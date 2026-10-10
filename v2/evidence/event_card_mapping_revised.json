@@ -1,0 +1,63 @@
+{
+  "source_log": "v2/evidence/run_p1_final_n20_llm.jsonl",
+  "total_events": 128564,
+  "before_total": 23185,
+  "after_total": 546,
+  "reduction_pct": 97.6,
+  "gated_cards": {
+    "mentorship": 32,
+    "creative-collab": 6,
+    "academic-collab": 14,
+    "combat-training": 68,
+    "select-location": 22,
+    "gift-giving": 62,
+    "saving-money": 36,
+    "whispered-comm": 42,
+    "emotion-burnout": 0,
+    "diff-scoring": 0,
+    "scarcity-buy": 23,
+    "skill-practice": 77,
+    "polite-reject": 11,
+    "passion-salary": 9,
+    "group-proposal": 19,
+    "counter-propose": 10,
+    "power-conflict": 88,
+    "rel-acceptance": 4,
+    "ice-breaking": 12,
+    "rel-maintain": 32
+  },
+  "gates": {
+    "mentorship": "ACTIVITY_*{template=mentorship}",
+    "creative-collab": "ACTIVITY_*{template=creative_collab}",
+    "academic-collab": "ACTIVITY_*{template=academic_collab}",
+    "combat-training": "ACTIVITY_*{template=combat_training}",
+    "select-location": "ACTIVITY_*{template=select_location}（非 PLACE_MOVE）",
+    "gift-giving": "TRANSFER{reason=gift} 或 ACTIVITY_*{template=gift}",
+    "saving-money": "DEPOSIT/WITHDRAW 或 ACTIVITY_*{template=savings}",
+    "whispered-comm": "ACTIVITY_*{template=whisper}（或 MSG_DM{visibility=private}）",
+    "emotion-burnout": "STATE_CHANGE{to=exhausted}（本 run=0）",
+    "diff-scoring": "同一 subject 的 SCORE_POSTED 分歧(≥2 且极差≥θ) 或 respect/affection 两维背向（当前维度缺失→0）",
+    "scarcity-buy": "MARKET_TRADE{scarcity_index≥θ 或 reason=scarce_buy}",
+    "skill-practice": "SKILL_PRACTICE",
+    "polite-reject": "OFFER_REJECTED",
+    "passion-salary": "ROLE_CHANGE",
+    "group-proposal": "NORM_PROPOSED",
+    "counter-propose": "OFFER_COUNTERED",
+    "power-conflict": "CONFLICT_STARTED/RESOLVED",
+    "rel-acceptance": "同一 agent→同一对象 accept↔reject 立场翻转（当前 dim 缺失→用 template=rel_accept）",
+    "ice-breaking": "首次 RELATION_ENCOUNTER∧familiarity<ε∧∃MSG（或 template=ice_break）",
+    "rel-maintain": "RELATION_CHANGE{a→b, gap>D_maint}（或 template=rel_maintain）"
+  },
+  "note": "D 类可重算门控；机械事件(RELATION_CHANGE/NEED_UPDATE/PLACE_MOVE/ACTIVITY_*/LLM_JUDGMENT)默认不配卡。",
+  "canonical_counts": {
+    "current_total": 23185,
+    "gated_total": 612,
+    "reduction_pct": 97.36,
+    "source": "code/obs/recount_cards.py（唯一权威）"
+  },
+  "deprecated": {
+    "22987": "领导口径变体（每 slug 仅取一个 type；与引擎按 e.type 逐事件渲染不符）→ 废弃，以 current_total 为准",
+    "567": "template-only（未含 TRANSFER{gift}/DEPOSIT 语义并集）→ 废弃",
+    "546": "template-only 且 whispered-comm=0 → 废弃"
+  }
+}

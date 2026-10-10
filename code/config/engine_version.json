@@ -1,0 +1,24 @@
+{
+  "_comment": "engine_version 指纹来源的集中声明（蓝图 §3.6）。各复现输入常数的版本在此登记；与 engine_version_digest 一致性在重放前校验。",
+  "schema_version": "1.0",
+  "mu_per_cr": 100,
+  "hash_algorithm": "sha256",
+  "canonical_json": {"sort_keys": true, "separators": "compact", "float_round": 6},
+  "time": {
+    "ROUNDS_PER_SLOT": 3,
+    "SLOTS_PER_DAY": ["morning", "afternoon", "evening", "night"],
+    "DAYS_PER_WEEK": 7,
+    "TIME_UNIT": 1000
+  },
+  "components": {
+    "default": {"file": "default.json", "version": "1.1"},
+    "topology": {"file": "topology.json", "version": "v1.1"},
+    "perception_scope": {"file": "perception_scope.json", "version": "v1.2-r2"},
+    "narrative_weights": {"file": "narrative_weights.json", "version": null},
+    "policy": {"file": "policy.json", "version": "1.0"},
+    "llm": {"file": "llm.json", "version": "1.0"},
+    "activity_templates": {"file": "activity_templates.json", "version": "v1.2-t45"}
+  },
+  "embedding": {"model": "frozen://lexical-relevance-v1", "version": "v1", "frozen": true, "note": "确定性词法相关度（非语义嵌入）；真语义相关性未验证"},
+  "llm_model": {"provider": "openai_compat", "model": "DeepSeek-Flash", "thinking_policy_in_fingerprint": true}
+}

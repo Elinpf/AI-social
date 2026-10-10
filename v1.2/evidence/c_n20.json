@@ -1,0 +1,196 @@
+{
+  "segment": "C_N20 (真 LLM @ 目标规模)",
+  "config": {
+    "seed": 42,
+    "rounds": 84,
+    "n": 20,
+    "policy": {
+      "economy.enabled": true,
+      "lifecycle.enabled": true
+    },
+    "provider": "openai_compat",
+    "side_root": "isolated (side_Cn20)",
+    "model": "DeepSeek-Flash"
+  },
+  "events": 124731,
+  "state_hash": "sha256:acf10e5a07dc3c774842b41c9d8fa02e2ec087a7111762064bff8bc47fef3efe",
+  "b2_n20_state_hash": "sha256:486d31fc43dc83f1d0fe9186de07fb1d8054dd4c3e3f2762482c5630bd724dcc",
+  "state_hash_differs_from_B2_N20": true,
+  "SYSTEM_ERROR": 0,
+  "chain_ok": true,
+  "replay_parity": true,
+  "seals_ok": true,
+  "TURN_SEAL": 84,
+  "semantic_hits_count": 16,
+  "semantic_hits": [
+    "E10_skill_practice",
+    "E11_polite_rejection",
+    "E12_passion_vs_salary",
+    "E13_group_proposal",
+    "E14_academic_collab",
+    "E15_counter_propose",
+    "E16_select_location",
+    "E17_power_conflict",
+    "E18_rel_acceptance",
+    "E19_ice_breaking",
+    "E3_combat_training",
+    "E4_creative_collab",
+    "E5_saving_money",
+    "E6_whispered_comm",
+    "E7_emotion_burnout",
+    "E8_diff_scoring"
+  ],
+  "econ_family": {
+    "TRANSFER": 31,
+    "MARKET_TRADE": 23,
+    "LOAN_ISSUED": 20,
+    "LOAN_REPAY": 0,
+    "LOAN_DEFAULT": 7,
+    "INTEREST_CHARGED": 266,
+    "INTEREST_PAID": 0,
+    "DEPOSIT": 18,
+    "WITHDRAW": 0,
+    "TAX_LEVIED": 46,
+    "UBI_PAID": 0,
+    "METABOLISM": 1600,
+    "PENALTY_APPLIED": 3,
+    "REVIVE_FEE_PAID": 12
+  },
+  "econ_active_total": 2026,
+  "lifecycle_family": {
+    "METABOLISM": 1600,
+    "STATE_CHANGE": 105,
+    "AGENT_DIED": 20,
+    "AGENT_REVIVED": 12,
+    "REVIVE_FEE_PAID": 12,
+    "LOAN_ISSUED": 20,
+    "LOAN_REPAY": 0,
+    "LOAN_DEFAULT": 7,
+    "INTEREST_CHARGED": 266,
+    "PENALTY_APPLIED": 3
+  },
+  "lifecycle_family_total": 2045,
+  "n_near_death": 26,
+  "n_died": 20,
+  "n_revived": 12,
+  "died_rounds": [
+    [
+      "P001",
+      60
+    ],
+    [
+      "P003",
+      64
+    ],
+    [
+      "P002",
+      65
+    ],
+    [
+      "P010",
+      68
+    ],
+    [
+      "P008",
+      69
+    ],
+    [
+      "P006",
+      70
+    ],
+    [
+      "P007",
+      70
+    ],
+    [
+      "P011",
+      70
+    ],
+    [
+      "P004",
+      73
+    ],
+    [
+      "P005",
+      73
+    ],
+    [
+      "P009",
+      73
+    ],
+    [
+      "P012",
+      73
+    ],
+    [
+      "P013",
+      73
+    ],
+    [
+      "P014",
+      73
+    ],
+    [
+      "P015",
+      73
+    ],
+    [
+      "P016",
+      73
+    ],
+    [
+      "P017",
+      73
+    ],
+    [
+      "P018",
+      76
+    ],
+    [
+      "P019",
+      76
+    ],
+    [
+      "P020",
+      76
+    ]
+  ],
+  "revived_agents": {
+    "P004": 1,
+    "P005": 1,
+    "P009": 1,
+    "P012": 1,
+    "P013": 1,
+    "P014": 1,
+    "P015": 1,
+    "P016": 1,
+    "P017": 1,
+    "P018": 1,
+    "P019": 1,
+    "P020": 1
+  },
+  "cost": {
+    "calls": 3950,
+    "tokens_in": 129661,
+    "tokens_out": 312954,
+    "tokens_total": 442615,
+    "cached": 3078,
+    "thinking": 496,
+    "degraded": 0,
+    "by_purpose": {
+      "describe": 20,
+      "importance": 3294,
+      "judge": 476,
+      "plan": 20,
+      "reflect": 140
+    },
+    "by_provider": {
+      "openai_compat": 3950
+    },
+    "provider_guard_ok": true,
+    "wall_seconds_approx": 4440
+  },
+  "command": "set -a; . code/.env.local; set +a; python /tmp/t63_seg.py C_N20 true true ../v1.2/evidence/run_abl_C_N20.jsonl ../v1.2/evidence/side_Cn20 20",
+  "wall_seconds_approx": 4440,
+  "note": "独立 --side-root=side_Cn20 + obs 侧 --require-provider openai_compat 守卫（PASS）；密钥仅 env，不入产出。state_hash 与 B2_N20 不同 → LLM 输出已进入结构决策。耗时约 74min（略超 35–45min 预估）。"
+}

@@ -1,0 +1,6 @@
+[life] n_agents=20 rounds=84 events=128564 seconds=3839.5782 log_bytes=56524995
+  unknown_event_types=[]
+  chain_ok=True replay_parity=True first_run_equals_replay=True
+  conservation_ok=True final_state_hash=sha256:494184f461295db1f5c44d86cc4eced82d03b81566b0e434865ca36a2d004d53
+  log written: ../v2/evidence/run_p1_final_n20_llm.jsonl
+RUN_DONE exit=0

@@ -1,0 +1,33 @@
+{
+  "schema": "hitt.layout/1",
+  "note": "青溪镇前端展示层布局（T71 v4：按 T70 方案 town-layout-research.md §3.2 坐标，×1.5 到 1440x1080）。单一真源为 src/town.js 的 LAYOUT；供 render_svg.py 对齐。与 engine 的 config/topology.json / travel_ticks 无关。",
+  "world": { "width": 1440, "height": 1080 },
+  "roads": [
+    { "a": [120, 630], "b": [1230, 630], "w": 3, "material": "street", "name": "东西主街（西端跨石桥，东端出镇）" },
+    { "a": [705, 375], "b": [705, 983], "w": 2, "material": "dirt", "name": "南北仪式轴（市政厅→广场→城门）" },
+    { "a": [495, 375], "b": [1170, 375], "w": 1, "material": "dirt", "name": "北巷" },
+    { "a": [345, 840], "b": [975, 840], "w": 1, "material": "dirt", "name": "南巷" }
+  ],
+  "nodes": [
+    { "place_id": "residence",        "x": 540,  "y": 795 },
+    { "place_id": "farm",             "x": 270,  "y": 255 },
+    { "place_id": "workshop",         "x": 1140, "y": 450 },
+    { "place_id": "kitchen",          "x": 1043, "y": 503 },
+    { "place_id": "clinic",           "x": 1140, "y": 780 },
+    { "place_id": "school",           "x": 930,  "y": 885 },
+    { "place_id": "office",           "x": 1080, "y": 585 },
+    { "place_id": "market",           "x": 840,  "y": 585 },
+    { "place_id": "bank",             "x": 945,  "y": 690 },
+    { "place_id": "plaza",            "x": 705,  "y": 630 },
+    { "place_id": "town_hall",        "x": 705,  "y": 375 },
+    { "place_id": "library",          "x": 375,  "y": 780 },
+    { "place_id": "community_center", "x": 770,  "y": 855 },
+    { "place_id": "cafe",             "x": 570,  "y": 690 },
+    { "place_id": "park",             "x": 450,  "y": 600 },
+    { "place_id": "hall",             "x": 540,  "y": 330 },
+    { "place_id": "gate",             "x": 705,  "y": 983 }
+  ],
+  "river": { "half": 45, "pts": [[140,60],[125,330],[150,570],[150,645],[125,900],[140,1050]] },
+  "pond": { "x": 320, "y": 700, "rx": 90, "ry": 55 },
+  "farm_plots": [ { "x": 200, "y": 300, "w": 240, "h": 150 } ]
+}

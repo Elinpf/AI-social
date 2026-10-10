@@ -1,0 +1,67 @@
+{
+  "_comment": "叙事层戏剧性度量权重与阈值（v1.2/17-narrative-layer.md §2.1/§2.2/§2.3/§4/§7 的落盘形态）。config 化以保可复现。",
+  "_discipline": "【价值假设纪律，同 13 §2.3 WBI】权重 w_k 是可声明的价值假设，仅用于叙事层确定性选片（决定『讲什么』）。不得回写世界、不得作为激励/目标函数、不得进入评估指标、验收门禁与 A 线训练信号（对齐 17 §0.2 H-2 / §9.3 NT-C2）。",
+  "_versioning": "本文件纳入 engine_version 指纹（engine/version.py FINGERPRINT_FILES）。其规范哈希即 narrative_config_hash（见 narrative/weights.py:narrative_config_hash）。任何权重/阈值改动 MUST 重算 narrative_config_hash 并记录到 WORLD_INIT 的 config_components，否则重放前 assert_log_fingerprint 会因指纹不一致而拒绝重放。",
+  "version": "v1.2-r1",
+
+  "weights": {
+    "c_conflict": 0.16,
+    "c_turn": 0.14,
+    "c_contrast": 0.12,
+    "c_plunge": 0.13,
+    "c_wbdiv": 0.10,
+    "c_ruin": 0.14,
+    "c_ally": 0.10,
+    "c_rarity": 0.06,
+    "c_impact": 0.05
+  },
+
+  "thresholds": {
+    "theta_turn": 0.20,
+    "theta_plunge": 0.25,
+    "theta_drama": 0.35,
+    "theta_feature": 0.60,
+    "k_top": 5,
+    "lambda": 0.30,
+    "delta_slots": 6
+  },
+
+  "_symbols": {
+    "c_conflict": "冲突强度",
+    "c_turn": "转折",
+    "c_contrast": "反差",
+    "c_plunge": "关系陡变",
+    "c_wbdiv": "福祉背离",
+    "c_ruin": "破产与重生",
+    "c_ally": "结盟与背叛",
+    "c_rarity": "稀有度/意外",
+    "c_impact": "影响面",
+    "theta_turn": "θ_turn（个体/集体轨迹一阶差分符号翻转的幅度阈值，归一化 [0,1]）",
+    "theta_plunge": "θ_plunge（单步 |after-before| 阈值，以 R=W_MAX-W_MIN 为域的比值）",
+    "theta_drama": "θ_drama（场景入选每周纪事/编年史的最低 NV）",
+    "theta_feature": "θ_feature（触发『重大事件特写』的最低 NV，须 > theta_drama）",
+    "k_top": "K_top（同周最多选片数，场景不重叠）",
+    "lambda": "λ（场景副峰聚合衰减系数，见 17 §2.2）",
+    "delta_slots": "Δ_slots（场景聚合的最大相邻时段间隔）"
+  },
+
+  "defaults": {
+    "templates": ["chronicle", "weekly_gazette", "character_pov", "feature"],
+    "pov_default": "omniscient",
+    "token_budget": {
+      "chronicle": 1200,
+      "weekly_gazette": 800,
+      "character_pov": 700,
+      "feature": 1500
+    },
+    "degrade_chain": ["T2", "T1", "T0"],
+    "sample_rate": 0.0,
+    "spec_policy": {
+      "inferred_atoms_require_spec_marker": true,
+      "heard_events_marked_spec": true,
+      "frozen_llm_requires_label": "(LLM 判定, 已冻结)"
+    },
+    "hard_fact_check": ["amount", "death", "winner", "relation_value", "time", "place"],
+    "origin_labels": ["spontaneous", "induced", "rescue", "frozen_llm"]
+  }
+}

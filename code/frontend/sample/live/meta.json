@@ -1,0 +1,8 @@
+{
+  "schema": "hitt.live/1",
+  "note": "节流运行的增量日志；权威确定性由 engine 保证，可 verify。只读派生。",
+  "seed": 42,
+  "n": 6,
+  "rounds": 300,
+  "engine_version": "v0.1-skeleton"
+}

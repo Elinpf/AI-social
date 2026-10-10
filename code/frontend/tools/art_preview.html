@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>青溪镇 · 美术预览（art-director 内部画质自检，独立于 shell）</title>
+<style>
+  html,body{margin:0;height:100%;background:#10130f;overflow:hidden}
+  #host{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  #host canvas{width:100%!important;height:100%!important;object-fit:contain;image-rendering:pixelated}
+  #hud{position:absolute;left:8px;top:8px;color:#dfe8d0;font:12px/1.5 ui-monospace,monospace;
+       text-shadow:0 1px 2px #000;pointer-events:none;z-index:5}
+</style>
+</head>
+<body>
+<div id="host"></div>
+<div id="hud">art preview · loading…</div>
+<script src="/vendor/pixi.min.js"></script>
+<script src="/src/sprites.js"></script>
+<script src="/src/town.js"></script>
+<script>
+(async function () {
+  const qs = new URLSearchParams(location.search);
+  const logUrl = qs.get("log") || "/sample/demo_run.jsonl";
+  const roundArg = qs.get("round");
+  const host = document.getElementById("host");
+  const hud = document.getElementById("hud");
+  try {
+    const [placesDoc, topo, txt] = await Promise.all([
+      fetch("/data/places.json").then(r => r.json()),
+      fetch("/data/topology.json").then(r => r.json()),
+      fetch(logUrl).then(r => r.text()),
+    ]);
+    const places = placesDoc.places || placesDoc;
+    const town = new window.HITTTown.Town(host, places, topo);
+    town.app.ticker.add(() => town.tick());
+    await town.load("/assets/");
+
+    // 轻量模式：直接消费服务端折叠好的关键帧状态（避免把大日志灌进浏览器）
+    const statesUrl = qs.get("states");
+    if (statesUrl) {
+      const doc = await fetch(statesUrl).then((r) => r.json());
+      const keys = (doc.rounds || Object.keys(doc.frames).map(Number)).slice().sort((a, b) => a - b);
+      const want = roundArg != null ? Number(roundArg) : keys[keys.length - 1];
+      let pick = keys[0];
+      for (const k of keys) { if (k <= want) pick = k; }
+      const fr = doc.frames[pick] || doc.frames[String(pick)];
+      town.renderState({ agents: fr.agents });
+      { const bq = qs.get("banner"); if (bq && town.setBanner) town.setBanner(decodeURIComponent(bq)); const hq = qs.get("hap"); if (hq && town.setHappenings) { try { town.setHappenings(JSON.parse(decodeURIComponent(hq))); } catch (e) {} } }
+      const lg = qs.get("light"); if (lg && town.setLighting) town.setLighting(lg);
+      hud.textContent = "art preview · states round " + pick + " · agents " + Object.keys(fr.agents).length;
+      window.__ready = true;
+      return;
+    }
+    // 折叠日志：复用最小 replay（避免依赖 src/replay.js 的 DOM）
+    const recs = txt.split(/\r?\n/).filter(Boolean).map(l => JSON.parse(l));
+    // 简单折叠：按 seq 排序后，逐条把 AGENT_MOVE/PLACE_* 等映射到 {id:{location,status,bubble}}
+    const byId = {};
+    let maxRound = 0;
+    const roundOf = (r) => (typeof r === "number" ? r : 0);
+    recs.sort((a, b) => (a.seq == null ? Infinity : a.seq) - (b.seq == null ? Infinity : b.seq));
+    const target = roundArg != null ? Number(roundArg) : Infinity;
+    for (const e of recs) {
+      const r = roundOf(e.round);
+      maxRound = Math.max(maxRound, r);
+      if (r > target) continue;
+      const id = e.agent_id || e.actor || e.agent || (e.payload && (e.payload.agent_id || e.payload.agent));
+      if (!id) continue;
+      byId[id] = byId[id] || { location: "residence", status: "alive", bubble: null };
+      const p = e.payload || {};
+      let loc = null;
+      if (e.type === "PLACE_MOVE" || e.type === "PLACE_ARRIVED") loc = p.to_place || p.to;
+      else if (e.type === "ACTIVITY_STARTED") loc = p.place_id || p.place;
+      else if (e.type === "AGENT_BORN") loc = p.home_place;
+      if (loc) byId[id].location = loc;
+      // 生命周期状态（供死亡灰化/复活自检）
+      if (e.type === "AGENT_DIED") byId[id].status = "dead";
+      else if (e.type === "AGENT_REVIVED") byId[id].status = "alive";
+      else if (e.type === "STATE_CHANGE") {
+        const to = p.to;
+        if (to === "dead" || to === "terminated") byId[id].status = "dead";
+        else if (to === "revived" || to === "alive") byId[id].status = "alive";
+      }
+      if (!byId[id].bubble && (p.tag || p.activity || p.name)) byId[id].bubble = p.tag || p.activity || p.name;
+      if (p.bubble || p.text || e.bubble) byId[id].bubble = p.bubble || p.text || e.bubble;
+      const st = p.status || e.status;
+      if (st) byId[id].status = st;
+    }
+    town.renderState({ agents: byId });
+    { const bq = qs.get("banner"); if (bq && town.setBanner) town.setBanner(decodeURIComponent(bq)); const hq = qs.get("hap"); if (hq && town.setHappenings) { try { town.setHappenings(JSON.parse(decodeURIComponent(hq))); } catch (e) {} } }
+    const light = qs.get("light");
+    if (light && town.setLighting) town.setLighting(light);
+    hud.textContent = `art preview · round ${roundArg != null ? roundArg : maxRound} · agents ${Object.keys(byId).length}`;
+    window.__ready = true;
+  } catch (err) {
+    hud.textContent = "ERR: " + err.message;
+    window.__ready = true;
+    console.error(err);
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+{
+  "engine_version": "v1.1-rim-run|thinking=sha256:d08abbe09",
+  "model": "DeepSeek-Flash",
+  "endpoint": "http://172.16.3.41:31809/v1",
+  "thinking_policy": {
+    "default": false,
+    "true_purposes": [
+      "describe",
+      "judge",
+      "narrate"
+    ],
+    "true_tiers": [
+      "T2"
+    ]
+  },
+  "workload": {
+    "agents": [
+      "alice",
+      "bob",
+      "carol"
+    ],
+    "rounds": 10,
+    "n_items": 33
+  },
+  "real_run": {
+    "provider_calls": 33,
+    "http_attempts": 33,
+    "llm_calls_counter": 33,
+    "n_calls": 33,
+    "tokens_in": 1587,
+    "tokens_out": 2755,
+    "by_purpose": {
+      "plan": {
+        "n": 12,
+        "tin": 440,
+        "tout": 272
+      },
+      "dialogue": {
+        "n": 18,
+        "tin": 654,
+        "tout": 393
+      },
+      "judge": {
+        "n": 2,
+        "tin": 314,
+        "tout": 1703
+      },
+      "describe": {
+        "n": 1,
+        "tin": 179,
+        "tout": 387
+      }
+    },
+    "wall_seconds": 40.43,
+    "mean_call_seconds": 1.225,
+    "max_call_seconds": 13.994
+  },
+  "real_judgments": [
+    {
+      "decision": "not_formed",
+      "model": "DeepSeek-Flash",
+      "context_digest": "sha256:d6abd1aebecfdf149ac22c6212ce9ec9eb967918383db453cb220aef97a4fb4c",
+      "frozen": true
+    },
+    {
+      "decision": "formed",
+      "model": "DeepSeek-Flash",
+      "context_digest": "sha256:a21232f87393bc9f136557ada14ed68e49c739270d94862beac50e52095c4c72",
+      "frozen": true
+    }
+  ],
+  "real_narratives": [
+    {
+      "narrative_id": "N-r9",
+      "affects_state": false
+    }
+  ],
+  "replay": {
+    "llm_calls": 0,
+    "provider_calls": 0
+  },
+  "rulebased_run": {
+    "llm_calls_counter": 33,
+    "n_calls": 33,
+    "tokens_in": 264,
+    "tokens_out": 264,
+    "by_purpose": {
+      "plan": {
+        "n": 12,
+        "tin": 96,
+        "tout": 96
+      },
+      "dialogue": {
+        "n": 18,
+        "tin": 144,
+        "tout": 144
+      },
+      "judge": {
+        "n": 2,
+        "tin": 16,
+        "tout": 16
+      },
+      "describe": {
+        "n": 1,
+        "tin": 8,
+        "tout": 8
+      }
+    },
+    "wall_seconds": 0.011,
+    "mean_call_seconds": 0.000343
+  },
+  "behavior_samples_real": [
+    {
+      "kind": "plan",
+      "round": 0,
+      "agent": "alice",
+      "text": "上午去镇东的集市买些新鲜蔬菜，顺便到老李家取回上周订的竹篮。"
+    },
+    {
+      "kind": "plan",
+      "round": 0,
+      "agent": "bob",
+      "text": "上午去镇东的集市买些新鲜蔬菜，顺便到老李家取回上周托他修的锄头。"
+    },
+    {
+      "kind": "plan",
+      "round": 0,
+      "agent": "carol",
+      "text": "上午我打算去镇上的集市买些新鲜蔬菜，顺便到邮局寄封信。"
+    },
+    {
+      "kind": "dialogue",
+      "round": 1,
+      "agent": "alice",
+      "text": "青溪镇的早晨真舒服，你家的菜园子今年收成咋样啊？"
+    },
+    {
+      "kind": "dialogue",
+      "round": 1,
+      "agent": "bob",
+      "text": "哟，Carol，今儿个去菜市场买菜了没？"
+    },
+    {
+      "kind": "dialogue",
+      "round": 1,
+      "agent": "carol",
+      "text": "青溪镇今天阳光正好，Carol 笑着对 Alice 说：“吃了吗？这天气晒得人心里都暖洋洋的。”"
+    }
+  ],
+  "behavior_samples_rulebased": [
+    {
+      "kind": "plan",
+      "round": 0,
+      "agent": "alice",
+      "text": "（计划）按作息工作、休息，留出社交与休闲时间。"
+    },
+    {
+      "kind": "plan",
+      "round": 0,
+      "agent": "bob",
+      "text": "（计划）按作息工作、休息，留出社交与休闲时间。"
+    },
+    {
+      "kind": "plan",
+      "round": 0,
+      "agent": "carol",
+      "text": "（计划）按作息工作、休息，留出社交与休闲时间。"
+    },
+    {
+      "kind": "dialogue",
+      "round": 1,
+      "agent": "alice",
+      "text": "（寒暄）今天天气不错，一切都好。"
+    },
+    {
+      "kind": "dialogue",
+      "round": 1,
+      "agent": "bob",
+      "text": "（寒暄）今天天气不错，一切都好。"
+    },
+    {
+      "kind": "dialogue",
+      "round": 1,
+      "agent": "carol",
+      "text": "（寒暄）今天天气不错，一切都好。"
+    }
+  ]
+}

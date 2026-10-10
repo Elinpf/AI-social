@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>青溪镇 · 小镇回放（游戏画面）</title>
+<link rel="stylesheet" href="styles/app.css?v=20" />
+</head>
+<body>
+  <header id="topbar">
+    <div class="brand">
+      <span class="logo">🏘️</span>
+      <div>
+        <div class="title">青溪镇</div>
+        <div class="subtitle debug-only">只读事件日志 · 确定性回放 · PixiJS</div>
+      </div>
+    </div>
+    <div class="hud-clockbox"><span id="hud-clock">—</span></div>
+    <div id="live-box" class="live-box" hidden>
+      <span class="live-badge">● LIVE</span>
+      <span id="live-round" class="muted">round —</span>
+      <button id="btn-follow" class="btn ghost" title="跟随最新 / 暂停回看">⏸ 暂停跟随</button>
+    </div>
+    <div class="loaders">
+      <button id="btn-debug" class="btn ghost" title="调试 / 审计（默认折叠）">⋯ 调试</button>
+      <button id="btn-view" class="btn ghost" title="景观模式：只留建筑/角色/地形（近景自动显示 NPC ID）">🏞 景观</button>
+      <button id="btn-settings" class="btn ghost debug-only" title="载入日志 / 样例 / 数据源">⋯ 设置</button>
+      <button id="btn-toggle-audit" class="btn ghost debug-only" title="审计观测台（默认收起）">📊 审计</button>
+      <div id="settings-pop" class="popover" hidden>
+        <div class="pop-row"><span class="pop-lbl">数据源</span><span id="source-badge" class="badge">未载入</span></div>
+        <div class="pop-row">
+          <label class="btn">载入日志
+            <input id="file-input" type="file" accept=".jsonl,.json,text/plain" hidden />
+          </label>
+        </div>
+        <div class="pop-row">
+          <select id="sample-select" title="内置样例日志">
+            <option value="">— 内置样例 —</option>
+            <option value="sample/run_b2_n20_week.play.jsonl">B2 @ N=20（播放视图·完整一周，含经济/死亡/复活）</option>
+            <option value="sample/demo_run.jsonl">生活层样例（含移动，20 回合）</option>
+            <option value="sample/engine_run_seed12345_r20.jsonl">内核样例（seed=12345, 20 回合）</option>
+          </select>
+        </div>
+        <div class="pop-hint">也可把 <code>.jsonl</code> 拖进画面直接载入</div>
+      </div>
+    </div>
+  </header>
+
+  <main id="stage-wrap">
+    <div id="pixi-host"></div>
+
+    <!-- 昼夜光照覆盖层（纯氛围） -->
+    <div id="lighting" class="lighting"></div>
+
+    <!-- 顶部关键事件提示条 -->
+    <div id="toast" class="toast" hidden><span id="toast-icon">★</span><span id="toast-text"></span></div>
+
+    <!-- 静态说明条（?caption= 用于关键帧标注） -->
+    <div id="caption" class="caption" hidden></div>
+
+    <!-- 左上 HUD -->
+    <div id="hud">
+      <div id="hud-legend" class="hud-item legend"></div>
+      <div id="hud-note" class="hud-note debug-only">1 tick = 2h（展示口径，引擎单位为抽象 tick）· 滚轮缩放 / 拖拽平移 / 点击角色·场所</div>
+    </div>
+
+    <!-- 缩放控件 -->
+    <div id="zoom-ctl" class="zoom-ctl">
+      <button id="btn-zoom-in" title="放大">＋</button>
+      <button id="btn-zoom-out" title="缩小">－</button>
+      <button id="btn-zoom-reset" title="复位">⤢</button>
+    </div>
+
+    <div id="error-box" hidden></div>
+  </main>
+
+  <!-- 右侧抽屉：审计观测台（默认收起） -->
+  <aside id="audit" class="drawer">
+    <div class="drawer-head">
+      <h2>观测台 <span class="tag">只读日志重算</span></h2>
+      <button class="drawer-close" data-close="audit" title="收起">✕</button>
+    </div>
+    <div id="kfacts" class="kfacts"></div>
+    <div class="tabs">
+      <button class="tab active" data-tab="chronicle">📜 编年史</button>
+      <button class="tab" data-tab="social">💬 社交</button>
+    </div>
+    <div id="pane-chronicle" class="pane">
+      <div class="audit-ctl">
+        <select id="ev-level" title="显示层级">
+          <option value="narrative">叙事级</option>
+          <option value="detail">+明细</option>
+          <option value="all">全部（含审计）</option>
+        </select>
+        <input id="ev-search" placeholder="搜索 人话/事件/seq…" />
+        <label class="tgl"><input type="checkbox" id="ev-audit" /> 审计模式</label>
+      </div>
+      <h3>小镇编年史 <span id="ev-count" class="muted"></span></h3>
+      <div id="event-stream" class="event-stream"></div>
+    </div>
+    <div id="pane-social" class="pane" hidden>
+      <div id="social-body" class="social-body"></div>
+    </div>
+  </aside>
+
+  <!-- 右侧抽屉：点击详情（角色 / 场所） -->
+  <aside id="inspector" class="drawer">
+    <div class="drawer-head">
+      <h2 id="insp-title">详情</h2>
+      <button class="drawer-close" data-close="inspector" title="关闭">✕</button>
+    </div>
+    <div id="insp-body" class="insp-body"><div class="muted" style="padding:8px 0">点击小镇里的角色或场所查看详情。</div></div>
+  </aside>
+
+  <!-- 悬浮半透明播放控制 -->
+  <footer id="controls">
+    <button id="btn-first" class="debug-only" title="回到开头">⏮</button>
+    <button id="btn-prev" class="debug-only" title="上一回合">◀</button>
+    <button id="btn-play" class="primary" title="播放/暂停">▶ 播放</button>
+    <button id="btn-next" class="debug-only" title="下一回合">▶</button>
+    <button id="btn-last" class="debug-only" title="跳到末尾">⏭</button>
+    <input id="round-slider" type="range" min="0" max="0" value="0" step="1" />
+    <span id="round-label" class="round-label debug-only">round — / —</span>
+    <label class="speed debug-only">速度
+      <select id="speed-select">
+        <option value="1600">0.5x</option>
+        <option value="800" selected>1x</option>
+        <option value="400">2x</option>
+        <option value="150">5x</option>
+      </select>
+    </label>
+  </footer>
+  <div id="timebar-wrap" class="debug-only">
+    <div id="timebar-legend">
+      <b>时间轴</b>：每格 = 1 tick = 2h ｜
+      <span class="sw morning"></span>晨 06–12
+      <span class="sw afternoon"></span>午 12–18
+      <span class="sw evening"></span>暮 18–24
+      <span class="sw night"></span>夜 00–06 ｜ 每 12 格 = 1 天；←/→ 或点击滑杆跳转
+    </div>
+    <div id="timebar" title="时间轴：每 tick = 2h；每 3 格一个时段，每 12 格一天"></div>
+    <div id="timebar-tag">时间轴</div>
+  </div>
+
+  <script src="vendor/pixi.min.js"></script>
+  <script src="src/data.js?v=20"></script>
+  <script src="src/assets.js?v=20"></script>
+  <script src="src/sprites.js?v=20"></script>
+  <script src="src/town.js?v=20"></script>
+  <script src="src/replay.js?v=20"></script>
+  <script src="src/audit.js?v=20"></script>
+  <script src="src/main.js?v=20"></script>
+</body>
+</html>

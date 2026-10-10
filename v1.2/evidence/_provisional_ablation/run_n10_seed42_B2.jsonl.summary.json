@@ -1,0 +1,27 @@
+{
+  "segment": "B2",
+  "economy_enabled": true,
+  "lifecycle_enabled": true,
+  "events": 34518,
+  "seconds": 42.0871,
+  "wall_s": 45.6,
+  "chain_ok": true,
+  "replay_parity": true,
+  "seals_ok": true,
+  "conservation_ok": true,
+  "final_state_hash": "sha256:97eae2e4cf1abdff9a97493cca86e954b94a2358a4b0b6ccecb00d46369ae90d",
+  "SYSTEM_ERROR": 0,
+  "lifecycle_family": {
+    "METABOLISM": 671,
+    "PENALTY_APPLIED": 0,
+    "STATE_CHANGE": 41,
+    "AGENT_DIED": 10,
+    "AGENT_REVIVED": 0,
+    "REVIVE_FEE_PAID": 0,
+    "INTEREST_CHARGED": 288,
+    "LOAN_ISSUED": 20,
+    "LOAN_REPAY": 0,
+    "LOAN_DEFAULT": 20
+  },
+  "lifecycle_family_total": 1050
+}

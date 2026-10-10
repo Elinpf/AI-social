@@ -1,0 +1,94 @@
+{
+  "demo_run.png": {
+    "url": "http://127.0.0.1:8848/?log=sample/demo_run.jsonl",
+    "info": {
+      "title": "青溪镇 · 小镇回放（游戏画面）",
+      "hasCanvas": true,
+      "canvasW": 960,
+      "canvasH": 720,
+      "cssW": 1600,
+      "cssH": 946,
+      "hostW": 1600,
+      "hostH": 946,
+      "roundLabel": "round 0 / 19",
+      "clock": "第 1 日 06:00（早晨 06:00–12:00） · week 0 workday",
+      "source": "sample/demo_run.jsonl",
+      "errBoxHidden": true,
+      "errText": "",
+      "bboxes": {
+        "#stage-wrap": [
+          0,
+          54,
+          1600,
+          946
+        ],
+        "#pixi-host": [
+          0,
+          54,
+          1600,
+          946
+        ],
+        "#audit": [
+          1612,
+          0,
+          390,
+          1000
+        ],
+        "#controls": [
+          430,
+          904,
+          741,
+          54
+        ]
+      }
+    },
+    "console": [
+      "[error] Failed to load resource: the server responded with a status of 404 (File not found)"
+    ]
+  },
+  "engine_run_r20.png": {
+    "url": "http://127.0.0.1:8848/?log=sample/engine_run_seed12345_r20.jsonl",
+    "info": {
+      "title": "青溪镇 · 小镇回放（游戏画面）",
+      "hasCanvas": true,
+      "canvasW": 960,
+      "canvasH": 720,
+      "cssW": 1600,
+      "cssH": 946,
+      "hostW": 1600,
+      "hostH": 946,
+      "roundLabel": "round 0 / 19",
+      "clock": "第 1 日 06:00（早晨 06:00–12:00） · week 0 workday",
+      "source": "sample/engine_run_seed12345_r20.jsonl",
+      "errBoxHidden": true,
+      "errText": "",
+      "bboxes": {
+        "#stage-wrap": [
+          0,
+          54,
+          1600,
+          946
+        ],
+        "#pixi-host": [
+          0,
+          54,
+          1600,
+          946
+        ],
+        "#audit": [
+          1612,
+          0,
+          390,
+          1000
+        ],
+        "#controls": [
+          430,
+          904,
+          741,
+          54
+        ]
+      }
+    },
+    "console": []
+  }
+}

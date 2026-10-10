@@ -1,0 +1,57 @@
+{
+  "log": "../v2/evidence/run_b2_n20_econ.jsonl",
+  "log_sha256": "sha256:633969153ecf9b88c112eeac3ee469e3f15bf1e7eeb4e6724e1caacddaf27ca4",
+  "econ_loop": {
+    "M_final": 35100,
+    "M_min": 0,
+    "M_max": 197200,
+    "M_mean": 85948,
+    "M_target": 200000,
+    "M_final_over_target": 0.1755,
+    "M_min_over_target": 0.0,
+    "M_never_negative": true,
+    "V": 0.055848,
+    "Y_mu": 48070,
+    "Y_units_total_milli": 294685,
+    "Y_units_by_good": {
+      "art": 3946,
+      "food": 111216,
+      "material": 55608,
+      "service": 123915
+    },
+    "median_wage_mu": null,
+    "gini_net_worth": 0.858709,
+    "tax_pool_final": 3271,
+    "public_goods_spend_mu": 0,
+    "minted_total": 243159,
+    "burned_total": 208059,
+    "net_mint_burn_last_round": 0,
+    "mint_burn_balance_window": 0.0,
+    "price_cv": {},
+    "price_cv_mean": 0.0,
+    "n_produce": 321,
+    "llm_judged_metric_count": 0
+  },
+  "institutions": {
+    "n_groups": 8,
+    "group_kinds": {
+      "chat": 8
+    },
+    "norm_proposed": 17,
+    "norm_adopted": 17,
+    "norm_violated": 0,
+    "adoption_success_rate": 1.0,
+    "norm_coverage": 1.0,
+    "n_contracts": 0,
+    "contract_kinds": {},
+    "contract_fulfilled": 0,
+    "contract_violated": 0,
+    "contract_expired": 0,
+    "contract_fulfillment_rate": 0.0,
+    "employment_contracts": 0,
+    "loan_contracts": 0,
+    "n_votes": 0
+  },
+  "metrics_bitewise_equal": true,
+  "recompute_cmd": "python -m obs metrics --log v2/evidence/run_b2_n20_econ.jsonl --out v2/evidence/metrics_full.json"
+}

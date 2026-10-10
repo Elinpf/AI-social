@@ -1,0 +1,128 @@
+{
+  "_comment": "B 线政策参数层（T20/T10）：可被实验编排器按档切换。每项含 default 与可调范围 [min,max]，单位一律整数（金额 mu；比例用万分比 bp）。纳入 engine_version 指纹。",
+  "schema_version": "1.0",
+  "income_tax_bp": {
+    "default": 1000,
+    "min": 0,
+    "max": 5000,
+    "desc": "收入税（万分比 bp）"
+  },
+  "wealth_tax_bp": {
+    "default": 200,
+    "min": 0,
+    "max": 2000,
+    "desc": "财富税（bp）"
+  },
+  "tax_pool_redistribute_bp": {
+    "default": 10000,
+    "min": 0,
+    "max": 10000,
+    "desc": "税池再分配（UBI）比例（bp）"
+  },
+  "ubi_mu": {
+    "default": 0,
+    "min": 0,
+    "max": 10000,
+    "desc": "每回合 UBI（mu）"
+  },
+  "loan_rate_bp": {
+    "default": 500,
+    "min": 0,
+    "max": 5000,
+    "desc": "借贷利率（bp）"
+  },
+  "loan_ltv_bp": {
+    "default": 6000,
+    "min": 0,
+    "max": 9000,
+    "desc": "抵押 LTV（bp）"
+  },
+  "loan_max_debt_mu": {
+    "default": 10000,
+    "min": 0,
+    "max": 1000000,
+    "desc": "单账户最大负债（mu，=100 CR）"
+  },
+  "penalty_bp": {
+    "default": 1000,
+    "min": 0,
+    "max": 10000,
+    "desc": "作弊罚没强度（bp）"
+  },
+  "metabolism_mu": {
+    "default": 0,
+    "min": 0,
+    "max": 10000,
+    "desc": "每回合代谢消耗（mu）"
+  },
+  "revive_fee_mu": {
+    "default": 0,
+    "min": 0,
+    "max": 100000,
+    "desc": "复活/续命费（mu）"
+  },
+  "money_floor_mu": 0,
+  "_note_money_floor_mu": "裸整数，非 dict（conservation 与 lifecycle 均按 int 读取；Leaders 裁定统一裸 int）",
+  "safety_valve": {
+    "net_worth_floor_mu": {
+      "default": -10000,
+      "min": -1000000,
+      "max": 0,
+      "desc": "安全阀：净财富下限（mu）"
+    },
+    "near_death_threshold_mu": {
+      "default": 0,
+      "min": -1000000,
+      "max": 100000,
+      "desc": "濒死判定阈值（mu）"
+    }
+  },
+  "economy": {
+    "_comment": "Phase 4.1–4.3 经济档（T58 消融开关 + T61×T62 流动性/授信共享键）。扁平值；由 engine.runner.load_config 原样并入 config['policy']['economy']，econ/lifecycle 经 engine.liquidity.resolve_params 读同键。默认 enabled=true；enabled=false 时 4.1–4.3 全跳过、不产经济事件。改本块会变 engine_version 指纹（属预期）。",
+    "enabled": true,
+    "liquid_trigger_mu": 250,
+    "liquid_sustain_mu": 600,
+    "subsistence_mu": 0,
+    "credit_ltv_bp": 6000,
+    "income_credit_bp": 20000,
+    "w_income_rounds": 12,
+    "w_cool_rounds": 6,
+    "min_collateral_mu": 0,
+    "credit_unsecured_base_mu": 0,
+    "negative_worth_penalty_bp": 100,
+    "fallback_mint_enabled": false,
+    "fallback_trigger_mu": 0,
+    "fallback_issue_max_mu": 0
+  },
+  "lifecycle": {
+    "_comment": "Phase 4.4–4.8 生命周期档（v1/02 §7）。扁平值（非 default/range 结构）；由 engine.runner.load_config 原样并入 config['policy']['lifecycle']，hook 零 I/O 读取。默认 enabled=false 保持 P0 现状。改本块会变 engine_version 指纹（属预期）。",
+    "enabled": true,
+    "metabolism_mu": 140,
+    "warn_mu": 2000,
+    "floor_mu": -2000,
+    "recover_mu": 500,
+    "n_death": 3,
+    "k_exit": 6,
+    "revive_fee_mu": 1000,
+    "c_cool": 5,
+    "n_overdue": 3,
+    "w_refi": 3,
+    "p8_enabled": false,
+    "safety_enabled": true,
+    "rescue_enabled": true,
+    "rho_min_bp": 6000,
+    "d_burst": 3,
+    "w_rescue": 5,
+    "w_pause": 3,
+    "rescue_grant_mu": 2000,
+    "penalty_bp": 10000
+  },
+  "social": {
+    "_comment": "v2 社交/对话发声档（T115 消融开关）。默认 enabled=true（行为不变）。enabled=false 时，**整条 v2 社交发声通道在生成侧整体短路**：不发 INTENT.SOCIAL、不物化 GROUP_CREATED，故 MSG_DM/MSG_PUBLIC/MSG_GROUP/GROUP_CREATED 全为 0、且无 LLM_CALL(purpose=dialogue) 调用、配额/去重逻辑也不经过。口径注记：v1 时期的 DM 正文是写死模板（已被 v2 的 LLM 生成取代），故 off 时一并关闭 DM 不会混淆新旧变量。只控制‘是否产生’，不删事件契约。改本块会变 engine_version 指纹（属预期）。",
+    "enabled": true
+  },
+  "production": {
+    "_comment": "v2 P1 生产层一等开关（T114）。扁平值；由 engine.runner.load_config 原样并入 config['policy']['production']；apply_production 读同键。默认 enabled=true（行为不变）；enabled=false 时零生产事件、双账本守恒仍成立、打 flag=production_disabled（**显式消融，不触发 fail-loud**）。改本块会变 engine_version 指纹（属预期）。",
+    "enabled": true
+  }
+}

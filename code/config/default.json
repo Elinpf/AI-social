@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.1",
+  "engine_version": "v0.1-skeleton",
+  "time_config": {
+    "ROUNDS_PER_SLOT": 3,
+    "SLOTS_PER_DAY": ["morning", "afternoon", "evening", "night"],
+    "DAYS_PER_WEEK": 7,
+    "DAY_TYPES": ["workday", "workday", "workday", "workday", "workday", "weekend", "weekend"],
+    "TIME_UNIT": 1000
+  },
+  "genesis": {
+    "agent_count": 3,
+    "initial_endowment_mu": 10000
+  },
+  "economy": {
+    "UBI_MU": 0
+  }
+}

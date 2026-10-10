@@ -1,0 +1,462 @@
+{
+  "_comment": "活动模板库（12-event-lineage §4.1/§4.2 落盘形态）。确定性骨架：场所+时段+人数+前置条件+确定性结算钩子+LLM 内容槽位。模板即数据，纳入 engine_version 指纹（version.py FINGERPRINT_FILES）。对接 Phase 3.5 L2 resolve_schedule / L3 settle_activities。",
+  "version": "v1.2-t45",
+  "schema_version": "1.1",
+  "census_alignment": "template_id ↔ 15-event-census-spec 的 E1..E20（census_class 字段）",
+  "roles_note": "participants.roles 的顺序即 effects 中 target/who/from_role/to_role 的取值域；单方模板 roles=[\"self\"]。",
+  "templates": [
+    {
+      "template_id": "mentorship",
+      "census_class": "E1_mentorship",
+      "activity_type": "learn",
+      "place_allowed": ["school", "workshop", "library"],
+      "slot_allowed": ["morning", "afternoon"],
+      "participants": {"min": 2, "max": 2, "roles": ["mentor", "mentee"]},
+      "preconditions": {
+        "skill": [{"who": "mentor", "same_skill": true, "gap_op": ">=", "gap_val": 2}],
+        "relation": [{"between": ["mentor", "mentee"], "dim": "affinity", "op": ">=", "val": 20}],
+        "need": [{"who": "mentee", "dim": "mastery", "op": ">=", "val": 20}],
+        "open_slot": true, "place_capacity": true
+      },
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {
+          "skill": [{"target": "mentee", "skill_id": "*", "delta_levels": 1, "emit": ["SKILL_PRACTICE", "SKILL_LEVEL_UP"]}],
+          "need": [{"who": "mentee", "dim": "mastery", "delta": 6}, {"who": "mentor", "dim": "esteem", "delta": 4}],
+          "relation": [{"from": "mentee", "to": "mentor", "dim": "respect", "delta": 5}]
+        }
+      },
+      "outputs": {"resource_intents": [], "memory": {"kind": "observation", "importance_rule": "rule"}, "tags": ["knowledge_transfer"]},
+      "llm_slots": {"plan_text": true, "dialogue": true, "narrative": true, "soft_judgment": {"dimension": "mentor_relation", "envelope_from": "D+R"}},
+      "cost_class": "T1",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "SKILL_PRACTICE", "SKILL_LEVEL_UP", "NEED_UPDATE", "RELATION_CHANGE"]
+    },
+    {
+      "template_id": "gift",
+      "census_class": "E2_gift_giving",
+      "activity_type": "socialize",
+      "place_allowed": ["plaza", "cafe", "community_center"],
+      "slot_allowed": ["afternoon", "evening"],
+      "participants": {"min": 2, "max": 2, "roles": ["giver", "receiver"]},
+      "preconditions": {
+        "relation": [{"between": ["giver", "receiver"], "dim": "affinity", "op": ">=", "val": 50}],
+        "resource": [{"who": "giver", "kind": "cash", "op": ">=", "val": 100}],
+        "open_slot": true, "place_capacity": true
+      },
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {
+          "money": [{"kind": "gift", "from": "giver", "to": "receiver", "amount_mu": 100, "reason": "gift"}],
+          "relation": [{"from": "receiver", "to": "giver", "dim": "affinity", "delta": 8}]
+        }
+      },
+      "outputs": {"resource_intents": ["TRANSFER"], "memory": {"kind": "observation", "importance_rule": "rule"}, "tags": ["gift"]},
+      "llm_slots": {"plan_text": false, "dialogue": true, "narrative": true, "soft_judgment": null},
+      "cost_class": "T1",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "TRANSFER", "RELATION_CHANGE"]
+    },
+    {
+      "template_id": "combat_training",
+      "census_class": "E3_combat_training",
+      "activity_type": "leisure",
+      "place_allowed": ["park"],
+      "slot_allowed": ["morning", "afternoon"],
+      "participants": {"min": 1, "max": 2, "roles": ["self", "rival"]},
+      "preconditions": {
+        "need": [{"who": "self", "dim": "energy", "op": ">=", "val": 30}],
+        "open_slot": true, "place_capacity": true
+      },
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {
+          "skill": [{"target": "self", "skill_id": "athletics", "delta_levels": 1, "emit": ["SKILL_PRACTICE", "SKILL_LEVEL_UP"]}],
+          "need": [{"who": "self", "dim": "energy", "delta": -8}, {"who": "self", "dim": "leisure", "delta": 5}],
+          "relation": [{"from": "rival", "to": "self", "dim": "respect", "delta": 3}]
+        },
+        "contest": {"enabled": true, "rule_ref": "training", "attr": "skill:athletics", "emit": ["CONFLICT_RESOLVED"]}
+      },
+      "outputs": {"resource_intents": [], "memory": {"kind": "observation", "importance_rule": "rule"}, "tags": ["training"]},
+      "llm_slots": {"plan_text": false, "dialogue": false, "narrative": true, "soft_judgment": null},
+      "cost_class": "T1",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "SKILL_PRACTICE", "SKILL_LEVEL_UP", "NEED_UPDATE", "RELATION_CHANGE", "CONFLICT_RESOLVED"]
+    },
+    {
+      "template_id": "creative_collab",
+      "census_class": "E4_creative_collab",
+      "activity_type": "socialize",
+      "place_allowed": ["hall", "workshop"],
+      "slot_allowed": ["evening"],
+      "participants": {"min": 2, "max": 6, "roles": ["self", "peer", "peer2"]},
+      "preconditions": {
+        "skill": [{"who": "self", "skill_id": "art", "op": ">=", "val": 1}],
+        "open_slot": true, "place_capacity": true
+      },
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {
+          "skill": [{"target": "self", "skill_id": "art", "delta_levels": 1, "emit": ["SKILL_OUTPUT"]}],
+          "need": [{"who": "self", "dim": "leisure", "delta": 6}, {"who": "self", "dim": "esteem", "delta": 4}],
+          "relation": [{"from": "peer", "to": "self", "dim": "affinity", "delta": 5}]
+        }
+      },
+      "outputs": {"resource_intents": [], "memory": {"kind": "observation", "importance_rule": "rule"}, "tags": ["creative"]},
+      "llm_slots": {"plan_text": true, "dialogue": true, "narrative": true, "soft_judgment": {"dimension": "creative_quality", "envelope_from": "D+R"}},
+      "cost_class": "T2",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "SKILL_OUTPUT", "NEED_UPDATE", "RELATION_CHANGE", "TAG_EMITTED"]
+    },
+    {
+      "template_id": "savings",
+      "census_class": "E5_saving_money",
+      "activity_type": "trade",
+      "place_allowed": ["bank"],
+      "slot_allowed": ["morning", "afternoon"],
+      "participants": {"min": 1, "max": 1, "roles": ["self"]},
+      "preconditions": {
+        "resource": [{"who": "self", "kind": "cash", "op": ">=", "val": 100}],
+        "open_slot": true, "place_capacity": true
+      },
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {
+          "money": [{"kind": "deposit", "from": "self", "to": "BANK", "amount_mu": 100, "reason": "savings", "event": "DEPOSIT"}]
+        }
+      },
+      "outputs": {"resource_intents": ["DEPOSIT"], "memory": {"kind": "observation", "importance_rule": "rule"}, "tags": []},
+      "llm_slots": {"plan_text": false, "dialogue": false, "narrative": false, "soft_judgment": null},
+      "cost_class": "T0",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "DEPOSIT"]
+    },
+    {
+      "template_id": "whisper",
+      "census_class": "E6_whispered_comm",
+      "activity_type": "socialize",
+      "place_allowed": ["cafe", "community_center"],
+      "slot_allowed": ["evening", "night"],
+      "participants": {"min": 2, "max": 2, "roles": ["self", "confidant"]},
+      "preconditions": {
+        "relation": [{"between": ["self", "confidant"], "dim": "trust", "op": ">=", "val": 20}],
+        "open_slot": true, "place_capacity": true
+      },
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {
+          "relation": [{"from": "confidant", "to": "self", "dim": "trust", "delta": 5}]
+        }
+      },
+      "outputs": {"resource_intents": [], "memory": {"kind": "chat", "importance_rule": "rule"}, "tags": ["secret"]},
+      "llm_slots": {"plan_text": false, "dialogue": true, "narrative": true, "soft_judgment": {"dimension": "secret_trust", "envelope_from": "D+R"}},
+      "cost_class": "T1",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "MSG_DM", "RELATION_CHANGE"]
+    },
+    {
+      "template_id": "burnout_event",
+      "census_class": "E7_emotion_burnout",
+      "activity_type": "rest",
+      "place_allowed": ["residence"],
+      "slot_allowed": ["morning", "afternoon", "evening", "night"],
+      "participants": {"min": 1, "max": 1, "roles": ["self"]},
+      "preconditions": {
+        "need": [{"who": "self", "dim": "energy", "op": "<=", "val": 20}],
+        "open_slot": true, "place_capacity": true
+      },
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {
+          "state": [{"who": "self", "to": "exhausted", "cause": "burnout"}]
+        }
+      },
+      "outputs": {"resource_intents": [], "memory": {"kind": "observation", "importance_rule": "rule"}, "tags": []},
+      "llm_slots": {"plan_text": false, "dialogue": false, "narrative": true, "soft_judgment": null},
+      "cost_class": "T0",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "STATE_CHANGE", "NEED_UPDATE"]
+    },
+    {
+      "template_id": "contest",
+      "census_class": "E8_diff_scoring",
+      "activity_type": "leisure",
+      "place_allowed": ["hall", "plaza"],
+      "slot_allowed": ["evening"],
+      "participants": {"min": 2, "max": 8, "roles": ["self", "rival"]},
+      "preconditions": {
+        "skill": [{"who": "self", "skill_id": "*", "op": ">=", "val": 1}],
+        "open_slot": true, "place_capacity": true
+      },
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {},
+        "contest": {"enabled": true, "rule_ref": "score", "attr": "skill:*", "emit": ["SCORE_POSTED", "RANKING_EMITTED"]}
+      },
+      "outputs": {"resource_intents": [], "memory": {"kind": "observation", "importance_rule": "rule"}, "tags": ["contest"]},
+      "llm_slots": {"plan_text": true, "dialogue": false, "narrative": true, "soft_judgment": {"dimension": "qualitative_review", "envelope_from": "D+R"}},
+      "cost_class": "T2",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "SCORE_POSTED", "RANKING_EMITTED"]
+    },
+    {
+      "template_id": "scarce_buy",
+      "census_class": "E9_scarcity_buy",
+      "activity_type": "trade",
+      "place_allowed": ["market"],
+      "slot_allowed": ["afternoon"],
+      "participants": {"min": 1, "max": 8, "roles": ["self"]},
+      "preconditions": {
+        "resource": [{"who": "self", "kind": "cash", "op": ">=", "val": 100}],
+        "open_slot": true, "place_capacity": true
+      },
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {
+          "money": [{"kind": "buy", "from": "self", "to": "MARKET", "amount_mu": 100, "reason": "scarce_buy"}]
+        }
+      },
+      "outputs": {"resource_intents": ["MARKET_TRADE"], "memory": {"kind": "observation", "importance_rule": "rule"}, "tags": ["scarce"]},
+      "llm_slots": {"plan_text": false, "dialogue": false, "narrative": false, "soft_judgment": null},
+      "cost_class": "T0",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "MARKET_TRADE"]
+    },
+    {
+      "template_id": "skill_practice",
+      "census_class": "E10_skill_practice",
+      "activity_type": "learn",
+      "place_allowed": ["school", "library", "farm", "workshop"],
+      "slot_allowed": ["morning", "afternoon"],
+      "participants": {"min": 1, "max": 1, "roles": ["self"]},
+      "preconditions": {"open_slot": true, "place_capacity": true},
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {
+          "skill": [{"target": "self", "skill_id": "*", "delta_levels": 1, "emit": ["SKILL_PRACTICE", "SKILL_LEVEL_UP"]}],
+          "need": [{"who": "self", "dim": "mastery", "delta": 6}]
+        }
+      },
+      "outputs": {"resource_intents": [], "memory": {"kind": "observation", "importance_rule": "rule"}, "tags": ["study"]},
+      "llm_slots": {"plan_text": false, "dialogue": false, "narrative": false, "soft_judgment": null},
+      "cost_class": "T0",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "SKILL_PRACTICE", "SKILL_LEVEL_UP", "NEED_UPDATE"]
+    },
+    {
+      "template_id": "polite_reject",
+      "census_class": "E11_polite_rejection",
+      "activity_type": "socialize",
+      "place_allowed": ["plaza", "cafe", "market"],
+      "slot_allowed": ["morning", "afternoon", "evening"],
+      "participants": {"min": 2, "max": 2, "roles": ["offerer", "responder"]},
+      "preconditions": {"open_slot": true, "place_capacity": true},
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {}
+      },
+      "outputs": {"resource_intents": [], "memory": {"kind": "chat", "importance_rule": "rule"}, "tags": []},
+      "llm_slots": {"plan_text": false, "dialogue": true, "narrative": true, "soft_judgment": null},
+      "cost_class": "T0",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "OFFER_REJECTED"]
+    },
+    {
+      "template_id": "job_choice",
+      "census_class": "E12_passion_vs_salary",
+      "activity_type": "civic",
+      "place_allowed": ["town_hall", "office"],
+      "slot_allowed": ["morning", "afternoon"],
+      "participants": {"min": 1, "max": 1, "roles": ["self"]},
+      "preconditions": {"open_slot": true, "place_capacity": true},
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {
+          "role": [{"who": "self", "cause": "preference"}]
+        }
+      },
+      "outputs": {"resource_intents": [], "memory": {"kind": "plan", "importance_rule": "rule"}, "tags": ["career"]},
+      "llm_slots": {"plan_text": true, "dialogue": false, "narrative": true, "soft_judgment": {"dimension": "job_preference", "envelope_from": "D+R"}},
+      "cost_class": "T2",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "ROLE_CHANGE"]
+    },
+    {
+      "template_id": "group_proposal",
+      "census_class": "E13_group_proposal",
+      "activity_type": "civic",
+      "place_allowed": ["town_hall", "plaza"],
+      "slot_allowed": ["morning", "afternoon", "evening"],
+      "participants": {"min": 5, "max": 12, "roles": ["proposer", "member"]},
+      "preconditions": {"open_slot": true, "place_capacity": true},
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {}
+      },
+      "outputs": {"resource_intents": [], "memory": {"kind": "plan", "importance_rule": "rule"}, "tags": ["governance"]},
+      "llm_slots": {"plan_text": true, "dialogue": true, "narrative": true, "soft_judgment": null},
+      "cost_class": "T2",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "NORM_PROPOSED", "NORM_ADOPTED"]
+    },
+    {
+      "template_id": "academic_collab",
+      "census_class": "E14_academic_collab",
+      "activity_type": "learn",
+      "place_allowed": ["school", "library"],
+      "slot_allowed": ["morning", "afternoon"],
+      "participants": {"min": 2, "max": 5, "roles": ["self", "peer"]},
+      "preconditions": {
+        "skill": [{"who": "self", "skill_id": "*", "op": ">=", "val": 1}],
+        "open_slot": true, "place_capacity": true
+      },
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {
+          "skill": [{"target": "self", "skill_id": "*", "delta_levels": 1, "emit": ["SKILL_LEVEL_UP", "SKILL_OUTPUT"]}],
+          "need": [{"who": "self", "dim": "mastery", "delta": 6}],
+          "relation": [{"from": "peer", "to": "self", "dim": "respect", "delta": 4}]
+        }
+      },
+      "outputs": {"resource_intents": [], "memory": {"kind": "observation", "importance_rule": "rule"}, "tags": ["study"]},
+      "llm_slots": {"plan_text": true, "dialogue": true, "narrative": true, "soft_judgment": {"dimension": "academic_quality", "envelope_from": "D+R"}},
+      "cost_class": "T1",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "SKILL_LEVEL_UP", "SKILL_OUTPUT", "NEED_UPDATE", "RELATION_CHANGE"]
+    },
+    {
+      "template_id": "counter_propose",
+      "census_class": "E15_counter_propose",
+      "activity_type": "trade",
+      "place_allowed": ["market", "cafe"],
+      "slot_allowed": ["morning", "afternoon", "evening"],
+      "participants": {"min": 2, "max": 2, "roles": ["buyer", "seller"]},
+      "preconditions": {"open_slot": true, "place_capacity": true},
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {}
+      },
+      "outputs": {"resource_intents": [], "memory": {"kind": "chat", "importance_rule": "rule"}, "tags": ["commerce"]},
+      "llm_slots": {"plan_text": false, "dialogue": true, "narrative": true, "soft_judgment": null},
+      "cost_class": "T1",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "OFFER_COUNTERED"]
+    },
+    {
+      "template_id": "select_location",
+      "census_class": "E16_select_location",
+      "activity_type": "socialize",
+      "place_allowed": ["plaza", "cafe", "park"],
+      "slot_allowed": ["morning", "afternoon", "evening", "night"],
+      "participants": {"min": 1, "max": 4, "roles": ["self"]},
+      "preconditions": {"open_slot": true, "place_capacity": true},
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {}
+      },
+      "outputs": {"resource_intents": [], "memory": {"kind": "plan", "importance_rule": "rule"}, "tags": []},
+      "llm_slots": {"plan_text": false, "dialogue": false, "narrative": false, "soft_judgment": null},
+      "cost_class": "T0",
+      "event_emit": ["PLACE_MOVE", "PLACE_ARRIVED", "ACTIVITY_STARTED", "ACTIVITY_COMPLETED"]
+    },
+    {
+      "template_id": "power_conflict",
+      "census_class": "E17_power_conflict",
+      "activity_type": "civic",
+      "place_allowed": ["town_hall", "market"],
+      "slot_allowed": ["afternoon", "evening"],
+      "participants": {"min": 2, "max": 6, "roles": ["challenger", "defender"]},
+      "preconditions": {
+        "resource": [{"who": "challenger", "kind": "cash", "op": ">=", "val": 100}],
+        "open_slot": true, "place_capacity": true
+      },
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {
+          "relation": [{"from": "defender", "to": "challenger", "dim": "affinity", "delta": -6}]
+        },
+        "contest": {"enabled": true, "rule_ref": "power", "attr": "power", "emit": ["CONFLICT_STARTED", "CONFLICT_RESOLVED"]}
+      },
+      "outputs": {"resource_intents": [], "memory": {"kind": "observation", "importance_rule": "rule"}, "tags": ["conflict"]},
+      "llm_slots": {"plan_text": true, "dialogue": true, "narrative": true, "soft_judgment": null},
+      "cost_class": "T2",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "CONFLICT_STARTED", "CONFLICT_RESOLVED", "RELATION_CHANGE"]
+    },
+    {
+      "template_id": "rel_accept",
+      "census_class": "E18_rel_acceptance",
+      "activity_type": "socialize",
+      "place_allowed": ["cafe", "plaza", "community_center"],
+      "slot_allowed": ["afternoon", "evening"],
+      "participants": {"min": 2, "max": 2, "roles": ["self", "friend"]},
+      "preconditions": {
+        "relation": [{"between": ["self", "friend"], "dim": "affinity", "op": ">=", "val": 20}],
+        "open_slot": true, "place_capacity": true
+      },
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {
+          "relation": [{"from": "self", "to": "friend", "dim": "affinity", "delta": 8}]
+        }
+      },
+      "outputs": {"resource_intents": [], "memory": {"kind": "observation", "importance_rule": "rule"}, "tags": ["friendship"]},
+      "llm_slots": {"plan_text": false, "dialogue": true, "narrative": true, "soft_judgment": {"dimension": "friendship_label", "envelope_from": "D+R"}},
+      "cost_class": "T1",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "RELATION_CHANGE"]
+    },
+    {
+      "template_id": "ice_break",
+      "census_class": "E19_ice_breaking",
+      "activity_type": "socialize",
+      "place_allowed": ["plaza", "cafe", "community_center"],
+      "slot_allowed": ["morning", "afternoon", "evening"],
+      "participants": {"min": 2, "max": 2, "roles": ["self", "stranger"]},
+      "preconditions": {"open_slot": true, "place_capacity": true},
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {
+          "relation": [{"from": "self", "to": "stranger", "dim": "affinity", "delta": 3}]
+        }
+      },
+      "outputs": {"resource_intents": [], "memory": {"kind": "chat", "importance_rule": "rule"}, "tags": ["greeting"]},
+      "llm_slots": {"plan_text": false, "dialogue": true, "narrative": true, "soft_judgment": null},
+      "cost_class": "T1",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "MSG_DM", "RELATION_ENCOUNTER", "RELATION_CHANGE"]
+    },
+    {
+      "template_id": "rel_maintain",
+      "census_class": "E20_rel_maintenance",
+      "activity_type": "socialize",
+      "place_allowed": ["cafe", "plaza", "park"],
+      "slot_allowed": ["afternoon", "evening"],
+      "participants": {"min": 2, "max": 2, "roles": ["self", "friend"]},
+      "preconditions": {
+        "relation": [{"between": ["self", "friend"], "dim": "affinity", "op": ">=", "val": 20}],
+        "open_slot": true, "place_capacity": true
+      },
+      "deterministic_settlement": {
+        "hook": "L3.settle_activities",
+        "effects": {
+          "relation": [{"from": "self", "to": "friend", "dim": "affinity", "delta": 4}]
+        }
+      },
+      "outputs": {"resource_intents": [], "memory": {"kind": "chat", "importance_rule": "rule"}, "tags": ["friendship"]},
+      "llm_slots": {"plan_text": false, "dialogue": true, "narrative": true, "soft_judgment": null},
+      "cost_class": "T0",
+      "event_emit": ["ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "RELATION_CHANGE"]
+    }
+  ],
+  "hard_to_trigger_scripts": {
+    "_comment": "难触发项（E4/E8/E12/E13/E17）在「单小镇+周尺度」下自发概率低，供 P1 用确定性脚本显式植入（08 §3.5 IF-5 inject_seed_event / SCHEDULE_PLANNED）。脚本不引入 LLM 判定，仅注入触发条件。",
+    "E4_creative_collab": {
+      "min_form": "SEED_EVENT{kind:'call_for_artists', place:'hall', slot:'evening'} + 至少 2 名自带 art 技能的 Agent 计划 creative_collab 活动",
+      "inject": {"event": "SEED_EVENT", "payload": {"kind": "call_for_artists", "place": "hall", "slot": "evening"}},
+      "for": "T10 沙盒观测脚本"
+    },
+    "E8_diff_scoring": {
+      "min_form": "SEED_EVENT{kind:'contest_announced', contest_id:...} + 系统在 hall 排一场 contest 活动（≥2 名参赛者）",
+      "inject": {"event": "SEED_EVENT", "payload": {"kind": "contest_announced", "place": "hall", "slot": "evening"}},
+      "for": "T10 沙盒观测脚本"
+    },
+    "E12_passion_vs_salary": {
+      "min_form": "构造岗位分化：对某 Agent 同时给出高薪岗（civic/office）与价值匹配岗（artist/hall），触发 job_choice 模板",
+      "inject": {"event": "SCHEDULE_PLANNED", "payload": {"slot": {"template_id": "job_choice", "place": "town_hall"}}},
+      "for": "T10 沙盒观测脚本"
+    },
+    "E13_group_proposal": {
+      "min_form": "注入公共议题 SEED_EVENT{kind:'public_issue'} + 召集 ≥5 名 Agent 于 town_hall（触发 group_proposal / NORM_* 阈值）",
+      "inject": {"event": "SEED_EVENT", "payload": {"kind": "public_issue", "place": "town_hall"}},
+      "for": "T10 沙盒观测脚本"
+    },
+    "E17_power_conflict": {
+      "min_form": "制造稀缺争夺：对同一稀缺资源（如 market 某商品）注入两个竞争需求，安排 power_conflict 活动",
+      "inject": {"event": "SEED_EVENT", "payload": {"kind": "resource_contest", "place": "market"}},
+      "for": "T10 沙盒观测脚本"
+    }
+  }
+}

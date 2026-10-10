@@ -1,0 +1,166 @@
+{
+  "task": "T103",
+  "seed": 42,
+  "n_agents": 3,
+  "rounds": 10,
+  "endpoint": "(masked)",
+  "model": "DeepSeek-Flash",
+  "mock_run": {
+    "provider": "MockProvider",
+    "events": 547,
+    "dialogue_llm_call": {
+      "count": 6,
+      "thinking_false": 6,
+      "tiers": {
+        "T1": 6
+      },
+      "samples": [
+        "sha256:7533cbfcb7640cdb90df7c8a89985c4f64e25344106d25fa94d3902386d1f57c",
+        "sha256:2f10cd64f6ed8f69cb21737395980a2d092c86f083e56f5326b2fe3cea3ea410"
+      ]
+    },
+    "msg_counts": {
+      "MSG_DM": 5,
+      "MSG_PUBLIC": 1,
+      "MSG_GROUP": 0
+    },
+    "group_created": 1,
+    "system_error": 0,
+    "intent_rejected": 0,
+    "llm_calls_total": 16,
+    "cost_by_purpose": {
+      "judge": {
+        "n": 3,
+        "tin": 24,
+        "tout": 24
+      },
+      "plan": {
+        "n": 3,
+        "tin": 24,
+        "tout": 24
+      },
+      "dialogue": {
+        "n": 6,
+        "tin": 48,
+        "tout": 48
+      },
+      "importance": {
+        "n": 4,
+        "tin": 16,
+        "tout": 16
+      }
+    },
+    "replay": {
+      "hash_1": "sha256:57dd2199e340960723b74304a72141db91182c28b3705b60d5b5f1645724917b",
+      "hash_2": "sha256:57dd2199e340960723b74304a72141db91182c28b3705b60d5b5f1645724917b",
+      "parity": true,
+      "provider_calls_before": 14,
+      "provider_calls_after": 14,
+      "llm_calls_during_replay": 0,
+      "client_llm_calls": 14
+    },
+    "engine_version": "sha256:49c057e87aa8d7a633777ff2bb808cc2813eea3ab6a86342b40c0287f93a4c07"
+  },
+  "real_run": {
+    "provider": "OpenAICompatProvider",
+    "events": 547,
+    "dialogue_llm_call": {
+      "count": 6,
+      "thinking_false": 6,
+      "tiers": {
+        "T1": 6
+      },
+      "samples": [
+        "sha256:7533cbfcb7640cdb90df7c8a89985c4f64e25344106d25fa94d3902386d1f57c",
+        "sha256:2f10cd64f6ed8f69cb21737395980a2d092c86f083e56f5326b2fe3cea3ea410"
+      ]
+    },
+    "msg_counts": {
+      "MSG_DM": 5,
+      "MSG_PUBLIC": 1,
+      "MSG_GROUP": 0
+    },
+    "group_created": 1,
+    "system_error": 0,
+    "intent_rejected": 0,
+    "llm_calls_total": 16,
+    "cost_by_purpose": {
+      "judge": {
+        "n": 3,
+        "tin": 464,
+        "tout": 1174
+      },
+      "plan": {
+        "n": 3,
+        "tin": 268,
+        "tout": 86
+      },
+      "dialogue": {
+        "n": 6,
+        "tin": 657,
+        "tout": 136
+      },
+      "importance": {
+        "n": 4,
+        "tin": 34,
+        "tout": 729
+      }
+    },
+    "replay": {
+      "hash_1": "sha256:1e3730073cc1daf810cb4bdefc6936bd7ac1d28afaebc1dcc931f20eb193fdca",
+      "hash_2": "sha256:1e3730073cc1daf810cb4bdefc6936bd7ac1d28afaebc1dcc931f20eb193fdca",
+      "parity": true,
+      "provider_calls_before": 14,
+      "provider_calls_after": 14,
+      "llm_calls_during_replay": 0,
+      "client_llm_calls": 14
+    },
+    "engine_version": "sha256:49c057e87aa8d7a633777ff2bb808cc2813eea3ab6a86342b40c0287f93a4c07"
+  },
+  "body_divergence": {
+    "paired_by": "record_order",
+    "mock_msg_len": 6,
+    "real_msg_len": 6,
+    "n_compared": 6,
+    "n_differ": 6,
+    "n_identical": 0,
+    "examples": [
+      {
+        "channel": "MSG_PUBLIC",
+        "msg_id": "P-0-0",
+        "mock": "mock::0f52ea028d55414f",
+        "real": "（刨子推过木料，卷起薄薄一层刨花）慢工出细活，急不得。"
+      },
+      {
+        "channel": "MSG_DM",
+        "msg_id": "D-3-0",
+        "mock": "mock::07155e018c8415d4",
+        "real": "（摆摆手）不了，地里的活还等着我，改天再说吧。"
+      },
+      {
+        "channel": "MSG_DM",
+        "msg_id": "D-3-0",
+        "mock": "mock::cefec7e03f831b85",
+        "real": "（低头刨着木料）这料子不多了，得省着用。"
+      }
+    ],
+    "verdict": "DIVERGED"
+  },
+  "real_dialogue_samples": [
+    {
+      "msg_id": "D-3-0",
+      "channel": "MSG_DM",
+      "body": "（摆摆手）不了，地里的活还等着我，改天再说吧。"
+    },
+    {
+      "msg_id": "D-3-0",
+      "channel": "MSG_DM",
+      "body": "（低头刨着木料）这料子不多了，得省着用。"
+    },
+    {
+      "msg_id": "D-6-0",
+      "channel": "MSG_DM",
+      "body": "（把一袋新米往你手里塞）拿着，自家地里出的，不图啥，就图个踏实。"
+    }
+  ]
+}

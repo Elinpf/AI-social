@@ -1,0 +1,29 @@
+# T107 校验（“已生效”以截图 + 运行期绑定为准）
+
+## 1. 运行期绑定证明（无头浏览器 still 单帧，round=12）
+- `window.HITTAssets.meta('place.residence').file` = `hand/buildings128/residence.png`
+- `window.HITTAssets.bases['place.town_hall'].resource.url` = `http://127.0.0.1:8848/assets/hand/buildings128/town_hall.png`
+- 控制台对 `hand/` 资源的 404 计数 = 0
+→ 结论：渲染路径确实加载的是 hand 资产（非 generated）。
+
+## 2. manifest 校验
+- 指向 `generated/buildings|characters` 的条目 = []（空）
+- 指向 `hand/` 的条目 = 25 / 25（place 17 + char 8）
+- place id 数 = 17（未新增；变体走顶层 `placeVariants`，渲染层按 place id 哈希选）
+- 每条 place/char：file/size/[anchor,frames 保留]/sha256 已按 hand 文件重算
+
+## 3. 回归门禁
+- `node frontend/tools/smoke_test.js` → PASS（ground<place<agent 等断言保持）
+- `python -m pytest -q` → 266 passed
+- `.importlinter`：未新增跨包 import（只改展示层与本目录脚本）
+- `config/topology.json` travel_ticks、任何 engine config：未改动
+
+## 4. 产物
+- 截图：t107_render_still.png（整页 still）、t107_render_canvas.png（画布）
+- 资源对照：t107_hand_vs_generated.png（左 hand = 现渲染 / 右 generated = 旧）
+- manifest：assets_manifest_hand.json（当前）、t107_manifest_diff.txt（diff+sha256）
+
+## 5. 后续修订（可见性根因修复）
+- 发现：`_libPlace` 的**变体纹理**误把 `BaseTexture` 直接传入 `new PIXI.Sprite(...)` → Pixi 抛错 → `town.load()` 在第一个场所(residence)中止 → **placeLayer=0（0 栋建筑）**，全图退化为"纯日志回放"（这正是"看不到建筑/一片空"的真正根因）。
+- 修复：变体先 `new PIXI.Texture(bt)` 再入 Sprite。修复后 `placeLayer.children.length = 17`，`useLib=true`。
+- 证据：`t107_town_overview.png`（修复后默认整页视图：约 12 栋手绘建筑 + 约 5 角色，小镇全景；逐排瓦/木纹/立柱/钟楼/诊所十字可见）。

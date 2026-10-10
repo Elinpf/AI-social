@@ -1,0 +1,12 @@
+{
+  "segment": "econ_off",
+  "economy_enabled": false,
+  "lifecycle_enabled": true,
+  "events": 122579,
+  "PRODUCE": 321,
+  "TRANSFER": 0,
+  "conservation_ok": true,
+  "chain_ok": true,
+  "final_state_hash": "sha256:41c9052f228cda789ede36de7bf9ffaaa13000a2c79e7661f82899847d75cf6b",
+  "note": "production/social 无独立开关，本段production仍在（如实）"
+}

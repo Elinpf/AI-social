@@ -1,0 +1,6 @@
+[life] n_agents=20 rounds=84 events=148869 seconds=219.5309 log_bytes=63086081
+  unknown_event_types=[]
+  chain_ok=True replay_parity=True first_run_equals_replay=True
+  conservation_ok=True final_state_hash=sha256:9a45be5e95f664c78c3c0fa63609da8107629c25f1dc78fc12d41f1d7757cd66
+  log written: ../v1.2/evidence/run_n20_seed42_week1.jsonl
+RUN_DONE exit=0

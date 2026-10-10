@@ -1,0 +1,23 @@
+{
+  "segment": "C_nosocial",
+  "production_enabled": true,
+  "social_enabled": false,
+  "provider": "mock(rule-based)",
+  "events": 124551,
+  "seconds": 274.2,
+  "chain_ok": true,
+  "replay_parity": true,
+  "seals_ok": true,
+  "conservation_ok": true,
+  "SYSTEM_ERROR": 0,
+  "state_hash": "sha256:2de59edea81795a77123d98769d25d2cb15cf5f2b2c39b34d69b701a59ee81b2",
+  "PRODUCE": 321,
+  "CONSUME": 165,
+  "MSG_DM": 0,
+  "MSG_PUBLIC": 0,
+  "MSG_GROUP": 0,
+  "GROUP_CREATED": 0,
+  "dialogue_calls": 0,
+  "LLM_CALL_total": 3935,
+  "sha256": "sha256:4207cbe7b9e5898c3eb2a6f8b21c7426cb3a8bbccee8ad5bdb4cd8498a384aee"
+}

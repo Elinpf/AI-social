@@ -1,0 +1,28 @@
+=== T104 four gates Sat Oct 10 09:01:48 PM CST 2026 ===
+
+## pytest -q
+........................................................................ [ 51%]
+........................................................................ [ 77%]
+.............................................................            [100%]
+277 passed in 36.43s
+
+## lint-imports
+frontend 只读：不得 import 内核/life/freeze/orchestration/obs/narrative KEPT (3 ignored imports)
+
+Contracts: 8 kept, 0 broken.
+
+## obs gate G1-G7
+[PASS] metrics_bitwise_equal
+[PASS] census_bitwise_equal
+[PASS] llm_calls_zero
+[PASS] llm_judged_metric_count_zero
+[PASS] money_conservation
+[PASS] schema_conformance
+[PASS] distribution_regression
+GATE PASS
+
+## make lexicon-gate
+  v1           violation=50   mention=7    [历史]
+  v1.1         violation=0    mention=47  
+  v1.2         violation=0    mention=1   
+========================================================================

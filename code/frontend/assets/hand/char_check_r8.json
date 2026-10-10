@@ -1,0 +1,59 @@
+{
+  "threshold_iou": 0.95,
+  "pairs": 28,
+  "axes": {
+    "villager_red": {
+      "hair": "short",
+      "body": "normal",
+      "cloth": "tunic",
+      "acc": "hat"
+    },
+    "villager_green": {
+      "hair": "long",
+      "body": "tall",
+      "cloth": "robe",
+      "acc": "none"
+    },
+    "villager_blue": {
+      "hair": "pony",
+      "body": "normal",
+      "cloth": "overalls",
+      "acc": "glasses"
+    },
+    "villager_yellow": {
+      "hair": "bald",
+      "body": "stout",
+      "cloth": "apron",
+      "acc": "tool"
+    },
+    "villager_purple": {
+      "hair": "braid",
+      "body": "short",
+      "cloth": "robe",
+      "acc": "scarf"
+    },
+    "villager_teal": {
+      "hair": "bun",
+      "body": "stout",
+      "cloth": "coat",
+      "acc": "backpack"
+    },
+    "villager_orange": {
+      "hair": "mohawk",
+      "body": "tall",
+      "cloth": "overalls",
+      "acc": "tool"
+    },
+    "villager_slate": {
+      "hair": "hat",
+      "body": "normal",
+      "cloth": "coat",
+      "acc": "tool"
+    }
+  },
+  "failed_pairs": [],
+  "gate_pass": {
+    "pass": true,
+    "fail": []
+  }
+}

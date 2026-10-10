@@ -1,0 +1,2287 @@
+{
+  "schema": "hitt.assets/1",
+  "generated_by": "frontend/tools/gen_assets_pixel.py",
+  "set": "all",
+  "grid": 32,
+  "world": {
+    "width": 1440,
+    "height": 1080
+  },
+  "palette": {
+    "name": "Sweetie 16 (+ same-hue ramp)",
+    "base": [
+      "#1a1c2c",
+      "#5d275d",
+      "#b13e53",
+      "#ef7d57",
+      "#ffcd75",
+      "#a7f070",
+      "#38b764",
+      "#257179",
+      "#29366f",
+      "#3b5dc9",
+      "#41a6f6",
+      "#73eff7",
+      "#f4f4f4",
+      "#94b0c2",
+      "#566c86",
+      "#333c57"
+    ],
+    "source": "https://lospec.com/palette-list/sweetie-16",
+    "ramp": "same-hue brightness x0.5-1.2; no new hues; total <=48 effective colors"
+  },
+  "anchorConvention": "bottom-center (x=size.w/2, y=anchorY); NO baked shadow",
+  "naming": "<type>.<name>;  type in {tile,road,place,char,prop,icon}",
+  "iconAtlas": {
+    "atlas": {
+      "url": "assets/generated/icons_atlas.png",
+      "size": 32,
+      "cols": 12,
+      "index": {
+        "mint": 0,
+        "coin-init": 1,
+        "coin-arrow": 2,
+        "shop": 3,
+        "bank-in": 4,
+        "bank-out": 5,
+        "loan": 6,
+        "loan-repay": 7,
+        "percent": 8,
+        "loan-broken": 9,
+        "tax": 10,
+        "gift-ubi": 11,
+        "gavel": 12,
+        "revive-fee": 13,
+        "drop": 14,
+        "burn": 15,
+        "world": 16,
+        "born": 17,
+        "metabolism": 18,
+        "state": 19,
+        "skull": 20,
+        "revive": 21,
+        "alert": 22,
+        "speech-public": 23,
+        "speech-dm": 24,
+        "speech-group": 25,
+        "relation": 26,
+        "meet": 27,
+        "norm-new": 28,
+        "norm-ok": 29,
+        "norm-bad": 30,
+        "offer": 31,
+        "offer-ok": 32,
+        "offer-no": 33,
+        "offer-alt": 34,
+        "offer-exp": 35,
+        "clash": 36,
+        "clash-ok": 37,
+        "group": 38,
+        "role": 39,
+        "tag": 40,
+        "walk": 41,
+        "pin": 42,
+        "calendar": 43,
+        "calendar-edit": 44,
+        "act-play": 45,
+        "act-done": 46,
+        "act-stop": 47,
+        "need": 48,
+        "goal": 49,
+        "goal-bar": 50,
+        "goal-ok": 51,
+        "goal-x": 52,
+        "mem": 53,
+        "mem-search": 54,
+        "reflect": 55,
+        "eye": 56,
+        "seed": 57,
+        "skill": 58,
+        "skill-up": 59,
+        "craft": 60,
+        "trophy": 61,
+        "judge": 62,
+        "book": 63,
+        "cpu": 64,
+        "clock": 65,
+        "seal": 66,
+        "reject": 67,
+        "error": 68
+      },
+      "sha256": "bacc870eab8ec0fb8a7f772fc10218257c358593307a47cc7f661555dec4805a"
+    },
+    "atlas16": {
+      "url": "assets/generated/icons_atlas_16.png",
+      "size": 16,
+      "cols": 12,
+      "index": {
+        "mint": 0,
+        "coin-init": 1,
+        "coin-arrow": 2,
+        "shop": 3,
+        "bank-in": 4,
+        "bank-out": 5,
+        "loan": 6,
+        "loan-repay": 7,
+        "percent": 8,
+        "loan-broken": 9,
+        "tax": 10,
+        "gift-ubi": 11,
+        "gavel": 12,
+        "revive-fee": 13,
+        "drop": 14,
+        "burn": 15,
+        "world": 16,
+        "born": 17,
+        "metabolism": 18,
+        "state": 19,
+        "skull": 20,
+        "revive": 21,
+        "alert": 22,
+        "speech-public": 23,
+        "speech-dm": 24,
+        "speech-group": 25,
+        "relation": 26,
+        "meet": 27,
+        "norm-new": 28,
+        "norm-ok": 29,
+        "norm-bad": 30,
+        "offer": 31,
+        "offer-ok": 32,
+        "offer-no": 33,
+        "offer-alt": 34,
+        "offer-exp": 35,
+        "clash": 36,
+        "clash-ok": 37,
+        "group": 38,
+        "role": 39,
+        "tag": 40,
+        "walk": 41,
+        "pin": 42,
+        "calendar": 43,
+        "calendar-edit": 44,
+        "act-play": 45,
+        "act-done": 46,
+        "act-stop": 47,
+        "need": 48,
+        "goal": 49,
+        "goal-bar": 50,
+        "goal-ok": 51,
+        "goal-x": 52,
+        "mem": 53,
+        "mem-search": 54,
+        "reflect": 55,
+        "eye": 56,
+        "seed": 57,
+        "skill": 58,
+        "skill-up": 59,
+        "craft": 60,
+        "trophy": 61,
+        "judge": 62,
+        "book": 63,
+        "cpu": 64,
+        "clock": 65,
+        "seal": 66,
+        "reject": 67,
+        "error": 68
+      },
+      "sha256": "8577bc495b7aa7ca30f5771ed9970c0cdde10c94fa921e17b1e9dc8f61459701"
+    },
+    "atlas_white": {
+      "url": "assets/generated/icons_atlas_white.png",
+      "size": 32,
+      "cols": 12,
+      "index": {
+        "mint": 0,
+        "coin-init": 1,
+        "coin-arrow": 2,
+        "shop": 3,
+        "bank-in": 4,
+        "bank-out": 5,
+        "loan": 6,
+        "loan-repay": 7,
+        "percent": 8,
+        "loan-broken": 9,
+        "tax": 10,
+        "gift-ubi": 11,
+        "gavel": 12,
+        "revive-fee": 13,
+        "drop": 14,
+        "burn": 15,
+        "world": 16,
+        "born": 17,
+        "metabolism": 18,
+        "state": 19,
+        "skull": 20,
+        "revive": 21,
+        "alert": 22,
+        "speech-public": 23,
+        "speech-dm": 24,
+        "speech-group": 25,
+        "relation": 26,
+        "meet": 27,
+        "norm-new": 28,
+        "norm-ok": 29,
+        "norm-bad": 30,
+        "offer": 31,
+        "offer-ok": 32,
+        "offer-no": 33,
+        "offer-alt": 34,
+        "offer-exp": 35,
+        "clash": 36,
+        "clash-ok": 37,
+        "group": 38,
+        "role": 39,
+        "tag": 40,
+        "walk": 41,
+        "pin": 42,
+        "calendar": 43,
+        "calendar-edit": 44,
+        "act-play": 45,
+        "act-done": 46,
+        "act-stop": 47,
+        "need": 48,
+        "goal": 49,
+        "goal-bar": 50,
+        "goal-ok": 51,
+        "goal-x": 52,
+        "mem": 53,
+        "mem-search": 54,
+        "reflect": 55,
+        "eye": 56,
+        "seed": 57,
+        "skill": 58,
+        "skill-up": 59,
+        "craft": 60,
+        "trophy": 61,
+        "judge": 62,
+        "book": 63,
+        "cpu": 64,
+        "clock": 65,
+        "seal": 66,
+        "reject": 67,
+        "error": 68
+      },
+      "sha256": "39c9ded37460931cbf0342d603763a14cba503b47c43e595ac524ea589c8b221"
+    },
+    "atlas_white16": {
+      "url": "assets/generated/icons_atlas_white_16.png",
+      "size": 16,
+      "cols": 12,
+      "index": {
+        "mint": 0,
+        "coin-init": 1,
+        "coin-arrow": 2,
+        "shop": 3,
+        "bank-in": 4,
+        "bank-out": 5,
+        "loan": 6,
+        "loan-repay": 7,
+        "percent": 8,
+        "loan-broken": 9,
+        "tax": 10,
+        "gift-ubi": 11,
+        "gavel": 12,
+        "revive-fee": 13,
+        "drop": 14,
+        "burn": 15,
+        "world": 16,
+        "born": 17,
+        "metabolism": 18,
+        "state": 19,
+        "skull": 20,
+        "revive": 21,
+        "alert": 22,
+        "speech-public": 23,
+        "speech-dm": 24,
+        "speech-group": 25,
+        "relation": 26,
+        "meet": 27,
+        "norm-new": 28,
+        "norm-ok": 29,
+        "norm-bad": 30,
+        "offer": 31,
+        "offer-ok": 32,
+        "offer-no": 33,
+        "offer-alt": 34,
+        "offer-exp": 35,
+        "clash": 36,
+        "clash-ok": 37,
+        "group": 38,
+        "role": 39,
+        "tag": 40,
+        "walk": 41,
+        "pin": 42,
+        "calendar": 43,
+        "calendar-edit": 44,
+        "act-play": 45,
+        "act-done": 46,
+        "act-stop": 47,
+        "need": 48,
+        "goal": 49,
+        "goal-bar": 50,
+        "goal-ok": 51,
+        "goal-x": 52,
+        "mem": 53,
+        "mem-search": 54,
+        "reflect": 55,
+        "eye": 56,
+        "seed": 57,
+        "skill": 58,
+        "skill-up": 59,
+        "craft": 60,
+        "trophy": 61,
+        "judge": 62,
+        "book": 63,
+        "cpu": 64,
+        "clock": 65,
+        "seal": 66,
+        "reject": 67,
+        "error": 68
+      },
+      "sha256": "386872f03a459cb39e33d92c3e9899ccfd1fa4420bd087994ff5596d2ac5cf66"
+    }
+  },
+  "assets": [
+    {
+      "id": "tile.grass_1",
+      "type": "tile",
+      "file": "generated/tiles/grass_1.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "5e5d8cb4a96e9a1a46a54e5bc0c7f7f948defb391935a26c6657f1a0ea25889b"
+    },
+    {
+      "id": "tile.grass_2",
+      "type": "tile",
+      "file": "generated/tiles/grass_2.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "7ed1b64bd36fb120d243121346bfb7b38fed14c57bc8c73aacd47178aef8214c"
+    },
+    {
+      "id": "tile.grass_3",
+      "type": "tile",
+      "file": "generated/tiles/grass_3.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "a5a3ec940192a0720b714636b75d279851c56efd2519a18959eab195dd006657"
+    },
+    {
+      "id": "tile.water_1",
+      "type": "tile",
+      "file": "generated/tiles/water_1.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "0acb55d8031ee9ddd8fa5c27d186fcf35db333e74088ebe1116d63191574aed6"
+    },
+    {
+      "id": "tile.water_edge",
+      "type": "tile",
+      "file": "generated/tiles/water_edge.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "5d96f7813bed55b5dbc1b020e0147587f9627a6d8e3764dd8575a3a98fe453bd"
+    },
+    {
+      "id": "tile.sand_1",
+      "type": "tile",
+      "file": "generated/tiles/sand_1.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "7fc831b8ff75a7366eb16c2c291bbb72baea6ac54a2612c97b1995fd678f05ed"
+    },
+    {
+      "id": "tile.soil_1",
+      "type": "tile",
+      "file": "generated/tiles/soil_1.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "1caeced2c7a6e6c2f7092b7f4e48f787dd595c6a3c1f9f48fbca893eba9473ab"
+    },
+    {
+      "id": "tile.farm_row",
+      "type": "tile",
+      "file": "generated/tiles/farm_row.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "de67fd530863303f6cad1667fdfff46b1beedd89aa66e3eb420521a881b43993"
+    },
+    {
+      "id": "road.dirt_path",
+      "type": "road",
+      "file": "generated/roads/dirt_path.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "555c2a2ace16b2cc29f5079e1f6070331757566f17b73641f113ae51a7b2b009"
+    },
+    {
+      "id": "road.stone_street",
+      "type": "road",
+      "file": "generated/roads/stone_street.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "9a5ced5b6be442cdc100b343d9605ef902e9abbe89c8aa5beb31f1286652d954"
+    },
+    {
+      "id": "road.cobble",
+      "type": "road",
+      "file": "generated/roads/cobble.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "0433633375a69cbeb38ba35ec573988f702f67e9c29980e5a2e72e3c8dc9b038"
+    },
+    {
+      "id": "road.bridge",
+      "type": "road",
+      "file": "generated/roads/bridge.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "e6ccfbbcc252cfe2fb68eb4154bac9c3716c2a5f503ae7f19d937ad9bf3b1946"
+    },
+    {
+      "id": "place.residence",
+      "type": "building",
+      "file": "hand/buildings128/residence.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        120
+      ],
+      "category": "living",
+      "frames": 1,
+      "sha256": "352deed97644044df572629a873b098d6016ac0cc35a2053a3d6d41a1f642851"
+    },
+    {
+      "id": "place.farm",
+      "type": "building",
+      "file": "hand/buildings128/farm.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        120
+      ],
+      "category": "work_production",
+      "frames": 1,
+      "sha256": "327bfe96fdb0f833e00587b7b547928cebb0476ebd6f1dc8fb7ed2e016df1b9e"
+    },
+    {
+      "id": "place.workshop",
+      "type": "building",
+      "file": "hand/buildings128/workshop.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        120
+      ],
+      "category": "work_production",
+      "frames": 1,
+      "sha256": "81fedf490df606d56ac92abd742a8d2fed93b553db5dc9a09468e2e467aec40f"
+    },
+    {
+      "id": "place.kitchen",
+      "type": "building",
+      "file": "hand/buildings128/kitchen.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        120
+      ],
+      "category": "work_processing",
+      "frames": 1,
+      "sha256": "a8310db5480620bf9c5833c0988c1592903b1a3304432fc3069de1dcd17efc27"
+    },
+    {
+      "id": "place.clinic",
+      "type": "building",
+      "file": "hand/buildings128/clinic.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        120
+      ],
+      "category": "work_service",
+      "frames": 1,
+      "sha256": "476592afe1d58943af0c0dbfceab4e74dabf8a2551d04db23818459c7b1578fe"
+    },
+    {
+      "id": "place.school",
+      "type": "building",
+      "file": "hand/buildings128/school.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        120
+      ],
+      "category": "work_education",
+      "frames": 1,
+      "sha256": "046836abda88ebb35d08c251635d8b48274e7d5c1e64cd2489f404933e135a1f"
+    },
+    {
+      "id": "place.office",
+      "type": "building",
+      "file": "hand/buildings128/office.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        120
+      ],
+      "category": "work_admin",
+      "frames": 1,
+      "sha256": "a7eae816a50397eda75cb6b96e997e58d82a829d3ec9c30ee2b8957138e577c9"
+    },
+    {
+      "id": "place.market",
+      "type": "building",
+      "file": "hand/buildings128/market.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        120
+      ],
+      "category": "trade",
+      "frames": 1,
+      "sha256": "dae111bc63348bb36610d54b6487773462bf951c6474d2d4721e842d3c13ab40"
+    },
+    {
+      "id": "place.bank",
+      "type": "building",
+      "file": "hand/buildings128/bank.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        120
+      ],
+      "category": "trade",
+      "frames": 1,
+      "sha256": "cf4034cfd320157d4ac0c81366be35d814d7fea0c6a4153b5581cc6be1f06358"
+    },
+    {
+      "id": "place.plaza",
+      "type": "building",
+      "file": "hand/buildings128/plaza.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        120
+      ],
+      "category": "public",
+      "frames": 1,
+      "sha256": "a50ef6c44494d00d2530ef956b6104165ee088d378cbd0a8414d24c7b5b1737c"
+    },
+    {
+      "id": "place.town_hall",
+      "type": "building",
+      "file": "hand/buildings128/town_hall.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        120
+      ],
+      "category": "public",
+      "frames": 1,
+      "sha256": "2c25585aff81d755f4a3f1aa1a3f236967ff561175518f26e915bf20fbfb146e"
+    },
+    {
+      "id": "place.library",
+      "type": "building",
+      "file": "hand/buildings128/library.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        120
+      ],
+      "category": "public",
+      "frames": 1,
+      "sha256": "23673c701ae00a3c7851db8a8912801fa64eb199e1b4de578f1c4baa506532f9"
+    },
+    {
+      "id": "place.community_center",
+      "type": "building",
+      "file": "hand/buildings128/community_center.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        120
+      ],
+      "category": "public",
+      "frames": 1,
+      "sha256": "0628cce44cd0d9f8c10b4e00c7891d78889488adc0470a13533e8779e753cced"
+    },
+    {
+      "id": "place.cafe",
+      "type": "building",
+      "file": "hand/buildings128/cafe.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        120
+      ],
+      "category": "leisure",
+      "frames": 1,
+      "sha256": "923be737abb26e11205571534298d9338a1a6fbe7359b16e3619ad7a55c85577"
+    },
+    {
+      "id": "place.park",
+      "type": "building",
+      "file": "hand/buildings128/park.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        120
+      ],
+      "category": "leisure",
+      "frames": 1,
+      "sha256": "06e939db6a3fcee11adaec75030a0c0297fcfa8e3834db1c69867918632c47c2"
+    },
+    {
+      "id": "place.hall",
+      "type": "building",
+      "file": "hand/buildings128/hall.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        120
+      ],
+      "category": "leisure",
+      "frames": 1,
+      "sha256": "152ae75fb23c2170de23fcc7e31ca2d030127f8d8b31c84ffcf2f1efe2e7ac7e"
+    },
+    {
+      "id": "place.gate",
+      "type": "building",
+      "file": "hand/buildings128/gate.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        120
+      ],
+      "category": "edge",
+      "frames": 1,
+      "sha256": "cb42104f19635cbcd501c29e45868071b218e69bafd773036bf7e5b23a14c96a"
+    },
+    {
+      "id": "char.villager_red",
+      "type": "character",
+      "file": "hand/chars/villager_red.png",
+      "size": [
+        144,
+        96
+      ],
+      "anchor": [
+        24,
+        92
+      ],
+      "frameSize": [
+        48,
+        96
+      ],
+      "frames": 3,
+      "sha256": "409a007084ea696c3f800fa387a9101fc024302bb8d4e1f647809ca6f74d7f12"
+    },
+    {
+      "id": "char.villager_green",
+      "type": "character",
+      "file": "hand/chars/villager_green.png",
+      "size": [
+        144,
+        96
+      ],
+      "anchor": [
+        24,
+        92
+      ],
+      "frameSize": [
+        48,
+        96
+      ],
+      "frames": 3,
+      "sha256": "7bd62af46ec740a31330ad5d98ae9364cec84ac5a83a56d62a4c7386eaa28983"
+    },
+    {
+      "id": "char.villager_blue",
+      "type": "character",
+      "file": "hand/chars/villager_blue.png",
+      "size": [
+        144,
+        96
+      ],
+      "anchor": [
+        24,
+        92
+      ],
+      "frameSize": [
+        48,
+        96
+      ],
+      "frames": 3,
+      "sha256": "a683c726d436011d044274444104c64bc82518f5b8c8f3243364c8c541710084"
+    },
+    {
+      "id": "char.villager_yellow",
+      "type": "character",
+      "file": "hand/chars/villager_yellow.png",
+      "size": [
+        144,
+        96
+      ],
+      "anchor": [
+        24,
+        92
+      ],
+      "frameSize": [
+        48,
+        96
+      ],
+      "frames": 3,
+      "sha256": "085da91119b84d91ea296a1131528c4b9fd07f7870c04c8b6799eb82a1da9976"
+    },
+    {
+      "id": "char.villager_purple",
+      "type": "character",
+      "file": "hand/chars/villager_purple.png",
+      "size": [
+        144,
+        96
+      ],
+      "anchor": [
+        24,
+        92
+      ],
+      "frameSize": [
+        48,
+        96
+      ],
+      "frames": 3,
+      "sha256": "58fb64014dfbaa1a1dfceed0ce833a0dd46000abff20059885dece088c2800e3"
+    },
+    {
+      "id": "char.villager_teal",
+      "type": "character",
+      "file": "hand/chars/villager_teal.png",
+      "size": [
+        144,
+        96
+      ],
+      "anchor": [
+        24,
+        92
+      ],
+      "frameSize": [
+        48,
+        96
+      ],
+      "frames": 3,
+      "sha256": "f850cb2b1e64fa8fd2d77c817814e0a9a76a63f60eb7857fd793dd979893db7d"
+    },
+    {
+      "id": "char.villager_orange",
+      "type": "character",
+      "file": "hand/chars/villager_orange.png",
+      "size": [
+        144,
+        96
+      ],
+      "anchor": [
+        24,
+        92
+      ],
+      "frameSize": [
+        48,
+        96
+      ],
+      "frames": 3,
+      "sha256": "5f03a0d1be9ce6c1ee27be3088f5898a6e97568d4e7a0e3255d29b6c356e7da7"
+    },
+    {
+      "id": "char.villager_slate",
+      "type": "character",
+      "file": "hand/chars/villager_slate.png",
+      "size": [
+        144,
+        96
+      ],
+      "anchor": [
+        24,
+        92
+      ],
+      "frameSize": [
+        48,
+        96
+      ],
+      "frames": 3,
+      "sha256": "146bfa26c80a49267c4222e07f733868f230a7de1ba5cb397bbbf84a9e25591e"
+    },
+    {
+      "id": "prop.tree",
+      "type": "prop",
+      "file": "generated/props/tree.png",
+      "size": [
+        32,
+        48
+      ],
+      "anchor": [
+        16,
+        44
+      ],
+      "sha256": "49e69be3b6666f3745de465804c2c7c59f8d9ea3b1741e1ff681e5f18d14a15c"
+    },
+    {
+      "id": "prop.bush",
+      "type": "prop",
+      "file": "generated/props/bush.png",
+      "size": [
+        32,
+        48
+      ],
+      "anchor": [
+        16,
+        44
+      ],
+      "sha256": "c8d7217bffbc6c6f501cc82d244721468157a75a43f2e1031dfd7dc297ef9d7d"
+    },
+    {
+      "id": "prop.rock",
+      "type": "prop",
+      "file": "generated/props/rock.png",
+      "size": [
+        32,
+        48
+      ],
+      "anchor": [
+        16,
+        44
+      ],
+      "sha256": "f636486ef4ce584cb220f2ef5139eb1f991c3eb28ed16badc48e3c9bf2be43f8"
+    },
+    {
+      "id": "prop.flower",
+      "type": "prop",
+      "file": "generated/props/flower.png",
+      "size": [
+        32,
+        48
+      ],
+      "anchor": [
+        16,
+        44
+      ],
+      "sha256": "c42c8a0eda7b9d171e18fa8120094beeef0ad6f50e8d027c61c0263ecf249c67"
+    },
+    {
+      "id": "prop.lamp",
+      "type": "prop",
+      "file": "generated/props/lamp.png",
+      "size": [
+        32,
+        48
+      ],
+      "anchor": [
+        16,
+        44
+      ],
+      "sha256": "89ccacdad4e06717ffcdbda247b5eb82539e5a2fe1a9179bac8632b8fd66afdf"
+    },
+    {
+      "id": "prop.bench",
+      "type": "prop",
+      "file": "generated/props/bench.png",
+      "size": [
+        32,
+        48
+      ],
+      "anchor": [
+        16,
+        44
+      ],
+      "sha256": "e5ff1f2beac18ecddd128ba0377e1a1362fac1844d455d99233a696a4d9c5293"
+    },
+    {
+      "id": "prop.sign",
+      "type": "prop",
+      "file": "generated/props/sign.png",
+      "size": [
+        32,
+        48
+      ],
+      "anchor": [
+        16,
+        44
+      ],
+      "sha256": "b4615f8a2516384e89d7253407ce6be4e475a0594d725e97778efa72f624e79e"
+    },
+    {
+      "id": "prop.fence",
+      "type": "prop",
+      "file": "generated/props/fence.png",
+      "size": [
+        32,
+        48
+      ],
+      "anchor": [
+        16,
+        44
+      ],
+      "sha256": "7354cd867ccf5de883a9fe9a430bb6c5dee14a337c4836ede02a8ed15043d536"
+    },
+    {
+      "id": "prop.flowerbed",
+      "type": "prop",
+      "file": "generated/props/flowerbed.png",
+      "size": [
+        32,
+        48
+      ],
+      "anchor": [
+        16,
+        44
+      ],
+      "sha256": "be516d62b445ac84034be1b12d3d8717e71c101307d0deb4b53f63055f7d2356"
+    },
+    {
+      "id": "prop.well",
+      "type": "prop",
+      "file": "generated/props/well.png",
+      "size": [
+        32,
+        48
+      ],
+      "anchor": [
+        16,
+        44
+      ],
+      "sha256": "777bf27a6d43393de6d6511a6b7880343156de645e0d757536956c3027cabb37"
+    },
+    {
+      "id": "prop.crate",
+      "type": "prop",
+      "file": "generated/props/crate.png",
+      "size": [
+        32,
+        48
+      ],
+      "anchor": [
+        16,
+        44
+      ],
+      "sha256": "bc76172bf90cd23839f6368b77440f0e5b132a2a5da85a82d3e49cf2c2204885"
+    },
+    {
+      "id": "prop.barrel",
+      "type": "prop",
+      "file": "generated/props/barrel.png",
+      "size": [
+        32,
+        48
+      ],
+      "anchor": [
+        16,
+        44
+      ],
+      "sha256": "3a241eac144305c0a2cb4c395ec7a9386f1c584cbf3b675ddbea3b268be88f09"
+    },
+    {
+      "id": "icon.mint",
+      "type": "icon",
+      "file": "generated/icons/mint.png",
+      "white": "generated/icons/mint_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E8B84B",
+      "sha256": "2e52ebee854f72b3252389a8170e27d0344df23316929a2205e8d59ab710f45f",
+      "sha256_white": "51bb7ce1c8fe9338cc4062ae93840890f2258f1263d6cffe06ea17fc8c5865d5"
+    },
+    {
+      "id": "icon.coin-init",
+      "type": "icon",
+      "file": "generated/icons/coin-init.png",
+      "white": "generated/icons/coin-init_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E8B84B",
+      "sha256": "0ff4a98a8d342cce27d491e89164bf65506daf6c4995358c426334d3fd25595d",
+      "sha256_white": "670dd62e6c2e51d9dc6c24a0c0afbd46101a04897f90a762ffa9aaee2916bb9c"
+    },
+    {
+      "id": "icon.coin-arrow",
+      "type": "icon",
+      "file": "generated/icons/coin-arrow.png",
+      "white": "generated/icons/coin-arrow_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E8B84B",
+      "sha256": "50551d858f0de3b88a8ab00b2cabd1dac0738f1a1ab6e287065fe3b529d4990d",
+      "sha256_white": "c59e3e94a18223b27cefc353655d8564c33f1aa1ceadf2959b2ebe72fca3a22b"
+    },
+    {
+      "id": "icon.shop",
+      "type": "icon",
+      "file": "generated/icons/shop.png",
+      "white": "generated/icons/shop_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E8B84B",
+      "sha256": "e3690448b0fd1bec6e559048d9056c982c8df57ca41c15a3fa1568fe5a9ef97c",
+      "sha256_white": "aaf5a83fe72531c635feb37222100bca60a58b9d32fef190b623cd9ab794b9bc"
+    },
+    {
+      "id": "icon.bank-in",
+      "type": "icon",
+      "file": "generated/icons/bank-in.png",
+      "white": "generated/icons/bank-in_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E8B84B",
+      "sha256": "b2c2836920232df194356a5fed4db51c663c47830639938a5390f26473591459",
+      "sha256_white": "a06e1b7a29cff41fc1d940a1927624e63868ab801163c7307e465ddc473b626b"
+    },
+    {
+      "id": "icon.bank-out",
+      "type": "icon",
+      "file": "generated/icons/bank-out.png",
+      "white": "generated/icons/bank-out_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E8B84B",
+      "sha256": "c15b2da7817d6bab06c4f676b24b3ebbf0857e5e7785f4d1004d049186fb4314",
+      "sha256_white": "1bfbe96433db0dfc6f69e4eda5381dce06739d78cb114368e50dcae322a80868"
+    },
+    {
+      "id": "icon.loan",
+      "type": "icon",
+      "file": "generated/icons/loan.png",
+      "white": "generated/icons/loan_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E8B84B",
+      "sha256": "30c49f0dec7b3b9195d47eb25c4cd7a9dcce90ab7be5a36635d6ac81d1de5681",
+      "sha256_white": "ff160e574d9a342b310a580f3c90965c27d2943b7e9cc3ddd1d7c0edf9cb6ff6"
+    },
+    {
+      "id": "icon.loan-repay",
+      "type": "icon",
+      "file": "generated/icons/loan-repay.png",
+      "white": "generated/icons/loan-repay_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E8B84B",
+      "sha256": "184dd4357b405ea2b39cfe3b82261554d877c67fdd2d4cbc7c3276bf38907392",
+      "sha256_white": "d28c82e95250178a068f139caaa948caa5da24c4888a1161bb8b413a951fefdd"
+    },
+    {
+      "id": "icon.percent",
+      "type": "icon",
+      "file": "generated/icons/percent.png",
+      "white": "generated/icons/percent_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E8B84B",
+      "sha256": "a2c03deff1c21b0f4047ba27a217af5de904be65d3ad73dc98f7a66f3bfe2e18",
+      "sha256_white": "2589e81992f256c18035e5fa3f06a41e6838c8ffa086d856444327f231bfc587"
+    },
+    {
+      "id": "icon.loan-broken",
+      "type": "icon",
+      "file": "generated/icons/loan-broken.png",
+      "white": "generated/icons/loan-broken_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E4572E",
+      "sha256": "23949639b6918d381fa3509db4776013c7e5bd3e7ab09f58706cec4ad07ab6a9",
+      "sha256_white": "f7a01debadb4d503a461058a3d3340ba9cce193003248e84069f4f3816a8097c"
+    },
+    {
+      "id": "icon.tax",
+      "type": "icon",
+      "file": "generated/icons/tax.png",
+      "white": "generated/icons/tax_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E8B84B",
+      "sha256": "2e52ebee854f72b3252389a8170e27d0344df23316929a2205e8d59ab710f45f",
+      "sha256_white": "51bb7ce1c8fe9338cc4062ae93840890f2258f1263d6cffe06ea17fc8c5865d5"
+    },
+    {
+      "id": "icon.gift-ubi",
+      "type": "icon",
+      "file": "generated/icons/gift-ubi.png",
+      "white": "generated/icons/gift-ubi_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E8B84B",
+      "sha256": "735552694efd6779349ba9a6a80da111498f1da1efe5788be762899c8bd347d4",
+      "sha256_white": "0f832ca1f3dd5ea1b261c5c75c464e0a76e297a8be3e527539f64d2a1ac33361"
+    },
+    {
+      "id": "icon.gavel",
+      "type": "icon",
+      "file": "generated/icons/gavel.png",
+      "white": "generated/icons/gavel_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E8B84B",
+      "sha256": "1c366640607d62a2e350127b18d2130105c8b9412401ba414316c5f9ac408ba5",
+      "sha256_white": "3ebd001b2995a36e3df9526faba1a13a1d47badc0738deab571e3958626c280f"
+    },
+    {
+      "id": "icon.revive-fee",
+      "type": "icon",
+      "file": "generated/icons/revive-fee.png",
+      "white": "generated/icons/revive-fee_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E8B84B",
+      "sha256": "083261a349f95becdaccfcc5fa3208c791e69708c154d2bda7d5fa925cf52248",
+      "sha256_white": "962888d23509ba36d6070457cb26e0f75098f5c67a999f3fd8288d417ec8b7e8"
+    },
+    {
+      "id": "icon.drop",
+      "type": "icon",
+      "file": "generated/icons/drop.png",
+      "white": "generated/icons/drop_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E8B84B",
+      "sha256": "ef78d40edb55d48026d2d74d912ee43a53597f0c90337d83c29eb00ae2319448",
+      "sha256_white": "0027316315afb474035ddfc62b58b3afae5f1a14c086e1b8a34ffec9e175dabe"
+    },
+    {
+      "id": "icon.burn",
+      "type": "icon",
+      "file": "generated/icons/burn.png",
+      "white": "generated/icons/burn_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E8B84B",
+      "sha256": "352b13f3dca1842965bf8fef2ab0e956e98c74c50676c0a3a30c2a15c3f30100",
+      "sha256_white": "cd704cf8234a362d08cb05722ce4be84d57cc72529a6c78ce2700db20b58d4b4"
+    },
+    {
+      "id": "icon.world",
+      "type": "icon",
+      "file": "generated/icons/world.png",
+      "white": "generated/icons/world_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#6FCF6B",
+      "sha256": "536078262603ec19a3c4c42049780df56ce430e7c510db3581cc3880999fd15c",
+      "sha256_white": "cbe6fdc5bae606a673abfcc9ac991a4733237f0fd93460f2bd6c1d2490881f76"
+    },
+    {
+      "id": "icon.born",
+      "type": "icon",
+      "file": "generated/icons/born.png",
+      "white": "generated/icons/born_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#6FCF6B",
+      "sha256": "dd9ebccbd6867c3f9fed782b1a4af739358bcdb656995fdbace7bd1a4b680a8e",
+      "sha256_white": "fc4e7ca0e5a4dd128354c480dd6c2e28428e87d9c5f316d8db4d2817e1738c2d"
+    },
+    {
+      "id": "icon.metabolism",
+      "type": "icon",
+      "file": "generated/icons/metabolism.png",
+      "white": "generated/icons/metabolism_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#6FCF6B",
+      "sha256": "a57eeccc82752253294fe75a2ab301abbf6b0b1e4b3eff4ff863bf512428181b",
+      "sha256_white": "1c7ceea32aea5991fa3aaf2d6fd407e67f541524c7429d0f777cff6fb3ea5e04"
+    },
+    {
+      "id": "icon.state",
+      "type": "icon",
+      "file": "generated/icons/state.png",
+      "white": "generated/icons/state_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#6FCF6B",
+      "sha256": "85ba0d09a589a106c75f4c06f7675c21de62dfc24d1e42c642c0269b103fc803",
+      "sha256_white": "55efced0d4d728a008cecbd8a0a0c6819902c16c0a91a4d6619db052e7df1d04"
+    },
+    {
+      "id": "icon.skull",
+      "type": "icon",
+      "file": "generated/icons/skull.png",
+      "white": "generated/icons/skull_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#D9534F",
+      "sha256": "3619913e5fee561fa53f9c9df9fa3df1167c0f85e33d5d8f8d816b867daec7fa",
+      "sha256_white": "51cb6e868c7e69ce5af69554be3e21cc9eb5121d42e748fb931a4215c984fa53"
+    },
+    {
+      "id": "icon.revive",
+      "type": "icon",
+      "file": "generated/icons/revive.png",
+      "white": "generated/icons/revive_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#7EC8FF",
+      "sha256": "ef47eeee989c5ee3c7ea1ca46d807153f49fb2296b514663e5e31fb9d19e827c",
+      "sha256_white": "1d039af861ce73977b62fd12df571d8cd08a659a362ab7ea88139a60c025dd1e"
+    },
+    {
+      "id": "icon.alert",
+      "type": "icon",
+      "file": "generated/icons/alert.png",
+      "white": "generated/icons/alert_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E4572E",
+      "sha256": "3575ad61add75de079861524dc18a9f42e56e1d5b62ebf193c2de24d4499ce31",
+      "sha256_white": "30a57a10298dc8c2529f74f2e7b1e77cde61dbb236603c478e21428ac3dab5d4"
+    },
+    {
+      "id": "icon.speech-public",
+      "type": "icon",
+      "file": "generated/icons/speech-public.png",
+      "white": "generated/icons/speech-public_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#B07CE8",
+      "sha256": "cc49f4ebf9b3da429625d6c4a8e7205d469b1b570342b57d8cb4741db0c42172",
+      "sha256_white": "810a8e21fc2bbe19a65e1ce166e869d5275e0abfbaedf08147b06efb862b1e63"
+    },
+    {
+      "id": "icon.speech-dm",
+      "type": "icon",
+      "file": "generated/icons/speech-dm.png",
+      "white": "generated/icons/speech-dm_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#B07CE8",
+      "sha256": "102e3eaee209eeba267284fd70b8e75a93d9391c18b919afae5aa2f15345562d",
+      "sha256_white": "9f6e1e1182fe813e73197e1527f85a053ee6e142046545546865561b6b48b052"
+    },
+    {
+      "id": "icon.speech-group",
+      "type": "icon",
+      "file": "generated/icons/speech-group.png",
+      "white": "generated/icons/speech-group_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#B07CE8",
+      "sha256": "6d41a900f815678490ff44445a2a8217d4174f038f39a9bd9e887a219ef5dfd8",
+      "sha256_white": "2b290982e91de9604bc69343d263e5b741d60634f0064815d66a0e9cac42e6e1"
+    },
+    {
+      "id": "icon.relation",
+      "type": "icon",
+      "file": "generated/icons/relation.png",
+      "white": "generated/icons/relation_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#B07CE8",
+      "sha256": "6abf6d12f10ec491ae34de611939a54b9395162c273e2930e1d59d9c3e05167c",
+      "sha256_white": "163893216bc9d99b873b5d5c65f4d9de83894b420212d6fa650c4d4829c2fff3"
+    },
+    {
+      "id": "icon.meet",
+      "type": "icon",
+      "file": "generated/icons/meet.png",
+      "white": "generated/icons/meet_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#B07CE8",
+      "sha256": "aff6541d354862608e648b11b68141885945a376f966a6ab209c337908cbb2ee",
+      "sha256_white": "480d5de456f535ffe3751474e981e4d0ef3c525c3dab709833bda1af8ffe9410"
+    },
+    {
+      "id": "icon.norm-new",
+      "type": "icon",
+      "file": "generated/icons/norm-new.png",
+      "white": "generated/icons/norm-new_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#B07CE8",
+      "sha256": "c525b4238841e527abdf1b807a473bdb3168c2a692445073df024e7eb4c39334",
+      "sha256_white": "24477faeefbd152072488acc0aa8cf5e358bd76ac16297533f3bf83da7e7b81d"
+    },
+    {
+      "id": "icon.norm-ok",
+      "type": "icon",
+      "file": "generated/icons/norm-ok.png",
+      "white": "generated/icons/norm-ok_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#B07CE8",
+      "sha256": "3338ca1aaddf9e3d1dbb263c64f83ba9e3ecca828eb4e3955ee3b09a440942a9",
+      "sha256_white": "61fd3d4fa717c93dfb799922dd4dd8ff7ebf75263d9f03b5e7e37b984645ee6f"
+    },
+    {
+      "id": "icon.norm-bad",
+      "type": "icon",
+      "file": "generated/icons/norm-bad.png",
+      "white": "generated/icons/norm-bad_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E4572E",
+      "sha256": "daa6d38dacbd9b9ae205e96608d5b8b99449c1004197f3253f6871cc904fc2b8",
+      "sha256_white": "5e60f146af424dcae16eac4e276b6c8a11b92145de49aee493e7c82f3370a534"
+    },
+    {
+      "id": "icon.offer",
+      "type": "icon",
+      "file": "generated/icons/offer.png",
+      "white": "generated/icons/offer_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#B07CE8",
+      "sha256": "a2d1fdc9fcaa25286243c3d05be1a7ebd0f1440f554aa4566d3f7fb43782fa79",
+      "sha256_white": "002b46178604c3720ccb4def284da5b5a565268878ab162db804cfeb9903ceff"
+    },
+    {
+      "id": "icon.offer-ok",
+      "type": "icon",
+      "file": "generated/icons/offer-ok.png",
+      "white": "generated/icons/offer-ok_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#B07CE8",
+      "sha256": "4c4649935ce423887e63d9fab7dbb42e95b1f5a2f2e89bcd3c7cb7c2f5b2b747",
+      "sha256_white": "378cebcbc38823c29b24d5593db10a64d883161a50b91817eaa8db7a44ea3fc8"
+    },
+    {
+      "id": "icon.offer-no",
+      "type": "icon",
+      "file": "generated/icons/offer-no.png",
+      "white": "generated/icons/offer-no_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#B07CE8",
+      "sha256": "01ac41f7c678766a2eb0df32687ec6027e9fe31726197c0e004de2e1e8998ca3",
+      "sha256_white": "f26259df7aeef4239f38b9d3492c3235f9e2d0c16c24690a5c878ea0cd7da7ec"
+    },
+    {
+      "id": "icon.offer-alt",
+      "type": "icon",
+      "file": "generated/icons/offer-alt.png",
+      "white": "generated/icons/offer-alt_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#B07CE8",
+      "sha256": "09a5bd688376683b9f4434978d6967c29572954a30d323aa5d364c23b0e3e5ac",
+      "sha256_white": "002b46178604c3720ccb4def284da5b5a565268878ab162db804cfeb9903ceff"
+    },
+    {
+      "id": "icon.offer-exp",
+      "type": "icon",
+      "file": "generated/icons/offer-exp.png",
+      "white": "generated/icons/offer-exp_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#B07CE8",
+      "sha256": "fb0e4199bfba907201b5b490db80a4d86f2301c85399da27b4d94e1eeccafb8b",
+      "sha256_white": "bcb9bd47af2c5e6b096fa44b8bb9491a227b8d0b54bd4f7b925f823c4ab1ceea"
+    },
+    {
+      "id": "icon.clash",
+      "type": "icon",
+      "file": "generated/icons/clash.png",
+      "white": "generated/icons/clash_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E4572E",
+      "sha256": "9d8ff73bf5624ad7261fdf875cbb47597c156fc6c743eb775e090fa070f781fa",
+      "sha256_white": "bdfcbee87483e6b1c9667ccf6657e2f53752e7228266734e1fddbd7335abe7fe"
+    },
+    {
+      "id": "icon.clash-ok",
+      "type": "icon",
+      "file": "generated/icons/clash-ok.png",
+      "white": "generated/icons/clash-ok_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#B07CE8",
+      "sha256": "3e1abe283dfd888bd1cc22154a5ec7994fd5430a12cd8ada6a790f8fc9f3b6b3",
+      "sha256_white": "4ba332ae857b423f4fd1fcc2c301936b204bbf4b22f704353211ea4171c2bec4"
+    },
+    {
+      "id": "icon.group",
+      "type": "icon",
+      "file": "generated/icons/group.png",
+      "white": "generated/icons/group_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#B07CE8",
+      "sha256": "6c9796de2f5b8273bbf96683f7b9d3ed4038d4c2a8fd45a9897da21779b6b4d1",
+      "sha256_white": "51b7733690e6bfa3d90b82cd9b8baa323f834813f4017709f8c3a4d1753e7522"
+    },
+    {
+      "id": "icon.role",
+      "type": "icon",
+      "file": "generated/icons/role.png",
+      "white": "generated/icons/role_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#B07CE8",
+      "sha256": "c914710f5b85eeca6a9de60fd82fcefee1b849b4f73337108934bab45a00deb2",
+      "sha256_white": "803b498cd8a91903997537cd500e8a8091b2cd349739ac4b421306d7314a05f1"
+    },
+    {
+      "id": "icon.tag",
+      "type": "icon",
+      "file": "generated/icons/tag.png",
+      "white": "generated/icons/tag_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#B07CE8",
+      "sha256": "a2d1fdc9fcaa25286243c3d05be1a7ebd0f1440f554aa4566d3f7fb43782fa79",
+      "sha256_white": "002b46178604c3720ccb4def284da5b5a565268878ab162db804cfeb9903ceff"
+    },
+    {
+      "id": "icon.walk",
+      "type": "icon",
+      "file": "generated/icons/walk.png",
+      "white": "generated/icons/walk_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "efc48dc6e7a45fb8ac3d1a19189a921873a18eab25c0520ba69708f4c4f81d7a",
+      "sha256_white": "fd553eaa761a898ee8e3d89f71a89e4d939594dd2edee4dc62dc1ff300b4d0f6"
+    },
+    {
+      "id": "icon.pin",
+      "type": "icon",
+      "file": "generated/icons/pin.png",
+      "white": "generated/icons/pin_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "dcee8d38156ec6fcfd4b706a2cb450de1e4c857e057f812bea8c6b3478291a9b",
+      "sha256_white": "744143a4ed5be828e4b0a7cc0e716b33fb332d27bf7284de6aa3493379dd073f"
+    },
+    {
+      "id": "icon.calendar",
+      "type": "icon",
+      "file": "generated/icons/calendar.png",
+      "white": "generated/icons/calendar_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "6e628c05c6adc676af1c3bdc731c2ba0d1cc2f85481ae2e300da49591a7ab1e9",
+      "sha256_white": "1515decbbb23b0cd22398d37522f1b3833c3e1cafdde7a71dd42084cb33dfdd4"
+    },
+    {
+      "id": "icon.calendar-edit",
+      "type": "icon",
+      "file": "generated/icons/calendar-edit.png",
+      "white": "generated/icons/calendar-edit_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "06647660dbf274ebe64db9d423ec4a9f553a8414fd3a311c6363157093baf18b",
+      "sha256_white": "e2f531ac2af32793e532f9b648564b8d227095bdce98ce8bd2f8310dba2288f3"
+    },
+    {
+      "id": "icon.act-play",
+      "type": "icon",
+      "file": "generated/icons/act-play.png",
+      "white": "generated/icons/act-play_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "bfe540ace241fbb2f67ed0dac46a854a199cea7a9d0044164014b680dd6d207f",
+      "sha256_white": "ec6018a3b4d6f757e2ec0276fa256ae3bb108b5f883a289f09ad07bdc47d7e11"
+    },
+    {
+      "id": "icon.act-done",
+      "type": "icon",
+      "file": "generated/icons/act-done.png",
+      "white": "generated/icons/act-done_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "0ebaf01d6c83ba76290af2f9dde840958b7b886dd80bff1002dc1caf3227d492",
+      "sha256_white": "c66279d1f82360cab3c89bd0b2f175acd2772a23b32d818522dd7a0a831a53a5"
+    },
+    {
+      "id": "icon.act-stop",
+      "type": "icon",
+      "file": "generated/icons/act-stop.png",
+      "white": "generated/icons/act-stop_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "6dbd2dc4452f7baf005803f491868e481c2b80164cecd6a6c1ac8464a8bba958",
+      "sha256_white": "8ce42d95607373d9c14015a184e00a92b6f61be907fbfe3d63ab65240e619cab"
+    },
+    {
+      "id": "icon.need",
+      "type": "icon",
+      "file": "generated/icons/need.png",
+      "white": "generated/icons/need_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "92e63c9fbd17385c8c01c4b42315c91ecd22f90bb4c592fbae0996191030a2e0",
+      "sha256_white": "0027316315afb474035ddfc62b58b3afae5f1a14c086e1b8a34ffec9e175dabe"
+    },
+    {
+      "id": "icon.goal",
+      "type": "icon",
+      "file": "generated/icons/goal.png",
+      "white": "generated/icons/goal_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "1ea5a64160b03f77abd3162b294cda7fa18ed7b8fb63239bbe8cb2ee9c1ca4c2",
+      "sha256_white": "9ca493e88614a5bf75df23283c76e84a0b788094e879c059da774a9715854a3f"
+    },
+    {
+      "id": "icon.goal-bar",
+      "type": "icon",
+      "file": "generated/icons/goal-bar.png",
+      "white": "generated/icons/goal-bar_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "85fa8a14e9c952fcbd56e492da9b3c6c12d8858d8f2c5151b84675e48838830e",
+      "sha256_white": "a19c01a0ea8dacce54dfd1686bca818b5b049df6ae3c2046306b11a6d21a3a14"
+    },
+    {
+      "id": "icon.goal-ok",
+      "type": "icon",
+      "file": "generated/icons/goal-ok.png",
+      "white": "generated/icons/goal-ok_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "49a1b680e67c45e6d334c862158e9c142ddde27421cbce265a85a881cb73b213",
+      "sha256_white": "43e73704f6bb03cf9bff29b58bfc6aa4b1e32d653124234ecbd97ee115f0eaa9"
+    },
+    {
+      "id": "icon.goal-x",
+      "type": "icon",
+      "file": "generated/icons/goal-x.png",
+      "white": "generated/icons/goal-x_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "e2b1eca5c2cc0f04d2ef5876c6f4343146bcccf9dd997850c087e5361ddaecfb",
+      "sha256_white": "d8c3b7e206ea305aa97fd7f23ee795287505be3fe7ae32bee420ebf950711b47"
+    },
+    {
+      "id": "icon.mem",
+      "type": "icon",
+      "file": "generated/icons/mem.png",
+      "white": "generated/icons/mem_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "a7d2a3bd77d53bf17106adc9d9576d164a7a383aa802447a1cf02fdd72e828e0",
+      "sha256_white": "fddec05050000565a6721f0eaf3712974c2efbbb907d618c3fb41dc9dca343e1"
+    },
+    {
+      "id": "icon.mem-search",
+      "type": "icon",
+      "file": "generated/icons/mem-search.png",
+      "white": "generated/icons/mem-search_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "d64a24be88f722dd47d328b1f5570c73a7962f6db2389ea8cf66643a877b52a0",
+      "sha256_white": "a239161d979c1cd57e35a0e8990be2f1991ea12f87f291d604dbdff50fe12989"
+    },
+    {
+      "id": "icon.reflect",
+      "type": "icon",
+      "file": "generated/icons/reflect.png",
+      "white": "generated/icons/reflect_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "ce9df9216bd7c19490114f2aea1793a2b6d5248ad9d3f96811a928378c2d6c90",
+      "sha256_white": "1924ea801a43fb4f134838443f811c61df6986bd3ce7f104a234da51e75cebdf"
+    },
+    {
+      "id": "icon.eye",
+      "type": "icon",
+      "file": "generated/icons/eye.png",
+      "white": "generated/icons/eye_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "8f792f57c8741569770b58d03d70e7b7dbb55c2abd9d292d6edf7965ca95fa0f",
+      "sha256_white": "03d1a9aab2b9e4de57b761ba48395368bc43298572a2d56d890285bea89e7e00"
+    },
+    {
+      "id": "icon.seed",
+      "type": "icon",
+      "file": "generated/icons/seed.png",
+      "white": "generated/icons/seed_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "265a3d43bb7632337c2e617d265165f71d6deafe322e5fcec0ada1ae613fc321",
+      "sha256_white": "0a9c88b8a41aa8d4a6f91743f4a651c5a6889a45a7be8301271a09d9c2247baf"
+    },
+    {
+      "id": "icon.skill",
+      "type": "icon",
+      "file": "generated/icons/skill.png",
+      "white": "generated/icons/skill_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "415e80096ac36575a8fae7b70adce3f7252a044d14791c8e623fd032f250ebe7",
+      "sha256_white": "04a468165f654a0e58e3db68f8cb2c074654c64f62427e44a028e41cdc8a5b0c"
+    },
+    {
+      "id": "icon.skill-up",
+      "type": "icon",
+      "file": "generated/icons/skill-up.png",
+      "white": "generated/icons/skill-up_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "e835ad4efc640d46f34bd3c04f2fff0ee80d6c1687fd1b327b77a4110ed09e00",
+      "sha256_white": "9ca9558d559e78b48b167bcb53c400bd9880e8d696a01882f7ce114ec2c9c176"
+    },
+    {
+      "id": "icon.craft",
+      "type": "icon",
+      "file": "generated/icons/craft.png",
+      "white": "generated/icons/craft_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "6d0fee59b9207755c4dde0607aa2dead19624144dd1075e5e621f423ac8725e0",
+      "sha256_white": "313b9fd5aef6c315d3a85be7e9555ec8966dc22f2254174484a1b3b54cade140"
+    },
+    {
+      "id": "icon.trophy",
+      "type": "icon",
+      "file": "generated/icons/trophy.png",
+      "white": "generated/icons/trophy_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#5CC8FF",
+      "sha256": "d226a8e725cfd4bea03737fa0f2f8c2f619ba575b9abae599d2ecabb5db91f4d",
+      "sha256_white": "8b8a1159219903d9f42374d759601e8ba0def3f3f3de9e8c649ae99e064ee5e2"
+    },
+    {
+      "id": "icon.judge",
+      "type": "icon",
+      "file": "generated/icons/judge.png",
+      "white": "generated/icons/judge_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#8B98AB",
+      "sha256": "5ca95fb084231ce8710250a0af4f922b6f4aed6b1fd382012d858f84c7e3ca7b",
+      "sha256_white": "72b8ce18786895ec6a1bd47a60fdf0a05cf86c2033dfde7777291cd9d045e24e"
+    },
+    {
+      "id": "icon.book",
+      "type": "icon",
+      "file": "generated/icons/book.png",
+      "white": "generated/icons/book_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#8B98AB",
+      "sha256": "b18156bb2d16d0292aae60d06adba4eb72ff264a7b14dac8a1edc964b4094769",
+      "sha256_white": "97729877bac80e4f5cb66de93a25732f7489108344e021da9dd5517a393efd60"
+    },
+    {
+      "id": "icon.cpu",
+      "type": "icon",
+      "file": "generated/icons/cpu.png",
+      "white": "generated/icons/cpu_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#8B98AB",
+      "sha256": "44f1d3739e12059ca5b2d0073cd2a060b02e9c27d683278efccfc870f88ef391",
+      "sha256_white": "ab4735448dd06021116ae52532362e3dd95101c34f5982dec35ec727ce116b3a"
+    },
+    {
+      "id": "icon.clock",
+      "type": "icon",
+      "file": "generated/icons/clock.png",
+      "white": "generated/icons/clock_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#8B98AB",
+      "sha256": "82cc0a885baa2d3064a32eb9ba183a00c0e2cb9a20d7c02fed153f7e3888fa5f",
+      "sha256_white": "f1afde935c0d9672762caa8183f8ac8cf1890d04fd946d2cdf9cf3a036269d51"
+    },
+    {
+      "id": "icon.seal",
+      "type": "icon",
+      "file": "generated/icons/seal.png",
+      "white": "generated/icons/seal_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#8B98AB",
+      "sha256": "7fd2be3e30b5d4316936895320fa32c7347a450353d43274fff63834e5b5deb6",
+      "sha256_white": "6506e498625ba511336048fc47f5e695118e16f5afa7070e186b31b2276113b1"
+    },
+    {
+      "id": "icon.reject",
+      "type": "icon",
+      "file": "generated/icons/reject.png",
+      "white": "generated/icons/reject_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E4572E",
+      "sha256": "3c5be37f20c1b755b121e0f22f024c3d95b3117b802057ee305017243e9d376d",
+      "sha256_white": "797a59913dcd482ab7554cebc5761d0bbb6f932421bad1cc8aedb1be5ad0e54f"
+    },
+    {
+      "id": "icon.error",
+      "type": "icon",
+      "file": "generated/icons/error.png",
+      "white": "generated/icons/error_white.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "color": "#E4572E",
+      "sha256": "3575ad61add75de079861524dc18a9f42e56e1d5b62ebf193c2de24d4499ce31",
+      "sha256_white": "30a57a10298dc8c2529f74f2e7b1e77cde61dbb236603c478e21428ac3dab5d4"
+    }
+  ],
+  "placeVariants": {
+    "residence": [
+      "hand/buildings128/residence_v2.png",
+      "hand/buildings128/residence_v3.png"
+    ]
+  },
+  "_handWired": "T107: place.*/char.* -> hand/ (variants via placeVariants; config place ids unchanged)"
+}

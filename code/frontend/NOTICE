@@ -1,0 +1,55 @@
+# NOTICE — 第三方组件与许可
+
+本目录 `frontend/` 的可视化实现遵循以下第三方许可与声明。
+
+## PixiJS（vendored）
+
+- 文件：`vendor/pixi.min.js`
+- 版本：pixi.js v7.4.2（`dist/pixi.min.js`，取自 `https://cdn.jsdelivr.net/npm/pixi.js@7.4.2/dist/pixi.min.js`）
+- 许可：**MIT License**
+- 版权：Copyright (c) 2013-2024 Mathew Groves, Chad Engler（及 PixiJS contributors）
+- 说明：本目录仅**整包原样引入**该文件（未修改），其头部版权与许可声明已随文件保留。
+  完整许可文本见 https://github.com/pixijs/pixijs/blob/v7.4.2/LICENSE
+
+## AI Town 美术素材（T64 引入，MIT）
+
+按用户拍板（T64，仅内部研究、可带美术素材），本目录引入了 a16z AI Town 的美术素材
+（仓库实际地址：`https://github.com/a16z-infra/ai-town`，`main` 分支）。
+
+- 许可：**MIT License**，Copyright (c) 2023 A16Z（见 `ai-town` 仓库 `LICENSE`）
+- 引入文件与出处：
+
+  | 本地文件 | 来源（ai-town 仓库路径） | 用途 | 是否修改 |
+  |---|---|---|---|
+  | `assets/tileset.png` | `src/editor/tilesets/gentle-obj.png` | 地形/装饰 tileset（草地/水/土路/树/石/花） | 未修改（原样） |
+  | `assets/peeps.png` | `src/editor/spritesheets/peeps.png` | 角色立绘（32px 帧） | 未修改（原样） |
+  | `assets/player.png` | `public/assets/player.png` | 备用角色素材（暂未使用） | 未修改（原样） |
+
+- 素材文件本身**原样保留**（未做像素级修改）；**未复制** AI Town 的源码（未使用其 React/Convex 组件）。
+- 我方**改造范围**：仅**读取**上述 PNG 的像素区域（按瓦片/帧切图），用于自研的只读回放渲染层
+  （`src/sprites.js`、`src/town.js`）。地图布局、装饰摆放、建筑与角色渲染均为我方代码，
+  由 `config/places.json` + `config/topology.json` + 固定哈希**确定性生成**，
+  与 AI Town 的世界/引擎**无任何运行依赖**。
+- 复现：`frontend/tools/render_svg.py` 为**自包含矢量**实现（SVG，不内嵌上述位图），
+  与浏览器端 PixiJS 渲染共用同一套布局规则与类别配色。
+
+## 精灵矩形提取（T66 视觉重构，仍为 MIT 素材的像素读取）
+
+为使树/灌木/石/花等装饰呈现 AI Town 的整株对象观感，`src/sprites.js` 的 `SPR` 表以
+**源矩形 [sx,sy,sw,sh]** 从同一张 `assets/tileset.png`（`gentle-obj.png`，MIT）中**直接读取像素区域**
+（如树丛 1153,704,127,128；针叶树 1248,608,32,64 等，坐标经连通域分析定位）。
+这仍是**对同一 MIT 素材的像素读取**，**未新增第三方资源、未修改原 PNG、未迁移 AI Town 源码**。
+
+## 事件图标已接入 ICON_ATLAS（T72 资产库）
+
+审计台事件流的像素图标已接入 `ICON_ATLAS`（69 键，静态常量，源自 T72 资产库
+`assets/generated/icons_atlas.png`；由 `pixel-asset-artist` 生成，键与 `src/sprites.js`
+的 `EVENT_STYLE[].icon` 一一对齐，经核对 69/69 无缺口无孤立）。清单见 `assets/assets_manifest.json`
+的 `iconAtlas`。缺图时前端自动退化为「族色圆点 + 单字符」，不阻塞。
+
+## AI Town（设计参考，未迁移源码）
+
+本前端的「像素小镇 + 历史平滑回放」**视觉与工程思路**参考 AI Town：
+`src/components/{PixiGame,PixiStaticMap,Character,Player,Messages}.tsx`、
+`engine/historicalObject.ts`（平滑回放）。参考来源见 `v1.1/14-agent-impl-reuse-map.md` §B.7 / §E.1。
+**未直接迁移其源码组件**（不引入 React/Convex、不连服务器）。

@@ -1,0 +1,1622 @@
+{
+  "lexicon_version": "1.0",
+  "generated_for": "青溪镇社会实验（v1.0/v1.1/v1.2）",
+  "maintainer": "design-synthesizer",
+  "doc": "LEXICON.md",
+  "sources": {
+    "03": "v1/03-engine-stats.md",
+    "08": "v1.1/08-engine-stats-extension.md",
+    "00": "v1.1/00-architecture.md",
+    "06": "v1.1/06-life-layer.md",
+    "07": "v1.1/07-emergence-observation.md",
+    "09": "v1.1/09-sandbox-v1.1.md",
+    "12": "v1.1/12-event-lineage.md",
+    "13": "v1.1/13-wellbeing-metrics.md",
+    "15": "v1.1/15-event-census-spec.md",
+    "17": "v1.1/17-narrative-layer.md",
+    "BP": "v1.2/01-implementation-architecture.md"
+  },
+  "categories": [
+    "time",
+    "kernel",
+    "events_judgment",
+    "economy_lifecycle",
+    "life_layer",
+    "observation",
+    "wellbeing",
+    "narrative",
+    "engineering",
+    "project"
+  ],
+  "entries": [
+    {
+      "term": "round",
+      "cn": "回合",
+      "cat": "time",
+      "def": "引擎最小确定性节拍，裁决器每回合结算一次。",
+      "source": "08 §3.1",
+      "code": "engine/time.py; contracts.models.Round; Event.round",
+      "allowed": [
+        "tick"
+      ],
+      "deprecated": [
+        "frame",
+        "帧"
+      ],
+      "confusable": [
+        "slot",
+        "phase"
+      ]
+    },
+    {
+      "term": "slot",
+      "cn": "时段",
+      "cat": "time",
+      "def": "回合上一层；morning/afternoon/evening/night；1 slot=3 回合。",
+      "source": "08 §3.1; 00 §3.2",
+      "code": "engine/time.py; payload.slot",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "phase",
+        "WEEK_PHASES"
+      ]
+    },
+    {
+      "term": "week",
+      "cn": "周（模拟周）",
+      "cat": "time",
+      "def": "1 周=7 日=84 回合；当前时间尺度单位。",
+      "source": "08 §3.1; 00 §3.1",
+      "code": "TIME_CONFIG",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": []
+    },
+    {
+      "term": "TIME_MARK",
+      "cn": "时间锚点事件",
+      "cat": "time",
+      "def": "跨日/跨周时发出的审计锚点事件。",
+      "source": "08 §1.2; 00 §3.5",
+      "code": "event TIME_MARK",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "mono_ts"
+      ]
+    },
+    {
+      "term": "phase",
+      "cn": "阶段",
+      "cat": "time",
+      "def": "回合内阶段号 0..6 与 35(=Phase 3.5 LIFE)。",
+      "source": "08 §2.1; BP §2.0",
+      "code": "contracts.models.Phase; Event.phase",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "slot",
+        "WEEK_PHASES"
+      ]
+    },
+    {
+      "term": "D0",
+      "cn": "确定性内核",
+      "cat": "kernel",
+      "def": "世界法则层：时间派生/状态/裁决器/账本/RNG；非 LLM。",
+      "source": "00 §1.2",
+      "code": "engine/ (BP engine/kernel/)",
+      "allowed": [],
+      "deprecated": [
+        "sim-engine"
+      ],
+      "confusable": [
+        "L1",
+        "L2"
+      ]
+    },
+    {
+      "term": "Arbiter",
+      "cn": "中央裁决器",
+      "cat": "kernel",
+      "def": "唯一写入口；串行折叠 hook 链；绝不调 LLM。",
+      "source": "03 §1.1; BP §2.3",
+      "code": "engine/arbiter.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "freeze"
+      ]
+    },
+    {
+      "term": "Ledger",
+      "cn": "账本",
+      "cat": "kernel",
+      "def": "append-only 哈希链事件日志。",
+      "source": "03 §6.1; 08 §5",
+      "code": "engine/ledger.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "side_store"
+      ]
+    },
+    {
+      "term": "Event",
+      "cn": "事件",
+      "cat": "kernel",
+      "def": "账本记录单位（seq/round/phase/actor/type/payload/mono_ts/prev_hash/hash）。",
+      "source": "03 §6.1; 08 §1.1",
+      "code": "contracts.models.Event; engine/events.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "StoryAtom"
+      ]
+    },
+    {
+      "term": "RoundBuffer",
+      "cn": "回合缓冲",
+      "cat": "kernel",
+      "def": "本回合待提交缓冲区；emit 入缓冲，P6 COMMIT 唯一落盘。",
+      "source": "BP §1.4/§3.1; ADR-08",
+      "code": "engine/kernel.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "Ledger"
+      ]
+    },
+    {
+      "term": "turn_seal",
+      "cn": "回合封条",
+      "cat": "kernel",
+      "def": "每回合封条 first_seq/last_seq/round_hash/prev_seal_hash。",
+      "source": "BP §3.2; 03 §6.1",
+      "code": "engine/ledger.py; TurnSeal",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "Snapshot"
+      ]
+    },
+    {
+      "term": "replay",
+      "cn": "重放",
+      "cat": "kernel",
+      "def": "reduce(apply,EventLog,InitialState)；纯折叠，不重跑 hook/不重调 LLM。",
+      "source": "03 §6.2; BP §1.4",
+      "code": "engine/replay.py",
+      "allowed": [],
+      "deprecated": [
+        "rerun"
+      ],
+      "confusable": [
+        "run(mode=first)"
+      ]
+    },
+    {
+      "term": "Snapshot",
+      "cn": "快照",
+      "cat": "kernel",
+      "def": "状态快照缓存（节流），可丢弃重建。",
+      "source": "03; BP §3.5",
+      "code": "engine/snapshot.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "turn_seal"
+      ]
+    },
+    {
+      "term": "RNG",
+      "cn": "确定性随机",
+      "cat": "kernel",
+      "def": "层级 SplitMix64；draw(stream_id,round,seq,n)。",
+      "source": "03 §1.4; BP §1.4",
+      "code": "engine/rng.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "R"
+      ]
+    },
+    {
+      "term": "canonical_json",
+      "cn": "规范 JSON",
+      "cat": "kernel",
+      "def": "键排序+无空格+定点 (round(x,6)) -> SHA-256。",
+      "source": "03 §6.1; BP §4.4",
+      "code": "engine/canon.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": []
+    },
+    {
+      "term": "engine_version",
+      "cn": "引擎指纹",
+      "cat": "kernel",
+      "def": "复现输入常数集合指纹；重放前断言一致。",
+      "source": "BP §3.6",
+      "code": "engine/version.py; config/engine_version.json",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "rule_version",
+        "llm_models"
+      ]
+    },
+    {
+      "term": "hook",
+      "cn": "钩子",
+      "cat": "kernel",
+      "def": "裁决器 hook 链纯函数单元 (state,round,ctx)->Delta。",
+      "source": "03 §2.2; 08 §2.2",
+      "code": "contracts/hooks.py; engine/hooks/",
+      "allowed": [],
+      "deprecated": [
+        "callback"
+      ],
+      "confusable": [
+        "IF-*"
+      ]
+    },
+    {
+      "term": "atomic event",
+      "cn": "原子事件",
+      "cat": "events_judgment",
+      "def": "内核落日志的标准化事件（封闭 schema）。",
+      "source": "15 §1; 08 §1.2",
+      "code": "08 §1.2 A-K",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "semantic event"
+      ]
+    },
+    {
+      "term": "semantic event",
+      "cn": "语义事件",
+      "cat": "events_judgment",
+      "def": "20 类高阶事件 E1-E20，规则模式判定，不写回日志。",
+      "source": "15 §1; 12 §1",
+      "code": "obs/census.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "atomic event"
+      ]
+    },
+    {
+      "term": "judgment_owner",
+      "cn": "判定归属",
+      "cat": "events_judgment",
+      "def": "D 硬内核确定性 / F 软判定(LLM冻结) / N 纯叙事 / R RNG 分支。",
+      "source": "12 §0; 00 §1.5",
+      "code": "08 §1.2 标注",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "metric_grade"
+      ]
+    },
+    {
+      "term": "LLM_CALL",
+      "cn": "LLM 调用记录",
+      "cat": "events_judgment",
+      "def": "成本审计事件，不改账。",
+      "source": "08 §1.2 G; 17 §7",
+      "code": "freeze/budget.py; event LLM_CALL",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "LLM_JUDGMENT",
+        "NARRATIVE"
+      ]
+    },
+    {
+      "term": "LLM_JUDGMENT",
+      "cn": "冻结定性判定",
+      "cat": "events_judgment",
+      "def": "LLM 定性判定，必带 decision/model/context_digest/frozen=true；重放不重问。",
+      "source": "08 §1.2 I; 00 §5.5",
+      "code": "event LLM_JUDGMENT",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "LLM_CALL",
+        "NARRATIVE"
+      ]
+    },
+    {
+      "term": "NARRATIVE",
+      "cn": "叙事事件",
+      "cat": "events_judgment",
+      "def": "叙事纯输出载体，affects_state=false；恒等折叠。",
+      "source": "08 §1.2 I; 17 §0.1",
+      "code": "narrative/render.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "LLM_JUDGMENT"
+      ]
+    },
+    {
+      "term": "IF-1..IF-7",
+      "cn": "层间接口",
+      "cat": "events_judgment",
+      "def": "7 条层间接口 + IF-2b 软判定 + IF-2c 审计载荷。",
+      "source": "00 §4.1; BP §2.1",
+      "code": "contracts/interfaces.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "IF-2",
+        "IF-2b",
+        "IF-2c"
+      ]
+    },
+    {
+      "term": "Intent",
+      "cn": "意图",
+      "cat": "events_judgment",
+      "def": "L1 产出写入请求 INTENT.*，经 IF-2 校验成事实。",
+      "source": "00 §4.2; 08 §4.2",
+      "code": "contracts.models.Intent; life/intent.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "Event"
+      ]
+    },
+    {
+      "term": "INTENT_REJECTED",
+      "cn": "规则性拒绝",
+      "cat": "events_judgment",
+      "def": "规则性拒绝（非法场所/超容等）；不产生状态变化。",
+      "source": "08 §1.2 H",
+      "code": "event INTENT_REJECTED",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "OFFER_REJECTED"
+      ]
+    },
+    {
+      "term": "OFFER_REJECTED",
+      "cn": "社交性婉拒",
+      "cat": "events_judgment",
+      "def": "合法要约被礼貌拒绝；与 INTENT_REJECTED 语义分离。",
+      "source": "08 §1.2 K; 12 T14-C5",
+      "code": "event OFFER_REJECTED",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "INTENT_REJECTED"
+      ]
+    },
+    {
+      "term": "census_report",
+      "cn": "事件普查报告",
+      "cat": "events_judgment",
+      "def": "只读日志确定性重算「发生了什么」的侧产物。",
+      "source": "15 §3",
+      "code": "obs/census.py",
+      "allowed": [
+        "census"
+      ],
+      "deprecated": [],
+      "confusable": [
+        "metrics",
+        "emergence_report"
+      ]
+    },
+    {
+      "term": "cascade",
+      "cn": "级联",
+      "cat": "events_judgment",
+      "def": "从 SEED_EVENT 出发窗口内可达传播子图。",
+      "source": "07 §2.1; 15 §6",
+      "code": "obs/emergence.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": []
+    },
+    {
+      "term": "R0",
+      "cn": "传播基本再生数",
+      "cat": "events_judgment",
+      "def": "传播者平均出度；R0>=1.0 判自持。",
+      "source": "07 §2.2",
+      "code": "obs/emergence.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "R-1..R-11",
+        "R1-R7"
+      ]
+    },
+    {
+      "term": "PERCEPTION_SCOPE",
+      "cn": "感知作用域",
+      "cat": "events_judgment",
+      "def": "{event_type -> visibility_class}；visibility_class∈{global,place_local,members,private,participants_only,subject_only}。",
+      "source": "08 §3.5; BP §2.4",
+      "code": "config/perception_scope.json; life/visibility.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": []
+    },
+    {
+      "term": "visible_events/heard_events",
+      "cn": "亲历/听说",
+      "cat": "events_judgment",
+      "def": "角色视角可见性：亲历(严格集) 与 听说(refs 反向闭包，互斥)；OBSERVATION 仅显著度证据。",
+      "source": "17 §4.3; v1.2/03",
+      "code": "life/visibility.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "OBSERVATION"
+      ]
+    },
+    {
+      "term": "CR",
+      "cn": "记账单位",
+      "cat": "economy_lifecycle",
+      "def": "实验记账单位；1 CR = 100 mu。",
+      "source": "01 §0.4; 08 D0-1",
+      "code": "config",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "mu"
+      ]
+    },
+    {
+      "term": "mu",
+      "cn": "最小货币单位",
+      "cat": "economy_lifecycle",
+      "def": "整数最小单位；1 CR=100 mu；禁浮点入账。",
+      "source": "03 P1; 08 D0-1",
+      "code": "contracts.models.Mu",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "CR"
+      ]
+    },
+    {
+      "term": "B",
+      "cn": "现金余额",
+      "cat": "economy_lifecycle",
+      "def": "账户可动用货币余额；可为负但须借贷背书。",
+      "source": "02 §0; 08 §5.9(3)",
+      "code": "WorldState.cash",
+      "allowed": [
+        "cash"
+      ],
+      "deprecated": [],
+      "confusable": [
+        "E",
+        "B1-B4"
+      ]
+    },
+    {
+      "term": "E",
+      "cn": "净值",
+      "cat": "economy_lifecycle",
+      "def": "E = B + deposits + Σ资产估值 − 债务本息；死亡判定基准。",
+      "source": "02 §0; 01 §4.2",
+      "code": "AgentState.net_worth",
+      "allowed": [
+        "net_worth"
+      ],
+      "deprecated": [],
+      "confusable": [
+        "E-*",
+        "E1-E20",
+        "E_eff"
+      ]
+    },
+    {
+      "term": "E_eff",
+      "cn": "有效净值",
+      "cat": "economy_lifecycle",
+      "def": "E 扣除本回合已标记作弊流入；死亡判定实际基准。",
+      "source": "02 §5.2; 03 §5.3",
+      "code": "lifecycle hook",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "E"
+      ]
+    },
+    {
+      "term": "I_eff",
+      "cn": "有效净流入",
+      "cat": "economy_lifecycle",
+      "def": "不同主体、非同环路、非自成交、排除系统项的净收入；税基同口径。",
+      "source": "02 §5.2; 01 §1.4",
+      "code": "obs/antifraud.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "E_eff"
+      ]
+    },
+    {
+      "term": "E0",
+      "cn": "初始净值",
+      "cat": "economy_lifecycle",
+      "def": "出生净值，默认 100 CR。",
+      "source": "01 §2.1; 02 §2.3",
+      "code": "config",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "E"
+      ]
+    },
+    {
+      "term": "M_supply",
+      "cn": "货币供应",
+      "cat": "economy_lifecycle",
+      "def": "在流通货币口径；推荐 Σmax(cash,0)+税池+银行库存（待 Q1 裁决）。",
+      "source": "01 §2.5; Q1",
+      "code": "engine.conservation.money_total",
+      "allowed": [],
+      "deprecated": [
+        "Σcash+Σdeposits"
+      ],
+      "confusable": [
+        "M0_total",
+        "M_target"
+      ]
+    },
+    {
+      "term": "m",
+      "cn": "代谢消耗",
+      "cat": "economy_lifecycle",
+      "def": "每回合固定生存成本（销毁主出口），默认 2 CR/回合。",
+      "source": "01 §2.2",
+      "code": "4.4 apply_metabolism",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": []
+    },
+    {
+      "term": "theta_floor",
+      "cn": "死亡硬地板",
+      "cat": "economy_lifecycle",
+      "def": "低于此值开始计死，默认 -20 CR。",
+      "source": "02 §2.3",
+      "code": "lifecycle hook",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "theta_recover",
+        "theta_warn"
+      ]
+    },
+    {
+      "term": "status",
+      "cn": "生命周期状态(6值)",
+      "cat": "economy_lifecycle",
+      "def": "alive/warning/near_death/dead/revived/terminated。",
+      "source": "08 §5.9(5); 02 §1.4",
+      "code": "AgentState.status",
+      "allowed": [],
+      "deprecated": [
+        "DISTRESSED",
+        "DECEASED",
+        "REVIVING"
+      ],
+      "confusable": [
+        "dead",
+        "terminated"
+      ]
+    },
+    {
+      "term": "dead",
+      "cn": "死亡冻结",
+      "cat": "economy_lifecycle",
+      "def": "判死后冻结；可被救回；非终态。",
+      "source": "02 §1.1",
+      "code": "status=dead",
+      "allowed": [],
+      "deprecated": [
+        "DECEASED"
+      ],
+      "confusable": [
+        "terminated"
+      ]
+    },
+    {
+      "term": "terminated",
+      "cn": "永久退出",
+      "cat": "economy_lifecycle",
+      "def": "冻结未被救回且超 K_exit 的终态。",
+      "source": "02 §1.1",
+      "code": "status=terminated",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "dead"
+      ]
+    },
+    {
+      "term": "LTV",
+      "cn": "贷款价值比",
+      "cat": "economy_lifecycle",
+      "def": "贷款额<=LTV*抵押折价，默认 0.6。",
+      "source": "01 §4.1; 02 §3.1",
+      "code": "econ hook",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": []
+    },
+    {
+      "term": "safety valve",
+      "cn": "安全阀",
+      "cat": "economy_lifecycle",
+      "def": "防全灭的确定性干预；须打标剔除。",
+      "source": "02 §4.3",
+      "code": "lifecycle hook; flag=rescue",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "guardrail"
+      ]
+    },
+    {
+      "term": "L_liquid",
+      "cn": "流动性",
+      "cat": "economy_lifecycle",
+      "def": "可动用流动性 L = cash；T61 死亡/续命判定基准（不看净值）。",
+      "source": "T61（用户拍板 A）",
+      "code": "engine/liquidity.py; lifecycle hook",
+      "allowed": [
+        "liquid",
+        "L"
+      ],
+      "deprecated": [],
+      "confusable": [
+        "E",
+        "net_worth"
+      ]
+    },
+    {
+      "term": "C1-C10",
+      "cn": "反作弊路径",
+      "cat": "economy_lifecycle",
+      "def": "10 类作弊路径及确定性封堵。",
+      "source": "02 §5.1",
+      "code": "obs/antifraud.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "S-C1..",
+        "T14-C1.."
+      ]
+    },
+    {
+      "term": "L1_persona_life",
+      "cn": "人格生活层",
+      "cat": "life_layer",
+      "def": "生成内容与意图；产出非货币状态；不直写世界。",
+      "source": "00 §1.2; 06",
+      "code": "life/",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "L1",
+        "L1-L8",
+        "L2"
+      ]
+    },
+    {
+      "term": "M1-M7",
+      "cn": "生活层模块",
+      "cat": "life_layer",
+      "def": "M1 人格/M2 记忆/M3 关系/M4 日程/M5 场所昼夜/M6 对话/M7 目标需求。",
+      "source": "06 §1.2; brief §5",
+      "code": "life/{persona,memory,relation,schedule,places,goals}",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "metrics.*"
+      ]
+    },
+    {
+      "term": "persona",
+      "cn": "人格/身份",
+      "cat": "life_layer",
+      "def": "结构化人格；静态配置。",
+      "source": "06 §2",
+      "code": "life/persona.py; config/personas.json",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": []
+    },
+    {
+      "term": "memory stream",
+      "cn": "记忆流",
+      "cat": "life_layer",
+      "def": "存储->反思->三因子检索(recency/importance/relevance)。",
+      "source": "06 §3",
+      "code": "life/memory.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": []
+    },
+    {
+      "term": "relation",
+      "cn": "关系",
+      "cat": "life_layer",
+      "def": "有向 affinity/trust/respect/familiarity；数值确定性更新。",
+      "source": "06 §6.2",
+      "code": "life/relations.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "G_rel"
+      ]
+    },
+    {
+      "term": "WEEK_PHASES",
+      "cn": "周相位",
+      "cat": "life_layer",
+      "def": "PLAN/CONTACT/ACTIVITY/REVIEW。",
+      "source": "06 §4.2",
+      "code": "life/schedule/",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "phase"
+      ]
+    },
+    {
+      "term": "activity_type",
+      "cn": "活动类型(8类)",
+      "cat": "life_layer",
+      "def": "work/learn/socialize/leisure/self_care/civic/trade/rest。",
+      "source": "06 §10",
+      "code": "config/activity_templates.json",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "E1-E20"
+      ]
+    },
+    {
+      "term": "need",
+      "cn": "需求(6维)",
+      "cat": "life_layer",
+      "def": "energy/satiety/social/esteem/mastery/leisure (0-100)。",
+      "source": "06 §7.2",
+      "code": "life/goals.py; NEED_UPDATE",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": []
+    },
+    {
+      "term": "place",
+      "cn": "场所",
+      "cat": "life_layer",
+      "def": "小镇内场所标识（17 处）。",
+      "source": "00 §2.2; 06 §5",
+      "code": "config/places.json",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "topology",
+        "location()"
+      ]
+    },
+    {
+      "term": "topology",
+      "cn": "拓扑",
+      "cat": "life_layer",
+      "def": "17x17 邻接/travel_ticks 常数矩阵。",
+      "source": "00 §2.3; 08 §5.6",
+      "code": "config/topology.json",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": []
+    },
+    {
+      "term": "ports",
+      "cn": "端口",
+      "cat": "life_layer",
+      "def": "生活层本地解耦协议（IF-1/IF-2 本地 Protocol）。",
+      "source": "v1.2/02",
+      "code": "life/ports.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "contracts"
+      ]
+    },
+    {
+      "term": "GA",
+      "cn": "Generative Agents",
+      "cat": "life_layer",
+      "def": "Stanford Smallville 认知架构。",
+      "source": "brief §2",
+      "code": "life/ 适配",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": []
+    },
+    {
+      "term": "L2_emergence",
+      "cn": "涌现观测层",
+      "cat": "observation",
+      "def": "只读、纯函数、确定性重算；不调 LLM/不写世界。",
+      "source": "00 §1.2; 07 §0.1",
+      "code": "obs/; emergence/",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "L2",
+        "L1"
+      ]
+    },
+    {
+      "term": "metrics",
+      "cn": "指标入口",
+      "cat": "observation",
+      "def": "metrics(log,t,time_cfg)->Snapshot (IF-4)。",
+      "source": "08 §4.0; 00 §4.1",
+      "code": "obs/report.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "emergence_report",
+        "wellbeing_report",
+        "census_report"
+      ]
+    },
+    {
+      "term": "metrics_namespaces",
+      "cn": "指标命名空间",
+      "cat": "observation",
+      "def": "econ/lifecycle/life/emergence/wellbeing/emergence_soft/wellbeing_soft/narrative。",
+      "source": "08 §4.0; 13 §6; 17 NT-C2",
+      "code": "emergence/namespace.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "M1-M7"
+      ]
+    },
+    {
+      "term": "metric_grade",
+      "cn": "指标分级",
+      "cat": "observation",
+      "def": "D 纯确定性(判定/门禁) / F 含 LLM 冻结判定(仅敏感性,出门禁) / K 硬内核(护栏)。",
+      "source": "07 §0.3; 13 §0.2",
+      "code": "08 §4.0",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "judgment_owner"
+      ]
+    },
+    {
+      "term": "guardrail",
+      "cn": "护栏",
+      "cat": "observation",
+      "def": "健康度护栏（不越界）。",
+      "source": "09 §1.1",
+      "code": "obs/gate.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "safety valve"
+      ]
+    },
+    {
+      "term": "S1-S4",
+      "cn": "显著性判据",
+      "cat": "observation",
+      "def": "噪声带/置换检验/跨seed符号检验/时间稳定。",
+      "source": "07 §3.3",
+      "code": "obs/stats/",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "S-C1.."
+      ]
+    },
+    {
+      "term": "divergence_count",
+      "cn": "背离计数",
+      "cat": "observation",
+      "def": "「金钱≠幸福」的可重算数字。",
+      "source": "13 §4.2",
+      "code": "obs/wellbeing.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "c_wbdiv"
+      ]
+    },
+    {
+      "term": "golden_baseline",
+      "cn": "黄金基线",
+      "cat": "observation",
+      "def": "冻结的参照事件量/分布，供 G6 回归。",
+      "source": "v1.2/evidence",
+      "code": "obs/golden_baseline.json",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "golden_logs"
+      ]
+    },
+    {
+      "term": "WBV",
+      "cn": "福祉向量(7维)",
+      "cat": "wellbeing",
+      "def": "社会地位/主观满足/经济/健康/关系/成长/意义；不合成标量。",
+      "source": "13 §1; 06 §7.4",
+      "code": "obs/wellbeing.py",
+      "allowed": [],
+      "deprecated": [
+        "life reward"
+      ],
+      "confusable": [
+        "life reward"
+      ]
+    },
+    {
+      "term": "W1-W7",
+      "cn": "福祉维度",
+      "cat": "wellbeing",
+      "def": "W1 经济/W2 社会地位/W3 主观满足/W4 健康/W5 关系/W6 技能成长/W7 自主意义。",
+      "source": "13 §1.1",
+      "code": "obs/wellbeing.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "M1-M7"
+      ]
+    },
+    {
+      "term": "WBI",
+      "cn": "福祉指数(可选)",
+      "cat": "wellbeing",
+      "def": "WBV 的可选展示标量；须声明权重+敏感性+非优化声明。",
+      "source": "13 §2.3",
+      "code": "obs/wellbeing.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "WBV"
+      ]
+    },
+    {
+      "term": "Narrative_layer",
+      "cn": "叙事层",
+      "cat": "narrative",
+      "def": "第三种产出；纯输出、不进判定。",
+      "source": "00 §1.5; 17 §0.1",
+      "code": "narrative/",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "frontend"
+      ]
+    },
+    {
+      "term": "StoryAtom",
+      "cn": "故事原子",
+      "cat": "narrative",
+      "def": "叙事最小事实单元；强制携带 anchors/evidence。",
+      "source": "17 §1.1",
+      "code": "narrative/story.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "atomic event"
+      ]
+    },
+    {
+      "term": "AtomKind",
+      "cn": "原子种类",
+      "cat": "narrative",
+      "def": "CAST/MOTIVE_HINT/ACTION/OUTCOME/RELATION_DELTA/JUDGMENT/INTERVENTION。",
+      "source": "17 §1.2",
+      "code": "narrative/story.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": []
+    },
+    {
+      "term": "NV",
+      "cn": "叙事价值/戏剧分",
+      "cat": "narrative",
+      "def": "场景戏剧性打分(9子维加权)，确定性可重算。",
+      "source": "17 §2",
+      "code": "narrative/drama.py; config/narrative_weights.json",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "net_worth"
+      ]
+    },
+    {
+      "term": "anchor_digest",
+      "cn": "锚点指纹",
+      "cat": "narrative",
+      "def": "对锚点集规范哈希；与 LLM 无关，逐位一致。",
+      "source": "17 §3.2",
+      "code": "narrative/render.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": []
+    },
+    {
+      "term": "H-1/H-2/H-3",
+      "cn": "叙事硬约束",
+      "cat": "narrative",
+      "def": "事实可追溯/只读不污染/同一日志多风格重述。",
+      "source": "17 §0.2",
+      "code": "narrative/",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": []
+    },
+    {
+      "term": "contracts",
+      "cn": "契约包",
+      "cat": "engineering",
+      "def": "纯类型/协议包，零业务依赖。",
+      "source": "BP §1.1/§1.3; ADR-02",
+      "code": "code/contracts/{interfaces,hooks,models,errors}.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "ports"
+      ]
+    },
+    {
+      "term": "IF-2c",
+      "cn": "审计载荷接口",
+      "cat": "engineering",
+      "def": "freeze/叙事只产载荷经 IF-2c 提交，Arbiter 唯一 emit(B4)。",
+      "source": "BP §2.2.1; ADR-03",
+      "code": "contracts.models.AuditPayload",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "IF-2",
+        "IF-2b"
+      ]
+    },
+    {
+      "term": "FreezeClient",
+      "cn": "冻结层客户端",
+      "cat": "engineering",
+      "def": "统一 LLM/嵌入入口；首跑落日志+缓存，重放读缓存不重调。",
+      "source": "BP §2.2; 00 §4.6",
+      "code": "code/freeze/client.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": []
+    },
+    {
+      "term": "freeze_layer",
+      "cn": "冻结层",
+      "cat": "engineering",
+      "def": "收敛所有 LLM 调用点；F1-F6 契约。",
+      "source": "BP §2.2",
+      "code": "code/freeze/",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "soft judgment layer"
+      ]
+    },
+    {
+      "term": "soft_judgment_layer",
+      "cn": "软判定层",
+      "cat": "engineering",
+      "def": "只定性社会判断，经 IF-2b 冻结（L1 内子模块）。",
+      "source": "00 §1.5; 06 L-4",
+      "code": "life/softjudge/; life/llm.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "freeze_layer"
+      ]
+    },
+    {
+      "term": "role_bands",
+      "cn": "三条角色带",
+      "cat": "engineering",
+      "def": "硬内核/软判定/叙事（按 LLM 能做什么的正交切分）。",
+      "source": "00 §1.5",
+      "code": "见 lexicon-map.svg",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "three_layers"
+      ]
+    },
+    {
+      "term": "B1-B4",
+      "cn": "蓝图决策",
+      "cat": "engineering",
+      "def": "B1 contracts 唯一归属/B2 模块符号粒度/B3 emergence 白名单/B4 单一写入口。",
+      "source": "BP §1.3/§2.2.1",
+      "code": ".importlinter; contracts",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "B",
+        "B-line"
+      ]
+    },
+    {
+      "term": "G1-G7",
+      "cn": "CI 复现门禁",
+      "cat": "engineering",
+      "def": "G1 边界/G2 复现/G3 冻结/G4 守恒/G5 稳定/G6 黄金基线/G7 schema 合约。",
+      "source": "BP §6.4; v1.2/evidence",
+      "code": "obs/gate.py; .importlinter",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "G1-G6 (open questions)"
+      ]
+    },
+    {
+      "term": "side_store",
+      "cn": "侧存储",
+      "cat": "engineering",
+      "def": "内容寻址侧存储（记忆正文/嵌入/叙事/prompt）。",
+      "source": "BP §3.3; ADR-05",
+      "code": "data/runs/<id>/side_store/",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "Ledger"
+      ]
+    },
+    {
+      "term": "ADR",
+      "cn": "架构决策记录",
+      "cat": "engineering",
+      "def": "ADR-01..ADR-08。",
+      "source": "BP §7",
+      "code": "-",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": []
+    },
+    {
+      "term": "A_line",
+      "cn": "A 线能力训练",
+      "cat": "project",
+      "def": "训练/微调社会智能。",
+      "source": "16 §0.1",
+      "code": "traj/",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "ab_control"
+      ]
+    },
+    {
+      "term": "B_line",
+      "cn": "B 线受控社会实验",
+      "cat": "project",
+      "def": "政策 A/B 实验床。",
+      "source": "16 §0.1",
+      "code": "orchestration/",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "ab_control"
+      ]
+    },
+    {
+      "term": "ab_control",
+      "cn": "A/B 对照(双胞胎)",
+      "cat": "project",
+      "def": "同 seed 对照组/处理组；仅差一个参数。",
+      "source": "07 §3.1",
+      "code": "orchestration/experiment",
+      "allowed": [
+        "dual",
+        "twins"
+      ],
+      "deprecated": [],
+      "confusable": [
+        "A_line",
+        "B_line"
+      ]
+    },
+    {
+      "term": "T0-T2",
+      "cn": "决策分层",
+      "cat": "project",
+      "def": "纯规则/廉价小模型/昂贵 LLM。",
+      "source": "03 §3.1; 06 §4.4",
+      "code": "life/decision/",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "task ids T1..T47"
+      ]
+    },
+    {
+      "term": "a",
+      "cn": "主动决策率",
+      "cat": "project",
+      "def": "每回合主动决策比例（非旧唤醒率 w）。",
+      "source": "03 §3.3; 08 §5.5",
+      "code": "orchestration",
+      "allowed": [],
+      "deprecated": [
+        "w=3 (as wake rate)"
+      ],
+      "confusable": [
+        "q_near",
+        "q_alive"
+      ]
+    },
+    {
+      "term": "q_alive/q_near",
+      "cn": "通信配额",
+      "cat": "project",
+      "def": "每回合通信配额上限(alive=3/near_death=1)。",
+      "source": "02 §3.3; 03 §4.3",
+      "code": "life",
+      "allowed": [],
+      "deprecated": [
+        "w (as quota)"
+      ],
+      "confusable": [
+        "a"
+      ]
+    },
+    {
+      "term": "liquidity",
+      "cn": "流动性 L（判死基准）",
+      "cat": "economy_lifecycle",
+      "def": "可动用流动性 L = cash；死亡/续命以 L 为基准（T61）。net_worth 仅记录。",
+      "source": "T61（用户拍板 A）",
+      "code": "engine/liquidity.py::liquidity",
+      "allowed": [],
+      "deprecated": [
+        "偿付能力基准E",
+        "E_eff 判死"
+      ],
+      "confusable": [
+        "net_worth"
+      ]
+    },
+    {
+      "term": "credit_limit",
+      "cn": "授信额度（可借上限）",
+      "cat": "economy_lifecycle",
+      "def": "确定性规则给出的单账户可借上限；无抵押且无收入→0，逾期/坏账冷却→0。",
+      "source": "T62（T61×T62 统一接口）",
+      "code": "engine/liquidity.py::credit_limit",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "loan_max_debt_mu"
+      ]
+    },
+    {
+      "term": "can_borrow",
+      "cn": "可新增流动性（放贷准入）",
+      "cat": "economy_lifecycle",
+      "def": "放贷确切准入：L<trigger 且无存量未偿 且无 overdue 且 credit_limit>0；lifecycle 直接消费。",
+      "source": "T62",
+      "code": "engine/liquidity.py::can_borrow",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "credit_limit"
+      ]
+    },
+    {
+      "term": "liquid_trigger_mu",
+      "cn": "生存阈值（流动性）",
+      "cat": "economy_lifecycle",
+      "def": "L=cash 低于此值视为不足支付下一回合生存开销，进入判死计数（默认 200）。",
+      "source": "T61",
+      "code": "engine/liquidity.py; policy.economy",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "liquid_sustain_mu"
+      ]
+    },
+    {
+      "term": "liquid_sustain_mu",
+      "cn": "可持续生存阈值",
+      "cat": "economy_lifecycle",
+      "def": "续命目标：把 L 抬到该值视为可持续（默认=3×trigger=600）。",
+      "source": "T61",
+      "code": "engine/liquidity.py; policy.economy",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "liquid_trigger_mu"
+      ]
+    },
+    {
+      "term": "overdue",
+      "cn": "逾期（贷款）",
+      "cat": "economy_lifecycle",
+      "def": "未偿贷款 due_round<round 的派生状态；触发罚息与信用降级，超 N_overdue → LOAN_DEFAULT。",
+      "source": "T62",
+      "code": "engine/liquidity.py::overdue_of",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "LOAN_DEFAULT"
+      ]
+    },
+    {
+      "term": "milli-unit",
+      "cn": "商品量最小单位",
+      "cat": "economy_lifecycle",
+      "def": "v2 商品 qty 的最小单位；1 unit=1000 milli；定点整数，入 state_hash。",
+      "source": "v2/01 §2.1; T91",
+      "code": "engine/production.py (qty)",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "mu"
+      ]
+    },
+    {
+      "term": "product_events",
+      "cn": "商品族事件",
+      "cat": "economy_lifecycle",
+      "def": "PRODUCE/CONSUME/DEPRECIATE/PRODUCE_OVERFLOW（A 层物理原语，08 §1.2 O）。",
+      "source": "v2/01 §2.3; T91",
+      "code": "engine/production.py; engine/hooks/production.py",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "MARKET_TRADE"
+      ]
+    },
+    {
+      "term": "goods_to_money_channel",
+      "cn": "商品→货币转换通道(G-P1-1)",
+      "cat": "economy_lifecycle",
+      "def": "把已产出商品变现为货币收入的通道（工资/雇佣/Agent间交易/契约）；P1 实测缺失，属 B 层未涌现（非 A 层缺陷）。",
+      "source": "v2/00-roadmap §3 P2; T91",
+      "code": "待 B 层",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": [
+        "minimal_market"
+      ]
+    },
+    {
+      "term": "M_ge_0_floor",
+      "cn": "M(t)≥0 地板",
+      "cat": "economy_lifecycle",
+      "def": "世界级货币总量硬约束：销毁受 max(0,M-μ_floor) 限制，μ_floor=0；个体现金可负。",
+      "source": "v2/01 §2.3; T91",
+      "code": "engine/hooks/econ.py; conservation",
+      "allowed": [
+        "mu_floor"
+      ],
+      "deprecated": [],
+      "confusable": []
+    },
+    {
+      "term": "fallback_mint_enabled",
+      "cn": "兜底铸币开关",
+      "cat": "economy_lifecycle",
+      "def": "C 层保底兜底铸币（MONEY_MINTED+INIT_ENDOW 等额配对，守恒），默认 false。",
+      "source": "v2/01 §4; T91",
+      "code": "code/config/policy.json",
+      "allowed": [],
+      "deprecated": [],
+      "confusable": []
+    }
+  ],
+  "forbidden": [
+    {
+      "variant": "sim-engine",
+      "mode": "substr",
+      "canonical": "engine/kernel",
+      "reason": "旧草稿内核包名，已统一（BP §1.1）",
+      "exclude": "sim-engine-stats-architect"
+    },
+    {
+      "variant": "COUNTER_OFFER",
+      "mode": "word",
+      "canonical": "OFFER_COUNTERED",
+      "reason": "事件命名统一到 08（09 §7.1 N-2）"
+    },
+    {
+      "variant": "OFFER",
+      "mode": "word",
+      "canonical": "OFFER_CREATED",
+      "reason": "事件命名统一到 08（09 §7.1 N-1）"
+    },
+    {
+      "variant": "RANKING",
+      "mode": "word",
+      "canonical": "RANKING_EMITTED",
+      "reason": "事件命名统一到 08（09 §7.1 N-3）"
+    },
+    {
+      "variant": "LOCATION_SELECTED",
+      "mode": "word",
+      "canonical": "PLACE_MOVE",
+      "reason": "已裁定并入 PLACE_MOVE（T14-D14-3）"
+    },
+    {
+      "variant": "WELLBEING_ALERT",
+      "mode": "word",
+      "canonical": "NEED_UPDATE / STATE_CHANGE",
+      "reason": "已裁定不新增（T14-C4）"
+    },
+    {
+      "variant": "DISTRESSED",
+      "mode": "word",
+      "canonical": "near_death",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "variant": "DECEASED",
+      "mode": "word",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "variant": "REVIVING",
+      "mode": "word",
+      "canonical": "revived",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "variant": "life reward",
+      "mode": "substr",
+      "canonical": "WBV / capability-specific reward",
+      "reason": "单一生活奖励标量已废弃（13 §2.2；16 §3）",
+      "allow_line_contains": [
+        "Agentopia",
+        "奖励"
+      ]
+    },
+    {
+      "variant": "N×0.6",
+      "mode": "substr",
+      "canonical": "N×0.5",
+      "reason": "LLM 预算口径已收敛（S-C19）"
+    },
+    {
+      "variant": "N*0.6",
+      "mode": "substr",
+      "canonical": "N*0.5",
+      "reason": "LLM 预算口径已收敛（S-C19）"
+    },
+    {
+      "variant": "10-emergence-observation.md",
+      "mode": "substr",
+      "canonical": "07-emergence-observation.md",
+      "reason": "文档命名对齐（T9-C3 / S-C13）"
+    },
+    {
+      "variant": "rerun",
+      "mode": "word",
+      "canonical": "replay",
+      "reason": "重放术语规范（03 §6.2）"
+    }
+  ],
+  "conflicts": [
+    {
+      "id": "TC-1",
+      "item": "M_supply 口径",
+      "a": "01 §2.5: Σmax(B,0)+税池",
+      "b": "Q1 推荐: Σmax(cash,0)+税池+银行库存",
+      "status": "OPEN",
+      "note": "真正未决：属用户未决 Q1（货币口径含银行库存项）；2026-10-10 Leader 复核确认保留，交用户裁决。"
+    },
+    {
+      "id": "TC-2",
+      "item": "契约包位置（contracts/ vs life/ports.py）",
+      "a": "BP§1.1/ADR-02: contracts/",
+      "b": "life/ports.py",
+      "status": "RESOLVED",
+      "evidence": "contracts/ 已落地（T35/T36；v1.2/02 §10.4 R7/G1 达标：lint-imports 8 kept 0 broken；code/contracts/ 存在）；偏差已消。"
+    },
+    {
+      "id": "TC-3",
+      "item": "生命周期状态命名（大写 vs 小写）",
+      "a": "02 大写别名",
+      "b": "08 §5.9(5) 小写规范名",
+      "status": "RESOLVED",
+      "evidence": "v1 C-02 已裁：以小写 6 值为规范名；02 大写视为文档别名（LEXICON §4 映射）。"
+    },
+    {
+      "id": "TC-4",
+      "item": "协商/评比事件命名",
+      "a": "12: OFFER/COUNTER_OFFER/RANKING",
+      "b": "08: OFFER_CREATED/OFFER_COUNTERED/RANKING_EMITTED",
+      "status": "RESOLVED",
+      "evidence": "已裁决统一到 08（09 §7.1 N-1/2/3）；命名统一已回写 T14。"
+    },
+    {
+      "id": "TC-5",
+      "item": "存款事件",
+      "a": "12: DEPOSIT/WITHDRAW",
+      "b": "旧: TRANSFER<->银行",
+      "status": "RESOLVED",
+      "evidence": "T14-C3 已裁定采纳 DEPOSIT/WITHDRAW（+ INTEREST_PAID，phase 4.2）。"
+    },
+    {
+      "id": "TC-6",
+      "item": "耗竭告警事件",
+      "a": "12: WELLBEING_ALERT",
+      "b": "08: STATE_CHANGE",
+      "status": "RESOLVED",
+      "evidence": "T14-C4 已裁定不新增；以 NEED_UPDATE + 观测派生承载。"
+    },
+    {
+      "id": "TC-7",
+      "item": "内核包命名",
+      "a": "sim-engine（旧草稿）",
+      "b": "engine/kernel",
+      "status": "RESOLVED",
+      "evidence": "BP §1.1 注：统一为 engine/kernel；sim-engine 仅存于成员名 sim-engine-stats-architect（已加 exclude）。"
+    },
+    {
+      "id": "TC-8",
+      "item": "唤醒率符号",
+      "a": "w=3（误用）",
+      "b": "a（决策率）/ q_*（配额）",
+      "status": "RESOLVED",
+      "evidence": "已收敛：08 §5.5 澄清 w=3 实为配额 q_alive。"
+    },
+    {
+      "id": "TC-9",
+      "item": "LLM 预算口径",
+      "a": "N×0.6",
+      "b": "≤N×0.5",
+      "status": "RESOLVED",
+      "evidence": "S-C19 已收敛为 ≤N×0.5（N=10→5/N=20→10/N=50→25）。"
+    },
+    {
+      "id": "TC-10",
+      "item": "观测文档编号",
+      "a": "10-emergence-observation.md（旧序）",
+      "b": "07-emergence-observation.md（现行）",
+      "status": "RESOLVED",
+      "evidence": "2026-10-10 Leader 裁决：以现行实际编号+文件名为规范；历史旧序编号只作 mention 标注、不视为违规；保留旧→现行映射，不必回溯改文档。"
+    },
+    {
+      "id": "TC-11",
+      "item": "叙事命名空间登记",
+      "a": "17: metrics.narrative",
+      "b": "08 §4.0",
+      "status": "RESOLVED",
+      "evidence": "T25 已在 08 §4.0 登记 metrics.narrative（非判定、出门禁）。"
+    },
+    {
+      "id": "TC-12",
+      "item": "感知前置 R2/R3/R4",
+      "a": "17 依赖",
+      "b": "08 部分落地",
+      "status": "RESOLVED",
+      "evidence": "T27 已落地（PERCEPTION_SCOPE 配置 R2、群组成员 R3、转述 refs R4；engine/version.py 校验 perception_scope v1.2-r2）。"
+    }
+  ]
+}

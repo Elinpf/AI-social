@@ -1,0 +1,26 @@
+# ===== 凭据：绝不提交 =====
+code/.env.local
+**/.env.local
+**/*.key
+**/secrets*
+
+# ===== 运行日志（体积大、可由命令再生；sha256 已记录在证据 md/json 内）=====
+**/*.jsonl
+**/*.jsonl.gz
+**/*.gz
+.v1.2/evidence/_provisional_ablation/
+**/.import_linter_cache/
+
+# ===== 可再生的缓存/报告/日志 =====
+code/reports/
+code/freeze_cache/
+code/logs/
+**/side_*/
+**/__pycache__/
+*.py[cod]
+**/.pytest_cache/
+**/node_modules/
+
+# ===== 其他 =====
+.DS_Store
+*.tmp

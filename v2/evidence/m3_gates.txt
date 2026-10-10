@@ -1,0 +1,25 @@
+=== T125 gates Sat Oct 10 09:50:38 PM CST 2026 ===
+
+## pytest -q
+........................................................................ [ 76%]
+.................................................................        [100%]
+281 passed in 39.30s
+
+## lint-imports
+
+Contracts: 8 kept, 0 broken.
+
+## obs gate G1-G7 (A)
+[PASS] metrics_bitwise_equal
+[PASS] census_bitwise_equal
+[PASS] llm_calls_zero
+[PASS] llm_judged_metric_count_zero
+[PASS] money_conservation
+[PASS] schema_conformance
+[PASS] distribution_regression
+GATE PASS
+
+## make lexicon-gate
+exit=0
+  v1.2         violation=0    mention=1   
+========================================================================

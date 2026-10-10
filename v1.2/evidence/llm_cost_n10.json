@@ -1,0 +1,96 @@
+{
+  "N": 10,
+  "caveat": "by_purpose 仅含 importance/reflect/plan，无 judge/narrate/dialogue → 不完整 planner 下限，非完整实验成本。",
+  "engine_log": {
+    "by_provider": {
+      "openai_compat": 522
+    },
+    "by_purpose": {
+      "importance": {
+        "cached": 387,
+        "calls": 442,
+        "degraded": 0,
+        "thinking": 0,
+        "tokens_in": 939,
+        "tokens_out": 14142
+      },
+      "plan": {
+        "cached": 0,
+        "calls": 10,
+        "degraded": 0,
+        "thinking": 0,
+        "tokens_in": 887,
+        "tokens_out": 666
+      },
+      "reflect": {
+        "cached": 18,
+        "calls": 70,
+        "degraded": 0,
+        "thinking": 0,
+        "tokens_in": 19743,
+        "tokens_out": 2673
+      }
+    },
+    "llm_judgment_by_dimension": {},
+    "source": "engine_log(LLM_CALL)",
+    "total": {
+      "cached": 405,
+      "calls": 522,
+      "degraded": 0,
+      "thinking": 0,
+      "tokens_in": 21569,
+      "tokens_out": 17481,
+      "tokens_total": 39050
+    }
+  },
+  "events": 31228,
+  "freeze_cache": {
+    "by_provider": {
+      "openai_compat": {
+        "responses_cached": 117,
+        "tokens_in": 21569,
+        "tokens_out": 17481,
+        "tokens_total": 39050
+      }
+    },
+    "by_tier": {
+      "T1": 117
+    },
+    "source": "freeze_cache:../v1.2/evidence/side_llm_c/freeze_cache",
+    "total": {
+      "degraded": 0,
+      "responses_cached": 117,
+      "thinking": 0,
+      "tokens_in": 21569,
+      "tokens_out": 17481,
+      "tokens_total": 39050
+    }
+  },
+  "headline": {
+    "by_purpose": {
+      "importance": 442,
+      "plan": 10,
+      "reflect": 70
+    },
+    "calls": 522,
+    "model": "DeepSeek-Flash",
+    "provider": "openai_compat",
+    "thinking": 0,
+    "tokens_in": 21569,
+    "tokens_out": 17481,
+    "tokens_total": 39050
+  },
+  "provider_guard": {
+    "by_provider": {
+      "openai_compat": 522
+    },
+    "expected": "openai_compat",
+    "ok": true,
+    "policy": "计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。",
+    "problems": []
+  },
+  "rounds": 84,
+  "seed": 42,
+  "segment": "post-T55 trunk + econ(T51) + real_llm (interim, 待冻干重跑)",
+  "wall_seconds": 225.1
+}

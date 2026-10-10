@@ -1,0 +1,14 @@
+T65 视觉调研取证 · 版本指纹（冻结时刻 2026-10-10 14:44:06 +08:00）
+服务：python3 tools/serve.py  →  http://127.0.0.1:8848/  （PID 333541）
+取证方式：本地 Playwright 1.63.0 + Chromium（headless，SwiftShader 软件 WebGL）
+          viewport 1600x1000（另 1920x1080 一张 wide），full_page 截图
+截图前后前端文件哈希一致（稳定）：
+  76977c02c5aa  index.html
+  db0b5f564c92  styles/app.css
+  0d070f322554  src/audit.js
+  e43683b57de1  src/data.js
+  68f3c6f95271  src/main.js
+  35464d8c02b0  src/replay.js
+  ad36ee039b21  src/sprites.js
+  a69311e46263  src/town.js
+说明：前端正被 art-director 高频迭代（14:39–14:42 连续变更），以上为本轮截图的确定状态。

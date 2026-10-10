@@ -1,0 +1,134 @@
+{
+  "segment": "B2_N20",
+  "N": 20,
+  "economy_enabled": true,
+  "lifecycle_enabled": true,
+  "policy_flags": {
+    "economy.enabled": true,
+    "lifecycle.enabled": true
+  },
+  "events": 124451,
+  "seconds": 287.7754,
+  "wall_s": 299.2,
+  "chain_ok": true,
+  "replay_parity": true,
+  "seals_ok": true,
+  "conservation_ok": true,
+  "final_state_hash": "sha256:486d31fc43dc83f1d0fe9186de07fb1d8054dd4c3e3f2762482c5630bd724dcc",
+  "SYSTEM_ERROR": 0,
+  "econ_family": {
+    "TRANSFER": 27,
+    "MARKET_TRADE": 21,
+    "LOAN_ISSUED": 20,
+    "LOAN_REPAY": 0,
+    "LOAN_DEFAULT": 7,
+    "INTEREST_CHARGED": 270,
+    "INTEREST_PAID": 0,
+    "DEPOSIT": 19,
+    "WITHDRAW": 0,
+    "TAX_LEVIED": 44,
+    "UBI_PAID": 0,
+    "METABOLISM": 1591,
+    "PENALTY_APPLIED": 2,
+    "REVIVE_FEE_PAID": 10
+  },
+  "econ_active_total": 2011,
+  "lifecycle_family": {
+    "METABOLISM": 1591,
+    "STATE_CHANGE": 101,
+    "AGENT_DIED": 20,
+    "AGENT_REVIVED": 10,
+    "REVIVE_FEE_PAID": 10,
+    "LOAN_ISSUED": 20,
+    "LOAN_REPAY": 0,
+    "LOAN_DEFAULT": 7,
+    "INTEREST_CHARGED": 270,
+    "PENALTY_APPLIED": 2
+  },
+  "lifecycle_family_total": 2031,
+  "n_near_death": 25,
+  "n_died": 20,
+  "n_revived": 10,
+  "died_rounds": [
+    [
+      "P001",
+      60
+    ],
+    [
+      "P002",
+      66
+    ],
+    [
+      "P003",
+      66
+    ],
+    [
+      "P004",
+      69
+    ],
+    [
+      "P005",
+      70
+    ],
+    [
+      "P006",
+      70
+    ],
+    [
+      "P007",
+      70
+    ],
+    [
+      "P008",
+      70
+    ],
+    [
+      "P010",
+      70
+    ],
+    [
+      "P011",
+      70
+    ],
+    [
+      "P009",
+      73
+    ],
+    [
+      "P012",
+      73
+    ],
+    [
+      "P013",
+      73
+    ],
+    [
+      "P014",
+      73
+    ],
+    [
+      "P015",
+      73
+    ],
+    [
+      "P016",
+      73
+    ],
+    [
+      "P017",
+      73
+    ],
+    [
+      "P019",
+      73
+    ],
+    [
+      "P020",
+      73
+    ],
+    [
+      "P018",
+      76
+    ]
+  ]
+}

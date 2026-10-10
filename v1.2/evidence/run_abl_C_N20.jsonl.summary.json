@@ -1,0 +1,134 @@
+{
+  "segment": "C_N20",
+  "N": 20,
+  "economy_enabled": true,
+  "lifecycle_enabled": true,
+  "policy_flags": {
+    "economy.enabled": true,
+    "lifecycle.enabled": true
+  },
+  "events": 124731,
+  "seconds": 4390.2316,
+  "wall_s": 4400.9,
+  "chain_ok": true,
+  "replay_parity": true,
+  "seals_ok": true,
+  "conservation_ok": true,
+  "final_state_hash": "sha256:acf10e5a07dc3c774842b41c9d8fa02e2ec087a7111762064bff8bc47fef3efe",
+  "SYSTEM_ERROR": 0,
+  "econ_family": {
+    "TRANSFER": 31,
+    "MARKET_TRADE": 23,
+    "LOAN_ISSUED": 20,
+    "LOAN_REPAY": 0,
+    "LOAN_DEFAULT": 7,
+    "INTEREST_CHARGED": 266,
+    "INTEREST_PAID": 0,
+    "DEPOSIT": 18,
+    "WITHDRAW": 0,
+    "TAX_LEVIED": 46,
+    "UBI_PAID": 0,
+    "METABOLISM": 1600,
+    "PENALTY_APPLIED": 3,
+    "REVIVE_FEE_PAID": 12
+  },
+  "econ_active_total": 2026,
+  "lifecycle_family": {
+    "METABOLISM": 1600,
+    "STATE_CHANGE": 105,
+    "AGENT_DIED": 20,
+    "AGENT_REVIVED": 12,
+    "REVIVE_FEE_PAID": 12,
+    "LOAN_ISSUED": 20,
+    "LOAN_REPAY": 0,
+    "LOAN_DEFAULT": 7,
+    "INTEREST_CHARGED": 266,
+    "PENALTY_APPLIED": 3
+  },
+  "lifecycle_family_total": 2045,
+  "n_near_death": 26,
+  "n_died": 20,
+  "n_revived": 12,
+  "died_rounds": [
+    [
+      "P001",
+      60
+    ],
+    [
+      "P003",
+      64
+    ],
+    [
+      "P002",
+      65
+    ],
+    [
+      "P010",
+      68
+    ],
+    [
+      "P008",
+      69
+    ],
+    [
+      "P006",
+      70
+    ],
+    [
+      "P007",
+      70
+    ],
+    [
+      "P011",
+      70
+    ],
+    [
+      "P004",
+      73
+    ],
+    [
+      "P005",
+      73
+    ],
+    [
+      "P009",
+      73
+    ],
+    [
+      "P012",
+      73
+    ],
+    [
+      "P013",
+      73
+    ],
+    [
+      "P014",
+      73
+    ],
+    [
+      "P015",
+      73
+    ],
+    [
+      "P016",
+      73
+    ],
+    [
+      "P017",
+      73
+    ],
+    [
+      "P018",
+      76
+    ],
+    [
+      "P019",
+      76
+    ],
+    [
+      "P020",
+      76
+    ]
+  ]
+}

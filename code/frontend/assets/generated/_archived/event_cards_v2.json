@@ -1,0 +1,210 @@
+{
+  "schema": "hitt.event-cards/2",
+  "size": [
+    300,
+    224
+  ],
+  "count": 20,
+  "cards": [
+    {
+      "id": "mentorship",
+      "title_cn": "导师指导",
+      "title_en": "Mentorship",
+      "icon": "skill-up",
+      "family": "COGN",
+      "scene": "pair-talk",
+      "annotation": "rel-bars",
+      "file": "assets/generated/event_cards_v2/mentorship.png"
+    },
+    {
+      "id": "gift-giving",
+      "title_cn": "赠礼",
+      "title_en": "Gift-giving",
+      "icon": "gift-ubi",
+      "family": "ECON",
+      "scene": "trade",
+      "annotation": "equation",
+      "file": "assets/generated/event_cards_v2/gift-giving.png"
+    },
+    {
+      "id": "combat-training",
+      "title_cn": "冲突演练",
+      "title_en": "Combat Training",
+      "icon": "clash",
+      "family": "WARN",
+      "scene": "conflict",
+      "annotation": "status",
+      "file": "assets/generated/event_cards_v2/combat-training.png"
+    },
+    {
+      "id": "creative-collab",
+      "title_cn": "创意协作",
+      "title_en": "Creative Collab",
+      "icon": "craft",
+      "family": "COGN",
+      "scene": "group",
+      "annotation": "rel-bars",
+      "file": "assets/generated/event_cards_v2/creative-collab.png"
+    },
+    {
+      "id": "saving-money",
+      "title_cn": "储蓄",
+      "title_en": "Saving Money",
+      "icon": "bank-in",
+      "family": "ECON",
+      "scene": "solo",
+      "annotation": "equation",
+      "file": "assets/generated/event_cards_v2/saving-money.png"
+    },
+    {
+      "id": "whispered-comm",
+      "title_cn": "私语",
+      "title_en": "Whispered Comm.",
+      "icon": "speech-dm",
+      "family": "SOCIAL",
+      "scene": "pair-talk",
+      "annotation": "ab-choice",
+      "file": "assets/generated/event_cards_v2/whispered-comm.png"
+    },
+    {
+      "id": "emotion-burnout",
+      "title_cn": "情绪耗竭",
+      "title_en": "Emotion Burnout",
+      "icon": "need",
+      "family": "LIFE",
+      "scene": "solo",
+      "annotation": "status",
+      "file": "assets/generated/event_cards_v2/emotion-burnout.png"
+    },
+    {
+      "id": "diff-scoring",
+      "title_cn": "评分分歧",
+      "title_en": "Diff. Scoring",
+      "icon": "judge",
+      "family": "SYS",
+      "scene": "group",
+      "annotation": "rel-bars",
+      "file": "assets/generated/event_cards_v2/diff-scoring.png"
+    },
+    {
+      "id": "scarcity-buy",
+      "title_cn": "稀缺抢购",
+      "title_en": "Scarcity Buy",
+      "icon": "shop",
+      "family": "ECON",
+      "scene": "trade",
+      "annotation": "equation",
+      "file": "assets/generated/event_cards_v2/scarcity-buy.png"
+    },
+    {
+      "id": "skill-practice",
+      "title_cn": "技能练习",
+      "title_en": "Skill Practice",
+      "icon": "skill",
+      "family": "COGN",
+      "scene": "craft",
+      "annotation": "status",
+      "file": "assets/generated/event_cards_v2/skill-practice.png"
+    },
+    {
+      "id": "polite-reject",
+      "title_cn": "礼貌拒绝",
+      "title_en": "Polite Rejection",
+      "icon": "offer-no",
+      "family": "SOCIAL",
+      "scene": "pair-talk",
+      "annotation": "ab-choice",
+      "file": "assets/generated/event_cards_v2/polite-reject.png"
+    },
+    {
+      "id": "passion-salary",
+      "title_cn": "热爱与薪资",
+      "title_en": "Passion vs Salary",
+      "icon": "role",
+      "family": "ECON",
+      "scene": "pair-talk",
+      "annotation": "ab-choice",
+      "file": "assets/generated/event_cards_v2/passion-salary.png"
+    },
+    {
+      "id": "group-proposal",
+      "title_cn": "小组提案",
+      "title_en": "Group Proposal",
+      "icon": "norm-new",
+      "family": "SOCIAL",
+      "scene": "group",
+      "annotation": "timeline",
+      "file": "assets/generated/event_cards_v2/group-proposal.png"
+    },
+    {
+      "id": "academic-collab",
+      "title_cn": "学术协作",
+      "title_en": "Academic Collab",
+      "icon": "book",
+      "family": "COGN",
+      "scene": "pair-talk",
+      "annotation": "rel-bars",
+      "file": "assets/generated/event_cards_v2/academic-collab.png"
+    },
+    {
+      "id": "counter-propose",
+      "title_cn": "反提案",
+      "title_en": "Counter-propose",
+      "icon": "offer-alt",
+      "family": "SOCIAL",
+      "scene": "pair-talk",
+      "annotation": "timeline",
+      "file": "assets/generated/event_cards_v2/counter-propose.png"
+    },
+    {
+      "id": "select-location",
+      "title_cn": "选择地点",
+      "title_en": "Select Location",
+      "icon": "pin",
+      "family": "COGN",
+      "scene": "solo",
+      "annotation": "ab-choice",
+      "file": "assets/generated/event_cards_v2/select-location.png"
+    },
+    {
+      "id": "power-conflict",
+      "title_cn": "权力冲突",
+      "title_en": "Power Conflict",
+      "icon": "gavel",
+      "family": "WARN",
+      "scene": "conflict",
+      "annotation": "rel-bars",
+      "file": "assets/generated/event_cards_v2/power-conflict.png"
+    },
+    {
+      "id": "rel-acceptance",
+      "title_cn": "关系接纳",
+      "title_en": "Rel. Acceptance",
+      "icon": "relation",
+      "family": "SOCIAL",
+      "scene": "pair-talk",
+      "annotation": "rel-bars",
+      "file": "assets/generated/event_cards_v2/rel-acceptance.png"
+    },
+    {
+      "id": "ice-breaking",
+      "title_cn": "破冰",
+      "title_en": "Ice-breaking",
+      "icon": "meet",
+      "family": "SOCIAL",
+      "scene": "pair-talk",
+      "annotation": "ab-choice",
+      "file": "assets/generated/event_cards_v2/ice-breaking.png"
+    },
+    {
+      "id": "rel-maintain",
+      "title_cn": "关系维护",
+      "title_en": "Rel. Maintenance",
+      "icon": "relation",
+      "family": "SOCIAL",
+      "scene": "trade",
+      "annotation": "timeline",
+      "file": "assets/generated/event_cards_v2/rel-maintain.png"
+    }
+  ]
+}

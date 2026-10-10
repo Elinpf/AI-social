@@ -1,0 +1,11 @@
+{
+  "_comment": "LLM 接入与 thinking 策略（非密钥）。端点/模型可被 env 覆盖（LLM_ENDPOINT/LLM_MODEL）；API Key 只从 env LLM_API_KEY 读取，禁止入库。thinking 策略按 purpose/tier 集中裁决，并纳入 engine_version 指纹。",
+  "endpoint": "http://172.16.3.41:31809/v1",
+  "model": "DeepSeek-Flash",
+  "embed_model": "frozen://lexical-relevance-v1",
+  "thinking": {
+    "default": false,
+    "true_purposes": ["judge", "narrate", "describe"],
+    "true_tiers": ["t2"]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "_comment": "v2 社会层配额/去重（v2/02-social-v2.md §1.3）。确定性硬约束；纳入 engine_version 指纹。单位：条/回合。",
+  "version": "1.0",
+  "caps": {
+    "dm_per_agent_per_round": 3,
+    "public_per_agent_per_round": 2,
+    "public_global_per_round": 20,
+    "group_per_agent_per_group_per_round": 3,
+    "group_global_per_group_per_round": 20
+  },
+  "dedup": {"by": "author_body_hash", "window": "slot"}
+}

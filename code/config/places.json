@@ -1,0 +1,21 @@
+{
+  "places": [
+    {"place_id": "residence", "name_cn": "住宅", "category": "living", "affordances": ["self_care", "rest"], "open_slots": ["morning", "afternoon", "evening", "night"], "capacity": 1},
+    {"place_id": "farm", "name_cn": "农场", "category": "work_production", "affordances": ["work"], "open_slots": ["morning", "afternoon"], "capacity": 6},
+    {"place_id": "workshop", "name_cn": "工坊", "category": "work_production", "affordances": ["work"], "open_slots": ["morning", "afternoon"], "capacity": 4},
+    {"place_id": "kitchen", "name_cn": "面包房", "category": "work_processing", "affordances": ["work", "self_care"], "open_slots": ["morning", "afternoon", "evening"], "capacity": 5},
+    {"place_id": "clinic", "name_cn": "诊所", "category": "work_service", "affordances": ["work", "self_care"], "open_slots": ["morning", "afternoon"], "capacity": 4},
+    {"place_id": "school", "name_cn": "学校", "category": "work_education", "affordances": ["work", "learn"], "open_slots": ["morning", "afternoon"], "capacity": 10},
+    {"place_id": "office", "name_cn": "事务所", "category": "work_admin", "affordances": ["work"], "open_slots": ["morning", "afternoon"], "capacity": 6},
+    {"place_id": "market", "name_cn": "市集", "category": "trade", "affordances": ["work", "trade"], "open_slots": ["morning", "afternoon", "evening"], "capacity": 20},
+    {"place_id": "bank", "name_cn": "银行", "category": "trade", "affordances": ["trade"], "open_slots": ["morning", "afternoon"], "capacity": 6},
+    {"place_id": "plaza", "name_cn": "中央广场", "category": "public", "affordances": ["socialize", "civic"], "open_slots": ["morning", "afternoon", "evening", "night"], "capacity": 30},
+    {"place_id": "town_hall", "name_cn": "市政厅", "category": "public", "affordances": ["civic", "work"], "open_slots": ["morning", "afternoon"], "capacity": 12},
+    {"place_id": "library", "name_cn": "图书馆", "category": "public", "affordances": ["learn"], "open_slots": ["morning", "afternoon", "evening", "night"], "capacity": 8},
+    {"place_id": "community_center", "name_cn": "社区中心", "category": "public", "affordances": ["socialize", "civic"], "open_slots": ["morning", "afternoon", "evening", "night"], "capacity": 12},
+    {"place_id": "cafe", "name_cn": "咖啡馆", "category": "leisure", "affordances": ["socialize", "leisure"], "open_slots": ["afternoon", "evening"], "capacity": 12},
+    {"place_id": "park", "name_cn": "公园", "category": "leisure", "affordances": ["socialize", "leisure"], "open_slots": ["morning", "afternoon", "evening", "night"], "capacity": 20},
+    {"place_id": "hall", "name_cn": "礼堂", "category": "leisure", "affordances": ["socialize", "leisure"], "open_slots": ["evening"], "capacity": 40},
+    {"place_id": "gate", "name_cn": "城门", "category": "edge", "affordances": [], "open_slots": ["morning", "afternoon", "evening", "night"], "capacity": 10}
+  ]
+}

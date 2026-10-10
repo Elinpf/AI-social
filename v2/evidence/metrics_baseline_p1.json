@@ -1,0 +1,35 @@
+{
+  "frozen_from": "v2/evidence/run_p1_final_n20_llm.jsonl",
+  "log_sha256": "sha256:fb832372af235736b78e539ab676feff08c3e94e79ffcdbe0dc4b5d88b13a2fc",
+  "feature_set": "v2-P1-final",
+  "tolerance_ratio": 0.8,
+  "econ_loop": {
+    "M_final": 41892,
+    "M_min": 0,
+    "M_max": 197200,
+    "M_target": 200000,
+    "M_never_negative": true,
+    "V": 0.062536,
+    "Y_mu": 46900,
+    "median_wage_mu": null,
+    "gini_net_worth": 0.704452,
+    "tax_pool_final": 3478,
+    "n_produce": 314,
+    "mint_burn_balance_window": 0.0,
+    "price_cv_mean": 0.0
+  },
+  "social_key": {
+    "channels": {
+      "DM": 164,
+      "PUBLIC": 59,
+      "GROUP": 8
+    },
+    "comm_directed_edges": 167,
+    "comm_reciprocity": 0.246269,
+    "n_groups": 8,
+    "norm_adopted": 19,
+    "n_contracts": 0,
+    "n_votes": 0
+  },
+  "note": "新指标基线（T101）；未来回归比对用 ≥ratio（增长通过、塌陷失败）。M_min=0 为 OFF 默认预期值。"
+}

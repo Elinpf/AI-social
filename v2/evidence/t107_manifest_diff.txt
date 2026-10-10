@@ -1,0 +1,36 @@
+# T107 manifest diff（place.*/char.* → hand/）
+
+place.residence: generated/buildings/residence.png (sha d018eb9584) -> hand/buildings128/residence.png (sha 352deed976, size [128, 128])
+place.farm: generated/buildings/farm.png (sha da30a6efc6) -> hand/buildings128/farm.png (sha 327bfe96fd, size [128, 128])
+place.workshop: generated/buildings/workshop.png (sha f6faeca628) -> hand/buildings128/workshop.png (sha 81fedf490d, size [128, 128])
+place.kitchen: generated/buildings/kitchen.png (sha a88e9f4f66) -> hand/buildings128/kitchen.png (sha a8310db548, size [128, 128])
+place.clinic: generated/buildings/clinic.png (sha 7525650a46) -> hand/buildings128/clinic.png (sha 476592afe1, size [128, 128])
+place.school: generated/buildings/school.png (sha 169f481a3e) -> hand/buildings128/school.png (sha 046836abda, size [128, 128])
+place.office: generated/buildings/office.png (sha f5d8afd2b1) -> hand/buildings128/office.png (sha a7eae816a5, size [128, 128])
+place.market: generated/buildings/market.png (sha 0ed52af58d) -> hand/buildings128/market.png (sha dae111bc63, size [128, 128])
+place.bank: generated/buildings/bank.png (sha cacd5d74bb) -> hand/buildings128/bank.png (sha cf4034cfd3, size [128, 128])
+place.plaza: generated/buildings/plaza.png (sha a52fed4f35) -> hand/buildings128/plaza.png (sha a50ef6c444, size [128, 128])
+place.town_hall: generated/buildings/town_hall.png (sha 0d3338ad7e) -> hand/buildings128/town_hall.png (sha 2c25585aff, size [128, 128])
+place.library: generated/buildings/library.png (sha 256cc40853) -> hand/buildings128/library.png (sha 23673c701a, size [128, 128])
+place.community_center: generated/buildings/community_center.png (sha 486baadc99) -> hand/buildings128/community_center.png (sha 0628cce44c, size [128, 128])
+place.cafe: generated/buildings/cafe.png (sha a88e9f4f66) -> hand/buildings128/cafe.png (sha 923be737ab, size [128, 128])
+place.park: generated/buildings/park.png (sha af01c8ec4b) -> hand/buildings128/park.png (sha 06e939db6a, size [128, 128])
+place.hall: generated/buildings/hall.png (sha 510ad31608) -> hand/buildings128/hall.png (sha 152ae75fb2, size [128, 128])
+place.gate: generated/buildings/gate.png (sha 242812ffbe) -> hand/buildings128/gate.png (sha cb42104f19, size [128, 128])
+char.villager_red: generated/characters/villager_red.png (sha 5e0706a435) -> hand/chars/villager_red.png (sha 409a007084, size [144, 96])
+char.villager_green: generated/characters/villager_green.png (sha 0d8bd4bf6a) -> hand/chars/villager_green.png (sha 7bd62af46e, size [144, 96])
+char.villager_blue: generated/characters/villager_blue.png (sha f98d57dda4) -> hand/chars/villager_blue.png (sha a683c726d4, size [144, 96])
+char.villager_yellow: generated/characters/villager_yellow.png (sha 08fe7bd292) -> hand/chars/villager_yellow.png (sha 085da91119, size [144, 96])
+char.villager_purple: generated/characters/villager_purple.png (sha 1be56804ff) -> hand/chars/villager_purple.png (sha 58fb64014d, size [144, 96])
+char.villager_teal: generated/characters/villager_teal.png (sha f9923d5df2) -> hand/chars/villager_teal.png (sha f850cb2b1e, size [144, 96])
+char.villager_orange: generated/characters/villager_orange.png (sha 5b63c8009f) -> hand/chars/villager_orange.png (sha 5f03a0d1be, size [144, 96])
+char.villager_slate: generated/characters/villager_slate.png (sha d98bcc65d0) -> hand/chars/villager_slate.png (sha 146bfa26c8, size [144, 96])
+
+# 校验
+指向 generated/buildings|characters 的条目: []  (应为空)
+指向 hand/ 的条目数: 25 / 25
+placeVariants(顶层, 不新增 place id): {'residence': ['hand/buildings128/residence_v2.png', 'hand/buildings128/residence_v3.png']}
+place id 数(应=17): 17
+sha256 hand/residence.png = 352deed97644044d
+sha256 hand/town_hall.png = 2c25585aff81d755
+sha256 hand/market.png = dae111bc63348bb3

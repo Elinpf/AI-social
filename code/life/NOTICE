@@ -1,0 +1,28 @@
+This product includes software adapted from joonspk-research/generative_agents
+(Generative Agents, Stanford University), licensed under the Apache License,
+Version 2.0 (the "License"); you may not use these adapted files except in
+compliance with the License. A copy of the License is available at:
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Copyright for the original work belongs to the Generative Agents authors.
+
+Modifications (marked as required by Apache-2.0 section 4(b)):
+  The files in this directory (`code/life/`) reimplement the *structure* and the
+  prompt organization of the Generative Agents cognitive architecture for our
+  deterministic, event-log-anchored world. They are substantially modified:
+
+    agent.py     adapted from  persona/persona.py  (Persona.move main loop:
+                   perceive -> retrieve -> plan -> act -> reflect)
+    memory.py    adapted from  persona/memory_structures/associative_memory.py
+                   and persona/cognitive_modules/{retrieve,reflect}.py
+                   (memory stream + three-factor retrieval + reflection trigger)
+    plan.py/plan logic adapted from persona/cognitive_modules/plan.py (template)
+
+  Key changes vs. the original:
+    * every step reads ONLY from the kernel's IF-1 `perceive()` and writes ONLY
+      via IF-2 `submit_intent()` — the agent never mutates world state;
+    * all LLM output is routed through a freezable `LLMClient` and is not used to
+      decide world randomness (RNG decides branches; the LLM only fills content);
+    * memory bodies/embeddings are stored in side storage; the ledger stores only
+      references; retrieval hits are logged so replay never recomputes embeddings.

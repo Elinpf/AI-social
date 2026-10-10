@@ -1,0 +1,59 @@
+{
+  "current_total": 23185,
+  "gated_total": 612,
+  "by_card_current": {
+    "academic-collab": 10,
+    "combat-training": 560,
+    "counter-propose": 10,
+    "creative-collab": 540,
+    "diff-scoring": 90,
+    "emotion-burnout": 3503,
+    "gift-giving": 31,
+    "group-proposal": 38,
+    "ice-breaking": 210,
+    "mentorship": 79,
+    "passion-salary": 30,
+    "polite-reject": 11,
+    "power-conflict": 88,
+    "rel-acceptance": 476,
+    "rel-maintain": 16716,
+    "saving-money": 18,
+    "scarcity-buy": 23,
+    "select-location": 511,
+    "skill-practice": 77,
+    "whispered-comm": 164
+  },
+  "by_card_gated": {
+    "academic-collab": 14,
+    "combat-training": 68,
+    "counter-propose": 10,
+    "creative-collab": 6,
+    "gift-giving": 93,
+    "group-proposal": 19,
+    "ice-breaking": 12,
+    "mentorship": 32,
+    "passion-salary": 9,
+    "polite-reject": 11,
+    "power-conflict": 88,
+    "rel-maintain": 32,
+    "saving-money": 54,
+    "scarcity-buy": 23,
+    "select-location": 22,
+    "skill-practice": 77,
+    "whispered-comm": 42
+  },
+  "reduction_pct": 97.36,
+  "leader_variant": 22987,
+  "deprecated": {
+    "22987": "领导口径变体（每 slug 仅取一个 type；与引擎按 e.type 逐事件渲染不符）→ 废弃，以 current_total 为准",
+    "567": "template-only（未含 TRANSFER{gift}/DEPOSIT 语义并集）→ 废弃",
+    "546": "template-only 且 whispered-comm=0 → 废弃"
+  },
+  "caliber": {
+    "field": "e.type",
+    "one_card_per_event": true,
+    "unmapped_counted": false,
+    "current_rule": "sprites.js 原 EVENT_CARDS 的 26 条 type 条目逐事件计数",
+    "gated_rule": "template→EVENT_CARDS→语义 switch（与 frontend audit.js 一致）"
+  }
+}

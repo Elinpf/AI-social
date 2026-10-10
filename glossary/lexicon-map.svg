@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="860" viewBox="0 0 1200 860" font-family="DejaVu Sans, Helvetica, Arial, sans-serif">
+  <style>
+    .title{font-size:24px;font-weight:700;fill:#0f172a}
+    .sub{font-size:13px;fill:#475569}
+    .band-title{font-size:16px;font-weight:700;fill:#0f172a}
+    .band-sub{font-size:11px;fill:#64748b}
+    .term{font-size:12px;fill:#1e293b}
+    .axis{font-size:13px;font-weight:700;fill:#334155}
+    .legend{font-size:12px;fill:#334155}
+    .mono{font-family:DejaVu Sans Mono, Consolas, monospace;font-size:11.5px;fill:#0b3a6b}
+    .small{font-size:10.5px;fill:#64748b}
+  </style>
+
+  <rect x="0" y="0" width="1200" height="860" fill="#f8fafc"/>
+  <text class="title" x="30" y="42">青溪镇术语图 · 三层（功能轴）× 三条角色带（LLM 能力轴）</text>
+  <text class="sub" x="30" y="66">权威：v1.1/00-architecture §1.5 + v1.2/01 实现蓝图 ｜ 配套：glossary/LEXICON.md、lexicon.json ｜ 只写=Arbiter；判定边界=LLM 仅 F(冻结)/N(叙事)</text>
+
+  <!-- ================= 左：三层（功能轴） ================= -->
+  <text class="axis" x="30" y="104">功能轴：三层架构（谁负责什么）</text>
+
+  <!-- L2 观测层 -->
+  <rect x="30" y="116" width="700" height="150" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+  <text class="band-title" x="48" y="144">L2 涌现观测层（M8）</text>
+  <text class="band-sub" x="250" y="144">只读 · 纯函数 · 确定性重算 · 判定不用 LLM</text>
+  <text class="term" x="48" y="170">metrics（IF-4）· emergence_report · wellbeing_report · census_report</text>
+  <text class="term" x="48" y="192">指标分级 D/F/K · guardrail 护栏 · S1–S4 · divergence_count · golden_baseline</text>
+  <text class="term" x="48" y="214">cascade / R0 · G_money / G_comm / G_rel · WBV（7 维）· WBI（可选）</text>
+  <text class="small" x="48" y="240">↳ 绝不：调 LLM / 重算嵌入 / 写世界；narrative_reads_in_decision==0；llm_judged_metric_count==0（入门禁命名空间）</text>
+  <text class="small" x="600" y="144" fill="#1d4ed8">只读（IF-4）</text>
+
+  <!-- D0 内核 -->
+  <rect x="30" y="286" width="700" height="190" rx="12" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+  <text class="band-title" x="48" y="314">D0 确定性内核（世界法则）</text>
+  <text class="band-sub" x="322" y="314">唯一写入口（Arbiter）· 绝不调 LLM</text>
+  <text class="term" x="48" y="340">Arbiter 中央裁决器 · Ledger 账本 · turn_seal 回合封条 · RoundBuffer（P6 唯一落盘）</text>
+  <text class="term" x="48" y="362">replay 重放 · Snapshot 快照 · RNG(SplitMix64) · canonical_json · engine_version</text>
+  <text class="term" x="48" y="384">hook 链：P4 4.1–4.8（经济/生命周期）｜ P3.5 L1–L7（生活层）</text>
+  <text class="term" x="48" y="406">Event · Intent(意图/事实分离) · flags 反作弊 · PERCEPTION_SCOPE · invariants 不变量</text>
+  <text class="small" x="48" y="432">↳ 时间派生 round→slot→day→week（1 周=84 回合）· status 6 值白名单 · E_eff 判死 · I_eff 过滤</text>
+  <text class="small" x="600" y="314" fill="#b91c1c">只写（唯一）</text>
+
+  <!-- L1 生活层 -->
+  <rect x="30" y="496" width="700" height="170" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+  <text class="band-title" x="48" y="524">L1 人格生活层</text>
+  <text class="band-sub" x="230" y="524">生成内容/意图 · 产出非货币状态 · 不直写世界</text>
+  <text class="term" x="48" y="550">模块 M1 人格 · M2 记忆流 · M3 关系 · M4 日程 · M5 场所昼夜 · M6 对话 · M7 目标需求</text>
+  <text class="term" x="48" y="572">persona · memory stream · relation(affinity/trust/respect) · WEEK_PHASES · activity_type · need · place · topology</text>
+  <text class="term" x="48" y="594">接口：IF-1 perceive（只读）· IF-2 submit_intent · IF-2b submit_judgment · IF-7 narrate</text>
+  <text class="small" x="48" y="620">↳ 生活 hook 不返回货币 delta，只返回非货币状态 + pending_intents（意图/事实分离）</text>
+  <text class="small" x="600" y="524" fill="#15803d">意图→内核</text>
+
+  <!-- 流向箭头 -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#334155"/>
+    </marker>
+    <marker id="arrowR" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <line x1="380" y1="496" x2="380" y2="476" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <text class="small" x="388" y="492">IF-2 意图（校验后才成事实）</text>
+  <line x1="720" y1="286" x2="720" y2="266" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow)"/>
+  <text class="small" x="612" y="284">IF-4 只读</text>
+  <text class="small" x="360" y="258" fill="#b91c1c">IF-3 events（唯一事实出口，P6 COMMIT）</text>
+
+  <!-- ================= 右：三条角色带 ================= -->
+  <text class="axis" x="770" y="104">能力轴：三条角色带（LLM 能做什么）</text>
+
+  <!-- 硬内核 -->
+  <rect x="770" y="116" width="400" height="176" rx="12" fill="#fff1f2" stroke="#dc2626" stroke-width="2"/>
+  <text class="band-title" x="788" y="144">① 硬内核 Hard Kernel</text>
+  <text class="band-sub" x="788" y="164">确定性代码 · 不调 LLM</text>
+  <text class="term" x="788" y="190">时钟 · 账本 · 结算 · 状态变更 · 死亡判定</text>
+  <text class="term" x="788" y="212">金额 / 死亡 / 结算 —— LLM 绝不碰</text>
+  <text class="small" x="788" y="238">落在：D0 确定性内核</text>
+  <text class="small" x="788" y="258">术语：Arbiter · Ledger · hook 4.x</text>
+  <text class="small" x="788" y="278">判定归属：D（确定性）· R（RNG 分支）</text>
+
+  <!-- 软判定 -->
+  <rect x="770" y="312" width="400" height="176" rx="12" fill="#fefce8" stroke="#ca8a04" stroke-width="2"/>
+  <text class="band-title" x="788" y="340">② 软判定层 Soft Judgment</text>
+  <text class="band-sub" x="788" y="360">LLM 定性判断 · 结果冻结</text>
+  <text class="term" x="788" y="386">仅定性社会判断（如「是否结为密友/师徒」）</text>
+  <text class="term" x="788" y="408">先 RNG 定分支 → LLM 填充 → 冻结</text>
+  <text class="small" x="788" y="434">落在：L1 内的判定子模块（life/softjudge）</text>
+  <text class="small" x="788" y="454">术语：LLM_JUDGMENT{decision,model,</text>
+  <text class="small" x="788" y="470">context_digest,frozen=true} · IF-2b</text>
+  <text class="small" x="788" y="486">判定归属：F（可读不可算，出门禁）</text>
+
+  <!-- 叙事 -->
+  <rect x="770" y="508" width="400" height="158" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+  <text class="band-title" x="788" y="536">③ 叙事层 Narrative</text>
+  <text class="band-sub" x="788" y="556">LLM 纯输出 · 只把已定结果讲成故事</text>
+  <text class="term" x="788" y="582">NARRATIVE{fact_event_seqs,body_ref,</text>
+  <text class="term" x="788" y="600">affects_state=false} · IF-7 narrate</text>
+  <text class="small" x="788" y="626">落在：narrative/（物理分包）</text>
+  <text class="small" x="788" y="646">H-1/H-2/H-3 · StoryAtom · NV · anchor_digest</text>
+  <text class="small" x="788" y="664">判定归属：N（纯叙事，不改状态）</text>
+
+  <!-- 边界图例 -->
+  <rect x="770" y="686" width="400" height="146" rx="12" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text class="axis" x="788" y="712">判定边界图例</text>
+  <line x1="788" y1="730" x2="820" y2="730" stroke="#b91c1c" stroke-width="3"/>
+  <text class="legend" x="830" y="734">只写：只有 D0 Arbiter 能改世界（唯一写入口 B4）</text>
+  <line x1="788" y1="758" x2="820" y2="758" stroke="#1d4ed8" stroke-width="3"/>
+  <text class="legend" x="830" y="762">只读：L2 观测层 / 前端 / traj / narrative（只读日志）</text>
+  <line x1="788" y1="786" x2="820" y2="786" stroke="#ca8a04" stroke-width="3"/>
+  <text class="legend" x="830" y="790">LLM 边界：只产 F（冻结判定）与 N（叙事）</text>
+  <text class="small" x="788" y="814">金额/死亡/结算 = 硬内核；判定/统计绝不依赖 LLM 主观判断</text>
+
+  <!-- 底部提示 -->
+  <rect x="30" y="700" width="700" height="132" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text class="axis" x="48" y="726">易混淆速记（详见 LEXICON.md §3/§4/§11.1）</text>
+  <text class="term" x="48" y="750">E 净值 vs E-* 事件族 vs E1–E20 语义事件 vs E_eff ｜ B 现金 vs B1–B4 蓝图决策 vs B线 双主线</text>
+  <text class="term" x="48" y="772">L1 生活层 vs L1 hook(advance_time) vs L1–L8 不变量 vs L2 观测层 ｜ M1–M7 模块 vs metrics.* 命名空间</text>
+  <text class="term" x="48" y="794">dead vs terminated ｜ INTENT_REJECTED(规则) vs OFFER_REJECTED(社交) ｜ guardrail 护栏 vs safety valve 安全阀</text>
+  <text class="term" x="48" y="816">R0 级联 vs R-1..R-11 风险 vs R1–R7 铁律 ｜ G1–G7 门禁 vs G1–G6 目标开放问题 ｜ S1–S4 判据 vs S-C* 冲突</text>
+</svg>

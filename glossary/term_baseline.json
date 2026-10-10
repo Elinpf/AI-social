@@ -1,0 +1,376 @@
+{
+  "generated": "2026-10-10T12:11:31",
+  "note": "术语检查器基线快照（棘轮模式）：仅『违规』入基线；『提及(mention)』不计。对比按 (file|variant) 计数，对行号偏移稳健。历史目录 v1/** 为历史快照，不强制改写。",
+  "historical_dirs": [
+    "v1"
+  ],
+  "total_violations": 50,
+  "counts": {
+    "v1/01-economy.md|DISTRESSED": 4,
+    "v1/01-economy.md|DECEASED": 3,
+    "v1/01-economy.md|REVIVING": 1,
+    "v1/02-lifecycle-anticheat.md|DISTRESSED": 9,
+    "v1/02-lifecycle-anticheat.md|DECEASED": 13,
+    "v1/02-lifecycle-anticheat.md|REVIVING": 7,
+    "v1/03-engine-stats.md|DISTRESSED": 1,
+    "v1/03-engine-stats.md|REVIVING": 1,
+    "v1/04-sandbox-plan.md|DISTRESSED": 2,
+    "v1/04-sandbox-plan.md|DECEASED": 4,
+    "v1/04-sandbox-plan.md|REVIVING": 2,
+    "v1/05-v1-proposal.md|DISTRESSED": 1,
+    "v1/05-v1-proposal.md|DECEASED": 1,
+    "v1/05-v1-proposal.md|REVIVING": 1
+  },
+  "entries": [
+    {
+      "file": "v1/01-economy.md",
+      "line": 283,
+      "variant": "DISTRESSED",
+      "canonical": "near_death",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/01-economy.md",
+      "line": 283,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/01-economy.md",
+      "line": 309,
+      "variant": "DISTRESSED",
+      "canonical": "near_death",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/01-economy.md",
+      "line": 309,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/01-economy.md",
+      "line": 347,
+      "variant": "DISTRESSED",
+      "canonical": "near_death",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/01-economy.md",
+      "line": 347,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/01-economy.md",
+      "line": 347,
+      "variant": "REVIVING",
+      "canonical": "revived",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/01-economy.md",
+      "line": 489,
+      "variant": "DISTRESSED",
+      "canonical": "near_death",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 40,
+      "variant": "DISTRESSED",
+      "canonical": "near_death",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 41,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 42,
+      "variant": "REVIVING",
+      "canonical": "revived",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 63,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 65,
+      "variant": "REVIVING",
+      "canonical": "revived",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 69,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 70,
+      "variant": "REVIVING",
+      "canonical": "revived",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 75,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 81,
+      "variant": "DISTRESSED",
+      "canonical": "near_death",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 111,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 121,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 131,
+      "variant": "DISTRESSED",
+      "canonical": "near_death",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 132,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 133,
+      "variant": "REVIVING",
+      "canonical": "revived",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 136,
+      "variant": "DISTRESSED",
+      "canonical": "near_death",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 157,
+      "variant": "DISTRESSED",
+      "canonical": "near_death",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 194,
+      "variant": "DISTRESSED",
+      "canonical": "near_death",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 194,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 215,
+      "variant": "DISTRESSED",
+      "canonical": "near_death",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 215,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 231,
+      "variant": "DISTRESSED",
+      "canonical": "near_death",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 232,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 233,
+      "variant": "REVIVING",
+      "canonical": "revived",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 241,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 247,
+      "variant": "REVIVING",
+      "canonical": "revived",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 261,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 473,
+      "variant": "DISTRESSED",
+      "canonical": "near_death",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 473,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/02-lifecycle-anticheat.md",
+      "line": 473,
+      "variant": "REVIVING",
+      "canonical": "revived",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/03-engine-stats.md",
+      "line": 194,
+      "variant": "DISTRESSED",
+      "canonical": "near_death",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/03-engine-stats.md",
+      "line": 196,
+      "variant": "REVIVING",
+      "canonical": "revived",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/04-sandbox-plan.md",
+      "line": 225,
+      "variant": "DISTRESSED",
+      "canonical": "near_death",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/04-sandbox-plan.md",
+      "line": 225,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/04-sandbox-plan.md",
+      "line": 225,
+      "variant": "REVIVING",
+      "canonical": "revived",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/04-sandbox-plan.md",
+      "line": 226,
+      "variant": "DISTRESSED",
+      "canonical": "near_death",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/04-sandbox-plan.md",
+      "line": 226,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/04-sandbox-plan.md",
+      "line": 226,
+      "variant": "REVIVING",
+      "canonical": "revived",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/04-sandbox-plan.md",
+      "line": 261,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/04-sandbox-plan.md",
+      "line": 274,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/05-v1-proposal.md",
+      "line": 55,
+      "variant": "DISTRESSED",
+      "canonical": "near_death",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/05-v1-proposal.md",
+      "line": 56,
+      "variant": "DECEASED",
+      "canonical": "dead",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    },
+    {
+      "file": "v1/05-v1-proposal.md",
+      "line": 57,
+      "variant": "REVIVING",
+      "canonical": "revived",
+      "reason": "生命周期状态规范名为小写（08 §5.9(5)）"
+    }
+  ]
+}

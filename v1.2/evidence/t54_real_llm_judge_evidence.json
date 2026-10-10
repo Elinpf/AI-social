@@ -1,0 +1,271 @@
+{
+  "task": "T59",
+  "commands": {
+    "real": "HITT_LLM_PROVIDER=openai_compat python3 -m orchestration run --life --seed 42 --agents 3 --rounds 84 --side-root <tmp> --out logs/t59_real84.jsonl",
+    "mock": "python3 -m orchestration run --life --seed 42 --agents 3 --rounds 84 --side-root <tmp> --out logs/t59_mock84.jsonl",
+    "cost_guard": "python3 -m obs llm-cost --log logs/t59_real84.jsonl --require-provider openai_compat --out v1.2/evidence/t59_llm_cost.json"
+  },
+  "env": {
+    "HITT_LLM_PROVIDER": "openai_compat",
+    "endpoint": "172.16.3.41:31809 (key omitted)",
+    "model": "DeepSeek-Flash"
+  },
+  "real_llm": {
+    "rounds": 84,
+    "agents": 3,
+    "seed": 42,
+    "state_hash": "sha256:9790a87fc9aec20c9107c098692b86b839855e0d53abf6a9cce300eccfea193e",
+    "replay_parity": true,
+    "first_run_equals_replay": true,
+    "events": 4264,
+    "llm_call": 63,
+    "llm_judgment": 20,
+    "narrative": 3,
+    "system_error": 0
+  },
+  "mock_llm": {
+    "rounds": 84,
+    "agents": 3,
+    "seed": 42,
+    "state_hash": "sha256:08d379a1aa5e2e4de36a3952e3e6cd0c5ab624f139f4d1d77bf78590f1ce1104",
+    "replay_parity": true,
+    "first_run_equals_replay": true,
+    "events": 4410,
+    "llm_call": 58,
+    "llm_judgment": 15,
+    "narrative": 3,
+    "system_error": 0
+  },
+  "state_hash_equal": false,
+  "judge_narrate_thinking": {
+    "judge_calls": 20,
+    "judge_thinking_true": 20,
+    "narrate_describe_calls": 3,
+    "narrate_describe_thinking_true": 3,
+    "samples": [
+      {
+        "round": 0,
+        "purpose": "judge",
+        "model": "DeepSeek-Flash",
+        "tier": "T2",
+        "thinking": true,
+        "tokens_in": 155,
+        "tokens_out": 332
+      },
+      {
+        "round": 0,
+        "purpose": "judge",
+        "model": "DeepSeek-Flash",
+        "tier": "T2",
+        "thinking": true,
+        "tokens_in": 155,
+        "tokens_out": 375
+      },
+      {
+        "round": 0,
+        "purpose": "judge",
+        "model": "DeepSeek-Flash",
+        "tier": "T2",
+        "thinking": true,
+        "tokens_in": 154,
+        "tokens_out": 267
+      },
+      {
+        "round": 44,
+        "purpose": "judge",
+        "model": "DeepSeek-Flash",
+        "tier": "T2",
+        "thinking": true,
+        "tokens_in": 150,
+        "tokens_out": 178
+      }
+    ]
+  },
+  "llm_judgment": {
+    "count": 20,
+    "all_four_elements": true,
+    "all_decision_in_options": true,
+    "samples": [
+      {
+        "round": 0,
+        "dimension": "weekly_focus",
+        "decision": "leisure",
+        "model": "DeepSeek-Flash",
+        "context_digest": "sha256:b0cc8b879c0cae93803629062d110529cceddd55c3b9878560cc0fbe02e555d4",
+        "frozen": true,
+        "options": [
+          "work",
+          "social",
+          "study",
+          "leisure",
+          "balance"
+        ]
+      },
+      {
+        "round": 0,
+        "dimension": "weekly_focus",
+        "decision": "work",
+        "model": "DeepSeek-Flash",
+        "context_digest": "sha256:d7e7c2a406bd4ad0c091b76f87b3e444d4179eb1d2d5d5c013006df631e4b8d2",
+        "frozen": true,
+        "options": [
+          "work",
+          "social",
+          "study",
+          "leisure",
+          "balance"
+        ]
+      },
+      {
+        "round": 0,
+        "dimension": "weekly_focus",
+        "decision": "social",
+        "model": "DeepSeek-Flash",
+        "context_digest": "sha256:09cfc496439fc689947b888f7f5c5fb2a436d6d150db1afe690db7d20c498f98",
+        "frozen": true,
+        "options": [
+          "work",
+          "social",
+          "study",
+          "leisure",
+          "balance"
+        ]
+      }
+    ]
+  },
+  "divergence": {
+    "weekly_focus_real": [
+      [
+        [
+          "P001"
+        ],
+        "leisure"
+      ],
+      [
+        [
+          "P002"
+        ],
+        "work"
+      ],
+      [
+        [
+          "P003"
+        ],
+        "social"
+      ]
+    ],
+    "weekly_focus_mock": [
+      [
+        [
+          "P001"
+        ],
+        "balance"
+      ],
+      [
+        [
+          "P002"
+        ],
+        "work"
+      ],
+      [
+        [
+          "P003"
+        ],
+        "balance"
+      ]
+    ],
+    "schedule_planned_slot_activity_real": {
+      "work": 12,
+      "socialize": 22,
+      "rest": 21,
+      "leisure": 7,
+      "trade": 9,
+      "self_care": 2,
+      "learn": 7,
+      "civic": 4
+    },
+    "schedule_planned_slot_activity_mock": {
+      "work": 12,
+      "socialize": 20,
+      "rest": 21,
+      "leisure": 5,
+      "trade": 9,
+      "learn": 8,
+      "civic": 7,
+      "self_care": 2
+    }
+  },
+  "cost": {
+    "by_provider": {
+      "openai_compat": 63
+    },
+    "by_purpose": {
+      "describe": {
+        "cached": 0,
+        "calls": 3,
+        "degraded": 0,
+        "thinking": 3,
+        "tokens_in": 521,
+        "tokens_out": 1272
+      },
+      "importance": {
+        "cached": 10,
+        "calls": 16,
+        "degraded": 0,
+        "thinking": 0,
+        "tokens_in": 102,
+        "tokens_out": 2004
+      },
+      "judge": {
+        "cached": 0,
+        "calls": 20,
+        "degraded": 0,
+        "thinking": 20,
+        "tokens_in": 3001,
+        "tokens_out": 7934
+      },
+      "plan": {
+        "cached": 0,
+        "calls": 3,
+        "degraded": 0,
+        "thinking": 0,
+        "tokens_in": 268,
+        "tokens_out": 104
+      },
+      "reflect": {
+        "cached": 0,
+        "calls": 21,
+        "degraded": 0,
+        "thinking": 0,
+        "tokens_in": 6509,
+        "tokens_out": 371
+      }
+    },
+    "llm_judgment_by_dimension": {
+      "rel_affinity": 5,
+      "rel_familiarity": 9,
+      "rel_trust": 3,
+      "weekly_focus": 3
+    },
+    "source": "engine_log(LLM_CALL)",
+    "total": {
+      "cached": 10,
+      "calls": 63,
+      "degraded": 0,
+      "thinking": 23,
+      "tokens_in": 10401,
+      "tokens_out": 11685,
+      "tokens_total": 22086
+    }
+  },
+  "provider_guard": {
+    "by_provider": {
+      "openai_compat": 63
+    },
+    "expected": "openai_compat",
+    "ok": true,
+    "policy": "计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。",
+    "problems": []
+  },
+  "key_leak": false
+}

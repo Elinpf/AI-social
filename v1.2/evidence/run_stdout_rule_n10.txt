@@ -1,0 +1,5 @@
+[life] n_agents=10 rounds=84 events=31228 seconds=28.5605 log_bytes=13526858
+  unknown_event_types=[]
+  chain_ok=True replay_parity=True first_run_equals_replay=True
+  conservation_ok=True final_state_hash=sha256:d49ef4c4b80442383f640f34c055db49b0a37f2f72937e4ad1113ea2c44f15b1
+  log written: ../v1.2/evidence/run_n10_seed42_rule.jsonl

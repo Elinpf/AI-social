@@ -1,0 +1,143 @@
+[importlinter]
+root_packages =
+    contracts
+    engine
+    life
+    freeze
+    obs
+    narrative
+    orchestration
+    frontend
+
+# ── 规则 1：contracts 是纯类型/协议包，零业务依赖（B1）──
+[importlinter:contract:contracts-pure]
+name = contracts 纯类型包（不依赖任何业务包）
+type = forbidden
+source_modules =
+    contracts
+forbidden_modules =
+    engine
+    life
+    freeze
+    obs
+    narrative
+    orchestration
+    frontend
+
+# ── 规则 4：内核不得 import life/emergence/freeze/orchestration（零反向依赖）──
+#  例外（组合根兼容 shim）：engine.cli 惰性委托、engine.integration 兼容再导出
+[importlinter:contract:engine-no-upstream]
+name = engine 核心不依赖 life/freeze/obs/orchestration/narrative/frontend
+type = forbidden
+source_modules =
+    engine
+forbidden_modules =
+    life
+    freeze
+    obs
+    narrative
+    orchestration
+    frontend
+ignore_imports =
+    engine.cli -> orchestration.integration
+    engine.integration -> orchestration.integration
+
+# ── 规则 3：life 只依赖 contracts/freeze，不得 import 内核实现/组合根（B2）──
+[importlinter:contract:life-no-kernel]
+name = life 不得 import engine/orchestration/obs/narrative/frontend
+type = forbidden
+source_modules =
+    life
+forbidden_modules =
+    engine
+    orchestration
+    obs
+    narrative
+    frontend
+# 例外：**仅 life 的测试模块**允许跨包 import engine/orchestration（契约约束的是生产代码；
+# 测试模块属例外，业界惯例）。范围严格限定 `life.tests.*`，**不放宽任何生产模块约束**。
+# 反向验证见交付说明：在生产包 life 内制造 life->engine 违规仍会 FAIL。
+ignore_imports =
+    life.tests.* -> engine.*
+
+# ── 规则 5：freeze 不得 import engine/life（只产载荷经 IF-2c）──
+[importlinter:contract:freeze-no-kernel-life]
+name = freeze 不得 import engine/life/orchestration/obs/narrative/frontend
+type = forbidden
+source_modules =
+    freeze
+forbidden_modules =
+    engine
+    life
+    orchestration
+    obs
+    narrative
+    frontend
+
+# ── 规则 2：emergence(obs) 只读，不得 import life/freeze/组合根/写路径（B3）──
+[importlinter:contract:obs-read-only]
+name = obs（观测层）只读：不得 import life/freeze/orchestration/narrative/frontend
+type = forbidden
+source_modules =
+    obs
+forbidden_modules =
+    life
+    freeze
+    orchestration
+    narrative
+    frontend
+
+[importlinter:contract:obs-no-write-path]
+name = obs（观测层）不得 import 内核写路径
+type = forbidden
+source_modules =
+    obs
+forbidden_modules =
+    engine.arbiter
+    engine.hooks
+    engine.state
+    engine.kernel
+    engine.scheduler
+    engine.rng
+
+# ── 规则 6：narrative / frontend 只读 ──
+[importlinter:contract:narrative-only-read]
+name = narrative 纯输出：不得 import 内核/life/freeze/orchestration/obs/frontend
+type = forbidden
+source_modules =
+    narrative
+forbidden_modules =
+    engine
+    life
+    freeze
+    orchestration
+    obs
+    frontend
+# 例外（Leader 裁定，与 emergence/obs 同类白名单）：允许 narrative -> engine.canon
+#   `engine.canon` 是**纯函数、无状态**工具（规范 JSON + SHA-256），narrative 仍未接触
+#   state/arbiter/ledger，故不破坏“纯输出、不改状态”语义；放行它是为了**避免重复实现
+#   canonical 导致哈希漂移**（同 B3 对 obs 的白名单）。
+#   ⚠️ P1 重构项：把 canonical/hash 收进 `contracts`，届时 narrative/obs 统一从 contracts 取，
+#   内核保留兼容再导出（engine.canon 作为 shim）。
+ignore_imports =
+    narrative.weights -> engine.canon
+
+[importlinter:contract:frontend-only-read]
+name = frontend 只读：不得 import 内核/life/freeze/orchestration/obs/narrative
+type = forbidden
+source_modules =
+    frontend
+forbidden_modules =
+    engine
+    life
+    freeze
+    orchestration
+    obs
+    narrative
+# 例外：`frontend/tools/*` 是**开发工具层**（gen_demo_log 造样例日志、live_run 驱动引擎、
+# 资产生成/预览等），非前端应用本体，需访问内核/编排/生活层/冻结层。范围**严格限定
+# `frontend.tools.*`**；`frontend.src.*`（应用本体）仍严格禁止（保持只读边界，见反向验证）。
+ignore_imports =
+    frontend.tools.* -> engine.*
+    frontend.tools.* -> orchestration.*
+    frontend.tools.* -> life.*

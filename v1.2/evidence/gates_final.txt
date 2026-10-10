@@ -1,0 +1,29 @@
+# T63 四项门禁 · 原始输出（冻结 trunk）
+
+## 1) pytest -q
+........................................................................ [ 94%]
+............                                                             [100%]
+228 passed in 32.93s
+
+## 2) lint-imports
+contracts 纯类型包（不依赖任何业务包） KEPT
+freeze 不得 import engine/life/orchestration/obs/narrative/frontend KEPT
+obs（观测层）只读：不得 import life/freeze/orchestration/narrative/frontend KEPT
+obs（观测层）不得 import 内核写路径 KEPT
+Contracts: 8 kept, 0 broken.
+
+## 3) python -m obs gate (canonical B2_N20)
+[PASS] metrics_bitwise_equal
+[PASS] census_bitwise_equal
+[PASS] llm_calls_zero
+[PASS] llm_judged_metric_count_zero
+[PASS] money_conservation
+[PASS] schema_conformance
+[PASS] distribution_regression
+GATE PASS
+
+## 4) make lexicon-gate
+========================================================================
+========================================================================
+新增违规   : 0  ← 棘轮判定依据
+========================================================================

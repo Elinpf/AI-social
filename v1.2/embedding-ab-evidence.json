@@ -1,0 +1,83 @@
+{
+  "embedding_model": "frozen://lexical-relevance-v1",
+  "fidelity_note": "确定性词法相关度：仅词面/词袋，无语义；真语义相关性未验证",
+  "query": "关于锄头的约定",
+  "n_memories": 8,
+  "results": [
+    {
+      "method": "lexical(frozen://lexical-relevance-v1)",
+      "top": [
+        {
+          "rank": 1,
+          "index": 0,
+          "score": 0.2631,
+          "lexical_overlap": 0.1429,
+          "text": "老李上周托我修一把锄头，约定这周去集市取。"
+        },
+        {
+          "rank": 2,
+          "index": 7,
+          "score": 0.2097,
+          "lexical_overlap": 0.1081,
+          "text": "我把修好的锄头还给老李，他很高兴。"
+        },
+        {
+          "rank": 3,
+          "index": 5,
+          "score": 0.1875,
+          "lexical_overlap": 0.0976,
+          "text": "我在图书馆读了一本关于木工手艺的书。"
+        },
+        {
+          "rank": 4,
+          "index": 3,
+          "score": 0.1494,
+          "lexical_overlap": 0.0,
+          "text": "我向银行申请了一笔小额贷款用来进货。"
+        }
+      ]
+    },
+    {
+      "method": "mock(random, 现状)",
+      "top": [
+        {
+          "rank": 1,
+          "index": 1,
+          "score": 0.9218,
+          "lexical_overlap": 0.0227,
+          "text": "今天是晴朗的早晨，广场上有人在晒谷物。"
+        },
+        {
+          "rank": 2,
+          "index": 3,
+          "score": 0.9155,
+          "lexical_overlap": 0.0,
+          "text": "我向银行申请了一笔小额贷款用来进货。"
+        },
+        {
+          "rank": 3,
+          "index": 7,
+          "score": 0.8396,
+          "lexical_overlap": 0.1081,
+          "text": "我把修好的锄头还给老李，他很高兴。"
+        },
+        {
+          "rank": 4,
+          "index": 2,
+          "score": 0.8349,
+          "lexical_overlap": 0.0233,
+          "text": "面包房的牛角包很受欢迎，清晨就卖光了。"
+        }
+      ]
+    },
+    {
+      "method": "real(P1)",
+      "status": "not_available",
+      "note": "未配置 FREEZE_EMBED_BASE_URL/MODEL；真语义相关性未验证"
+    }
+  ],
+  "lexical_top2_related_hit": [
+    0,
+    7
+  ]
+}

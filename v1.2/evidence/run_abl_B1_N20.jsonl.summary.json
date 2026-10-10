@@ -1,0 +1,53 @@
+{
+  "segment": "B1_N20",
+  "N": 20,
+  "economy_enabled": true,
+  "lifecycle_enabled": false,
+  "policy_flags": {
+    "economy.enabled": true,
+    "lifecycle.enabled": false
+  },
+  "events": 121179,
+  "seconds": 234.1816,
+  "wall_s": 244.9,
+  "chain_ok": true,
+  "replay_parity": true,
+  "seals_ok": true,
+  "conservation_ok": true,
+  "final_state_hash": "sha256:b19d8aec361f28162afee572f64ca3c3d435944f304c7a00d20c8020a5a34c31",
+  "SYSTEM_ERROR": 0,
+  "econ_family": {
+    "TRANSFER": 27,
+    "MARKET_TRADE": 21,
+    "LOAN_ISSUED": 0,
+    "LOAN_REPAY": 0,
+    "LOAN_DEFAULT": 0,
+    "INTEREST_CHARGED": 0,
+    "INTEREST_PAID": 0,
+    "DEPOSIT": 19,
+    "WITHDRAW": 0,
+    "TAX_LEVIED": 44,
+    "UBI_PAID": 0,
+    "METABOLISM": 0,
+    "PENALTY_APPLIED": 0,
+    "REVIVE_FEE_PAID": 0
+  },
+  "econ_active_total": 111,
+  "lifecycle_family": {
+    "METABOLISM": 0,
+    "STATE_CHANGE": 1,
+    "AGENT_DIED": 0,
+    "AGENT_REVIVED": 0,
+    "REVIVE_FEE_PAID": 0,
+    "LOAN_ISSUED": 0,
+    "LOAN_REPAY": 0,
+    "LOAN_DEFAULT": 0,
+    "INTEREST_CHARGED": 0,
+    "PENALTY_APPLIED": 0
+  },
+  "lifecycle_family_total": 1,
+  "n_near_death": 0,
+  "n_died": 0,
+  "n_revived": 0,
+  "died_rounds": []
+}

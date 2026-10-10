@@ -1,0 +1,472 @@
+"""Agent cognition main loop: perceive -> retrieve -> plan -> act -> reflect.
+
+Generative Agents `Persona.move()` *structure* (persona/persona.py, Apache-2.0),
+adapted to our deterministic kernel: every step reads ONLY from `kernel.perceive()`
+(IF-1) and writes ONLY by handing an `Intent` to `kernel.submit_intent()` (IF-2).
+The agent never mutates world state.
+
+  perceive  : refresh local cache + track own needs + record salient observations
+  retrieve  : three-factor memory retrieval (logged as MEMORY_RETRIEVE)
+  plan      : weekly plan (deprivation-aware) -> INTENT.PLAN; seed goals -> INTENT.GOAL
+  act       : move toward the planned place -> INTENT.MOVE
+  reflect   : accumulated-importance / weekly trigger -> reflection memories
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from typing import Any
+
+from . import constants as C
+from . import goals as G
+from . import relations as R
+from .llm import LLMClient, get_llm_client
+from .memory import AssociativeMemory, EmbeddingModel, HashEmbeddingModel, SideStore
+from .persona import Persona
+from .policy import social_enabled
+from .ports import (
+    INTENT_GOAL, INTENT_MEMORY, INTENT_MOVE, INTENT_OBSERVE, INTENT_PLAN, INTENT_RELATION,
+    INTENT_SOCIAL, Intent, KernelPort,
+)
+from .soft import get_soft_layer, rng_branch
+from .util import clamp
+
+_SALIENT_EVENTS = {
+    "ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "PLACE_ARRIVED",
+    "MSG_PUBLIC", "MSG_DM", "MSG_GROUP", "RELATION_ENCOUNTER", "RELATION_CHANGE",
+    "SEED_EVENT", "AGENT_DIED", "TAG_EMITTED", "NARRATIVE", "NORM_VIOLATED",
+}
+
+_TPL_TBL: dict | None = None
+
+
+def _templates(places: dict) -> dict:
+    global _TPL_TBL
+    if _TPL_TBL is None:
+        from .templates import load_activity_templates
+        _TPL_TBL = load_activity_templates(places=places)
+    return _TPL_TBL
+
+# deprivation -> satisfying (activity_type, place), deterministic (06 §7.3)
+_NEED_ACTIVITY = {
+    "satiety": ("self_care", "kitchen"), "energy": ("rest", "residence"),
+    "social": ("socialize", "plaza"), "leisure": ("leisure", "park"),
+    "esteem": ("civic", "town_hall"), "mastery": ("learn", "school"),
+}
+
+# template_id -> dialogue channel (T98). private=MSG_DM, place_group=MSG_GROUP,
+# global=MSG_PUBLIC.
+_DM_TEMPLATES = {"whisper", "gift", "ice_break", "rel_maintain", "rel_accept",
+                 "polite_reject", "counter_propose", "mentorship"}
+_GROUP_TEMPLATES = {"creative_collab", "academic_collab", "power_conflict", "contest",
+                    "combat_training"}
+_PUBLIC_TEMPLATES = {"group_proposal", "job_choice"}
+
+
+@dataclass
+class StepReport:
+    round: int
+    perceived: int = 0
+    observed: int = 0
+    retrieved: list = field(default_factory=list)
+    planned: bool = False
+    goals_set: bool = False
+    moved_to: str | None = None
+    reflected: bool = False
+    concentrated: bool = False
+    soft_judgments: int = 0
+    narrated: bool = False
+    accepted: list = field(default_factory=list)
+    rejected: list = field(default_factory=list)
+
+
+class LifeLayerAgent:
+    def __init__(self, agent_id: str, persona: Persona, kernel: KernelPort, *,
+                 llm: LLMClient | None = None, side_store: SideStore,
+                 embedding: EmbeddingModel | None = None,
+                 memory_params: dict | None = None,
+                 places: dict[str, dict] | None = None,
+                 peers: list[str] | None = None) -> None:
+        self.agent_id = agent_id
+        self.persona = persona
+        self.kernel = kernel
+        self.llm = llm or get_llm_client()
+        self.embedding = embedding or HashEmbeddingModel()
+        self.memory = AssociativeMemory(agent_id, self.embedding, side_store, memory_params)
+        self.places = places or {}
+        self.peers = [p for p in (peers or []) if p and p != agent_id]
+        self.soft = get_soft_layer(self.llm)
+        self._rel_cache: dict = {}          # (to, dim) -> current outgoing relation value
+        self._judged: set = set()           # (to, dim, level) already soft-judged
+        self._narrated_weeks: set = set()
+        self._comm_slot: str | None = None  # last slot we generated dialogue for (≤1/slot)
+        # own needs (initial from persona; then folded from own NEED_UPDATE events)
+        self.needs: dict[str, int] = {d: int(persona.needs_init.get(d, 50)) for d in C.NEED_DIMS}
+        # agent-local ephemera (NOT world state):
+        self._planned_weeks: set[int] = set()
+        self._goals_set_weeks: set[int] = set()
+        self._plan_slots: dict[str, dict] = {}
+        self._observed_seqs: set[int] = set()
+
+    # ---- public entry ------------------------------------------------------
+    def step(self) -> StepReport:
+        wv = self.kernel.perceive(self.agent_id)          # IF-1 (read-only)
+        rep = StepReport(round=wv.round)
+        self.memory.sync_from_refs(wv.memory_refs)
+        self._update_needs(wv)
+        self._observe(wv, rep)
+        retrieved_ids, _ = self._retrieve(wv)
+        rep.retrieved = retrieved_ids
+        rep.planned, rep.goals_set = self._plan(wv)
+        rep.moved_to = self._act(wv)
+        rep.reflected = self._reflect(wv, retrieved_ids)
+        self._fold_relations(wv)
+        rep.soft_judgments = self._maybe_soft_judge(wv)
+        rep.narrated = self._maybe_narrate(wv)
+        self._communicate(wv)
+        return rep
+
+    # ---- helpers -----------------------------------------------------------
+    def _submit(self, intent: Intent, rep: StepReport) -> bool:
+        res = self.kernel.submit_intent(self.agent_id, intent)
+        if res.ok:
+            rep.accepted.append(intent.intent_class)
+        else:
+            rep.rejected.append(f"{intent.intent_class}:{res.reason}")
+        return res.ok
+
+    def _update_needs(self, wv) -> None:
+        for ev in wv.visible_events:
+            if ev.type == "NEED_UPDATE" and ev.payload.get("agent_id") == self.agent_id:
+                self.needs[ev.payload["dim"]] = int(ev.payload["after"])
+
+    # 1. perceive ----------------------------------------------------------
+    def _observe(self, wv, rep: StepReport) -> None:
+        rep.perceived = len(wv.visible_events)
+        for ev in wv.visible_events:
+            if ev.seq in self._observed_seqs or ev.type not in _SALIENT_EVENTS:
+                continue
+            self._observed_seqs.add(ev.seq)
+            text = self._describe_event(ev)
+            imp = self._score_importance(text, wv.round)
+            payload = self.memory.prepare_write(
+                kind="observation", text=text, importance=imp, day=wv.day, slot=wv.slot,
+                tick=wv.round, subject=ev.actor if ev.actor != self.agent_id else None,
+                refs=[str(ev.seq)], source_event_seq=ev.seq)
+            if self._submit(Intent(INTENT_MEMORY, self.agent_id, payload), rep):
+                self.memory.commit_write(payload)
+                self._submit(Intent(INTENT_OBSERVE, self.agent_id,
+                                    {"target_event_seq": ev.seq, "salience": imp}), rep)
+                rep.observed += 1
+
+    # 2. retrieve ----------------------------------------------------------
+    def _retrieve(self, wv, query: str | None = None) -> tuple[list, dict]:
+        if query is None:
+            query = self._retrieval_query(wv)
+        hits, debug = self.memory.score_and_rank(query, now_tick=wv.round)
+        ids = [n.mem_id for n, _ in hits]
+        scores = [round(s, 6) for _, s in hits]
+        payload = {"op": "retrieve", "query_id": f"Q-{self.agent_id}-{wv.round}",
+                   "top_k": debug["top_k"], "selected_mem_ids": ids, "scores": scores,
+                   "weights": debug["weights"], "tie_order": debug["tie_order"],
+                   "query_digest": self.embedding.version}
+        if self._submit(Intent(INTENT_MEMORY, self.agent_id, payload), StepReport(wv.round)):
+            self.memory.touch(ids, wv.round)
+        return ids, debug
+
+    def _retrieval_query(self, wv) -> str:
+        recents = [n.text for n in list(self.memory.nodes.values())[-3:]]
+        head = f"{self.persona.compressed_profile(self._current_goal())} {self._activity_for(wv)[0]}"
+        return head + " " + " ".join(recents)
+
+    # 3. plan --------------------------------------------------------------
+    def _plan(self, wv) -> tuple[bool, bool]:
+        if wv.time.week in self._planned_weeks:
+            return False, False
+        focus = self._weekly_focus(wv)          # LLM-decided, frozen (T57)
+        slots = self._weekly_slots(wv, focus)
+        self.llm.call("plan", self.persona.compressed_profile(self._current_goal()),
+                      meta={"agent_id": self.agent_id, "round": wv.round})
+        planned = self._submit(Intent(INTENT_PLAN, self.agent_id,
+                                      {"horizon": "week", "week": wv.time.week, "slots": slots}),
+                               StepReport(wv.round))
+        if planned:
+            self._planned_weeks.add(wv.time.week)
+        goals_set = False
+        if wv.time.week not in self._goals_set_weeks:
+            goals = [g.as_dict() for g in G.initial_goals(self.agent_id, self.persona)]
+            if self._submit(Intent(INTENT_GOAL, self.agent_id, {"op": "set", "goals": goals}),
+                            StepReport(wv.round)):
+                self._goals_set_weeks.add(wv.time.week)
+                goals_set = True
+        return planned, goals_set
+
+    def _weekly_focus(self, wv) -> str:
+        """LLM decides the week's focus from a small option set; the choice is FROZEN
+        (LLM_JUDGMENT) so the resulting plan stays replay-stable, yet differs between
+        mock and a real LLM (T57: LLM output drives structure)."""
+        from .planner import FOCUS_OPTIONS
+        branch = rng_branch(self.agent_id, "weekly_focus", "self", wv.time.week, FOCUS_OPTIONS)
+        envelope = {"options": list(FOCUS_OPTIONS)}
+        jid = f"JF-{self.agent_id}-{wv.time.week}"
+        try:
+            payload, emitted = self.soft.judge(
+                judgment_id=jid, dimension="weekly_focus", question_ref="weekly_focus",
+                envelope=envelope, rng_branch=branch, parties=[self.agent_id],
+                context={"goal": self._current_goal(), "needs": dict(self.needs),
+                         "memories": self.memory.summary_for_prompt(
+                             list(self.memory.nodes)[-8:], 300)},
+                round_no=wv.round)
+        except Exception:
+            return "balance"
+        if not emitted:
+            self._submit_audit("LLM_JUDGMENT", payload, phase=2)
+        return str(payload["decision"])
+
+    def _weekly_slots(self, wv, focus: str | None = None) -> list[dict]:
+        """Weekly plan. Social/economy slots may carry a `template_id` (T49) chosen by
+        the deterministic `Planner`; other slots fall back to the base template."""
+        from .planner import Planner
+        templates = _templates(self.places)
+        planner = Planner(self.agent_id, templates, self.peers, self.places)
+        slots = []
+        self._plan_slots = {}
+        for dow in range(C.TIME_CONFIG["DAYS_PER_WEEK"]):
+            day_type = C.TIME_CONFIG["DAY_TYPES"][dow]
+            for si, slot in enumerate(C.TIME_CONFIG["SLOTS_PER_DAY"]):
+                slot_id = f"day{dow}-{slot}"
+                planned_tick = dow * 12 + si * C.TIME_CONFIG["ROUNDS_PER_SLOT"]
+                chosen = planner.plan_slot(day_type, slot, slot_id, int(wv.cash), focus)
+                extra: dict = {}
+                if chosen:
+                    atype, place = chosen["activity_type"], chosen["place"]
+                    extra = {"template_id": chosen["template_id"],
+                             "participants": chosen["participants"]}
+                    self._plan_slots[slot_id] = {"activity_type": atype, "place": place,
+                                                 "template_id": chosen["template_id"],
+                                                 "participants": chosen["participants"]}
+                else:
+                    atype, place = self._choose_activity(day_type, slot)
+                    self._plan_slots[slot_id] = {"activity_type": atype, "place": place}
+                d = {"slot_id": slot_id, "activity_type": atype, "place": place,
+                     "priority": 0.7, "planned_tick": planned_tick}
+                d.update(extra)
+                slots.append(d)
+        return slots
+
+    def _base_activity(self, day_type: str, slot: str) -> tuple[str, str]:
+        if slot == "night":
+            return ("rest", "residence")
+        if slot == "morning":
+            if day_type == "workday":
+                wp = self._work_place_for(slot)
+                return ("work", wp) if wp else ("self_care", "residence")
+            return ("self_care", "residence")
+        if slot == "afternoon":
+            if day_type == "workday":
+                wp = self._work_place_for(slot)
+                return ("work", wp) if wp else ("socialize", "plaza")
+            return ("socialize", "plaza")
+        return ("socialize", "cafe") if day_type == "workday" else ("leisure", "park")
+
+    def _valid(self, atype: str, place: str, slot: str) -> bool:
+        spec = self.places.get(place, {})
+        return slot in spec.get("open_slots", []) and atype in spec.get("affordances", [])
+
+    def _work_place_for(self, slot: str) -> str | None:
+        """A place that actually affords `work` and is open at `slot` (role's, else any)."""
+        wp = self.persona.work_place
+        if self._valid("work", wp, slot):
+            return wp
+        for cand in C.ACTIVITY_TO_PLACES["work"]:
+            if self._valid("work", cand, slot):
+                return cand
+        return None
+
+    def _choose_activity(self, day_type: str, slot: str) -> tuple[str, str]:
+        """Deprivation-aware (06 §7.3): a need below θ_dep overrides the template."""
+        base = self._base_activity(day_type, slot)
+        if slot == "night":
+            return base
+        deprived = [d for d in C.NEED_DIMS if self.needs.get(d, 50) < C.THETA_DEP]
+        if not deprived:
+            return base
+        dim = min(deprived, key=lambda d: (self.needs.get(d, 50), d))
+        atype, place = _NEED_ACTIVITY[dim]
+        if self._valid(atype, place, slot):
+            return (atype, place)
+        return base
+
+    def _activity_for(self, wv) -> tuple[str, str]:
+        slot_id = f"day{wv.time.day_of_week}-{wv.time.slot}"
+        entry = self._plan_slots.get(slot_id)
+        if entry:
+            return entry["activity_type"], entry["place"]
+        return self._base_activity(wv.time.day_type, wv.time.slot)
+
+    # 4. act ---------------------------------------------------------------
+    def _act(self, wv) -> str | None:
+        atype, place = self._activity_for(wv)
+        if wv.location == place:
+            return None
+        slot_id = f"day{wv.time.day_of_week}-{wv.time.slot}"
+        res = self.kernel.submit_intent(self.agent_id, Intent(
+            INTENT_MOVE, self.agent_id, {"to_place": place, "slot_id": slot_id,
+                                         "activity_type": atype}))
+        return place if res.ok else None
+
+    # 5. reflect -----------------------------------------------------------
+    def _reflect(self, wv, retrieved_ids: list) -> bool:
+        force_weekly = C.week_phase(
+            {"day_of_week": wv.time.day_of_week, "slot": wv.time.slot}) == "REVIEW"
+        if not self.memory.reflection_due(wv.time.week, force_weekly):
+            return False
+        src_ids, imp_sum = self.memory.take_reflection_input()
+        prompt = self.persona.compressed_profile(self._current_goal()) + "\n" + \
+            self.memory.summary_for_prompt(src_ids or retrieved_ids)
+        text = self.llm.call("reflect", prompt,
+                             meta={"agent_id": self.agent_id, "round": wv.round}).text
+        produced = []
+        for i in range(3):
+            payload = self.memory.prepare_write(
+                kind="reflection", text=f"{text}（insight {i + 1}）", importance=min(10, 6 + i),
+                day=wv.day, slot=wv.slot, tick=wv.round, refs=list(src_ids))
+            if self._submit(Intent(INTENT_MEMORY, self.agent_id, payload), StepReport(wv.round)):
+                self.memory.commit_write(payload)
+                produced.append(payload["mem_id"])
+        if produced:
+            self._submit(Intent(INTENT_MEMORY, self.agent_id, {
+                "op": "reflect", "triggered_by_mem_ids": src_ids, "importance_sum": imp_sum,
+                "produced_mem_id": produced[0], "produced_mem_ids": produced}), StepReport(wv.round))
+            self.memory.note_reflection(wv.time.week)
+            return True
+        return False
+
+    # ---- soft judgment (F) & narrative (N) --------------------------------
+    def _fold_relations(self, wv) -> None:
+        for ev in wv.visible_events:
+            if ev.type == "RELATION_CHANGE" and ev.payload.get("from") == self.agent_id:
+                to = ev.payload.get("to")
+                if to:
+                    self._rel_cache[(to, ev.payload["dim"])] = int(ev.payload["after"])
+
+    def _submit_audit(self, kind: str, payload: dict, phase: int) -> None:
+        fn = getattr(self.kernel, "submit_audit", None)
+        if fn is not None:  # mini test-double path; the freeze layer emits on its own
+            fn(kind, payload, actor=self.agent_id, phase=phase)
+
+    def _maybe_soft_judge(self, wv) -> int:
+        n = 0
+        for (to, dim), after in list(self._rel_cache.items()):
+            if dim not in ("affinity", "trust", "respect", "familiarity"):
+                continue
+            level = "strong" if abs(after) >= C.EPS_STRONG else ("weak" if abs(after) >= C.EPS else None)
+            if level is None or (to, dim, level) in self._judged:
+                continue
+            self._judged.add((to, dim, level))
+            envelope = R.soft_judgment_envelope(dim, 0, after)
+            branch = rng_branch(self.agent_id, dim, to, wv.round, envelope["options"])
+            jid = f"J-{self.agent_id}-{to}-{dim}-{level}-{wv.round}"
+            payload, emitted = self.soft.judge(
+                judgment_id=jid, dimension=f"rel_{dim}", question_ref="rel_relation_quality",
+                envelope=envelope, rng_branch=branch, parties=[self.agent_id, to],
+                context={"dim": dim, "to": to, "after": after}, round_no=wv.round)
+            if not emitted:
+                self._submit_audit("LLM_JUDGMENT", payload, phase=2)
+            # numeric consequence from the FROZEN label (deterministic, D-12)
+            for d, dv in R.delta_from_frozen_label(payload["decision"]).items():
+                before = int(self._rel_cache.get((to, d), 0))
+                lo, hi = C.RELATION_RANGE[d]
+                self.kernel.submit_intent(self.agent_id, Intent(INTENT_RELATION, self.agent_id, {
+                    "to": to, "dim": d, "before": before,
+                    "after": clamp(before + dv, lo, hi), "cause": "soft_judgment"}))
+            n += 1
+        return n
+
+    def _maybe_narrate(self, wv) -> bool:
+        phase = C.week_phase({"day_of_week": wv.time.day_of_week, "slot": wv.time.slot})
+        if phase != "REVIEW" or wv.time.week in self._narrated_weeks:
+            return False
+        self._narrated_weeks.add(wv.time.week)
+        seqs = [ev.seq for ev in wv.visible_events][-20:]
+        nid = f"N-{self.agent_id}-{wv.time.week}"
+        payload, emitted = self.soft.narrate(
+            narrative_id=nid, fact_event_seqs=seqs,
+            body_ref=f"side://narrative/{self.agent_id}/{nid}.txt", round_no=wv.round)
+        if not emitted:
+            self._submit_audit("NARRATIVE", payload, phase=6)
+        return True
+
+    # ---- M6 dialogue / public / group (T98) --------------------------------
+    def _communicate(self, wv) -> None:
+        """Generate wording via the LLM (purpose=dialogue) for a significant social
+        event and submit INTENT.SOCIAL. Wording is frozen (logged in the MSG_* event),
+        so replay never re-calls the model. ≤1 per agent per slot; round-level quotas
+        are enforced by the kernel."""
+        slot_id = f"day{wv.time.day_of_week}-{wv.time.slot}"
+        if not social_enabled():          # T115: whole social-voice channel off
+            return
+        if slot_id == self._comm_slot:
+            return
+        entry = self._plan_slots.get(slot_id)
+        if not entry or not entry.get("template_id"):
+            return
+        tid = entry["template_id"]
+        parts = list(entry.get("participants") or [self.agent_id])
+        partners = [p for p in parts if p != self.agent_id]
+        scope, to, gid = "global", None, None
+        if tid in _DM_TEMPLATES and partners:
+            scope, to = "private", partners[0]
+        elif tid in _GROUP_TEMPLATES and len(parts) >= 3:
+            scope, gid = "place_group", f"place:{entry['place']}"
+        elif tid in _PUBLIC_TEMPLATES:
+            scope = "global"
+        elif partners:
+            scope, to = "private", partners[0]
+        res = self.llm.call("dialogue", self._dialogue_prompt(tid, parts),
+                            meta={"agent_id": self.agent_id, "round": wv.round, "template": tid})
+        body = (res.text or "").strip()
+        if not body:
+            return
+        self._comm_slot = slot_id
+        payload: dict = {"scope": scope, "body": body, "refs": [], "tag_hints": [tid]}
+        if to:
+            payload["to"] = to
+        if gid:
+            payload["group_id"] = gid
+        self.kernel.submit_intent(self.agent_id, Intent(INTENT_SOCIAL, self.agent_id, payload))
+
+    def _dialogue_prompt(self, tid: str, parts: list) -> str:
+        others = ", ".join(p for p in parts if p != self.agent_id) or "(独自)"
+        return (self.persona.compressed_profile(self._current_goal())
+                + f"\n场景：{tid}；对象：{others}。请用一句话自然地说点什么。")
+
+    # ---- misc ------------------------------------------------------------
+    def _current_goal(self) -> str:
+        return str(self.persona.goal_tendencies[0].get("kind", "")) if self.persona.goal_tendencies else ""
+
+    def _describe_event(self, ev) -> str:
+        t, p = ev.type, (ev.payload or {})
+        if t == "ACTIVITY_STARTED":
+            return f"{ev.actor} 在 {p.get('place')} 开始 {p.get('activity_type')}。"
+        if t == "ACTIVITY_COMPLETED":
+            return f"{ev.actor} 完成了 {p.get('activity_type')}（{p.get('place')}|{p.get('outcome')}）。"
+        if t == "PLACE_ARRIVED":
+            return f"{ev.actor} 到达 {p.get('place')}。"
+        if t.startswith("MSG_"):
+            return f"{ev.actor} 说：{p.get('body', '')}"
+        if t == "RELATION_ENCOUNTER":
+            return f"{ev.actor} 与 {p.get('b')} 在 {p.get('place')} 相遇。"
+        if t == "AGENT_DIED":
+            return f"{p.get('agent_id')} 去世了。"
+        return f"{ev.actor} 的 {t} 事件。"
+
+    def _score_importance(self, text: str, round_no: int) -> int:
+        low = text.lower()
+        if not any(k in low for k in ("派对", "救助", "去世", "争吵", "相遇", "party", "help", "died")):
+            return 2
+        out = self.llm.call("importance", text,
+                            meta={"agent_id": self.agent_id, "round": round_no}).text
+        try:
+            return clamp(int(out.strip().split()[0]), 1, 10)
+        except Exception:
+            return 2

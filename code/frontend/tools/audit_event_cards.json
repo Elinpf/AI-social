@@ -1,0 +1,493 @@
+{
+  "total": 20,
+  "fixed_scarcity": {
+    "card": "scarcity-buy",
+    "cn": "稀缺抢购",
+    "kind": "equation",
+    "pixel_empty_slots": [],
+    "candidates": [],
+    "spec_issues": [],
+    "history": "equation 操作符项曾多画空槽（已修）",
+    "status": "已修"
+  },
+  "cards_with_empty_now": [],
+  "rows": [
+    {
+      "card": "mentorship",
+      "cn": "导师指导",
+      "kind": "rel-bars",
+      "pixel_empty_slots": [],
+      "candidates": [
+        {
+          "bbox": [
+            124,
+            22,
+            15,
+            11
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": true,
+            "slot_sized": false
+          },
+          "verdict": "track"
+        },
+        {
+          "bbox": [
+            120,
+            42,
+            19,
+            11
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": true,
+            "slot_sized": false
+          },
+          "verdict": "track"
+        }
+      ],
+      "spec_issues": [],
+      "history": "",
+      "status": "无需修"
+    },
+    {
+      "card": "gift-giving",
+      "cn": "赠礼",
+      "kind": "equation",
+      "pixel_empty_slots": [],
+      "candidates": [
+        {
+          "bbox": [
+            116,
+            36,
+            43,
+            25
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": false,
+            "slot_sized": true
+          },
+          "verdict": "other"
+        }
+      ],
+      "spec_issues": [],
+      "history": "equation 操作符项曾多画空槽（已修）",
+      "status": "已修"
+    },
+    {
+      "card": "combat-training",
+      "cn": "冲突演练",
+      "kind": "status",
+      "pixel_empty_slots": [],
+      "candidates": [
+        {
+          "bbox": [
+            97,
+            42,
+            42,
+            17
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": true,
+            "slot_sized": false
+          },
+          "verdict": "track"
+        }
+      ],
+      "spec_issues": [],
+      "history": "",
+      "status": "无需修"
+    },
+    {
+      "card": "creative-collab",
+      "cn": "创意协作",
+      "kind": "rel-bars",
+      "pixel_empty_slots": [],
+      "candidates": [
+        {
+          "bbox": [
+            128,
+            22,
+            11,
+            11
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": true,
+            "slot_sized": false
+          },
+          "verdict": "track"
+        },
+        {
+          "bbox": [
+            112,
+            42,
+            27,
+            11
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": true,
+            "slot_sized": false
+          },
+          "verdict": "track"
+        }
+      ],
+      "spec_issues": [],
+      "history": "",
+      "status": "无需修"
+    },
+    {
+      "card": "saving-money",
+      "cn": "储蓄",
+      "kind": "equation",
+      "pixel_empty_slots": [],
+      "candidates": [
+        {
+          "bbox": [
+            24,
+            36,
+            43,
+            25
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": false,
+            "slot_sized": true
+          },
+          "verdict": "other"
+        },
+        {
+          "bbox": [
+            88,
+            36,
+            43,
+            25
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": false,
+            "slot_sized": true
+          },
+          "verdict": "other"
+        },
+        {
+          "bbox": [
+            152,
+            36,
+            43,
+            25
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": false,
+            "slot_sized": true
+          },
+          "verdict": "other"
+        }
+      ],
+      "spec_issues": [],
+      "history": "equation 操作符项曾多画空槽（已修）",
+      "status": "已修"
+    },
+    {
+      "card": "whispered-comm",
+      "cn": "私语",
+      "kind": "ab-choice",
+      "pixel_empty_slots": [],
+      "candidates": [],
+      "spec_issues": [],
+      "history": "",
+      "status": "无需修"
+    },
+    {
+      "card": "emotion-burnout",
+      "cn": "情绪耗竭",
+      "kind": "status",
+      "pixel_empty_slots": [],
+      "candidates": [
+        {
+          "bbox": [
+            45,
+            42,
+            94,
+            17
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": true,
+            "slot_sized": false
+          },
+          "verdict": "track"
+        }
+      ],
+      "spec_issues": [],
+      "history": "",
+      "status": "无需修"
+    },
+    {
+      "card": "diff-scoring",
+      "cn": "评分分歧",
+      "kind": "rel-bars",
+      "pixel_empty_slots": [],
+      "candidates": [
+        {
+          "bbox": [
+            116,
+            22,
+            23,
+            11
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": true,
+            "slot_sized": false
+          },
+          "verdict": "track"
+        },
+        {
+          "bbox": [
+            85,
+            42,
+            54,
+            11
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": true,
+            "slot_sized": false
+          },
+          "verdict": "track"
+        }
+      ],
+      "spec_issues": [],
+      "history": "",
+      "status": "无需修"
+    },
+    {
+      "card": "scarcity-buy",
+      "cn": "稀缺抢购",
+      "kind": "equation",
+      "pixel_empty_slots": [],
+      "candidates": [],
+      "spec_issues": [],
+      "history": "equation 操作符项曾多画空槽（已修）",
+      "status": "已修"
+    },
+    {
+      "card": "skill-practice",
+      "cn": "技能练习",
+      "kind": "status",
+      "pixel_empty_slots": [],
+      "candidates": [
+        {
+          "bbox": [
+            123,
+            42,
+            16,
+            17
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": true,
+            "slot_sized": false
+          },
+          "verdict": "track"
+        }
+      ],
+      "spec_issues": [],
+      "history": "",
+      "status": "无需修"
+    },
+    {
+      "card": "polite-reject",
+      "cn": "礼貌拒绝",
+      "kind": "ab-choice",
+      "pixel_empty_slots": [],
+      "candidates": [],
+      "spec_issues": [],
+      "history": "",
+      "status": "无需修"
+    },
+    {
+      "card": "passion-salary",
+      "cn": "热爱与薪资",
+      "kind": "ab-choice",
+      "pixel_empty_slots": [],
+      "candidates": [],
+      "spec_issues": [],
+      "history": "",
+      "status": "无需修"
+    },
+    {
+      "card": "group-proposal",
+      "cn": "小组提案",
+      "kind": "timeline",
+      "pixel_empty_slots": [],
+      "candidates": [],
+      "spec_issues": [],
+      "history": "",
+      "status": "无需修"
+    },
+    {
+      "card": "academic-collab",
+      "cn": "学术协作",
+      "kind": "rel-bars",
+      "pixel_empty_slots": [],
+      "candidates": [
+        {
+          "bbox": [
+            124,
+            22,
+            15,
+            11
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": true,
+            "slot_sized": false
+          },
+          "verdict": "track"
+        },
+        {
+          "bbox": [
+            128,
+            42,
+            11,
+            11
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": true,
+            "slot_sized": false
+          },
+          "verdict": "track"
+        }
+      ],
+      "spec_issues": [],
+      "history": "",
+      "status": "无需修"
+    },
+    {
+      "card": "counter-propose",
+      "cn": "反提案",
+      "kind": "timeline",
+      "pixel_empty_slots": [],
+      "candidates": [],
+      "spec_issues": [],
+      "history": "",
+      "status": "无需修"
+    },
+    {
+      "card": "select-location",
+      "cn": "选择地点",
+      "kind": "ab-choice",
+      "pixel_empty_slots": [],
+      "candidates": [],
+      "spec_issues": [],
+      "history": "",
+      "status": "无需修"
+    },
+    {
+      "card": "power-conflict",
+      "cn": "权力冲突",
+      "kind": "rel-bars",
+      "pixel_empty_slots": [],
+      "candidates": [
+        {
+          "bbox": [
+            81,
+            22,
+            58,
+            11
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": true,
+            "slot_sized": false
+          },
+          "verdict": "track"
+        },
+        {
+          "bbox": [
+            89,
+            42,
+            50,
+            11
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": true,
+            "slot_sized": false
+          },
+          "verdict": "track"
+        }
+      ],
+      "spec_issues": [],
+      "history": "",
+      "status": "无需修"
+    },
+    {
+      "card": "rel-acceptance",
+      "cn": "关系接纳",
+      "kind": "rel-bars",
+      "pixel_empty_slots": [],
+      "candidates": [
+        {
+          "bbox": [
+            128,
+            22,
+            11,
+            11
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": true,
+            "slot_sized": false
+          },
+          "verdict": "track"
+        },
+        {
+          "bbox": [
+            124,
+            42,
+            15,
+            11
+          ],
+          "conds": {
+            "solid_block": true,
+            "no_ink": true,
+            "slot_sized": false
+          },
+          "verdict": "track"
+        }
+      ],
+      "spec_issues": [],
+      "history": "",
+      "status": "无需修"
+    },
+    {
+      "card": "ice-breaking",
+      "cn": "破冰",
+      "kind": "ab-choice",
+      "pixel_empty_slots": [],
+      "candidates": [],
+      "spec_issues": [],
+      "history": "",
+      "status": "无需修"
+    },
+    {
+      "card": "rel-maintain",
+      "cn": "关系维护",
+      "kind": "timeline",
+      "pixel_empty_slots": [],
+      "candidates": [],
+      "spec_issues": [],
+      "history": "",
+      "status": "无需修"
+    }
+  ]
+}

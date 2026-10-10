@@ -1,0 +1,41 @@
+{
+  "_comment": "PERCEPTION_SCOPE：event_type -> visibility_class（08 §3.5 R2 / §1.2 R5）。引擎侧 canonical 真源；版本纳入 engine_version 指纹。",
+  "version": "v1.2-r2",
+  "default_visibility_class": "place_local",
+  "scope": {
+    "MSG_PUBLIC": "global",
+    "AGENT_DIED": "global",
+    "SEED_EVENT": "global",
+    "TIME_MARK": "global",
+
+    "MSG_DM": "private",
+
+    "MSG_GROUP": "members",
+
+    "TRANSFER": "participants_only",
+    "MARKET_TRADE": "participants_only",
+    "RELATION_CHANGE": "participants_only",
+    "LLM_JUDGMENT": "participants_only",
+
+    "PLACE_MOVE": "place_local",
+    "PLACE_ARRIVED": "place_local",
+    "ACTIVITY_STARTED": "place_local",
+    "ACTIVITY_COMPLETED": "place_local",
+    "ACTIVITY_INTERRUPTED": "place_local",
+    "RELATION_ENCOUNTER": "place_local",
+    "STATE_CHANGE": "place_local",
+
+    "OBSERVATION": "subject_only",
+    "SCHEDULE_PLANNED": "subject_only",
+    "SCHEDULE_REVISED": "subject_only",
+    "NEED_UPDATE": "subject_only",
+    "MEMORY_WRITE": "subject_only",
+    "MEMORY_RETRIEVE": "subject_only",
+    "MEMORY_REFLECT": "subject_only",
+    "GOAL_SET": "subject_only",
+    "GOAL_PROGRESS": "subject_only",
+    "GOAL_ACHIEVED": "subject_only",
+    "GOAL_ABANDON": "subject_only",
+    "LLM_CALL": "subject_only"
+  }
+}

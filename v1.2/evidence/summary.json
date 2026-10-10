@@ -1,0 +1,68 @@
+{
+  "chain_ok": true,
+  "conservation_ok": true,
+  "conservation_residual": 0,
+  "economic_family": {
+    "active_total": 0,
+    "by_type": {
+      "DEPOSIT": 0,
+      "INIT_ENDOW": 20,
+      "INTEREST_CHARGED": 0,
+      "INTEREST_PAID": 0,
+      "LOAN_DEFAULT": 0,
+      "LOAN_ISSUED": 0,
+      "LOAN_REPAY": 0,
+      "MARKET_TRADE": 0,
+      "METABOLISM": 0,
+      "MONEY_BURNED": 0,
+      "MONEY_MINTED": 1,
+      "PENALTY_APPLIED": 0,
+      "REVIVE_FEE_PAID": 0,
+      "TAX_LEVIED": 0,
+      "TRANSFER": 0,
+      "UBI_PAID": 0,
+      "WITHDRAW": 0
+    },
+    "genesis_total": 21,
+    "is_active": false,
+    "total": 21
+  },
+  "engine_version": "v0.1-skeleton",
+  "event_family_counts": {
+    "ACTIVITY_COMPLETED": 420,
+    "ACTIVITY_STARTED": 420,
+    "GOAL_ACHIEVED": 24,
+    "GOAL_PROGRESS": 249,
+    "GOAL_SET": 39,
+    "MEMORY_WRITE": 59188,
+    "NEED_UPDATE": 3506,
+    "NORM_ADOPTED": 6,
+    "NORM_PROPOSED": 6,
+    "NORM_VIOLATED": 0,
+    "RELATION_CHANGE": 22820,
+    "SEED_EVENT": 0,
+    "SKILL_LEVEL_UP": 0,
+    "SKILL_PRACTICE": 0,
+    "TAG_EMITTED": 420
+  },
+  "gate_ok": true,
+  "known_pending_zero": [
+    "NORM_VIOLATED"
+  ],
+  "log_bytes": 63086081,
+  "log_hash_canonical": "sha256:fdeebcf62a0bc110f82c922dad1d59bf366f8bd50de3f578cf15b970706701ec",
+  "log_label": "run_n20_seed42_week1.jsonl",
+  "log_path": "../v1.2/evidence/run_n20_seed42_week1.jsonl",
+  "log_sha256_of_file": "sha256:e9e7cf3b47c1416b9826f94b8c1d897054c66f20bb2585768291f2729d8c1193",
+  "metrics_bitwise_equal": true,
+  "n_agents": 20,
+  "n_events": 148869,
+  "notes": [
+    "② 段：rule-based N=20×84，life 修复 + GOAL_SET 扁平 + T45 活动模板上线。③ 段（真实 LLM）待 LLM_API_KEY 注入后补。"
+  ],
+  "rounds": 84,
+  "run_stdout": "[life] n_agents=20 rounds=84 events=148869 seconds=219.5309 log_bytes=63086081\n  unknown_event_types=[]\n  chain_ok=True replay_parity=True first_run_equals_replay=True\n  conservation_ok=True final_state_hash=sha256:9a45be5e95f664c78c3c0fa63609da8107629c25f1dc78fc12d41f1d7757cd66\n  log written: ../v1.2/evidence/run_n20_seed42_week1.jsonl\nRUN_DONE exit=0\n",
+  "schema_anomalies": [],
+  "schema_conformance_ok": true,
+  "seed": 42
+}
