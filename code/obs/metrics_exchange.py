@@ -14,6 +14,8 @@
 
 world 标识：`{WORLD, MARKET, BANK, SYSTEM, TAX_POOL}`；agent = `AGENT_BORN` 出现过的 id。
 对手方判定优先用一等字段 `counterparty`（08 §1.2 R，A1），否则回退到 seller/buyer 主体 id。
+**卖方/买方口径 = 所有成交事件的并集**：`MARKET_TRADE.seller/buyer` ∪ `EXCHANGE_SETTLED` 商品腿
+`from/to`（08 §1.2 R：`distinct_sellers_excl_world` 是「卖方去重排除 world」，覆盖两条成交出口）。
 """
 
 from __future__ import annotations
@@ -96,25 +98,40 @@ def exchange_metrics(records) -> dict:
     trades = [r for r in records if r["type"] == "MARKET_TRADE"]
     exchs = [r for r in records if r["type"] == "EXCHANGE_SETTLED"]
 
-    sellers, buyers = [], []
+    # 口径（08 §1.2 R）：`distinct_sellers_excl_world` = **所有成交事件**的卖方去重、排除 world。
+    #   卖方身份：MARKET_TRADE.seller ∪ EXCHANGE_SETTLED 商品腿 `from`（交货方=卖方）。
+    #   ⚠️ 只读 MARKET_TRADE 会**漏掉整条 exchange 路径**（v2 的 agent↔agent 成交全在
+    #   EXCHANGE_SETTLED）→ 卖方去重=0 的假象 → 误判「无 agent 间交易」。
+    sellers, buyers = [], []               # 全部成交（含 world）
+    mt_sellers, mt_buyers = [], []         # 细分：MARKET_TRADE
+    ex_sellers, ex_buyers = [], []         # 细分：EXCHANGE_SETTLED（按商品腿 from/to）
     n_agent_trade = 0
     for r in trades:
         p = _p(r)
-        sellers.append(p.get("seller"))
-        buyers.append(p.get("buyer"))
+        sellers.append(p.get("seller")); buyers.append(p.get("buyer"))
+        mt_sellers.append(p.get("seller")); mt_buyers.append(p.get("buyer"))
         if is_agent(p.get("buyer")) and is_agent(p.get("seller")):
             n_agent_trade += 1
 
     n_agent_exch = 0
     for r in exchs:
-        parties = _p(r).get("parties") or []
+        p = _p(r)
+        parties = p.get("parties") or []
         if len(parties) >= 2 and all(is_agent(x) for x in parties):
             n_agent_exch += 1
+        for g in ((p.get("legs") or {}).get("goods") or []):
+            sellers.append(g.get("from")); buyers.append(g.get("to"))
+            ex_sellers.append(g.get("from")); ex_buyers.append(g.get("to"))
 
     d_sellers = len({s for s in sellers if s is not None})
     d_buyers = len({b for b in buyers if b is not None})
     d_sellers_excl = len({s for s in sellers if is_agent(s)})
     d_buyers_excl = len({b for b in buyers if is_agent(b)})
+    # 细分（透明，便于定位卖方来自哪条路径）
+    d_sellers_mt = len({s for s in mt_sellers if is_agent(s)})
+    d_sellers_ex = len({s for s in ex_sellers if is_agent(s)})
+    d_buyers_mt = len({b for b in mt_buyers if is_agent(b)})
+    d_buyers_ex = len({b for b in ex_buyers if is_agent(b)})
 
     num = n_agent_trade + n_agent_exch
     den = len(trades) + len(exchs)
@@ -136,8 +153,12 @@ def exchange_metrics(records) -> dict:
         "n_exchange_settled": len(exchs),
         "distinct_sellers": d_sellers,
         "distinct_sellers_excl_world": d_sellers_excl,
+        "distinct_sellers_excl_world_market_trade": d_sellers_mt,
+        "distinct_sellers_excl_world_exchange": d_sellers_ex,
         "distinct_buyers": d_buyers,
         "distinct_buyers_excl_world": d_buyers_excl,
+        "distinct_buyers_excl_world_market_trade": d_buyers_mt,
+        "distinct_buyers_excl_world_exchange": d_buyers_ex,
         "agent_agent_deals": num,
         "all_deals": den,
         "agent_agent_share": share,

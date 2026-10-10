@@ -70,6 +70,26 @@ def test_V2a_false_for_legacy_market_trade_only():
     assert exchange_metrics(lb.records())["V2a_tool_available"] is False
 
 
+def test_exchange_sellers_include_exchange_legs():
+    """08 §1.2 R：卖方口径 = MARKET_TRADE ∪ EXCHANGE_SETTLED 商品腿；只读 MARKET_TRADE 会漏整条 exchange 路径。"""
+    lb = build_log(seed=12, agents=("A000", "A001", "A002"))
+    # MARKET_TRADE 卖方全是 world
+    lb.add(1, 2, "A000", "MARKET_TRADE", {"buyer": "A000", "seller": "MARKET", "counterparty": "MARKET",
+                                          "amount": 5, "qty": 1000, "good_id": "food"})
+    # 两笔 EXCHANGE_SETTLED：A001→A000、A002→A000 卖 material
+    lb.add(2, 2, "SYSTEM", "EXCHANGE_SETTLED", {"exchange_id": "X1", "channel": "offer", "parties": ["A000", "A001"],
+        "legs": {"goods": [{"from": "A001", "to": "A000", "good_id": "material", "qty": 1000}],
+                 "money": [{"from": "A000", "to": "A001", "mu": 100}]}})
+    lb.add(2, 2, "SYSTEM", "EXCHANGE_SETTLED", {"exchange_id": "X2", "channel": "offer", "parties": ["A000", "A002"],
+        "legs": {"goods": [{"from": "A002", "to": "A000", "good_id": "material", "qty": 1000}],
+                 "money": [{"from": "A000", "to": "A002", "mu": 100}]}})
+    m = exchange_metrics(lb.records())
+    assert m["distinct_sellers_excl_world"] == 2          # A001, A002（来自 exchange 商品腿）
+    assert m["distinct_sellers_excl_world_market_trade"] == 0
+    assert m["distinct_sellers_excl_world_exchange"] == 2
+    assert m["V2b_ai_trades"] is True                      # 修前只读 MARKET_TRADE → 这里会误判 False
+
+
 def test_offer_split_unknown_kind_is_other():
     lb = build_log(seed=10, agents=("A000",))
     lb.add(1, 2, "A000", "OFFER_CREATED", {"offer_id": "X1", "from": "A000", "to": [],
