@@ -16,6 +16,13 @@
 **指纹对照**：不动开关，**单进程 vs 两次独立子进程** `state_hash` 三者**一致** = `7ce8349…`
 → 证明「每段独立进程」的驱动改造**本身没改结果**（先验通过，才上三档）。
 
+> **⚠️ 结论的边界（务必带）**：**P2 只主张一条 —— 「出现了 agent↔agent 成交」**（`EXCHANGE_SETTLED>0` 且非 world）。
+> **不主张任何市场结构**（卖方数、集中度等）—— `distinct_sellers_excl_world=3` 是**遍历顺序偏置**（见 §4），
+> **结构须在修掉顺序偏置后重测**。
+
+> **LLM 无关性检验**：life 的接受逻辑**完全确定性、不含 LLM** → 真 LLM 应给出**同样的** `EXCHANGE_SETTLED=23`。
+> 若 real-LLM 与 mock 在此**不一致**，则是更重要的发现（说明有 LLM 依赖被藏起来）。见 §7。
+
 ## 1. 两档对照表（canonical 为主）
 | 指标 | probe N=10 | **canon N=20** | 消融 N=20(off) |
 |---|---|---|---|
@@ -26,12 +33,17 @@
 | `MARKET_TRADE`（世界市场保留） | 14 | 21 | 21 |
 | `PRODUCE` | 155 | 322 | 321 |
 | `distinct_sellers_excl_world`（exch / mt） | 3 (3 / 0) | **3 (3 / 0)** | 0 |
-| `distinct_buyers_excl_world` | 5 | 5 | 5 |
+| `distinct_buyers_excl_world`（= union，正确口径） | 5 | 5 | 5 |
 | `distinct_counterparty_excl_world` | 4 | 3 | 0 |
 | `agent_agent_share` | 0.641026 | 0.522727 | 0.0 |
 | `state_hash` | `135a6289…` | `814691d9…` | `8d8d1c3d…` |
 
 > probe N=10 的 `25 / 120 / 69` 与 Leader 的 T133 基线**逐项一致**（基线 seed7、本 run seed42 —— 聚合口径与种子无关）。
+
+> **买方口径说明**：`distinct_buyers_excl_world` 与 `distinct_sellers_excl_world` 同为「**全部成交**」口径
+> （= `MARKET_TRADE` ∪ `EXCHANGE_SETTLED`，与 `agent_agent_share` 分母一致）。canonical = **5 = `{P001..P005}`**（正确）。
+> 细分键 `..._exchange`（= `{P001..P004}`）/ `..._market_trade`（并集里贡献 P005）供排查，**headline 用并集**。
+> 买方权威口径 = `legs.money[].from`（付款方），本数据无物物交换，其与 `goods.to` **等集**。
 
 ## 2. 消融（`exchange.enabled=false`）——生效查法
 - **`DROPPED{flag:exchange_disabled}` = 168**（08 规定的「开关生效唯一查法」✓）
@@ -69,9 +81,28 @@
 **唯一权威口径**：卖方 = `EXCHANGE_SETTLED.legs.goods[].from`（交货方）；买方 = `legs.money[].from`（付款方）。
 本 run 的 `distinct_sellers_excl_world` 用 `goods.from`（`628fd11`）；`distinct_counterparty_excl_world` **单列**仅为透明对照。
 
-## 4. 涌现结构观察（**观察，非指标**；非设计）
-canonical N=20：**卖方仅 3 个**（`P001/P002/P003`，持有 `material` 者），**买方 5 个** —— **P004、P006 只买不卖（纯消费者）**。
-→ 可交易物**集中在少数人手里**，这**决定了谁成为卖方**：这是涌现出的**经济角色分化**，**不是我们设计的**；也说明 `> 1` 判据确由真实异质行为触发。**写成观察，勿包装成指标。**
+## 4. ⚠️ 结构性偏置（**实验缺陷**，非涌现）—— 必须写清
+canonical N=20：`distinct_sellers_excl_world = 3`（`{P001,P002,P003}`）。**这不是市场结构**：
+
+- **行为完全均匀**：20 个 agent **各挂 6 个 real_sale 要约（共 120）**、**各尝试接受 12 次（共 240）**，无人偷懒。
+- **但只有 12 个要约成交，creator 恰 = `{P001,P002,P003}`（id 最小的 3 个）**；P004–P020 的 **102 个要约 0 成交**。
+- **机理（实测）**：
+  - 挂单创建顺序 = phase2 **按 `agent_id` 升序**（首 seq：P001=26317 < P002=26409 < P003=26503 < P004=26601 < … < P020）；
+  - life 接受策略 = 「接受 `visible_events` 里**第一个未接受过的** `OFFER_CREATED`」；广播要约对**所有 agent 可见且顺序相同** → **人人优先接受"最早创建"的那条** → **P001 的要约永远排在最前**。
+- **结论**：`distinct_sellers_excl_world = 3` 判据**仍成立**（成交确实发生、且非 world），**但该值不可解释为市场结构 —— 它是遍历顺序支配的、由我们自己的流水线造成的偏置**（**不是自发涌现**）。
+- **修掉顺序偏置后必须重测**，才能谈市场结构（否则会把偏置当发现写进证据）。
+
+### 4b. 波及面：**系统性的确定性顺序偏置**（不止 offer 链）
+| 路径 | 分布 | id 顺序偏置 |
+|---|---|---|
+| `EXCHANGE_SETTLED` 卖方 | `{P001,P002,P003}` | **是（最小 id）** |
+| `EXCHANGE_SETTLED` 买方 | `{P001..P004}` | **是** |
+| `MARKET_TRADE` 买方 | `{P001:11, P002:4, P003:3, P004:2, P005:1}` | **是 —— P001 独占 11/21（52%）** |
+| `PRODUCE` | 20 人全有（8425–22274 milli） | 否 |
+| `MSG_PUBLIC` | 19 个 actor | 否 |
+→ 偏置**局限在「贸易/稀缺配给」路径**（凡「排序决定谁先被服务」处），**不在生产、不在发言**。
+→ ⚠️ **P1 时代凡基于 `MARKET_TRADE` 的「谁买到稀缺品 / 不平等」解读，都可能被同一偏置污染** —— 报告若引用过此类结论须一并标注。
+→ Leader 将把「**修顺序偏置**」升级为**独立立项**（结算顺序 + 世界市场配给 + life 接受目标，口径统一）。
 
 ## 5. 诚实说明
 - **`PRODUCE 322→321`（Δ1）**：消融后无库存转移 → 持有量轨线微变 → 生产恰好差 1 单位。**A 层非逐位不变**，据实报（`MARKET_TRADE` 21 不变）。
