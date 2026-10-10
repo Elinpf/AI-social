@@ -130,13 +130,18 @@ class KernelAdapter:
                 continue
             p = ev.get("payload", {})
             vis = self._visibility(ev["type"])
+            # 定向要约分档（关键契约）：OFFER_CREATED.to==[] -> global（广播）；to 非空 -> private（仅名单可见）
+            if ev["type"] == "OFFER_CREATED":
+                vis = "global" if not (p.get("to") or []) else "private"
             if vis == "global":
                 ok = True
             elif vis == "place_local":
                 ok = (p.get("place") == loc)
             elif vis == "private":
-                ok = agent_id in (p.get("from"), p.get("to")) or p.get("agent_id") == agent_id \
-                    or p.get("observer") == agent_id or ev.get("actor") == agent_id
+                ok = (agent_id in (p.get("from"), p.get("to"))
+                      or agent_id in (p.get("to") or [])
+                      or p.get("agent_id") == agent_id
+                      or p.get("observer") == agent_id or ev.get("actor") == agent_id)
             elif vis == "subject_only":
                 ok = (p.get("agent_id") == agent_id or p.get("observer") == agent_id
                       or ev.get("actor") == agent_id)
@@ -335,7 +340,7 @@ class KernelAdapter:
                          phase=PHASE_LIFE, actor=agent_id)
         return IntentResult(ok=True, event_seqs=(seq,))
 
-    # ---- v2 经济意图（T133/T135）：OFFER/CONTRACT_SIGN 于 phase2 封装事件；其余入队交 4.x ----
+    # ---- v2 经济意图（T133/T135）：OFFER_CREATED/CONTRACT_SIGN 于 phase2 封装事件；其余入队交 4.x ----
     def _do_econ(self, agent_id, intent):
         cls = intent.intent_class
         p = intent.payload or {}

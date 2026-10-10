@@ -49,12 +49,15 @@ def visible_events(records: list, agent_id: str, upto_round: int, config: dict |
             break
         cls = table.get(rec["type"], default_cls)
         p = rec.get("payload", {})
+        if rec["type"] == "OFFER_CREATED":  # 定向要约分档：to==[] -> global；to 非空 -> private
+            cls = "global" if not (p.get("to") or []) else "private"
         if cls == "global":
             ok = True
         elif cls == "place_local":
             ok = (p.get("place") == loc)
         elif cls == "private":
-            ok = agent_id in (p.get("from"), p.get("to"))
+            ok = (agent_id in (p.get("from"), p.get("to"))
+                  or agent_id in (p.get("to") or []))
         elif cls == "participants_only":
             ok = agent_id in (p.get("participants") or []) or agent_id in (p.get("from"), p.get("to"), p.get("actor"))
         elif cls == "subject_only":
