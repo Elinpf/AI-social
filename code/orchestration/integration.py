@@ -335,14 +335,61 @@ class KernelAdapter:
                          phase=PHASE_LIFE, actor=agent_id)
         return IntentResult(ok=True, event_seqs=(seq,))
 
-    # ---- v2 经济意图（T133/T135）：委派 engine.intents -> 入 pending_intents，交 4.1/4.2 结算 ----
+    # ---- v2 经济意图（T133/T135）：OFFER/CONTRACT_SIGN 于 phase2 封装事件；其余入队交 4.x ----
     def _do_econ(self, agent_id, intent):
+        cls = intent.intent_class
+        p = intent.payload or {}
+        if cls == "INTENT.ECON.OFFER":
+            return self._do_offer(agent_id, p)
+        if cls == "INTENT.ECON.CONTRACT_SIGN":
+            return self._do_contract_sign(agent_id, p)
         from life.ports import IntentResult
         from engine import intents as _intents
         res = _intents.submit_intent(self.engine, agent_id, {
-            "intent_class": intent.intent_class, "payload": intent.payload})
+            "intent_class": cls, "payload": p})
         return IntentResult(ok=bool(res.get("ok")), reason=res.get("reason"),
                             event_seqs=tuple(res.get("event_seqs", ()) or ()))
+
+    def _do_offer(self, agent_id, p):
+        """`INTENT.ECON.OFFER` → `OFFER_CREATED/COUNTERED/ACCEPTED/REJECTED`（phase 2/3）。"""
+        from life.ports import IntentResult
+        r = self.engine.state.round
+        act = p.get("act")
+        terms = p.get("terms")  # 价格自 terms 原样，不预设
+        if act == "create":
+            offer_id = p.get("offer_id") or f"O-{r}-{agent_id}"
+            seq = self._emit("OFFER_CREATED", {
+                "offer_id": offer_id, "from": agent_id, "to": list(p.get("to") or []),
+                "kind": p.get("kind"), "terms": terms, "round_no": r},
+                phase=PHASE_DECIDE, actor=agent_id)
+            return IntentResult(ok=True, event_seqs=(seq,))
+        oid = p.get("offer_id")
+        if act not in ("counter", "accept", "reject") or not oid:
+            return self._reject_reason(agent_id, "INTENT.ECON.OFFER", "invalid_payload", p)
+        if act == "counter":
+            ev, pay = "OFFER_COUNTERED", {"offer_id": oid, "by": agent_id,
+                                          "new_terms": terms, "round_no": r}
+        elif act == "accept":
+            ev, pay = "OFFER_ACCEPTED", {"offer_id": oid, "by": agent_id, "terms": terms}
+        else:
+            ev, pay = "OFFER_REJECTED", {"offer_id": oid, "by": agent_id,
+                                         "reason": p.get("reason", "")}
+        seq = self._emit(ev, pay, phase=PHASE_DECIDE, actor=agent_id)
+        return IntentResult(ok=True, event_seqs=(seq,))
+
+    def _do_contract_sign(self, agent_id, p):
+        """`INTENT.ECON.CONTRACT_SIGN{offer_id}` → `CONTRACT_CREATED`（phase 2/3）。"""
+        from life.ports import IntentResult
+        oid = p.get("offer_id")
+        if not oid:
+            return self._reject_reason(agent_id, "INTENT.ECON.CONTRACT_SIGN", "missing_offer_id", p)
+        r = self.engine.state.round
+        cid = p.get("contract_id") or f"C-{r}-{oid}"
+        seq = self._emit("CONTRACT_CREATED", {
+            "contract_id": cid, "offer_id": oid, "parties": p.get("parties"),
+            "terms": p.get("terms"), "kind": p.get("kind"), "round_no": r},
+            phase=PHASE_DECIDE, actor=agent_id)
+        return IntentResult(ok=True, event_seqs=(seq,))
 
     # ---- v2 社会层：三通道 MSG（T97）----
     def _members(self, group_id: str) -> list:
