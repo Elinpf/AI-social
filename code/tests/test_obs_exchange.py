@@ -2,7 +2,7 @@
 
 from obs import metrics, to_canonical
 from obs.metrics_econ_loop import econ_loop_metrics
-from obs.metrics_exchange import exchange_metrics
+from obs.metrics_exchange import exchange_metrics, dropped_reconcile
 from obs.testsupport import build_log
 
 
@@ -88,6 +88,32 @@ def test_exchange_sellers_include_exchange_legs():
     assert m["distinct_sellers_excl_world_market_trade"] == 0
     assert m["distinct_sellers_excl_world_exchange"] == 2
     assert m["V2b_ai_trades"] is True                      # 修前只读 MARKET_TRADE → 这里会误判 False
+
+
+def test_dropped_reconcile_reclassifies_offer_exhausted():
+    """跨回合售罄：该 offer 此前已 EXCHANGE_SETTLED 的 insufficient_goods → 离线改判 offer_exhausted。"""
+    lb = build_log(seed=13, agents=("A000", "A001", "A002"))
+    lb.add(1, 2, "A000", "OFFER_CREATED", {"offer_id": "S1", "from": "A000", "to": [],
+        "kind": "sale", "terms": {"good_id": "food", "price_mu": 10, "qty": 1}})
+    # 回合 2 已成交（seq 早于后面的 DROPPED）
+    lb.add(2, 2, "SYSTEM", "EXCHANGE_SETTLED", {"exchange_id": "E1", "channel": "offer",
+        "parties": ["A000", "A001"], "meta": {"offer_id": "S1"},
+        "legs": {"goods": [{"from": "A000", "to": "A001", "good_id": "food", "qty": 1000}],
+                 "money": [{"from": "A001", "to": "A000", "mu": 10}]}})
+    lb.add(3, 2, "A001", "DROPPED", {"offer_id": "S1", "reason": "insufficient_goods"})   # 已成交过 → 售罄
+    lb.add(3, 2, "A002", "DROPPED", {"offer_id": "S9", "reason": "insufficient_goods"})   # 无成交 → 真缺货
+    lb.add(3, 2, "A001", "DROPPED", {"offer_id": "S1", "reason": "insufficient_cash"})    # 他因不动
+    dr = dropped_reconcile(lb.records())
+    assert dr["engine"] == {"insufficient_cash": 1, "insufficient_goods": 2}
+    assert dr["offline"] == {"insufficient_cash": 1, "insufficient_goods": 1, "offer_exhausted": 1}
+    assert dr["reclassified"] == 1 and dr["reclassified_cross_round"] == 1
+
+
+def test_dropped_reconcile_in_metrics_and_bitwise():
+    recs = _log()
+    m = exchange_metrics(recs)
+    assert "dropped_reconcile" in m
+    assert to_canonical(exchange_metrics(recs)) == to_canonical(exchange_metrics(recs))
 
 
 def test_offer_split_unknown_kind_is_other():

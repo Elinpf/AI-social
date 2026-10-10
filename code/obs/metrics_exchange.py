@@ -89,6 +89,51 @@ def offer_source_split(records) -> dict:
     }
 
 
+def dropped_reconcile(records) -> dict:
+    """`DROPPED{insufficient_goods}` 的**离线复算**：区分「要约售罄」与「真缺货」。
+
+    引擎口径（econ `offer_exhausted`）只覆盖**同回合**超额认购；跨回合的被接受仍落
+    `insufficient_goods`。离线口径更权威：某 `DROPPED{insufficient_goods}` 的 `offer_id`
+    **此前（seq 更小）已出现过 `EXCHANGE_SETTLED`** ⇒ 该要约已成交过 ⇒ 这次是**售罄**，
+    重分类为 `offer_exhausted`。同/跨回合再细分。
+
+    纯函数、只读、确定性。
+    """
+    settled = collections.defaultdict(list)  # offer_id -> [(round, seq)]
+    for r in records:
+        if r["type"] == "EXCHANGE_SETTLED":
+            oid = (_p(r).get("meta") or {}).get("offer_id")
+            if oid is not None:
+                settled[oid].append((int(r.get("round", 0)), int(r.get("seq", 0))))
+    engine = collections.Counter()
+    offline = collections.Counter()
+    same_round = cross_round = 0
+    for r in records:
+        if r["type"] != "DROPPED":
+            continue
+        p = _p(r)
+        reason = p.get("reason")
+        engine[reason] += 1
+        oid = p.get("offer_id")
+        seq, rnd = int(r.get("seq", 0)), int(r.get("round", 0))
+        prior = [x for x in settled.get(oid, ()) if x[1] < seq] if oid is not None else []
+        if reason == "insufficient_goods" and prior:
+            offline["offer_exhausted"] += 1
+            if any(pr == rnd for (pr, _s) in prior):
+                same_round += 1
+            else:
+                cross_round += 1
+        else:
+            offline[reason] += 1
+    return {
+        "engine": {k: engine[k] for k in sorted(engine) if k},
+        "offline": {k: offline[k] for k in sorted(offline) if k},
+        "reclassified": same_round + cross_round,
+        "reclassified_same_round": same_round,
+        "reclassified_cross_round": cross_round,
+    }
+
+
 def exchange_metrics(records) -> dict:
     agents = set(_agents(records))
 
@@ -178,9 +223,10 @@ def exchange_metrics(records) -> dict:
                            "offer_accepted_real_sale": real_accepted,
                            "market_trade": len(trades), "exchange_settled": len(exchs)},
         "offer_source_split": split,
+        "dropped_reconcile": dropped_reconcile(records),
         "llm_judged_metric_count": 0,
     }
 
 
-__all__ = ["exchange_metrics", "offer_source_split", "classify_offer", "WORLD_IDS",
-           "REAL_SALE", "SOCIAL_PSEUDO", "OFFER_OTHER"]
+__all__ = ["exchange_metrics", "offer_source_split", "classify_offer", "dropped_reconcile",
+           "WORLD_IDS", "REAL_SALE", "SOCIAL_PSEUDO", "OFFER_OTHER"]
