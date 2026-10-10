@@ -120,6 +120,8 @@ class WorldView:
     net_worth: int
     visible_events: tuple[EventView, ...] = ()
     memory_refs: tuple[MemoryRef, ...] = ()
+    # 自有库存（仅本人可见）：((good_id, qty), ...)，按 good_id 升序，qty>0
+    inventory: tuple[tuple[str, int], ...] = ()
     # optional: unconsumed messages addressed to the agent
     inbox: tuple[EventView, ...] = ()
 

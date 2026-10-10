@@ -136,6 +136,24 @@ def test_offer_created_visibility_by_to():
         assert oid_b in vis_ids(aid), f"广播要约应对 {aid} 可见"
 
 
+def test_worldview_inventory_exposed():
+    """WorldView.inventory：自有库存、按 good_id 升序、qty>0、仅本人可见。"""
+    from engine.constants import PHASE_COMMUNICATE
+    from orchestration.integration import build_world
+
+    w = build_world(seed=7, n=3); eng = w["engine"]; ad = w["adapter"]
+    pids = sorted(w["personas"]); A, B = pids[0], pids[1]
+    eng.state.round = 1; eng.ctx = eng.ctx.at(1, 0); eng.arbiter.discard()
+    eng.emit_specs([
+        spec(1, PHASE_COMMUNICATE, A, "PRODUCE", {"agent_id": A, "good_id": "material", "qty": 3000}),
+        spec(1, PHASE_COMMUNICATE, A, "PRODUCE", {"agent_id": A, "good_id": "food", "qty": 1000}),
+        spec(1, PHASE_COMMUNICATE, A, "PRODUCE", {"agent_id": A, "good_id": "tool", "qty": 0}),
+    ])
+    eng.state, _ = eng.arbiter.commit(eng.state)
+    assert ad.perceive(A).inventory == (("food", 1000), ("material", 3000))  # 升序、qty>0 过滤
+    assert ad.perceive(B).inventory == ()                                   # 仅本人可见
+
+
 def test_contracts_are_audit_only():
     st = initial_state(1); led = Ledger(); _seed(st, led)
     before = state_hash(st)
