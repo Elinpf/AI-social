@@ -19,13 +19,20 @@ from engine.rng import draw_u64
 MILLI = 1000
 
 # ---- 商品注册表（base_rate 以 milli 表示；p_ref_mu 仅统计计价，非成交价）----
+# `transferable`（v2/04 §3.3）：默认 true；service 非库存/即时交付 → 不可经 inventory 转让。
 GOODS: dict[str, dict] = {
-    "food":     {"kind": "food",     "base_milli": 2000, "p_ref_mu": 100,  "shelf_life": 8},
-    "material": {"kind": "material", "base_milli": 1000, "p_ref_mu": 150,  "shelf_life": None},
-    "tool":     {"kind": "tool",     "base_milli": 300,  "p_ref_mu": 500,  "shelf_life": None},
-    "service":  {"kind": "service",  "base_milli": 1000, "p_ref_mu": 200,  "shelf_life": None},
-    "art":      {"kind": "art",      "base_milli": 200,  "p_ref_mu": 1000, "shelf_life": None},
+    "food":     {"kind": "food",     "base_milli": 2000, "p_ref_mu": 100,  "shelf_life": 8,    "transferable": True},
+    "material": {"kind": "material", "base_milli": 1000, "p_ref_mu": 150,  "shelf_life": None, "transferable": True},
+    "tool":     {"kind": "tool",     "base_milli": 300,  "p_ref_mu": 500,  "shelf_life": None, "transferable": True},
+    "service":  {"kind": "service",  "base_milli": 1000, "p_ref_mu": 200,  "shelf_life": None, "transferable": False},
+    "art":      {"kind": "art",      "base_milli": 200,  "p_ref_mu": 1000, "shelf_life": None, "transferable": True},
 }
+
+
+def is_transferable(good_id: str) -> bool:
+    """商品是否可经 exchange/inventory 转让（默认 True；service=False）。"""
+    g = GOODS.get(good_id)
+    return bool(g.get("transferable", True)) if g else False
 
 # ---- 配方：产出 -> 上游投入（good_id, qty_milli）；labor_ticks=1（每回合一次劳动 tick）----
 #    数量一律**定点 milli-单位**（1000 == 1 单位），使分数 base_rate（如 tool=0.3）仍为整数可算。
@@ -214,6 +221,6 @@ __all__ = [
     "GOODS", "RECIPES", "DEFAULTS", "MILLI",
     "skill_factor_milli", "tool_bonus_milli", "resource_factor_milli",
     "produce_qty", "inv_get", "inv_add", "inv_remove", "can_produce",
-    "depreciate", "burn_floor", "burn_budget", "world_burns",
+    "is_transferable", "depreciate", "burn_floor", "burn_budget", "world_burns",
     "fallback_mint", "market_ref_band",
 ]

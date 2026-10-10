@@ -36,12 +36,28 @@ from .life_hooks import (
     advance_time, resolve_schedule, settle_activities, apply_needs,
     update_relations, write_memories, emit_tags,
 )
+# v2 交换原语（P2/T131）：apply_exchange @4.1、apply_contracts @4.2（防御式挂载）
+try:
+    from .exchange import apply_exchange, apply_contracts
+    EXCHANGE_HOOK_AVAILABLE = True
+    EXCHANGE_HOOK_ERROR = None
+except Exception as _ex_exc:  # pragma: no cover
+    EXCHANGE_HOOK_AVAILABLE = False
+    EXCHANGE_HOOK_ERROR = repr(_ex_exc)
+
+    def apply_exchange(state, round_no, ctx):
+        return []
+
+    def apply_contracts(state, round_no, ctx):
+        return []
 
 # ---- Phase 4 ARBITRATE：4.1–4.8（顺序冻结，X2）----
 PHASE4_CHAIN = [
     ("apply_production", apply_production),    # v2 首项：生产/库存（4.1 前）
     ("settle_market", settle_market),          # 4.1
+    ("apply_exchange", apply_exchange),        # v2 交换原语（4.1 同层，settle_market 后）
     ("settle_obligations", settle_obligations),  # 4.2
+    ("apply_contracts", apply_contracts),      # v2 契约执行器（4.2 同层）
     ("apply_tax", apply_tax),                  # 4.3
     ("apply_metabolism", apply_metabolism),    # 4.4
     ("apply_penalty", apply_penalty),          # 4.5
@@ -100,6 +116,32 @@ def assert_production_available(config) -> None:
         raise RuntimeError(
             "economy.enabled=true 且 production.enabled=true 但 `apply_production` 未挂载"
             f"（生产将静默停摆）：{PRODUCTION_HOOK_ERROR}")
+
+
+def assert_exchange_available(config) -> None:
+    """交换原语 fail-loud 三态（T131，与 `assert_production_available` 同纪律）：
+    `economy.enabled=true` 且 `exchange.enabled=true`（默认）且 hook 未挂载 → **raise**；
+    `exchange.enabled=false`（显式消融）→ 不 raise；`economy.enabled=false` → 允许 no-op。
+    """
+    pol = (config or {}).get("policy", {}) if isinstance(config, dict) else {}
+    econ = pol.get("economy", {}) if isinstance(pol, dict) else {}
+    econ_on = bool(econ.get("enabled", False)) if isinstance(econ, dict) else False
+    if isinstance(config, dict):
+        rt_e = config.get("economy")
+        if isinstance(rt_e, dict) and "enabled" in rt_e:
+            econ_on = bool(rt_e["enabled"])
+    ex_on = True
+    if isinstance(config, dict):
+        rt = config.get("exchange")
+        if isinstance(rt, dict) and "enabled" in rt:
+            ex_on = bool(rt["enabled"])
+        elif isinstance(pol, dict) and isinstance(pol.get("exchange"), dict) \
+                and "enabled" in pol["exchange"]:
+            ex_on = bool(pol["exchange"]["enabled"])
+    if econ_on and ex_on and not EXCHANGE_HOOK_AVAILABLE:
+        raise RuntimeError(
+            "economy.enabled=true 且 exchange.enabled=true 但交换原语未挂载"
+            f"（Agent 间交易将静默失效）：{EXCHANGE_HOOK_ERROR}")
 
 
 def register_phase35_hook(name: str, fn) -> None:

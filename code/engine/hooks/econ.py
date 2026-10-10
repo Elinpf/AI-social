@@ -227,7 +227,8 @@ def _emit_market_trade(round_no, params, buyer, amount, fee_burn, fee_pool, reas
         "tx_id": tx_id, "buyer": buyer, "seller": seller,
         "qty": 1, "unit_price": int(amount), "amount": int(amount),
         "fee": int(fee_burn), "tx_type": "trade", "reason": reason or "trade",
-        "counterparty_id": seller, "flags": sorted(set(fl)),
+        "counterparty_id": seller, "counterparty": seller, "channel": "orderbook",
+        "flags": sorted(set(fl)),
     }
     if scarcity_index is not None:
         payload["scarcity_index"] = scarcity_index
@@ -411,7 +412,8 @@ def _settle_order_book(state, round_no, params, orders, prior, local, counter):
         local.append(tx)
         payload = {"tx_id": tx_id, "buyer": b["aid"], "seller": seller, "qty": qty,
                    "unit_price": price, "amount": amount, "fee": burn, "tx_type": "trade",
-                   "reason": "order_match", "counterparty_id": seller, "flags": sorted(set(fl))}
+                   "reason": "order_match", "counterparty_id": seller,
+                   "counterparty": seller, "channel": "orderbook", "flags": sorted(set(fl))}
         specs.append(spec(round_no, P4, b["aid"], "MARKET_TRADE", payload))
         if pool > 0:
             specs.append(spec(round_no, P4, "SYSTEM", "TAX_LEVIED", {

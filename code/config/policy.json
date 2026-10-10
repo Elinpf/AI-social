@@ -124,5 +124,9 @@
   "production": {
     "_comment": "v2 P1 生产层一等开关（T114）。扁平值；由 engine.runner.load_config 原样并入 config['policy']['production']；apply_production 读同键。默认 enabled=true（行为不变）；enabled=false 时零生产事件、双账本守恒仍成立、打 flag=production_disabled（**显式消融，不触发 fail-loud**）。改本块会变 engine_version 指纹（属预期）。",
     "enabled": true
+  },
+  "exchange": {
+    "_comment": "v2 交换原语档（T126/T129；T131 实现）。policy.exchange.enabled（runtime config.exchange.enabled 优先），默认 true（行为不变）。语义=控制「agent↔agent 成交」（世界市场 MARKET 保留）。OFF → EXCHANGE_SETTLED=0、agent-as-seller 的 MARKET_TRADE=0、CONTRACT_CREATED=0，发审计 DROPPED{reason/flag=exchange_disabled}，**不 fail-loud**；与 economy.enabled 为 AND。改本块变 engine_version 指纹（属预期）。",
+    "enabled": true
   }
 }
