@@ -14,8 +14,14 @@ def _log():
     # EXCHANGE_SETTLED：双方均 agent + 含 world
     lb.add(2, 4, "SYSTEM", "EXCHANGE_SETTLED", {"exchange_id": "E1", "channel": "offer", "parties": ["A001", "A002"], "legs": {"goods": [], "money": []}})
     lb.add(2, 4, "SYSTEM", "EXCHANGE_SETTLED", {"exchange_id": "E2", "channel": "order", "parties": ["A000", "WORLD"], "legs": {"goods": [], "money": []}})
-    lb.add(3, 2, "A000", "OFFER_CREATED", {"offer_id": "O1", "from": "A000", "to": ["A001"], "kind": "trade"})
-    lb.add(3, 2, "A001", "OFFER_ACCEPTED", {"offer_id": "O1", "by": "A001"})
+    # 真实市场挂单（kind=sale，terms 含 good_id/price_mu/qty）+ 被接受
+    lb.add(3, 2, "A000", "OFFER_CREATED", {"offer_id": "S1", "from": "A000", "to": [],
+                                           "kind": "sale", "terms": {"good_id": "food", "price_mu": 120, "qty": 1}})
+    lb.add(3, 2, "A001", "OFFER_ACCEPTED", {"offer_id": "S1", "by": "A001"})
+    # 社交伪要约（kind=trade，terms 仅 amount_mu）+ 拒绝：**不得计入 V2a**
+    lb.add(3, 2, "A000", "OFFER_CREATED", {"offer_id": "O2", "from": "A000", "to": ["A002"],
+                                           "kind": "trade", "terms": {"amount_mu": 100}})
+    lb.add(3, 2, "A002", "OFFER_REJECTED", {"offer_id": "O2", "by": "A002", "reason": "polite"})
     return lb.records()
 
 
@@ -28,9 +34,50 @@ def test_exchange_metrics_basic():
     assert m["agent_agent_deals"] == 2         # MARKET agent-agent + EXCHANGE both-agent
     assert m["all_deals"] == 4
     assert m["agent_agent_share"] == 0.5
-    assert m["V2a_tool_available"] is True     # offer_created/accepted>0
+    assert m["V2a_tool_available"] is True     # 有 real_sale 挂单 + 被接受
     assert m["V2b_ai_trades"] is False         # distinct_sellers_excl_world=1（未>1）
     assert m["llm_judged_metric_count"] == 0
+
+
+def test_offer_source_split_counts_by_kind():
+    sp = exchange_metrics(_log())["offer_source_split"]
+    assert sp["created_total"] == 2
+    assert sp["created_real_sale"] == 1
+    assert sp["created_social_pseudo"] == 1
+    assert sp["created_other"] == 0
+    assert sp["accepted_total"] == 1
+    assert sp["accepted_real_sale"] == 1
+    assert sp["accepted_social_pseudo"] == 0
+
+
+def test_V2a_false_when_only_social_pseudo_offers():
+    """关键防假绿：只有社交伪要约时 V2a 必须为 False（不拿伪要约当证据）。"""
+    lb = build_log(seed=9, agents=("A000", "A001"))
+    lb.add(1, 2, "A000", "OFFER_CREATED", {"offer_id": "O-1-A000-A001", "from": "A000",
+                                           "to": ["A001"], "kind": "trade", "terms": {"amount_mu": 100}})
+    lb.add(1, 2, "A001", "OFFER_REJECTED", {"offer_id": "O-1-A000-A001", "by": "A001", "reason": "polite"})
+    m = exchange_metrics(lb.records())
+    assert m["V2a_components"]["offer_created"] == 1
+    assert m["V2a_components"]["offer_created_social_pseudo"] == 1
+    assert m["V2a_tool_available"] is False
+    assert m["offer_source_split"]["created_real_sale"] == 0
+
+
+def test_V2a_false_for_legacy_market_trade_only():
+    """沿用 T134 语义：只有 MARKET_TRADE、无 real_sale 被接受 → V2a False（不被 legacy 成交顶真）。"""
+    lb = build_log(seed=11, agents=("A000", "A001"))
+    lb.add(1, 2, "A000", "MARKET_TRADE", {"buyer": "A000", "seller": "A001", "amount": 1, "qty": 1000, "good_id": "food"})
+    assert exchange_metrics(lb.records())["V2a_tool_available"] is False
+
+
+def test_offer_split_unknown_kind_is_other():
+    lb = build_log(seed=10, agents=("A000",))
+    lb.add(1, 2, "A000", "OFFER_CREATED", {"offer_id": "X1", "from": "A000", "to": [],
+                                           "kind": "weird", "terms": {"foo": 1}})
+    lb.add(1, 2, "A000", "OFFER_CREATED", {"offer_id": "X2", "from": "A000", "to": [],
+                                           "kind": "sale"})  # 缺 good_id → 不算 real_sale
+    sp = exchange_metrics(lb.records())["offer_source_split"]
+    assert sp["created_other"] == 2 and sp["created_real_sale"] == 0
 
 
 def test_exchange_V2b_true_when_multiple_agent_sellers():
