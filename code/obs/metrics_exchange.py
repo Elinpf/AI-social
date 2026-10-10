@@ -133,6 +133,11 @@ def exchange_metrics(records) -> dict:
     d_buyers_mt = len({b for b in mt_buyers if is_agent(b)})
     d_buyers_ex = len({b for b in ex_buyers if is_agent(b)})
 
+    # 对手方（08 §1.2 R A1 一等字段）：与「卖方」口径不同，单独暴露以免混淆。
+    #   卖方 = 交货/出货方（goods.from / MARKET_TRADE.seller）；counterparty = 该笔的**另一侧**。
+    cp = [_p(r).get("counterparty") for r in trades + exchs]
+    d_cp_excl = len({x for x in cp if is_agent(x)})
+
     num = n_agent_trade + n_agent_exch
     den = len(trades) + len(exchs)
     share = round(num / den, 6) if den else 0.0
@@ -159,6 +164,7 @@ def exchange_metrics(records) -> dict:
         "distinct_buyers_excl_world": d_buyers_excl,
         "distinct_buyers_excl_world_market_trade": d_buyers_mt,
         "distinct_buyers_excl_world_exchange": d_buyers_ex,
+        "distinct_counterparty_excl_world": d_cp_excl,
         "agent_agent_deals": num,
         "all_deals": den,
         "agent_agent_share": share,
