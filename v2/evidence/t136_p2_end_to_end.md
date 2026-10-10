@@ -118,3 +118,24 @@ python /tmp/t136.py
 # 离线复算：python -c "import json;from obs.metrics_exchange import exchange_metrics; \
 #   print(exchange_metrics([json.loads(l) for l in open('v2/evidence/run_t136_canon_n20.jsonl')])['dropped_reconcile'])"
 ```
+
+## 7. 世界观上下文（**既有性质，非 T136 回归**）
+| run | `AGENT_DIED` | 死亡 | 死因 | 存活 | `LOAN_ISSUED` | 死亡回合 |
+|---|---|---|---|---|---|---|
+| T136 probe N=10 (mock) | 10 | 10/10 | `illiquid_no_credit_N` | 0 | 10 | 61–75 |
+| **T136 canon N=20 (mock)** | 18 | **18/20** | `illiquid_no_credit_N` | 2（P018/P020） | 19 | 61–73 |
+| P1 canonical (真 LLM) | 18 | 18/20 | `illiquid_no_credit_N` | 2 | 20 | — |
+| M3-A baseline | 18 | 18/20 | `illiquid_no_credit_N` | 2 | 19 | — |
+
+- **三 run 完全一致 → 既有性质，不是 T136 的回归。**
+- 小镇在第 5–6 天（round 60–76）**基本死光**；84 回合里**前 ~60 回合才是「活着的」**。
+  **T136 的 23 笔成交落在 round 14–62，恰好全在此窗口内。**
+- 死亡**均匀、与个体无关**（18 人各 1 次、同因、无 id 偏置）→ **系统性经济性质**（`illiquid` + 授信被拒 `count_c:3`），**不是选择效应**。
+- **续命机制没救下任何人**：`LOAN_ISSUED` 19–20 次 ≈ 每人 1 次，之后即 `no_credit_N`。
+- ⚠️ **解读边界**：任何「社会结构 / 不平等 / 福祉」的观察，都发生在**一个正在整体死去的世界里** —— 与 v2 总目标（小镇能否自洽运转，T78/T80）**直接相关**。
+- **与顺序偏置是两件事**：一个污染「**谁**先被服务」，一个是「**世界本身**在 60 回合后崩掉」。**两者都写，都不该包装成涌现。**
+
+## 8. real-LLM canonical（P2 证据记录）—— 见下方追记
+> `provider=openai_compat` · N=20×84 · seed 42 · `exchange.enabled=true` · HEAD `6f7407e`。
+> **预期**：life 接受逻辑确定性、不含 LLM → 应与 mock 给出**同样**的 `EXCHANGE_SETTLED=23`（LLM 无关性检验）。
+> **结果**：_（运行完成后追记：V2a/V2b/`EXCHANGE_SETTLED`/`distinct_sellers_excl_world`/`agent_agent_share`/`state_hash`/`SYSTEM_ERROR` + 与 mock 的逐项对照）_
