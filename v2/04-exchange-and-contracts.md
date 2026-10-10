@@ -2,6 +2,7 @@
 
 > 领域：经济机制设计 ｜ 作者：econ-mechanism-designer ｜ 版本：v2 设计提案（设计层，不改代码）
 > 任务：P2 首要命题 **G-P1-1（商品→货币转换通道缺失）** 的 A 层原语设计
+> 修订：v2.1 —— 并入 Leader E1–E7 裁决 + A1（`counterparty`）/A2（V2a/V2b 分列），并统一 `INTENT.ECON.*` 命名空间
 > 上游依据：`v2/00-roadmap.md`（P2 命题）、`v2/01-economy-substrate.md`（A/B/C 三层与结算原语）、`v1.1/08-engine-stats-extension.md`（事件契约权威）、`v1.2/01-implementation-architecture.md §AD R-08`（回合缓冲/唯一 append）
 > 红线（用户拍板，不可破）：**不预设价格 / 工资 / 税率 / 是否铸币**；**确定性内核不得调 LLM**。
 
@@ -220,6 +221,8 @@ inventory[from][good] -= qty ;  inventory[to][good] += qty     （同一回合�
 |---|---|---|---|---|---|
 | A1 | **新增事件** | `EXCHANGE_SETTLED` | 4.1 | `exchange_id, channel∈{offer,contract}, offer_id?, contract_id?, parties[2], goods_legs:[(from,to,good_id,qty)], money_legs:[(from,to,mu)], price_mu?, place?, activity?, round` | 对 `inventory`/`cash` 逐腿原子应用；校验零和 |
 | A2 | **字段扩展** | `MARKET_TRADE.channel∈{orderbook}`（可选） | 4.1 | （既有字段 + `channel`） | 无（纯审计；不改语义） |
+| A2b | **一等字段（Leader A1）** | `counterparty`（必带，回答「对手方是谁、是否 world」） | 4.1 | `EXCHANGE_SETTLED.counterparty` / `MARKET_TRADE.counterparty`（world 记 `is_world=true`） | 无（供 E1/E6/V2 合成 Agent 间交易量） |
+| A2c | **新增事件出口（Leader E7）** | `ORDER_CANCEL`（撤单必须可观测） | 4.1 | `order_id, agent_id, good_id, side, price_mu, qty, round` | 从订单簿移除该单（确定性） |
 | A3 | **新增意图** | `INTENT.ECON.TRADE` / `INTENT.ECON.OFFER`（→`OFFER_CREATED`）/ `INTENT.ECON.CONTRACT_SIGN` | 2/3→4.1 | 见 §5.1 | 内核封装为对应事件 |
 | A4 | **复用** | `OFFER_CREATED/COUNTERED/ACCEPTED/REJECTED/EXPIRED` | 2/3 | 既有（`kind` 已含 `sale/service`） | 无需改 |
 | A5 | **复用** | `CONTRACT_CREATED/FULFILLED/VIOLATED/EXPIRED`、`VOTE_CAST` | 2/3・3.5/4 | 既有 | 无需改 |
@@ -230,7 +233,7 @@ inventory[from][good] -= qty ;  inventory[to][good] += qty     （同一回合�
 
 **与 `sim-engine-stats-architect` 的协同口径（需其确认/登记进 v1.1/08）**：
 1. `EXCHANGE_SETTLED` 的**折叠器**与 `market_trade` 折叠器共用 `apply_exchange` 内核；
-2. 指标口径新增：**agent↔agent 成交占比** = `MARKET_TRADE(buyer∈Agents ∧ seller∈Agents)` + `EXCHANGE_SETTLED` / 全部成交；**`distinct_sellers`** 从「卖方去重」口径**自然把 Agent 纳入**（**这是 G-P1-1 的核心观测量**）；
+2. 指标口径（Leader A1 裁决）：**一等字段 `counterparty`** 落在每笔成交（回答「对手方是谁、是否 world」）；核心判据 **`distinct_sellers_excl_world`**（卖方去重、**排除 world**）**> 1**；**agent↔agent 占比 = 分子(双方均非 world 的成交额) / 分母(全部成交额)**；**不去重**，但必须能合成「Agent 间交易量」；
 3. 守恒校验（货币式 + 商品式）需把 `EXCHANGE_SETTLED` 纳入**零和事件白名单**（与 `TRANSFER/MARKET_TRADE/DEPOSIT` 同类，不计入 MINT/BURN）。
 
 ---
@@ -241,8 +244,9 @@ inventory[from][good] -= qty ;  inventory[to][good] += qty     （同一回合�
 | 项 | 定义 |
 |---|---|
 | 名称 | `policy.exchange.enabled`（runtime `config.exchange.enabled` 优先），**默认 `true`（行为不变）** |
-| 控制范围 | **只控制「是否产生」交易/契约原语**：`OFF` 时 life **不产生** `INTENT.ECON.TRADE/OFFER/ORDER_PLACE`（→`OFFER_CREATED`），engine **不挂** `apply_exchange/apply_contracts` |
-| `OFF` 的结果 | `EXCHANGE_SETTLED=0`、agent-as-seller 的 `MARKET_TRADE=0`、`CONTRACT_CREATED=0` → **Agent 间交易 = 0** |
+| 控制范围（Leader E6 写死） | **语义 = 关闭「agent↔agent 成交」**（**不是**关闭全部成交）：`OFF` 时 life **不产生** `INTENT.ECON.TRADE/OFFER/ORDER_PLACE`（→`OFFER_CREATED`），engine **不挂** `apply_exchange/apply_contracts` |
+| `OFF` 的结果 | `EXCHANGE_SETTLED=0`、**agent-as-seller 的 `MARKET_TRADE=0`**、`CONTRACT_CREATED=0` → **Agent 间交易 = 0**；**世界市场 `MARKET` 成交保留**（保底仍在） |
+| 与 `economy.enabled` 嵌套 | **`AND`**：`economy=false` ⇒ exchange 无意义（整个经济结算关闭） |
 | 纪律 | **不删事件契约、不改守恒、不 fail-loud**（显式消融）；发**审计事件** `DROPPED{reason:"exchange_disabled", flag:"exchange_disabled"}`（08 §5.8 同款）——**「开关生效」的唯一查法 = 查该 `DROPPED`** |
 | 与静默失效区分 | 「静默失效」必须 **fail-loud**；「显式关闭」不 fail-loud 且留 flag（08 §5.8 统一纪律） |
 
@@ -252,8 +256,18 @@ inventory[from][good] -= qty ;  inventory[to][good] += qty     （同一回合�
 关：exchange.enabled=false → distinct_sellers = 1（退回仅世界市场）、I_eff P50 = 0、CONTRACT_CREATED = 0
 其余 A 层不变（生产/代谢/守恒照常）→ 差异只能归因于「交易原语」
 ```
-- **证伪力**：若关掉后 `distinct_sellers` 仍 >1，则说明「agent↔agent 交易」另有来源（非本原语）→ 设计被证伪。
+- **证伪力**：若关掉后 `distinct_sellers_excl_world` 仍 >1，则说明「agent↔agent 交易」另有来源（非本原语）→ 设计被证伪。
 - **防「假涌现」**：交易若靠**写死常量/规则代劳**产生，则 `OFF` 时不会归零→ 用本对照排除（对齐 `v2/00 §0.3`「写死常量不算涌现」）。
+
+### 7.3 消融矩阵（`economy.enabled × exchange.enabled`，Leader E6 要求）
+| `economy` | `exchange` | 预期 | 判据 |
+|---|---|---|---|
+| `true` | `true`（默认） | 正常：Agent 间交易、世界市场成交、契约皆可发生 | V1–V7 |
+| `true` | `false` | **仅 agent↔agent 归零**；世界市场成交保留；生产/代谢/守恒照常 | `distinct_sellers_excl_world=1`、`EXCHANGE_SETTLED=0`、`CONTRACT_CREATED=0`；`M(t)≥0` 仍成立 |
+| `false` | `true` | **经济结算整体关闭** ⇒ exchange **无意义**（AND 语义，等价于 exchange 也关） | 无成交、无契约；发 `DROPPED{flag=economy_disabled}` |
+| `false` | `false` | 同上级 | 同上 |
+
+> **读法**：只有第 2 行才是「**去交易原语**」的单变量对照（保持其余 A 层不变）——这是 M3 证伪的基准行。
 
 ---
 
@@ -288,12 +302,16 @@ inventory[from][good] -= qty ;  inventory[to][good] += qty     （同一回合�
 | # | 验收 | 判据 |
 |---|---|---|
 | V1 | 原语可用 | `EXCHANGE_SETTLED > 0` 且守恒（商品零和 + 货币零和）成立 |
-| V2 | agent↔agent 成交 | `distinct_sellers > 1`；`MARKET_TRADE(seller∈Agent) > 0` |
+| **V2a** | **结构性（原语可用）** | `INTENT.ECON.OFFER`（→`OFFER_CREATED`）/`TRADE > 0`、`OFFER_ACCEPTED > 0`（**证明「工具通了」**） |
+| **V2b** | **涌现性（AI 真的交易了）** | **`distinct_sellers_excl_world > 1`**、`MARKET_TRADE(seller∈Agent) > 0`（**证明「涌现发生了」**） |
 | V3 | 变现 | `I_eff P50 > 0`（≥ 代谢 `metabolism` 为佳） |
 | V4 | 契约 | `CONTRACT_CREATED(type=EMPLOYMENT/…) > 0`、履约率 > 0 |
-| V5 | 消融 | `exchange.enabled=false` → V2/V3 指标归零，其余 A 层不变 |
+| V5 | 消融 | `exchange.enabled=false` → **V2b/V3 归零、V2a 归零**，其余 A 层不变（世界市场保留，见 §7.3 第 2 行） |
 | V6 | 复现/守恒 | `replay` 逐位一致；`ECONOMY_INVARIANT_VIOLATION=0`；双账本守恒成立 |
 | V7 | 不写死 | 无任何「价格/工资/税率/铸币」默认值；价格来自 `terms` |
+| V8 | 对手方可观测 | 每笔成交带 `counterparty`；`distinct_sellers_excl_world` 可由日志纯函数算出 |
+
+> **V2a/V2b 必须分开报（Leader A2 硬要求）**：否则「**AI 选择不交易**」会被误读成「**原语坏了**」。区分「工具可用」与「涌现发生」——这是 M3 消融教训的延伸。
 
 ---
 
@@ -307,18 +325,21 @@ inventory[from][good] -= qty ;  inventory[to][good] += qty     （同一回合�
 5. **可转让物品**：`state.inventory`（milli、入 `state_hash`）参与交换，腿式原子改 owner；`service` 即时交付；新增 `good.transferable`；
 6. **发现机制**：**不新造原语**，复用订单簿 + `OFFER_*` + 只读公开簿投影（防底牌/套利）；
 7. **life 通道**：新增 `INTENT.ECON.{TRADE, OFFER, CONTRACT_SIGN}`（→`OFFER_CREATED`）；LLM 只产内容/条款，合法性/结算确定性；居民 `thinking=false`、世界 LLM `thinking=true`；
-8. **消融**：`policy.exchange.enabled`（默认 true），`OFF` 时 Agent 间交易归零并留 `DROPPED{flag=exchange_disabled}`。
+8. **消融**：`policy.exchange.enabled`（默认 true），**语义 = agent↔agent 成交**（世界市场保留），`OFF` 时 Agent 间交易归零并留 `DROPPED{flag=exchange_disabled}`；含 `economy × exchange` 消融矩阵（§7.3）；
+9. **对手方可观测（Leader A1）**：每笔成交带**一等字段 `counterparty`**；核心判据 **`distinct_sellers_excl_world`**（§6 A2b、§8 V8）；
+10. **验收分列（Leader A2）**：**V2a 结构性（原语可用）** 与 **V2b 涌现性（AI 真的交易了）** 必须分开报（§8）；
+11. **撤单可观测（Leader E7）**：`INTENT.ECON.ORDER_CANCEL` 具事件出口 `ORDER_CANCEL`（§6 A2c）。
 
-### 9.2 待讨论（交 Leader / 相关方）
-| # | 议题 | 影响 | 建议 |
-|---|---|---|---|
-| E1 | `EXCHANGE_SETTLED` 与 `MARKET_TRADE` 的**成交量去重口径**（议价成交是否也被算作「市场成交」） | 指标口径 | 分开计，另出「agent↔agent 占比」 |
-| E2 | 订单簿是否对 Agent **完全公开身份** | 隐私 vs 效率 | 默认只见聚合深度（§4.2） |
-| E3 | 是否允许**以物易物**（无货币腿） | 绕过货币 | 允许（红线：不设价；零和天然安全） |
-| E4 | `service`/`art` 的**交付与质量**判定 | 契约违约判定 | 默认确定性（按 qty）；质量软判定须冻结 |
-| E5 | 契约违约的**集体惩罚**是否允许 | 制度强度 | 交 AI 用规范决定（`v2/01 Q3`） |
-| E6 | `exchange.enabled` 与 `economy.enabled` 的**嵌套语义** | 消融矩阵 | 定义为 `AND`：economy=false 则 exchange 无意义 |
-| E7 | 挂单**撤单** `ORDER_CANCEL` 是否登记 | 意图完整性 | 复用 `INTENT.ECON.ORDER_CANCEL`（v1 已有） |
+### 9.2 议题 —— 已由 Leader 裁决（E1–E7 全部【已决】）
+| # | 议题 | 裁决 |
+|---|---|---|
+| E1 | 成交量去重口径 | **分开计**；**加一等字段 `counterparty`**；写死判据 **`distinct_sellers_excl_world`**、**agent↔agent 占比 = 分子(双方均非 world)/分母(全部)**；不去重但须能合成 Agent 间交易量（§6 A1/A2b、§8 V8） |
+| E2 | 订单簿是否公开身份 | **默认只见聚合深度**，但 **`orderbook_view.identity` 必须参数化**（匿名 vs 实名是**制度变量**，可被 B 层演化/消融，**不写死 A 层**）（§4.2） |
+| E3 | 是否允许以物易物 | **允许**——只允许「钱↔货」等于预设「必须有货币」，违反「不替 AI 设计经济」；零和天然安全（§1.5） |
+| E4 | 服务/艺术品质量判定 | **默认按 qty 确定性**；**硬约束：软判定不得改金额**，质量软判定只能产**布尔**（是否违约）且必须冻结进 `LLM_JUDGMENT`（§2.2） |
+| E5 | 契约违约集体惩罚 | **交 AI 规范决定**（与 `v2/01 Q3` 一致）；我们只提供 `PENALTY_APPLIED`，**不预设是否惩罚/多重** |
+| E6 | 开关嵌套语义 | **`exchange.enabled` 语义 = agent↔agent 成交**（世界市场保留）；`economy=false ⇒ exchange 无意义`；**补消融矩阵**（§7.3） |
+| E7 | 撤单可观测 | **批准复用 `INTENT.ECON.ORDER_CANCEL`，但必须有事件出口** `ORDER_CANCEL`（撤单可观测、订单簿状态可审计）（§6 A2c） |
 
 ### 9.3 新增术语（需回填 `glossary/LEXICON.md`）
 `成交原语（Exchange Primitive）`、`EXCHANGE_SETTLED`、`apply_exchange`、`apply_contracts`、`exchange.enabled`、`公开簿视图（orderbook_view）`、`agent↔agent 成交占比`。

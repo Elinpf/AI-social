@@ -1,0 +1,125 @@
+{
+  "threshold_iou": 0.95,
+  "margin_px": 2,
+  "margin_scope": "union_of_3_frames",
+  "frame": [
+    48,
+    96
+  ],
+  "axes": {
+    "villager_red": {
+      "hair": "short",
+      "body": "normal",
+      "cloth": "tunic",
+      "acc": "backpack"
+    },
+    "villager_green": {
+      "hair": "long",
+      "body": "tall",
+      "cloth": "robe",
+      "acc": "none"
+    },
+    "villager_blue": {
+      "hair": "pony",
+      "body": "normal",
+      "cloth": "overalls",
+      "acc": "glasses"
+    },
+    "villager_yellow": {
+      "hair": "bald",
+      "body": "stout",
+      "cloth": "apron",
+      "acc": "tool"
+    },
+    "villager_purple": {
+      "hair": "braid",
+      "body": "short",
+      "cloth": "robe",
+      "acc": "scarf"
+    },
+    "villager_teal": {
+      "hair": "bun",
+      "body": "stout",
+      "cloth": "coat",
+      "acc": "backpack"
+    },
+    "villager_orange": {
+      "hair": "mohawk",
+      "body": "tall",
+      "cloth": "overalls",
+      "acc": "tool"
+    },
+    "villager_slate": {
+      "hair": "hat",
+      "body": "normal",
+      "cloth": "coat",
+      "acc": "tool"
+    }
+  },
+  "pairs": 28,
+  "failed_pairs": [],
+  "frame_margin": {
+    "villager_red": {
+      "top": 12,
+      "left": 10,
+      "right": 6,
+      "bottom": 2,
+      "ok": true
+    },
+    "villager_green": {
+      "top": 6,
+      "left": 10,
+      "right": 8,
+      "bottom": 2,
+      "ok": true
+    },
+    "villager_blue": {
+      "top": 12,
+      "left": 10,
+      "right": 8,
+      "bottom": 2,
+      "ok": true
+    },
+    "villager_yellow": {
+      "top": 12,
+      "left": 6,
+      "right": 4,
+      "bottom": 2,
+      "ok": true
+    },
+    "villager_purple": {
+      "top": 26,
+      "left": 10,
+      "right": 8,
+      "bottom": 2,
+      "ok": true
+    },
+    "villager_teal": {
+      "top": 4,
+      "left": 6,
+      "right": 2,
+      "bottom": 2,
+      "ok": true
+    },
+    "villager_orange": {
+      "top": 2,
+      "left": 10,
+      "right": 8,
+      "bottom": 2,
+      "ok": true
+    },
+    "villager_slate": {
+      "top": 6,
+      "left": 8,
+      "right": 8,
+      "bottom": 2,
+      "ok": true
+    }
+  },
+  "failed_margin": [],
+  "gate_pass": {
+    "pass": true,
+    "fail_pairs": [],
+    "fail_margin": []
+  }
+}
