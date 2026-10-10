@@ -1,0 +1,4 @@
+⚠️ 本提交含他人产物（add -A 裹入，非本人 WIP）：
+- design-synthesizer 的 glossary/tools/lint_terms.py v3（362 行，属 T130）
+- pixel-asset-artist 的 char_check_T128b.json + chars_sheet_r2b.png（属 T128b）
+根因：Leader 旧指令 'git add -A'（已废止，改为 'git add <自己路径>'）。内容无丢失，仅提交标签不精确，故用 note 留档、不重写历史。
