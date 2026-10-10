@@ -169,12 +169,13 @@ class KernelAdapter:
                     if int(q) > 0)
         from engine import production as _P
         tg = tuple(g for g, _q in inv if _P.is_transferable(g))  # 可转让自有 goods（供 life 选货）
+        rp = tuple((g, int(_P.GOODS.get(g, {}).get("p_ref_mu", 0))) for g, _q in inv)  # 参考价（非成交价）
         return WorldView(
             agent_id=agent_id, round=r, time=self.derive_time(r),
             status=a.get("status", "alive"), location=loc,
             cash=int(st.cash.get(agent_id, 0)), net_worth=st.net_worth(agent_id),
             visible_events=tuple(visible), memory_refs=memrefs,
-            inventory=inv, transferable_goods=tg,
+            inventory=inv, transferable_goods=tg, ref_prices=rp,
         )
 
     # ---- 落账辅助（唯一经 Arbiter；D1：入本回合缓冲，P6 落盘）----
