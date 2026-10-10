@@ -526,6 +526,26 @@ def _apply_produce_overflow(state, rec, p):
     return None  # 纯审计（库存未增；溢出量记于事件）
 
 
+# ---------------- v2 交易原语（T131）：EXCHANGE_SETTLED（双边、原子、零和） ----------------
+
+@register("EXCHANGE_SETTLED")
+def _apply_exchange_settled(state, rec, p):
+    legs = p.get("legs", {}) or {}
+    for leg in legs.get("goods", []):
+        f, t, g, q = leg["from"], leg["to"], leg["good_id"], int(leg["qty"])
+        state.inventory.setdefault(f, {})
+        state.inventory.setdefault(t, {})
+        state.inventory[f][g] = int(state.inventory[f].get(g, 0)) - q
+        state.inventory[t][g] = int(state.inventory[t].get(g, 0)) + q
+    for leg in legs.get("money", []):
+        f, t, m = leg["from"], leg["to"], int(leg["mu"])
+        state.ensure_agent(f)
+        state.ensure_agent(t)
+        state.cash[f] = int(state.cash.get(f, 0)) - m
+        state.cash[t] = int(state.cash.get(t, 0)) + m
+    # 零和：不改 minted/burned（守恒式与商品总量式均不受影响）
+
+
 # ---------------- 审计 / 无状态折叠 ----------------
 
 @register("ECONOMY_INVARIANT_VIOLATION")
@@ -556,6 +576,8 @@ _NOOP_TYPES = [
     "OFFER_CREATED", "OFFER_ACCEPTED", "OFFER_REJECTED", "OFFER_COUNTERED", "OFFER_EXPIRED",
     "SCORE_POSTED", "RANKING_EMITTED", "CONFLICT_STARTED", "CONFLICT_RESOLVED",
     "VOTE_CAST",
+    "CONTRACT_CREATED", "CONTRACT_FULFILLED", "CONTRACT_VIOLATED", "CONTRACT_EXPIRED",
+    "ORDER_CANCEL",
     "INTENT_REJECTED", "DROPPED",
 ]
 for _t in _NOOP_TYPES:

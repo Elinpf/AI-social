@@ -35,8 +35,10 @@ class Engine:
         # 启动时捕获指纹（run 内固定用此值，避免运行期间配置被并发修改导致假不匹配）
         self.fingerprint = _fingerprint()
         # fail-loud：经济启用却未挂载 apply_production -> 直接报错（防生产静默停摆）
-        from .hooks import assert_production_available
+        from .hooks import assert_production_available, assert_exchange_available
         assert_production_available(config)
+        # fail-loud：economy+exchange 启用却未挂载 apply_exchange -> 直接报错（防交易静默失效）
+        assert_exchange_available(config)
         self.state = initial_state(self.seed)
         self.ctx = Ctx(self.seed, config, 0, 0)
         # 生活层驱动：每回合在 Phase 2 DECIDE 调用 agent.step()（注入，不 import life）
