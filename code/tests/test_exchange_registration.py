@@ -147,11 +147,14 @@ def test_worldview_inventory_exposed():
     eng.emit_specs([
         spec(1, PHASE_COMMUNICATE, A, "PRODUCE", {"agent_id": A, "good_id": "material", "qty": 3000}),
         spec(1, PHASE_COMMUNICATE, A, "PRODUCE", {"agent_id": A, "good_id": "food", "qty": 1000}),
+        spec(1, PHASE_COMMUNICATE, A, "PRODUCE", {"agent_id": A, "good_id": "service", "qty": 1000}),
         spec(1, PHASE_COMMUNICATE, A, "PRODUCE", {"agent_id": A, "good_id": "tool", "qty": 0}),
     ])
     eng.state, _ = eng.arbiter.commit(eng.state)
-    assert ad.perceive(A).inventory == (("food", 1000), ("material", 3000))  # 升序、qty>0 过滤
-    assert ad.perceive(B).inventory == ()                                   # 仅本人可见
+    wv = ad.perceive(A)
+    assert wv.inventory == (("food", 1000), ("material", 3000), ("service", 1000))  # 升序、qty>0
+    assert wv.transferable_goods == ("food", "material")  # service 不可转让被剔除
+    assert ad.perceive(B).inventory == ()                 # 仅本人可见
 
 
 def test_contracts_are_audit_only():

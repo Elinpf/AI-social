@@ -122,6 +122,8 @@ class WorldView:
     memory_refs: tuple[MemoryRef, ...] = ()
     # 自有库存（仅本人可见）：((good_id, qty), ...)，按 good_id 升序，qty>0
     inventory: tuple[tuple[str, int], ...] = ()
+    # 自有且**可转让**的 goods（good_id 升序）：供 life 过滤不可转让品（如 service）
+    transferable_goods: tuple[str, ...] = ()
     # optional: unconsumed messages addressed to the agent
     inbox: tuple[EventView, ...] = ()
 
