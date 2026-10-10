@@ -324,11 +324,22 @@ def main(argv: list[str] | None = None) -> int:
         print("=" * 78)
         print(f"扫描根目录 : {report['root']}")
         print(f"扫描文件   : {n_files}")
-        print(f"违规       : {report['violations']}    提及(不罚) : {report['mentions']}")
+        print(f"违规(行命中)       : {report['violations']}    提及(不罚,行命中) : {report['mentions']}")
+        print("   ↑ 单位=**行命中**：每处禁用叫法各计 1（同一行多处则计多处）")
         if args.baseline:
-            print(f"基线       : {baseline_used}（冻结 {report.get('baseline_total')} 条）")
-            print(f"新增违规   : {report.get('new_violations')}  ← 棘轮判定依据")
+            print(f"基线       : {baseline_used}（冻结 {report.get('baseline_total')} 条**条目**）")
+            print(f"新增违规(条目数)   : {report.get('new_violations')}  ← 新增违规的 (file,variant) **条目数**；与'行命中'是**不同层级**")
         print("-" * 78)
+
+        # 变体明细：显式标注这是「行内命中计数」，非条目数
+        if report["by_variant"]:
+            print("变体明细（每个禁用变体的**命中行数**，非条目数）：")
+            for v, n in report["by_variant"].items():
+                canon = next((x["canonical"] for x in violations if x["variant"] == v), "")
+                print(f"  {v!r:<24} 命中 {n} 行  -> {canon}")
+            print("  ↑ 这是「行计数」；上方『新增违规(条目数)』= (file,variant) 组合数，两者不可直接相加")
+            print("-" * 78)
+
 
         # ① 棘轮新违规：逐条可操作
         if new_keys:
