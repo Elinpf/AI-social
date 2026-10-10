@@ -486,8 +486,12 @@ class LifeLayerAgent:
             return
         if wv.round % 12 != 0:              # ~ once per day per agent
             return
-        # only sell what we actually hold; no held goods -> no (empty) offer
+        # only sell what we actually hold; restrict to transferable goods if the
+        # kernel exposes that hint (avoids good_not_transferable drops).
         held = {g: int(q) for g, q in (wv.inventory or []) if int(q) > 0}
+        tg = set(getattr(wv, "transferable_goods", ()) or ())
+        if tg:
+            held = {g: q for g, q in held.items() if g in tg}
         if not held:
             return
         # deterministic pick: largest holding, ties by good_id asc (seed-stable)
