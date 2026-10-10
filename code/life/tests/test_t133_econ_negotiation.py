@@ -26,7 +26,7 @@ def test_life_offer_and_negotiation():
     neg = sum(1 for r in recs if r["type"] == "LLM_CALL"
               and (r["payload"] or {}).get("purpose") == "negotiation")
     assert neg > 0, "negotiation LLM calls expected (purpose=negotiation)"
-    # life's public-board OFFER intent (to=[]) must surface as OFFER_CREATED{to=[]}
+    # life's public-board OFFER_CREATED intent (to=[]) must surface as OFFER_CREATED{to=[]}
     broadcast = [r for r in recs if r["type"] == "OFFER_CREATED"
                  and not (r["payload"] or {}).get("to")]
     assert broadcast, "life INTENT.ECON.OFFER(create,to=[]) should produce OFFER_CREATED"

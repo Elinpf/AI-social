@@ -101,6 +101,7 @@ class LifeLayerAgent:
         self._appraised: set = set()        # (to, week) already social-appraised (T127)
         self._narrated_weeks: set = set()
         self._comm_slot: str | None = None  # last slot we generated dialogue for (≤1/slot)
+        self._accepted: set = set()         # offer_ids already accepted (T133)
         # own needs (initial from persona; then folded from own NEED_UPDATE events)
         self.needs: dict[str, int] = {d: int(persona.needs_init.get(d, 50)) for d in C.NEED_DIMS}
         # agent-local ephemera (NOT world state):
@@ -127,6 +128,7 @@ class LifeLayerAgent:
         rep.narrated = self._maybe_narrate(wv)
         self._communicate(wv)
         self._maybe_negotiate(wv)
+        self._maybe_accept_offers(wv)
         return rep
 
     # ---- helpers -----------------------------------------------------------
@@ -499,6 +501,28 @@ class LifeLayerAgent:
             "enforceable": False, "body": wording}))
         # NOTE (T133): no ORDER_PLACE / ORDER_CANCEL here — the order-book path is
         # deferred to its own wave; producing a cancel without a place is a half-state.
+
+    def _maybe_accept_offers(self, wv) -> None:
+        """P2: read the (public) offer board via `visible_events()` and ACCEPT an offer
+        addressed to us or broadcast (`to=[]`), **at the offer's own terms** (no preset
+        price). Submits `INTENT.ECON.OFFER{act:"accept",...}`; the kernel wraps it into
+        `OFFER_ACCEPTED`. ≤1 accept per round; each offer accepted at most once."""
+        if not exchange_enabled():
+            return
+        for ev in wv.visible_events:
+            if ev.type != "OFFER_CREATED":
+                continue
+            p = ev.payload or {}
+            oid = p.get("offer_id")
+            to = list(p.get("to") or [])
+            if not oid or oid in self._accepted or p.get("from") == self.agent_id:
+                continue
+            if to:                                    # only public-board offers (to==[])
+                continue
+            self._accepted.add(oid)
+            self.kernel.submit_intent(self.agent_id, Intent(INTENT_ECON_OFFER, self.agent_id, {
+                "act": "accept", "offer_id": oid, "terms": p.get("terms") or {}}))
+            return                                    # ≤1 accept per round
 
     # ---- misc ------------------------------------------------------------
     def _current_goal(self) -> str:
