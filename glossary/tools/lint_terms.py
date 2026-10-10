@@ -101,14 +101,15 @@ def _is_mention(line: str, rule: dict) -> bool:
     return False
 
 
-def build_suggestion(line: str, rule: dict, category: str) -> str:
+def build_suggestion(line: str, rule: dict, category: str, match: re.Match | None = None) -> str:
     """给一条命中生成**可操作的建议**（供作者直接照改）。"""
     variant = rule["variant"]
     canonical = rule.get("canonical", "")
-    # 1) 命名空间错优先
+    # 1) 命名空间错优先（仅当**本次命中**落在 `INTENT.OFFER` 上，避免误伤同一行的裸词）
     for pat, correct, msg in NAMESPACE_HINTS:
-        if pat.search(line):
-            return msg
+        for mm in pat.finditer(line):
+            if match is not None and mm.start() < match.end() and match.start() < mm.end():
+                return msg
     # 2) 常规：给规范名 + 族写法
     family = ""
     if canonical and re.match(r"^[A-Z][A-Z0-9]*(_[A-Z0-9]+)+$", canonical):
@@ -161,7 +162,7 @@ def scan_file(path: Path, rules: list[dict], root: Path) -> list[dict]:
                     "canonical": r["canonical"],
                     "reason": r["reason"],
                     "category": category,
-                    "suggestion": build_suggestion(line, r, category),
+                    "suggestion": build_suggestion(line, r, category, m),
                     "text": line.strip()[:200],
                 })
     return findings

@@ -1448,7 +1448,8 @@
       "variant": "OFFER",
       "mode": "word",
       "canonical": "OFFER_CREATED",
-      "reason": "事件命名统一到 08（09 §7.1 N-1）"
+      "reason": "事件命名统一到 08（09 §7.1 N-1）",
+      "exclude": "INTENT.ECON.OFFER"
     },
     {
       "variant": "RANKING",
