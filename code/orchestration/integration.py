@@ -185,6 +185,9 @@ class KernelAdapter:
         legal = set(ALL_INTENT_CLASSES) | {"INTENT.SOCIAL"}
         if intent.intent_class not in legal:
             return self._reject(agent_id, intent, "unknown_intent_class")
+        # v2 经济意图（T133）：统一入 `state.pending_intents`，由 4.1/4.2 hook 消费
+        if intent.intent_class.startswith("INTENT.ECON."):
+            return self._do_econ(agent_id, intent)
         handler = getattr(self, "_do_" + intent.intent_class.split(".", 1)[1].lower(), None)
         if handler is None:
             return self._reject(agent_id, intent, "unsupported_intent")
@@ -331,6 +334,15 @@ class KernelAdapter:
                                              "cause_event_seq": p.get("cause_event_seq")},
                          phase=PHASE_LIFE, actor=agent_id)
         return IntentResult(ok=True, event_seqs=(seq,))
+
+    # ---- v2 经济意图（T133/T135）：委派 engine.intents -> 入 pending_intents，交 4.1/4.2 结算 ----
+    def _do_econ(self, agent_id, intent):
+        from life.ports import IntentResult
+        from engine import intents as _intents
+        res = _intents.submit_intent(self.engine, agent_id, {
+            "intent_class": intent.intent_class, "payload": intent.payload})
+        return IntentResult(ok=bool(res.get("ok")), reason=res.get("reason"),
+                            event_seqs=tuple(res.get("event_seqs", ()) or ()))
 
     # ---- v2 社会层：三通道 MSG（T97）----
     def _members(self, group_id: str) -> list:
