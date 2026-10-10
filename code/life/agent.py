@@ -97,6 +97,7 @@ class LifeLayerAgent:
         self.soft = get_soft_layer(self.llm)
         self._rel_cache: dict = {}          # (to, dim) -> current outgoing relation value
         self._judged: set = set()           # (to, dim, level) already soft-judged
+        self._appraised: set = set()        # (to, week) already social-appraised (T127)
         self._narrated_weeks: set = set()
         self._comm_slot: str | None = None  # last slot we generated dialogue for (≤1/slot)
         # own needs (initial from persona; then folded from own NEED_UPDATE events)
@@ -121,6 +122,7 @@ class LifeLayerAgent:
         rep.reflected = self._reflect(wv, retrieved_ids)
         self._fold_relations(wv)
         rep.soft_judgments = self._maybe_soft_judge(wv)
+        self._maybe_social_appraisal(wv)
         rep.narrated = self._maybe_narrate(wv)
         self._communicate(wv)
         return rep
@@ -380,6 +382,35 @@ class LifeLayerAgent:
                     "to": to, "dim": d, "before": before,
                     "after": clamp(before + dv, lo, hi), "cause": "soft_judgment"}))
             n += 1
+        return n
+
+    def _maybe_social_appraisal(self, wv) -> int:
+        """T127: emit frozen LLM_JUDGMENT for two extra social dimensions that light
+        up the `rel-acceptance` (stance flip) and `diff-scoring` (respect/affection
+        divergence) cards. Same frozen path as the relation judgments: RNG picks the
+        branch, the LLM fills the label, the decision is frozen into the log (replay
+        reads it back, never re-calls). One appraisal per (peer, week), bounded."""
+        week = wv.time.week
+        peers = sorted({to for (to, _dim) in self._rel_cache})[:4]
+        n = 0
+        for to in peers:
+            key = (to, week)
+            if key in self._appraised:
+                continue
+            self._appraised.add(key)
+            for dim, opts in (("stance", ["accept", "reject"]),
+                              ("respect", ["high", "low"]),
+                              ("affection", ["high", "low"])):
+                branch = rng_branch(self.agent_id, dim, to, wv.round, opts)
+                envelope = {"options": list(opts)}
+                jid = f"J-{self.agent_id}-{to}-{dim}-w{week}"
+                payload, emitted = self.soft.judge(
+                    judgment_id=jid, dimension=dim, question_ref=f"social_{dim}",
+                    envelope=envelope, rng_branch=branch, parties=[self.agent_id, to],
+                    context={"dim": dim, "to": to}, round_no=wv.round)
+                if not emitted:
+                    self._submit_audit("LLM_JUDGMENT", payload, phase=2)
+                n += 1
         return n
 
     def _maybe_narrate(self, wv) -> bool:
