@@ -24,7 +24,7 @@ from .memory import AssociativeMemory, EmbeddingModel, HashEmbeddingModel, SideS
 from .persona import Persona
 from .policy import social_enabled, exchange_enabled
 from .ports import (
-    INTENT_ECON_OFFER, INTENT_ECON_ORDER_CANCEL, INTENT_ECON_TRADE,
+    INTENT_ECON_OFFER,
     INTENT_GOAL, INTENT_MEMORY, INTENT_MOVE, INTENT_OBSERVE, INTENT_PLAN, INTENT_RELATION,
     INTENT_SOCIAL, Intent, KernelPort,
 )
@@ -497,11 +497,8 @@ class LifeLayerAgent:
             "act": "create", "kind": "sale", "to": [],
             "terms": {"good_id": good, "price_mu": price, "qty": 1},
             "enforceable": False, "body": wording}))
-        # occasionally cancel one of own open orders -> observable ORDER_CANCEL
-        if wv.round % 24 == 0:
-            self.kernel.submit_intent(self.agent_id, Intent(
-                INTENT_ECON_ORDER_CANCEL, self.agent_id,
-                {"order_id": f"ord-{self.agent_id}-{wv.round}"}))
+        # NOTE (T133): no ORDER_PLACE / ORDER_CANCEL here — the order-book path is
+        # deferred to its own wave; producing a cancel without a place is a half-state.
 
     # ---- misc ------------------------------------------------------------
     def _current_goal(self) -> str:

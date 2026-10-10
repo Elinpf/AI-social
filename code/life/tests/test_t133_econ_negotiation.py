@@ -1,49 +1,50 @@
-"""T133: life produces INTENT.ECON.* + negotiation wiring.
+"""T133: life produces INTENT.ECON.OFFER (+ negotiation) — engine-based, no stub.
 
-Offline (mini double) proves the intent -> event path incl. ORDER_CANCEL observability.
-Real-engine part asserts the negotiation LLM call and that ECON intents are accepted
-(not unknown/unsupported); the ORDER_CANCEL *event* on the engine still awaits the
-engine-side emission (tracked separately) and is therefore not asserted here.
+Order-book path (ORDER_PLACE/ORDER_CANCEL) is deferred to its own wave, so it is
+NOT asserted here (no half-state: we never emit a cancel without a place).
 """
 from __future__ import annotations
 
 from collections import Counter
 
-from life.tests.support.mini_kernel import MiniKernel, state_fingerprint
-from life.tests.test_life_m3m7 import _run as _mini_run
 
-
-def test_offline_intents_produce_events_and_cancel_observable():
-    k, _, _ = _mini_run(6, 84, 7)
-    c = Counter(e["type"] for e in k.ledger)
-    assert c.get("OFFER_CREATED", 0) > 0, "life OFFER intent -> OFFER_CREATED"
-    assert c.get("ORDER_CANCEL", 0) > 0, "life ORDER_CANCEL intent -> ORDER_CANCEL (observable)"
-    assert state_fingerprint(k.state) == state_fingerprint(MiniKernel.replay(k.ledger, seed=7))
-
-
-def test_engine_negotiation_and_econ_accepted():
-    try:
-        from engine.integration import build_world
-        from engine.replay import replay_records
-        from engine.state import state_hash
-    except Exception:
-        return  # engine unavailable
-    w = build_world(seed=7, n=6)
+def _run(n: int = 6, rounds: int = 84, seed: int = 7):
+    from engine.integration import build_world
+    from engine.replay import replay_records
+    from engine.state import state_hash
+    w = build_world(seed=seed, n=n)
     eng = w["engine"]
-    for r in range(84):
+    for r in range(rounds):
         eng.run_round(r)
     recs = eng.ledger.records
+    return recs, state_hash(replay_records(recs)) == state_hash(eng.state)
+
+
+def test_life_offer_and_negotiation():
+    recs, replay = _run()
     c = Counter(r["type"] for r in recs)
     neg = sum(1 for r in recs if r["type"] == "LLM_CALL"
               and (r["payload"] or {}).get("purpose") == "negotiation")
     assert neg > 0, "negotiation LLM calls expected (purpose=negotiation)"
-    # ECON intents must be accepted (routed), never unknown/unsupported
+    # life's public-board OFFER intent (to=[]) must surface as OFFER_CREATED{to=[]}
+    broadcast = [r for r in recs if r["type"] == "OFFER_CREATED"
+                 and not (r["payload"] or {}).get("to")]
+    assert broadcast, "life INTENT.ECON.OFFER(create,to=[]) should produce OFFER_CREATED"
+    # ECON intents must be routed (never unknown/unsupported)
     bad = [r for r in recs if r["type"] == "INTENT_REJECTED"
            and (r["payload"] or {}).get("intent_class", "").startswith("INTENT.ECON.")
            and (r["payload"] or {}).get("reason") in ("unknown_intent_class", "unsupported_intent")]
     assert not bad, bad
     assert c.get("SYSTEM_ERROR", 0) == 0
-    assert state_hash(replay_records(recs)) == state_hash(eng.state)
+    assert replay is True
+
+
+def test_no_cancel_without_place():
+    """Guard the ruling: life must not emit a cancel without ever placing an order."""
+    recs, _ = _run()
+    c = Counter(r["type"] for r in recs)
+    assert c.get("ORDER_PLACE", 0) == 0 and c.get("ORDER_CANCEL", 0) == 0, \
+        "no order-book half-state (place/cancel deferred to its own wave)"
 
 
 def _main() -> int:
