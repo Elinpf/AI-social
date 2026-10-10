@@ -270,6 +270,7 @@ def apply_exchange(state, round_no, ctx):
             continue
         _emit_deal(deal, f"ex:{round_no}:{i}")
     # (b) OFFER_ACCEPTED → deal（(B)；规则 1/2/3）
+    settled_offers: set = set()
     for seq, item in _accept_deals(state, round_no):
         if item[0] == "DROPPED":
             _, reason, oid, by = item
@@ -277,8 +278,22 @@ def apply_exchange(state, round_no, ctx):
                               {"reason": reason, "offer_id": oid, "by": by}))
             continue
         _, deal, by = item
-        _emit_deal(deal, f"ex:{round_no}:offer:{seq}",
-                   {"offer_id": deal["meta"].get("offer_id"), "by": by})
+        oid = deal["meta"].get("offer_id")
+        reason = _val(deal)
+        if reason is None:
+            _shadow(deal)
+            settled_offers.add(oid)
+            counterparty = deal["parties"][1] if len(deal["parties"]) == 2 else "WORLD"
+            specs.append(_exchange_settled_spec(round_no, deal, "offer",
+                                                f"ex:{round_no}:offer:{seq}", counterparty,
+                                                sum(m for (_, _, m) in deal["money"])))
+            continue
+        # 语义细分：该要约**本回合已成功结算过**再被接受 → 属**超额认购/售罄**，非"真缺货"
+        if reason == "insufficient_goods" and oid in settled_offers:
+            reason = "offer_exhausted"
+        specs.append(spec(round_no, P4, "SYSTEM", "DROPPED",
+                          {"reason": reason, "exchange_id": f"ex:{round_no}:offer:{seq}",
+                           "offer_id": oid, "by": by, "parties": deal["parties"]}))
     return specs
 
 

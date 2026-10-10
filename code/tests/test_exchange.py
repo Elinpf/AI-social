@@ -215,3 +215,30 @@ def test_broken_chain_and_missing_terms_are_dropped_not_crash():
     dr = {s.payload.get("reason") for s in outs if s.type == "DROPPED"}
     assert ex == []
     assert "unknown_offer" in dr and "bad_terms" in dr
+
+
+def test_offer_exhausted_vs_true_shortage():
+    """同一 offer 被两人接受：首笔成交，次笔 `offer_exhausted`（售罄）——与真缺货区分。"""
+    st, _ = _state(agents=("A", "B", "C"))
+    st.inventory.setdefault("A", {})["food"] = 1000          # 卖方仅 1 单位
+    _inj(st, 1, "OFFER_CREATED", {"offer_id": "s1", "from": "A", "to": [], "kind": "sale",
+                                  "terms": {"good_id": "food", "price_mu": 1, "qty": 1},
+                                  "enforceable": False})
+    _inj(st, 2, "OFFER_ACCEPTED", {"offer_id": "s1", "by": "B"})
+    _inj(st, 3, "OFFER_ACCEPTED", {"offer_id": "s1", "by": "C"})   # 均有钱 → 竞争同一单位
+    outs = X.apply_exchange(st, 1, _ctx(_cfg()))
+    ex = [s for s in outs if s.type == "EXCHANGE_SETTLED"]
+    dr = [s for s in outs if s.type == "DROPPED"]
+    assert len(ex) == 1 and ex[0].payload["parties"] == ["A", "B"]   # 首笔（seq 小）成交
+    assert any(d.payload.get("reason") == "offer_exhausted" and d.payload.get("by") == "C" for d in dr)
+    assert not any(d.payload.get("reason") == "insufficient_goods" for d in dr)  # 不是"真缺货"
+
+    # 真缺货：卖方从来没有该货 → 仍报 insufficient_goods
+    st2, _ = _state(agents=("A", "B"))
+    _inj(st2, 1, "OFFER_CREATED", {"offer_id": "s2", "from": "A", "to": ["B"], "kind": "sale",
+                                   "terms": {"good_id": "art", "price_mu": 1, "qty": 1},
+                                   "enforceable": False})   # A 无 art → 真缺货
+    _inj(st2, 2, "OFFER_ACCEPTED", {"offer_id": "s2", "by": "B"})
+    outs2 = X.apply_exchange(st2, 1, _ctx(_cfg()))
+    dr2 = [s for s in outs2 if s.type == "DROPPED"]
+    assert any(d.payload.get("reason") == "insufficient_goods" for d in dr2)
