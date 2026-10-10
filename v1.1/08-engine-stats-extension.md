@@ -297,6 +297,33 @@ class Event:
 > **最小化原则（v2/02 §4.2）**：优先派生，仅在「行为性且不可派生」时新增事件。所有新增事件必须：① 登记 `engine/events.py::EVENT_TYPES`；② 在 `replay.apply_event` 注册确定性折叠器；③ 带 `day/slot/place` 审计字段。
 > **G7 影响**：以上均为**新增类型**或**可选字段**——新增类型在**旧日志中不出现**，G7 对既有日志仍通过；可选字段被容忍，G7 不受影响。**均不与既有 66 类事件冲突**（只增不改）。
 
+**R. v2 交换原语事件（A 层成交通道，应 `v2/04-exchange-and-contracts.md` §6 / T126，已登记）**
+
+> 目的：解 G-P1-1（Agent 间零交易 / 商品→货币转换通道缺失）。**一条成交原语 `apply_exchange` + 两个事件出口**：复用 `MARKET_TRADE`（订单簿，**关键改动：允许 Agent 作卖家**）与**新增 `EXCHANGE_SETTLED`**（议价/契约的多腿双边原子交换）。红线：**不预设价格/工资/税率/铸币；内核不调 LLM**。
+
+| type | phase | payload 关键字段 | 折叠器行为 |
+|---|---|---|---|
+| `EXCHANGE_SETTLED`（**新增**） | 4.1 | `exchange_id, channel∈{offer,contract}, offer_id?, contract_id?, parties[2], legs{goods:[(from,to,good_id,qty)], money:[(from,to,mu)]}, counterparty?, price_mu?, meta?, place?, activity?, round` | 对 `inventory`/`cash` **逐腿原子应用**；**校验零和**：∀good 净额=0、`Σmoney` 净额=0 |
+
+> `legs` 即多腿双边交换：`legs.goods[]`（商品腿）与 `legs.money[]`（货币腿），等价 `v2/04 §6` 的 `goods_legs`/`money_legs` 记法；`meta` 为可选审计元数据。
+
+- **`MARKET_TRADE` 扩展可选字段 `channel∈{orderbook}`；并显式允许 `seller ∈ Agent`**（关键改动：卖方不再仅世界 `MARKET`；**只增字段、不改语义**，X1；G7 容忍）。
+- **`counterparty` 一等字段（Leader 裁决 A1）**：`MARKET_TRADE` 与 `EXCHANGE_SETTLED` 均新增可选字段 `counterparty` = **成交对手方标识**（`AgentId` ⇒ agent↔agent 成交；world 标识 `"WORLD"`/`"MARKET"` ⇒ 与世界成交）。**每笔成交必须能回答「对手方是谁、是否 world」**——服务 G-P1-1 判据与 `exchange.enabled` 消融口径。
+- **折叠器**：`EXCHANGE_SETTLED` 与 `market_trade` **共用 `apply_exchange` 内核**（`replay.apply_event` 注册确定性折叠器）。
+- **守恒白名单**：`EXCHANGE_SETTLED` 归入**零和事件**（与 `TRANSFER`/`MARKET_TRADE`/`DEPOSIT` 同类，**不计入 MINT/BURN**）——货币式与商品式守恒均适用。
+- **契约的账务落点**：契约（`CONTRACT_*`）是**制度层意图/结果**记录，其每一笔付款/交货**物理上仍是** `TRANSFER`/`EXCHANGE_SETTLED`/`MARKET_TRADE`，经同一守恒校验（与 §1.2 P 一致）。
+- **意图（登记契约）**：`INTENT.ECON.TRADE` / `INTENT.ECON.OFFER`（意图侧；事件侧 → `OFFER_CREATED`）/ `INTENT.ECON.CONTRACT_SIGN` / `INTENT.ECON.ORDER_CANCEL`（新增，登记 `life/ports.py::ALL_INTENT_CLASSES`）。**撤单必须有事件出口**（`ORDER_CANCEL`），否则订单簿状态不可审计。
+- **成本口径**：`LLM_CALL.purpose += "negotiation"`（居民 `thinking=false`，与 `dialogue` 同批接线）。**须同步 freeze 白名单 + 缓存键**（T92 同类坑：purpose 未登记会导致缓存/回放不一致）。
+- **新增 hook**：`apply_exchange()`@4.1、`apply_contracts()`@4.2（挂入 Phase4 全序）。
+- **新增商品字段**：`good.transferable: bool`（默认 `true`，商品注册表字段，非事件；校验用）。
+
+> **指标口径（写死分子/分母，供 T101/T126）**：
+> - **agent↔agent 成交占比**：`分子 = |{MARKET_TRADE: buyer∈Agents ∧ seller∈Agents}| + |{EXCHANGE_SETTLED: parties 双方均∈Agents}|`；`分母 = |全部成交| = |MARKET_TRADE| + |EXCHANGE_SETTLED|`。**分子/分母如上写死**，可复现。
+> - **`distinct_sellers_excl_world`** = 卖方身份去重后**排除 world 标识**的计数（世界不计入）；与含 world 的 `distinct_sellers` **并列输出**——**`distinct_sellers_excl_world > 0` 才是 G-P1-1 的真判据**（当前 `distinct_sellers=1` 混了 world 与 Agent，故必须排除 world 才能作答）。
+> - **`exchange.enabled=false` 消融** → `distinct_sellers_excl_world = 0`（世界市场保留，`distinct_sellers` 可能 =1）、`agent↔agent 成交占比 = 0`、`I_eff` P50=0、`CONTRACT_CREATED=0`（证伪力见 §5.8）。
+
+> **G7/兼容**：`EXCHANGE_SETTLED` 为**新增类型**（旧日志不出现）、`channel` 为**可选字段**（被容忍）——**G7 不受影响**；与既有 66 类不冲突（只增不改，X1/X4）。**引擎实现**（`EVENT_TYPES`/`apply_event` 折叠器/两个 hook/意图）由 econ/kernel 实现阶段落地，本节只登记 schema。
+
 > **通信事件复用 v1**：`MSG_PUBLIC / MSG_DM / MSG_GROUP` 不新增，但新增可选字段 `refs[]`（引用 msg_id）与 `tag_hints[]`（供 `TAG_EMITTED` 关联，实为内容层）。传播边由 `OBSERVATION.target_event_seq` 与 msg `refs` 共同构建（§4.3）。
 
 > **对齐提示（供 persona-life-designer / emergence-observer-designer）**：上表 `dim`、`activity_type`、`place`、`tag` 的**取值枚举**由你们在 06/07 分册定义；本文件只固定**结构、必带字段与语义**。我会在看到 06/07 后按需在 §8 补一张「枚举取值对齐表」。
@@ -769,6 +796,7 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
   - 修改本节所述开关块**会改变 `engine_version` 指纹**（属预期，非数据损坏）；`config/policy.json` 的 `production`/`economy`/`lifecycle`/`social` 各块均纳入指纹。
   - **同族开关**：`social.enabled`（v2 社交发声档，T115）同属这一族——`false` 时整条 v2 社交发声通道在**生成侧短路**（不发 `INTENT.SOCIAL`、不物化 `GROUP_CREATED` → `MSG_*`/`GROUP_CREATED` 全为 0、无 `LLM_CALL(purpose=dialogue)`），**同样只控制「是否产生」、不删事件契约、不触发 fail-loud**。`economy.enabled`（T58）/`lifecycle.enabled` 同族。
   - **消融口径**：显式关闭必须与「静默失效」可区分——前者不 fail-loud 且发审计 flag，后者必须 fail-loud。这是本族开关的统一纪律。
+  - **`exchange.enabled`（v2 交换原语档，T126/T129）同属这一族**：`policy.exchange.enabled`（runtime `config.exchange.enabled` 优先），**默认 `true`（行为不变）**。**语义 = 控制「agent↔agent 成交」原语**（**世界市场 `MARKET` 保留**，不受本开关影响）。`OFF` 时 life 不产生 `INTENT.ECON.TRADE/OFFER/ORDER_PLACE/ORDER_CANCEL`、engine 不挂 `apply_exchange/apply_contracts` → `EXCHANGE_SETTLED=0`、agent-as-seller 的 `MARKET_TRADE=0`、`CONTRACT_CREATED=0`（**Agent 间交易 = 0；世界市场成交仍在**）；**不删事件契约、不改守恒、不 fail-loud**，发审计 `DROPPED{reason:"exchange_disabled", flag:"exchange_disabled"}`（**「开关生效」唯一查法 = 查该 `DROPPED`**）。与 `economy.enabled` 的嵌套语义 = **AND**（`economy=false` 则 exchange 无意义）。
 
 ---
 
@@ -870,6 +898,8 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
 | **新增不变量** | `M(t) ≥ 0`（代谢只销毁可得部分）、商品守恒 | §6 式(12)(13) |
 | **字段语义登记** | 商品族 `qty` 的 **milli-unit** 口径（`1 unit = 1000 milli-unit`）+ `base_rate` 定点值 + `state.inventory` 同单位/入 state_hash/sorted | §1.2 O.1 / O.2 |
 | **配置口径登记** | 一等开关 `policy.production.enabled`（默认 true、只控「是否产生」）+ 三态 fail-loud 协同（显式关闭不 fail-loud/静默失效必 FAIL）+ `social.enabled` 同族 | §5.8 |
+| **新增事件（v2 交换，T126/T129）** | `EXCHANGE_SETTLED`（4.1，多腿双边原子交换，零和）+ `MARKET_TRADE.channel∈{orderbook}`（允许 seller∈Agent）+ 一等字段 `counterparty` + 意图 `ORDER_CANCEL` + 统计口径（`distinct_sellers_excl_world`/agent↔agent 占比） | §1.2 R |
+| **配置口径登记（v2 交换）** | `policy.exchange.enabled`（默认 true，同开关族；OFF→Agent 间交易归零 + `DROPPED{flag=exchange_disabled}`，不 fail-loud） | §5.8 |
 
 > **合计**：新增事件 **11** 类（商品 4 + 契约 4 + 投票 1 + 社会 2）；字段扩展 **3** 事件；不变量 **2** 条；字段语义登记 **1** 项（商品族 `qty` milli-unit 口径）。**均只增不改**，与既有 66 类不冲突；G7 对既有日志仍通过（新增类型旧日志不出现、可选字段被容忍）。**引擎实现**（`engine/events.py` EVENT_TYPES + `replay.apply_event` 折叠器 + `apply_production()/apply_contracts()` hook）由 v2 实现阶段（econ-dev T91 等）落地，本任务只出 schema。
 
