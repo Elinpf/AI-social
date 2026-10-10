@@ -458,6 +458,8 @@ def settle_market(state, round_no, ctx):
             orders.append({"agent_id": it.get("agent_id"), "intent": it,
                            "seq": int(round_no)})
         elif cls == "INTENT.ECON.ORDER_CANCEL":
+            # 无持久化订单簿：保留 DROPPED{no_order_book}（"无簿可撤"的正确反应）。
+            # ORDER_CANCEL 事件出口的取舍待 Leader 裁（v2/04 A2c；见 T131 讨论）。
             specs.append(spec(round_no, P4, "SYSTEM", "DROPPED",
                               {"reason": "no_order_book", "agent_id": it.get("agent_id")}))
         elif cls == "INTENT.ECON.TRANSFER":

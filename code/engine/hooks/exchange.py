@@ -54,8 +54,11 @@ def _inv_get(state, owner, good) -> int:
 def normalize_deal(state, intent: dict) -> dict | None:
     """把 life 意图归一为内部 deal：{parties(升序), goods[(f,t,g,qty)], money[(f,t,mu)], meta}。
 
-    支持形态：`{deal:{parties,goods,money,meta}}` 或 `{counterparty,give:[...],take:[...]}`。
-    `give/take` 项：`{"good":g,"qty":n}` 或 `{"mu":m}`（give=我付出、take=我获得）。
+    **唯一 canonical payload（v2/04 §5.1 / Leader A3）**：
+      `{"counterparty": other, "give": [{"good":g,"qty":n} | {"mu":m}], "take": [...], "meta": {...}}`
+      （`give`=我付出、`take`=我获得）。
+    ⚠️ **已废弃**：`{"deal": {parties, goods, money, meta}}`（保留解析仅为向后兼容，**请勿再用于新代码**——
+    两套形状并存会造成「同名不同义」）。新代码一律用 canonical 形态。
     """
     p = (intent or {}).get("payload", {}) or {}
     deal = p.get("deal") if isinstance(p.get("deal"), dict) else None
@@ -189,8 +192,10 @@ def _active_contracts(state, round_no):
 
 
 def apply_contracts(state, round_no, ctx):
-    """4.2：契约执行器（确定性「法院」）。默认只做**确定性**判定（余额/期限）。
+    """4.2：契约执行器（确定性「法院」）——**只执行「已存在的 `CONTRACT_CREATED`」，不创建契约**。
 
+    「谁创建契约」（`INTENT.ECON.OFFER/CONTRACT_SIGN` → `OFFER_*`/`CONTRACT_CREATED`）是 **phase 2/3
+    的内核封装**（v2/04 §6），由 kernel 侧实现；本 hook 仅消费其结果。
     软判定（服务达标等）必须走 `LLM_JUDGMENT(frozen)` 且**只产布尔、不得改金额**；本实现不含软判定。
     """
     if not exchange_enabled(ctx):
