@@ -36,13 +36,19 @@
 ## 2. 消融（`exchange.enabled=false`）——生效查法
 - **`DROPPED{flag:exchange_disabled}` = 168**（08 规定的「开关生效唯一查法」✓）
 - `EXCHANGE_SETTLED=0`、`OFFER_ACCEPTED=0`、`real_sale=0` → **V2a/V2b 归零** ✓
-- 世界市场**保留**：`MARKET_TRADE=21`（与 canonical 同）；`PRODUCE 322→321`（**Δ1，如实**，见 §5）
+- **不是逐位不变**：世界市场保留 `MARKET_TRADE=21`（与 canonical 同），但 `PRODUCE 322→321`（**Δ1**，机理见 §5）。
+  正确措辞 = 「**除与库存轨线耦合的 Δ1 外其余不变**」，**不得写「其余 A 层完全不变」**。
 - 消融段仍有 `OFFER_CREATED=22` —— **全部 `social_pseudo`**（模板社交要约不受 exchange 开关影响），**不算 V2a 证据**。
 
 ## 3. 口径（必须读）
 ### 3.1 「尝试接受」≠「成交」
 `OFFER_ACCEPTED=240` 是**尝试**；**成交**只有 `EXCHANGE_SETTLED=23`。`23 + 217(DROPPED) = 240` 自洽。
 **不得把 accept 数当成交数。**
+
+### 3.1b `agent_agent_share` 的**分母定义**（写死，防后人重复犯错）
+- **`agent_agent_share`（指标）= 分子(双方非 world 的成交) / 分母(= **全部成交 = `MARKET_TRADE` + `EXCHANGE_SETTLED`**)**（E1 裁决）。canon `23/(23+21)=0.522727`。
+- **另一个结构性命题（不叫 share）**：**新的 exchange 路径成交 `25/25` 全部是 agent↔agent** —— 这是**构造性**的（world 不可能成为 offer 链的一环）。**单独陈述，勿混入 `agent_agent_share`。**
+  > 早先误报的 `25/25 = 1.000` 是「只用 `EXCHANGE_SETTLED` 作分母」的错误口径，**作废**。
 
 ### 3.2 `offer_exhausted`：引擎口径 vs 离线复算（两列）
 | DROPPED reason | 引擎口径(=日志) | 离线复算 | 差异 |
@@ -63,9 +69,9 @@
 **唯一权威口径**：卖方 = `EXCHANGE_SETTLED.legs.goods[].from`（交货方）；买方 = `legs.money[].from`（付款方）。
 本 run 的 `distinct_sellers_excl_world` 用 `goods.from`（`628fd11`）；`distinct_counterparty_excl_world` **单列**仅为透明对照。
 
-## 4. 涌现结构观察（非设计，由「谁持有可交易物」决定）
-canonical N=20：**卖方 3 个**（持有 `material` 者）而**买方 5 个** —— **P004、P006 只买不卖（纯消费者）**。
-这是经济结构（持有可交易物决定谁卖），**不是我们预设的**；也说明 `> 1` 判据确由真实异质行为触发。
+## 4. 涌现结构观察（**观察，非指标**；非设计）
+canonical N=20：**卖方仅 3 个**（`P001/P002/P003`，持有 `material` 者），**买方 5 个** —— **P004、P006 只买不卖（纯消费者）**。
+→ 可交易物**集中在少数人手里**，这**决定了谁成为卖方**：这是涌现出的**经济角色分化**，**不是我们设计的**；也说明 `> 1` 判据确由真实异质行为触发。**写成观察，勿包装成指标。**
 
 ## 5. 诚实说明
 - **`PRODUCE 322→321`（Δ1）**：消融后无库存转移 → 持有量轨线微变 → 生产恰好差 1 单位。**A 层非逐位不变**，据实报（`MARKET_TRADE` 21 不变）。
