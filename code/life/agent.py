@@ -22,13 +22,14 @@ from . import relations as R
 from .llm import LLMClient, get_llm_client
 from .memory import AssociativeMemory, EmbeddingModel, HashEmbeddingModel, SideStore
 from .persona import Persona
-from .policy import social_enabled
+from .policy import social_enabled, exchange_enabled
 from .ports import (
+    INTENT_ECON_OFFER, INTENT_ECON_ORDER_CANCEL, INTENT_ECON_TRADE,
     INTENT_GOAL, INTENT_MEMORY, INTENT_MOVE, INTENT_OBSERVE, INTENT_PLAN, INTENT_RELATION,
     INTENT_SOCIAL, Intent, KernelPort,
 )
 from .soft import get_soft_layer, rng_branch
-from .util import clamp
+from .util import clamp, sha256_hex
 
 _SALIENT_EVENTS = {
     "ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "PLACE_ARRIVED",
@@ -125,6 +126,7 @@ class LifeLayerAgent:
         self._maybe_social_appraisal(wv)
         rep.narrated = self._maybe_narrate(wv)
         self._communicate(wv)
+        self._maybe_negotiate(wv)
         return rep
 
     # ---- helpers -----------------------------------------------------------
@@ -470,6 +472,36 @@ class LifeLayerAgent:
         others = ", ".join(p for p in parts if p != self.agent_id) or "(独自)"
         return (self.persona.compressed_profile(self._current_goal())
                 + f"\n场景：{tid}；对象：{others}。请用一句话自然地说点什么。")
+
+    # ---- economy: negotiation / offer / order-cancel (T133) ----------------
+    def _maybe_negotiate(self, wv) -> None:
+        """Produce `INTENT.ECON.*` in the decision phase (v2/04 §5). The LLM
+        (`purpose="negotiation"`, thinking=false) only writes the *wording*; the
+        asking terms are the agent's own (deterministic, per-round) — never a preset
+        world price. Money/goods consequences are settled by the kernel's 4.x hooks.
+        Bounded: once per (agent, day)."""
+        if not exchange_enabled():
+            return
+        if wv.round % 12 != 0:              # ~ once per day per agent
+            return
+        res = self.llm.call(
+            "negotiation",
+            self.persona.compressed_profile(self._current_goal())
+            + "\n请拟一句向街坊兜售余货/邀约议价的口头话（只写措辞，不写数字）。",
+            meta={"agent_id": self.agent_id, "round": wv.round})
+        wording = (res.text or "").strip()
+        good = "food"
+        price = 1 + (int(sha256_hex(f"ask:{self.agent_id}:{wv.round}")[:6], 16) % 20)
+        # public board offer (to=[] == broadcast discovery, v2/04 §4.1)
+        self.kernel.submit_intent(self.agent_id, Intent(INTENT_ECON_OFFER, self.agent_id, {
+            "act": "create", "kind": "sale", "to": [],
+            "terms": {"good_id": good, "price_mu": price, "qty": 1},
+            "enforceable": False, "body": wording}))
+        # occasionally cancel one of own open orders -> observable ORDER_CANCEL
+        if wv.round % 24 == 0:
+            self.kernel.submit_intent(self.agent_id, Intent(
+                INTENT_ECON_ORDER_CANCEL, self.agent_id,
+                {"order_id": f"ord-{self.agent_id}-{wv.round}"}))
 
     # ---- misc ------------------------------------------------------------
     def _current_goal(self) -> str:

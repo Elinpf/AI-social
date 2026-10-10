@@ -54,3 +54,36 @@ def set_social_enabled(value: bool | None) -> None:
     _override = value
     if value is None:
         _config_cache = None
+
+
+# ---- exchange switch (T131/T133): agent<->agent trade primitives --------------
+_exchange_cache: bool | None = None
+_exchange_override: bool | None = None
+
+
+def _read_exchange() -> bool:
+    env = os.environ.get("EXCHANGE_ENABLED")
+    if env is not None:
+        return env.strip().lower() not in ("0", "false", "off", "no", "")
+    try:
+        data = json.loads(_CONFIG_PATH.read_text(encoding="utf-8"))
+        return bool(data.get("exchange", {}).get("enabled", True))
+    except Exception:
+        return True
+
+
+def exchange_enabled() -> bool:
+    """True (default) -> life may produce `INTENT.ECON.*`; off -> produce none."""
+    global _exchange_cache
+    if _exchange_override is not None:
+        return _exchange_override
+    if _exchange_cache is None:
+        _exchange_cache = _read_exchange()
+    return _exchange_cache
+
+
+def set_exchange_enabled(value: bool | None) -> None:
+    global _exchange_override, _exchange_cache
+    _exchange_override = value
+    if value is None:
+        _exchange_cache = None
