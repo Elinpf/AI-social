@@ -486,14 +486,20 @@ class LifeLayerAgent:
             return
         if wv.round % 12 != 0:              # ~ once per day per agent
             return
+        # only sell what we actually hold; no held goods -> no (empty) offer
+        held = {g: int(q) for g, q in (wv.inventory or []) if int(q) > 0}
+        if not held:
+            return
+        # deterministic pick: largest holding, ties by good_id asc (seed-stable)
+        good = min(held, key=lambda g: (-held[g], g))
         res = self.llm.call(
             "negotiation",
             self.persona.compressed_profile(self._current_goal())
             + "\n请拟一句向街坊兜售余货/邀约议价的口头话（只写措辞，不写数字）。",
             meta={"agent_id": self.agent_id, "round": wv.round})
         wording = (res.text or "").strip()
-        good = "food"
-        price = 1 + (int(sha256_hex(f"ask:{self.agent_id}:{wv.round}")[:6], 16) % 20)
+        # agent's own ASK (deterministic, per-round); NOT a preset world price
+        price = 50 + (int(sha256_hex(f"ask:{self.agent_id}:{wv.round}")[:6], 16) % 151)
         # public board offer (to=[] == broadcast discovery, v2/04 §4.1)
         self.kernel.submit_intent(self.agent_id, Intent(INTENT_ECON_OFFER, self.agent_id, {
             "act": "create", "kind": "sale", "to": [],
