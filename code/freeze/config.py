@@ -67,14 +67,15 @@ class TierDecision:
 
 #: 允许交由 LLM 的用途（内容与定性判断类，对齐 00 §5.2 N-1..N-8）。
 ALLOWED_PURPOSES = {
-    "plan",        # 日/周计划内容
-    "dialogue",    # 对话正文
-    "reflect",     # 反思文本
-    "importance",  # 记忆重要性（定性打分，非结算）
-    "decide_t2",   # T2 决策内容/意图
-    "describe",    # 描述性文字（涌现/叙事）
-    "judge",       # 软判定层定性判断（IF-2b）
-    "narrate",     # 叙事层纯输出（IF-7）
+    "plan",         # 日/周计划内容
+    "dialogue",     # 对话正文
+    "negotiation",  # 议价/条款内容（T132：只产内容/条款，不判可行性、不写账）
+    "reflect",      # 反思文本
+    "importance",   # 记忆重要性（定性打分，非结算）
+    "decide_t2",    # T2 决策内容/意图
+    "describe",     # 描述性文字（涌现/叙事）
+    "judge",        # 软判定层定性判断（IF-2b）
+    "narrate",      # 叙事层纯输出（IF-7）
 }
 
 #: 明令禁止的用途（命中即拒绝）：金额 / 死亡 / 结算三类数字。

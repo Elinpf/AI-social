@@ -18,7 +18,7 @@ from dataclasses import dataclass
 from typing import Any, Protocol, runtime_checkable
 
 ALLOWED_PURPOSES = frozenset({"plan", "reflect", "importance", "decide_t2", "describe",
-                              "judge", "narrate", "dialogue"})
+                              "judge", "narrate", "dialogue", "negotiation"})
 
 
 @dataclass(frozen=True)

@@ -553,6 +553,67 @@ class FreezeLayerTest(unittest.TestCase):
         self.assertNotEqual(r.cache_key, r2.cache_key)
 
     # ------------------------------------------------------------------ #
+    # T132：purpose="negotiation"（议价/条款内容，N 类）
+    # ------------------------------------------------------------------ #
+    def test_negotiation_purpose_end_to_end(self) -> None:
+        from freeze import assert_purpose_allowed
+
+        assert_purpose_allowed("negotiation")  # 白名单通过，不被禁
+
+        run = LLMClient(make_config(self.tmp), provider=MockProvider(),
+                        event_log=EventLog(), budget=LLMBudget(limit=100))
+        # 居民议价：T1 → thinking=false
+        r1 = run.complete(purpose="negotiation", system="s", user="议价：木料多少",
+                          tier=Tier.T1)
+        c1 = run.event_log.of_type("LLM_CALL")[-1]["payload"]
+        self.assertEqual(c1["purpose"], "negotiation")
+        self.assertEqual(c1["tier"], "T1")
+        self.assertIs(c1["thinking"], False)
+        # 世界 LLM：T2 → thinking=true
+        r2 = run.complete(purpose="negotiation", system="s", user="议价：木料多少",
+                          tier=Tier.T2)
+        c2 = run.event_log.of_type("LLM_CALL")[-1]["payload"]
+        self.assertIs(c2["thinking"], True)
+        # thinking/tier 进缓存键
+        self.assertNotEqual(r1.cache_key, r2.cache_key)
+
+        # 重放：读缓存，零 LLM 调用
+        replay = LLMClient(make_config(self.tmp, mode=Mode.REPLAY),
+                           provider=MockProvider(), event_log=EventLog())
+        r3 = replay.complete(purpose="negotiation", system="s", user="议价：木料多少",
+                             tier=Tier.T1)
+        self.assertTrue(r3.cached)
+        self.assertEqual(replay.llm_calls, 0)
+
+        # obs 可统计（同 dialogue/judge 同构）
+        from obs.llmcost import llm_cost_from_records
+
+        out = llm_cost_from_records(run.event_log.records)
+        self.assertGreaterEqual(out["by_purpose"]["negotiation"]["calls"], 1)
+
+    def test_unknown_purpose_still_rejected(self) -> None:
+        """不要放水：未登记 purpose 仍 fail（negotiation 加入不影响该底线）。"""
+        from freeze import assert_purpose_allowed
+
+        with self.assertRaises(ValueError):
+            assert_purpose_allowed("not_registered_purpose")
+        client = LLMClient(make_config(self.tmp), provider=MockProvider(), event_log=EventLog())
+        with self.assertRaises(ValueError):
+            client.complete(purpose="bogus", system="", user="")
+        self.assertEqual(client.llm_calls, 0)
+
+    def test_negotiation_whitelists_aligned(self) -> None:
+        from freeze.config import ALLOWED_PURPOSES as F
+        from life.llm import ALLOWED_PURPOSES as L
+
+        content_purposes = {"plan", "dialogue", "negotiation", "reflect", "importance",
+                            "decide_t2", "describe"}
+        self.assertIn("negotiation", F)
+        self.assertIn("negotiation", L)
+        self.assertTrue(content_purposes <= F)
+        self.assertTrue(content_purposes <= L)
+
+    # ------------------------------------------------------------------ #
     # 集成：life 层窄接口自动采用 freeze.client.FreezeLLM
     # ------------------------------------------------------------------ #
     def test_no_arg_freeze_llm_offline(self) -> None:
