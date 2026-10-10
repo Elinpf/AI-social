@@ -145,3 +145,58 @@ def test_apply_exchange_reject_is_noop():
     outs = X.apply_exchange(st, 1, _ctx(_cfg()))
     assert all(s.type == "DROPPED" for s in outs)          # 整笔拒绝，无 EXCHANGE_SETTLED
     assert st.inventory["A"]["food"] == 5000               # 无痕
+
+
+# ---------------- (B) OFFER_ACCEPTED → EXCHANGE_SETTLED：三条规则 ----------------
+def _inj(st, seq, typ, payload, rd=1):
+    st.event_index[seq] = {"seq": seq, "round": rd, "type": typ, "phase": 2,
+                           "actor": "SYSTEM", "payload": payload}
+
+
+def _three():
+    st, led = _state(agents=("A", "B", "C"))
+    st.inventory.setdefault("A", {})["food"] = 10000
+    st.cash["C"] = 0
+    return st, led
+
+
+def test_rule1_accept_uses_last_counter_terms():
+    st, _ = _three()
+    _inj(st, 1, "OFFER_CREATED", {"offer_id": "o1", "from": "A", "to": ["B"],
+                                  "kind": "sale", "terms": {"good_id": "food", "price_mu": 5, "qty": 1},
+                                  "enforceable": False})
+    _inj(st, 2, "OFFER_COUNTERED", {"offer_id": "o1", "by": "B",
+                                    "terms": {"good_id": "food", "price_mu": 9, "qty": 1}})
+    _inj(st, 3, "OFFER_ACCEPTED", {"offer_id": "o1", "by": "B"})
+    outs = X.apply_exchange(st, 1, _ctx(_cfg()))
+    ex = [s for s in outs if s.type == "EXCHANGE_SETTLED"]
+    assert len(ex) == 1
+    # 用最后 counter 的价 9（不是最初的 5）
+    assert ex[0].payload["legs"]["money"] == [{"from": "B", "to": "A", "mu": 9}]
+
+
+def test_rule2_kind_split_sale_vs_employment():
+    st, _ = _three()
+    _inj(st, 1, "OFFER_CREATED", {"offer_id": "s1", "from": "A", "to": ["B"], "kind": "sale",
+                                  "terms": {"good_id": "food", "price_mu": 3, "qty": 1}, "enforceable": False})
+    _inj(st, 2, "OFFER_ACCEPTED", {"offer_id": "s1", "by": "B"})
+    _inj(st, 3, "OFFER_CREATED", {"offer_id": "e1", "from": "A", "to": ["B"], "kind": "EMPLOYMENT",
+                                  "terms": {"wage_mu": 50}, "enforceable": True})
+    _inj(st, 4, "OFFER_ACCEPTED", {"offer_id": "e1", "by": "B"})
+    outs = X.apply_exchange(st, 1, _ctx(_cfg()))
+    ex = [s for s in outs if s.type == "EXCHANGE_SETTLED"]
+    assert len(ex) == 1                                  # 只有 sale 即时成交
+    assert ex[0].payload["meta"]["offer_id"] == "s1"      # EMPLOYMENT 不出即时成交
+
+
+def test_rule3_broadcast_multi_accept_one_fails_only_it_dropped():
+    st, _ = _three()
+    _inj(st, 1, "OFFER_CREATED", {"offer_id": "b1", "from": "A", "to": [], "kind": "sale",
+                                  "terms": {"good_id": "food", "price_mu": 1, "qty": 1}, "enforceable": False})
+    _inj(st, 2, "OFFER_ACCEPTED", {"offer_id": "b1", "by": "B"})   # B 有钱 → 成交
+    _inj(st, 3, "OFFER_ACCEPTED", {"offer_id": "b1", "by": "C"})   # C 现金 0 → DROPPED
+    outs = X.apply_exchange(st, 1, _ctx(_cfg()))
+    ex = [s for s in outs if s.type == "EXCHANGE_SETTLED"]
+    dr = [s for s in outs if s.type == "DROPPED"]
+    assert len(ex) == 1 and ex[0].payload["parties"] == ["A", "B"]
+    assert any(d.payload.get("reason") == "insufficient_cash" and d.payload.get("by") == "C" for d in dr)

@@ -145,28 +145,134 @@ def _drain_trade_intents(state):
     return taken
 
 
+def _offer_chain(state, round_no):
+    """折叠 OFFER_CREATED/COUNTERED/ACCEPTED（全序）→ (offers, accepts)。
+
+    offers[oid] 的 terms = **链上最后一个 counter 的 terms**（规则 1：防"还价后用旧价结算"）。
+    """
+    idx = getattr(state, "event_index", {}) or {}
+    offers: dict[str, dict] = {}
+    accepts = []
+    for r in sorted(idx.values(), key=lambda x: int(x.get("seq", 0))):
+        t, p = r.get("type"), (r.get("payload") or {})
+        if t == "OFFER_CREATED":
+            oid = p.get("offer_id")
+            if oid and oid not in offers:
+                offers[oid] = {"from": p.get("from"), "to": list(p.get("to") or []),
+                               "kind": str(p.get("kind", "")).lower(),
+                               "terms": dict(p.get("terms") or {}),
+                               "enforceable": bool(p.get("enforceable", False))}
+        elif t == "OFFER_COUNTERED":
+            oid = p.get("offer_id")
+            if oid in offers and isinstance(p.get("terms"), dict):
+                offers[oid]["terms"] = dict(p["terms"])       # 规则 1：取最后 counter
+        elif t == "OFFER_ACCEPTED":
+            accepts.append((int(r.get("seq", 0)), p.get("offer_id"), p.get("by"),
+                            int(r.get("round", -1))))
+    return offers, accepts
+
+
+def _accept_deals(state, round_no):
+    """本回合 `OFFER_ACCEPTED` → 待结算 deal（仅 `kind=sale` 即时成交；其余走契约，规则 2）。"""
+    offers, accepts = _offer_chain(state, round_no)
+    out = []
+    for seq, oid, by, rd in accepts:
+        if rd != int(round_no) or oid not in offers or by is None:
+            continue
+        o = offers[oid]
+        if o["kind"] != "sale":                               # 规则 2：长周期契约不当即时成交
+            continue
+        terms = o["terms"]
+        g = terms.get("good_id")
+        price = int(terms.get("price_mu", 0) or 0)
+        qty = int(terms.get("qty", 0) or 0)
+        frm, to = o["from"], by
+        if not g or price <= 0 or qty <= 0 or frm is None:
+            out.append((seq, ("DROPPED", "bad_terms", oid, by)))
+            continue
+        deal = {"parties": sorted([frm, to]),
+                "goods": [(frm, to, str(g), qty * P.MILLI)],
+                "money": [(to, frm, price * qty)],            # 价全来自 terms（不预设）
+                "meta": {"offer_id": oid}}
+        out.append((seq, ("DEAL", deal, by)))
+    return sorted(out, key=lambda x: x[0])
+
+
 def apply_exchange(state, round_no, ctx):
-    """4.1：消费 `INTENT.ECON.TRADE` 的双边交换 → `EXCHANGE_SETTLED`（原子、零和）。"""
+    """4.1：消费 `INTENT.ECON.TRADE` 与「本回合 `OFFER_ACCEPTED`（(B) 单源=offer terms）」
+    的双边交换 → `EXCHANGE_SETTLED`（原子、零和）。
+
+    **不直写 state**（hook 纯净）：同一回合内多笔 deal 的"防超卖"用**本地影子视图**完成；
+    真正落账由 replay 折叠 `EXCHANGE_SETTLED`（每腿一次）。
+    """
     if not exchange_enabled(ctx):
         return [spec(round_no, P4, "SYSTEM", "DROPPED",
                      {"reason": "exchange_disabled", "flag": "exchange_disabled"})]
     specs = []
+    # 影子视图（本回合内多笔 deal 互不重复占用；不写 state）
+    sc = {a: int(v) for a, v in state.cash.items()}
+    si = {k: {g: int(q) for g, q in v.items()}
+          for k, v in (getattr(state, "inventory", {}) or {}).items()}
+
+    def _val(deal):
+        for (f, t, g, q) in deal["goods"]:
+            if q <= 0:
+                return "non_positive_qty"
+            if not _is_agent(state, f) or not _is_agent(state, t):
+                return "unknown_party"
+            if not P.is_transferable(g):
+                return "good_not_transferable"
+            if int(si.get(f, {}).get(g, 0)) < q:
+                return "insufficient_goods"
+        for (f, t, m) in deal["money"]:
+            if m <= 0:
+                return "non_positive_money"
+            if not _is_agent(state, f) or not _is_agent(state, t):
+                return "unknown_party"
+            if int(sc.get(f, 0)) < m:
+                return "insufficient_cash"
+        return None
+
+    def _shadow(deal):
+        for (f, t, g, q) in deal["goods"]:
+            si.setdefault(f, {})
+            si.setdefault(t, {})
+            si[f][g] = int(si[f].get(g, 0)) - q
+            si[t][g] = int(si[t].get(g, 0)) + q
+        for (f, t, m) in deal["money"]:
+            sc[f] = int(sc.get(f, 0)) - m
+            sc[t] = int(sc.get(t, 0)) + m
+
+    def _emit_deal(deal, eid, extra=None):
+        reason = _val(deal)
+        if reason is not None:
+            p = {"reason": reason, "exchange_id": eid, "parties": deal["parties"]}
+            p.update(extra or {})
+            specs.append(spec(round_no, P4, "SYSTEM", "DROPPED", p))
+            return
+        _shadow(deal)
+        counterparty = deal["parties"][1] if len(deal["parties"]) == 2 else "WORLD"
+        specs.append(_exchange_settled_spec(round_no, deal, "offer", eid, counterparty,
+                                            sum(m for (_, _, m) in deal["money"])))
+
+    # (a) 显式 TRADE 意图
     for i, it in enumerate(_drain_trade_intents(state)):
         deal = normalize_deal(state, it)
-        eid = f"ex:{round_no}:{i}"
         if deal is None:
             specs.append(spec(round_no, P4, "SYSTEM", "DROPPED",
-                              {"reason": "bad_deal", "exchange_id": eid}))
+                              {"reason": "bad_deal", "exchange_id": f"ex:{round_no}:{i}"}))
             continue
-        reason = validate_deal(state, deal)
-        if reason is not None:
+        _emit_deal(deal, f"ex:{round_no}:{i}")
+    # (b) OFFER_ACCEPTED → deal（(B)；规则 1/2/3）
+    for seq, item in _accept_deals(state, round_no):
+        if item[0] == "DROPPED":
+            _, reason, oid, by = item
             specs.append(spec(round_no, P4, "SYSTEM", "DROPPED",
-                              {"reason": reason, "exchange_id": eid,
-                               "parties": deal["parties"]}))
+                              {"reason": reason, "offer_id": oid, "by": by}))
             continue
-        counterparty = deal["parties"][1] if len(deal["parties"]) == 2 else "WORLD"
-        price = sum(m for (_, _, m) in deal["money"])
-        specs.append(_exchange_settled_spec(round_no, deal, "offer", eid, counterparty, price))
+        _, deal, by = item
+        _emit_deal(deal, f"ex:{round_no}:offer:{seq}",
+                   {"offer_id": deal["meta"].get("offer_id"), "by": by})
     return specs
 
 
