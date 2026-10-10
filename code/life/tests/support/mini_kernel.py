@@ -255,6 +255,8 @@ class MiniKernel(KernelPort):
     def submit_intent(self, agent_id: str, intent: Intent) -> IntentResult:
         if intent.intent_class not in ALL_INTENT_CLASSES:
             return self._reject(agent_id, intent, "unknown_intent_class")
+        if intent.intent_class.startswith("INTENT.ECON."):
+            return self._do_econ(agent_id, intent.intent_class, intent.payload)
         handler = getattr(self, "_do_" + intent.intent_class.split(".", 1)[1].lower(), None)
         if handler is None:
             return self._reject(agent_id, intent, "unsupported_intent")
@@ -366,8 +368,24 @@ class MiniKernel(KernelPort):
                          phase=35, actor=agent_id)
         return IntentResult(ok=True, event_seqs=(seq,))
 
+    def _do_econ(self, agent_id, cls, p):
+        """Test-double ECON routing (T133): OFFER -> OFFER_CREATED; ORDER_CANCEL ->
+        ORDER_CANCEL. (Full exchange/contract settlement lives in the real engine.)"""
+        r = self.state["round"]
+        if cls == "INTENT.ECON.OFFER" and (p.get("act") in (None, "create")):
+            seq = self._emit("OFFER_CREATED", {
+                "offer_id": f"O-{r}-{agent_id}", "from": agent_id,
+                "to": list(p.get("to") or []), "kind": p.get("kind"),
+                "terms": p.get("terms") or {}, "round_no": 0}, phase=2, actor=agent_id)
+            return IntentResult(ok=True, event_seqs=(seq,))
+        if cls == "INTENT.ECON.ORDER_CANCEL":
+            seq = self._emit("ORDER_CANCEL", {
+                "order_id": p.get("order_id"), "agent_id": agent_id, "round": r},
+                phase=4, actor=agent_id)
+            return IntentResult(ok=True, event_seqs=(seq,))
+        return None
+
     def _do_social(self, agent_id, p):
-        """Mirror engine `_do_social`: scope -> MSG_DM/PUBLIC/GROUP (test-double)."""
         scope = p.get("scope")
         body = (p.get("body") or "").strip()
         if not body:
