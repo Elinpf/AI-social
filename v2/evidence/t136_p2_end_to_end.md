@@ -135,7 +135,34 @@ python /tmp/t136.py
 - ⚠️ **解读边界**：任何「社会结构 / 不平等 / 福祉」的观察，都发生在**一个正在整体死去的世界里** —— 与 v2 总目标（小镇能否自洽运转，T78/T80）**直接相关**。
 - **与顺序偏置是两件事**：一个污染「**谁**先被服务」，一个是「**世界本身**在 60 回合后崩掉」。**两者都写，都不该包装成涌现。**
 
-## 8. real-LLM canonical（P2 证据记录）—— 见下方追记
-> `provider=openai_compat` · N=20×84 · seed 42 · `exchange.enabled=true` · HEAD `6f7407e`。
-> **预期**：life 接受逻辑确定性、不含 LLM → 应与 mock 给出**同样**的 `EXCHANGE_SETTLED=23`（LLM 无关性检验）。
-> **结果**：_（运行完成后追记：V2a/V2b/`EXCHANGE_SETTLED`/`distinct_sellers_excl_world`/`agent_agent_share`/`state_hash`/`SYSTEM_ERROR` + 与 mock 的逐项对照）_
+## 8. real-LLM canonical（**P2 证据记录**）
+`provider=openai_compat` · N=20×84 · seed 42 · sha **`0adfe61`** · **3781.6s** ·
+**LLM calls 4814**（`llm-cost --require-provider openai_compat` → **provider_guard ok、无 mock 混入、degraded=0**，tokens_total 660,501）。
+
+| 指标 | 值 |
+|---|---|
+| `OFFER_CREATED`（real_sale / social_pseudo） | 141（**120** / 21） |
+| `OFFER_ACCEPTED` | **240** |
+| **`EXCHANGE_SETTLED`** | **20** |
+| `MARKET_TRADE` / `PRODUCE` | 23 / 317 |
+| **`distinct_sellers_excl_world`** | **3**（exch 3 / mt 0） |
+| **V2a / V2b** | **True / True** |
+| `agent_agent_share` | **20/(20+23)=0.465116** |
+| `SYSTEM_ERROR` / chain / replay / seals / 守恒 | 0 / ✓✓✓✓ |
+| `state_hash` | `debe51fd…` |
+| DROPPED（engine==offline） | gnt 19 · cash 3 · **ig 97** · **offer_exhausted 101**（reclassified 0） |
+
+### LLM 无关性对照（mock canon vs **real canon**）
+| | mock (`e6d77c2`) | **real (`0adfe61`)** |
+|---|---|---|
+| `EXCHANGE_SETTLED` | 23 | **20** |
+| real_sale `OFFER_CREATED` | 120 | **120** |
+| `OFFER_ACCEPTED` | 240 | **240** |
+| 成交 offer creators | `{P001,P002,P003}` | **`{P001,P002,P003}`** |
+| `distinct_sellers_excl_world` | 3 | **3** |
+| V2a / V2b | True / True | **True / True** |
+| `agent_agent_share` | 23/44=0.5227 | **20/43=0.4651** |
+
+→ **判据（V2a 结构性 + V2b 涌现性）在 mock 与 real 上完全一致**；**机制输入逐项一致**（real_sale 挂单 120、接受 240、成交 creator 集合相同）⇒ **无「被藏起来的 LLM 依赖」**。
+→ **唯一差异 = 成交计数 20 vs 23**：accept 逻辑本身确定、**不含 LLM**；但其**上游状态（持有量 / 规划 / 对话）由 LLM 塑造**，两个世界轨线不同 → 少数接受成败不同。**这是「机制的输入不同」，不是「机制依赖 LLM」。**
+→ 结论边界不变（§0/§4）：**P2 只主张「agent↔agent 成交出现」，不主张任何市场结构**（结构受顺序偏置污染，见 §4）。
