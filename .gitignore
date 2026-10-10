@@ -24,3 +24,6 @@ code/logs/
 # ===== 其他 =====
 .DS_Store
 *.tmp
+
+# 根级冻结缓存（可再生）
+freeze_cache/
