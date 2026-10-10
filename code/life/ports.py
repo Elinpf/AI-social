@@ -124,8 +124,6 @@ class WorldView:
     inventory: tuple[tuple[str, int], ...] = ()
     # 自有且**可转让**的 goods（good_id 升序）：供 life 过滤不可转让品（如 service）
     transferable_goods: tuple[str, ...] = ()
-    # 自有商品的**参考价** p_ref_mu（good_id 升序，只读；仅供 life 形成要价，**非成交价**）
-    ref_prices: tuple[tuple[str, int], ...] = ()
     # optional: unconsumed messages addressed to the agent
     inbox: tuple[EventView, ...] = ()
 

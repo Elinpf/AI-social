@@ -154,7 +154,6 @@ def test_worldview_inventory_exposed():
     wv = ad.perceive(A)
     assert wv.inventory == (("food", 1000), ("material", 3000), ("service", 1000))  # 升序、qty>0
     assert wv.transferable_goods == ("food", "material")  # service 不可转让被剔除
-    assert wv.ref_prices == (("food", 100), ("material", 150), ("service", 200))  # 只读参考价
     assert ad.perceive(B).inventory == ()                 # 仅本人可见
 
 
