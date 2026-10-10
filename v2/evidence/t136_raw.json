@@ -1,0 +1,272 @@
+{
+  "sha": "e6d77c2",
+  "provider": "mock(rule-based)",
+  "segments": {
+    "control": {
+      "inproc": "sha256:7ce834938c308269fa03dd7cb7d23a702509aae6590f89111ed50e478eaacbab",
+      "sub_a": "sha256:7ce834938c308269fa03dd7cb7d23a702509aae6590f89111ed50e478eaacbab",
+      "sub_b": "sha256:7ce834938c308269fa03dd7cb7d23a702509aae6590f89111ed50e478eaacbab",
+      "n": 6,
+      "rounds": 24,
+      "equal": true
+    },
+    "probe_n10": {
+      "segment": "probe_n10",
+      "sha": "e6d77c2",
+      "provider": "mock(rule-based)",
+      "n": 10,
+      "rounds": 84,
+      "seed": 42,
+      "exchange_enabled": true,
+      "events": 36763,
+      "seconds": 43.3,
+      "SYSTEM_ERROR": 0,
+      "chain_ok": true,
+      "replay_parity": true,
+      "seals_ok": true,
+      "conservation_ok": true,
+      "state_hash": "sha256:135a6289b99a0d73d0c60c71405c20f8e206e4663aa976a955a4be302233a5d9",
+      "sha256": "sha256:5107316480f793fa951f270e42cfe189f446281bc436cbc59d92c251153e2287",
+      "INTENT_ECON_OFFER_events": 0,
+      "OFFER_CREATED": 69,
+      "OFFER_ACCEPTED": 120,
+      "EXCHANGE_SETTLED": 25,
+      "MARKET_TRADE": 14,
+      "PRODUCE": 155,
+      "MSG_PUBLIC": 36,
+      "dialogue": 133,
+      "DROPPED_reasons": {
+        "good_not_transferable": 9,
+        "insufficient_cash": 6,
+        "insufficient_goods": 29,
+        "offer_exhausted": 51
+      },
+      "exchange": {
+        "n_market_trade": 14,
+        "n_exchange_settled": 25,
+        "distinct_sellers": 4,
+        "distinct_sellers_excl_world": 3,
+        "distinct_sellers_excl_world_market_trade": 0,
+        "distinct_sellers_excl_world_exchange": 3,
+        "distinct_buyers": 5,
+        "distinct_buyers_excl_world": 5,
+        "distinct_buyers_excl_world_market_trade": 2,
+        "distinct_buyers_excl_world_exchange": 5,
+        "distinct_counterparty_excl_world": 4,
+        "agent_agent_deals": 25,
+        "all_deals": 39,
+        "agent_agent_share": 0.641026,
+        "V2a_tool_available": true,
+        "V2b_ai_trades": true,
+        "V2a_components": {
+          "offer_created": 69,
+          "offer_created_real_sale": 60,
+          "offer_created_social_pseudo": 9,
+          "offer_created_other": 0,
+          "offer_accepted": 120,
+          "offer_accepted_real_sale": 120,
+          "market_trade": 14,
+          "exchange_settled": 25
+        },
+        "offer_source_split": {
+          "created_total": 69,
+          "created_real_sale": 60,
+          "created_social_pseudo": 9,
+          "created_other": 0,
+          "accepted_total": 120,
+          "accepted_real_sale": 120,
+          "accepted_social_pseudo": 0,
+          "accepted_other": 0,
+          "accepted_unknown": 0
+        },
+        "dropped_reconcile": {
+          "engine": {
+            "good_not_transferable": 9,
+            "insufficient_cash": 6,
+            "insufficient_goods": 29,
+            "offer_exhausted": 51
+          },
+          "offline": {
+            "good_not_transferable": 9,
+            "insufficient_cash": 6,
+            "insufficient_goods": 29,
+            "offer_exhausted": 51
+          },
+          "reclassified": 0,
+          "reclassified_same_round": 0,
+          "reclassified_cross_round": 0
+        },
+        "llm_judged_metric_count": 0
+      }
+    },
+    "canon_n20": {
+      "segment": "canon_n20",
+      "sha": "e6d77c2",
+      "provider": "mock(rule-based)",
+      "n": 20,
+      "rounds": 84,
+      "seed": 42,
+      "exchange_enabled": true,
+      "events": 130180,
+      "seconds": 317.1,
+      "SYSTEM_ERROR": 0,
+      "chain_ok": true,
+      "replay_parity": true,
+      "seals_ok": true,
+      "conservation_ok": true,
+      "state_hash": "sha256:814691d95f960368c5cd4adb9ee65e4c6ccf4a584408c20f537944d244ab7f5e",
+      "sha256": "sha256:a89a31030f90b8e60183a748440d84d09a448c6405dd76b3d066bc966c36be0e",
+      "INTENT_ECON_OFFER_events": 0,
+      "OFFER_CREATED": 142,
+      "OFFER_ACCEPTED": 240,
+      "EXCHANGE_SETTLED": 23,
+      "MARKET_TRADE": 21,
+      "PRODUCE": 322,
+      "MSG_PUBLIC": 64,
+      "dialogue": 270,
+      "DROPPED_reasons": {
+        "good_not_transferable": 19,
+        "insufficient_cash": 3,
+        "insufficient_goods": 78,
+        "offer_exhausted": 117
+      },
+      "exchange": {
+        "n_market_trade": 21,
+        "n_exchange_settled": 23,
+        "distinct_sellers": 4,
+        "distinct_sellers_excl_world": 3,
+        "distinct_sellers_excl_world_market_trade": 0,
+        "distinct_sellers_excl_world_exchange": 3,
+        "distinct_buyers": 5,
+        "distinct_buyers_excl_world": 5,
+        "distinct_buyers_excl_world_market_trade": 5,
+        "distinct_buyers_excl_world_exchange": 4,
+        "distinct_counterparty_excl_world": 3,
+        "agent_agent_deals": 23,
+        "all_deals": 44,
+        "agent_agent_share": 0.522727,
+        "V2a_tool_available": true,
+        "V2b_ai_trades": true,
+        "V2a_components": {
+          "offer_created": 142,
+          "offer_created_real_sale": 120,
+          "offer_created_social_pseudo": 22,
+          "offer_created_other": 0,
+          "offer_accepted": 240,
+          "offer_accepted_real_sale": 240,
+          "market_trade": 21,
+          "exchange_settled": 23
+        },
+        "offer_source_split": {
+          "created_total": 142,
+          "created_real_sale": 120,
+          "created_social_pseudo": 22,
+          "created_other": 0,
+          "accepted_total": 240,
+          "accepted_real_sale": 240,
+          "accepted_social_pseudo": 0,
+          "accepted_other": 0,
+          "accepted_unknown": 0
+        },
+        "dropped_reconcile": {
+          "engine": {
+            "good_not_transferable": 19,
+            "insufficient_cash": 3,
+            "insufficient_goods": 78,
+            "offer_exhausted": 117
+          },
+          "offline": {
+            "good_not_transferable": 19,
+            "insufficient_cash": 3,
+            "insufficient_goods": 78,
+            "offer_exhausted": 117
+          },
+          "reclassified": 0,
+          "reclassified_same_round": 0,
+          "reclassified_cross_round": 0
+        },
+        "llm_judged_metric_count": 0
+      }
+    },
+    "abl_exchange_off_n20": {
+      "segment": "abl_exchange_off_n20",
+      "sha": "e6d77c2",
+      "provider": "mock(rule-based)",
+      "n": 20,
+      "rounds": 84,
+      "seed": 42,
+      "exchange_enabled": false,
+      "events": 129626,
+      "seconds": 294.5,
+      "SYSTEM_ERROR": 0,
+      "chain_ok": true,
+      "replay_parity": true,
+      "seals_ok": true,
+      "conservation_ok": true,
+      "state_hash": "sha256:8d8d1c3d9742c38de4d81fbd8fd41cd1387a50bef5cae6097298389fff97fbc3",
+      "sha256": "sha256:be489c578925a22e23ff9a7846e54b78a59907f4132ac8ff6a39058956aa4159",
+      "INTENT_ECON_OFFER_events": 0,
+      "OFFER_CREATED": 22,
+      "OFFER_ACCEPTED": 0,
+      "EXCHANGE_SETTLED": 0,
+      "MARKET_TRADE": 21,
+      "PRODUCE": 321,
+      "MSG_PUBLIC": 64,
+      "dialogue": 270,
+      "DROPPED_reasons": {
+        "exchange_disabled": 168
+      },
+      "exchange": {
+        "n_market_trade": 21,
+        "n_exchange_settled": 0,
+        "distinct_sellers": 1,
+        "distinct_sellers_excl_world": 0,
+        "distinct_sellers_excl_world_market_trade": 0,
+        "distinct_sellers_excl_world_exchange": 0,
+        "distinct_buyers": 5,
+        "distinct_buyers_excl_world": 5,
+        "distinct_buyers_excl_world_market_trade": 5,
+        "distinct_buyers_excl_world_exchange": 0,
+        "distinct_counterparty_excl_world": 0,
+        "agent_agent_deals": 0,
+        "all_deals": 21,
+        "agent_agent_share": 0.0,
+        "V2a_tool_available": false,
+        "V2b_ai_trades": false,
+        "V2a_components": {
+          "offer_created": 22,
+          "offer_created_real_sale": 0,
+          "offer_created_social_pseudo": 22,
+          "offer_created_other": 0,
+          "offer_accepted": 0,
+          "offer_accepted_real_sale": 0,
+          "market_trade": 21,
+          "exchange_settled": 0
+        },
+        "offer_source_split": {
+          "created_total": 22,
+          "created_real_sale": 0,
+          "created_social_pseudo": 22,
+          "created_other": 0,
+          "accepted_total": 0,
+          "accepted_real_sale": 0,
+          "accepted_social_pseudo": 0,
+          "accepted_other": 0,
+          "accepted_unknown": 0
+        },
+        "dropped_reconcile": {
+          "engine": {
+            "exchange_disabled": 168
+          },
+          "offline": {
+            "exchange_disabled": 168
+          },
+          "reclassified": 0,
+          "reclassified_same_round": 0,
+          "reclassified_cross_round": 0
+        },
+        "llm_judged_metric_count": 0
+      }
+    }
+  }
+}
