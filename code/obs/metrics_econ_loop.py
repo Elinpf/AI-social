@@ -39,6 +39,7 @@ def _money_series(records):
 
 
 def econ_loop_metrics(records, params=None) -> dict:
+    from .metrics_exchange import exchange_metrics as _exchange  # noqa: local import avoids cycle
     eco = fold_economy(records)
     series = _money_series(records)
     M_final = series[-1] if series else eco["money_supply"]
@@ -141,6 +142,7 @@ def econ_loop_metrics(records, params=None) -> dict:
         "price_cv": price_cv,
         "price_cv_mean": round(sum(price_cv.values()) / len(price_cv), 6) if price_cv else 0.0,
         "n_produce": sum(1 for r in records if r["type"] == "PRODUCE"),
+        "exchange": _exchange(records),
         "llm_judged_metric_count": 0,
     }
 
