@@ -177,7 +177,13 @@ def _accept_deals(state, round_no):
     offers, accepts = _offer_chain(state, round_no)
     out = []
     for seq, oid, by, rd in accepts:
-        if rd != int(round_no) or oid not in offers or by is None:
+        if rd != int(round_no):
+            continue                                          # 仅处理本回合的 accept
+        if oid not in offers or by is None:
+            # 链断裂（无对应 OFFER_CREATED）或缺接受者 → 显式 DROPPED（不崩）
+            out.append((seq, ("DROPPED",
+                              "unknown_offer" if oid not in offers else "no_accepter",
+                              oid, by)))
             continue
         o = offers[oid]
         if o["kind"] != "sale":                               # 规则 2：长周期契约不当即时成交

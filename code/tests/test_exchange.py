@@ -200,3 +200,18 @@ def test_rule3_broadcast_multi_accept_one_fails_only_it_dropped():
     dr = [s for s in outs if s.type == "DROPPED"]
     assert len(ex) == 1 and ex[0].payload["parties"] == ["A", "B"]
     assert any(d.payload.get("reason") == "insufficient_cash" and d.payload.get("by") == "C" for d in dr)
+
+
+def test_broken_chain_and_missing_terms_are_dropped_not_crash():
+    st, _ = _three()
+    # 链断裂：ACCEPTED 无对应 CREATED
+    _inj(st, 1, "OFFER_ACCEPTED", {"offer_id": "ghost", "by": "B"})
+    # terms 缺字段：sale 但无 good_id/price/qty
+    _inj(st, 2, "OFFER_CREATED", {"offer_id": "bad", "from": "A", "to": ["B"], "kind": "sale",
+                                  "terms": {}, "enforceable": False})
+    _inj(st, 3, "OFFER_ACCEPTED", {"offer_id": "bad", "by": "B"})
+    outs = X.apply_exchange(st, 1, _ctx(_cfg()))          # 不得抛异常
+    ex = [s for s in outs if s.type == "EXCHANGE_SETTLED"]
+    dr = {s.payload.get("reason") for s in outs if s.type == "DROPPED"}
+    assert ex == []
+    assert "unknown_offer" in dr and "bad_terms" in dr
