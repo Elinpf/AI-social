@@ -186,11 +186,12 @@ inventory[from][good] -= qty ;  inventory[to][good] += qty     （同一回合�
 | 意图 | 载荷 | 内核封装事件 | phase |
 |---|---|---|---|
 | `INTENT.ECON.ORDER_PLACE`（已有） | `{good_id, side, price_mu, qty}` | （挂单，成交落 `MARKET_TRADE`） | 4.1 |
-| `INTENT.ECON.TRADE`（**新增**） | `{offer_id, accept:bool}` 或 `{counterparty, give:[…], take:[…]}` | `EXCHANGE_SETTLED` | 4.1 |
+| `INTENT.ECON.TRADE`（**新增，P2 暂不启用**） | `{offer_id, accept:bool}` 或 `{counterparty, give:[…], take:[…]}` | `EXCHANGE_SETTLED` | 4.1 |
 | `INTENT.ECON.OFFER`（**新增**，→ 封装 `OFFER_CREATED`） | `{act∈{create,counter,accept,reject}, offer_id?, kind, to[], terms, enforceable}` | `OFFER_CREATED/COUNTERED/ACCEPTED/REJECTED` | 2/3 |
 | `INTENT.ECON.CONTRACT_SIGN`（**新增，可选**） | `{offer_id}`（成约确认） | `CONTRACT_CREATED` | 2/3 |
 
 > 命名放在 `INTENT.ECON.*` 下（与既有 `ORDER_PLACE/TRANSFER/LOAN_APPLY` 同族），而**非**顶层 `INTENT.TRADE`——**理由**：统一经济意图边界，便于 `ports.py::ALL_INTENT_CLASSES` 一次性登记与门禁。
+> **裁决 B（2026-10-10）**：`INTENT.ECON.TRADE` **登记保留但 P2 暂不启用**——offer 链的结算由 `apply_exchange` 折叠 `OFFER_ACCEPTED` 完成（§6.1）。
 
 ### 5.2 LLM 的角色（只产「内容/条款」，不写账、不判可行性）
 | 环节 | 谁做 | LLM 是否参与 |
@@ -222,7 +223,8 @@ inventory[from][good] -= qty ;  inventory[to][good] += qty     （同一回合�
 | A1 | **新增事件** | `EXCHANGE_SETTLED` | 4.1 | `exchange_id, channel∈{offer,contract}, offer_id?, contract_id?, parties[2], goods_legs:[(from,to,good_id,qty)], money_legs:[(from,to,mu)], price_mu?, place?, activity?, round` | 对 `inventory`/`cash` 逐腿原子应用；校验零和 |
 | A2 | **字段扩展** | `MARKET_TRADE.channel∈{orderbook}`（可选） | 4.1 | （既有字段 + `channel`） | 无（纯审计；不改语义） |
 | A2b | **一等字段（Leader A1）** | `counterparty`（必带，回答「对手方是谁、是否 world」） | 4.1 | `EXCHANGE_SETTLED.counterparty` / `MARKET_TRADE.counterparty`（world 记 `is_world=true`） | 无（供 E1/E6/V2 合成 Agent 间交易量） |
-| A2c | **新增事件出口（Leader E7）** | `ORDER_CANCEL`（撤单必须可观测） | 4.1 | `order_id, agent_id, good_id, side, price_mu, qty, round` | 从订单簿移除该单（确定性） |
+| A2c | **新增事件出口（Leader E7）** | `ORDER_CANCEL`（撤单必须可观测） | 4.1 | `order_id, agent_id, good_id, side, price_mu, qty, round` | **仅当「有订单簿且该单存在」时才发**；**无簿则仅发 `DROPPED{reason:"no_order_book"}`**（**不伪造事件**，防污染撤单指标） |
+| A2d | **相位/原语（Leader 裁决 B）** | `OFFER_ACCEPTED{offer_id}` → 4.1 由 `apply_exchange` 折叠 offer 链生成 deal → `EXCHANGE_SETTLED` | 4.1 | （无新事件，复用 `EXCHANGE_SETTLED`） | deal 由 offer `terms` **唯一确定**；**life 无需产 `INTENT.ECON.TRADE`**（单源，宁少不重） |
 | A3 | **新增意图** | `INTENT.ECON.TRADE` / `INTENT.ECON.OFFER`（→`OFFER_CREATED`）/ `INTENT.ECON.CONTRACT_SIGN` | 2/3→4.1 | 见 §5.1 | 内核封装为对应事件 |
 | A4 | **复用** | `OFFER_CREATED/COUNTERED/ACCEPTED/REJECTED/EXPIRED` | 2/3 | 既有（`kind` 已含 `sale/service`） | 无需改 |
 | A5 | **复用** | `CONTRACT_CREATED/FULFILLED/VIOLATED/EXPIRED`、`VOTE_CAST` | 2/3・3.5/4 | 既有 | 无需改 |
@@ -230,6 +232,19 @@ inventory[from][good] -= qty ;  inventory[to][good] += qty     （同一回合�
 | A7 | **新增 hook** | `apply_exchange()`（4.1）、`apply_contracts()`（4.2） | 4.1/4.2 | — | 挂入 Phase4 全序 |
 | A8 | **配置开关** | `policy.exchange.enabled`（§7） | — | `config/policy.json` | 见 §7 |
 | A9 | **笼统登记** | `LLM_CALL.purpose += "negotiation"` | 2/3 | 既有事件 | 无需改契约 |
+
+### 6.1 `offer → 成交` 的相位与规则（Leader 裁决 B，2026-10-10）
+> **`OFFER_ACCEPTED{offer_id}` → 4.1 由 `apply_exchange` 折叠 offer 链生成 deal → `EXCHANGE_SETTLED`**
+> ——**life 无需产 `INTENT.ECON.TRADE`**：accept 只表达「我同意」，**deal 由 offer 的 `terms` 唯一确定** → **单源，宁少不重**。
+
+**三条精确规则（econ-dev 提、Leader 全采纳）**：
+1. **有效 `terms` = 链上最后一个 counter 的 terms**（`OFFER_CREATED → OFFER_COUNTERED × N → OFFER_ACCEPTED`）——否则**还价后接受会用旧价结算**。
+2. **按 `kind` 分流**：`sale` → 即时 `EXCHANGE_SETTLED`（4.1）；`kind ∈ {EMPLOYMENT, LOAN, TENANCY, PROFIT_SHARE, COOPERATIVE}` → **走 `CONTRACT_CREATED`（2/3）→ `apply_contracts`@4.2 分期结算**（**时间维度的交换**）。
+3. **广播 `to=[]` 多方可接受**：每个 accept 生成**各自的双边 deal**、互不影响；**单笔失败 → 该笔 `DROPPED`，不半成交**。
+
+**暂缓注记（防后人以为漏了）**：**`service` 暂按契约走、P2 不做即时成交**——因为它**没有 goods 腿**，「当场交付」的**零和如何定义**是额外设计问题；**`sale` 是最小充分路径，先窄后宽**。
+
+**订单簿完整路径（`ORDER_PLACE` + 撤单 + 簿可见性）留下一波做**——P2 阶段 life **只走 `OFFER`（→`OFFER_CREATED`）路径**（实测 `ORDER_PLACE=0`）。
 
 **与 `sim-engine-stats-architect` 的协同口径（需其确认/登记进 v1.1/08）**：
 1. `EXCHANGE_SETTLED` 的**折叠器**与 `market_trade` 折叠器共用 `apply_exchange` 内核；
