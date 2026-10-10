@@ -1,6 +1,11 @@
 {
   "threshold_iou": 0.95,
-  "pairs": 28,
+  "margin_px": 2,
+  "margin_scope": "union_of_3_frames",
+  "frame": [
+    48,
+    96
+  ],
   "axes": {
     "villager_red": {
       "hair": "short",
@@ -51,9 +56,70 @@
       "acc": "tool"
     }
   },
+  "pairs": 28,
   "failed_pairs": [],
+  "frame_margin": {
+    "villager_red": {
+      "top": 12,
+      "left": 10,
+      "right": 6,
+      "bottom": 2,
+      "ok": true
+    },
+    "villager_green": {
+      "top": 6,
+      "left": 10,
+      "right": 8,
+      "bottom": 2,
+      "ok": true
+    },
+    "villager_blue": {
+      "top": 12,
+      "left": 10,
+      "right": 8,
+      "bottom": 2,
+      "ok": true
+    },
+    "villager_yellow": {
+      "top": 12,
+      "left": 6,
+      "right": 4,
+      "bottom": 2,
+      "ok": true
+    },
+    "villager_purple": {
+      "top": 26,
+      "left": 10,
+      "right": 8,
+      "bottom": 2,
+      "ok": true
+    },
+    "villager_teal": {
+      "top": 4,
+      "left": 6,
+      "right": 2,
+      "bottom": 2,
+      "ok": true
+    },
+    "villager_orange": {
+      "top": 2,
+      "left": 10,
+      "right": 8,
+      "bottom": 2,
+      "ok": true
+    },
+    "villager_slate": {
+      "top": 6,
+      "left": 8,
+      "right": 8,
+      "bottom": 2,
+      "ok": true
+    }
+  },
+  "failed_margin": [],
   "gate_pass": {
     "pass": true,
-    "fail": []
+    "fail_pairs": [],
+    "fail_margin": []
   }
 }

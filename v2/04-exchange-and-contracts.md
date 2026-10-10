@@ -80,7 +80,7 @@ def apply_exchange(state, deal) -> Delta:
 任一回合不成立 → **整回合回滚 + `ECONOMY_INVARIANT_VIOLATION`**。
 
 ### 1.5 不写死价格
-- 成交价 `price_mu` **完全来自双方协商**（`OFFER.terms.price_mu` / 契约 `terms.price_mu` / 订单簿 `price_mu` 挂单价）；A 层**不设默认价、不设价格带作为成交价**。
+- 成交价 `price_mu` **完全来自双方协商**（`OFFER_CREATED.terms.price_mu` / 契约 `terms.price_mu` / 订单簿 `price_mu` 挂单价）；A 层**不设默认价、不设价格带作为成交价**。
 - `p_ref_mu`（`v2/01 §2.2`）**仅用于统计计价与铸币挂钩**，**不得强制为成交价**（红线）。
 - 价格写入事件（`EXCHANGE_SETTLED.price_mu` / `MARKET_TRADE.price`），供「价格离散度 `CV=σ/μ`」指标。
 
@@ -96,10 +96,10 @@ OFFER_CREATED → (OFFER_COUNTERED → … ×N_round) → OFFER_ACCEPTED → CON
                                                                   → CONTRACT_FULFILLED | CONTRACT_VIOLATED | CONTRACT_EXPIRED
               ↘ OFFER_REJECTED / OFFER_EXPIRED（协商失败）
 ```
-- **发起（life）**：life 决策相位产出 `INTENT.OFFER{kind, to[], terms, enforceable}`（§5）→ 内核封装为 `OFFER_CREATED`（phase 2/3，08 §1.2 K）。
-- **还价/应约**：`INTENT.OFFER{offer_id, act∈{counter,accept,reject}, terms?}` → `OFFER_COUNTERED/ACCEPTED/REJECTED`。
+- **发起（life）**：life 决策相位产出 `INTENT.ECON.OFFER{kind, to[], terms, enforceable}`（§5）→ 内核封装为 `OFFER_CREATED`（phase 2/3，08 §1.2 K）。
+- **还价/应约**：`INTENT.ECON.OFFER{offer_id, act∈{counter,accept,reject}, terms?}` → `OFFER_COUNTERED/ACCEPTED/REJECTED`。
 - **成约**：`OFFER_ACCEPTED` → 该契约进入**确定性执行表** → `CONTRACT_CREATED`（phase 2/3）。
-- **`kind`**：复用 08 已登记枚举 `{EMPLOYMENT, LOAN, TENANCY, PROFIT_SHARE, COOPERATIVE, SERVICE}`（+ 交换类 `sale` 走 `OFFER` 但**不建长周期契约**，直接 §1 成交）。
+- **`kind`**：复用 08 已登记枚举 `{EMPLOYMENT, LOAN, TENANCY, PROFIT_SHARE, COOPERATIVE, SERVICE}`（+ 交换类 `sale` 走 `OFFER_CREATED` 但**不建长周期契约**，直接 §1 成交）。
 
 ### 2.2 执行器（唯一的「法院」，确定性）
 ```
@@ -186,7 +186,7 @@ inventory[from][good] -= qty ;  inventory[to][good] += qty     （同一回合�
 |---|---|---|---|
 | `INTENT.ECON.ORDER_PLACE`（已有） | `{good_id, side, price_mu, qty}` | （挂单，成交落 `MARKET_TRADE`） | 4.1 |
 | `INTENT.ECON.TRADE`（**新增**） | `{offer_id, accept:bool}` 或 `{counterparty, give:[…], take:[…]}` | `EXCHANGE_SETTLED` | 4.1 |
-| `INTENT.ECON.OFFER`（**新增**） | `{act∈{create,counter,accept,reject}, offer_id?, kind, to[], terms, enforceable}` | `OFFER_CREATED/COUNTERED/ACCEPTED/REJECTED` | 2/3 |
+| `INTENT.ECON.OFFER`（**新增**，→ 封装 `OFFER_CREATED`） | `{act∈{create,counter,accept,reject}, offer_id?, kind, to[], terms, enforceable}` | `OFFER_CREATED/COUNTERED/ACCEPTED/REJECTED` | 2/3 |
 | `INTENT.ECON.CONTRACT_SIGN`（**新增，可选**） | `{offer_id}`（成约确认） | `CONTRACT_CREATED` | 2/3 |
 
 > 命名放在 `INTENT.ECON.*` 下（与既有 `ORDER_PLACE/TRANSFER/LOAN_APPLY` 同族），而**非**顶层 `INTENT.TRADE`——**理由**：统一经济意图边界，便于 `ports.py::ALL_INTENT_CLASSES` 一次性登记与门禁。
@@ -194,7 +194,7 @@ inventory[from][good] -= qty ;  inventory[to][good] += qty     （同一回合�
 ### 5.2 LLM 的角色（只产「内容/条款」，不写账、不判可行性）
 | 环节 | 谁做 | LLM 是否参与 |
 |---|---|---|
-| 与谁交易、交易什么、开价多少 | **Agent（LLM 决策）** | ✅ 产出 `INTENT.ECON.OFFER/TRADE` 的**候选项与条款数值** |
+| 与谁交易、交易什么、开价多少 | **Agent（LLM 决策）** | ✅ 产出 `INTENT.ECON.OFFER`（→`OFFER_CREATED`）与 `INTENT.ECON.TRADE` 的**候选项与条款数值** |
 | 议价措辞、说服、还价理由 | **Agent（LLM）** | ✅ 文本内容（N 类） |
 | **合法性校验**（余额/库存/可转让/额度/守恒） | **确定性内核** | ❌ 绝不调 LLM |
 | **成交/记账/守恒** | **确定性内核** | ❌ |
@@ -220,7 +220,7 @@ inventory[from][good] -= qty ;  inventory[to][good] += qty     （同一回合�
 |---|---|---|---|---|---|
 | A1 | **新增事件** | `EXCHANGE_SETTLED` | 4.1 | `exchange_id, channel∈{offer,contract}, offer_id?, contract_id?, parties[2], goods_legs:[(from,to,good_id,qty)], money_legs:[(from,to,mu)], price_mu?, place?, activity?, round` | 对 `inventory`/`cash` 逐腿原子应用；校验零和 |
 | A2 | **字段扩展** | `MARKET_TRADE.channel∈{orderbook}`（可选） | 4.1 | （既有字段 + `channel`） | 无（纯审计；不改语义） |
-| A3 | **新增意图** | `INTENT.ECON.TRADE` / `INTENT.ECON.OFFER` / `INTENT.ECON.CONTRACT_SIGN` | 2/3→4.1 | 见 §5.1 | 内核封装为对应事件 |
+| A3 | **新增意图** | `INTENT.ECON.TRADE` / `INTENT.ECON.OFFER`（→`OFFER_CREATED`）/ `INTENT.ECON.CONTRACT_SIGN` | 2/3→4.1 | 见 §5.1 | 内核封装为对应事件 |
 | A4 | **复用** | `OFFER_CREATED/COUNTERED/ACCEPTED/REJECTED/EXPIRED` | 2/3 | 既有（`kind` 已含 `sale/service`） | 无需改 |
 | A5 | **复用** | `CONTRACT_CREATED/FULFILLED/VIOLATED/EXPIRED`、`VOTE_CAST` | 2/3・3.5/4 | 既有 | 无需改 |
 | A6 | **新增字段** | `good.transferable: bool`（默认 `true`） | — | （商品注册表字段，非事件） | 校验用 |
@@ -241,7 +241,7 @@ inventory[from][good] -= qty ;  inventory[to][good] += qty     （同一回合�
 | 项 | 定义 |
 |---|---|
 | 名称 | `policy.exchange.enabled`（runtime `config.exchange.enabled` 优先），**默认 `true`（行为不变）** |
-| 控制范围 | **只控制「是否产生」交易/契约原语**：`OFF` 时 life **不产生** `INTENT.ECON.TRADE/OFFER/ORDER_PLACE`，engine **不挂** `apply_exchange/apply_contracts` |
+| 控制范围 | **只控制「是否产生」交易/契约原语**：`OFF` 时 life **不产生** `INTENT.ECON.TRADE/OFFER/ORDER_PLACE`（→`OFFER_CREATED`），engine **不挂** `apply_exchange/apply_contracts` |
 | `OFF` 的结果 | `EXCHANGE_SETTLED=0`、agent-as-seller 的 `MARKET_TRADE=0`、`CONTRACT_CREATED=0` → **Agent 间交易 = 0** |
 | 纪律 | **不删事件契约、不改守恒、不 fail-loud**（显式消融）；发**审计事件** `DROPPED{reason:"exchange_disabled", flag:"exchange_disabled"}`（08 §5.8 同款）——**「开关生效」的唯一查法 = 查该 `DROPPED`** |
 | 与静默失效区分 | 「静默失效」必须 **fail-loud**；「显式关闭」不 fail-loud 且留 flag（08 §5.8 统一纪律） |
@@ -268,10 +268,10 @@ inventory[from][good] -= qty ;  inventory[to][good] += qty     （同一回合�
 【本设计补的三块原语】
    ① 成交原语 apply_exchange/EXCHANGE_SETTLED —— 原子、零和、双账本守恒、不写死价格
    ② 允许 Agent 作 maker（含卖方）的订单簿 —— 复用 MARKET_TRADE，自然产生 agent↔agent 成交
-   ③ INTENT.ECON.{TRADE, OFFER, ORDER_PLACE} —— life 侧可发起交易/议价/缔约
+   ③ INTENT.ECON.{TRADE, OFFER, ORDER_PLACE}（→OFFER_CREATED）—— life 侧可发起交易/议价/缔约
 
 【因果链（可观测）】
-   life 决策(LLM, thinking=false) 产出 INTENT.ECON.OFFER/TRADE
+   life 决策(LLM, thinking=false) 产出 INTENT.ECON.OFFER（→OFFER_CREATED）/TRADE
       → 确定性校验（余额/库存/可转让）
       → OFFER_ACCEPTED
       → apply_exchange 原子结算
@@ -281,7 +281,7 @@ inventory[from][good] -= qty ;  inventory[to][good] += qty     （同一回合�
       → 工资(CONTRACT EMPLOYMENT)/消费/税 随成交出现 → 货币循环
 
 【红线守住】
-   价格/工资/税率由 OFFER.terms / 竞价值 决定（B 层）——A 层只给插座；
+   价格/工资/税率由 OFFER_CREATED.terms / 竞价值 决定（B 层）——A 层只给插座；
    确定性内核全程不调 LLM；不写死任何价格/工资/税率/铸币。
 ```
 **验收项**：
@@ -306,7 +306,7 @@ inventory[from][good] -= qty ;  inventory[to][good] += qty     （同一回合�
 4. **契约底座**：复用 `OFFER_*→CONTRACT_*` 生命周期 + 新 hook `apply_contracts`（Phase 4.2），**默认确定性违约判定**，软判定须 `LLM_JUDGMENT` 冻结；
 5. **可转让物品**：`state.inventory`（milli、入 `state_hash`）参与交换，腿式原子改 owner；`service` 即时交付；新增 `good.transferable`；
 6. **发现机制**：**不新造原语**，复用订单簿 + `OFFER_*` + 只读公开簿投影（防底牌/套利）；
-7. **life 通道**：新增 `INTENT.ECON.{TRADE, OFFER, CONTRACT_SIGN}`；LLM 只产内容/条款，合法性/结算确定性；居民 `thinking=false`、世界 LLM `thinking=true`；
+7. **life 通道**：新增 `INTENT.ECON.{TRADE, OFFER, CONTRACT_SIGN}`（→`OFFER_CREATED`）；LLM 只产内容/条款，合法性/结算确定性；居民 `thinking=false`、世界 LLM `thinking=true`；
 8. **消融**：`policy.exchange.enabled`（默认 true），`OFF` 时 Agent 间交易归零并留 `DROPPED{flag=exchange_disabled}`。
 
 ### 9.2 待讨论（交 Leader / 相关方）
