@@ -3,6 +3,11 @@
 > 领域：交付质量 / 一致性核对 ｜ 维护：sim-engine-stats-architect ｜ 状态：v1（首批 7 条）
 > 目的：**一表回答「一个已登记的东西到底有没有活」**。因为 — **在文件里，"存在"与"生效"长得一模一样**。
 
+> ## ⚠️ 性质与盲区（先读）
+> **① 这是一道棘轮，不是一张表。** 核对器（`tools/check_inert_registry.py`）自己扫 `code/` 判定状态；**未接线必须显式声明**（`tools/inert_registry.json` 的 `expected_status`），**接线之后必须同步更新该声明**。
+> → **它造成的"红"不是 bug，而是"有人改了接线状态但没更新声明"。** 已接入 `make gate` / CI（`make inert-gate`）。
+> **② 它有盲区，且盲区写在明处**：静态扫描的「已接线」**只保证有生产侧调用点，不保证运行时真产生**。→ **重大条目必须叠加一次实跑日志核对**（`grep '"type": "XXX"' <LOG>`，静态+运行双证据）。**不要因为"有了核对器"就以为万事大吉。**
+
 ---
 
 ## 0. 为什么要有这张表（问题家族）
@@ -38,10 +43,12 @@
   | `死代码` | 声明 + 从不被引用（当前首批无此例） |
 - **运行**：
   ```bash
-  python3 tools/check_inert_registry.py          # 打印表；与 expected_status 不一致 → 退出码 1（棘轮）
-  python3 tools/check_inert_registry.py --json   # 机器可读
+  make inert-gate                                  # 已接入 make gate / CI（棘轮）
+  python3 tools/check_inert_registry.py            # 三段表（A 手工棘轮 / B 事件自动 / C 开关自动）+ 退出码
+  python3 tools/check_inert_registry.py --json     # 机器可读
+  python3 tools/check_inert_registry.py --no-auto  # 只看手工棘轮条目
   ```
-  建议接入 CI（与 `make lexicon-gate` 同级）：**登记表与代码不一致即失败**。
+  已接入 **`make gate`**（`gate: stamp lexicon-gate inert-gate code-test plugin-test`）；**登记表与代码不一致即失败**（棘轮退出码 1）。
 
 > **两条硬要求的落实**：① 每条"未接线"都附**可执行验证命令**（见下表「如何验证」列，逐条 `grep`）；② **能机器判定的都写成脚本**（`check_inert_registry.py`），表由它校验。
 
@@ -61,6 +68,21 @@
 
 > **结论（首批）**：**7 条全部"未接线"**，其中 3 条（`MEMORY_CONSOLIDATE`/`MEMORY_FORGET`/`PERSONA_DRIFT`）已"有生产侧产事件但未注册"，属**半接线**——**一旦 persona 完成 `EVENT_TYPES` 注册 + 落账接线，脚本会自动判为「已接线」**，本表随之更新。
 > **凡"已核实活着"的条目**：脚本判为 `已接线` 并给出 `hits`（真实调用点）——**该结论同样记录在案**（首批无）。
+
+---
+
+## 2.1 自动枚举（扩展覆盖：**全部 `EVENT_TYPES` 事件** / **config 开关**）
+
+> 手工条目（§2）只覆盖"已知疑似"。为落实"能机器判定的不靠人维护"，核对器**同时自动枚举**：
+
+**[B] 全部 `engine/events.py::EVENT_TYPES` 事件**（当前 **85** 个）——逐条判"有没有**生产侧发射点**"（**排除 `events.py`/`replay.py` 自身的登记**，否则"登记"会被误当"发射"）：
+- **未接线（已注册·无生产侧发射点）9 个**：`ACTIVITY_INTERRUPTED`、`GOAL_ABANDON`、`GROUP_JOINED`、`GROUP_LEFT`、`LOAN_REPAY`、`MONEY_BURNED`、`OFFER_EXPIRED`、`SCHEDULE_REVISED`、`VOTE_CAST`。
+  → 含义："schema 里有、`EVENT_TYPES` 里有，但**当前没有任何生产侧代码会发射它**"（**收口/接线时须留意**；也可能属"接口预留"）。
+- 其余 ~76 个判为"已接线(有发射点)" —— **均标【未验证】**（静态扫描不保证运行时真产生）。
+
+**[C] 全部 `code/config/policy.json` 的 `*.enabled` 开关**（当前 **6**）：`economy / lifecycle / social / production / exchange / llm_budget` —— 全判"已接线(疑似)"。**近似判定【未验证】**：判据是"生产侧代码是否出现该 section 名且含 `enabled`"；**开关类必须叠加一次"开/关实跑"核对**（开关"看起来存在但没接上"是最危险的一类）。
+
+> **棘轮边界**：**[A] 手工条目**含 `expected_status`，**不一致 → 退出码 1**（参与 CI）；**[B]/[C] 自动枚举**为**报告**，不参与退出码（避免因"接口预留"类条目造成噪声红）。要"锁定"某自动条目，把它提升为 [A] 手工条目并声明 `expected_status`。
 
 ---
 
