@@ -42,4 +42,5 @@ def visible_events(records: list, agent_id: str, upto_round: int,
         return fn(agent_id, upto_round, window_rounds=window_rounds, location=location)
     return _ve(records, agent_id, upto_round,
                scope_table=C.PERCEPTION_SCOPE, default_cls=C.DEFAULT_VISIBILITY,
-               window_rounds=window_rounds, location=location)
+               window_rounds=window_rounds, location=location,
+               place_local_actor_fallback=C.PLACE_LOCAL_ACTOR_FALLBACK)

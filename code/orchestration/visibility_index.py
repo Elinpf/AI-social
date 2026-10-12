@@ -132,7 +132,8 @@ class VisibilityIndex:
         return uniq
 
     def visible(self, agent_id: str, upto_round: int, *,
-                window_rounds: int | None = None, location: str | None = None) -> list:
+                window_rounds: int | None = None, location: str | None = None,
+                place_local_actor_fallback: bool = False) -> list:
         loc = location if location is not None else self._loc_at(agent_id, upto_round)
         gmembers = self._gm_upto(upto_round)
         out = []
@@ -142,6 +143,6 @@ class VisibilityIndex:
             if window_rounds is not None and rec["round"] < upto_round - window_rounds:
                 continue
             if _visible(self._class(rec), agent_id, rec.get("actor", "SYSTEM"),
-                        rec.get("payload", {}), loc, gmembers):
+                        rec.get("payload", {}), loc, gmembers, place_local_actor_fallback):
                 out.append(rec)
         return out

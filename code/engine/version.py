@@ -92,6 +92,13 @@ def load_perception_scope(config_dir: str | Path | None = None) -> tuple[dict, s
     return dict(scope), default_cls, version
 
 
+def load_visibility_flags(config_dir: str | Path | None = None) -> dict:
+    """G1 可见性开关（默认 false；文件值进 engine_version 指纹）。"""
+    d = Path(config_dir) if config_dir else CONFIG_DIR
+    obj = _read_json(d / "perception_scope.json") or {}
+    return {"place_local_actor_fallback": bool(obj.get("place_local_actor_fallback", False))}
+
+
 def assert_log_fingerprint(records: list, config_dir: str | Path | None = None,
                            expected: str | None = None) -> None:
     """重放前断言：日志 `WORLD_INIT.fingerprint` == 期望的 engine_version 指纹。

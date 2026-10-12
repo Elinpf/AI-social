@@ -41,10 +41,13 @@ def location_of(records: list, agent_id: str, upto_round: int) -> str:
 def visible_events(records: list, agent_id: str, upto_round: int, config: dict | None = None) -> list:
     """T264：选择委托**唯一真源** `contracts.visibility`；仍返回 dict 投影（保持本模块对外契约）。"""
     from contracts.visibility import visible_events as _ve
+    from . import version
     scope = load_perception_scope()
     recs = _ve(records, agent_id, upto_round,
                scope_table=scope.get("scope", {}),
-               default_cls=scope.get("default_visibility_class", "place_local"))
+               default_cls=scope.get("default_visibility_class", "place_local"),
+               place_local_actor_fallback=version.load_visibility_flags().get(
+                   "place_local_actor_fallback", False))
     return [{
         "seq": r["seq"], "round": r["round"], "phase": r["phase"],
         "actor": r["actor"], "type": r["type"],

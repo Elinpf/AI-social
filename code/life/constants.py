@@ -223,4 +223,15 @@ def load_perception_scope(path: str | Path | None = None) -> tuple[dict, str, st
 
 PERCEPTION_SCOPE, DEFAULT_VISIBILITY, PERCEPTION_SCOPE_SOURCE = load_perception_scope()
 
+
+def load_visibility_flags(path: str | Path | None = None) -> dict:
+    """G1 可见性开关（默认 false；进 engine_version 指纹）。"""
+    p = Path(path) if path else (Path(__file__).resolve().parents[1] / "config" /
+                                 "perception_scope.json")
+    data = json.loads(p.read_text(encoding="utf-8"))
+    return {"place_local_actor_fallback": bool(data.get("place_local_actor_fallback", False))}
+
+
+PLACE_LOCAL_ACTOR_FALLBACK = load_visibility_flags()["place_local_actor_fallback"]
+
 PHASE_LIFE = 35  # integer encoding of Phase 3.5 (08 §2.1)

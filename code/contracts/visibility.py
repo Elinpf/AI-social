@@ -7,9 +7,10 @@
 
 `OFFER_CREATED` 分档（T137 固化）：`to==[]`→`global`；`to` 非空→`private`（对 `{from,to}` + `to` 名单）。
 
-⚠️ 待 08 核定（不得自选）：`subject_only`/`private` 是否纳入 `payload.subject`、`members` 是否含
-`actor==agent_id` 回退。当前暂采 **engine 现行语义**（不含 subject；members 含 actor 回退），
-08 定稿后**只改本文件一处**即可全链路一致。已由 kernel-dev 路由 sim-engine-stats-architect。
+⚠️ 08 已定稿（T266，`v2/refs/visibility-semantics-08.md` §8–§10）：
+  - D2：`subject_only`/`private` **不含** `payload.subject`；D3：`members` **含** `actor==agent_id` 回退。
+  - G3：`subject_only` 的 `from` 子句**从未生效（dead，n20_week 命中 0）** → 已删（等价简化）。
+  - G1：`place_local` 增 `actor==agent_id` 回退，开关 `place_local_actor_fallback`（默认 `false`=行为不变）。
 """
 
 from __future__ import annotations
@@ -32,19 +33,25 @@ def location_of(records: list, agent_id: str, upto_round: int,
 
 
 def visible(cls: str, agent_id: str, actor: str, p: dict, loc: str,
-            group_members: dict | None = None) -> bool:
-    """单条事件的可见性谓词（纯函数）。"""
+            group_members: dict | None = None,
+            place_local_actor_fallback: bool = False) -> bool:
+    """单条事件的可见性谓词（纯函数）。
+
+    `place_local_actor_fallback`（G1，默认 False）：为 True 时 `place_local` 增 `actor==agent_id`
+    回退（`place` 未知/不等但 actor 本人 → 可见）；开关进 `engine_version` 指纹。
+    """
     if cls == "global":
         return True
     if cls == "place_local":
-        return p.get("place") == loc
+        return p.get("place") == loc or (place_local_actor_fallback and actor == agent_id)
     if cls == "private":
         return (agent_id in (p.get("from"), p.get("to"))
                 or agent_id in (p.get("to") or [])
                 or p.get("agent_id") == agent_id or p.get("observer") == agent_id
                 or actor == agent_id)
     if cls == "subject_only":
-        return (agent_id in (p.get("agent_id"), p.get("observer"), p.get("from"))
+        # G3：删去 dead 的 `from` 子句（08 §9）
+        return (agent_id in (p.get("agent_id"), p.get("observer"))
                 or actor == agent_id)
     if cls == "participants_only":
         return (agent_id in (p.get("participants") or [])
@@ -79,7 +86,8 @@ def _group_members(records: list, upto_round: int) -> dict:
 def visible_events(records: list, agent_id: str, upto_round: int, *,
                    scope_table: dict, default_cls: str = "place_local",
                    window_rounds: int | None = None,
-                   location: str | None = None) -> list:
+                   location: str | None = None,
+                   place_local_actor_fallback: bool = False) -> list:
     """返回 `agent_id` 在 `upto_round` 可**直接感知**的事件（原始 record，保持账本顺序）。"""
     loc = location if location is not None else location_of(records, agent_id, upto_round)
     gmembers = _group_members(records, upto_round)
@@ -93,6 +101,7 @@ def visible_events(records: list, agent_id: str, upto_round: int, *,
         cls = scope_table.get(rec["type"], default_cls)
         if rec["type"] == "OFFER_CREATED":  # T137：定向要约分档
             cls = "global" if not (p.get("to") or []) else "private"
-        if visible(cls, agent_id, rec.get("actor", "SYSTEM"), p, loc, gmembers):
+        if visible(cls, agent_id, rec.get("actor", "SYSTEM"), p, loc, gmembers,
+                   place_local_actor_fallback):
             out.append(rec)
     return out

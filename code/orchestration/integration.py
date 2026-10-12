@@ -265,6 +265,11 @@ class KernelAdapter:
             self._default_cls = "place_local"
         self._social = _load_social_cfg()
         self._vindex = None  # T264：可见性增量索引（惰性构建，不入 state_hash）
+        try:
+            from engine.version import load_visibility_flags
+            self._plaf = load_visibility_flags().get("place_local_actor_fallback", False)
+        except Exception:
+            self._plaf = False  # G1：place_local actor 回退（默认 off）
         self._permit_round = None
         self._permits = None  # None=未启用（全许可）；set=本回合允许调 LLM 的 agent
 
@@ -289,7 +294,8 @@ class KernelAdapter:
             self._vindex = VisibilityIndex(self._scope_table, self._default_cls)
         self._vindex.sync(self.engine.ledger.records)
         return self._vindex.visible(agent_id, upto_round,
-                                    window_rounds=window_rounds, location=location)
+                                    window_rounds=window_rounds, location=location,
+                                    place_local_actor_fallback=self._plaf)
 
     # ---- IF-1 perceive ----
     def perceive(self, agent_id: str):

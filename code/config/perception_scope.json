@@ -2,6 +2,7 @@
   "_comment": "PERCEPTION_SCOPE：event_type -> visibility_class（08 §3.5 R2 / §1.2 R5）。引擎侧 canonical 真源；版本纳入 engine_version 指纹。",
   "version": "v1.2-r2",
   "default_visibility_class": "place_local",
+  "place_local_actor_fallback": false,
   "_class_semantics": {
     "_note": "08 §3.5 权威类语义（visibility_class → 判据字段集）。T266 裁定：D2 不含 payload.subject；D3 members 含 actor 回退。仅注释性真源（人读/对照），机器行为唯一实现在 contracts/visibility.py::visible()；三处（engine/perceive、life/visibility、adapter）只调用它，不内联。",
     "global": [],
@@ -11,7 +12,7 @@
     "participants_only": ["payload.participants", "payload.from", "payload.to", "actor"],
     "subject_only": ["payload.agent_id", "payload.observer", "payload.from", "actor"],
     "_dynamic": {"OFFER_CREATED": "to==[] -> global ; 否则 -> private (T137)"},
-    "_known_gaps": ["G1 place_local 无 actor 回退(待裁)", "G2 部分 v2 新事件无 scope 条目(待补)", "G3 subject_only 含 from / private.to[] 与 OFFER_CREATED 特判重叠(待收敛)"]
+    "_known_gaps": []
   },
   "scope": {
     "MSG_PUBLIC": "global",
@@ -47,6 +48,56 @@
     "GOAL_PROGRESS": "subject_only",
     "GOAL_ACHIEVED": "subject_only",
     "GOAL_ABANDON": "subject_only",
-    "LLM_CALL": "subject_only"
+    "LLM_CALL": "subject_only",
+
+    "TAG_EMITTED": "global",
+    "NORM_PROPOSED": "global",
+    "NORM_ADOPTED": "global",
+    "NORM_VIOLATED": "global",
+    "GROUP_CREATED": "global",
+    "GROUP_DISSOLVED": "global",
+    "VOTE_CAST": "global",
+    "ROLE_CHANGE": "global",
+    "PUBLIC_REACTION": "global",
+    "IDLE": "global",
+    "WORLD_DIRECTIVE": "global",
+    "WORLD_GROUP_EVENT": "global",
+
+    "GROUP_JOINED": "members",
+    "GROUP_LEFT": "members",
+
+    "EXCHANGE_SETTLED": "participants_only",
+    "CONTRACT_CREATED": "participants_only",
+    "CONTRACT_FULFILLED": "participants_only",
+    "CONTRACT_VIOLATED": "participants_only",
+    "CONTRACT_EXPIRED": "participants_only",
+    "LOAN_ISSUED": "participants_only",
+    "LOAN_REPAY": "participants_only",
+    "LOAN_DEFAULT": "participants_only",
+
+    "OFFER_ACCEPTED": "private",
+    "OFFER_REJECTED": "private",
+    "OFFER_COUNTERED": "private",
+    "OFFER_EXPIRED": "private",
+
+    "SKILL_PRACTICE": "place_local",
+
+    "SKILL_LEVEL_UP": "subject_only",
+    "SKILL_OUTPUT": "subject_only",
+    "PRODUCE": "subject_only",
+    "CONSUME": "subject_only",
+    "DEPRECIATE": "subject_only",
+    "PRODUCE_OVERFLOW": "subject_only",
+    "DEPOSIT": "subject_only",
+    "WITHDRAW": "subject_only",
+    "INTEREST_CHARGED": "subject_only",
+    "INTEREST_PAID": "subject_only",
+    "TAX_LEVIED": "subject_only",
+    "UBI_PAID": "subject_only",
+    "METABOLISM": "subject_only",
+    "PENALTY_APPLIED": "subject_only",
+    "REVIVE_FEE_PAID": "subject_only",
+    "WAKE": "subject_only",
+    "INTENT_REJECTED": "subject_only"
   }
 }
