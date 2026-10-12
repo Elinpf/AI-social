@@ -980,6 +980,20 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
   - **`wake.enabled` / `wake.triggers.*`（v2 双时钟档，T263/T265）同属这一族**：`wake.enabled` **默认 `false`（行为不变）**；置 `true` 启用「个体决策节拍 = 事件驱动唤醒」。`wake.triggers.{W1..W10}` 为**逐因开关**（`W6` 默认 `true` 可关，供消融）；**世界结算节拍（round）不受本开关影响、始终不变**。**只控制「是否启用唤醒门控」、不删事件契约、不改守恒、不 fail-loud**；`engine_version` 指纹随本块变化（属预期）。
   - **`service_delivered.enabled`（v2 服务交付档，T278）同属这一族**：`policy.service_delivered.enabled`，**默认 `true`（行为不变）**。**只控制「是否产生」**服务交付事件：`OFF` → 不产 `SERVICE_DELIVERED` + `DROPPED{reason:"service_disabled", flag:"service_disabled"}`；**不删事件契约、不改守恒、不 fail-loud**；与 `economy.enabled` 嵌套 = **AND**。
 
+### 5.9 账本分段与轻索引口径（应 T281，已定；纯存储层，不改语义）
+
+> 定位：**只改存储**（`ledger.records` 全量常驻 → 尾段常驻 + 已封段落盘 + 轻索引），**不改事件顺序/判定/`state_hash`**。08 为本节**单一真源**（`v2/refs/ledger-residency-reduction.md` 引用 08、不另定义）。
+
+- **总原则**：① **日志仍是唯一记录**（段 + 轻索引**必须能完整解释世界**；索引可由段重建；段丢失=日志丢失，等同现状）；② **`seq` 全局全序不变、段边界必落回合边界**（同回合事件不跨段）；③ **`state_hash` 不变**；④ **不新增事件类型**；⑤ 开关**默认不启用**。
+- **段（segment）= 按回合**（**不按字节**）：默认 `SEG_ROUNDS = 12`（对齐 T262）；命名 `ledger.seg.<start_round>-<end_round>.jsonl`（编号=起始 round）；段头记 `start_seq/end_seq/first_hash/last_hash/engine_version`。**段边界=回合边界**。
+- **轻索引**：`seq → {round, type, phase, actor, offset, len}`；**默认不含 `hash`**（每事件 hash 在段文件；**段级**存 `first_hash/last_hash`）；紧凑二进制/列式 + 段级字典（type/actor）。`state.event_index` 同步轻量化（可裁到 **`seq→type`**——`OBSERVATION` 锚点校验只需**存在性+type**）。
+- **封段顺序（保 `seq` 全序）**：P6 唯一 append（内存尾段）→ `TURN_SEAL` → 跨段边界则**原子封段 + 切新段**；封段在**回合末 seal 之后、下一回合之前**。**只封"已 commit 的整回合"**。
+- **落地条件（kernel-dev 可行性约束）**：tail-only 须**外置 `seq_base`/`chain_head`**；**索引与段必须同一原子替换**（否则"段+索引=可解释世界"不成立）。
+- **读回（重放 / 续跑 T276）**：按 `seq` 升序读段（段按 `start_round` 排序、段内 seq 升序）→ `reduce(apply_event, …, InitialState)`；续跑 = 读**最后一段 + 轻索引**重建内存视图。
+- **可重建派生集合（单一口径）**：`state.observed` / 各 agent `_observed_seqs` / `memories` 索引等**派生集合** = **可由日志重建**、**不入 `state_hash`**、**不入 08 事件语义**。⚠️ **与 T276 的 `LifeAgent.restore(state, records)` 是同一状态**——**必须一次对齐、不得两处各定义**（避免"可重建集合"口径分叉）。
+- **不新增事件**；段锚点**复用 `TURN_SEAL` 可选字段**（只增不改）：`segment_id` / `segment_file` / `segment_first_seq` / `segment_last_seq` / `segment_last_hash`。
+- **开关族（默认 `false`，进 `engine_version` 指纹）**：`segment.enabled`、`index.slim`（§5.8 家族；`OFF`=旧行为）。
+
 ---
 
 ## 6. 与 v1 的兼容性（覆盖要求 6）
