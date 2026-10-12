@@ -72,3 +72,41 @@ M4=0 python /tmp/m4_probe.py ; M4=1 python /tmp/m4_probe.py
 - **N=50 接 M4 后能否 <60min**：mock 下**预计不能**（瓶颈是 side IO/O(N²)），**未实测**（>60min 成本高；建议先做 §1 削减再复探）。
 - **周期 flush 效果**：**未做**（需改 `orchestration/`，待批）。
 - **§1 候选 a/b 动 life 语义** → 须 08/审批，**未动**。
+
+---
+
+## 6. 补测（决策级）· 2026-10-12 14:xx · sha `d65abf1`（探针在后续工作区，见 §6.6）
+### 6.1 CPU vs IO 隔离实验 —— **IO≈0，瓶颈是 CPU**
+N=20×24 mock，仅改 side 落盘位置：
+| side 位置 | 墙钟 | side 文件 |
+|---|---:|---:|
+| → **磁盘** | 90.0 s | 32,596 |
+| → **/dev/shm（RAM）** | 89.2 s | 32,596 |
+→ **IO 等待 ≈ 0.7 s（<1%）**。**写 3.2 万个小文件近乎免费**。
+**结论修正**：N=50 的"跑不完"主因是 **O(N²) CPU**（per-agent 反复重扫事件），**不是 "side IO 墙"**；299k 文件的 inode 压力是**症状**、非主因。
+### 6.2 CPU 热点与定位（cProfile，N=20×24）
+- 头号：**`visible_events`（`life/visibility.py:42`）+ `location_of`（`:13`）** —— 每 (agent, 回合) 调用时**全量重扫 `records`（≤upto_round）** → **11.2M 次 `_visible`（`:26`）**、全局 **158M 次 `dict.get`**。
+- 其余：`write_memories`(`settlement.py:570`) 23s；流动性 `credit_limit`/`recent_income` 13.5s；canonical 哈希 8–9s。
+- **回合内也超线性**：N=20 墙钟 **R=24→~40s**、**R=84→390s**（回合 ×3.5 → 时间 ×9.75）：因**每回合重扫"增长的日志"** ⇒ 复杂度 ≈ `O(N × log_len × rounds)` ≈ **O(N²·rounds²)** 量级。
+- engine 双胞胎 **`engine/perceive.py:41`（visible_events）/ `:28`（location_of）** 同型（`perceive` 每 agent 一次，l.108/111）。
+- **同族提示**：`visible_events` 亦为"同一概念两处实现"（`engine/perceive` ↔ `life/visibility`），与 T257（两个 truth 模块）同族。
+### 6.3 内存累积（**第二根因，已实证**）
+N=20×84 RSS 采样（`ulimit -v 8G`）：
+- **曲线**：20 → 85 → … → 448 MB（每 ~6 采样点），**peak 493 MB**；**单调上升、无平台**。
+- **≈ 每回合 +5 MB（N=20）**；外推 N=50（且 O(N²)）→ **GB 级** → **与宿主 OOM（被杀进程 `anon-rss 23.2GB`）方向一致**。
+- **判定**：**按回合无界累积**（疑记忆/side 缓冲），**比文件数超线性更危险**（会 OOM 宿主）。**只定位、未改**。
+### 6.4 周期 flush —— **已由 T262 落地**（kernel-dev，sha `7ccd35e`）
+`run_e2e(..., flush_every=N)`：每 N 回合原子落盘**已提交前缀**（临时文件+`os.replace`）；**默认 0 = 末尾写、字节不变**；真 `SIGKILL` 中途 → 前缀**非空且可 `replay`**（正向），旧行为 `flush_every=0` **丢全部**（反向，证明缺陷真实）。建议长跑 `--flush-every 12`。**本任务仅提供触发场景/复现（§3），实现归 kernel。**
+### 6.5 削减候选 · **Leader 裁决**
+| # | 候选 | 动语义? | 裁决 |
+|---|---|---|---|
+| **c2** | visibility **每回合索引一次**，消 11.2M 重扫 | 否 | **✅ 批准·首选**（实施另开任务；需 file:line 定位，见 §6.2） |
+| c1 | 共享不可变源事件 + 每 agent 指针 | 否 | ✅ 批准（**等价搬迁：输出逐字节不变**） |
+| c3 | 流动性 credit_limit/recent_income 每回合 memo | 否 | ✅ 批准（同上） |
+| c4 | observation 类不逐写一文件（批量/懒算） | 否 | ✅ 批准（同上） |
+| c5 | `familiarity` pairwise 稀疏化/阈值化 | **是** | ❌ 不批（等 T263 时间模型 + 08 登记 + 用户） |
+| c6 | 观察扇出合并 2.65→1 | **是** | ❌ 不批（同上） |
+| — | 多核/多进程（16 核） | — | **先记不做**（先消 O(N²)；多核与"全量日志"纪律有张力） |
+### 6.6 运行环境记录
+- 主机 **16 核 / 31 GiB**；探针前 `free -h`：used 12Gi / **avail ~20Gi**；`df -h /` 103G 空闲、`df -i` 46%。
+- **停批纪律**：本补测未跑 >N=20 未加限的批次；内存探针加 `ulimit -v 8G`。**>N=20 必报 leader + 设 MemoryMax。**
