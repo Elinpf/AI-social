@@ -35,7 +35,13 @@
 - **关键检查点**：**`MEMORY_RETRIEVE` 折叠更新的 `memory_index[mid]` 与 `MEMORY_WRITE` 折叠塞进 `a["memories"]` 的，是否同一个 dict 对象**？
   - 若**同一对象** ⇒ 更新互见，restore 读到正确值（**分歧不在此**）。
   - 若**不同对象**（如 `a["memories"]` 存副本、`memory_index` 存另一份） ⇒ restore 读到**陈旧** `last_access/access_count` → `forgetting.classify` 的 `dt = round - last`（`forgetting.py:30-32`）偏差 → `retention_permille` 偏差 → **恰在 round 93 跨 `theta_forget`** ⇒ 解释"merge vs drop"。
-- **优先级**：**最高**（与现象量级/时点最吻合）。
+- **优先级**：~~最高~~ **已核伪** —— life-layer-dev（`8ac9d493`）读码确认 `replay.py:331-344` 的 `a["memories"].append(ref)` 与 `state.memory_index[mid]=ref` **是同一 dict 对象**，`MEMORY_RETRIEVE`（`345-351`）改的就是它 ⇒ `sync_from_refs` 读到的是**更新后**值。**本条划掉**。
+
+### 候选 (2′) ★【新头号】T244 前向态未进 `restore()`（life-layer-dev `8ac9d493` 提出）
+- **依据**：`_slept_days`（`_maybe_sleep_window` 防同日重复睡眠）/ `_persona_state` / `_persona_p0` / `_drift_streak`（`PERSONA_DRIFT` 去重）**不在** `restore()` 重建列表（`life/agent.py:126`）→ 续跑 `run_sleep_window` 的输入（`mems` + persona 态）与一次性不同 ⇒ `classify` 的 `has_sibling`/consolidate 分组可能分岔。
+- **与现象吻合**：**merge vs drop 正落此条**；**round93 才暴露**符合"跨日睡眠窗 + 累计到阈值"。
+- **优先核验**：**先 dump `_slept_days`/`_persona_state`/`mems` 三者**（再 dump 记忆字段）——若第一步即分岔 ⇒ 根因即明。
+- **修法**：把这些前向态**原样并入 `restore()`**（或确认可由 `SLEEP_*`/`PERSONA_DRIFT` 事件重建），**不做有界化**。
 
 ### 候选 (3) `_unreflected_importance` 与 `reflected` 回填不全
 - **依据**：`restore()`（`life/agent.py:51-64`）**只**从 `MEMORY_REFLECT.triggered_by_mem_ids` 回填 `nd.reflected=True`，再重算 `_unreflected_importance`。
@@ -48,7 +54,11 @@
 
 ## 3. 【核验法】一次小跑即可判定（art-director 取证用）
 
-**在 round 90（恢复点）**，两条路径各 dump 目标记忆的**判定输入**并 diff：
+**顺序**：**先 step0**（前向态），再 step1（记忆字段）。
+
+**step0（先做，最高信息量）**：在 round 90 两路 dump **`_slept_days` / `_persona_state` / `_persona_p0` / `_drift_streak` / `mems`(节点集)** → diff。**若第一步即分岔 ⇒ 根因即候选 (2′)，到此为止。**
+
+**step1**：在 round 90（恢复点），两条路径各 dump 目标记忆的**判定输入**并 diff：
 
 对 `P001` 的 `M-P001-000003` 与 `M-P001-000005`，逐字段打印：
 ```
@@ -77,7 +87,7 @@ emo, referenced_by_reflection, kind, has_sibling(该 subject 的兄弟数)
 
 - **本文件只读归因**；不复现、不修码（Leader 裁定：life 修 / art 取证）。
 - **不把"逐字节一致"降级**（不可放宽验收）。
-- **批期不动世界层**（当前有批在跑，宿主内存紧张）。
+- **批期不动世界层**（当前有批在跑——判据是"**别在批期**"，**非内存**；且按 Leader 新口径：判断"能不能跑"看 **`available`**，不看 `free` 列）。
 
 ---
 
