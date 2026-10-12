@@ -2,24 +2,70 @@
   "_comment": "T226 inert registry 数据源（机器可校验）。由 tools/check_inert_registry.py 扫描 code/ 自动判定『已接线|未接线』；本文件只声明『被测对象 + 登记位置 + 期望状态』，状态由脚本核实，不手工维护。",
   "schema_version": "1.0",
   "scan_root": "code",
-  "production_exclude_parts": ["tests", "scripts", "__pycache__", "frontend", "freeze_cache"],
+  "production_exclude_parts": [
+    "tests",
+    "scripts",
+    "__pycache__",
+    "frontend",
+    "freeze_cache"
+  ],
   "_auto_event_classification_comment": "Leader 裁决（T226）：对 [B]『已注册·无生产侧发射点』的 9 事件做三分类——reserved（预留，写明将在哪接线）/ missing_wiring（应接线但漏了，报 Leader 排期）/ deprecated（废弃）。不要求清零，要求分类。",
   "auto_event_classification": {
-    "GROUP_JOINED": {"class": "reserved", "note": "v2 默认『组队不可变』（08 §1.2 M / v2/02 §3.2）；启用时机：行会/互助需要成员变动时", "wire_task": "v2 社会结构·组织成员可变时"},
-    "GROUP_LEFT": {"class": "reserved", "note": "同 GROUP_JOINED；默认冻结 members，不落 JOINED/LEFT", "wire_task": "v2 社会结构·组织成员可变时"},
-    "VOTE_CAST": {"class": "reserved", "note": "08 §1.2 P：显式投票为**可选**，默认用 NORM_PROPOSED.support_count 计票", "wire_task": "仅在需要显式投票审计时启用"},
-    "GOAL_ABANDON": {"class": "missing_wiring", "note": "08 §1.2 C 已定义**确定性放弃钩子**（deadline/stalled/voluntary），life L4 未实现发射", "wire_task": "life 目标钩子（报 Leader 排期）"},
-    "LOAN_REPAY": {"class": "missing_wiring", "note": "经济循环应有（4.2 结算）；econ 已实现在期/续命贷，但无 LOAN_REPAY 发射点", "wire_task": "econ 4.2 还款发射（报 Leader 排期）"},
-    "MONEY_BURNED": {"class": "missing_wiring", "note": "销毁当前经 METABOLISM/PENALTY 的 money_burned_total 承载；独立 MONEY_BURNED 事件无发射点", "wire_task": "econ/审计：销毁事件化（报 Leader 排期）"},
-    "OFFER_EXPIRED": {"class": "missing_wiring", "note": "08 §1.2 K：协商超限确定性终止；协商(OFFER_*)通道未接线", "wire_task": "life/econ 协商状态机超时（报 Leader 排期）"},
-    "SCHEDULE_REVISED": {"class": "missing_wiring", "note": "08 §1.2 A/CO2：life L2 日解析『计划微调』本应发射；现无发射点", "wire_task": "life L2 计划修订（报 Leader 排期）"},
-    "ACTIVITY_INTERRUPTED": {"class": "missing_wiring", "note": "08 §1.2 A：活动中断；life 尚无中断判定/发射（也可能应改为 reserved，请 life-layer-dev 定）", "wire_task": "life 活动中断判定（报 Leader 排期；倾向 missing_wiring）"}
+    "GROUP_JOINED": {
+      "class": "reserved",
+      "note": "v2 默认『组队不可变』（08 §1.2 M / v2/02 §3.2）；启用时机：行会/互助需要成员变动时",
+      "wire_task": "v2 社会结构·组织成员可变时"
+    },
+    "GROUP_LEFT": {
+      "class": "reserved",
+      "note": "同 GROUP_JOINED；默认冻结 members，不落 JOINED/LEFT",
+      "wire_task": "v2 社会结构·组织成员可变时"
+    },
+    "VOTE_CAST": {
+      "class": "reserved",
+      "note": "08 §1.2 P：显式投票为**可选**，默认用 NORM_PROPOSED.support_count 计票",
+      "wire_task": "仅在需要显式投票审计时启用"
+    },
+    "GOAL_ABANDON": {
+      "class": "missing_wiring",
+      "note": "08 §1.2 C 已定义**确定性放弃钩子**（deadline/stalled/voluntary），life L4 未实现发射",
+      "wire_task": "T231（life-layer-dev，depends_on T222）"
+    },
+    "LOAN_REPAY": {
+      "class": "missing_wiring",
+      "note": "经济循环应有（4.2 结算）；econ 已实现在期/续命贷，但无 LOAN_REPAY 发射点",
+      "wire_task": "T230（econ-dev）"
+    },
+    "MONEY_BURNED": {
+      "class": "missing_wiring",
+      "note": "销毁当前经 METABOLISM/PENALTY 的 money_burned_total 承载；独立 MONEY_BURNED 事件无发射点。⚠️ 接线前须先定口径（Leader 裁决）：新增独立事件后『原 money_burned_total 字段是否仍计销毁』必须明确，否则守恒断言会双计。先定口径，再写代码。",
+      "wire_task": "T230（econ-dev）：先定双计口径，再发独立事件"
+    },
+    "OFFER_EXPIRED": {
+      "class": "missing_wiring",
+      "note": "08 §1.2 K：协商超限确定性终止；协商(OFFER_*)通道未接线",
+      "wire_task": "T230（econ-dev）"
+    },
+    "SCHEDULE_REVISED": {
+      "class": "missing_wiring",
+      "note": "08 §1.2 A/CO2：life L2 日解析『计划微调』本应发射；现无发射点",
+      "wire_task": "T231（life-layer-dev，depends_on T222）"
+    },
+    "ACTIVITY_INTERRUPTED": {
+      "class": "missing_wiring",
+      "note": "08 §1.2 A：活动中断；life 尚无中断判定/发射（也可能应改为 reserved，请 life-layer-dev 定）",
+      "wire_task": "T231（life-layer-dev，先定性）"
+    }
   },
   "entries": [
     {
       "name": "mentor_relation",
       "kind": "judgment_dim",
-      "declared_in": ["code/config/activity_templates.json", "code/life/constants.py", "v1.1/08-engine-stats-extension.md"],
+      "declared_in": [
+        "code/config/activity_templates.json",
+        "code/life/constants.py",
+        "v1.1/08-engine-stats-extension.md"
+      ],
       "expected_status": "未接线",
       "owner": "life-layer-dev / persona-life-designer",
       "due_condition": "life 决策相位对『师徒关系质变』调用 IF-2b 提交 LLM_JUDGMENT(dimension=mentor_relation)；届时脚本应判为『已接线』"
@@ -27,7 +73,9 @@
     {
       "name": "SLEEP_STARTED",
       "kind": "event",
-      "declared_in": ["v1.1/08-engine-stats-extension.md §1.2 S"],
+      "declared_in": [
+        "v1.1/08-engine-stats-extension.md §1.2 S"
+      ],
       "expected_status": "未接线",
       "owner": "persona-life-designer (T224) / kernel-dev",
       "due_condition": "① 登记 engine/events.py::EVENT_TYPES + replay.apply_event 折叠器；② life/sleep_window 接线并由 agent 落账"
@@ -35,7 +83,9 @@
     {
       "name": "SLEEP_COMPLETED",
       "kind": "event",
-      "declared_in": ["v1.1/08-engine-stats-extension.md §1.2 S"],
+      "declared_in": [
+        "v1.1/08-engine-stats-extension.md §1.2 S"
+      ],
       "expected_status": "未接线",
       "owner": "persona-life-designer (T224) / kernel-dev",
       "due_condition": "同 SLEEP_STARTED"
@@ -43,7 +93,10 @@
     {
       "name": "MEMORY_CONSOLIDATE",
       "kind": "event",
-      "declared_in": ["v1.1/08-engine-stats-extension.md §1.2 S", "code/life/sleep_window.py"],
+      "declared_in": [
+        "v1.1/08-engine-stats-extension.md §1.2 S",
+        "code/life/sleep_window.py"
+      ],
       "expected_status": "未接线",
       "owner": "persona-life-designer (T224) / kernel-dev",
       "due_condition": "sleep_window 已产『待发事件』，但未登记 EVENT_TYPES、未接线落账 → 一旦登记+接线即『已接线』"
@@ -51,7 +104,10 @@
     {
       "name": "MEMORY_FORGET",
       "kind": "event",
-      "declared_in": ["v1.1/08-engine-stats-extension.md §1.2 S", "code/life/sleep_window.py"],
+      "declared_in": [
+        "v1.1/08-engine-stats-extension.md §1.2 S",
+        "code/life/sleep_window.py"
+      ],
       "expected_status": "未接线",
       "owner": "persona-life-designer (T224) / kernel-dev",
       "due_condition": "同 MEMORY_CONSOLIDATE"
@@ -59,7 +115,10 @@
     {
       "name": "PERSONA_DRIFT",
       "kind": "event",
-      "declared_in": ["v1.1/08-engine-stats-extension.md §1.2 S", "code/life/sleep_window.py"],
+      "declared_in": [
+        "v1.1/08-engine-stats-extension.md §1.2 S",
+        "code/life/sleep_window.py"
+      ],
       "expected_status": "未接线",
       "owner": "persona-life-designer (T224) / kernel-dev",
       "due_condition": "同 MEMORY_CONSOLIDATE"
@@ -67,7 +126,9 @@
     {
       "name": "PERSONA_FINGERPRINT",
       "kind": "snapshot",
-      "declared_in": ["v1.1/08-engine-stats-extension.md §1.2 S（快照非事件）"],
+      "declared_in": [
+        "v1.1/08-engine-stats-extension.md §1.2 S（快照非事件）"
+      ],
       "expected_status": "未接线",
       "owner": "persona-life-designer (T224)",
       "due_condition": "作为快照入 metrics/侧存储；非事件、不落哈希链（本项『未接线』指尚未产出快照）"
