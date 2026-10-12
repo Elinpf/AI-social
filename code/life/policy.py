@@ -197,3 +197,41 @@ def set_persist_vec(value: bool | None) -> None:
     if value is None:
         _pv_cache = None
 
+
+# ---- T234: 叙事正文落盘开关（T228 分档体系；可关，关时不写）------------------
+#   policy.life.narrative.persist_body  (config/policy.json, 默认 true=行为不变)
+#   env N50_NARR_BODY=0|false|no|off  -> 关（oversight override）
+# 关时：`_maybe_narrate` **不写** `side/narrative/<agent>/<nid>.txt`（省 inode）；
+# `NARRATIVE.body_ref` 仍发射（与 `.vec` 关时同语义：指针在、正文可缺，导出侧显式计 missing）。
+_nb_cache: bool | None = None
+_nb_override: bool | None = None
+
+
+def _read_narrative_persist() -> bool:
+    env = os.environ.get("N50_NARR_BODY")
+    if env is not None:
+        return env.strip().lower() not in ("0", "false", "no", "off", "")
+    try:
+        data = json.loads(_CONFIG_PATH.read_text(encoding="utf-8"))
+        return bool(((data.get("life") or {}).get("narrative") or {}).get("persist_body", True))
+    except Exception:
+        return True
+
+
+def narrative_persist_enabled() -> bool:
+    """True（默认）-> life 写叙事正文到 side；False -> 不写（可关/消融）。"""
+    global _nb_cache
+    if _nb_override is not None:
+        return _nb_override
+    if _nb_cache is None:
+        _nb_cache = _read_narrative_persist()
+    return _nb_cache
+
+
+def set_narrative_persist(value: bool | None) -> None:
+    """Test/ablation hook: force the flag (None clears and re-reads config)."""
+    global _nb_override, _nb_cache
+    _nb_override = value
+    if value is None:
+        _nb_cache = None
+

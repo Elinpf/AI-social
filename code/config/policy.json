@@ -93,6 +93,10 @@
     "memory": {
       "persist_vec": true,
       "_persist_vec_note": "side storage 是否落 <mem_id>.vec（省 inode）。关时检索显式降级并打 vec_available=false/retrieval_mode 标记；env N50_VEC=0 覆盖。"
+    },
+    "narrative": {
+      "persist_body": true,
+      "_persist_body_note": "T234：是否把叙事正文写入 side（side/narrative/<agent>/<nid>.txt，S4 数据资产）。默认 true=行为不变；关时 NARRATIVE.body_ref 仍发射但不落文件（导出侧计 missing）。env N50_NARR_BODY=0 覆盖。只补 writer，不新增事件/字段。"
     }
   },
   "safety_valve": {

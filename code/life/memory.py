@@ -167,6 +167,30 @@ class SideStore:
         rel = ref.split("side://", 1)[1]
         return self.root / rel
 
+    # ---- T234: narrative body side storage (IF-7 `NARRATIVE.body_ref` writer) ----
+    # 与记忆同处一个 side root（`<root>/narrative/<agent>/<nid>.txt`），**只补 writer**，
+    # 路径与 `life/agent.py` 的 `body_ref = side://narrative/<agent>/<nid>.txt` **一致**。
+    # 开关走 T228 分档体系（`policy.narrative_persist_enabled`）：**关时不写**（不落文件）。
+    def _narrative_path(self, agent_id: str, narrative_id: str) -> Path:
+        return self.root / "narrative" / agent_id / f"{narrative_id}.txt"
+
+    @staticmethod
+    def narrative_ref(agent_id: str, narrative_id: str) -> str:
+        """叙事正文的 side 引用（单一来源；`NARRATIVE.body_ref` 即此值）。"""
+        return f"side://narrative/{agent_id}/{narrative_id}.txt"
+
+    def write_narrative(self, agent_id: str, narrative_id: str, text: str) -> str:
+        """写入叙事正文，返回可解析的 `body_ref`。"""
+        p = self._narrative_path(agent_id, narrative_id)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(text, encoding="utf-8")
+        return self.narrative_ref(agent_id, narrative_id)
+
+    def read_narrative(self, ref: str) -> str:
+        """按 `side://narrative/<agent>/<nid>.txt` 读回正文（供导出/S4）。"""
+        rel = ref.split("side://", 1)[1]
+        return (self.root / rel).read_text(encoding="utf-8")
+
 
 # ---- memory node & stream ----------------------------------------------------
 @dataclass
