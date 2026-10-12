@@ -13,10 +13,15 @@ life 层不能直写状态：submit_intent 一律经内核中央裁决器 Arbite
 
 from __future__ import annotations
 
+import glob as _glob
 import json
+import os
 import shutil
+import signal
+import sys
 import tempfile
 import time
+from contextlib import contextmanager
 from pathlib import Path
 
 from engine.constants import PHASE_DECIDE, PHASE_LIFE
@@ -27,6 +32,134 @@ from engine.state import state_hash
 
 _CODE_DIR = Path(__file__).resolve().parents[1]
 CONFIG_DIR = _CODE_DIR / "config"
+
+# ---- 临时 side 目录卫生（T232）：前缀/归属标记/孤儿清理 ----
+SIDE_PREFIX = "hitt_side_"
+SIDE_TTL_SECONDS = 3600  # 孤儿判定时限（无 active run 且超此龄 → 清理）
+
+
+def _safe_rmtree(root) -> None:
+    try:
+        shutil.rmtree(root, ignore_errors=True)
+    except Exception:
+        pass
+
+
+def _write_owner_marker(root: str) -> None:
+    """归属标记：`谁的`（pid）/`多久了`（started_at）——供 sweeper 判活。"""
+    try:
+        with open(os.path.join(root, ".owner"), "w", encoding="utf-8") as f:
+            f.write(f"pid={os.getpid()}\n")
+        with open(os.path.join(root, ".started_at"), "w", encoding="utf-8") as f:
+            f.write(str(int(time.time())))
+    except OSError:
+        pass
+
+
+def make_side_root(prefix: str = SIDE_PREFIX) -> str:
+    root = tempfile.mkdtemp(prefix=prefix)
+    _write_owner_marker(root)
+    return root
+
+
+def _read_owner_pid(root: str):
+    try:
+        with open(os.path.join(root, ".owner"), encoding="utf-8") as f:
+            for line in f:
+                if line.startswith("pid="):
+                    return int(line.strip().split("=", 1)[1])
+    except (OSError, ValueError):
+        return None
+    return None
+
+
+def _pid_alive(pid: int) -> bool:
+    if pid is None:
+        return False
+    try:
+        os.kill(pid, 0)
+        return True
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+
+
+def _dir_age(root: str, now: float) -> float:
+    try:
+        with open(os.path.join(root, ".started_at"), encoding="utf-8") as f:
+            started = int(f.read().strip())
+        return now - started
+    except (OSError, ValueError):
+        try:
+            return now - os.path.getmtime(root)
+        except OSError:
+            return 0.0
+
+
+@contextmanager
+def managed_side_root(explicit=None, prefix: str = SIDE_PREFIX):
+    """`explicit` 给定→原样用（**不删**）；否则创建并在退出（含异常/中断/SIGTERM）时清理。"""
+    auto = explicit is None
+    root = make_side_root(prefix) if auto else explicit
+    old_handlers = {}
+
+    def _on_signal(signum, frame):
+        _safe_rmtree(root)
+        signal.signal(signum, old_handlers.get(signum, signal.SIG_DFL))
+        os.kill(os.getpid(), signum)
+
+    if auto:
+        for sig in (signal.SIGTERM, signal.SIGINT):
+            try:
+                old_handlers[sig] = signal.getsignal(sig)
+                signal.signal(sig, _on_signal)
+            except (ValueError, OSError):
+                pass  # 非主线程等：忽略，仍由 finally 兜底
+    try:
+        yield root
+    finally:
+        for sig, h in old_handlers.items():
+            try:
+                signal.signal(sig, h)
+            except (ValueError, OSError):
+                pass
+        if auto:
+            _safe_rmtree(root)
+
+
+def sweep_orphan_side_dirs(base_dir: str | None = None, prefix: str = SIDE_PREFIX,
+                           ttl_seconds: float = SIDE_TTL_SECONDS, now: float | None = None,
+                           warn: bool = True, active_pids=None, dry_run: bool = False) -> dict:
+    """清理**孤儿** `prefix*` 目录：owner pid 已死（或无标记）且年龄 ≥ ttl。
+
+    **绝不清理活着的 run**（owner pid 存活）。返回 {removed, kept, warned, would_remove}；
+    `dry_run=True` 只报告不删（用于安全实测/巡检）；`warn=True` 时对每个被删目录打 **stderr 告警**。
+    """
+    base = base_dir or tempfile.gettempdir()
+    now = time.time() if now is None else now
+    removed, kept, warned, would_remove = [], [], [], []
+    for path in sorted(_glob.glob(os.path.join(base, prefix + "*"))):
+        if not os.path.isdir(path):
+            continue
+        pid = _read_owner_pid(path)
+        live = _pid_alive(pid) or (active_pids is not None and pid in active_pids)
+        if live:
+            kept.append(path)
+            continue
+        if _dir_age(path, now) >= ttl_seconds:
+            would_remove.append(path)
+            if not dry_run:
+                _safe_rmtree(path)
+                removed.append(path)
+                if warn:
+                    msg = (f"[sweep] removed orphan side dir "
+                           f"(pid={pid}, age>= {int(ttl_seconds)}s): {path}")
+                    print(msg, file=sys.stderr)
+                    warned.append(msg)
+        else:
+            kept.append(path)
+    return {"removed": removed, "kept": kept, "warned": warned, "would_remove": would_remove}
 
 
 def _load_social_cfg() -> dict:
@@ -678,7 +811,7 @@ def build_world(seed: int, config: dict | None = None, *, n: int | None = None,
 
     adapter = KernelAdapter(engine, places)
     if side_root is None:
-        side_root = tempfile.mkdtemp(prefix="hitt_side_")
+        side_root = make_side_root()  # 带归属标记（T232）
     if llm is None:
         llm = _default_llm(cache_dir=str(Path(side_root) / "freeze_cache"), engine=engine)
     side = SideStore(side_root)
@@ -695,52 +828,59 @@ def build_world(seed: int, config: dict | None = None, *, n: int | None = None,
 def run_e2e(seed: int = 42, rounds: int = 84, n: int = 3, config: dict | None = None,
             *, out_path=None, side_root=None, personas_path=None, places_path=None,
             llm=None, cleanup_side: bool = True) -> dict:
-    """在真内核上跑 N 个 Agent 共 `rounds` 回合，返回端到端证据。"""
+    """在真内核上跑 N 个 Agent 共 `rounds` 回合，返回端到端证据。
+
+    T232：自动创建的 side 目录**异常/中断/SIGTERM 也会释放**（try/finally + 信号兜底）；
+    显式传入的 `side_root` 不被删除（调用方负责）。
+    """
+    auto = side_root is None
     world = build_world(seed, config, n=n, personas_path=personas_path,
                         places_path=places_path, side_root=side_root, llm=llm)
-    engine = world["engine"]
-    side_root = world["side_root"]
-    t0 = time.perf_counter()
-    for r in range(int(rounds)):
-        engine.run_round(r)
-    elapsed = time.perf_counter() - t0
+    try:
+        engine = world["engine"]
+        side_root = world["side_root"]
+        t0 = time.perf_counter()
+        for r in range(int(rounds)):
+            engine.run_round(r)
+        elapsed = time.perf_counter() - t0
 
-    records = engine.ledger.records
-    chain_ok, chain_err = engine.ledger.verify_chain()
-    final_hash = state_hash(engine.state)
+        records = engine.ledger.records
+        chain_ok, chain_err = engine.ledger.verify_chain()
+        final_hash = state_hash(engine.state)
 
-    from engine.replay import replay_records
-    fp = getattr(engine, "fingerprint", None)
-    # 第一次重放**校验 turn_seal**（防 T55 类静默污染）；第二次作 parity 伙伴
-    r1 = state_hash(replay_records(records, verify=True, verify_seals=True, expected_fingerprint=fp))
-    r2 = state_hash(replay_records(records, verify=True, verify_seals=False, expected_fingerprint=fp))
+        from engine.replay import replay_records
+        fp = getattr(engine, "fingerprint", None)
+        # 第一次重放**校验 turn_seal**（防 T55 类静默污染）；第二次作 parity 伙伴
+        r1 = state_hash(replay_records(records, verify=True, verify_seals=True, expected_fingerprint=fp))
+        r2 = state_hash(replay_records(records, verify=True, verify_seals=False, expected_fingerprint=fp))
 
-    from engine import conservation
-    viols = conservation.check_conservation(engine.state, engine.config)
-    unknown = sorted({rec["type"] for rec in records if rec["type"] not in EVENT_TYPES})
+        from engine import conservation
+        viols = conservation.check_conservation(engine.state, engine.config)
+        unknown = sorted({rec["type"] for rec in records if rec["type"] not in EVENT_TYPES})
 
-    if out_path:
-        write_log(records, out_path)
-    # log_bytes 与落盘文件口径一致：规范 JSON（键排序、紧凑分隔）+ 每行 '\n'
-    from engine.canon import canonical_json
-    log_bytes = sum(len(canonical_json(rec).encode("utf-8")) + 1 for rec in records)
+        if out_path:
+            write_log(records, out_path)
+        # log_bytes 与落盘文件口径一致：规范 JSON（键排序、紧凑分隔）+ 每行 '\n'
+        from engine.canon import canonical_json
+        log_bytes = sum(len(canonical_json(rec).encode("utf-8")) + 1 for rec in records)
 
-    report = {
-        "seed": seed, "rounds": int(rounds), "n_agents": len(world["agents"]),
-        "events": len(records),
-        "event_types": sorted({rec["type"] for rec in records}),
-        "unknown_event_types": unknown,
-        "chain_ok": chain_ok, "chain_error": chain_err,
-        "final_state_hash": final_hash,
-        "replay_hash_1": r1, "replay_hash_2": r2,
-        "replay_parity": (r1 == r2),
-        "seals_ok": True,  # r1 已以 verify_seals=True 校验通过（否则上面会抛错）
-        "first_run_equals_replay": (r1 == final_hash),
-        "conservation_ok": (len(viols) == 0), "conservation_violations": viols,
-        "seconds": round(elapsed, 4),
-        "log_bytes": log_bytes,
-        "log_path": str(out_path) if out_path else None,
-    }
-    if cleanup_side and side_root and str(side_root).startswith(tempfile.gettempdir()):
-        shutil.rmtree(side_root, ignore_errors=True)
-    return report
+        return {
+            "seed": seed, "rounds": int(rounds), "n_agents": len(world["agents"]),
+            "events": len(records),
+            "event_types": sorted({rec["type"] for rec in records}),
+            "unknown_event_types": unknown,
+            "chain_ok": chain_ok, "chain_error": chain_err,
+            "final_state_hash": final_hash,
+            "replay_hash_1": r1, "replay_hash_2": r2,
+            "replay_parity": (r1 == r2),
+            "seals_ok": True,  # r1 已以 verify_seals=True 校验通过（否则上面会抛错）
+            "first_run_equals_replay": (r1 == final_hash),
+            "conservation_ok": (len(viols) == 0), "conservation_violations": viols,
+            "seconds": round(elapsed, 4),
+            "log_bytes": log_bytes,
+            "log_path": str(out_path) if out_path else None,
+        }
+    finally:
+        # T232：自动创建的 side 目录**无论如何**释放（异常/中断也走到这里）
+        if cleanup_side and auto:
+            _safe_rmtree(world.get("side_root"))

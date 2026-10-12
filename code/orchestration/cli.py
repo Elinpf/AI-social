@@ -85,8 +85,25 @@ def main(argv=None) -> int:
     pv.add_argument("--log", required=True)
     pv.set_defaults(func=_cmd_verify)
 
+    ps = sub.add_parser("sweep-side", help="清理孤儿临时 side 目录（T232；不静默，带告警）")
+    ps.add_argument("--base", default=None, help="扫描根目录（默认系统 tempdir）")
+    ps.add_argument("--ttl", type=float, default=3600.0, help="孤儿时限（秒）")
+    ps.add_argument("--dry-run", action="store_true", help="只报告不删除（安全巡检）")
+    ps.set_defaults(func=_cmd_sweep)
+
     args = p.parse_args(argv)
     return args.func(args)
+
+
+def _cmd_sweep(args) -> int:
+    from .integration import sweep_orphan_side_dirs
+    res = sweep_orphan_side_dirs(base_dir=args.base, ttl_seconds=args.ttl, dry_run=args.dry_run)
+    verb = "would_remove" if args.dry_run else "removed"
+    print(f"[sweep-side] {verb}={len(res['would_remove'] if args.dry_run else res['removed'])} "
+          f"kept={len(res['kept'])}")
+    for p in (res["would_remove"] if args.dry_run else res["removed"])[:10]:
+        print(f"  {verb}: {p}")
+    return 0
 
 
 if __name__ == "__main__":
