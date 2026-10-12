@@ -44,6 +44,36 @@ class Engine:
         self.ctx = Ctx(self.seed, config, 0, 0)
         # 生活层驱动：每回合在 Phase 2 DECIDE 调用 agent.step()（注入，不 import life）
         self.agent_steppers: list = []
+        # T253：通用「emit 后监听」扩展点 —— read-only 观察者，仅 **run 模式**在 P6 唯一
+        # append 之后回调（replay 不经 run_round，故天然不回调）。engine 只提供注册+触发，
+        # **不认识 life/side 格式**（谁注册、写什么由上层决定）。注册回调默认无 → 零影响。
+        self.emit_observers: list = []
+
+    # ---- T253：emit 后监听（read-only 观察者）----
+    def register_emit_observer(self, fn) -> None:
+        """注册「emit 后监听」回调 `fn(records: list[dict])`。
+
+        - **run-only**：仅在 `run_round` 的 P6 唯一 append 之后触发；**replay 不触发**。
+        - **read-only**：回调收到的是**本轮已提交事件的浅拷贝**，**不得改事件/世界**；
+          契约由调用方遵守（engine 不 enforce，但传入拷贝以阻断对账本记录的原地修改）。
+        - engine **不认识**回调写什么（格式/落盘全归注册方），也不 import 上游包。
+        """
+        if fn not in self.emit_observers:
+            self.emit_observers.append(fn)
+
+    def unregister_emit_observer(self, fn) -> None:
+        try:
+            self.emit_observers.remove(fn)
+        except ValueError:
+            pass
+
+    def _notify_emit_observers(self, records: list) -> None:
+        if not records or not self.emit_observers:
+            return
+        # 浅拷贝：阻止观察者原地改账本记录（payload 嵌套仍为引用，契约要求不写）
+        snapshot = [dict(r) for r in records]
+        for fn in list(self.emit_observers):
+            fn(snapshot)
 
     # ---- 内部：写入本回合待提交缓冲区（D1：不落盘）----
     def _emit(self, specs: list) -> None:
@@ -177,6 +207,7 @@ class Engine:
             return
 
         # P6 COMMIT：守恒校验 → 唯一 append
+        committed: list = []
         viols = conservation.check_all(self.state, self.config)
         if viols:
             self._restore_from_ledger(round_no)  # 丢弃整个缓冲（含 P2 LLM_CALL）
@@ -192,8 +223,11 @@ class Engine:
                                                  priority=_status_pri(self.state))
             if skip is not None:
                 self._emit([skip])
-            self.state, _ = self.arbiter.commit(self.state)
+            self.state, committed = self.arbiter.commit(self.state)
         self._seal(round_no)
+        # T253：仅成功提交的回合触发「emit 后监听」（含 TURN_SEAL 之前的本回合事件）；
+        # 回滚/异常路径不触发（观察者只看"已真正落盘的世界事件"）。
+        self._notify_emit_observers(committed)
 
     # ---- IF-1/IF-2 端口辅助（Adapter 也复用）----
     def current_round(self) -> int:
