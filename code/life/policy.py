@@ -87,3 +87,77 @@ def set_exchange_enabled(value: bool | None) -> None:
     _exchange_override = value
     if value is None:
         _exchange_cache = None
+
+
+# ---- M2b 判别式开关（T222）: judge / importance 走「受限选择」还是旧生成式 ------
+# **默认 `generative` = 走旧路径，行为与现状逐项一致**（新路径默认关）。
+# 新键进 engine_version 指纹（Leader ③：不复用旧键）。
+#   policy.m2b.judge.mode      ∈ {generative, discriminative}   默认 generative
+#   policy.m2b.importance.mode ∈ {generative, discriminative}   默认 generative
+#   policy.m2b.judge.fallback  ∈ {none, margin}                 默认 none（保守，不触发）
+#   policy.m2b.judge.margin_theta   float                       默认 0.0（<0 才升级 → 恒不触发）
+_M2B_DEFAULT: dict = {"judge_mode": "generative", "importance_mode": "generative",
+                      "fallback": "none", "margin_theta": 0.0}
+_m2b_cache: dict | None = None
+_m2b_override: dict | None = None
+
+
+def _read_m2b() -> dict:
+    cfg = dict(_M2B_DEFAULT)
+    try:
+        data = json.loads(_CONFIG_PATH.read_text(encoding="utf-8"))
+        m = data.get("m2b") or {}
+        j = m.get("judge") or {}
+        im = m.get("importance") or {}
+        if j.get("mode") is not None:
+            cfg["judge_mode"] = str(j["mode"])
+        if im.get("mode") is not None:
+            cfg["importance_mode"] = str(im["mode"])
+        if j.get("fallback") is not None:
+            cfg["fallback"] = str(j["fallback"])
+        if j.get("margin_theta") is not None:
+            cfg["margin_theta"] = float(j["margin_theta"])
+    except Exception:
+        pass
+    env = os.environ.get("M2B_MODE")  # ablation override: discriminative|generative
+    if env is not None:
+        v = env.strip().lower()
+        if v in ("discriminative", "on", "1", "true"):
+            cfg["judge_mode"] = cfg["importance_mode"] = "discriminative"
+        elif v in ("generative", "off", "0", "false", ""):
+            cfg["judge_mode"] = cfg["importance_mode"] = "generative"
+    return cfg
+
+
+def m2b_config() -> dict:
+    global _m2b_cache
+    if _m2b_override is not None:
+        return dict(_m2b_override)
+    if _m2b_cache is None:
+        _m2b_cache = _read_m2b()
+    return dict(_m2b_cache)
+
+
+def m2b_judge_mode() -> str:
+    return m2b_config()["judge_mode"]
+
+
+def m2b_importance_mode() -> str:
+    return m2b_config()["importance_mode"]
+
+
+def m2b_fallback() -> str:
+    return m2b_config()["fallback"]
+
+
+def m2b_margin_theta() -> float:
+    return float(m2b_config()["margin_theta"])
+
+
+def set_m2b_config(cfg: dict | None) -> None:
+    """Test/ablation hook: force the M2b config (None clears and re-reads config)."""
+    global _m2b_override, _m2b_cache
+    _m2b_override = cfg
+    if cfg is None:
+        _m2b_cache = None
+

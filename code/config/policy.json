@@ -77,6 +77,17 @@
     "critical_importance": true,
     "schedule_enabled": false
   },
+  "m2b": {
+    "_comment": "M2b 受限选择路径（T222）。默认 generative=走旧生成式，行为与现状逐项一致。新键进 engine_version 指纹（Leader ③）。判据来自 T212（v2/refs/m2b-judge-ab.md）：一致率 0.9902、成本降一个量级；置信度回退证据不足→默认不开。",
+    "judge": {
+      "mode": "generative",
+      "fallback": "none",
+      "margin_theta": 0.0
+    },
+    "importance": {
+      "mode": "generative"
+    }
+  },
   "safety_valve": {
     "net_worth_floor_mu": {
       "default": -10000,

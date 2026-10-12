@@ -136,6 +136,50 @@ RELATION_DELTA_MAX = 10          # 单次交互幅度上限 Δ_max
 #     不在此表；它由 `llm_budget.critical_importance` 独立控制。
 CRITICAL_DIMENSIONS = ("weekly_focus", "rel_affinity", "rel_trust", "rel_respect")
 
+# ---- M2b 判别式候选枚举（**单一真源**；T222）---------------------------------
+# 「受限选择」路径下每个 judge 维度的合法候选。**由 life 代码确定性枚举、LLM 只“选”不“造枚举”**
+# （T213 §1 的安全阀）：候选表不完备 → 判别式会**系统性看不见真实可能性**。
+#
+# 逃生项（escape）：每个维度**必须**含一个逃生项 `undecidable`，
+# 保证「说不清 / 不合任何既定类别」时**不被强迫瞎选**。命中逃生项的比率 = `escape_rate`：
+#   **偏高 = 我们的枚举漏了东西 → 回去补 §枚举，而不是调阈值**（设计缺陷的早期信号）。
+ESCAPE_OPTION = "undecidable"
+
+# 维度 -> 合法候选（末位恒为逃生项）。订单/口径：
+#   * relation 四维用 `rel_<dim>` 前缀（与 `agent._maybe_soft_judge` 一致）；
+#   * `respect`（T127 社交评价维）**不含前缀**，与 `rel_respect` 是不同维度，**不得归一**；
+#   * `weekly_focus` 的语义候选 = `planner.FOCUS_OPTIONS`（此处复制其值，实施时收敛为引用）；
+#   * `mentor_relation` 属**登记维**（`config/activity_templates.json` 已声明）但 **life 无调用点** → 见 `MENTOR_DIMENSION_WIRED`；
+#   * `importance` 属**另一条轴**（`_score_importance` → `llm.call`，非 judge），在此仅为“候选集单一真源”。
+JUDGMENT_OPTIONS: dict[str, tuple[str, ...]] = {
+    "rel_affinity":    ("formed", "not_formed", ESCAPE_OPTION),
+    "rel_trust":       ("formed", "not_formed", ESCAPE_OPTION),
+    "rel_respect":     ("formed", "not_formed", ESCAPE_OPTION),
+    "rel_familiarity": ("formed", "not_formed", ESCAPE_OPTION),
+    "weekly_focus":    ("work", "social", "study", "leisure", "balance", ESCAPE_OPTION),
+    "stance":          ("accept", "reject", ESCAPE_OPTION),
+    "respect":         ("high", "low", ESCAPE_OPTION),
+    "affection":       ("high", "low", ESCAPE_OPTION),
+    "importance":      tuple(str(i) for i in range(1, 11)) + (ESCAPE_OPTION,),  # T213 §5
+    "mentor_relation": ("formed", "not_formed", ESCAPE_OPTION),  # 登记维（未接线）
+}
+
+# 逃生项命中后的**确定性兜底**（不静默：落 `method="rule"` / `fallback="escape_option"`）。
+ESCAPE_FALLBACK: dict[str, str] = {
+    "rel_affinity": "not_formed", "rel_trust": "not_formed",
+    "rel_respect": "not_formed", "rel_familiarity": "not_formed",
+    "weekly_focus": "balance",
+    "stance": "reject", "respect": "low", "affection": "low",
+    "importance": "5",
+    "mentor_relation": "not_formed",   # 更严格：无强证据不结师（T212 观察到判别式偏宽松）
+}
+
+# `mentor_relation` 是**登记维**：`config/activity_templates.json` 声明了它，但 life 当前
+# **没有对应的 `LLM_JUDGMENT` 调用点**（`_maybe_soft_judge` 只发 `rel_*`）。任何“对该维做兜底”
+# 的机制在此阶段都是 **inert**（等 E1 Mentorship 真正接线才生效）。**不得假装它有活。**
+MENTOR_DIMENSION_WIRED = False
+
+
 
 # ---- Goals (06 §7.1) ---------------------------------------------------------
 GOAL_LAYERS = ["survival", "growth", "social", "meaning"]

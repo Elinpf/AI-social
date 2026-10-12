@@ -35,11 +35,16 @@ class SoftLayer:
 
     def judge(self, *, judgment_id: str, dimension: str, question_ref: str, envelope: dict,
               rng_branch: str, parties: list[str], context: dict, round_no: int,
-              phase: int = 2) -> tuple[dict, bool]:
+              phase: int = 2, mode: str = "generative") -> tuple[dict, bool]:
         inner = self._inner()
         options = envelope.get("options") or ["not_formed"]
         decision = rng_branch if rng_branch in options else options[0]
         if inner is not None and hasattr(inner, "judge"):
+            if mode == "discriminative" and hasattr(inner, "judge_discriminative"):
+                return self._judge_discriminative(
+                    inner, judgment_id=judgment_id, dimension=dimension,
+                    question_ref=question_ref, envelope=envelope, rng_branch=rng_branch,
+                    parties=parties, context=context, round_no=round_no, phase=phase)
             try:
                 j = inner.judge(judgment_id=judgment_id, dimension=dimension,
                                 question_ref=question_ref, envelope=envelope, context=context,
@@ -67,6 +72,63 @@ class SoftLayer:
                    "dimension": dimension, "question_ref": question_ref, "envelope": envelope,
                    "rng_branch": rng_branch, "parties": list(parties)}
         return payload, False
+
+    def _judge_discriminative(self, inner: Any, *, judgment_id: str, dimension: str,
+                              question_ref: str, envelope: dict, rng_branch: str,
+                              parties: list[str], context: dict, round_no: int,
+                              phase: int) -> tuple[dict, bool]:
+        """M2b 受限选择路径（T222）。freeze 侧 `judge_discriminative` 负责 provider 调用 +
+        约束解码 + 落 `LLM_JUDGMENT`（四要素只增不改，加 `method`/`margin`）。此处只：
+          1) 失败（provider/解析/越界）→ **可见回退** rng-branch（method=rng-branch，不静默）；
+          2) **逃生项解析**：若模型选了 `undecidable`（escape），按 `ESCAPE_FALLBACK` 落到
+             确定性兜底值供**下游消费**（日志里 LLM_JUDGMENT.decision 仍保留模型原话=undecidable，
+             故 `escape_rate` 可从日志聚合 —— 不新增事件）。
+        """
+        from . import constants as C
+        from . import policy
+        try:
+            j = inner.judge_discriminative(
+                judgment_id=judgment_id, dimension=dimension, question_ref=question_ref,
+                envelope=envelope, context=context, rng_branch=rng_branch, parties=list(parties),
+                created_round=round_no, round=round_no, phase=phase, method="discriminative")
+        except Exception:
+            payload = {"judgment_id": judgment_id, "decision": rng_branch, "model": "rng-branch",
+                       "fallback": True, "method": "rng-branch",
+                       "context_digest": canonical_hash(context), "frozen": True,
+                       "dimension": dimension, "question_ref": question_ref,
+                       "envelope": envelope, "rng_branch": rng_branch, "parties": list(parties)}
+            self._emit_frozen_via(inner, payload, parties, round_no, phase)
+            return payload, True
+        raw = getattr(j, "decision", None)
+        margin = getattr(j, "margin", None)
+        method = "discriminative"
+        resolved = raw
+        fallback_note = None
+        # (1) 逃生项 -> 确定性兜底（供下游消费；日志保留 raw 以便 escape_rate 聚合）
+        if raw == C.ESCAPE_OPTION and dimension in C.ESCAPE_FALLBACK:
+            resolved = C.ESCAPE_FALLBACK[dimension]
+            fallback_note = "escape_option"
+        # (2) margin 回退（分支 B；默认 none/θ=0 → 永不触发）
+        fb, theta = policy.m2b_fallback(), policy.m2b_margin_theta()
+        if fb == "margin" and margin is not None and float(margin) < float(theta):
+            try:
+                j2 = inner.judge(judgment_id=judgment_id, dimension=dimension,
+                                 question_ref=question_ref, envelope=envelope, context=context,
+                                 rng_branch=rng_branch, parties=list(parties),
+                                 created_round=round_no, round=round_no, phase=phase)
+                resolved, method, fallback_note = j2.decision, "generative", "margin_low"
+            except Exception:
+                pass
+        payload = {"judgment_id": judgment_id, "decision": resolved, "model": j.model,
+                   "context_digest": j.context_digest, "frozen": True, "dimension": dimension,
+                   "question_ref": question_ref, "envelope": envelope, "rng_branch": rng_branch,
+                   "parties": list(parties), "method": method, "model_decision": raw}
+        if margin is not None:
+            payload["margin"] = margin
+        if fallback_note:
+            payload["fallback"] = fallback_note
+        return payload, True
+
 
     @staticmethod
     def _emit_frozen_via(inner: Any, payload: dict, parties: list, round_no: int, phase: int) -> None:
