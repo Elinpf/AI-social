@@ -104,8 +104,9 @@ def test_obs_gate_on_kernel_log():
     res = gate.run_gates(recs)
     assert res["ok"] is True
     names = {g["name"] for g in res["gates"]}
-    assert {"metrics_bitwise_equal", "census_bitwise_equal",
-            "llm_calls_zero", "money_conservation"} <= names
+    assert {"llm_calls_zero", "money_conservation"} <= names          # must 级
+    diag = {d["name"] for d in res["diagnostics"]}
+    assert {"metrics_bitwise_equal", "census_bitwise_equal"} <= diag  # G2a/G2b 已降诊断（Fork B）
 
 
 def test_readonly_log_verifies_chain():
