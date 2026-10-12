@@ -267,12 +267,13 @@ def _asset_defs(frontend_dir: Path) -> list[tuple[str, list, str, str]]:
 
 
 def _refs_asset(sym: str, ids: list, frontend_dir: Path, define_rel: str, map_name: str):
-    """返回 (refs_name, refs_value, dynamic_scope)。
-    名字=`.sym`/`'sym'`；值=id(≥100)字面量（定义文件除外）；
-    dynamic_scope **只对 sym 所属的映射 `map_name`** 的非字面量键访问为真（别的映射动态访问不影响本符号）。"""
+    """返回 (refs_name, refs_value, dynamic_scope, has_small_ids)。
+    名字=`.sym`/`'sym'`；值=id(≥100)字面量（定义文件除外）；has_small_ids = 存在被过滤的 id(<100)
+    → 届时无名字命中也不能确证零引用（值命中是【近似】，靠名字兜底）。"""
     rn: list[str] = []
     rv: list[str] = []
     dyn = False
+    has_small_ids = any(i < 100 for i in ids)   # <100 的 id 不作值搜索 → 可能漏，不能据此报 zero_ref
     name_re = re.compile(r"\." + re.escape(sym) + r"\b|[\"']" + re.escape(sym) + r"[\"']")
     dyn_re = re.compile(r"\b" + re.escape(map_name) + r"\s*\[\s*[^\"'\]]")
     # 值(id)命中需落在"瓦片消费"上下文，避免 id 在注释/坐标里被误当引用。
@@ -295,17 +296,18 @@ def _refs_asset(sym: str, ids: list, frontend_dir: Path, define_rel: str, map_na
                         rv.append(f"{rel}:{i}:{idv}")
             if dyn_re.search(code):
                 dyn = True
-    return rn, rv, dyn
+    return rn, rv, dyn, has_small_ids
 
 
-def d_state(name: str, value_ids: list, refs_name: list, refs_value: list, dynamic_scope: bool) -> str:
+def d_state(name: str, value_ids: list, refs_name: list, refs_value: list,
+            dynamic_scope: bool, has_small_ids: bool = False) -> str:
     """资产/常量三态（与事件三态同构）：
     - referenced: 名字命中 **或** 值(id)命中；
-    - zero_ref: 名字与值均零命中，**且**无动态索引（可确证零引用）；
-    - dynamic_ref_unknown: 零命中但存在动态索引 → **未知，绝不写 zero_ref**。"""
+    - zero_ref: 名字与值均零命中，**且**无动态索引、**且**无被过滤的小 id（可确证零引用）；
+    - dynamic_ref_unknown: 零命中但有动态索引 **或被过滤的小 id**（值命中为近似）→ **未知，绝不写 zero_ref**。"""
     if refs_name or refs_value:
         return "referenced"
-    return "dynamic_ref_unknown" if dynamic_scope else "zero_ref"
+    return "dynamic_ref_unknown" if (dynamic_scope or has_small_ids) else "zero_ref"
 
 
 def _load_asset_ratchet(frontend_dir: Path) -> dict:
@@ -326,14 +328,14 @@ def auto_assets(frontend_dir: Path, include_auto: bool = True) -> list[dict]:
     rows: list[dict] = []
     for name, ids, rel, map_name in (_asset_defs(frontend_dir) if include_auto else []):
         seen.add(name)
-        rn, rv, dyn = _refs_asset(name, ids, frontend_dir, rel, map_name)
-        st = d_state(name, ids, rn, rv, dyn)
+        rn, rv, dyn, small = _refs_asset(name, ids, frontend_dir, rel, map_name)
+        st = d_state(name, ids, rn, rv, dyn, small)
         e = ratchet.get(name, {})
         exp = e.get("expected_status")
         rows.append({
             "name": name, "kind": "asset", "status": st,
             "defined_in": "code/frontend/" + rel, "value_ids": ids,
-            "refs_name": rn[:3], "refs_value": rv[:3], "dynamic_scope": dyn,
+            "refs_name": rn[:3], "refs_value": rv[:3], "dynamic_scope": dyn, "has_small_ids": small,
             "hits": (rn or rv)[:3],
             "expected_status": exp, "expected_ok": (exp == st) if exp else None,
             "purpose": e.get("purpose"), "owner": e.get("owner"),
@@ -344,7 +346,7 @@ def auto_assets(frontend_dir: Path, include_auto: bool = True) -> list[dict]:
         exp = e.get("expected_status")
         rows.append({
             "name": name, "kind": "asset", "status": "-", "defined_in": e.get("defined_in"),
-            "value_ids": [], "refs_name": [], "refs_value": [], "dynamic_scope": None, "hits": [],
+            "value_ids": [], "refs_name": [], "refs_value": [], "dynamic_scope": None, "has_small_ids": None, "hits": [],
             "expected_status": exp, "expected_ok": None, "purpose": e.get("purpose"), "owner": e.get("owner"),
             "note": "棘轮条目未被自动枚举（查名字/路径；--no-auto 下正常）",
         })
@@ -357,19 +359,21 @@ def _self_test() -> int:
     import tempfile
     ok = True
     sp = "const TILES = {\n  grassLight: [745, 1015],\n};\n"
+    sp_small = "const TILES = {\n  tiny: [3, 7],\n};\n"
     cases = [
-        ("未接线 → zero_ref", sp, "const x = 1;\n", "zero_ref"),
-        ("已接线(town.js 具名) → referenced", sp, "const g = W.TILES.grassLight;\n", "referenced"),
-        ("动态键访问 → dynamic_ref_unknown", sp, "const g = TILES[k];\n", "dynamic_ref_unknown"),
-        ("动态键访问(普通下标不算)", sp, "const r = road[ty][tx];\n", "zero_ref"),
+        ("未接线 → zero_ref", sp, "const x = 1;\n", "zero_ref", "grassLight"),
+        ("已接线(town.js 具名) → referenced", sp, "const g = W.TILES.grassLight;\n", "referenced", "grassLight"),
+        ("动态键访问 → dynamic_ref_unknown", sp, "const g = TILES[k];\n", "dynamic_ref_unknown", "grassLight"),
+        ("动态键访问(普通下标不算)", sp, "const r = road[ty][tx];\n", "zero_ref", "grassLight"),
+        ("仅小 id(<100) 无具名 → dynamic_ref_unknown(防假红)", sp_small, "const x = 1;\n", "dynamic_ref_unknown", "tiny"),
     ]
-    for label, s, t, expect in cases:
+    for label, s, t, expect, sym in cases:
         d = Path(tempfile.mkdtemp())
         (d / "src").mkdir()
         (d / "tools").mkdir()
         (d / "src" / "sprites.js").write_text(s, encoding="utf-8")
         (d / "src" / "town.js").write_text(t, encoding="utf-8")
-        got = next((r["status"] for r in auto_assets(d) if r["name"] == "grassLight"), None)
+        got = next((r["status"] for r in auto_assets(d) if r["name"] == sym), None)
         mark = "OK" if got == expect else "FAIL"
         ok = ok and got == expect
         print(f"  [{mark}] {label}: got={got} expect={expect}")
@@ -491,7 +495,7 @@ def main() -> int:
             exp = r.get("expected_status")
             mark = "" if r.get("expected_ok") is None else (" OK" if r["expected_ok"] else " MISMATCH")
             print(f"  - {r['name']:<22} {r['status']:<20} ids={r['value_ids']} "
-                  f"dyn={r['dynamic_scope']} hits={r['hits'] or '-'}"
+                  f"dyn={r['dynamic_scope']} small_ids={r.get('has_small_ids')} hits={r['hits'] or '-'}"
                   + (f" 期望 {exp}->{mark}" if exp else ""))
             if r.get("purpose"):
                 print(f"      用途: {r['purpose']}")

@@ -10,7 +10,7 @@
 - **两态纪律**：三态 `referenced / zero_ref / dynamic_ref_unknown`；`zero_ref` 才报警，**`dynamic_ref_unknown` 只报"未知"，绝不写成 zero_ref**。
 - **动态访问收窄到"符号所属映射"**：仅当对 `sym` 所属映射（如 `TILES`）做**非字面量键访问**（`TILES[k]`）才算动态；普通 `road[ty][tx]`/`gset[0]` **不算**。
   （否则 `dynamic_scope` 恒真 → `zero_ref` 永不出现，与反向验证自相矛盾——这正是评审时先揪出的缺陷。）
-- **值(id)引用**：建 符号→值(id) 映射；仅当 id≥100 且落在**瓦片消费上下文**（`pick(`/`slice(`/`texture`/`Rectangle`/`frame`）才计入；**跳过注释行**（曾致 `745` 因注释误命中）。
+- **值(id)引用（近似）**：建 符号→值(id) 映射；仅当 id≥100 且落在**瓦片消费上下文**（`pick(`/`slice(`/`texture`/`Rectangle`/`frame`）才计入；**跳过注释行**（曾致 `745` 因注释误命中）。**<100 的小 id 不作值搜索** → 若某键**只靠小 id、无具名访问**，无名字命中时**降级为 `dynamic_ref_unknown`（不写成 zero_ref）**，防假红；靠名字命中兜底。
 - **只做数据级**：顶层映射表键 vs 引用点；局部未用变量交 ESLint `no-unused-vars`，本器不判。
 - **棘轮**：`frontend/tools/inert_assets.json` 的 `entries`（显式 `expected_status` + `purpose`=该键语义用途，不靠名字匹配）；不一致 → 退出码 1。
 - **JSON**：只新增 `auto_assets` 键，不动 `manual/mismatches/auto_events/auto_switches`。
@@ -22,6 +22,7 @@
 | 已接线（town.js 具名） → | referenced | ✅ referenced |
 | 动态键访问 `TILES[k]` → | dynamic_ref_unknown | ✅ dynamic_ref_unknown |
 | 普通下标 `road[ty][tx]` → | zero_ref | ✅ zero_ref |
+| 仅小 id(<100) 无具名 → | dynamic_ref_unknown（防假红） | ✅ dynamic_ref_unknown |
 | **真实 assets · town.js 去掉 grassLight 引用** → | zero_ref | ✅ zero_ref |
 | **真实 assets · town.js 原样（已接线）** → | referenced | ✅ referenced |
 
