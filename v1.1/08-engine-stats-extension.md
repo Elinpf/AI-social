@@ -467,6 +467,36 @@ class Event:
 - **G7/兼容**：新增类型（旧日志不出现），G7 不受影响；`events.py::EVENT_TYPES` + `replay.apply_event` 折叠器归 **kernel-dev**；econ 产出侧（`socialize` 改发本事件）+ 开关 + 测试归 **econ-dev**。
 - **同批可见性裁定（T277 `ORDER_PLACED`）**：**`place_local`**（防抢跑；**非** `global`）；已加 `perception_scope.json` 条目（事件 schema 待 T277 登记）。
 
+**W. 人格漂移 `PERSONA_DRIFT` 的【可触发】与【可重建】（应 T320；T309 定位 + T319 端口改造前置）**
+
+> 问题来源（T309 实测）：三配置（`seed9/n=2/150r`、`n=2/400r`、`n=8/200r`）`PERSONA_DRIFT` 发射 **0**——该路径需「**连续 ≥2 睡眠窗**、每窗各有 `importance≥7` **且含情感词**的反思候选」，实跑**从未满足**。两处缺口：① **不可由真实配置触发**（`min_importance`/`min_windows` 硬编码 7/2、且**不在 override keyset** → 覆盖即 `life/config.py::_deep_merge` **fail-loud**）；② `_drift_streak`（逐窗候选史）**未在 `restore()` 重建**，且其**非零态不发任何事件** ⇒ **无法纯由已发事件倒推**。**先立 08 口径（未登不实现）。**
+
+**(1) 可触发 —— 立为可配置键（`config/life_v2.json::persona_drift` 段）**
+
+| 键 | 类型 / 范围 | 默认 | 语义 |
+|---|---|---|---|
+| `persona_drift.min_importance` | int，0–10 | **7** | 反思候选最低 `importance`（`kind=="reflection"` 且 `importance ≥ 此值` 才入候选） |
+| `persona_drift.min_windows` | int，1–（建议 ≤ 观测窗内睡眠窗数） | **2** | 某维需**连续 N 个睡眠窗**均有候选，才发 `PERSONA_DRIFT`（单窗=抖动不发）；发出后该维计数清零 |
+
+- **用途**：**仅让该路径可由真实配置触发 / 可验证**；**默认值 = 现状**（行为不变）。
+- **键集**：加入 `life_v2.json::persona_drift`，使 **override（`life/config.py`）可用**（否则 unknown key → fail-loud）。
+- ⚠️ **新增 config 键 ⇒ 通知 `obs-stats-dev` 并入 T300 重冻变更清单**（标 **【仅指纹变/行为不变（默认值）】**；改默认值或启用才【行为变】）。
+
+**(2) 可重建 —— 选 (a)：每睡眠窗落 `PERSONA_DRIFT_CANDIDATE`**（推荐；与「事件即权威」一致）
+
+| type | phase | payload 字段 | 折叠器 |
+|---|---|---|---|
+| `PERSONA_DRIFT_CANDIDATE`（**新增**） | 3.5（随睡眠窗） | `agent_id, dim, sign∈{-1,+1}, window, mem_id, reached_threshold:bool, day, slot` | **identity fold（审计/指针）** |
+
+- **语义**：每睡眠窗、每**有候选**的大五维落一条（`dim` 由 `sha256(mem_id)` 定、`sign` 由情感词定、`reached_threshold = (streak ≥ min_windows)`）；**使 `_drift_streak` 可由「连续含候选的窗数」确定性重建**。
+- **兼 `state_hash`**：**不入**（**identity fold / `_NOOP_TYPES`**，同 `PERSONA_DRIFT`/`SLEEP_*`）——纯审计，仅供 `restore()` 重建 life 侧 `_drift_streak`。
+- **为何选 (a) 而非 (b)（`streak` 快照）**：(a) 与「**日志=唯一记录**」一致、可审计、可重放重建；(b) 会**新增第二真相源**、与非事件状态耦合、快照丢失即不可重建（违反 §5.9「可重建派生集合」**按日志重建**口径）。
+- **`restore()` 重建**：数「该 agent 每维**连续**含候选的睡眠窗数」→ `_drift_streak`（**原样重建、不做有界化**，同 T276/T296 口径）。
+
+**(3) 反思更易产出情感词（可选，走 08）**：不新增 LLM 调用（沿用既有反思）；如需扩召回，登记**词表位置**（`life/agent.py::_DRIFT_POS/_DRIFT_NEG`）与「**只扩召回、不改判定**」口径。**【待定】**。
+
+**衔接**：**T309**（结论=0 发射 / `_drift_streak` 未重建）是本口径的**问题来源**；**T319**（端口改造）**依赖**本口径——`PERSONA_DRIFT` 路径须「可由配置触发 + 可重建」，否则端口改造后仍不可验证。故**本口径是 T309 → T319 的前置**。
+
 > **「确定性后果真值」口径（T257 裁定，08 权威；替代原「建议合并」附记）**：
 > 存在**两个**实现 `obs/truth.py`(`264c07f`) 与 `obs/truth_from_consequences.py`(`969335f`)，口径分歧（3/3 输入）。现裁定：
 > 1. **单一真源** = **`obs/truth_from_consequences.py`**（`obs/truth.py` 废弃并入）；验收=合并机制下输出一致（**口径变更处按本表修正输出**，非"跨口径逐字节不变"）。
