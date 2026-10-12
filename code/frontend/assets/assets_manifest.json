@@ -1146,6 +1146,62 @@
       "sha256": "3a241eac144305c0a2cb4c395ec7a9386f1c584cbf3b675ddbea3b268be88f09"
     },
     {
+      "id": "landmark.clocktower",
+      "type": "landmark",
+      "file": "generated/landmarks/clocktower.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        60
+      ],
+      "sha256": "cac5b80358bf0f0743acf76193809b07bf593349d79fd2b664ce51f867ed9a96"
+    },
+    {
+      "id": "landmark.arch_bridge",
+      "type": "landmark",
+      "file": "generated/landmarks/arch_bridge.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        60
+      ],
+      "sha256": "36a48a9a9629230f90954fc36618d2dec16165468c02d71689757757a6043ab4"
+    },
+    {
+      "id": "landmark.fountain",
+      "type": "landmark",
+      "file": "generated/landmarks/fountain.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        60
+      ],
+      "sha256": "7ebe01eafc34af6d3b119cc735033655c8f8f0ada7fc836defd917d7751475e9"
+    },
+    {
+      "id": "landmark.windmill",
+      "type": "landmark",
+      "file": "generated/landmarks/windmill.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        60
+      ],
+      "sha256": "4867cd2c112695c6388db2dce4c73cfe5f4546107028884e30097dafc9623660"
+    },
+    {
       "id": "icon.mint",
       "type": "icon",
       "file": "generated/icons/mint.png",

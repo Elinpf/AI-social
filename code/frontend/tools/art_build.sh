@@ -84,7 +84,7 @@ n = 0
 import glob as _g
 _groot = os.path.dirname(root)
 groups = [_g.glob(os.path.join(root, g, "*.png")) for g in ("buildings128", "chars", "props")] \
-       + [_g.glob(os.path.join(_groot, "generated", d, "*.png")) for d in ("tiles", "roads", "icons", "event_cards_hand")]
+       + [_g.glob(os.path.join(_groot, "generated", d, "*.png")) for d in ("tiles", "roads", "icons", "event_cards_hand", "landmarks")]
 for fs in groups:
     for f in sorted(fs):
         roll.update((os.path.relpath(f, os.path.dirname(root)) + ":" + hashlib.sha256(open(f, "rb").read()).hexdigest() + "\n").encode())
