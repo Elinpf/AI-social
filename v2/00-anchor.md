@@ -164,6 +164,10 @@
 
 ## 7. 变更记录
 
+- **v1.3.43（02:26）**：✅ **`T317` 收口为"检查后确认【无需改动】"（比取消更好）+ 一条文档修正单** ——
+  · **结论**：**`run_override.py` 是【通用 dot-path】（`run_override.py:36-46`，`for k in keys[:-1]: node=node.setdefault(k,{})`），不是白名单表** ⇒ **`--override life_v2.sleep.enabled=false` 本来就能生效**（life 端到端 `SLEEP_STARTED` 2→0 已证）⇒ **"release 侧无需改动：通用路径已覆盖 `life_v2`"**。证据 `v2/evidence/T317-life-v2-override-no-change-needed.md`；提交 `a4c32dc`（**code 零改动**）。
+  ⭐ **Leader 自纠（第 7 次）**：**我 02:23 仅因"`T297b` 验收文本里写着『让 release 加一行表项即可』"就开了一张实现单；1 分钟内核实其前提为假、撤单** —— **两条教训**：① **验收文本里的"对方加一行 X 即可"也可能是错的**（**文本与事实不符**今晚又一例）；② **开实现单前先问"不做是否也能过？"**（release 的判据一句话：**"不改代码，该 override 能不能生效？"**）。
+  · ✅ **`T318`（纯文档）**：`run_override.py` docstring 现写"`life_v2`…此途径不覆盖它"，**与事实相反、会误导下一个人** ⇒ 修正为：**`life_v2` 受支持** + **通用 dot-path（非白名单）** + **fail-loud 键集**（`sleep.{enabled,slot,planned_ticks}` / `forgetting.*` / `persona_drift.*`）+ **未知键 `ValueError` 不静默** + **顺手通读全文查其它不符处**。**纯文档、不动 `code/`、不需 `make verify`**。
 - **v1.3.42（02:22）**：✅✅ **`T298` 独立验证链闭合 + 验证窗冻结解除** ——
   · ✅ **`T304`（art 独立复核）**：pin 树 `fd6ecea` / 门 `5c9d9ce` / 探针 `ecc7f4c`；**稳定性 = 可稳定复现**：`cut=75` **5/5**、`cut=89` **4/4**，每次 **`R1==R2==O`**（`8820493f…`），**0/N 分歧**；**每次均 ①否·②否，且用【自己折叠】复核**（两两 canonical diff = 0、`state_hash` 不等 = 0，含 `last_hash`）⇒ **旧"1/3 间歇"确为装置**（墙钟 kill 致 cut 漂移）。**原报告"需修订"但只改【适用范围】**：§4.1"仅单次成立"→"**在 `fd6ecea` 上 cut=75/89 稳定成立**"；**新增"`cut` 是缺陷敏感维度"**（cut=75 曾是 `_comm_slot`/T244 前向态的另一处 `restore()` 缺口，已由 `7f16c80` 修复）。交付 `v2/refs/T298-final-independent-verify.md`（`34838fe`）+ 原报告 §4.2 回写（`35787ef`）。
   · ✅ **`T314`（kernel 门独立复验）结论 = 「该红能红、该绿才绿、探测失败必红」**：`make resume-guard` **PASS/EXIT=0**（两 cut `state_hash` 不等=0）· `make resume-fixture-check` **PASS**（must-be-red 成立）· **假绿专项**：坏 sha ⇒ 红 + `rc=2` + 三投影空；夹具缺失 ⇒ 红 + exit2 · ⭐ **前两轮"运行中被改"时守卫亦各判红一次 ⇒ "探测失败必红"共 4 次实测生效** · **未误挂 verify/CI**（`gate` 内 `resume` 引用数 = 0）· 错误处理 = `set -uo pipefail` + **显式判据**（`rc==0` ∧ 三投影非空 64-hex 且恒等 ∧ `state_hash` 不等=0）⇒ **无"探测一错就绿"路径**。
