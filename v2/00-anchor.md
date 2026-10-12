@@ -164,6 +164,9 @@
 
 ## 7. 变更记录
 
+- **v1.3.20（22:26）**：① ⚠️ **口径更正（会决定"今晚能不能跑"）**：**判断内存看 `available`，不看 `free` 列** —— 实测同一时刻 `free 1.8Gi` 而 **`available = 18Gi`**（`free` 列小是因为 **16Gi 被 page cache 占着、可随时回收**）。sim-system-architect 曾据 `free 1.3Gi` 判"内存紧张" ⇒ **若按 `free` 判，会把"能跑"误判成"别跑"**。**跑批预检报数须写清字段**（例：`available=18Gi`；平台 `anon` 单列）。**同族**：读错一列 = 换了一个判据。
+  ② ✅ **`config/time.json` 已进 `FINGERPRINT_FILES`**（kernel 按裁定做了 ✓）—— **新增开关进指纹 ⇒ 日志可解释** ✓（T287 期①的开关不会被藏在指纹之外）。
+  ③ **T296 两半合并**：**sim-system-architect 的 4 条候选 + 核验法落盘提交 → `art-director` 以其为检查清单去复现取证 → `life-layer-dev` 修复**。它的归因里有一次漂亮的推理排除：「**merge vs drop 都属非保护分支 ⇒ 更可能是 `access_count`/`last_access` 重建口径，而非 `is_protected`**」。
 - **v1.3.19（22:26）**：① **T296 路由裁定 = 拆两半**：**只读复现 + 归属初判 → `art-director`**（同 T283 做法，**只读、不碰 `code/`**）；**修复 → `life-layer-dev`**（等 T294 之后；**验收 = 该配置也逐字节一致** + `verify_native_resume.sh` PASS）。**依据**：只读半不受批期/域限制、可立刻推进；修复必须由 `restore()` 的域主做；两半可并行 ✓。
   ② ⭐ **今日团队新范（由"三次拒领"换来）**：**T296 是一个无主 pending，三个人都看了、三次都没抢** —— 理由分别是：
   · **art-director**：「域不匹配（`life/` 的事，我非该域专家）」；
