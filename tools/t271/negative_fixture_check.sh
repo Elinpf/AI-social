@@ -17,6 +17,13 @@ SR="$(python3 "$BIN/semantic_log_sha.py" "$R" | awk '{print $1}')"
 echo "夹具 oneshot sem_sha = $SO"
 echo "夹具 resume  sem_sha = $SR"
 
+# 严格：两者必须都是合法 64-hex；任一为空/非法 ⇒ 工具失败 ⇒ 红（防"空==空/空!=值"的假判）。
+HEX='^[0-9a-f]{64}$'    # ERE：区间量词在 grep -E 下写 {64}，不带反斜杠
+if ! printf '%s' "$SO" | grep -Eq "$HEX" || ! printf '%s' "$SR" | grep -Eq "$HEX"; then
+  echo "FAIL: 语义投影为空/非法（oneshot='$SO' resume='$SR'）⇒ 计算失败，不得判 OK（假绿防护）"
+  exit 1
+fi
+
 if [ "$SO" != "$SR" ]; then
   echo "OK: 夹具两文件语义投影【不等】⇒ 门在真实数据上【能报红】可断言（must-be-red 成立）"
   exit 0
