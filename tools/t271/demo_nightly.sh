@@ -3,7 +3,8 @@
 set -euo pipefail
 BIN="$(cd "$(dirname "$0")" && pwd)"
 D="${T271_DEMO_DIR:-/root/t271/demo}"; mkdir -p "$D"
-RUN_ROOT="${T271_RUN_ROOT:-/root/t271/runs/nightly}"; rm -rf "$RUN_ROOT"; mkdir -p "$RUN_ROOT"
+# 独立 run_root：mock 演示产物【绝不】与真实夜跑 run_root 混在一起（否则早报被 mock 混淆）
+RUN_ROOT="${T271_RUN_ROOT:-/root/t271/runs/demo}"; rm -rf "$RUN_ROOT"; mkdir -p "$RUN_ROOT"
 printf 'T271_NOOP=1\n' > "$D/dummy.env"
 PY=/opt/openjiuwen/workswarm-venv/bin/python
 MOCKCMD="$PY $BIN/mock_batch.py --out {out} --rounds 40 --agents 2 --seed 42 --flush-every 5 --round-seconds 1.5 --heartbeat-seconds 3"

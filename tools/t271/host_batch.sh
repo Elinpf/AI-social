@@ -64,7 +64,7 @@ systemd-run --unit="$UNIT" --collect \
   "${ENV_ARGS[@]}" \
   -p StandardOutput=append:"$RUN_DIR/host.log" \
   -p StandardError=append:"$RUN_DIR/host.log" \
-  "$BIN/t271_runner.sh" "$RUN_DIR" "$OUT" "$HB" -- "$@"
+  bash "$BIN/t271_runner.sh" "$RUN_DIR" "$OUT" "$HB" -- "$@"
 
 echo "[host] launched unit=$UNIT"
 sleep 1
