@@ -34,6 +34,7 @@ PY_GLOBS = ("code/**/*.py",)
 EXCLUDE_DIR_PARTS = {
     "glossary", "__pycache__", ".pytest_cache", ".git", "node_modules",
     "data", "freeze_cache", "licenses",
+    ".worktrees",  # worktree 是分支拷贝，不该被仓根 gate 扫（与 .git 同族）；否则改造分支的副本会污染主树门禁
 }
 EXCLUDE_SUFFIXES = {".jsonl"}
 
