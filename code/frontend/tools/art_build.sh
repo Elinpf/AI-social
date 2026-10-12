@@ -24,6 +24,7 @@ python3 "$SRC/tools/gen_event_cards_hand.py"        # 事件卡 20 张（单一�
 echo "[art] 2/4 校验（剪影同一趟：色数/同形/门禁 + 角色差分）"
 python3 "$S/silhouette_check.py" >/dev/null
 python3 "$S/char_check.py" >/dev/null
+python3 "$S/check_single_source.py"                    # 门禁：palette 单一真源（T246）
 python3 "$SRC/tools/audit_event_cards.py"           # 事件卡机制区空槽门禁（有槽即非零退出）
 
 echo "[art] 3/4 自洽断言（JSON.distinct_colors == 落盘 PNG 实测）"
