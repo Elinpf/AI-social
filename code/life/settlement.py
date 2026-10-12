@@ -478,6 +478,41 @@ def apply_needs(state: dict, round_no: int, ctx: Ctx) -> list[EventSpec]:
                     events.append(EventSpec("GOAL_ACHIEVED", {
                         "goal_id": gid, "agent_id": aid, "reward_intents": [],
                         "day": t["day"], "slot": t["slot"]}, actor=aid))
+    # (c) deterministic goal abandon — `stalled` hook (08 §1.2 C; T231).
+    #     At the last round of a week (REVIEW boundary): an `active` goal whose
+    #     progress delta over THIS week is 0 is abandoned. The delta is derived
+    #     faithfully from the week's own `GOAL_PROGRESS` events (goals are re-seeded
+    #     to progress=0 at weekly GOAL_SET, and L4 only ever emits GOAL_PROGRESS when
+    #     progress actually increased) → no fabricated events; a stall-free week
+    #     yields 0 events (allowed). `deadline`/`voluntary` reasons stay defined in
+    #     08 §1.2 C but are not enabled here. Effect: only removes stalled goals,
+    #     deterministic and replayable; no other decision path is touched.
+    WEEK_ROUNDS = (C.TIME_CONFIG["DAYS_PER_WEEK"] * len(C.TIME_CONFIG["SLOTS_PER_DAY"])
+                   * C.TIME_CONFIG["ROUNDS_PER_SLOT"])
+    if round_no % WEEK_ROUNDS == WEEK_ROUNDS - 1:
+        week_start = (round_no // WEEK_ROUNDS) * WEEK_ROUNDS
+        progressed: set = set()
+        for rec in state.get("event_index", {}).values():
+            if rec.get("type") != "GOAL_PROGRESS":
+                continue
+            rr = int(rec.get("round", -1))
+            if not (week_start <= rr <= round_no):
+                continue
+            rp = rec.get("payload") or {}
+            progressed.add((rp.get("agent_id"), rp.get("goal_id")))
+        for aid in st.agent_ids():
+            goals = st.goals(aid)
+            for gid in sorted(goals):
+                goal = goals[gid]
+                if goal.get("status", "active") != "active":
+                    continue
+                if (aid, gid) in progressed:      # 本周有推进 → 不停滞
+                    continue
+                events.append(EventSpec("GOAL_ABANDON", {
+                    "goal_id": gid, "agent_id": aid, "reason": "stalled",
+                    "progress_at_abandon": float(goal.get("progress", 0.0)),
+                    "week": round_no // WEEK_ROUNDS,
+                    "day": t["day"], "slot": t["slot"]}, actor=aid))
     return events
 
 
