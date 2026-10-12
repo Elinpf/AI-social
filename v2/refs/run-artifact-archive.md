@@ -181,13 +181,15 @@ LLM 调用 ──T227──▶ prompt 正文(input) ┐
 - **共享归档描述符（字段名唯一，T219 manifest / obs evidence 同名）**【已核实 obs-stats-dev 2026-10-12】：
 
   ```jsonc
-  "archive": { "sha256": "…", "ref": "run_<id>.tar.gz", "command": "…", "in_git": false,
+  "archive": { "sha256": "sha256:<hex>", "ref": "run_<id>.tar.gz", "command": "…", "in_git": false,
                // T219/run 侧附加（evidence 侧可不带）：
                "bytes": 509828, "n_files": 2815, "has_side": true, "side_txt": 1324, "side_vec": 0 }
   ```
 
-  - `obs evidence` 增**可选** `--archive <path>` / `--archive-sha256 <hex>`；提供时写入上述块（**未提供则不写该键**，保持既有 evidence 字节兼容 → G2 诊断不漂）。
-  - T219 manifest 用**同名三字段** `sha256/ref/command`（+`in_git`），**不另起名**。
+  - **值格式**：`sha256` **带 `sha256:<hex>` 前缀**（与 `config.fingerprint` / `log_hash` 同格式）——【已实测 obs `c4677e8` 即此格式】。
+  - `obs evidence` 增**可选** `--archive <path>` / `--archive-sha256 <hex>`（**提供 `--archive` 未给 sha 时由 obs 现算**，只读该文件、不产归档；本机实测 sha 与归档一致）；提供时写入上述块（**未提供则不写该键**，保持既有 evidence 字节兼容 → G2 诊断不漂）。
+  - T219 manifest 用**同名三字段** `sha256/ref/command`（+`in_git`），**不另起名**；`sha256` 同带前缀。
+  - **端到端核对已做**：`obs evidence --archive …` 产出的 `sha256:47f07bcf…` == 归档实算 sha ✓；无 `--archive` 时 `summary.json` **无** `archive` 键 ✓。
 - `git.sha/dirty` 取 `tools/git_stamp.sh`；发布/跑批入口首行调它（T220 契约）；`[DIRTY]` 时归档结论**标"仅供参考"**。
 
 ---
