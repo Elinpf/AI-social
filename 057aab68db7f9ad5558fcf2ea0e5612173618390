@@ -2,3 +2,5 @@
 - design-synthesizer 的 glossary/tools/lint_terms.py v3（362 行，属 T130）
 - pixel-asset-artist 的 char_check_T128b.json + chars_sheet_r2b.png（属 T128b）
 根因：Leader 旧指令 'git add -A'（已废止，改为 'git add <自己路径>'）。内容无丢失，仅提交标签不精确，故用 note 留档、不重写历史。
+
+【Leader 注记 2026-10-12】本提交夹带 3 个他人文件（裸 git commit + 共享索引所致；内容无损，仅归属）：glossary/tools/lint_terms.py → design-synthesizer(T130b)；code/frontend/assets/hand/char_check_T128b.json、chars_sheet_r2b.png → pixel-asset-artist(T128b)。
