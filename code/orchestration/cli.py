@@ -28,7 +28,8 @@ def _cmd_run(args) -> int:
         rounds = int(round(args.weeks * WEEK_ROUNDS))
     rep = run_e2e(seed=args.seed, rounds=rounds, n=args.agents, config=config,
                   out_path=args.out, personas_path=args.personas, places_path=args.places,
-                  side_root=args.side_root, flush_every=args.flush_every)
+                  side_root=args.side_root, flush_every=args.flush_every,
+                  resume_from=args.resume_from, target_round=args.target_round)
     print(f"[life] n_agents={rep['n_agents']} rounds={rep['rounds']} events={rep['events']} "
           f"seconds={rep['seconds']} log_bytes={rep['log_bytes']}")
     print(f"  unknown_event_types={rep['unknown_event_types']}")
@@ -76,6 +77,10 @@ def main(argv=None) -> int:
                     help="侧存储/冻结缓存根目录（默认临时目录；显式指定可复现/复用缓存）")
     pr.add_argument("--flush-every", type=int, default=0,
                     help="周期 flush：每 N 回合原子落盘已提交前缀（0=仅末尾写；长跑建议设正数防 kill 丢日志）")
+    pr.add_argument("--resume-from", default=None,
+                    help="T276 续跑：从该已 flush 日志的完整前缀恢复并续跑（须复用同一 --side-root）")
+    pr.add_argument("--target-round", type=int, default=None,
+                    help="T276 续跑目标回合（缺省用 --rounds/--weeks）")
     pr.add_argument("--life", action="store_true", help="（默认即 life 模式，保留兼容）")
     pr.set_defaults(func=_cmd_run)
 

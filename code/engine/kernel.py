@@ -94,6 +94,25 @@ class Engine:
             self.state, _ = self.arbiter.emit(self.state, specs)
             self.state, _ = self.arbiter.commit(self.state)
 
+    def load_prefix(self, records: list, round_no: int | None = None) -> None:
+        """T276：从一份**已 flush 的完整前缀日志**恢复世界，续跑。
+
+        - **原地替换** `ledger.records`（`records[:]=`）以保持 list 身份不变 —— 已注册的
+          emit 观察者 / 可见性索引按 `id(records)` 绑定，替换身份会使其失联；
+        - `replay_records(verify=True, verify_seals=True)` 重建状态并**断言指纹一致**
+          （配置变更 → 旧前缀拒绝续跑，报错明说）；
+        - `round_no` 显式给出时以它为准（否则取日志末回合）。
+        **不动任何语义**：续跑与一次性跑同源。
+        """
+        from .replay import replay_records
+        self.ledger.records[:] = [dict(r) for r in records]
+        self.arbiter.discard()
+        self.state = replay_records(self.ledger.records, verify=True, verify_seals=True,
+                                    expected_fingerprint=self.fingerprint)
+        r = int(round_no) if round_no is not None else int(self.state.round)
+        self.state.round = r
+        self.ctx = self.ctx.at(r, 0)
+
     def _restore_from_ledger(self, round_no: int) -> None:
         """回滚：丢弃本回合缓冲，用已提交日志重建状态（D1）。"""
         self.arbiter.discard()

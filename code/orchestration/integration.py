@@ -964,7 +964,8 @@ def _flush_log_atomic(records: list, path) -> None:
 
 def run_e2e(seed: int = 42, rounds: int = 84, n: int = 3, config: dict | None = None,
             *, out_path=None, side_root=None, personas_path=None, places_path=None,
-            llm=None, cleanup_side: bool = True, flush_every: int = 0) -> dict:
+            llm=None, cleanup_side: bool = True, flush_every: int = 0,
+            resume_from=None, target_round: int | None = None) -> dict:
     """在真内核上跑 N 个 Agent 共 `rounds` 回合，返回端到端证据。
 
     T232：自动创建的 side 目录**异常/中断/SIGTERM 也会释放**（try/finally + 信号兜底）；
@@ -972,6 +973,11 @@ def run_e2e(seed: int = 42, rounds: int = 84, n: int = 3, config: dict | None = 
 
     T262 周期 flush：`flush_every > 0` 时每 N 回合把**已提交前缀**原子落盘（默认 0＝仅末尾写，
     行为与产物字节不变）。中途被 kill 时，已 flush 的完整前缀可被 `verify`/`replay` 消费。
+
+    T276 续跑：`resume_from=<已 flush 日志路径或记录列表>` 时，从该**完整前缀**恢复世界状态
+    并续跑到 `target_round`（缺省用 `rounds`）。续跑段与一次性跑**逐字节一致**；不完整的前缀
+    （最后一个回合未 seal）会被截断到最后一个 `TURN_SEAL` 边界后重算。续跑必须复用**同一**
+    `side_root`（T268 共享源正文/缓存都在其中）。
     """
     auto = side_root is None
     world = build_world(seed, config, n=n, personas_path=personas_path,
@@ -980,10 +986,30 @@ def run_e2e(seed: int = 42, rounds: int = 84, n: int = 3, config: dict | None = 
         engine = world["engine"]
         side_root = world["side_root"]
         fe = int(flush_every) if flush_every else 0
-        if out_path and fe > 0:
+        start_round = 0
+        if resume_from is not None:
+            from engine.runner import read_log
+            prefix = read_log(resume_from) if not isinstance(resume_from, list) else list(resume_from)
+            last_seal = None
+            for rec in prefix:
+                if rec["type"] == "TURN_SEAL" and (last_seal is None or rec["round"] > last_seal):
+                    last_seal = rec["round"]
+            if last_seal is None:
+                raise ValueError("resume_from 前缀无任何 TURN_SEAL：非完整回合前缀，拒绝续跑")
+            prefix = [r for r in prefix if r["round"] <= last_seal]
+            engine.load_prefix(prefix, round_no=int(last_seal))
+            # T276：life 前向态恢复挂钩（加性、可选）——agent 实现 `restore(state, records)`
+            # 时由组合根调用（life 未实现则跳过，行为不变）。engine 不 import life，仅 duck-type。
+            for _a in world["agents"]:
+                _rf = getattr(_a, "restore", None)
+                if callable(_rf):
+                    _rf(engine.state, engine.ledger.records)
+            start_round = int(last_seal) + 1
+        target = int(target_round) if target_round is not None else int(rounds)
+        if out_path and fe > 0 and resume_from is None:
             _flush_log_atomic(engine.ledger.records, out_path)  # 起始（创世已提交）
         t0 = time.perf_counter()
-        for r in range(int(rounds)):
+        for r in range(start_round, target):
             engine.run_round(r)
             if out_path and fe > 0 and (r + 1) % fe == 0:
                 _flush_log_atomic(engine.ledger.records, out_path)
@@ -1013,7 +1039,9 @@ def run_e2e(seed: int = 42, rounds: int = 84, n: int = 3, config: dict | None = 
         log_bytes = sum(len(canonical_json(rec).encode("utf-8")) + 1 for rec in records)
 
         return {
-            "seed": seed, "rounds": int(rounds), "n_agents": len(world["agents"]),
+            "seed": seed, "rounds": target, "n_agents": len(world["agents"]),
+            "resumed_from": str(resume_from) if resume_from is not None else None,
+            "start_round": start_round,
             "events": len(records),
             "event_types": sorted({rec["type"] for rec in records}),
             "unknown_event_types": unknown,
