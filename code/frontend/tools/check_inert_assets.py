@@ -2,6 +2,11 @@
 # -*- coding: utf-8 -*-
 """check_inert_assets.py — 「睡着的资产」核对器（T258e）
 
+⚠️ 参考实现（reference only）——**正式实现归 frontend-dev（T267），本脚本不接入任何门禁**。
+   保留原因：记录"定义 vs 使用"对照这一发现的**可复算做法**，供 T267 参考。
+   ⚠️ 盲区（sim-engine-stats-architect 提醒）：JS 动态访问（`sprites[k]` / 数字索引）会让"名字搜不到 ≠ 没引用"；
+      正式核对器必须把该盲区写成"两态"才敢上，且 expected 应附**该键的语义用途**而非仅名字匹配。
+
 类：一个资产/常量**已定义却零引用**（死帧 / 未接线素材）。
 案例：grassLight 定义于 sprites.js，town.js 里曾定义 glight 却零使用（人眼发现）。
 机械化：解析 sprites.js 的 TILES 常量表，统计每个 key 在 src/*.js 中的引用数；
