@@ -183,6 +183,15 @@ class LifeLayerAgent:
                    "top_k": debug["top_k"], "selected_mem_ids": ids, "scores": scores,
                    "weights": debug["weights"], "tie_order": debug["tie_order"],
                    "query_digest": self.embedding.version}
+        # T228：检索降级标记（additive；字段名引用 freeze.side 单一来源，不另拼）
+        try:
+            from freeze.side import degradation_marker
+            payload.update(degradation_marker(
+                vec_available=debug.get("vec_available", True),
+                retrieval_mode=debug.get("retrieval_mode", "vector")))
+        except Exception:
+            payload["vec_available"] = bool(debug.get("vec_available", True))
+            payload["retrieval_mode"] = debug.get("retrieval_mode", "vector")
         if self._submit(Intent(INTENT_MEMORY, self.agent_id, payload), StepReport(wv.round)):
             self.memory.touch(ids, wv.round)
         return ids, debug

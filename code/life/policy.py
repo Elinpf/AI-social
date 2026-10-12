@@ -161,3 +161,39 @@ def set_m2b_config(cfg: dict | None) -> None:
     if cfg is None:
         _m2b_cache = None
 
+
+# ---- T228: side storage `.vec` 落盘开关（默认 True=行为不变）------------------
+#   policy.life.memory.persist_vec  (config/policy.json, 默认 true)
+#   env N50_VEC=0|false|no|off  -> 关（oversight override，与 freeze.side 同语义）
+# 关时 SideStore 不写 `<mem_id>.vec`（省 inode）；检索调用点显式降级并打标记（不静默）。
+_pv_cache: bool | None = None
+_pv_override: bool | None = None
+
+
+def _read_persist_vec() -> bool:
+    env = os.environ.get("N50_VEC")
+    if env is not None:
+        return env.strip().lower() not in ("0", "false", "off", "no", "")
+    try:
+        data = json.loads(_CONFIG_PATH.read_text(encoding="utf-8"))
+        return bool(((data.get("life") or {}).get("memory") or {}).get("persist_vec", True))
+    except Exception:
+        return True
+
+
+def persist_vec_enabled() -> bool:
+    global _pv_cache
+    if _pv_override is not None:
+        return _pv_override
+    if _pv_cache is None:
+        _pv_cache = _read_persist_vec()
+    return _pv_cache
+
+
+def set_persist_vec(value: bool | None) -> None:
+    """Test/ablation hook: force the flag (None clears and re-reads config)."""
+    global _pv_override, _pv_cache
+    _pv_override = value
+    if value is None:
+        _pv_cache = None
+

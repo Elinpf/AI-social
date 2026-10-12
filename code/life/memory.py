@@ -116,8 +116,14 @@ class SideStore:
     Layout (06 §3.2): side/mem/<agent_id>/<mem_id>.txt  and  .../<mem_id>.vec
     """
 
-    def __init__(self, root: str | Path) -> None:
+    def __init__(self, root: str | Path, persist_vec: bool | None = None) -> None:
         self.root = Path(root)
+        # T228：关掉 `.vec` 落盘（默认 True=行为不变）。persist_vec=None -> 读 policy
+        # （config/policy.json `life.memory.persist_vec` / env `N50_VEC`）。
+        if persist_vec is None:
+            from . import policy
+            persist_vec = policy.persist_vec_enabled()
+        self.persist_vec = bool(persist_vec)
 
     def _body_path(self, agent_id: str, mem_id: str) -> Path:
         return self.root / "mem" / agent_id / f"{mem_id}.txt"
@@ -135,17 +141,26 @@ class SideStore:
 
     def write(self, agent_id: str, mem_id: str, text: str, vec: list[float]) -> tuple[str, str]:
         bp = self._body_path(agent_id, mem_id)
-        vp = self._vec_path(agent_id, mem_id)
         bp.parent.mkdir(parents=True, exist_ok=True)
         bp.write_text(text, encoding="utf-8")
-        vp.write_text(json.dumps([round(v, 9) for v in vec]), encoding="utf-8")
+        if self.persist_vec:
+            self._vec_path(agent_id, mem_id).write_text(
+                json.dumps([round(v, 9) for v in vec]), encoding="utf-8")
         return self.body_ref(agent_id, mem_id), self.embed_ref(agent_id, mem_id)
 
     def read_body(self, ref: str) -> str:
         return self._resolve(ref, ".txt").read_text(encoding="utf-8")
 
-    def read_embed(self, ref: str) -> list[float]:
-        return json.loads(self._resolve(ref, ".vec").read_text(encoding="utf-8"))
+    def read_embed(self, ref: str) -> list[float] | None:
+        """Return the frozen vector, or **None** if absent (persist_vec off / missing).
+
+        `None` is an explicit signal to the retrieval call site to degrade
+        (lexical/recomputed) and mark `vec_available=false` — never a silent failure.
+        """
+        p = self._resolve(ref, ".vec")
+        if not p.exists():
+            return None
+        return json.loads(p.read_text(encoding="utf-8"))
 
     def _resolve(self, ref: str, suffix: str) -> Path:
         # ref form: side://mem/<agent>/<mem>.txt|.vec
@@ -214,6 +229,7 @@ class AssociativeMemory:
             vec = self.side.read_embed(r.embed_ref)
         except FileNotFoundError:
             text, vec = "", []
+        vec = vec or []
         node = MemoryNode(
             mem_id=r.mem_id, agent_id=self.agent_id, kind=r.kind, text=text,
             importance=r.importance, day=r.day, slot=r.slot, embed=vec,
@@ -258,7 +274,7 @@ class AssociativeMemory:
         mem_id = payload["mem_id"]
         if mem_id in self.nodes:
             return self.nodes[mem_id]
-        vec = self.side.read_embed(payload["embed_ref"])
+        vec = self.side.read_embed(payload["embed_ref"]) or []
         node = MemoryNode(
             mem_id=mem_id, agent_id=self.agent_id, kind=payload["kind"], text="",
             importance=payload["importance"], day=payload["day"], slot=payload["slot"],
@@ -286,17 +302,28 @@ class AssociativeMemory:
         top_k = int(top_k if top_k is not None else self.params["top_k"])
         decay = self.params["decay"]
         q = self.embedding.embed(query_text)
+        q_tokens = set(_tokenize(query_text))
         scored: list[tuple[MemoryNode, float]] = []
+        degraded = False
         for node in self.nodes.values():
             recency = decay ** max(0, now_tick - node.last_access)
             importance = node.importance / 10.0
-            relevance = cosine(q, node.embed)
+            if node.embed:
+                relevance = cosine(q, node.embed)
+            else:
+                # T228 降级：无向量 → 词面重叠（lexical），并显式标记（不静默）
+                degraded = True
+                nt = set(_tokenize(node.text))
+                relevance = (len(q_tokens & nt) / len(q_tokens)) if q_tokens else 0.0
             s = w["w_rec"] * recency + w["w_imp"] * importance + w["w_rel"] * relevance
             scored.append((node, s))
         # total order tie-break: score desc, last_access desc, mem_id asc
         scored.sort(key=lambda t: (-t[1], -t[0].last_access, t[0].mem_id))
         debug = {"weights": w, "top_k": top_k, "decay": decay,
-                 "tie_order": ["score_desc", "last_access_desc", "mem_id_asc"]}
+                 "tie_order": ["score_desc", "last_access_desc", "mem_id_asc"],
+                 # T228：检索降级标记（additive，进 MEMORY_RETRIEVE payload）
+                 "vec_available": not degraded,
+                 "retrieval_mode": "lexical" if degraded else "vector"}
         return scored[:top_k], debug
 
     def touch(self, mem_ids: Iterable[str], now_tick: int) -> None:

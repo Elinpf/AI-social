@@ -88,6 +88,13 @@
       "mode": "generative"
     }
   },
+  "life": {
+    "_comment": "life 侧开关（T228）。默认 true=行为不变；新键进 engine_version 指纹。",
+    "memory": {
+      "persist_vec": true,
+      "_persist_vec_note": "side storage 是否落 <mem_id>.vec（省 inode）。关时检索显式降级并打 vec_available=false/retrieval_mode 标记；env N50_VEC=0 覆盖。"
+    }
+  },
   "safety_valve": {
     "net_worth_floor_mu": {
       "default": -10000,
