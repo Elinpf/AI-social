@@ -1,0 +1,46 @@
+{
+  "task": "T299-semantic-equality-gate",
+  "author": "release-engineer",
+  "date": "2026-10-13",
+  "gate_definition": "回答『世界语义是否一致』，不比本地 freeze 缓存命中状态",
+  "impl": {
+    "helper": "tools/t271/semantic_log_sha.py (世界语义投影 sha256, 规范化后重算哈希链)",
+    "probe": "tools/t271/verify_native_resume.sh (集成 + 显式核 TURN_SEAL.state_hash + 反向钩子 + 自描述)",
+    "repro": "tools/t271/repro_resume_cut.sh (最小复现: cut 相关 resume 分歧)"
+  },
+  "exclusion_whitelist": ["cached", "tokens_in", "tokens_out", "cost_units"],
+  "exclusion_scope": "仅 LLM_CALL.payload 内；其余全部字段(含 cache_key/prompt_hash/meta_digest/engine_version/provider/purpose/model/priority/tier/thinking/degraded)参与比较",
+  "must_be_equal": ["LLM_CALL.payload 其余全部", "TURN_SEAL.state_hash (显式核)"],
+  "chain_recompute_rationale": "record.hash = compute_event_hash(整条含 payload) (engine/ledger.py:24); TURN_SEAL.payload.last_hash = ledger.last_hash() = 上一条记录 hash (engine/kernel.py:239) ⇒ 计量字段发射时已进链 ⇒ 只删显示层字段不改写已存 hash/prev_hash/last_hash。故对规范化事件【重算】prev_hash/hash/TURN_SEAL.last_hash (复用引擎 compute_event_hash/canonical_json) ⇒ '语义相同⇒规范化链相同'; 不排除 last_hash、不靠断言。",
+  "acceptance": {
+    "cut89_no_true_divergence": {
+      "sem_projection_sha_resumed_equals_oneshot": true,
+      "turn_seal_state_hash_mismatch_count": 0,
+      "reverse_ok": true,
+      "verdict": "PASS"
+    },
+    "cut75_true_divergence": {
+      "sem_projection_sha_resumed": "110840b768ef7668ff51e2f4895c7343ee9fb351fa55a40c77871caf7431a017",
+      "sem_projection_sha_oneshot": "8820493fd8d219389e1736e609960eced8380263b8d4cc881e0d1f3ec4f07558",
+      "turn_seal_state_hash_mismatch_count": 74,
+      "first_mismatch_round": 76,
+      "verdict": "FAIL (真阳性: 门正确报红)"
+    }
+  },
+  "instrument_fix": "kill 从墙钟改为『跑到指定 round 再 kill』(T271_VR_KILLROUND)——墙钟 kill 使 cut 在 75↔89 漂移，制造假『间歇』；cut 显式参数化 T271_VR_CUT",
+  "known_real_defect": {
+    "class": "②类 确定性 bias (已交 life-layer-dev)",
+    "symptom": "同 sha 下 resume 对 cut 敏感: 从 TURN_SEAL@75 续跑 round 76 起与一次性跑分叉(state_hash 不等数=74); 从 @89 续跑一致",
+    "ruled_out": {
+      "string_hash_order": "对 PYTHONHASHSEED∈{0,0,1,2,3,不设,不设} 结果全同 ⇒ 完全不敏感 ⇒ 非字符串哈希序",
+      "race": "同 cut resume x2 恒等 (r1=r2) ⇒ 非竞态",
+      "cache_affects_semantics": "oneshot 跨 run 稳定; resume 对 seed 不敏感 ⇒ 非 cache"
+    },
+    "repro": "bash tools/t271/repro_resume_cut.sh 75  (对照 89); 产物 /root/t271/runs/repro/"
+  },
+  "ledger_restatement": "本门此前所有『逐字节一致』结论 (T276 / T288 / T292) 按新口径重述为『世界语义(排除 4 计量字段 + 重算哈希链)一致』; T288 的逐字节在其原测试配置成立，但非普适(见 known_real_defect)",
+  "alternatives_not_adopted": {
+    "a_warm_parity": "证据不足: 预热后仍 cached:false(8/8)89 + cached:true(0/0)65 混合，单用不充分",
+    "c_keep_whole_sha": "报的是本地缓存命中状态，非世界语义"
+  }
+}

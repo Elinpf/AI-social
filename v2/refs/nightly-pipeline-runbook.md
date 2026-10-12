@@ -62,9 +62,14 @@ python3 "$REPO/tools/t271/nightly.py" collect
 python3 "$REPO/tools/t271/nightly.py" resume --batches <表> --env-file "$REPO/code/.env.local"
 ```
 - **`native`（默认；T276/T288 落地后）**：真 runner 用 **`--resume-from <已 flush 前缀> --target-round <目标>`**，从 flush 前缀**接着跑到目标回合**，日志被重写为**完整日志（前缀+续跑段）**，`collect` 末条 round 即 target ✓。**必须复用同一 `side_root`**（共享源正文/缓存）。
-  - **前提（硬）**：该 **sha + 该配置** 上「**逐字节一致**」已被验证。**换 sha 或换配置（seed/N/rounds/开关）后须重新核**。
-  - **实测（本机）**：参数正确、状态判对（`bash tools/t271/verify_native_resume.sh` 门禁 PASS）。**但该脚本的逐字节【探针】在 `seed=9/n=2/150r` 上不一致**（续跑与一次性跑在 **round 93** 的 `MEMORY_FORGET` 分叉）→ 说明「逐字节一致」**并非所有配置都成立**；native 用于新配置前**必须自证**。详见 `v2/evidence/T292-native-resume-verify.json`。
-  - **自证用法（对新 sha/配置，分钟级）**：`T271_VR_SEED=42 T271_VR_AGENTS=4 T271_VR_ROUNDS=24 T271_VR_KILL_AFTER=1 T271_VR_GATE=1 bash tools/t271/verify_native_resume.sh`。`T271_VR_GATE=1` ⇒ **逐字节不一致即失败**（=native 前提自证不通过）。注意 **rounds 要够大**（mock 跑得快，太小则批次在 kill 前已跑完 → 中断项 `[SKIP]`）。
+  - **前提（硬）**：该 **sha + 该配置 + 该 cut 点** 上「**世界语义一致**」已被验证。**换 sha/配置/cut 后须重新核**。
+  - **门的新定义（T299，2026-10-12 裁定方案 (b)）**：**回答「世界语义是否一致」**，不比本地 freeze 缓存命中。比较用 **世界语义投影 sha256**（`tools/t271/semantic_log_sha.py`）：**只排除** `LLM_CALL.payload` 的 `{cached,tokens_in,tokens_out,cost_units}`；**其余全比**（含 `cache_key/prompt_hash/meta_digest/engine_version/provider/purpose/model/priority/tier/thinking/degraded` 与 **`TURN_SEAL.state_hash`**）。因 `record.hash` 覆盖含 payload 的整条、`TURN_SEAL.payload.last_hash = ledger.last_hash()`（`engine/ledger.py:24`/`kernel.py:239`）⇒ **对规范化事件【重算哈希链】**（**不排除 `last_hash`、不靠断言**）。整份原 sha 仅打印作参考。
+  - **自证用法（分钟级）**：`T271_VR_GATE=1 T271_VR_REVERSE=1 T271_VR_CUT=89 bash tools/t271/verify_native_resume.sh`
+    - `T271_VR_CUT`（默认 `ROUNDS/2`）逐字节比对的**截断点**；`T271_VR_KILLROUND`（默认 `ROUNDS/2`）**跑到该 round 再 kill**（**不用墙钟**——否则 cut 随负载漂移，制造假"间歇"，T299 实测踩过）；`T271_VR_GATE=1` 语义不一致即失败；`T271_VR_REVERSE=1` 加反向验证（最小语义扰动仍须报红）。
+  - **实测（本机，双面真数据）**：`cut=89`（无真分歧）→ **PASS**（语义投影 byte-equal、`state_hash` 不等数=0、REVERSE ok）；`cut=75`（真分歧）→ **FAIL=真阳性**（`state_hash` 不等数=74，首个不等 round=76）。
+  - **⚠️ 已知真缺陷（②类，已交 life）**：同 sha 下 **resume 对 cut 敏感** —— `@75` 续跑 round 76 起与一次性跑分叉，`@89` 一致。**非哈希序**（对 `PYTHONHASHSEED ∈{0,1,2,3,不设}` 完全不敏感）、非竞态、非 cache。最小复现：`bash tools/t271/repro_resume_cut.sh 75`（对照 `89`）。详见 `v2/evidence/T299-semantic-equality-gate.json`。
+  - **备选（记此，未采用）**：(a) 预热对等——证据不足（预热后仍混合命中，单用不充分）；(c) 维持整份 sha 现状——报的是本地缓存命中状态、非世界语义。
+  - **台账重述（T299 验收）**：本门此前所有"逐字节一致"结论（**T276 / T288 / T292**）**均按新口径重述为「世界语义（排除上述 4 计量字段、重算哈希链）一致」**；T288 的"逐字节"在其原测试配置成立，但**非普适**（见上"已知真缺陷"）。
 - **`overlap`（显式回退，保留）**：重跑到目标回合，输出 `rerun.jsonl` → `meta.resume_mode=overlap_rerun`（此处 `rerun` 指"重跑产物文件名"，非 `replay` 重放）。**不假装能续**；`native` 前提不满足时用它。
 
 ## 5. 长期账：清理 / 保留 / inode 监控
