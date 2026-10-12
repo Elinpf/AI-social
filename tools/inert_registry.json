@@ -28,7 +28,7 @@
     },
     "GOAL_ABANDON": {
       "class": "wired",
-      "note": "T231 已接线（life L4 发射）。stalled 条件（08 §1.2 C 写死）：**周 REVIEW、status=active 且本周 progress 增量==0 → GOAL_ABANDON{reason:\"stalled\"}**；deadline/voluntary 暂不启用；不得为凑事件强发。**实测 0 触发**：seed 7/11/23 × 4 周 × N=3 → `GOAL_ABANDON=0`、`GOAL_PROGRESS=107`，与『当前无目标停滞(最低 0.15)』一致 → **钩子该发时能发，只是当前世界目标不停滞**（换严苛环境才可能响）；**不得放宽条件凑数**。证据（sha `18ed5c5`）：`python -c "from orchestration.integration import run_e2e; run_e2e(seed=7, rounds=336, n=3, out_path='../v2/evidence/t231_goal_abandon_n3_seed7.jsonl')"`；`grep -c '\"type\":\"GOAL_ABANDON\"' → 0`、`grep -c '\"type\":\"GOAL_PROGRESS\"' → 107`、`GOAL_SET=24/GOAL_ACHIEVED=10`、`conservation_ok=True`、`replay_parity=True`；规则可触发单测 `pytest tests/test_t231_goal_abandon.py -q → 5 passed`（停滞周发；有推进/已达成/非周边界不发；字段完整）",
+      "note": "T231 已接线（life L4 发射）。stalled 条件（08 §1.2 C 写死）：**周 REVIEW、status=active 且本周 progress 增量==0 → GOAL_ABANDON{reason:\"stalled\"}**；deadline/voluntary 暂不启用；不得为凑事件强发。**实测 0 触发**：seed 7/11/23 × 4 周 × N=3 → `GOAL_ABANDON=0`、`GOAL_PROGRESS=107`，与『当前无目标停滞(最低 0.15)』一致 → **钩子该发时能发，只是当前世界目标不停滞**（换严苛环境才可能响）；**不得放宽条件凑数**。证据（sha `18ed5c5`）：`python -c \"from orchestration.integration import run_e2e; run_e2e(seed=7, rounds=336, n=3, out_path='../v2/evidence/t231_goal_abandon_n3_seed7.jsonl')\"`；`grep -c '\"type\":\"GOAL_ABANDON\"' → 0`、`grep -c '\"type\":\"GOAL_PROGRESS\"' → 107`、`GOAL_SET=24/GOAL_ACHIEVED=10`、`conservation_ok=True`、`replay_parity=True`；规则可触发单测 `pytest tests/test_t231_goal_abandon.py -q → 5 passed`（停滞周发；有推进/已达成/非周边界不发；字段完整）",
       "wire_task": "已完成 T231（life-layer-dev）"
     },
     "LOAN_REPAY": {
