@@ -29,7 +29,10 @@
     "GOAL_ABANDON": {
       "class": "wired",
       "note": "T231 已接线（life L4 发射）。stalled 条件（08 §1.2 C 写死）：**周 REVIEW、status=active 且本周 progress 增量==0 → GOAL_ABANDON{reason:\"stalled\"}**；deadline/voluntary 暂不启用；不得为凑事件强发。**实测 0 触发**：seed 7/11/23 × 4 周 × N=3 → `GOAL_ABANDON=0`、`GOAL_PROGRESS=107`，与『当前无目标停滞(最低 0.15)』一致 → **钩子该发时能发，只是当前世界目标不停滞**（换严苛环境才可能响）；**不得放宽条件凑数**。证据（sha `18ed5c5`）：`python -c \"from orchestration.integration import run_e2e; run_e2e(seed=7, rounds=336, n=3, out_path='../v2/evidence/t231_goal_abandon_n3_seed7.jsonl')\"`；`grep -c '\"type\":\"GOAL_ABANDON\"' → 0`、`grep -c '\"type\":\"GOAL_PROGRESS\"' → 107`、`GOAL_SET=24/GOAL_ACHIEVED=10`、`conservation_ok=True`、`replay_parity=True`；规则可触发单测 `pytest tests/test_t231_goal_abandon.py -q → 5 passed`（停滞周发；有推进/已达成/非周边界不发；字段完整）",
-      "wire_task": "已完成 T231（life-layer-dev）"
+      "wire_task": "已完成 T231（life-layer-dev）",
+      "default_state": "on",
+      "switch": "无独立开关",
+      "default_state_note": "已接线，无开关；当前世界目标不停滞→本 run 0 触发"
     },
     "LOAN_REPAY": {
       "class": "wired",
@@ -84,7 +87,10 @@
       "expected_status": "已接线",
       "owner": "life-layer-dev（T224）",
       "due_condition": "① 登记 engine/events.py::EVENT_TYPES + replay.apply_event 折叠器；② life/sleep_window 接线并由 agent 落账  [接线确认] wired_by=6975f18（T224 agent.py 睡眠挂载点→INTENT.MEMORY→裁决器落事件）",
-      "wired_by": "6975f18"
+      "wired_by": "6975f18",
+      "default_state": "off",
+      "switch": "config/life_v2.json::sleep.enabled",
+      "default_state_note": "默认关（睡眠窗流程 enabled = sleep.enabled OR forgetting.enabled）；sleep 与 forgetting 默认均 false"
     },
     {
       "name": "SLEEP_COMPLETED",
@@ -95,7 +101,10 @@
       "expected_status": "已接线",
       "owner": "life-layer-dev（T224）",
       "due_condition": "同 SLEEP_STARTED  [接线确认] wired_by=6975f18（T224 agent.py 睡眠挂载点→INTENT.MEMORY→裁决器落事件）",
-      "wired_by": "6975f18"
+      "wired_by": "6975f18",
+      "default_state": "off",
+      "switch": "config/life_v2.json::sleep.enabled",
+      "default_state_note": "默认关（睡眠窗流程 enabled = sleep.enabled OR forgetting.enabled）；sleep 与 forgetting 默认均 false"
     },
     {
       "name": "MEMORY_CONSOLIDATE",
@@ -107,7 +116,10 @@
       "expected_status": "已接线",
       "owner": "life-layer-dev（T224）",
       "due_condition": "sleep_window 已产『待发事件』，但未登记 EVENT_TYPES、未接线落账 → 一旦登记+接线即『已接线』  [接线确认] wired_by=6975f18（T224 agent.py 睡眠挂载点→INTENT.MEMORY→裁决器落事件）",
-      "wired_by": "6975f18"
+      "wired_by": "6975f18",
+      "default_state": "off",
+      "switch": "config/life_v2.json::forgetting.enabled",
+      "default_state_note": "默认关；关闭时 plan_forgetting 恒空"
     },
     {
       "name": "MEMORY_FORGET",
@@ -119,7 +131,10 @@
       "expected_status": "已接线",
       "owner": "life-layer-dev（T224）",
       "due_condition": "同 MEMORY_CONSOLIDATE  [接线确认] wired_by=6975f18（T224 agent.py 睡眠挂载点→INTENT.MEMORY→裁决器落事件）",
-      "wired_by": "6975f18"
+      "wired_by": "6975f18",
+      "default_state": "off",
+      "switch": "config/life_v2.json::forgetting.enabled",
+      "default_state_note": "默认关；关闭时 plan_forgetting 恒空"
     },
     {
       "name": "PERSONA_DRIFT",
@@ -131,7 +146,10 @@
       "expected_status": "已接线",
       "owner": "life-layer-dev（T224）",
       "due_condition": "同 MEMORY_CONSOLIDATE  [接线确认] wired_by=6975f18（T224 agent.py 睡眠挂载点→INTENT.MEMORY→裁决器落事件）",
-      "wired_by": "6975f18"
+      "wired_by": "6975f18",
+      "default_state": "off",
+      "switch": "config/life_v2.json::sleep.enabled",
+      "default_state_note": "默认关；随睡眠窗流程运行，无独立开关"
     },
     {
       "name": "PERSONA_FINGERPRINT",
@@ -160,7 +178,10 @@
       "expected_status": "已接线",
       "owner": "life-layer-dev / freeze-layer-dev（T234/T53）",
       "due_condition": "NARRATIVE 事件已由 life/agent.py 发射（body_ref=side://narrative/...），但**指向的正文无写入方** → 即使 side 保留也导不出（非归档问题，是从未写过）。接线：narrative-designer 落正文到 side 存储。wire_task：待派（narrative-designer 域）  [接线确认] wired_by=74f75d0（T234 phase1: SideStore 叙事正文 writer + persist_body 开关）；事件发射点 agent.py:499 _submit_audit('NARRATIVE')",
-      "wired_by": "74f75d0"
+      "wired_by": "74f75d0",
+      "default_state": "on",
+      "switch": "code/config/policy.json::life.narrative.persist_body",
+      "default_state_note": "persist_body 默认 true=on（env N50_NARR_BODY=0 可关） | 拆两事实：①【事件 NARRATIVE 发射】无独立开关 → default_state=on（agent.py:499）；②【正文落盘 body_ref→side txt】受 life.narrative.persist_body 控制，默认 on"
     },
     {
       "name": "SKILL_OUTPUT(body)",
@@ -190,7 +211,10 @@
       ],
       "expected_status": "已到达",
       "owner": "已完成（T235）",
-      "due_condition": "T235 已落地：72/72 携带 vec_available。证据：T235（见 v2/refs/inert-registry.md / T235 提交）"
+      "due_condition": "T235 已落地：72/72 携带 vec_available。证据：T235（见 v2/refs/inert-registry.md / T235 提交）",
+      "default_state": "on",
+      "switch": "code/config/policy.json::life.memory.persist_vec",
+      "default_state_note": "persist_vec 默认 true=on（env N50_VEC=0 可关→vec_available=false）"
     }
   ],
   "assembly_points": {
@@ -198,22 +222,30 @@
     "WORLD_DIRECTIVE": {
       "assembly_point": "engine/hooks/world_director.py::apply_world_director（PHASE4_CHAIN 首项）",
       "producer": "WD-Core 决策器→内核合规校验器(R1–R6)封装",
-      "notes": "默认 config/world_director.json enabled=false（保底(b)消融→0事件）；启用后产"
+      "notes": "默认 config/world_director.json enabled=false（保底(b)消融→0事件）；启用后产",
+      "default_state": "off",
+      "switch": "config/world_director.json::enabled"
     },
     "WORLD_GROUP_EVENT": {
       "assembly_point": "engine/hooks/world_director.py::apply_world_director",
       "producer": "EF-Core/Opp/Incident→内核据 DIRECTIVE+RNG 封装",
-      "notes": "kind 用 T216 §2.1 的 14 枚举子集；≠GROUP_*"
+      "notes": "kind 用 T216 §2.1 的 14 枚举子集；≠GROUP_*",
+      "default_state": "off",
+      "switch": "config/world_director.json::enabled"
     },
     "WORLD_DIRECTIVE_REJECTED": {
       "assembly_point": "engine/hooks/world_director.py::apply_world_director",
       "producer": "WD-Core 合规校验器",
-      "notes": "仅违 R1–R6（reason∈…，severity=reject）或 scope<K（severity=warn）时出现；正常 run=0"
+      "notes": "仅违 R1–R6（reason∈…，severity=reject）或 scope<K（severity=warn）时出现；正常 run=0",
+      "default_state": "off",
+      "switch": "config/world_director.json::enabled"
     },
     "FORGE_FIRED": {
       "assembly_point": "engine/hooks/…::EF-Control（**未实现**）",
       "producer": "EF-Control 控制面",
-      "notes": "**未接线**：事件制造机 EF-Control 未实现；实现后必含 machine-check social_result_emits==0（E-3）"
+      "notes": "**未接线**：事件制造机 EF-Control 未实现；实现后必含 machine-check social_result_emits==0（E-3）",
+      "default_state": "n/a",
+      "switch": "EF-Control 未实现"
     }
   }
 }
