@@ -69,7 +69,7 @@ python3 "$REPO/tools/t271/nightly.py" resume --batches <表> --env-file "$REPO/c
   - **实测（本机，双面真数据）**：`cut=89`（无真分歧）→ **PASS**（语义投影 byte-equal、`state_hash` 不等数=0、REVERSE ok）；`cut=75`（真分歧）→ **FAIL=真阳性**（`state_hash` 不等数=74，首个不等 round=76）。
   - **⚠️ 已知真缺陷（②类，已交 life）**：同 sha 下 **resume 对 cut 敏感** —— `@75` 续跑 round 76 起与一次性跑分叉，`@89` 一致。**非哈希序**（对 `PYTHONHASHSEED ∈{0,1,2,3,不设}` 完全不敏感）、非竞态、非 cache。最小复现：`bash tools/t271/repro_resume_cut.sh 75`（对照 `89`）。详见 `v2/evidence/T299-semantic-equality-gate.json`。
   - **备选（记此，未采用）**：(a) 预热对等——证据不足（预热后仍混合命中，单用不充分）；(c) 维持整份 sha 现状——报的是本地缓存命中状态、非世界语义。
-  - **台账重述（T299 验收）**：本门此前所有"逐字节一致"结论（**T276 / T288 / T292**）**均按新口径重述为「世界语义（排除上述 4 计量字段、重算哈希链）一致」**；T288 的"逐字节"在其原测试配置成立，但**非普适**（见上"已知真缺陷"）。
+  - **台账重述（T299 验收 → 独立成 T306）**：本门此前所有"逐字节一致"结论按新口径重述为「世界语义（排除 4 计量字段、重算哈希链）一致」，**逐条**列【原口径 / 新口径结论 / 是否独立核 / 在哪个 sha·指纹·cut 下成立 / 是否已失效】+ 命令读数。**完整重述见 `v2/evidence/T306-byte-equality-restatement.md`**（覆盖 **T276 / T288 / T236 / T292 / T287期①**）。要点：T276/T288 的世界语义一致**仅 cut=89 成立**（cut=75 真分歧，已交 life）；T236 属 provenance（不受影响）；T292 属计数旁证；T287期① 为异配置对照（口径不同、同向互证）。
 - **`overlap`（显式回退，保留）**：重跑到目标回合，输出 `rerun.jsonl` → `meta.resume_mode=overlap_rerun`（此处 `rerun` 指"重跑产物文件名"，非 `replay` 重放）。**不假装能续**；`native` 前提不满足时用它。
 
 ## 5. 长期账：清理 / 保留 / inode 监控
