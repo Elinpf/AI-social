@@ -15,6 +15,7 @@ set -uo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"   # -> code/
 cd "$ROOT"
 export PATH="/root/.local/share/pi-node/node-v22.23.1-linux-x64/bin:$PATH"
+IMMERSION_LOG="${IMMERSION_LOG:-sample/run_c_n20.play.jsonl}"
 GATE_PY="${GATE_PY:-frontend/tools/gate_render.py}"
 rc=0
 
@@ -23,7 +24,7 @@ rc=0
 _GS="$(cd "$ROOT/.." && pwd)/tools/git_stamp.sh"
 if [ -f "$_GS" ]; then bash "$_GS"; fi
 
-echo "== [1/2] 无浏览器快速门禁：smoke_test.js =="
+echo "== [1/3] 无浏览器快速门禁：smoke_test.js =="
 if [ "${HITT_SKIP_SMOKE:-0}" = "1" ]; then
   echo "  (跳过：HITT_SKIP_SMOKE=1)"
 else
@@ -34,7 +35,7 @@ else
   [ "$smoke_rc" -ne 0 ] && rc=1
 fi
 
-echo "== [2/2] 真渲染门禁：$GATE_PY =="
+echo "== [2/3] 真渲染门禁：$GATE_PY =="
 if ! ss -ltn 2>/dev/null | grep -q ':8848'; then
   echo "  启动静态服务 0.0.0.0:8848 ..."
   setsid nohup python3 frontend/tools/serve.py --host 0.0.0.0 --port 8848 >/tmp/hitt_serve.log 2>&1 < /dev/null &
@@ -46,6 +47,11 @@ case "$gate_rc" in
   3) echo "  → 真渲染门禁 SKIP（依赖缺失，未执行）"; [ "$rc" -eq 0 ] && rc=3 ;;
   *) rc=1 ;;
 esac
+
+echo "== [3/3] R9 沉浸/质感口径：immersion_metrics.js =="
+echo "  （校准条件：view=default · scale=1 · 960×720；日志 $IMMERSION_LOG）"
+node frontend/tools/immersion_metrics.js --log "$IMMERSION_LOG"; imm_rc=$?
+[ "$imm_rc" -ne 0 ] && rc=1
 
 echo
 case "$rc" in

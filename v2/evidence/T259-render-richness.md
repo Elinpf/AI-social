@@ -98,3 +98,15 @@
 
 **证据**：`T259-g12-before.png`（改前：无该 tab）`b1e6cf5f…` ｜ `T259-g12-after.png`（改后）`4ec82b05…`。
 **门禁**：`make ci` 曾 **FAIL**——`gate_render` 抓到 `pageerror: Unexpected identifier 'TURN_SEAL'`（我在模板串里误用了反引号），**mock 版 smoke 抓不到**；修复后 `make ci` **PASS**。→ **这正是"双门禁"存在的价值**（真渲染门禁抓到 mock 抓不到的真错）。
+
+## 3. R9「沉浸/质感」口径（leader 批准；A 部分已进 CI）
+
+**A. 可复算（`frontend/tools/immersion_metrics.js`，接入 `make ci` 第 3 步）**：
+`activity_ratio ≥0.5` · `idle_round_ratio ≤0.2` · `causal_coverage ≥0.8` · `label_overlap_rate ≤0.05`。
+**成立条件**：`view=default`·`scale=1`·960×720；校准日志 `sample/run_c_n20.play.jsonl` →
+实测 `0.7325 / 0.0000 / 0.9180 / 0.0000`（PASS）。**反向**：`IMMERSION_LOG=sample/demo_run.jsonl` → `FAIL(3)` → CI 红。
+**变更条件须重校**：视图/缩放/世界尺寸/人口/标签口径。
+
+**B. 人工量表（3 分钟盲测，5 人，1–5 分）**：
+① 这看起来是"一个在运转的小镇"吗？② 我大致知道"谁在做什么"吗？③ 画面乱/糊吗（反向）？
+**判据**：三题均值 ≥4，且**无人给 ≤2**。样本片段固定为 `run_c_n20.play.jsonl` 的 5 段（round 6/21/33/45/60）。

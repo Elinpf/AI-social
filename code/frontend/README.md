@@ -400,3 +400,22 @@ G-1..G-14 可执行清单见 `v2/refs/gamefeel-executable-tasks-T240.md`。本�
 - **G-14 关系图**：角色卡内**节点-边关系图**（中心「我」，边粗=好感强度、绿正/红负；点节点切换角色卡）。实现：`main.js::relGraphSVG`。
 
 演示参数：`?tab=weekly` / `?audit=1&expand=<seq>` / `?agent=<id>`。证据：`v2/evidence/T240-{before,after}-*.png`。**修复**：`.pane{display:flex}` 会盖过 `[hidden]`，致分页旧面板残留 → 加 `.pane[hidden]{display:none!important}`。`make ci` PASS。
+
+## 16. R9「沉浸/质感」可复算口径（进 CI）
+
+`tools/immersion_metrics.js` 计算**四条确定性子指标**（只读日志/渲染坐标），已接入 `ci_gate.sh` **第 3 步**：
+
+| 指标 | 定义 | 阈值 |
+|---|---|---|
+| `activity_ratio` | 产生可见画面反馈的事件 / 总事件 | ≥0.5 |
+| `idle_round_ratio` | 零变化回合 / 总回合 | ≤0.2 |
+| `causal_coverage` | 叙事级事件中"能展开为什么(reason/cause/cause_event_seq)"的比例 | ≥0.8 |
+| `label_overlap_rate` | default 视图下场所标签包围盒与**其它**建筑相交占比（渲染坐标近似） | ≤0.05 |
+
+**★ 成立条件（变了要重校）**：`view=default`（仅场所名，无 NPC ID）· **`scale=1` 未缩放** · 世界 960×720；
+CI 校准日志 = `sample/run_c_n20.play.jsonl`（C@N=20 真 LLM；实测 activity 0.7325 / idle 0 / causal 0.9180 / overlap 0）。
+`label_overlap` 为**确定性近似**（非像素级测量）：视图/尺寸/人口/标签口径变化 → 阈值须重校。
+
+**反向验证**：`IMMERSION_LOG=sample/demo_run.jsonl make ci` → `IMMERSION FAIL(3)` → `CI GATE: FAIL`；默认日志 → `PASS`。
+
+> 人工侧（B 部分）：3 分钟盲测量表（5 人、1–5 分、三题、均≥4 且无人≤2）——见 `v2/evidence/T259-render-richness.md` §3。
