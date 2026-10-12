@@ -480,6 +480,7 @@ class Event:
 
 - **用途**：**仅让该路径可由真实配置触发 / 可验证**；**默认值 = 现状**（行为不变）。
 - **键集**：加入 `life_v2.json::persona_drift`，使 **override（`life/config.py`）可用**（否则 unknown key → fail-loud）。
+- **落地顺序（防 inert，Leader 2026-10-13）**：两键**尚未写入** `life_v2.json`（现状文件不含它们）——由 **T321 与消费者（读取处，去硬编码）一起写入**：**写入前文件不含 → 现非 inert；写入即生效、`engine_version` 指纹一次变**（避免"先写键后补读"造成 inert）。
 - ⚠️ **新增 config 键 ⇒ 通知 `obs-stats-dev` 并入 T300 重冻变更清单**（标 **【仅指纹变/行为不变（默认值）】**；改默认值或启用才【行为变】）。
 
 **(2) 可重建 —— 选 (a)：每睡眠窗落 `PERSONA_DRIFT_CANDIDATE`**（推荐；与「事件即权威」一致）
