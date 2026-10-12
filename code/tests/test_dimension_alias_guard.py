@@ -149,3 +149,21 @@ def test_config_critical_dimensions_are_known_and_distinct():
         "importance belongs to the separate `critical_importance` key, not "
         "`critical_dimensions`")
 
+
+def test_config_projection_equals_life_constants():
+    """`policy.llm_budget.critical_dimensions` is the PUBLISHED PROJECTION of the
+    semantic source `life/constants.CRITICAL_DIMENSIONS`. They must be equal — the
+    engine cannot import life, so this assertion is the only thing keeping the two
+    from drifting apart."""
+    from life.constants import CRITICAL_DIMENSIONS
+
+    cfg = json.loads(_read(CODE_DIR / "config" / "policy.json"))
+    projection = (cfg.get("llm_budget") or {}).get("critical_dimensions")
+    assert isinstance(projection, list), "critical_dimensions projection missing"
+
+    assert set(projection) == set(CRITICAL_DIMENSIONS), (
+        "drift between semantic source and published projection:\n"
+        f"  life.constants.CRITICAL_DIMENSIONS = {sorted(CRITICAL_DIMENSIONS)}\n"
+        f"  policy.json.critical_dimensions    = {sorted(projection)}")
+
+

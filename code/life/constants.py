@@ -127,6 +127,16 @@ W_MIN, W_MAX = -100, 100
 EPS, EPS_STRONG = 20, 50
 RELATION_DELTA_MAX = 10          # 单次交互幅度上限 Δ_max
 
+# ---- M6 critical-only 维度价值表（T213↔T215↔T221 的**单一语义源**）-----------
+# `LLM_JUDGMENT.dimension` 中，在 L3（critical-only 降级）时**不可跳过**的维度。
+#   * 发布投影 = `config/policy.json::llm_budget.critical_dimensions`（引擎不 import life，
+#     只能读 config）；由 `code/tests/test_dimension_alias_guard.py` 断言两者相等（防漂移）。
+#   * ⚠️ `rel_respect`（关系四维之一）≠ `respect`（T127 社交评价维）——**不得归一**。
+#   * `importance` 属**另一条轴**（`_score_importance` → `llm.call`，非 judge），
+#     不在此表；它由 `llm_budget.critical_importance` 独立控制。
+CRITICAL_DIMENSIONS = ("weekly_focus", "rel_affinity", "rel_trust", "rel_respect")
+
+
 # ---- Goals (06 §7.1) ---------------------------------------------------------
 GOAL_LAYERS = ["survival", "growth", "social", "meaning"]
 KIND_TO_LAYER = {"security": "survival", "wealth": "survival", "mastery": "growth",
