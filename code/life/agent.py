@@ -120,6 +120,7 @@ class LifeLayerAgent:
         self._persona_state: dict | None = None
         self._persona_p0: dict | None = None
         self._slept_days: set[int] = set()
+        self._drift_streak: dict[str, int] = {}  # T244: 逐维"连续被反思信号"计数（分抖动/真漂移）
 
     # ---- public entry ------------------------------------------------------
     def step(self) -> StepReport:
@@ -646,12 +647,15 @@ class LifeLayerAgent:
             "op": "sleep_start", "day": day, "slot": slot, "planned_ticks": planned}))
         out = _sleep.run_sleep_window(self.agent_id, mems, wv.round, params,
                                       day=day, slot=slot, anchor=anchor,
-                                      p_state=self._persona_state, p0=self._persona_p0)
+                                      p_state=self._persona_state, p0=self._persona_p0,
+                                      drift_events=self._reflection_drift_events(params))
         n = 0
         for a in out["forget"]:
             if self.kernel.submit_intent(self.agent_id, Intent(INTENT_MEMORY, self.agent_id, {
                     "op": "forget", "mem_id": a["mem_id"], "level": a["level"],
                     "retention_permille": a["retention_permille"], "reason": a["reason"],
+                    "protected": a.get("protected"),                     # T244: 保护标记必须透传
+                    "protection_reason": a.get("protection_reason"),
                     "day": day, "slot": slot})).ok:
                 n += 1
         for g in out["consolidate"]:
@@ -667,6 +671,53 @@ class LifeLayerAgent:
 
     def _current_goal(self) -> str:
         return str(self.persona.goal_tendencies[0].get("kind", "")) if self.persona.goal_tendencies else ""
+
+    # T244 W3: 由**既有**反思（MEMORY_REFLECT 产出）转成**有界**人格漂移候选（不新增 LLM）。
+    _DRIFT_POS = ("帮助", "成长", "喜悦", "连接", "感谢", "陪伴", "温暖", "成功",
+                  "support", "growth", "joy", "connect", "thanks")
+    _DRIFT_NEG = ("冲突", "失败", "孤独", "失去", "争吵", "痛苦", "挫折", "焦虑",
+                  "conflict", "loss", "lonely", "fail", "struggle")
+
+    def _reflection_drift_events(self, params: dict) -> list[dict]:
+        """把既有反思节点转成**有界**漂移候选（06 §1.2；T244 W3）。
+
+        规则（确定性、**宁缺毋滥**、不新增 LLM 调用）：
+          * 仅取 `kind=="reflection"` 且 `importance >= min_importance`（默认 7）；
+          * `dim` 由 `sha256(mem_id)` **确定性**映射到大五之一；
+          * `delta` 符号由**情感词表**定；**无情感词 → 不产**（不在噪声里乱发）；
+          * 每窗口每维至多一条候选；
+          * **抖动 vs 真漂移**：某维需**连续 `min_windows`（默认 2）个窗口**被反思信号才发
+            `PERSONA_DRIFT`（单窗噪声不发）；发出后该维计数清零（自然冷却）；
+          * 幅度 = `±delta_max`（`bounded_update` 再夹一层）。
+        """
+        pd = params.get("persona_drift", {}) or {}
+        min_imp = int(pd.get("min_importance", 7))
+        dmax = int(pd.get("delta_max", 1))
+        min_windows = int(pd.get("min_windows", 2))
+        dims = PD.BIG5_DIMS
+        cand: dict[str, tuple[int, str]] = {}          # dim -> (sign, mem_id)
+        for n in sorted(self.memory.nodes.values(), key=lambda x: x.mem_id):
+            if n.kind != "reflection" or n.importance < min_imp:
+                continue
+            low = (n.text or "").lower()
+            sign = 1 if any(k in low for k in self._DRIFT_POS) else (
+                -1 if any(k in low for k in self._DRIFT_NEG) else 0)
+            if sign == 0:
+                continue
+            dim = dims[int(sha256_hex(n.mem_id)[:8], 16) % len(dims)]
+            if dim not in cand:                        # 每窗口每维至多一条
+                cand[dim] = (sign, n.mem_id)
+        evs: list[dict] = []
+        for dim in dims:
+            if dim in cand:
+                self._drift_streak[dim] = self._drift_streak.get(dim, 0) + 1
+            else:
+                self._drift_streak[dim] = 0
+            if self._drift_streak[dim] >= min_windows:  # 持续 = 真漂移；单窗 = 抖动，不发
+                sign, mem_id = cand[dim]
+                evs.append({"dim": dim, "delta": sign * dmax, "cause_mem_id": mem_id})
+                self._drift_streak[dim] = 0            # 发出后冷却
+        return evs
 
     def _describe_event(self, ev) -> str:
         t, p = ev.type, (ev.payload or {})
