@@ -1,0 +1,93 @@
+{
+  "worldbook_version": "1.0",
+  "schema_note": "作者化【世界层】的可配置 schema。世界层=我们(作者)定；社会层=只给手段、不预设数值。换世界观只需替换本文件与引用的 config，不改引擎/社会层。",
+  "world_id": "qingxi_town",
+  "display_name": "青溪镇",
+  "status": "validation_bed",
+  "status_note": "当前验证床（N=20 单小镇）。异世界后置：先跑通青溪镇，再以本 schema 生成新世界。",
+  "layers": {
+    "world_layer": { "owner": "author(我们)", "content": ["地理", "背景故事", "初始居民", "宏观事件", "世界导演介入"] },
+    "social_layer": { "owner": "emergence(AI)", "preset": false, "content": ["货币", "价格", "工资", "税", "制度", "规范"] }
+  },
+  "background": "群山环抱的小镇「青溪」，一条溪水穿镇而过。镇民世代以农、工、商、学、医相济；市集逢集而开，礼堂办节庆。镇子在城门口与外界相通，偶有外来者与物资。世界层只铺设『舞台与初始情境』，不规定镇子将走向何方。",
+  "geography": {
+    "places_ref": "code/config/places.json",
+    "topology_ref": "code/config/topology.json",
+    "n_places": 17,
+    "places": ["residence","farm","workshop","kitchen","clinic","school","office","market","bank","plaza","town_hall","library","community_center","cafe","park","hall","gate"],
+    "topology": { "schema_version_ref": "code/config/topology.json", "ring_rule": true, "travel_ticks": "{1,2,3}" }
+  },
+  "residents": {
+    "personas_ref": "code/config/personas.json",
+    "n_residents": 20,
+    "roster": [
+      {"persona_id": "P001", "display_name": "青溪镇·老周", "role_id": "farmer"},
+      {"persona_id": "P002", "display_name": "青溪镇·老石", "role_id": "craftsman"},
+      {"persona_id": "P003", "display_name": "青溪镇·阿禾", "role_id": "farmer"},
+      {"persona_id": "P004", "display_name": "青溪镇·秀娘", "role_id": "cook"},
+      {"persona_id": "P005", "display_name": "青溪镇·陈医", "role_id": "healer"},
+      {"persona_id": "P006", "display_name": "青溪镇·方老师", "role_id": "teacher"},
+      {"persona_id": "P007", "display_name": "青溪镇·阿林", "role_id": "merchant"},
+      {"persona_id": "P008", "display_name": "青溪镇·周公文", "role_id": "public_servant"},
+      {"persona_id": "P009", "display_name": "青溪镇·金先生", "role_id": "banker"},
+      {"persona_id": "P010", "display_name": "青溪镇·月牙", "role_id": "artist"},
+      {"persona_id": "P011", "display_name": "青溪镇·小满", "role_id": "student"},
+      {"persona_id": "P012", "display_name": "青溪镇·桂婶", "role_id": "farmer"},
+      {"persona_id": "P013", "display_name": "青溪镇·铁头", "role_id": "craftsman"},
+      {"persona_id": "P014", "display_name": "青溪镇·巧儿", "role_id": "craftsman"},
+      {"persona_id": "P015", "display_name": "青溪镇·五味", "role_id": "cook"},
+      {"persona_id": "P016", "display_name": "青溪镇·兰姐", "role_id": "merchant"},
+      {"persona_id": "P017", "display_name": "青溪镇·书言", "role_id": "teacher"},
+      {"persona_id": "P018", "display_name": "青溪镇·弦歌", "role_id": "artist"},
+      {"persona_id": "P019", "display_name": "青溪镇·石头", "role_id": "student"},
+      {"persona_id": "P020", "display_name": "青溪镇·阿散", "role_id": "unemployed"}
+    ]
+  },
+  "macro_events": {
+    "mechanism_table_ref": "v2/refs/world-event-mechanisms.md",
+    "director_config_ref": "code/config/world_director.json",
+    "narrator_policy": "世界导演不碰叙事层；叙事机只读、照常叙述（H-2 不破）。",
+    "mechanisms": [
+      {"config_key": "wd.festival",     "kind": "festival",     "enabled": true,  "wm_id": "WM-02", "name": "节庆 / 集市 / 大型活动"},
+      {"config_key": "wd.edict",        "kind": "edict",        "enabled": true,  "wm_id": null,    "name": "政令 / 公共公告", "note": "WD-3；未并入 WM 表（待对齐）"},
+      {"config_key": "wd.tension",      "kind": "tension",      "enabled": true,  "wm_id": "WM-07", "name": "紧张升级（制造 stakes）"},
+      {"config_key": "wd.visitor",      "kind": "visitor",      "enabled": false, "wm_id": "WM-12", "name": "外来者 / 访客"},
+      {"config_key": "wd.supply_shock", "kind": "supply_shock", "enabled": false, "wm_id": "WM-05", "name": "供给冲击"},
+      {"config_key": "wd.disaster",     "kind": "disaster",     "enabled": false, "wm_id": "WM-10", "name": "灾害"},
+      {"config_key": "wd.epidemic",     "kind": "epidemic",     "enabled": false, "wm_id": "WM-11", "name": "疫病"},
+      {"config_key": "wd.public_works", "kind": "public_works", "enabled": false, "wm_id": "WM-04", "name": "公共工程 / 公共协作目标"},
+      {"config_key": "wd.season",       "kind": "season",       "enabled": false, "wm_id": "WM-01", "name": "世界节律 / 季节"},
+      {"config_key": "wd.mass_event",   "kind": "mass_event",   "enabled": false, "wm_id": "WM-13", "name": "大规模外来事件"}
+    ],
+    "wm_only_not_in_config": ["WM-03 opportunity", "WM-06 scarcity", "WM-08 conflict_gate", "WM-09 incident"],
+    "note_wm_only": "这些机制在机制表(world-event-mechanisms.md)中定义，但当前 world_director.json 未开列对应 wd.* 键（待对齐，非矛盾）。"
+  },
+  "director": {
+    "design_ref": "v2/refs/world-director-design.md",
+    "principles": {
+      "a_explicit": "显式事件：每次介入落 WORLD_DIRECTIVE/WORLD_GROUP_EVENT，带 directed=true",
+      "b_ablatable": "可消融：每机制独立开关+剂量；关闭即归零，可做对照（置换检验）",
+      "c_no_rewrite": "不改过去：只影响 t>=now 的未来情境，绝不篡改已发生事实"
+    },
+    "dose_curves": ["conservative", "moderate", "aggressive"],
+    "default_dose_curve": "conservative",
+    "redlines": [
+      "世界导演不碰叙事层（叙事机只读）",
+      "政令只给『公共情境』，不得写死税率/价格/工资",
+      "供给冲击只改供给量，不写价格",
+      "紧张升级只制造 stakes，不指定对手/不指定胜负",
+      "conflict_gate 只降门槛/给可见度，触发权完全在 Agent",
+      "灾难级(aggressive)默认 OFF，且须能逐 Agent 事后复算影响"
+    ]
+  },
+  "configurability": {
+    "next_option": "世界设定可配置（异世界后置：先跑通青溪镇）",
+    "swap_points": ["geography.places_ref/topology_ref", "residents.personas_ref", "macro_events.director_config_ref", "background"],
+    "invariants": ["世界层只定情境不定结局", "社会层数值不预设", "每次介入可审计/可消融/不改过去"]
+  },
+  "social_layer_policy": {
+    "preset_values": false,
+    "forbidden_presets": ["price", "wage", "tax_rate", "mint_rule", "employment_wage"],
+    "note": "红线：世界层不得预设上述社会层数值；它们由 B 层涌现（见 v2/00-roadmap §0.3、v2/01 §0.3）。"
+  }
+}
