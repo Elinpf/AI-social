@@ -921,6 +921,45 @@ class FreezeLayerTest(unittest.TestCase):
         self.assertNotEqual(cfg_off.engine_version_with_policy(),
                             cfg_on.engine_version_with_policy())
 
+    # ------------------------------------------------------------------ #
+    # T228（freeze 侧）：side 分档契约 + 降级标记 schema
+    # ------------------------------------------------------------------ #
+    def test_side_persist_vec_switch(self) -> None:
+        from freeze import side
+
+        os.environ.pop(side.PERSIST_VEC_ENV, None)
+        self.assertTrue(side.resolve_persist_vec())          # 缺省=True（行为不变）
+        os.environ[side.PERSIST_VEC_ENV] = "0"
+        self.assertFalse(side.resolve_persist_vec())
+        os.environ[side.PERSIST_VEC_ENV] = "1"
+        self.assertTrue(side.resolve_persist_vec())
+        os.environ.pop(side.PERSIST_VEC_ENV, None)
+
+    def test_side_fingerprint_and_marker(self) -> None:
+        from freeze import side
+
+        self.assertEqual(side.side_fingerprint(True), {"persist_vec": True})
+        m_off = side.degradation_marker(vec_available=False)
+        self.assertFalse(m_off[side.VEC_AVAILABLE_FIELD])
+        self.assertEqual(m_off[side.RETRIEVAL_MODE_FIELD], "lexical")   # 显式降级
+        m_on = side.degradation_marker(vec_available=True)
+        self.assertEqual(m_on[side.RETRIEVAL_MODE_FIELD], "vector")
+        with self.assertRaises(ValueError):
+            side.degradation_marker(vec_available=False, retrieval_mode="bogus")
+
+    def test_embed_for_side_respects_switch(self) -> None:
+        from freeze import side
+
+        prov = MockProvider(embed_dim=4)
+        on = side.embed_for_side("t", prov, persist_vec=True)
+        self.assertIsNotNone(on.vector)
+        self.assertTrue(on.vec_available)
+        off = side.embed_for_side("t", prov, persist_vec=False)
+        self.assertIsNone(off.vector)                     # 不产 .vec
+        self.assertFalse(off.vec_available)
+        self.assertEqual(off.retrieval_mode, "lexical")
+        self.assertEqual(prov.embed_calls, 1)             # 关闭时不调用嵌入
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
