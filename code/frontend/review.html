@@ -42,7 +42,7 @@
 <body>
 <header>
   <h1>青溪镇 · 游戏质感盲测（片段播放件）</h1>
-  <div class="sub">5 个固定片段 + 打分表 · 全程 ≤ 3 分钟 · 点左侧片段即可播放</div>
+  <div class="sub">5 个固定片段 + 打分表 · 全程 ≤ 3 分钟 · 点左侧片段即可播放 · 日志：<code id="logname">…</code></div>
   <div id="stamp" class="stamp" title="页面所对应的 git 版本；DIRTY = frontend/ 有未提交改动（分数将无法归因到某个提交）">版本加载中…</div>
 </header>
 
@@ -77,9 +77,12 @@
 </div>
 
 <script>
-  // 固定 5 个片段（round 6/21/33/45/60）。时刻由 wallClock 口径确定性派生：1 tick=2h。
-  const LOG = "sample/run_c_n20.play.jsonl";
-  const CLIPS = [6, 21, 33, 45, 60];
+  // 片段可指向「任意日志」：?log=<url>（默认旧 canonical）+ ?rounds=6,21,33,45,60（默认 5 段）。
+  // 时刻由 wallClock 口径确定性派生：1 tick=2h。
+  const QS = new URLSearchParams(location.search);
+  const LOG = QS.get("log") || "sample/run_c_n20.play.jsonl";
+  const CLIPS = (QS.get("rounds") ? QS.get("rounds").split(",") : ["6", "21", "33", "45", "60"])
+    .map((x) => parseInt(x, 10)).filter((x) => Number.isFinite(x));
   const DIMS = [
     "画面丰富度（层次/光影）",
     "世界在运转",
@@ -98,6 +101,7 @@
 
   const clipsEl = document.getElementById("clips");
   const player = document.getElementById("player");
+  document.getElementById("logname").textContent = LOG;
   let activeIdx = 0;
 
   function label(r) {
