@@ -63,6 +63,7 @@ class Arbiter:
         for ev in self._pending:
             rec = self.ledger.append_spec(ev)
             state.event_index[rec["seq"]] = rec  # 用真实记录覆盖临时索引
+            # T295：累加已在 emit→apply_event 时按同 seq 完成，此处不重复
             recs.append(rec)
         self._pending = []
         return state, recs

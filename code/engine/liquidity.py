@@ -116,10 +116,8 @@ def overdue_of(state, aid, round_no) -> bool:
 def recent_default_of(state, aid, round_no, params) -> bool:
     """近 `w_cool_rounds` 回合内该 Agent 是否发生坏账（LOAN_DEFAULT）→ 信用降级。"""
     cool = int(params.get("w_cool_rounds", 6))
-    idx = getattr(state, "event_index", {}) or {}
-    for r in idx.values():
-        if r.get("type") != "LOAN_DEFAULT":
-            continue
+    from .event_acc import recs_of_type  # T295：读路径增量聚合（等价全表扫）
+    for r in recs_of_type(state, "LOAN_DEFAULT"):
         p = r.get("payload") or {}
         if p.get("borrower") == aid and int(round_no) - int(r.get("round", round_no)) <= cool:
             return True
@@ -130,32 +128,33 @@ def recent_default_of(state, aid, round_no, params) -> bool:
 def recent_income(state, aid, round_no, params) -> int:
     """近 `w_income_rounds` 回合的**正**有效净流入合计（口径同 obs/antifraud.ie_eff）。"""
     window = int(params.get("w_income_rounds", 12))
-    idx = getattr(state, "event_index", {}) or {}
+    from .event_acc import seqs_of_round  # T295：读路径增量聚合（等价全表扫）
     per_round = {}
-    for r in idx.values():
-        rd = int(r.get("round", -1))
-        if rd > int(round_no) or rd < int(round_no) - window:
-            continue
-        t = r.get("type")
-        p = r.get("payload") or {}
-        if t == "TRANSFER":
-            frm, to, tt = p.get("from"), p.get("to"), p.get("tx_type", "transfer")
-        elif t == "MARKET_TRADE":
-            frm, to, tt = p.get("buyer"), p.get("seller"), p.get("tx_type", "trade")
-        else:
-            continue
-        if tt not in _INCOME_TX_TYPES:
-            continue
-        flags = set(p.get("flags") or [])
-        if frm == to or (flags & _EXCLUDE_FLAGS):
-            continue
-        amount = int(p.get("amount", 0))
-        d = per_round.setdefault(rd, 0)
-        if to == aid:
-            d += amount
-        if frm == aid:
-            d -= amount
-        per_round[rd] = d
+    lo = int(round_no) - window
+    hi = int(round_no)
+    for rd in range(lo, hi + 1):
+        for seq in seqs_of_round(state, rd):
+            r = state.event_index[seq]
+            t = r.get("type")
+            p = r.get("payload") or {}
+            if t == "TRANSFER":
+                frm, to, tt = p.get("from"), p.get("to"), p.get("tx_type", "transfer")
+            elif t == "MARKET_TRADE":
+                frm, to, tt = p.get("buyer"), p.get("seller"), p.get("tx_type", "trade")
+            else:
+                continue
+            if tt not in _INCOME_TX_TYPES:
+                continue
+            flags = set(p.get("flags") or [])
+            if frm == to or (flags & _EXCLUDE_FLAGS):
+                continue
+            amount = int(p.get("amount", 0))
+            d = per_round.setdefault(rd, 0)
+            if to == aid:
+                d += amount
+            if frm == aid:
+                d -= amount
+            per_round[rd] = d
     return sum(max(0, v) for v in per_round.values())
 
 

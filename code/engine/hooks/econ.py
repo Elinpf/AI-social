@@ -639,11 +639,9 @@ def settle_obligations(state, round_no, ctx):
 # ------------------------------------------------------------------ 4.3 apply_tax
 def _round_ie_eff(state, round_no, agent_id, params):
     """本回合有效净流入 I_eff（与 obs/antifraud 口径一致）。"""
-    idx = getattr(state, "event_index", {}) or {}
+    from ..event_acc import recs_of_round  # T295：读路径增量聚合（等价全表扫）
     inflow = outflow = 0
-    for r in idx.values():
-        if int(r.get("round", -1)) != int(round_no):
-            continue
+    for r in recs_of_round(state, round_no):
         t = r.get("type")
         p = r.get("payload") or {}
         if t == "TRANSFER":

@@ -81,9 +81,8 @@ def _labor_completions(state, round_no):
     """本回合已完成的「劳动类」活动（按 seq 全序）。"""
     idx = getattr(state, "event_index", {}) or {}
     out = []
-    for r in idx.values():
-        if r.get("type") != "ACTIVITY_COMPLETED" or int(r.get("round", -1)) != int(round_no):
-            continue
+    from ..event_acc import recs_of_round  # T295：读路径增量聚合
+    for r in recs_of_round(state, round_no, ("ACTIVITY_COMPLETED",)):
         p = r.get("payload") or {}
         out.append((int(r.get("seq", 0)), p.get("agent_id"), p.get("place"),
                     p.get("activity_type"), p))
@@ -94,9 +93,8 @@ def _skill_level(state, aid, good) -> int:
     """从 `SKILL_LEVEL_UP` 折叠出 (agent, skill) 当前等级（确定性，默认 0）。"""
     idx = getattr(state, "event_index", {}) or {}
     lv = 0
-    for r in idx.values():
-        if r.get("type") != "SKILL_LEVEL_UP":
-            continue
+    from ..event_acc import recs_of_type  # T295：读路径增量聚合
+    for r in recs_of_type(state, "SKILL_LEVEL_UP"):
         p = r.get("payload") or {}
         if p.get("agent_id") != aid:
             continue

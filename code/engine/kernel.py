@@ -43,6 +43,7 @@ class Engine:
         # fail-loud：economy+exchange 启用却未挂载 apply_exchange -> 直接报错（防交易静默失效）
         assert_exchange_available(config)
         self.state = initial_state(self.seed)
+        self.state.acc_trusted = True  # T295：引擎状态 ⇒ 累加器可信（读取走增量聚合）
         self.ctx = Ctx(self.seed, config, 0, 0)
         # 生活层驱动：每回合在 Phase 2 DECIDE 调用 agent.step()（注入，不 import life）
         self.agent_steppers: list = []

@@ -62,10 +62,8 @@ def _history(state) -> tuple[dict, dict]:
     """从已提交日志折叠每 Agent 的「上次唤醒」：{aid: last_wake_seq} / {aid: last_wake_round}。"""
     last_seq: dict[str, int] = {}
     last_round: dict[str, int] = {}
-    idx = getattr(state, "event_index", None) or {}
-    for rec in idx.values():
-        if rec.get("type") != "WAKE":
-            continue
+    from .event_acc import recs_of_type  # T295：读路径增量聚合
+    for rec in recs_of_type(state, "WAKE"):
         aid = (rec.get("payload") or {}).get("agent_id")
         if not aid:
             continue

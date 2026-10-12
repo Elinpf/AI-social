@@ -228,23 +228,15 @@ def _agent_ids(state) -> list:
 
 
 def _events_of_round(state, round_no: int, types=None) -> list:
-    out = []
-    for rec in state.event_index.values():
-        if int(rec.get("round", -1)) != int(round_no):
-            continue
-        if types is not None and rec.get("type") not in types:
-            continue
-        out.append(rec)
-    out.sort(key=lambda r: int(r.get("seq", 0)))
-    return out
+    from ..event_acc import recs_of_round  # T295：读路径增量聚合（等价全表扫；已 seq 升序）
+    return recs_of_round(state, round_no, types)
 
 
 def _distress_series_all(state, upto_round: int) -> dict:
     """一次遍历：{agent_id: {round: {"d": bool(distress), "L": liquid}}}。"""
+    from ..event_acc import recs_of_type  # T295：读路径增量聚合
     out: dict = {}
-    for rec in state.event_index.values():
-        if rec.get("type") != _T_METABOLISM:
-            continue
+    for rec in recs_of_type(state, _T_METABOLISM):
         r = int(rec.get("round", -1))
         if r > int(upto_round):
             continue

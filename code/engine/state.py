@@ -37,6 +37,7 @@ _ATTR_KEYS = frozenset({
     "money_minted_total", "money_burned_total", "judgments", "pending_intents",
     "audit_violations", "memory_index", "event_index", "observed", "rejected",
     "relations", "encounters", "tags", "norms", "groups", "inventory", "budget_level",
+    "events_by_round", "seqs_by_type", "acc_n", "acc_trusted",
 })
 
 
@@ -79,6 +80,16 @@ class WorldState:
     # ---- 生活层派生索引 ----
     memory_index: dict = field(default_factory=dict)  # mem_id -> memory ref
     event_index: dict = field(default_factory=dict)   # seq -> event record（不入 state_hash）
+    # T295：读路径增量聚合（派生缓存，不入 state_hash；可由日志重建，续跑由 replay 恢复）
+    # round -> {type -> [seq,...]}（seq 升序）
+    events_by_round: dict = field(default_factory=dict)
+    # type -> [seq,...]（全局，seq 升序）
+    seqs_by_type: dict = field(default_factory=dict)
+    # 累加器已索引条数（自愈标记：与 len(event_index) 不一致 ⇒ 重建）
+    acc_n: int = 0
+    # T295：累加器是否可信 —— 仅 Engine / replay_records 产出的状态为 True；
+    # 手工构造/直接注入 event_index 的状态为 False（读取时按全扫等价重建）。
+    acc_trusted: bool = False
     observed: dict = field(default_factory=dict)      # agent_id -> [target_event_seq,...]
     rejected: list = field(default_factory=list)      # INTENT_REJECTED 摘要
     # ---- M3 关系 / M7 目标 / 传播（life 折叠，纳入 state_hash）----

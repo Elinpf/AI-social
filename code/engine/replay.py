@@ -664,6 +664,8 @@ def apply_event(state: WorldState, record: dict) -> WorldState:
     if r >= state.round:
         state.round = r
     state.event_index[record["seq"]] = record  # 事件索引（OBSERVATION 锚点校验等）
+    from .event_acc import note_event  # T295：读路径增量聚合（**唯一累加点**；emit 经此、replay 经此）
+    note_event(state, record)
     fn(state, record, record.get("payload", {}))
     return state
 
@@ -685,6 +687,7 @@ def replay_records(records: list, seed: int | None = None, verify: bool = True,
     if seed is None:
         seed = _seed_from_records(records)
     state = initial_state(seed)
+    state.acc_trusted = True  # T295：重放产出 ⇒ 累加器可信
     for rec in records:
         apply_event(state, rec)
     if verify_seals:

@@ -153,7 +153,9 @@ def _offer_chain(state, round_no):
     idx = getattr(state, "event_index", {}) or {}
     offers: dict[str, dict] = {}
     accepts = []
-    for r in sorted(idx.values(), key=lambda x: int(x.get("seq", 0))):
+    from ..event_acc import recs_of_types  # T295：读路径增量聚合（等价全表扫）
+    for r in recs_of_types(state, ("OFFER_CREATED", "OFFER_COUNTERED", "OFFER_ACCEPTED",
+                                   "OFFER_REJECTED", "OFFER_EXPIRED")):
         t, p = r.get("type"), (r.get("payload") or {})
         if t == "OFFER_CREATED":
             oid = p.get("offer_id")
@@ -317,7 +319,8 @@ def _expire_offers(state, round_no, ctx):
     idx = getattr(state, "event_index", {}) or {}
     created: dict[str, int] = {}
     terminal: set = set()
-    for r in sorted(idx.values(), key=lambda x: int(x.get("seq", 0))):
+    from ..event_acc import recs_of_types  # T295：读路径增量聚合
+    for r in recs_of_types(state, ("OFFER_CREATED", "OFFER_ACCEPTED", "OFFER_REJECTED", "OFFER_EXPIRED")):
         t, p = r.get("type"), (r.get("payload") or {})
         if t == "OFFER_CREATED" and p.get("offer_id"):
             created.setdefault(p["offer_id"], int(r.get("round", 0)))
@@ -338,7 +341,9 @@ def _active_contracts(state, round_no):
     idx = getattr(state, "event_index", {}) or {}
     status: dict[str, str] = {}
     created: dict[str, dict] = {}
-    for r in sorted(idx.values(), key=lambda x: int(x.get("seq", 0))):
+    from ..event_acc import recs_of_types  # T295：读路径增量聚合
+    for r in recs_of_types(state, ("CONTRACT_CREATED", "CONTRACT_FULFILLED",
+                                   "CONTRACT_VIOLATED", "CONTRACT_EXPIRED")):
         t = r.get("type")
         p = r.get("payload") or {}
         if t == "CONTRACT_CREATED":

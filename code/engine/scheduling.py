@@ -30,9 +30,10 @@ def sim_day(round_no: int, config=None) -> int:
 
 
 def daily_token_usage(state, day: int, config=None) -> int:
+    from .event_acc import recs_of_type  # T295：读路径增量聚合（等价全表扫）
     tot = 0
-    for rec in state.event_index.values():
-        if rec.get("type") != "LLM_CALL" or sim_day(rec.get("round", 0), config) != day:
+    for rec in recs_of_type(state, "LLM_CALL"):
+        if sim_day(rec.get("round", 0), config) != day:
             continue
         p = rec.get("payload", {}) or {}
         tot += int(p.get("tokens_in", 0) or 0) + int(p.get("tokens_out", 0) or 0)
@@ -40,9 +41,10 @@ def daily_token_usage(state, day: int, config=None) -> int:
 
 
 def daily_judge_calls(state, day: int, config=None) -> int:
+    from .event_acc import recs_of_type  # T295：读路径增量聚合（等价全表扫）
     n = 0
-    for rec in state.event_index.values():
-        if rec.get("type") != "LLM_CALL" or sim_day(rec.get("round", 0), config) != day:
+    for rec in recs_of_type(state, "LLM_CALL"):
+        if sim_day(rec.get("round", 0), config) != day:
             continue
         if (rec.get("payload", {}) or {}).get("purpose") == "judge":
             n += 1
