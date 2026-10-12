@@ -31,6 +31,13 @@ from .constants import (
 from .ports import MemoryRef
 from .util import sha256_hex
 
+try:  # optional vectorized relevance (T264-adjacent perf, T265-approved ②); off if absent
+    import numpy as _np
+except Exception:  # pragma: no cover
+    _np = None
+
+USE_NUMPY_RELEVANCE = _np is not None
+
 
 # ---- embedding model (frozen, offline, deterministic) ------------------------
 class EmbeddingModel(Protocol):
@@ -254,6 +261,16 @@ class AssociativeMemory:
         self._next_seq = 0
         self._unreflected_importance = 0
         self._reflections_by_week: dict[int, int] = {}
+        # perf caches (T265-approved ①②④). None of these change the ranking:
+        #  _norm_cache   ① avoids recomputing an unchanged node-vector norm
+        #  _rel_cache    ④ avoids recomputing relevance for the same (mem_id, query)
+        #  _vec_rows     ② optional numpy batch dot over the same float64 values
+        self._norm_cache: dict[str, float] = {}
+        self._rel_cache: dict[tuple[str, str], float] = {}
+        self._vec_ids: list[str] = []
+        self._vec_rows: list[list[float]] = []
+        self._vec_pos: dict[str, int] = {}
+        self._mat = None
 
     # ---- rebuild cache from the (authoritative) log refs ------------------
     def sync_from_refs(self, refs: Iterable[MemoryRef]) -> None:
@@ -285,6 +302,7 @@ class AssociativeMemory:
             access_count=r.access_count,
         )
         self.nodes[r.mem_id] = node
+        self._register(node)
         return node
 
     # ---- writes (prepare payload -> arbiter -> commit locally) ------------
@@ -334,12 +352,72 @@ class AssociativeMemory:
         except FileNotFoundError:
             node.text = ""
         self.nodes[mem_id] = node
+        self._register(node)
         self._next_seq = max(self._next_seq, int(mem_id.rsplit("-", 1)[-1]) + 1)
         if node.kind == "observation" and not node.reflected:
             self._unreflected_importance += node.importance
         return node
 
     # ---- three-factor retrieval (06 §3.4) ---------------------------------
+    # ---- perf helpers (T265-approved ①/②/④; ranking-preserving) -----------
+    def _register(self, node: MemoryNode) -> None:
+        """Index a node's frozen embedding for the optional numpy batch path."""
+        emb = node.embed
+        if emb and node.mem_id not in self._vec_pos:
+            self._vec_pos[node.mem_id] = len(self._vec_ids)
+            self._vec_ids.append(node.mem_id)
+            self._vec_rows.append(emb)
+            self._mat = None
+
+    def _node_norm(self, node: MemoryNode, n: int | None = None) -> float:
+        """① Cached L2 norm of an immutable node vector (recomputed at most once)."""
+        v = self._norm_cache.get(node.mem_id)
+        if v is None:
+            b = node.embed
+            m = len(b) if n is None else min(n, len(b))
+            v = sum(b[i] * b[i] for i in range(m)) ** 0.5
+            self._norm_cache[node.mem_id] = v
+        return v
+
+    def _relevance(self, node: MemoryNode, q: list[float], qn: float,
+                   q_digest: str) -> float:
+        """Scalar path: byte-for-byte the same arithmetic as `cosine(q, node.embed)`."""
+        key = (node.mem_id, q_digest)
+        cached = self._rel_cache.get(key)
+        if cached is not None:
+            return cached
+        b = node.embed
+        n = min(len(q), len(b))
+        dot = sum(q[i] * b[i] for i in range(n))
+        na = sum(q[i] * q[i] for i in range(n)) ** 0.5
+        nb = sum(b[i] * b[i] for i in range(n)) ** 0.5
+        val = 0.0 if (na == 0 or nb == 0) else (dot / (na * nb) + 1.0) / 2.0
+        self._rel_cache[key] = val
+        return val
+
+    def _batched_relevance(self, q: list[float], qn: float) -> dict[str, float]:
+        """② Optional numpy batch dot over the same float64 values.
+
+        Only active when `USE_NUMPY_RELEVANCE`. Falls back to the scalar path on
+        any shape mismatch, so it can never change *which* nodes are scored.
+        """
+        if not USE_NUMPY_RELEVANCE or not self._vec_ids:
+            return {}
+        if self._mat is None:
+            try:
+                self._mat = _np.asarray(self._vec_rows, dtype=_np.float64)
+            except Exception:  # pragma: no cover - ragged rows -> scalar path
+                return {}
+        if self._mat.ndim != 2 or self._mat.shape[1] != len(q):
+            return {}
+        dots = self._mat @ _np.asarray(q, dtype=_np.float64)
+        norms = _np.asarray([self._node_norm(self.nodes[i]) for i in self._vec_ids],
+                            dtype=_np.float64)
+        denom = qn * norms
+        with _np.errstate(divide="ignore", invalid="ignore"):
+            rel = _np.where(denom == 0.0, 0.0, (dots / denom + 1.0) / 2.0)
+        return {mid: float(rel[i]) for i, mid in enumerate(self._vec_ids)}
+
     def score_and_rank(self, query_text: str, now_tick: int, top_k: int | None = None,
                        weights: dict | None = None) -> tuple[list[tuple[MemoryNode, float]], dict]:
         w = {"w_rec": self.params["w_rec"], "w_imp": self.params["w_imp"],
@@ -350,13 +428,18 @@ class AssociativeMemory:
         decay = self.params["decay"]
         q = self.embedding.embed(query_text)
         q_tokens = set(_tokenize(query_text))
+        qn = sum(v * v for v in q) ** 0.5          # ① query norm computed once
+        q_digest = sha256_hex(query_text)          # ④ cache key component
+        batched = self._batched_relevance(q, qn)   # ② optional vectorized relevance
         scored: list[tuple[MemoryNode, float]] = []
         degraded = False
         for node in self.nodes.values():
             recency = decay ** max(0, now_tick - node.last_access)
             importance = node.importance / 10.0
             if node.embed:
-                relevance = cosine(q, node.embed)
+                relevance = batched.get(node.mem_id)
+                if relevance is None:
+                    relevance = self._relevance(node, q, qn, q_digest)
             else:
                 # T228 降级：无向量 → 词面重叠（lexical），并显式标记（不静默）
                 degraded = True
