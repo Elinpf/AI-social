@@ -3,6 +3,18 @@
   "schema_version": "1.0",
   "scan_root": "code",
   "production_exclude_parts": ["tests", "scripts", "__pycache__", "frontend", "freeze_cache"],
+  "_auto_event_classification_comment": "Leader 裁决（T226）：对 [B]『已注册·无生产侧发射点』的 9 事件做三分类——reserved（预留，写明将在哪接线）/ missing_wiring（应接线但漏了，报 Leader 排期）/ deprecated（废弃）。不要求清零，要求分类。",
+  "auto_event_classification": {
+    "GROUP_JOINED": {"class": "reserved", "note": "v2 默认『组队不可变』（08 §1.2 M / v2/02 §3.2）；启用时机：行会/互助需要成员变动时", "wire_task": "v2 社会结构·组织成员可变时"},
+    "GROUP_LEFT": {"class": "reserved", "note": "同 GROUP_JOINED；默认冻结 members，不落 JOINED/LEFT", "wire_task": "v2 社会结构·组织成员可变时"},
+    "VOTE_CAST": {"class": "reserved", "note": "08 §1.2 P：显式投票为**可选**，默认用 NORM_PROPOSED.support_count 计票", "wire_task": "仅在需要显式投票审计时启用"},
+    "GOAL_ABANDON": {"class": "missing_wiring", "note": "08 §1.2 C 已定义**确定性放弃钩子**（deadline/stalled/voluntary），life L4 未实现发射", "wire_task": "life 目标钩子（报 Leader 排期）"},
+    "LOAN_REPAY": {"class": "missing_wiring", "note": "经济循环应有（4.2 结算）；econ 已实现在期/续命贷，但无 LOAN_REPAY 发射点", "wire_task": "econ 4.2 还款发射（报 Leader 排期）"},
+    "MONEY_BURNED": {"class": "missing_wiring", "note": "销毁当前经 METABOLISM/PENALTY 的 money_burned_total 承载；独立 MONEY_BURNED 事件无发射点", "wire_task": "econ/审计：销毁事件化（报 Leader 排期）"},
+    "OFFER_EXPIRED": {"class": "missing_wiring", "note": "08 §1.2 K：协商超限确定性终止；协商(OFFER_*)通道未接线", "wire_task": "life/econ 协商状态机超时（报 Leader 排期）"},
+    "SCHEDULE_REVISED": {"class": "missing_wiring", "note": "08 §1.2 A/CO2：life L2 日解析『计划微调』本应发射；现无发射点", "wire_task": "life L2 计划修订（报 Leader 排期）"},
+    "ACTIVITY_INTERRUPTED": {"class": "missing_wiring", "note": "08 §1.2 A：活动中断；life 尚无中断判定/发射（也可能应改为 reserved，请 life-layer-dev 定）", "wire_task": "life 活动中断判定（报 Leader 排期；倾向 missing_wiring）"}
+  },
   "entries": [
     {
       "name": "mentor_relation",

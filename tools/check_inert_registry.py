@@ -186,6 +186,12 @@ def main() -> int:
     mism = [r for r in manual if r["expected_ok"] is False]
     ev = [] if args.no_auto else auto_events(code_dir, exclude)
     sw = [] if args.no_auto else auto_switches(code_dir / "config" / "policy.json", code_dir, exclude)
+    # 对自动事件附「三分类」（Leader 裁决：reserved / missing_wiring / deprecated）
+    cls_map = reg.get("auto_event_classification", {})
+    for r in ev:
+        if r["name"] in cls_map:
+            r["class"] = cls_map[r["name"]].get("class")
+            r["class_note"] = cls_map[r["name"]].get("note")
 
     if args.json:
         print(json.dumps({
@@ -208,11 +214,19 @@ def main() -> int:
 
     if ev:
         un = [r for r in ev if not r["status"].startswith("已接线")]
+        n_mis = sum(1 for r in un if r.get("class") == "missing_wiring")
+        n_res = sum(1 for r in un if r.get("class") == "reserved")
+        n_dep = sum(1 for r in un if r.get("class") == "deprecated")
         print("-" * W)
         print(f"[B] 自动枚举 · EVENT_TYPES 事件：共 {len(ev)}，未接线 {len(un)}"
               f"（其余 已接线 = 有生产侧调用点且已折叠；仍须实跑确认【未验证】）")
+        print(f"    未接线三分类：missing_wiring={n_mis}  reserved={n_res}  deprecated={n_dep}"
+              f"  未分类={len(un) - n_mis - n_res - n_dep}（不要求清零，要求分类）")
         for r in un:
-            print(f"  - {r['name']:<26} {r['status']}  hits={r['hits'] or '-'}")
+            tag = f"[{r.get('class', 'unclassified')}]"
+            print(f"  - {r['name']:<26} {r['status']} {tag}")
+            if r.get("class_note"):
+                print(f"      {r['class_note']}")
 
     if sw:
         print("-" * W)
