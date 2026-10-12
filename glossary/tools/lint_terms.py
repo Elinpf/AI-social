@@ -127,7 +127,46 @@ def build_suggestion(line: str, rule: dict, category: str, match: re.Match | Non
     return sug
 
 
-def iter_targets(root: Path) -> Iterator[Path]:
+def _is_target(p: Path, root: Path) -> bool:
+    """仅接受 *.md（全树）与 code/**/*.py，且不在排除目录/后缀内。"""
+    if not p.is_file():
+        return False
+    if any(part in EXCLUDE_DIR_PARTS for part in p.parts):
+        return False
+    if p.suffix in EXCLUDE_SUFFIXES:
+        return False
+    try:
+        rel = p.relative_to(root).as_posix()
+    except ValueError:
+        rel = p.as_posix()
+    if rel.endswith(".md"):
+        return True
+    if rel.startswith("code/") and rel.endswith(".py"):
+        return True
+    return False
+
+
+def iter_targets(root: Path, only: list[Path] | None = None) -> Iterator[Path]:
+    """only=None → 全树扫描（CI / 全量门禁 `make lexicon-gate`）。
+
+    only=路径列表 → 仅扫描这些文件（pre-commit「本次提交范围」，对共享索引免疫）。
+    """
+    if only is not None:
+        resolved: list[Path] = []
+        seen: set[Path] = set()
+        for raw in only:
+            p = raw if raw.is_absolute() else (root / raw)
+            try:
+                p = p.resolve()
+            except OSError:
+                continue
+            if p in seen:
+                continue
+            seen.add(p)
+            if _is_target(p, root):
+                resolved.append(p)
+        yield from sorted(resolved)
+        return
     seen: set[Path] = set()
     for glob in MD_GLOBS + PY_GLOBS:
         for p in sorted(root.glob(glob)):
@@ -179,9 +218,10 @@ def counts_of(findings: list[dict]) -> dict[str, int]:
     return dict(c)
 
 
-def run_scan(root: Path, lexicon_path: Path, max_per_file: int) -> tuple[list[dict], int]:
+def run_scan(root: Path, lexicon_path: Path, max_per_file: int,
+             only: list[Path] | None = None) -> tuple[list[dict], int]:
     rules = compile_rules(load_forbidden(lexicon_path))
-    targets = list(iter_targets(root))
+    targets = list(iter_targets(root, only))
     findings: list[dict] = []
     for p in targets:
         hits = scan_file(p, rules, root)
@@ -245,6 +285,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--fail", action="store_true")
     ap.add_argument("--max-list", type=int, default=60, help="可操作清单最多打印条数")
     ap.add_argument("--max-per-file", type=int, default=500)
+    ap.add_argument("--paths", nargs="*", default=None,
+                    help="仅检查这些路径（相对 --root 或绝对）；缺省=全树")
+    ap.add_argument("--paths-from-stdin", action="store_true",
+                    help="从 stdin 逐行读取待检路径，仅检查这些（pre-commit 提交范围）")
     args = ap.parse_args(argv)
 
     root = Path(args.root).resolve()
@@ -256,7 +300,13 @@ def main(argv: list[str] | None = None) -> int:
         print(f"[lint_terms] 找不到 lexicon：{lexicon_path}", file=sys.stderr)
         return 2
 
-    findings, n_files = run_scan(root, lexicon_path, args.max_per_file)
+    only: list[Path] | None = None
+    if args.paths_from_stdin:
+        only = [Path(s.strip()) for s in sys.stdin.read().splitlines() if s.strip()]
+    elif args.paths is not None:
+        only = [Path(s) for s in args.paths]
+
+    findings, n_files = run_scan(root, lexicon_path, args.max_per_file, only)
     violations = [f for f in findings if f["category"] == "violation"]
     mentions = [f for f in findings if f["category"] == "mention"]
 
@@ -278,6 +328,7 @@ def main(argv: list[str] | None = None) -> int:
 
     report = {
         "root": str(root),
+        "scope": "changed-only" if only is not None else "full-tree",
         "files_scanned": n_files,
         "violations": len(violations),
         "mentions": len(mentions),

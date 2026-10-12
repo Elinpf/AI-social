@@ -1,0 +1,39 @@
+#!/bin/sh
+# pre-commit 钩子 · 术语棘轮（仅扫「本次提交涉及的文件」）—— T237
+#
+# 病根（今天已两次致堵）：旧钩子跑 `make lexicon-gate` 是**全树**扫描，
+#   会把**他人尚未提交的 WIP 违规**也扫进来，从而**阻断所有人的提交**
+#   （e.g. econ-dev 被他人 WIP 拦、sim-engine-stats-architect 被 life-layer-dev 新文件拦）。
+#   诱发的错误"解阻"是**代改他人文件** → 又制造归属/裹带问题。故**修根因**。
+#
+# 修复：只扫 `git diff --cached --name-only --diff-filter=ACM`（**本次提交范围**），
+#   对共享索引/他人 WIP 免疫；**全树检查保留给 CI**（`make lexicon-gate`，未削弱）。
+#
+# 安装：make install-hooks
+#   （等价于：cp tools/pre-commit-lexicon.sh .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit）
+# 绕过：git commit --no-verify（请先把违规修掉）。
+
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+cd "$ROOT" || exit 0
+
+# 本次提交涉及的文件（新增/修改/改名；不含删除）
+CHANGED="$(git diff --cached --name-only --diff-filter=ACM)"
+if [ -z "$CHANGED" ]; then
+  exit 0    # 本次提交无文件 → 放行
+fi
+
+printf '%s\n' "$CHANGED" \
+  | python3 glossary/tools/lint_terms.py --root . \
+      --baseline glossary/term_baseline.json --paths-from-stdin \
+      >/tmp/.lexicon_precommit.out 2>&1
+rc=$?
+
+if [ "$rc" -ne 0 ]; then
+  echo "❌ pre-commit 拦截：本次提交的文件存在新增术语违规（仅检查本次提交范围）"
+  echo "---- 可操作清单（行号 + 建议替换）----"
+  grep -E "OFFER|新增违规|建议|probe|:[0-9]+:" /tmp/.lexicon_precommit.out | head -24
+  echo "-------------------------------------"
+  echo "修好后重试；确需绕过：git commit --no-verify"
+  exit 1
+fi
+exit 0

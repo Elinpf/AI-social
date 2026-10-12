@@ -24,7 +24,7 @@
 | G0 | **单元/集成测试** | `cd code && python3 -m pytest -q` | 逻辑回归；契约/守恒/hashchain/重放/调度/预算 | 覆盖不到的模块（无 cov 计量）；「世界停摆但全绿」旧盲区由 G8/G6 补 |
 | G1 | **import 边界契约**（10 条） | `cd code && lint-imports` | 架构腐化：内核零反向依赖、life 不碰内核、obs/narrative/frontend 只读、plugin 仅 stdlib | 运行期**动态** import、字符串反射；ignore_imports 白名单被滥用 |
 | G2 | **术语棘轮** | `make lexicon-gate` | 命名漂移（同一物多叫法，如 `OFFER`→`OFFER_CREATED`）；仅**基线外新违规**报错 | 语义「同名不同义」；.md 中被判为「提及」的合法引用不罚（需人工判） |
-| G3 | **pre-commit 钩子** | `.git/hooks/pre-commit` | 把 G2 提前到**提交前**，防漏网进库 | `--no-verify` 可绕过；仅覆盖 lexicon，不跑 pytest/lint |
+| G3 | **pre-commit 钩子** | `.git/hooks/pre-commit`（源 `tools/pre-commit-lexicon.sh`） | 把 G2 提前到**提交前**，防漏网进库；**T237：只扫本次提交范围**（`git diff --cached`），对他人 WIP 免疫 | `--no-verify` 可绕过；仅覆盖 lexicon，不跑 pytest/lint |
 | G4 | **obs gate G2–G7** | `python -m obs gate --log <log> --baseline auto` | 见 §1.1（观测层 7 项） | G6 未命中基线时静默 skip（假绿 F2）；F 类指标正确性靠 07 口径 |
 | G5 | **前端双门禁** | `bash code/frontend/tools/ci_gate.sh` | ① smoke（PIXI mock 快检）② 真渲染（Chromium/SwiftShader：pageerror/空画面/图层数） | **像不像 / 好不看**（主观，§6）；SKIP(rc=3) 不等于 PASS（结构上区分） |
 | G6 | **美术管线幂等** | `make -C code art` | 「图旧资产新」脱钩：JSON `distinct_colors` == **落盘 PNG 实测**；剪影/角色 gate；事件卡空槽 | 美术品味；配色美观度（主观） |
@@ -246,4 +246,26 @@
 
 ---
 
-*（策略 v1 + T220 §10 — sandbox-test-lead；含 RV1–RV9 + RV-DISK + RV-STAMP 反向验证实录；口径真源 `code/obs/*`；与 delivery-reviewer T218 对齐中。）*
+## 11. T237 pre-commit 扫描范围修复（只扫「本次提交」，含反向验证）
+
+**问题（今日 2 次致堵）**：旧 pre-commit 跑 `make lexicon-gate` = **全树**扫描 → **他人未提交的 WIP 违规**会阻断**所有人**的提交（econ-dev 被他人 WIP 拦；sim-engine-stats-architect 被 life-layer-dev 新建 `code/tests/test_t231_goal_abandon.py` 第 3 行 `sim-engine` 拦）。诱发的错误"解阻"是**代改他人文件** → 又制造归属/裹带问题。故**修根因，不修症状**。
+
+**修复（只放宽"扫描范围"，不放宽"检测强度"）**：
+- `glossary/tools/lint_terms.py` 新增 `--paths <...>` 与 `--paths-from-stdin`（**仅扫给定文件**；缺省仍全树）；报告新增 `scope: full-tree | changed-only`。
+- pre-commit 改为：`git diff --cached --name-only --diff-filter=ACM | python3 glossary/tools/lint_terms.py --root . --baseline glossary/term_baseline.json --paths-from-stdin` —— **本次提交范围**，对共享索引 / 他人 WIP **免疫**。
+- 钩子脚本**入库**：`tools/pre-commit-lexicon.sh`；安装 `make install-hooks`（`cp` 到 `.git/hooks/pre-commit`）。
+- **CI 全树门禁未削弱**：`make lexicon-gate` 仍是 `--root .`（全树），**不改**。
+
+**反向验证（实际命令与输出；受控 temp 仓库 `/tmp/t237-rv`，装真实钩子）**：
+
+| # | 构造状态 | 命令 | 实测结果 |
+|---|---|---|---|
+| ① | 仅**他人** WIP 违规（`other_wip.md` 含 `OFFER`，**未暂存**） | staged 仅 `mine.md`（无违规）→ `git commit` | **成功**（`5380f41`）→ 仅他人 WIP 违规**不再阻断**我的提交 ✓ |
+| ② | **我的**文件违规（staged `mine_bad.md` 含 `OFFER`） | `git commit` | **失败**，打印 `mine_bad.md:1:1 [OFFER] -> OFFER_CREATED` + 建议替换 ✓ |
+| ④ | CI 全树门禁 | `lint_terms.py --root . --baseline …` | `scope=full-tree files_scanned=319 new_violations=0`；对照 `--paths` → `scope=changed-only files_scanned=1` ✓（全树**未削弱**） |
+
+> 红线守住：**放宽的是扫描范围，不是检测强度**——自己文件里的**新违规照样红**（②）。若做不到 ②，本改动作废。
+
+---
+
+*（策略 v1 + T220 §10 + T237 §11 — sandbox-test-lead；含 RV1–RV9 + RV-DISK + RV-STAMP + T237 RV①②④ 反向验证实录；口径真源 `code/obs/*`；与 delivery-reviewer T218 对齐中。）*

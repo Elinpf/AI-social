@@ -3,7 +3,7 @@
 # 与 `pytest -q` / `lint-imports` / obs gate 并列的可跑门禁。
 # 术语合规采用「基线/棘轮」模式：仅当出现基线之外的【新】违规才失败。
 
-.PHONY: help lexicon-gate lexicon-report lexicon-baseline lexicon-dir-stats inert-gate pyclean code-test plugin-test stamp gate
+.PHONY: help lexicon-gate lexicon-report lexicon-baseline lexicon-dir-stats inert-gate pyclean code-test plugin-test stamp install-hooks gate
 
 help:
 	@echo "make lexicon-gate    # 术语合规 · 棘轮门禁（CI 推荐）"
@@ -53,6 +53,14 @@ plugin-test:
 # git 状态打戳（T220 三）：门禁结论必须说明「在哪个 git 状态上跑的」。
 stamp:
 	@bash tools/git_stamp.sh
+
+# 安装本地 git 钩子（T237）：术语棘轮只扫**本次提交范围**（git diff --cached），
+# 对共享索引 / 他人 WIP 免疫；全树检查保留给 CI（`make lexicon-gate`）。
+# 钩子在 .git/hooks（不在版本库）→ 此目标把版本库内脚本装入，避免 clone 后丢失。
+install-hooks:
+	@cp tools/pre-commit-lexicon.sh .git/hooks/pre-commit
+	@chmod +x .git/hooks/pre-commit
+	@echo "[install-hooks] 已安装 .git/hooks/pre-commit ← tools/pre-commit-lexicon.sh"
 
 # 汇总门禁：先打戳（证据绑版本）；再术语棘轮 + inert 棘轮；再 code 测试；如装了 import-linter 则跑边界
 gate: stamp lexicon-gate inert-gate code-test plugin-test
