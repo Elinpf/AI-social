@@ -168,7 +168,9 @@ cd /tmp/cordis-spike
 
 ## 8. 证据文件位置
 
-**均在 `/tmp/cordis-spike/`（未入项目仓）**：
+> ⚠️ **2026-10-12 更新**：`/tmp/cordis-spike` 已按团队 **inode 告警**清理（释放 ~30,723 文件）。**本报告即证据存档**；下列文件全部**可由 §2–§5 的复现命令重新生成**（`npm install` 那两个包 + `pip install` SDK + 就地写脚本），故不再保留 scratch。
+
+**（原 scratch，均已清理，可再生成）** `/tmp/cordis-spike/`：
 `s1-standalone.mjs`、`s1-loader-plugin.mjs`、`cordis.yml`、`overlay.yml`、`overlay2.yml`、`headless-config.yml`（95 插件基线）、`patched-config.yml`、`s3.py`、`s3b.py`、`s3c.py`、`s4_demo.py`、`s4_real.py`、`frozen_harness.py`、`mock_llm.py`、`mock_req.log`、`home/sessions/**/session.v4.jsonl.zstd`。
 
 *（v2/refs/cordis-spike-result.md 完成 — solution-architect）*
