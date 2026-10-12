@@ -67,3 +67,14 @@
 - **忽略 `{cached,tokens_in,tokens_out}` 后**逐条比对仍显示 TURN_SEAL 差 → 因 `last_hash` 是哈希链下游，源头仍是上述三字段。
 
 **（以上为原始数据；归因由 art 独立给出。）**
+
+## 6) 解冻后待补（T298 出口，命令占位）
+> 前置：解冻 + T299 新闸门口径落地。均走**与结论对应的机制**（探针=copy；三档=纯 HEAD）。
+
+1. **纯 HEAD 三档**（消除 §3b 的"活树"caveat）：
+   `git worktree add .worktrees/t298-head <HEAD>` 或整目录复制 → 在该树跑 §3c 的三档（`seed42/n=4/0..8`、`0..24`、`seed7/N=20×24`），记录 `one==two`。
+2. **新口径探针**（T299 定义：排除 `cached/tokens_in/tokens_out/cost_units`、保留 `cache_key`、`state_hash` 须等）：
+   `T271_VR_SEED=9 T271_VR_AGENTS=2 T271_VR_ROUNDS=150 T271_VR_FLUSH=5 T271_VR_KILL_AFTER=2 T271_VR_GATE=1 bash tools/t271/verify_native_resume.sh`
+3. **反向验证**（去掉修复须重回分叉）：临时将 `sync_from_refs` 的裁剪分支置空 → 探针应重新在 round93 分叉；随后恢复。
+4. **`make verify`**（分段跑）。
+
