@@ -191,6 +191,29 @@ class SideStore:
         rel = ref.split("side://", 1)[1]
         return (self.root / rel).read_text(encoding="utf-8")
 
+    # ---- T247: SKILL_OUTPUT 正文 side storage（`SKILL_OUTPUT.output_ref` writer）----
+    # 与 `life/settlement.py` 的 `output_ref = f"side://skill/{aid}/{skill_id}"` **一字对齐**
+    # （无扩展名）。开关走 T228 分档体系（`policy.skill_persist_enabled`）：**关时不写**。
+    def _skill_path(self, agent_id: str, skill_id: str) -> Path:
+        return self.root / "skill" / agent_id / f"{skill_id}"
+
+    @staticmethod
+    def skill_ref(agent_id: str, skill_id: str) -> str:
+        """技能正文的 side 引用（单一来源；`SKILL_OUTPUT.output_ref` 即此值）。"""
+        return f"side://skill/{agent_id}/{skill_id}"
+
+    def write_skill(self, agent_id: str, skill_id: str, text: str) -> str:
+        """写入技能产出正文，返回可解析的 `output_ref`。"""
+        p = self._skill_path(agent_id, skill_id)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(text, encoding="utf-8")
+        return self.skill_ref(agent_id, skill_id)
+
+    def read_skill(self, ref: str) -> str:
+        """按 `side://skill/<agent>/<skill_id>` 读回正文（供导出/S2 roundtrip）。"""
+        rel = ref.split("side://", 1)[1]
+        return (self.root / rel).read_text(encoding="utf-8")
+
 
 # ---- memory node & stream ----------------------------------------------------
 @dataclass

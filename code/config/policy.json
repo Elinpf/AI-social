@@ -97,6 +97,10 @@
     "narrative": {
       "persist_body": true,
       "_persist_body_note": "T234：是否把叙事正文写入 side（side/narrative/<agent>/<nid>.txt，S4 数据资产）。默认 true=行为不变；关时 NARRATIVE.body_ref 仍发射但不落文件（导出侧计 missing）。env N50_NARR_BODY=0 覆盖。只补 writer，不新增事件/字段。"
+    },
+    "skill": {
+      "persist_body": true,
+      "_persist_body_note": "T247：是否把技能产出正文写入 side（side/skill/<agent>/<skill_id>，#10 数据资产；与 SKILL_OUTPUT.output_ref 一字对齐）。默认 true=行为不变；关时 output_ref 仍发射但不落文件（导出侧计 missing）。env N50_SKILL_BODY=0 覆盖。只补 writer，不新增事件/字段。"
     }
   },
   "safety_valve": {

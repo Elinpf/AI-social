@@ -235,3 +235,41 @@ def set_narrative_persist(value: bool | None) -> None:
     if value is None:
         _nb_cache = None
 
+
+# ---- T247: 技能产出正文落盘开关（T228 分档体系；可关，关时不写）----------------
+#   policy.life.skill.persist_body  (config/policy.json, 默认 true=行为不变)
+#   env N50_SKILL_BODY=0|false|no|off  -> 关（oversight override）
+# 关时：emit 侧**不写** `side/skill/<agent>/<skill_id>`（省 inode）；`output_ref` 仍发射
+# （指针在、正文可缺，导出侧显式计 missing）。与 T234 narrative 同族。
+_sb_cache: bool | None = None
+_sb_override: bool | None = None
+
+
+def _read_skill_persist() -> bool:
+    env = os.environ.get("N50_SKILL_BODY")
+    if env is not None:
+        return env.strip().lower() not in ("0", "false", "no", "off", "")
+    try:
+        data = json.loads(_CONFIG_PATH.read_text(encoding="utf-8"))
+        return bool(((data.get("life") or {}).get("skill") or {}).get("persist_body", True))
+    except Exception:
+        return True
+
+
+def skill_persist_enabled() -> bool:
+    """True（默认）-> emit 侧写技能正文到 side；False -> 不写（可关/消融）。"""
+    global _sb_cache
+    if _sb_override is not None:
+        return _sb_override
+    if _sb_cache is None:
+        _sb_cache = _read_skill_persist()
+    return _sb_cache
+
+
+def set_skill_persist(value: bool | None) -> None:
+    """Test/ablation hook: force the flag (None clears and re-reads config)."""
+    global _sb_override, _sb_cache
+    _sb_override = value
+    if value is None:
+        _sb_cache = None
+
