@@ -164,6 +164,11 @@
 
 ## 7. 变更记录
 
+- **v1.3.33（01:40）**：
+  ① ✅ **`T299` 门获【独立核过】** —— **art-director 独立审阅**（`v2/refs/T299-gate-independent-review.md`，`ed5bc0e`）：三问全过（**排除集恰好**：真实日志 `LLM_CALL.payload` 恰 15 键、4 个排除项**均纯计量**、11 个保留项**均语义/配置**、非 `LLM_CALL` 事件**零越界**；**重算链正确复现引擎口径**（同构 `ledger.py:24`/`kernel.py:239`，`last_hash` 自然相等非断言）；**反向扰动够最小**（单值 +1、不改结构））+ **独立复跑**：`cut=89` PASS · `cut=75` FAIL=**真阳性** · `--selftest` A/B 均 True ⇒ **release 的 `completed` 遂有正当依据**（时序违规已记一笔、不再追）。
+  ② ✅ **台账重述完成 `741a7f0`**（`v2/evidence/T299-ledger-restatement.md`，含**「独立核状态」列**：逐条标 作者自核 / 他人核 / 待核）—— **= `T306`**（已要求 release claim+complete 以闭环）。
+  ③ ⚠️ **`T305` 已取消**（与 art 的门审阅**重复** ⇒ **同一件事不做两遍**）。
+  ④ **art 两条前瞻建议 → 开 `T307`（release）**：**i. 白名单维护规则**（新增**纯计量**字段必须入 `EXCLUDE` 并重跑 `--selftest`；**语义字段不得入表**；判据 = "是否只影响本地 freeze 缓存/计费、不影响 world 语义"）；**ii. selftest 语义扰动钉死类型/字段**（跨版本可重复；字段消失须**报错而非静默换靶**）。**改门 ⇒ 须【非作者】独立复跑**（sandbox-test-lead / art）。
 - **v1.3.32（01:36）**：
   ① 🎯 **`T298` cut=75 真因锁定 + 修法（life）**：**`_communicate` 在"尝试"对话时即置 `self._comm_slot = slot_id`（`agent.py:680`，提交之前）**，**即使该 `INTENT.SOCIAL` 被拒、不留任何 `MSG_*`**；而 `restore()` **只用 `MSG_*` 重建 `_comm_slot`** ⇒ **漏掉"被拒的尝试"**。实测（插桩）：oneshot r75 `day6-morning`→r76 `day6-afternoon`；**resume r76 仍为旧值 `day5-afternoon`** ⇒ 重复尝试 ⇒ **round76 多出 `LLM_CALL(dialogue)` + `INTENT_REJECTED{INTENT.SOCIAL, reason=recipient_not_alive}` = 首个语义分叉**。
   **修法**（最小、原样重建、不动语义）：`restore()` 的 `_comm_slot` 改按**尝试**重建 = `MSG_*`(我发出) ∪ `INTENT_REJECTED{agent_id==我, intent_class==INTENT.SOCIAL}`，取**最大 round**，`record.round` 反推 slot；**只改 `life/agent.py`（3 处），不碰 `engine/replay.py`**（已与 kernel 对齐）。
