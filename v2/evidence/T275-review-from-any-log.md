@@ -45,3 +45,24 @@ python3 frontend/tools/review_pack.py --log <任意日志> [--measure] [--shots 
 ## 已知边界（如实）
 - 5 个片段**逐个切换**时 iframe 各自重新加载日志（≈每段一次解析）→ 5 段全看约 25s（30 万级）；用户一次看一段，可按需再优化（预取/复用）。
 - 夜间冻结批的日志到位后，**按同一命令实跑一次**即可（`review_pack.py --log <今晚A批产物>`）。
+
+---
+
+## 实跑补证（今晚 A 批真日志，2026-10-12 21:4x）
+**日志**：`v2/evidence/run_t236_canon_n20_llm.jsonl` —— **301,384 行 / 140.9 MB**（新基线，旧 canonical 的 ~2.3×）。
+
+命令（一条）：
+```
+python3 code/frontend/tools/review_pack.py --log v2/evidence/run_t236_canon_n20_llm.jsonl --measure
+```
+输出：
+```
+片段(覆盖昼夜): r0 第1日 06:00 晨 | r37 第4日 08:00 晨 | r40 第4日 14:00 午 | r43 第4日 20:00 暮 | r46 第4日 02:00 夜
+夜段在样本内: ✅ [46]
+▶ http://127.0.0.1:8848/review.html?log=sample/run_t236_canon_n20_llm.jsonl&rounds=0,37,40,43,46
+实测（无头 Chromium, still）：日志→画面就绪: 5.92 s · JS 堆 used=355.0 MB / limit=4396 MB
+```
+
+**结论**：真 30 万数据上 **5.92s / 355MB**，与合成 300k 的 **5.33s / 324MB** 一致 ⇒ **T275 的"吃得下"在真数据上成立**。
+证据截图：`T275-review-real-A-batch.png`（页头日志名 + 5 段昼夜 + 汇总表 + `/__gitstamp` 角标）。
+`shot.py` 观察哨：`blank_cumulative=0/7`（无空白、重试 0）。
