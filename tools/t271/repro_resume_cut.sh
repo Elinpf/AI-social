@@ -4,6 +4,7 @@
 # 用法: repro_resume_cut.sh [CUT]        # 默认 75；再跑 CUT=89 对照
 set -uo pipefail
 BIN="$(cd "$(dirname "$0")" && pwd)"
+source "$BIN/safe_rmrf.sh"   # T313 rm -rf 守卫
 REPO="${T271_REPO:-/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment}"
 PY=/opt/openjiuwen/workswarm-venv/bin/python
 SHA="${T271_REPRO_SHA:-$(git -C "$REPO" rev-parse HEAD)}"
@@ -11,7 +12,7 @@ CUT="${1:-75}"; ROUNDS=150; SEED=9; N=2; FLUSH=5
 CO=/tmp/t271-repro          # 固定只读副本（从 SHA 建，避免活树漂移）
 [ -d "$CO/code" ] || bash "$BIN/make_batch_copy.sh" repro "$SHA" >/dev/null 2>&1
 [ -d "$CO/code" ] || { echo "副本缺失：$CO/code"; exit 2; }
-P=/root/t271/runs/repro; S="$P/side"; rm -rf "$P"; mkdir -p "$S"
+P=/root/t271/runs/repro; S="$P/side"; safe_rmrf "$P"; mkdir -p "$S"
 run(){ ( cd "$CO/code" && "$PY" -m orchestration run --life --seed "$SEED" --agents "$N" \
         --rounds "$ROUNDS" --out "$1" --side-root "$S" --flush-every "$FLUSH" ) ; }
 echo "sha=$(git -C "$REPO" rev-parse --short "$SHA")  cut=$CUT"

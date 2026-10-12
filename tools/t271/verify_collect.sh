@@ -6,11 +6,12 @@
 # 全程在隔离 run_root 下，不碰今晚真实产物。
 set -uo pipefail
 BIN="$(cd "$(dirname "$0")" && pwd)"
+source "$BIN/safe_rmrf.sh"   # T313 rm -rf 守卫
 REPO="${T271_REPO:-/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment}"
 PY="/opt/openjiuwen/workswarm-venv/bin/python"
 VR="${T271_VERIFY_ROOT:-/root/t271/runs/verify}"
 export T271_RUN_ROOT="$VR"
-rm -rf "$VR"; mkdir -p "$VR/_env"
+safe_rmrf "$VR"; mkdir -p "$VR/_env"
 printf 'T271_NOOP=1\n' > "$VR/_env/dummy.env"
 ENVF="$VR/_env/dummy.env"
 SHA="$(git -C "$REPO" rev-parse --short HEAD)"
@@ -20,7 +21,7 @@ ck() { if [ "$1" = "$2" ]; then echo "  ok: $3"; else echo "  FAIL: $3 (got='$1'
 row() { python3 "$BIN/nightly.py" status --run-root "$VR" 2>/dev/null | awk -v n="$1" '$1==n{print $2}'; }
 
 echo "### A) 心跳滞后但实际成功 -> SUCCESS"
-COPA="$VR/_copyA"; rm -rf "$COPA"; mkdir -p "$COPA"
+COPA="$VR/_copyA"; safe_rmrf "$COPA"; mkdir -p "$COPA"
 git -C "$REPO" archive HEAD | tar -x -C "$COPA"
 AOUT="$VR/A/run.jsonl"
 bash "$BIN/host_batch.sh" --name A --out "$AOUT" --run-dir "$VR/A" \

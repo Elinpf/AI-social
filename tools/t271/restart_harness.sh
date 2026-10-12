@@ -8,9 +8,10 @@
 #   逃逸到独立 transient unit 的候选批在【同一次重启】中必须存活。
 set -u
 BIN=/root/t271/bin
+source "$BIN/safe_rmrf.sh"   # T313 rm -rf 守卫
 RUN=/root/t271/runs/restart-test
 CAND="restart-cand"
-rm -rf "$RUN"; mkdir -p "$RUN"
+safe_rmrf "$RUN"; mkdir -p "$RUN"
 
 echo "############ T271 restart-survival ############"
 echo "# 开始 $(date '+%F %T')"
@@ -65,6 +66,10 @@ if awk -v ts="$RESTART_TS" '$1" "$2 <= ts' "$RUN/cand/mock.hb" 2>/dev/null | gre
 else
   echo "[FAIL] 候选批心跳未跨越重启时刻"; PASS=0
 fi
+
+# 清理本次自起的 unit（只点自己显式单元名；T313 —— 不留残留 unit）
+systemctl stop t271-guard 2>/dev/null; systemctl reset-failed t271-guard 2>/dev/null
+systemctl stop t271-restart-cand 2>/dev/null; systemctl reset-failed t271-restart-cand 2>/dev/null
 
 echo "# 结束 $(date '+%F %T')"
 if [ "$PASS" = "1" ]; then echo "############ RESULT: PASS ############"; else echo "############ RESULT: FAIL ############"; fi

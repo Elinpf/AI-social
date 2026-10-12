@@ -14,11 +14,12 @@
 #   备选方案 (a)预热对等 / (c)维持现状 见 runbook §4。反向验证：T271_VR_REVERSE=1（扰动 1 个语义字段→须报红）。
 set -uo pipefail
 BIN="$(cd "$(dirname "$0")" && pwd)"
+source "$BIN/safe_rmrf.sh"   # T313 rm -rf 守卫
 REPO="${T271_REPO:-/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment}"
 PY="/opt/openjiuwen/workswarm-venv/bin/python"
 VR="${T271_NR_ROOT:-/root/t271/runs/nr}"
 export T271_RUN_ROOT="$VR"
-rm -rf "$VR"; mkdir -p "$VR/_env"
+safe_rmrf "$VR"; mkdir -p "$VR/_env"
 printf 'T271_NOOP=1\n' > "$VR/_env/dummy.env"
 ENVF="$VR/_env/dummy.env"
 SEED=${T271_VR_SEED:-9}; AGENTS=${T271_VR_AGENTS:-2}; ROUNDS=${T271_VR_ROUNDS:-150}
@@ -67,7 +68,7 @@ ck "$(lastround "$VR/N1/run.jsonl")" "$((ROUNDS-1))" "续跑到目标回合 $((R
 ck "$(python3 "$BIN/nightly.py" status --run-root "$VR" | awk '$1=="N1"{print $2}')" "SUCCESS" "collect 判 native 续跑批为 SUCCESS"
 
 echo "### 3) 逐字节比对（用【持久共享 side_root】+ 预热，冷/热缓存一致；复刻本流水线生成的续跑参数）"
-S="$VR/side_shared"; rm -rf "$S"; mkdir -p "$S"
+S="$VR/side_shared"; safe_rmrf "$S"; mkdir -p "$S"
 oneshot(){ ( cd /tmp/t271-N1/code && "$PY" -m orchestration run --life --seed "$SEED" --agents "$AGENTS" \
     --rounds "$ROUNDS" --out "$1" --side-root "$S" --flush-every "$FLUSH" ); }
 oneshot "$VR/warm.jsonl"    >>"$VR/oneshot.log" 2>&1   # 预热 freeze 缓存
