@@ -33,12 +33,17 @@
   .ok { color:#3fb950; } .bad { color:#f85149; }
   .big { font-size:20px; font-weight:700; }
   .note { color:var(--muted); font-size:11.5px; margin-top:10px; }
+  .stamp { margin-top:6px; display:inline-block; font:12px/1.4 ui-monospace,Menlo,Consolas,monospace;
+    padding:2px 8px; border-radius:6px; border:1px solid var(--line); color:var(--muted); background:var(--panel); }
+  .stamp .dirty { color:#f85149; font-weight:700; }
+  .stamp .clean { color:#3fb950; font-weight:700; }
 </style>
 </head>
 <body>
 <header>
   <h1>青溪镇 · 游戏质感盲测（片段播放件）</h1>
   <div class="sub">5 个固定片段 + 打分表 · 全程 ≤ 3 分钟 · 点左侧片段即可播放</div>
+  <div id="stamp" class="stamp" title="页面所对应的 git 版本；DIRTY = frontend/ 有未提交改动（分数将无法归因到某个提交）">版本加载中…</div>
 </header>
 
 <div class="wrap">
@@ -157,6 +162,27 @@
   };
 
   loadClip(0);
+
+  // 版本角标（T259 协调）：让"页面绑在哪个 git 版本 / 是否 DIRTY"在页面上**可见**。
+  // 非门禁：未提交不一定错（可能正是开发中要看），只是让分数能自带版本、可归因。
+  (async () => {
+    const el = document.getElementById("stamp");
+    try {
+      const r = await fetch("/__gitstamp", { cache: "no-store" });
+      if (!r.ok) throw new Error("no endpoint");
+      const g = await r.json();
+      const fe = g.frontend_dirty || [];
+      if (fe.length) {
+        el.innerHTML = `sha <b>${g.sha}</b> · <span class="dirty">DIRTY</span>（frontend/ 未提交 ${fe.length} 项：${fe.slice(0, 3).join("、")}${fe.length > 3 ? "…" : ""}）`;
+      } else if (g.dirty) {
+        el.innerHTML = `sha <b>${g.sha}</b> · <span class="clean">clean(frontend)</span> · 其他目录有未提交`;
+      } else {
+        el.innerHTML = `sha <b>${g.sha}</b> · <span class="clean">clean</span>`;
+      }
+    } catch (e) {
+      el.textContent = "sha — · 版本戳不可用（非 serve.py 提供？）";
+    }
+  })();
 </script>
 </body>
 </html>
