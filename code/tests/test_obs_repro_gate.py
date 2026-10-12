@@ -105,14 +105,43 @@ def test_full_obs_gate(tmp_path):
     assert out["ok"] is True
 
 
-def test_cli_gate_exit_zero(tmp_path):
+def test_cli_gate_baseline_none_skips(tmp_path):
+    # 显式 --baseline none → 跳过 G6，rc=0，且**必须显式打印**（T220）
     p, _ = _log_file(tmp_path)
     cp = subprocess.run(
-        [sys.executable, "-m", "obs", "gate", "--log", str(p)],
+        [sys.executable, "-m", "obs", "gate", "--log", str(p), "--baseline", "none"],
         cwd=str(_CODE_DIR), capture_output=True, text=True,
     )
     assert cp.returncode == 0, cp.stdout + cp.stderr
     assert "GATE PASS" in cp.stdout
+    assert "baseline=none" in cp.stdout  # 显式跳过必须可见
+
+
+def test_cli_gate_auto_unmatched_fails_loud(tmp_path):
+    # fail-loud（T220）：--baseline auto 未命中 → GATE FAIL + rc=1（旧行为 rc=0 是假绿）
+    p, _ = _log_file(tmp_path)
+    cp = subprocess.run(
+        [sys.executable, "-m", "obs", "gate", "--log", str(p)],  # 默认 auto
+        cwd=str(_CODE_DIR), capture_output=True, text=True,
+    )
+    assert cp.returncode == 1, cp.stdout + cp.stderr
+    assert "GATE FAIL" in cp.stdout
+    assert "baseline_auto_unmatched" in cp.stdout
+
+
+def test_g6_unmatched_is_failure_not_skip(tmp_path):
+    """T220 fail-loud：auto 未命中 / id 不存在 → ok=False（不再 ok=None 被当通过）。"""
+    p, _ = _log_file(tmp_path)
+    log = ReadOnlyLog(read_log(str(p)))
+    d1 = gate.check_distribution(log, "auto")
+    assert d1["ok"] is False and d1["detail"]["reason"] == "baseline_auto_unmatched"
+    d2 = gate.check_distribution(log, "no_such_baseline_id")
+    assert d2["ok"] is False and d2["detail"]["reason"] == "baseline_id_not_found"
+    # 已解析 dict 基线 → 正常评估（进入分布比较，而非"未命中"）
+    from obs.golden import compute_baseline
+    b = compute_baseline(read_log(str(p)), "tmp_probe")
+    d3 = gate.check_distribution(log, b)
+    assert "reason" not in d3["detail"] and "comparison" in d3["detail"]
 
 
 def test_cli_census_outputs_json(tmp_path):

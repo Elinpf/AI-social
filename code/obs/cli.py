@@ -88,19 +88,26 @@ def _cmd_census(args) -> int:
 
 def _cmd_gate(args) -> int:
     log = ReadOnlyLog(read_log(args.log))
-    baseline = None
-    if args.baseline:
-        baseline = None if args.baseline == "none" else args.baseline
+    # 三态（T220）：none（显式跳过，必须打印）/ auto（默认）/ <id>
+    if args.baseline == "none":
+        baseline = None
+        print("[gate] baseline=none（显式跳过分布门禁）")
+    else:
+        baseline = args.baseline or "auto"
     res = _gate.run_gates(log, args.t, baseline=baseline)
     for g in res["gates"]:
         status = "PASS" if g["ok"] else ("SKIP" if g["ok"] is None else "FAIL")
         print(f"[{status}] {g['name']} {g['detail']}")
         if g["ok"] is False and g["name"] == "distribution_regression":
             d = g["detail"]
-            print(f"  基线：id={d.get('baseline_id')} feature_set={d.get('baseline_feature_set')} "
-                  f"engine_version={d.get('baseline_engine_version')}")
-            print(f"  判定：事件量 ≥ 基线×{d.get('min_event_ratio')}（增长应通过、塌陷才失败）")
-            _print_distribution_table(d.get("comparison", []))
+            if d.get("reason"):
+                print(f"  未命中：reason={d.get('reason')} baseline_arg={d.get('baseline_arg')}")
+                print(f"  {d.get('hint')}")
+            else:
+                print(f"  基线：id={d.get('baseline_id')} feature_set={d.get('baseline_feature_set')} "
+                      f"engine_version={d.get('baseline_engine_version')}")
+                print(f"  判定：事件量 ≥ 基线×{d.get('min_event_ratio')}（增长应通过、塌陷才失败）")
+                _print_distribution_table(d.get("comparison", []))
     print("GATE " + ("PASS" if res["ok"] else "FAIL"))
     return 0 if res["ok"] else 1
 

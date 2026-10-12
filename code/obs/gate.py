@@ -88,13 +88,28 @@ def check_distribution(log, baseline, time_cfg=None) -> dict:
     from .golden import expected_time_marks, type_counts, load_baselines, auto_match
 
     log = log if isinstance(log, ReadOnlyLog) else ReadOnlyLog(log)
+    # 三态解析（fail-loud，T220）：dict(已解析) / "auto"(自动匹配) / "<id>"(显式基线)。
+    # **未命中一律 FAIL** —— 不再把「没找到基线」当「基线通过」（假绿）。
+    resolved, reason = baseline, None
     if isinstance(baseline, str):
-        baseline = load_baselines().get(baseline)
-    if baseline is None:
-        baseline = auto_match(log)
-    if baseline is None:
+        if baseline == "auto":
+            resolved = auto_match(log)
+            if resolved is None:
+                reason = "baseline_auto_unmatched"
+        else:
+            resolved = load_baselines().get(baseline)
+            if resolved is None:
+                reason = "baseline_id_not_found"
+    if reason is not None:
+        return {"name": "distribution_regression", "ok": False,
+                "detail": {"reason": reason, "baseline_arg": baseline,
+                           "hint": "未命中黄金基线 = 拒绝通过（fail-loud）；"
+                                   "如确实不要分布门禁，请显式 `--baseline none`"}}
+    if resolved is None:  # 理论不可达：run_gates 对显式 none 不调用本函数
         return {"name": "distribution_regression", "ok": None,
-                "detail": {"skipped": "无匹配的黄金基线（--baseline auto 未命中）"}}
+                "detail": {"reason": "baseline_none_self_managed",
+                           "hint": "显式 none 应由 CLI 打印，不应到此处"}}
+    baseline = resolved
 
     actual = type_counts(log.records)
     n_actual = sum(actual.values())
@@ -200,7 +215,9 @@ def run_gates(log, t=None, time_cfg=None, params: ObsParams | None = None,
               baseline=None, schema_strict: bool = True) -> dict:
     """运行观测层门禁，返回 {ok, gates:[...]}。
 
-    `baseline`：None（不含 G6）/ 基线 dict / baseline_id 字符串 / "auto"。
+    `baseline`：None（显式 none，不含 G6，由 CLI 打印跳过）/ 基线 dict / baseline_id 字符串 / "auto"。
+      **fail-loud（T220）**：`"auto"` 未命中或 `id` 不存在 → G6 `ok=False`（拒绝通过）。
+      仅**显式** `--baseline none`（= None）才跳过，且必须由 CLI 显式打印。
     `schema_strict`：True（默认）→ 纳入 G7 schema 合约（阻塞 FAIL）。
     """
     reset_llm_calls()
