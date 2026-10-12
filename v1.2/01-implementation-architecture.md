@@ -1,5 +1,7 @@
 # 01 · v1.2 系统实现架构（工程蓝图）——把 v1.1 设计落成可开工的系统
 
+> **【Fork B 时效标注 · 2026-10-12】** 本文 §0 铁律 **(C2)「同日志逐位一致 `replay(log)` + `metrics()` 字节相等」** 按 Leader Q-12.1 修正为：**保留 `replay(log)` 代码确定性，`metrics()` 字节相等降为诊断、不再作放行门禁**（其余 C1/C3 不变）。**单一口径见 `v2/refs/gate-grading.md`。**
+
 > 文档类型：系统实现架构（工程蓝图）｜ 作者：solution-architect（解决方案架构师）
 > 状态：**Draft v0.1（增量落盘，逐节追加）**
 > 目标读者：kernel-dev / life-layer-dev / freeze-layer-dev / sim-engine-stats-architect / sandbox-test-lead / delivery-reviewer（T24）

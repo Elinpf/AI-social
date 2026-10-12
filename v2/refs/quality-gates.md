@@ -49,7 +49,10 @@
 
 ## 2. 覆盖率基线 + 棘轮（只许升不许降）
 
-**P0 前置**：`pytest-cov` 当前**未安装** → 先装（隔离 env），再启用行覆盖率棘轮。在此之前用**可度量的计数基线**代替：
+**P0 前置**：`pytest-cov` 当前**未安装**。**Leader 裁定：暂不装**（装它需动环境，当前为「先跑通」阶段且非关键路径），故**行覆盖率棘轮暂缓**，改用**可度量的计数基线**（下）替代。
+
+> **⚠️ 替代口径的局限（必须写明，不得悄悄用弱口径顶替）**：
+> ① 计数基线只能证明「有测试、且数量没缩水」，**无法发现「未覆盖的边缘分支/异常路径」（如错误处理、边界值）**；② 无法区分「测试覆盖了函数」与「测试真正断言了行为」（可能有空跑/弱断言）；③ 模块-测试存在性矩阵只到**文件粒度**，非**行/分支粒度**。**因此本替代不等于覆盖率达标，只是「不倒退」的下界护栏。** 需要行覆盖率时单独提 `pytest-cov`。
 
 | 指标 | 当前基线（2026-10-12） | 棘轮规则 |
 |---|---|---|
@@ -162,7 +165,9 @@
   - `obs gate` 的 **G2a `metrics_bitwise_equal` / G2b `census_bitwise_equal`**、以及测试里的 **replay 状态哈希相等（G2c）** → **显式降为「诊断」（diagnostic，非阻塞）**，避免环境/浮点导致的**假 FAIL**。
   - **保留为阻塞**：G3 `llm_calls_zero`、G5 `llm_judged_zero`、G4 守恒、G7 schema、G6 分布回归、G1 边界、G2 术语、G5 前端、G6 美术。
 - **绑证据方式不变**：**全量日志 + 种子化随机 + 产物 sha + 生成命令**（每条结论附 `log_hash` + 命令）。这是「结论可被独立复算」的落点。
-- **待与 `delivery-reviewer`（T218 门禁分级表）对齐**：分级命名（blocking / diagnostic / manual）、以及 F2「G6 skip 假绿」的修复归属。
+- **待与 `delivery-reviewer`（T218 门禁分级表）对齐**：分级命名（blocking / diagnostic / manual）。
+- **F2「G6 skip 假绿」已修**（obs-stats-dev，commit `d1ee62e`）：改为 fail-loud，见 §10。
+- **发布入口分级**（release-engineer 提议，已认同）：**产出型发布 `make release` → `GIT_STAMP_STRICT=1`（脏树停）**；**只检查型 `make release-check` → 非 strict（脏树继续但标 `[DIRTY — 仅供参考]`，不作通过依据）**。理由：发版树干净不放松；诊断可继续但不背书。
 - **口径唯一不复制**：本表所有阈值/命令均引用现有实现（`code/obs/*`、`glossary/*`、`.importlinter`），**未新增第二套数**。
 
 ---
@@ -170,10 +175,12 @@
 ## 8. 落地清单（P0 / P1）
 
 **P0（本轮）**
-1. 修 **F2 假绿**：`obs gate --baseline auto` 未命中时**报警并 rc≠0**（或强制显式 `--baseline none`）。
-2. 门禁/CI 前置**清 `__pycache__` + pytest 缓存**（治 F4 假红）。
-3. 安装 `pytest-cov`，启用**行覆盖率棘轮**（红区模块阈值先设保守值，只升不降）。
-4. 在 CI 里把 G2a/G2b/G2c **标为 diagnostic**（Fork B），不阻塞；其余保持阻塞。
+1. 修 **F2 假绿**：`obs gate --baseline auto` 未命中时**报警并 rc≠0**（或强制显式 `--baseline none`）。→ **已修✓**（§10 ①，commit `d1ee62e`）
+2. 门禁/CI 前置**清 `__pycache__` + pytest 缓存**（治 F4 假红）。→ **入口已修✓**（§10 ②）；CI 全局环境【待 release-engineer】
+3. 安装 `pytest-cov`，启用**行覆盖率棘轮**。→ **Leader 裁定暂不装**；用替代口径（§2），**并写明其局限**（见 §2 注）。
+4. 在 CI 里把 G2a/G2b/G2c **标为 diagnostic**（Fork B），不阻塞；其余保持阻塞。→ **已做✓**（obs gate 输出 `[DIAG]`）
+5. **门禁绑 git 状态**（T220③）→ Makefile/ci_gate 已接✓；obs gate / release 入口【待】。
+6. **门禁覆盖全测试**（T220④，修 `life/tests` 静默缺口）→ **已修✓**（§10 ④）
 
 **P1（后续）**
 5. 补 `plugin/*`、`orchestration/*`、`devtools/*` 独立测试（§2 缺口）。
@@ -188,6 +195,55 @@
 > 每加一条门禁，必须同时交付：① 一条**故意弄坏 → 变红**的证明；② 它**防不到的盲区**说明；③ 退出码语义（**SKIP ≠ PASS**）。
 > 三条缺一，该门禁**不予合并**。
 
+**判定例（来自 T220 的两处真缺陷——「会响」的守卫与「看得到全部」的守卫，缺一不可）：**
+
+1. **判定例·假绿（F2）**：`obs gate --baseline auto` 未命中基线时**静默 skip 被当通过**（RV-F2 修复前：`[SKIP]`→`GATE PASS` rc=0）。
+   → 违反元规则的**精神**：它「没报警」，但它也**没在工作**。「**没找到基线 ≠ 基线通过**」。
+   → 新门禁判定：**存在「未命中/未运行」路径时，必须 fail-loud 或显式声明 skip**；否则不予合并。
+2. **判定例·假红（F4）**：陈旧 `__pycache__` 让「已还原」的代码**仍报红**（RV6 实录）。
+   → 这是「**守卫误报**」：它响了，但响错了对象——**假红会训练团队忽略告警**。
+   → 新门禁判定：**门禁入口必须控制环境确定性**（清缓存 / 禁写字节码 / 固定种子），否则不予合并。
+3. **判定例·覆盖缺口（T220④）**：门禁「绿」但**一整个测试目录从未被收集**（`code/life/tests` 27 测试）。
+   → 这是**最安静的失败**：**「门禁看得到全部该看的东西」与「门禁会响」同等重要**。一个覆盖不全的门禁，和不会响的门禁一样危险。
+   → 新门禁判定：**必须列出「实际覆盖范围」**（目录/文件），不得只写「pytest 通过」。
+4. **判定例·环境伪装（T220+ 磁盘余量）**：**磁盘/inode 满会伪装成代码坏**——"偶发红 → 复跑就好"会把这个伪装一直盖住（freeze-layer-dev 查明今天多次"偶发红"真因是 **inode 99–100%**，非 flaky）。
+   → 这是**假红的另一个来源**：不是时序，是**资源**。
+   → 新门禁判定：**门禁结论必须绑定运行环境**（git 状态 + 磁盘/inode 余量），否则不予合并。本机实测 `avail_inode=8667 / 16,252,928（100% 用尽）` → 戳应显示 `DISK LOW`。
+
 ---
 
-*（策略 v1 — sandbox-test-lead；含 RV1–RV6 反向验证实录；口径真源 `code/obs/*`；与 delivery-reviewer T218 对齐中。）*
+## 10. T220 门禁缺陷修复与验证（四件）
+
+> 来源：T217 §3/§4 反向验证凿出的**真缺陷**。原则：**未修完的标【未修】**，不得因「已报过」当已解决。
+
+| # | 缺陷 | 修复 | 反向验证 | 状态 |
+|---|---|---|---|---|
+| ① 假绿 | `obs gate --baseline auto` 未命中基线静默 skip（`ok=None`→通过） | obs-stats-dev 改 `obs/gate.py`+`obs/cli.py`（commit `d1ee62e`）：auto 未命中→`ok=False`；`none` 显式才跳过并打印；unknown id→fail | **RV-F2**：`auto` 未命中→`GATE FAIL` rc=1；`none`→PASS rc=0 + 打印；命中（t59_mock84）→PASS；`nope_id`→FAIL | **已修 ✓** |
+| ② 假红 | 陈旧 `__pycache__` → 回滚后仍红 | 门禁入口前置清缓存 + 禁写字节码：`Makefile` `pyclean` + `code-test` 用 `PYTHONDONTWRITEBYTECODE=1 … -p no:cacheprovider` | **RV7**：`pyclean` 后 0；普通 import→3 个 `__pycache__`；`-B` import→0 | **入口已修 ✓**；CI 全局环境 / 发布入口【待 release-engineer】 |
+| ③ 绑 git 状态 | 门禁结论不标「在哪个 git 状态上跑的」→ 并发编辑期结果不可信 | 新增 `tools/git_stamp.sh`；接入根 `Makefile`（`stamp`，且为 `gate` 首步）、`code/frontend/tools/ci_gate.sh` | **RV9**：当前树→`[DIRTY — 结论仅供参考]`；临时净仓库→`[CLEAN]`；+1 未跟踪→`[DIRTY]` | `Makefile`/`ci_gate` **已接 ✓**；`obs gate`【待 obs-stats-dev】；`make release`【待 release-engineer，contract 已钉】 |
+| ④ 覆盖率缺口 | `pytest.ini testpaths=tests` 只收 `code/tests`；`code/life/tests`(27)、`plugin-skeleton/tests`(11) **从未被门禁运行**（**同名不同义**：两套「跑测试」覆盖不同） | `pytest.ini`→`testpaths = tests life/tests`；新增 `make plugin-test` 纳入 `gate` | **RV8**：BEFORE——`life/tests` 放必失败测试，`make code-test` 仍 `358 passed`（缺口实证）；AFTER——同一测试让 `make code-test` `FAILED` | **已修 ✓** |
+| ⑤ 磁盘余量打戳（T220+） | 磁盘/**inode 满会伪装成代码坏**（"红→复跑→绿"盖住真因） | `tools/git_stamp.sh` 增 `disk:`（字节+inode）+ `磁盘: [DISK OK]|[DISK LOW — 结论仅供参考]`；阈值可覆盖 | **RV-DISK**：默认→`DISK LOW`（本机 `avail_inode=8667`，inode 100%）；阈值≤1→`DISK OK`；`GIT_STAMP_STRICT=1`→rc=1 | **make/ci_gate/obs gate 已接 ✓**（obs 五行 `85f7176`+caveat `3bbe67e`） |
+| ⑥ 红来源不明（T220+） | 长期红时**只能猜**（flaky? 脏树? 磁盘?）——真相是**在飞改动**；比"红"更糟的是"红来源不明"，会训练人忽略门禁 | 打戳推至 **pytest 出口**：`code-test: pyclean stamp`；新增 `tools/pytest_stamped.sh`（根 pytest 入口包装）；戳新增两行 `未提交文件数:` + `最近改动的模块:`（脏文件按纳秒 mtime 降序 → 模块目录，前 3） | **RV-STAMP（受控 temp 仓库）**：建脏文件 obs→engine→life（依次更新）→ 戳输出 `最近改动的模块: code/life code/engine code/obs`（最新优先）；修复了「全新未跟踪目录呈 `dir/` → dirname 少一层」的 bug | **已修 ✓** |
+
+### 10.1 门禁覆盖范围表（逐入口 —— 禁止再以为「跑了 pytest」=「测试都跑了」）
+
+| 入口 | 命令 | **实际覆盖**（测试目录/范围） | 备注 |
+|---|---|---|---|
+| `make code-test` | `pytest` | `code/tests` + **`code/life/tests`** | 旧版漏 `life/tests`（④ 已修）；含重 e2e，~4 min |
+| `make plugin-test` | `pytest` | `plugin-skeleton/tests` | ④ 新增 |
+| `make gate` | `stamp`+`lexicon-gate`+`code-test`+`plugin-test`(+`lint-imports`) | 上述全部 | 汇总入口；**首步打戳** |
+| `obs gate` | `python -m obs gate --log …` | 无测试收集（读日志跑 G2–G7） | 观测层门禁 |
+| `tools/pytest_stamped.sh` | `pytest`（带戳） | 同 `pytest`（参数决定） | 「根 pytest 入口」推荐包法；**先打戳再 pytest**（⑥） |
+| `ci_gate.sh` | `node` + `python` | `frontend/tools/smoke_test.js` + 真渲染 | JS/渲染，非 pytest |
+| `make -C code art` | `bash` | 美术脚本自检（剪影/角色/事件卡/自洽断言） | 非 pytest |
+| **豁免** | — | `frontend.src`（只读应用本体）、`devtools/*`、`orchestration/*`、`gen_*.py`（生成脚本） | 豁免理由：只读/工具/生成物，其**产物**由 G5/G6/G8 覆盖；独立测试列 §8-P1 |
+
+### 10.2 遗留（【未修】/【待复核】——不虚报）
+
+- 【已收口】`obs gate` **五行打戳**（commit `85f7176`：`sha/dirty_files/disk:/状态/磁盘:` + `GIT_STAMP_STRICT`）；已独立复跑验证（strict 脏树→rc=1；非 strict→GATE PASS）✓。`disk:` 行与本仓 `tools/git_stamp.sh` 口径一致（跨入口同一数）。caveat 已在 `3bbe67e` 注释写明（`avail` 列不含 5% root 预留，root 场景 LOW 是保守误报、安全的错法）。**交叉核验**：obs gate 默认→`DISK OK`、`DISK_MIN_INODE_AVAIL=1`→OK、阈值极大→`DISK LOW`（两分支均可达）✓。
+- 【待 release-engineer】发布入口打戳 + CI 全局 `PYTHONDONTWRITEBYTECODE`（contract 已钉在其方案 `5af0bac`）；
+- 【待洁净树复核】T220 改动后「现有门禁全绿」的**最终确认**：当前工作树 **DIRTY（46 文件，他人并发编辑 T213/T215 中）**，观测到 `37 failed / 7 errors` 且集中在**正在被改的模块**（`scheduling_budget`/`production_*`/`llm_audit_bridge`/`version_fingerprint`/`freeze`）——**按 ③ 语义，该结果标 `[DIRTY — 仅供参考]，不作为通过依据`**；需在**洁净树**上复核。**本文件不声称全绿。**
+
+---
+
+*（策略 v1 + T220 §10 — sandbox-test-lead；含 RV1–RV9 + RV-DISK + RV-STAMP 反向验证实录；口径真源 `code/obs/*`；与 delivery-reviewer T218 对齐中。）*

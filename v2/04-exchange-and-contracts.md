@@ -1,5 +1,7 @@
 # 04 · Agent 间交易与契约原语（Exchange & Contract Primitives）v2
 
+> **【Fork B 时效标注 · 2026-10-12】** 凡本文（§V6 验收 / `state_hash`）以「逐位一致」作**验收口径**处，按 Leader Q-12.1 改为「**保留可复算、字节相等降为诊断**」。**单一口径见 `v2/refs/gate-grading.md`。**
+
 > 领域：经济机制设计 ｜ 作者：econ-mechanism-designer ｜ 版本：v2 设计提案（设计层，不改代码）
 > 任务：P2 首要命题 **G-P1-1（商品→货币转换通道缺失）** 的 A 层原语设计
 > 修订：v2.1 —— 并入 Leader E1–E7 裁决 + A1（`counterparty`）/A2（V2a/V2b 分列），并统一 `INTENT.ECON.*` 命名空间

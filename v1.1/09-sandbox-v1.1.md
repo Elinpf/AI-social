@@ -1,5 +1,7 @@
 # 09 · 沙盒与验收方案 v1.1（护栏判据 + 观测判据）
 
+> **【Fork B 时效标注 · 2026-10-12】** 凡本文「可复现性」判据以「逐位/字节相等」作**验收口径**处，按 Leader Q-12.1 改为「**放开"必须可复现"、保留"可被复算"**」——改为「全量日志 + 种子化 + 产物 sha/命令 可追溯」；`replay` 一致性**降为诊断**。**单一口径见 `v2/refs/gate-grading.md`。**
+
 > 归属：sandbox-test-lead（沙盒实验与验收负责人）
 > 上游依赖（已读）：`00-architecture.md`（T12，含 r1 N=20）、`08-engine-stats-extension.md`（T8）、`07-emergence-observation.md`（T9）、`06-life-layer.md`（T7）、`13-wellbeing-metrics.md`（T15）
 > 已并入：`12-event-lineage.md`（T14，事件谱系 + 活动模板库）

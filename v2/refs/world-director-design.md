@@ -1,5 +1,7 @@
 # 世界 AI 导演（World Director）设计 · 宏观群体事件 + 世界侧介入 v2
 
+> **【Fork B 时效标注 · 2026-10-12】** 凡本文（§0.3 / §2 / §6 / §7 保底 (c)）以「`replay(log)` 逐位一致」作**验收口径**处，按 Leader Q-12.1 改为「**保留可复算（同日志→同状态）、不判字节 FAIL**」。**单一口径见 `v2/refs/gate-grading.md`，另见 `v2/refs/review-world-director-design.md` R-1。**
+
 > 文档类型：v2 参考设计（模块分解 + 可审计口径 + 验收判据）｜ 作者：narrative-designer（叙事与故事层设计专家）
 > 状态：v2 设计稿（供 Leader / sim-engine-stats-architect / 前端消费；显式区分 **【已定】/【待讨论】/【未验证】**）
 > 上游依据（不另立口径，只引用）：
