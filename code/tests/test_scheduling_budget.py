@@ -164,11 +164,22 @@ def test_degrade_on_off_controlled_diff_n10():
     c_on = Counter(rec["type"] for rec in e_on.ledger.records)
     assert c_on.get("DEGRADE", 0) >= 1
 
-    # 除 DEGRADE 外，其余事件计数一致 → 差异 100% 可归因于「降级标记」本身
+    # 差异必须**可归因**（T221c 后 life 真正消费 gate）：真正跳过 LLM 判定 →
+    # `LLM_JUDGMENT`/`LLM_CALL` 下降，这正是「降级」的定义；下降量 == 被跳判定条数，
+    # 且被跳维度 ∈ 非 critical。除这三个「降级直接产物」外，其余事件计数一致。
+    _DEGRADE_ARTIFACTS = {"DEGRADE", "LLM_JUDGMENT", "LLM_CALL"}
     for t in set(c_off) | set(c_on):
-        if t == "DEGRADE":
+        if t in _DEGRADE_ARTIFACTS:
             continue
         assert c_off.get(t, 0) == c_on.get(t, 0), f"{t}: off={c_off.get(t,0)} on={c_on.get(t,0)}"
+
+    skipped = [s for rec in e_on.ledger.records if rec["type"] == "DEGRADE"
+               and (rec["payload"] or {}).get("action") == "skip_judgment"
+               for s in (rec["payload"].get("skipped") or [])]
+    crit = set(e_on.config["policy"]["llm_budget"]["critical_dimensions"])
+    assert skipped, "expected listed skip_judgment entries (可列)"
+    assert all(s["dimension"] not in crit for s in skipped), "critical 维度不得被跳"
+    assert c_off["LLM_JUDGMENT"] - c_on["LLM_JUDGMENT"] == len(skipped)
 
 
 def test_non_degraded_path_unchanged_n10():

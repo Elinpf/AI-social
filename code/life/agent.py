@@ -18,6 +18,7 @@ from typing import Any
 
 from . import constants as C
 from . import goals as G
+from . import degrade as _degrade
 from . import relations as R
 from .llm import LLMClient, get_llm_client
 from .memory import AssociativeMemory, EmbeddingModel, HashEmbeddingModel, SideStore
@@ -103,6 +104,7 @@ class LifeLayerAgent:
         self.soft = get_soft_layer(self.llm)
         self._rel_cache: dict = {}          # (to, dim) -> current outgoing relation value
         self._judged: set = set()           # (to, dim, level) already soft-judged
+        self._llm_permit = True             # T221c: M4 本回合 LLM 许可（默认 True=不变）
         self._appraised: set = set()        # (to, week) already social-appraised (T127)
         self._narrated_weeks: set = set()
         self._comm_slot: str | None = None  # last slot we generated dialogue for (≤1/slot)
@@ -123,6 +125,7 @@ class LifeLayerAgent:
     def step(self) -> StepReport:
         wv = self.kernel.perceive(self.agent_id)          # IF-1 (read-only)
         rep = StepReport(round=wv.round)
+        self._llm_permit = self._llm_ok(wv)               # T221c: M4 本回合 LLM 许可
         self.memory.sync_from_refs(wv.memory_refs)
         self._update_needs(wv)
         self._observe(wv, rep)
@@ -203,14 +206,34 @@ class LifeLayerAgent:
         head = f"{self.persona.compressed_profile(self._current_goal())} {self._activity_for(wv)[0]}"
         return head + " " + " ".join(recents)
 
+    # ---- M6 降级 gate（T221c）：默认关 = 行为不变 -------------------------------
+    def _llm_ok(self, wv) -> bool:
+        """M4：本回合该 agent 是否获准调用 LLM（`schedule_enabled` 时按 Kc 限流）。
+        默认 True（未启用=行为不变）；异常偏保守（True，宁可多算不可静默少算）。"""
+        try:
+            return _degrade.llm_permit(wv)
+        except Exception:
+            return True
+
+    def _judge_skip(self, wv, dimension: str, parties) -> bool:
+        """M6 critical-only：该 judge 是否应跳过（M4 未许可 或 内核 critical-only 判跳）。
+        内核已负责把跳过落成**可列** `DEGRADE`；life 只读布尔。默认 False=不跳。"""
+        if not self._llm_ok(wv):
+            return True
+        try:
+            return _degrade.should_skip_judgment(self.kernel, dimension, parties)
+        except Exception:
+            return False
+
     # 3. plan --------------------------------------------------------------
     def _plan(self, wv) -> tuple[bool, bool]:
         if wv.time.week in self._planned_weeks:
             return False, False
         focus = self._weekly_focus(wv)          # LLM-decided, frozen (T57)
         slots = self._weekly_slots(wv, focus)
-        self.llm.call("plan", self.persona.compressed_profile(self._current_goal()),
-                      meta={"agent_id": self.agent_id, "round": wv.round})
+        if self._llm_ok(wv):                     # T221c: M4 未许可 → 不调 LLM（计划本身确定性）
+            self.llm.call("plan", self.persona.compressed_profile(self._current_goal()),
+                          meta={"agent_id": self.agent_id, "round": wv.round})
         planned = self._submit(Intent(INTENT_PLAN, self.agent_id,
                                       {"horizon": "week", "week": wv.time.week, "slots": slots}),
                                StepReport(wv.round))
@@ -237,6 +260,8 @@ class LifeLayerAgent:
         branch = rng_branch(self.agent_id, "weekly_focus", "self", wv.time.week, options)
         envelope = {"options": options}
         jid = f"JF-{self.agent_id}-{wv.time.week}"
+        if self._judge_skip(wv, "weekly_focus", [self.agent_id]):
+            return str(branch)               # 降级：确定性 RNG 选择，不调 LLM
         try:
             payload, emitted = self.soft.judge(
                 judgment_id=jid, dimension="weekly_focus", question_ref="weekly_focus",
@@ -349,6 +374,8 @@ class LifeLayerAgent:
             {"day_of_week": wv.time.day_of_week, "slot": wv.time.slot}) == "REVIEW"
         if not self.memory.reflection_due(wv.time.week, force_weekly):
             return False
+        if not self._llm_ok(wv):                     # T221c: M4 未许可 → 跳过反思 LLM
+            return False
         src_ids, imp_sum = self.memory.take_reflection_input()
         prompt = self.persona.compressed_profile(self._current_goal()) + "\n" + \
             self.memory.summary_for_prompt(src_ids or retrieved_ids)
@@ -398,6 +425,8 @@ class LifeLayerAgent:
                 envelope = {**envelope, "options": list(C.JUDGMENT_OPTIONS[f"rel_{dim}"])}
             branch = rng_branch(self.agent_id, dim, to, wv.round, envelope["options"])
             jid = f"J-{self.agent_id}-{to}-{dim}-{level}-{wv.round}"
+            if self._judge_skip(wv, f"rel_{dim}", [self.agent_id, to]):
+                continue
             payload, emitted = self.soft.judge(
                 judgment_id=jid, dimension=f"rel_{dim}", question_ref="rel_relation_quality",
                 envelope=envelope, rng_branch=branch, parties=[self.agent_id, to],
@@ -439,6 +468,8 @@ class LifeLayerAgent:
                 branch = rng_branch(self.agent_id, dim, to, wv.round, opts)
                 envelope = {"options": list(opts)}
                 jid = f"J-{self.agent_id}-{to}-{dim}-w{week}"
+                if self._judge_skip(wv, dim, [self.agent_id, to]):
+                    continue
                 payload, emitted = self.soft.judge(
                     judgment_id=jid, dimension=dim, question_ref=f"social_{dim}",
                     envelope=envelope, rng_branch=branch, parties=[self.agent_id, to],
@@ -451,6 +482,8 @@ class LifeLayerAgent:
     def _maybe_narrate(self, wv) -> bool:
         phase = C.week_phase({"day_of_week": wv.time.day_of_week, "slot": wv.time.slot})
         if phase != "REVIEW" or wv.time.week in self._narrated_weeks:
+            return False
+        if not self._llm_ok(wv):                     # T221c: M4 未许可 → 跳过叙事 LLM
             return False
         self._narrated_weeks.add(wv.time.week)
         seqs = [ev.seq for ev in wv.visible_events][-20:]
@@ -474,6 +507,8 @@ class LifeLayerAgent:
         are enforced by the kernel."""
         slot_id = f"day{wv.time.day_of_week}-{wv.time.slot}"
         if not social_enabled():          # T115: whole social-voice channel off
+            return
+        if not self._llm_ok(wv):          # T221c: M4 未许可 → 不发对话 LLM
             return
         if slot_id == self._comm_slot:
             return
@@ -518,6 +553,8 @@ class LifeLayerAgent:
         world price. Money/goods consequences are settled by the kernel's 4.x hooks.
         Bounded: once per (agent, day)."""
         if not exchange_enabled():
+            return
+        if not self._llm_ok(wv):            # T221c: M4 未许可 → 不发议价 LLM
             return
         if wv.round % 12 != 0:              # ~ once per day per agent
             return
@@ -651,6 +688,8 @@ class LifeLayerAgent:
         low = text.lower()
         if not any(k in low for k in ("派对", "救助", "去世", "争吵", "相遇", "party", "help", "died")):
             return 2
+        if not getattr(self, "_llm_permit", True):   # T221c: M4 未许可 → 确定性兜底
+            return 2
         if m2b_importance_mode() == "discriminative":
             return self._importance_discriminative(text, round_no)
         out = self.llm.call("importance", text,
@@ -662,6 +701,8 @@ class LifeLayerAgent:
 
     def _importance_discriminative(self, text: str, round_no: int) -> int:
         """M2b：importance 走受限选择（候选 {1..10}+逃生项，单一真源）；关闭时不走此路。"""
+        if not getattr(self, "_llm_permit", True):   # T221c: M4 未许可 → 确定性兜底
+            return 2
         options = list(C.JUDGMENT_OPTIONS["importance"])
         branch = rng_branch(self.agent_id, "importance", "self", round_no, options)
         jid = f"IMP-{self.agent_id}-{round_no}-{sha256_hex(text)[:8]}"
