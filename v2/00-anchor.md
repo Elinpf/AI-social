@@ -164,6 +164,12 @@
 
 ## 7. 变更记录
 
+- **v1.3.16（22:06）**：⭐ **T276→T288 链闭合：被打断的夜跑可以"续跑"了**。
+  **T288 达成「逐字节一致」**（三档全过：seed42/n=4/0..8 ✓ · 0..24 ✓ · **N=20×24（cut12）`one==two`、start_round=12** ✓；回归 **497 passed**、`lint-imports` 9/0）。
+  **根因（life 侧，非引擎）**：`restore()` 重建软判定去重集时按「**parties 含我**」归属 —— 前缀里 `J-P003-P001-affinity-weak-11`（parties=`['P003','P001']`）被**误加进 P001 的 `_judged`** ⇒ P001 在 round22 的判定被**在 `_judge_skip` 之前**挡掉（所以续跑侧打点**根本没进 `_judge_skip`**）⇒ **kernel 对 M6 的排除完全正确**（两层判断对上）。**修法**：按 **jid 归属人**（`J-<owner>-<to>-<dim>-…`，`owner==self` 才记）。
+  **能力切换**：**`meta.resume_mode`: `overlap_rerun` → `native`**（Leader 定，归 release 执行；保留旧模式作显式回退）⇒ **打断的夜跑可续、不必重来**。
+  **纪律细化（由 life 主动披露换来）**：**"跑批期零写"的准确表述 = 不对"该批所读的那份树"写** —— **A 批读主树 ⇒ A 在跑时主树冻结；B/C/D 读副本 ⇒ 主树自由**；**若已改动必须主动披露 + 说明是否影响** ✓。
+  **本条链的收敛幅度**：从 T276 首次对照的「首续回合 +12 观测 / 140 条重复 seq / `LLM_CALL` 18→47」→ **`one==two`**。
 - **v1.3.15（21:47）**：
   ① ⛔ **Leader 改判：消融的 cache 键机制**（推翻我 16:53 那条"**不用 dict-overrides、要改 config 文件以便指纹可溯**"）。obs 实测 `freeze/llm_client.py::make_cache_key` ⇒ **缓存键必含 `engine_version` + `prompt_hash`** ⇒ **"改 config 文件 + 共享 cache" = 0 命中**（等于重新抽样，**不是干净对照**）。
   **新规矩（即时生效）**：**消融用 `config-dict` 覆盖**（保命中、得干净对照）**+ 在 `meta.json`/报告里显式记录开关值**；**报告必须写明「本批开关来自 override/meta，不在日志 `engine_version` 指纹里」** ⇒ **解释口径是 meta 而非指纹**（纪律①仍满足）。**小验证**：B（导演 off）`cached=47/47=100%`、与 A 指纹相同 ✓ ⇒ 同 prompt 同答案，差异只来自 config。
