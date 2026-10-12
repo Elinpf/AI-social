@@ -285,11 +285,11 @@
       G2.addChild(snow);
       // T269「没层次」：纵向纵深色调带 —— 上（远/北）偏冷暗、下（近/南）偏暖亮（俯视读远近；不动拓扑）
       const depth = new P.Graphics();
-      for (let i = 0; i < height; i += 4) {
+      for (let i = 0; i < height; i += 2) {                                                // 2px 步进 → 带缘更细、少"横向硬带"
         const t = i / height;
-        fillRect(depth, 0, i, width, 4, 0x0a1420, 0.22 * (1 - t));                        // 远端冷暗（加强）
-        fillRect(depth, 0, i, width, 4, 0x2a3550, 0.14 * (1 - t) * (1 - t));              // 空气透视：远端去饱和/偏冷
-        if (t > 0.4) fillRect(depth, 0, i, width, 4, 0xffd9a0, 0.09 * (t - 0.4) / 0.6);   // 近端暖亮（加强）
+        fillRect(depth, 0, i, width, 2, 0x0a1420, 0.22 * (1 - t));                        // 远端冷暗
+        fillRect(depth, 0, i, width, 2, 0x2a3550, 0.14 * (1 - t) * (1 - t));              // 空气透视：远端去饱和/偏冷
+        if (t > 0.4) fillRect(depth, 0, i, width, 2, 0xffd9a0, 0.09 * (t - 0.4) / 0.6);   // 近端暖亮
       }
       G2.addChild(depth);
       // 轻微颗粒/抖动（避免"太干净"，贴近手绘像素）
@@ -1166,6 +1166,9 @@
           this._smokeLayer.addChild(sg);
         });
       });
+      // T269③：夜光主次焦点 —— 中央广场给一处更大更暖的核心光（避免夜景"均匀贴片"）
+      const hub = this.nodeById["plaza"];
+      if (hub) addAt(hub.x, hub.y - 4, 13, 0xffd08a);
       (this._lampGlows || []).forEach((p) => addAt(p[0], p[1], 6, 0xffd98a));
       this.setLighting(this._lightMode || "day");
     }

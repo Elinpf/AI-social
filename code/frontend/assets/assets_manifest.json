@@ -1202,6 +1202,62 @@
       "sha256": "bc75af5ad529c7c06808d2c13cb655833993ba083557f2596ed761d327eb73a3"
     },
     {
+      "id": "fg.canopy",
+      "type": "fg",
+      "file": "generated/fg/canopy.png",
+      "size": [
+        64,
+        48
+      ],
+      "anchor": [
+        32,
+        46
+      ],
+      "sha256": "b19d60f87cd13d2c8134950c2665e052360951c23b9d6b9015721c54934b0c78"
+    },
+    {
+      "id": "fg.arch",
+      "type": "fg",
+      "file": "generated/fg/arch.png",
+      "size": [
+        64,
+        80
+      ],
+      "anchor": [
+        32,
+        78
+      ],
+      "sha256": "06a1b7f1e2fcac423fe375f0f36264e0aba75b97c3db3919fa9e91d942494d59"
+    },
+    {
+      "id": "fg.hedge",
+      "type": "fg",
+      "file": "generated/fg/hedge.png",
+      "size": [
+        32,
+        44
+      ],
+      "anchor": [
+        16,
+        42
+      ],
+      "sha256": "9e730293a8365251e14cafba0e0fb4addb9f0ca3d43cd510ac7a51e394e6232c"
+    },
+    {
+      "id": "fg.awning",
+      "type": "fg",
+      "file": "generated/fg/awning.png",
+      "size": [
+        64,
+        28
+      ],
+      "anchor": [
+        32,
+        27
+      ],
+      "sha256": "e7d622f8476a9231f6789fa574b28979d26acb5859a0180e1a04d36b25bc77f6"
+    },
+    {
       "id": "tile.edge_soil_grass_n",
       "type": "tile",
       "file": "generated/tiles/edge_soil_grass_n.png",

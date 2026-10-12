@@ -141,6 +141,10 @@ class SideStore:
             from . import policy
             persist_vec = policy.persist_vec_enabled()
         self.persist_vec = bool(persist_vec)
+        # T268: in-memory object caches so all nodes sharing a ref share ONE
+        # str / list object (cuts retained RSS from O(#nodes) to O(#unique sources)).
+        self._body_cache: dict[str, str] = {}
+        self._vec_cache: dict[str, list] = {}
 
     def _body_path(self, agent_id: str, mem_id: str) -> Path:
         return self.root / "mem" / agent_id / f"{mem_id}.txt"
@@ -165,8 +169,43 @@ class SideStore:
                 json.dumps([round(v, 9) for v in vec]), encoding="utf-8")
         return self.body_ref(agent_id, mem_id), self.embed_ref(agent_id, mem_id)
 
+    # ---- T268: shared immutable source hub ---------------------------------
+    # "each agent keeps its own copy" -> "one shared immutable source + a per-agent
+    # pointer". Bodies are content-addressed by sha256(text); the per-agent
+    # `mem_id` (and the MEMORY_WRITE event fields) stay unchanged — only `body_ref`
+    # now points at the shared blob, so N observers of one source event share ONE
+    # disk file and ONE in-memory str/list object (see read caches below).
+    def _src_path(self, digest: str, suffix: str) -> Path:
+        return self.root / "src" / f"{digest}{suffix}"
+
+    @staticmethod
+    def shared_body_ref(digest: str) -> str:
+        return f"side://src/{digest}.txt"
+
+    @staticmethod
+    def shared_embed_ref(digest: str) -> str:
+        return f"side://src/{digest}.vec"
+
+    def write_shared(self, text: str, vec: list[float]) -> tuple[str, str]:
+        """Write the body once to a content-addressed blob; return shared refs."""
+        digest = sha256_hex(text)
+        bp = self._src_path(digest, ".txt")
+        if not bp.exists():
+            bp.parent.mkdir(parents=True, exist_ok=True)
+            bp.write_text(text, encoding="utf-8")
+        if self.persist_vec:
+            vp = self._src_path(digest, ".vec")
+            if not vp.exists():
+                vp.write_text(json.dumps([round(v, 9) for v in vec]), encoding="utf-8")
+        return self.shared_body_ref(digest), self.shared_embed_ref(digest)
+
     def read_body(self, ref: str) -> str:
-        return self._resolve(ref, ".txt").read_text(encoding="utf-8")
+        cached = self._body_cache.get(ref)
+        if cached is not None:
+            return cached
+        text = self._resolve(ref, ".txt").read_text(encoding="utf-8")
+        self._body_cache[ref] = text
+        return text
 
     def read_embed(self, ref: str) -> list[float] | None:
         """Return the frozen vector, or **None** if absent (persist_vec off / missing).
@@ -174,10 +213,14 @@ class SideStore:
         `None` is an explicit signal to the retrieval call site to degrade
         (lexical/recomputed) and mark `vec_available=false` — never a silent failure.
         """
+        if ref in self._vec_cache:
+            return self._vec_cache[ref]
         p = self._resolve(ref, ".vec")
         if not p.exists():
             return None
-        return json.loads(p.read_text(encoding="utf-8"))
+        vec = json.loads(p.read_text(encoding="utf-8"))
+        self._vec_cache[ref] = vec
+        return vec
 
     def _resolve(self, ref: str, suffix: str) -> Path:
         # ref form: side://mem/<agent>/<mem>.txt|.vec
@@ -328,7 +371,9 @@ class AssociativeMemory:
         importance = max(IMPORTANCE_MIN, min(IMPORTANCE_MAX, int(importance)))
         mem_id = self.next_mem_id()
         vec = self.embedding.embed(text)
-        body_ref, embed_ref = self.side.write(self.agent_id, mem_id, text, vec)
+        # T268: content-addressed shared source; mem_id stays per-agent (log unchanged
+        # apart from body_ref now pointing at the shared blob).
+        body_ref, embed_ref = self.side.write_shared(text, vec)
         return {
             "op": "write",
             "mem_id": mem_id,

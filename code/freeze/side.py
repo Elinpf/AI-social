@@ -4,8 +4,13 @@
 **freeze 侧**负责：① "可产 / 可不产 `.vec`"的**嵌入能力**；② **检索降级标记的 schema 约定**；
 ③ 把开关**折进 `engine_version` 指纹**。
 
-背景：`side/mem/<agent>/<id>.txt`（#10 数据资产，**必留**）与 `<id>.vec`（可重算，**可关/懒算**）。
-`N=20` → ≈95k 文件、`N=50` → ≈187k，**inode 元凶**。
+背景：记忆正文/向量的 side 存储。**布局（T268 起）**：正文/向量改为**内容寻址、全局去重**，
+落 `side/src/<sha256(text)>.txt` 与 `...vec`；`MEMORY_WRITE.body_ref/embed_ref` 指向 `side/src/<h>.txt`；
+per-agent 写入接口 `SideStore.write()`（`side/mem/<agent>/<id>.*`）**保留**，`mem_id` 不变。
+`.vec`（可重算，**可关/懒算**）。`N=20` → ≈95k 文件、`N=50` → ≈187k，**inode 元凶**。
+
+> **本模块不解析任何 side 路径形状**（只依赖 `SideStore` 封装 / `body_ref`/`embed_ref` 字符串透传），
+> 故 T268 布局变更对本模块**透明**。归档需覆盖 `side/src/`（见 T229）。
 
 **开关**：env **`N50_VEC`**（obs 已挂 `N50_VEC=0` 等）；`"0"/"false"/"no"/"off"` → 关；缺省 → **True（行为不变）**。
 
