@@ -1,7 +1,11 @@
 #!/bin/sh
-# pre-commit 钩子 · 「本次提交范围」的两道检查：
-#   阶段 1 术语棘轮（T237）· 阶段 2 机器可读文件可解析（T242, json/jsonl/yaml/toml）
-#   —— 都只扫 `git diff --cached --name-only`（本次提交），对他人 WIP 免疫。
+# pre-commit 钩子 · 「本次提交范围」的三道检查：
+#   阶段 0 提交范围守卫（T273）· 阶段 1 术语棘轮（T237）· 阶段 2 机器可读文件可解析（T242）
+#   —— 都只扫 `git rev-parse` 得到的本次暂存集，对他人 WIP 免疫。
+#
+# 阶段 0（T273）新增：拦住 `git add -A` 裹带**他人未提交 WIP**。信号 = 同批暂存里
+#   混有「新鲜改动」与「久未提交的陈旧文件」；默认拦截，`COMMIT_SCOPE_ACK=<令牌>` 确认放行。
+#   机制见 tools/enforce_commit_scope.py（**不判定作者**——git 不记录作者；只识别新旧混批）。
 #
 # 病根（今天已两次致堵）：旧钩子跑 `make lexicon-gate` 是**全树**扫描，
 #   会把**他人尚未提交的 WIP 违规**也扫进来，从而**阻断所有人的提交**
@@ -22,6 +26,14 @@ cd "$ROOT" || exit 0
 CHANGED="$(git diff --cached --name-only --diff-filter=ACM)"
 if [ -z "$CHANGED" ]; then
   exit 0    # 本次提交无文件 → 放行
+fi
+
+# ---- 阶段 0（T273）：提交范围守卫 —— 拦住 `git add -A` 裹带他人未提交 WIP ----
+# 只读本次暂存集；不判定作者；信号=「新鲜文件」与「久未提交的陈旧文件」同批。
+python3 tools/enforce_commit_scope.py
+rc0=$?
+if [ "$rc0" -ne 0 ]; then
+  exit 1
 fi
 
 printf '%s\n' "$CHANGED" \
