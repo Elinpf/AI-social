@@ -200,6 +200,10 @@ class SideStore:
         return self.shared_body_ref(digest), self.shared_embed_ref(digest)
 
     def read_body(self, ref: str) -> str:
+        # T288: `body_ref` may be None（MEMORY_CONSOLIDATE 的派生记忆无正文）→ 空正文，
+        # 节点仍在 memory_index 中、可检索，按既有 lexical 降级路径计分（不抛、不静默）。
+        if ref is None:
+            return ""
         cached = self._body_cache.get(ref)
         if cached is not None:
             return cached
@@ -213,6 +217,9 @@ class SideStore:
         `None` is an explicit signal to the retrieval call site to degrade
         (lexical/recomputed) and mark `vec_available=false` — never a silent failure.
         """
+        # T288: `embed_ref` may be None（派生记忆无向量）→ 同样按 None 降级。
+        if ref is None:
+            return None
         if ref in self._vec_cache:
             return self._vec_cache[ref]
         p = self._resolve(ref, ".vec")

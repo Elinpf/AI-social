@@ -6,12 +6,9 @@
 
 from pathlib import Path
 
-import pytest
-
 from orchestration.integration import run_e2e
 
 
-@pytest.mark.xfail(strict=True, reason="待方案 A：life 的 `LifeAgent.restore()`（明天白天相位）")
 def test_resume_from_flush_byte_identical(tmp_path):
     n, target, fe, cut = 4, 8, 4, 4
     # 一次性跑完

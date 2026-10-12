@@ -122,6 +122,115 @@ class LifeLayerAgent:
         self._slept_days: set[int] = set()
         self._drift_streak: dict[str, int] = {}  # T244: 逐维"连续被反思信号"计数（分抖动/真漂移）
 
+    # ---- T288 / T276: 从账本单一真源恢复「只前向累积」的内部态 ---------------
+    def restore(self, state, records) -> None:
+        """Rebuild forward-accumulated internal state from the ledger (single source).
+
+        Called by `orchestration` once, right after `load_prefix` (duck-typed hook).
+        **只做「原样重建」，不做有界化**（有界化=改语义，另议）。
+
+        Rebuilt: `_observed_seqs` / `needs` / `_plan_slots`(schedule) /
+        `_planned_weeks` / `_goals_set_weeks` / `_comm_slot` / `_narrated_weeks` /
+        `_accepted` / `_rel_cache`, plus `memory` via `sync_from_refs`.
+        No new decision, no event payload change — the engine world state was already
+        restored by `replay_records`; this only re-syncs the life-side mirrors.
+        """
+        from .ports import MemoryRef
+        a = state.agents.get(self.agent_id)
+        if a is None:
+            return
+        # memory (bodies/embeddings live in side storage; sync rebuilds nodes)
+        self.memory.sync_from_refs(tuple(
+            MemoryRef(mem_id=m["mem_id"], kind=m["kind"], body_ref=m["body_ref"],
+                      embed_ref=m["embed_ref"], importance=int(m["importance"]),
+                      day=int(m["day"]), slot=m["slot"], subject=m.get("subject"),
+                      source_event_seq=m.get("source_event_seq"),
+                      last_access=int(m.get("last_access", 0)),
+                      access_count=int(m.get("access_count", 0)))
+            for m in a.get("memories", [])))
+        # observed: engine-authoritative OBSERVATION set ∪ this agent's MEMORY_WRITE sources
+        obs = set(a.get("observed_event_seqs", []))
+        for rec in records:
+            if rec.get("type") == "MEMORY_WRITE" and (rec.get("payload") or {}).get("agent_id") == self.agent_id:
+                s = (rec["payload"] or {}).get("source_event_seq")
+                if s is not None:
+                    obs.add(s)
+        self._observed_seqs = obs
+        # needs (own NEED_UPDATE folded into engine agent state)
+        self.needs = {d: int(a.get("needs", {}).get(d, self.needs.get(d, 50))) for d in C.NEED_DIMS}
+        # schedule -> _plan_slots (planner re-reads this; avoids re-planning drift)
+        self._plan_slots = {}
+        for s in a.get("schedule", []) or []:
+            sid = s.get("slot_id")
+            if not sid:
+                continue
+            e = {"activity_type": s.get("activity_type"), "place": s.get("place")}
+            for k in ("template_id", "participants"):
+                if k in s:
+                    e[k] = s[k]
+            self._plan_slots[sid] = e
+        # week caches + dialogue/narrative dedup (else resume re-emits events)
+        W = (C.TIME_CONFIG["DAYS_PER_WEEK"] * len(C.TIME_CONFIG["SLOTS_PER_DAY"])
+             * C.TIME_CONFIG["ROUNDS_PER_SLOT"])
+        planned: set[int] = set()
+        goals_weeks: set[int] = set()
+        narrated: set[int] = set()
+        accepted: set = set()
+        judged: set = set()
+        appraised: set = set()
+        comm = None
+        rel: dict = {}
+        for rec in records:
+            t = rec.get("type")
+            p = rec.get("payload") or {}
+            r = int(rec.get("round", 0))
+            if t == "SCHEDULE_PLANNED" and p.get("agent_id") == self.agent_id:
+                planned.add(r // W)
+            elif t == "GOAL_SET" and (p.get("agent_id") == self.agent_id or rec.get("actor") == self.agent_id):
+                goals_weeks.add(r // W)
+            elif t in ("MSG_DM", "MSG_PUBLIC", "MSG_GROUP"):
+                who = p.get("from") or p.get("author") or rec.get("actor")
+                if who == self.agent_id and p.get("day") is not None and p.get("slot"):
+                    sid = f"day{int(p['day']) % C.TIME_CONFIG['DAYS_PER_WEEK']}-{p['slot']}"
+                    if comm is None or r >= comm[0]:
+                        comm = (r, sid)
+            elif t == "NARRATIVE":
+                br = p.get("body_ref") or ""
+                if f"narrative/{self.agent_id}/" in br:
+                    tail = br.rsplit("-", 1)[-1].split(".")[0]
+                    if tail.isdigit():
+                        narrated.add(int(tail))
+            elif t == "OFFER_ACCEPTED":
+                who = p.get("by") or p.get("accepter") or p.get("to")
+                oid = p.get("offer_id")
+                if oid and who == self.agent_id:
+                    accepted.add(oid)
+            elif t == "RELATION_CHANGE" and p.get("from") == self.agent_id:
+                rel[(p.get("to"), p.get("dim"))] = p.get("after")
+            elif t == "LLM_JUDGMENT" and self.agent_id in (p.get("parties") or []):
+                # 软判定/社会评价的去重集（否则续跑首回合会重新判：多出 LLM_CALL/JUDGMENT）
+                dim = p.get("dimension") or ""
+                jid = p.get("judgment_id") or ""
+                others = [x for x in (p.get("parties") or []) if x != self.agent_id]
+                if not others:
+                    continue
+                if dim.startswith("rel_"):
+                    toks = jid.split("-")
+                    if len(toks) > 4:
+                        judged.add((others[0], dim[4:], toks[4]))
+                elif dim in ("stance", "respect", "affection"):
+                    tail = jid.rsplit("w", 1)[-1]
+                    if tail.isdigit():
+                        appraised.add((others[0], int(tail)))
+        self._planned_weeks = planned
+        self._goals_set_weeks = goals_weeks
+        self._narrated_weeks = narrated
+        self._accepted = accepted
+        self._judged = judged
+        self._appraised = appraised
+        self._comm_slot = comm[1] if comm else None
+        self._rel_cache = rel
+
     # ---- public entry ------------------------------------------------------
     def step(self) -> StepReport:
         wv = self.kernel.perceive(self.agent_id)          # IF-1 (read-only)
