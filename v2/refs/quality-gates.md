@@ -268,4 +268,26 @@
 
 ---
 
-*（策略 v1 + T220 §10 + T237 §11 — sandbox-test-lead；含 RV1–RV9 + RV-DISK + RV-STAMP + T237 RV①②④ 反向验证实录；口径真源 `code/obs/*`；与 delivery-reviewer T218 对齐中。）*
+## 12. T242 pre-commit 阶段 2：机器可读文件「可解析」（只扫本次提交，含反向验证）
+
+**背景**：sim-engine-stats-architect 提交时把 `tools/inert_registry.json` 写成**无效 JSON**（Python 命令里 `"` 未转义），事后 `json.load` 才发现（`036f8c3` 修）。同一族病：**写入了机器可读文件却没校验，发现得太晚**——而 `json.load` 成本 0.1 秒。
+
+**修复（复用同一钩子，不另起第二套）**：
+- 新增 `tools/check_machine_readable.py`：`*.json`→`json.load`；`*.jsonl`→逐行（报断行号）；`*.yaml/.yml`→`yaml.safe_load`（无 PyYAML 则**可见地**标 `skipped (no parser)`）；`*.toml`→`tomllib`（stdlib）。**只做"可解析"，不校验 schema 语义**。
+- **大文件门上限**：> `--size-cap`（默认 **5 MiB**）→ 打印 `skipped (size): <file> (<name> B > <cap> B)` 后跳过——**跳过原因可见，绝不静默**。
+- 挂在既有钩子 `tools/pre-commit-lexicon.sh` 的**阶段 2**（阶段 1 = T237 术语棘轮），**仍由 `make install-hooks` 装**；两段都用 `git diff --cached`（本次提交范围）。
+
+**反向验证（实际命令与输出；受控 temp 仓库 `/tmp/t242-rv`，装真实钩子）**：
+
+| # | 构造状态 | 命令 | 实测结果 |
+|---|---|---|---|
+| ② | staged 合法 `good.json` | `git commit` | **成功**，钩子打印 `✅ 机器可读文件可解析（checked=1, skipped(size)=0）` ✓ |
+| ① | staged 坏 `bad.json`（`{"a": 1,, "b": }`） | `git commit` | **失败**，打印 `bad.json:1:9: JSON 解析失败：Expecting property name enclosed in double quotes` ✓（**文件名 + 行列**） |
+| 附 | staged 坏 `bad.jsonl`（第 2 行非法） | `git commit` | **失败**，打印 `bad.jsonl:2: JSONL 第 2 行解析失败：Expecting value` ✓（**断行号**） |
+| ④ | staged 大文件 `big.json`（6 000 001 B > 5 MiB） | `git commit` | **成功**，打印 `skipped (size): big.json (6000001 B > 5242880 B)` + `（checked=0, skipped(size)=1）` ✓（**跳过可见**） |
+
+> 红线守住：**不为"更快"而静默跳过**——跳过的每条都打印原因（`skipped (size)` / `skipped (no parser)`）。未覆盖 `.csv/.txt` 等：**明确不做**（非机器可读 JSON/YAML/TOML 目标，且无低成本通用解析）。
+
+---
+
+*（策略 v1 + T220 §10 + T237 §11 + T242 §12 — sandbox-test-lead；含 RV1–RV9 + RV-DISK + RV-STAMP + T237/T242 反向验证实录；口径真源 `code/obs/*`；与 delivery-reviewer T218 对齐中。）*

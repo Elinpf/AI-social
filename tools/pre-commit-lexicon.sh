@@ -1,5 +1,7 @@
 #!/bin/sh
-# pre-commit 钩子 · 术语棘轮（仅扫「本次提交涉及的文件」）—— T237
+# pre-commit 钩子 · 「本次提交范围」的两道检查：
+#   阶段 1 术语棘轮（T237）· 阶段 2 机器可读文件可解析（T242, json/jsonl/yaml/toml）
+#   —— 都只扫 `git diff --cached --name-only`（本次提交），对他人 WIP 免疫。
 #
 # 病根（今天已两次致堵）：旧钩子跑 `make lexicon-gate` 是**全树**扫描，
 #   会把**他人尚未提交的 WIP 违规**也扫进来，从而**阻断所有人的提交**
@@ -36,4 +38,16 @@ if [ "$rc" -ne 0 ]; then
   echo "修好后重试；确需绕过：git commit --no-verify"
   exit 1
 fi
+
+# ---- 阶段 2（T242）：机器可读文件「可解析」（仅本次提交范围）----
+# json / jsonl / yaml / toml；大文件 >5MiB 跳过并打印 skipped(size)（可见，不静默）。
+printf '%s\n' "$CHANGED" \
+  | python3 tools/check_machine_readable.py --root . --paths-from-stdin
+rc2=$?
+if [ "$rc2" -ne 0 ]; then
+  echo "❌ pre-commit 拦截：本次提交的机器可读文件无法解析（见上：文件名 + 错误位置）"
+  echo "修好后重试；确需绕过：git commit --no-verify"
+  exit 1
+fi
+
 exit 0
