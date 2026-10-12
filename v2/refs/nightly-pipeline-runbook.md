@@ -10,15 +10,20 @@
 `nightly.py` 把 T271 的托管封装成**每晚例行**：读一张批次表 → 一键起全部批（各在自己的 transient unit、`/tmp` 只读副本、文件开关、心跳落盘）→ 一键收出**一页早报** → 中断批可续（或重叠重跑）→ 清理长期账。
 
 ## 1. 批次表（TSV，制表符分隔）
-列：`name rounds agents seed switch resume_mode tree flush out side cmd`
+列：`name rounds agents seed switch switch_mode resume_mode tree flush out side cmd`
 | 列 | 取值 | 说明 |
 |---|---|---|
-| `switch` | `file.json:dot.path=value`，多个用 `;`；`-`=无 | 消融开关**以文件落副本**（非 dict override） |
+| `switch` | `file.json:dot.path=value`，多个用 `;`；`-`=无 | 消融开关（语义见下一行 `switch_mode`） |
+| `switch_mode` | `file`（默认）｜`override` | `file`=改副本 `config/*.json`（**进 `engine_version` 指纹**）；`override`=**运行时 cfg 覆盖**（`tools/t271/run_override.py`，**文件不动→保指纹→保 `cache_key`→可命中共享 `freeze_cache`**）。⚠️ **`override` 只对引擎级键**（`world_director`/`policy`/`economy`/`time_config`/`genesis`）有效；**`life_v2`(sleep/forgetting/persona_drift) 由 life 层直接读盘 → 只能 `file`（会改指纹）** |
 | `resume_mode` | `native`（默认）｜`overlap`（回退） | `native`=真 runner `--resume-from/--target-round` 从 flush 前缀续跑；`overlap`=重跑（见 §4） |
-| `tree` | `copy`（默认）｜`main` | `main`=在主树跑（A 批口径，无副本/无开关）；`copy`=`/tmp` 只读副本 |
+| `tree` | `copy`（默认）｜`main` | `main`=在主树跑（A 批口径）；`copy`=`/tmp` 只读副本 |
 | `out` | 绝对路径；留空=默认 | 覆盖批次日志落点（如 A 落 `v2/evidence/run_t236_canon_n20_llm.jsonl`）；**run 元数据仍落 `<run_root>/<name>/`** |
-| `side` | 绝对路径；留空=默认 | 覆盖 `side_root`（默认 `<run_dir>/side`）。**多批填同一个 = 共享 `freeze_cache`/源正文，做干净消融（B−A 差值不被缓存冷热污染）**；`native` 续跑自动沿用 `meta.side_root` |
-| `cmd` | 留空=默认 | 默认绝对 venv python：`/opt/openjiuwen/workswarm-venv/bin/python -m orchestration run … {resume_args}`（**不赌 `python3` 解析**） |
+| `side` | 绝对路径；留空=默认 | 覆盖 `side_root`（默认 `<run_dir>/side`）。**多批填同一个 = 共享 `freeze_cache`/源正文**；`native` 续跑自动沿用 `meta.side_root` |
+| `cmd` | 留空=默认 | `file` 模式默认 `…/python -m orchestration run … {resume_args} {switch_args}`；`override` 模式默认 `…/python {bin}/run_override.py … {resume_args} {switch_args}`（**不赌 `python3` 解析**） |
+
+> **"干净消融"编排 = 多批同 `side`（一方预热）+ `switch_mode=override`（开关不进行为指纹、只进 `meta`）** ⇒ B−A 差值不被缓存冷热污染。
+> 实测（本机）：`base`/`override` 指纹**一致**（`sha256:23658bf8…`）、`file` 指纹**不同**（`sha256:7aa8fd3a…`）。
+> ⚠️ **`life_v2` 类开关无法 override**（life 层直接读盘）→ 含 C 的"干净消融"需 life 层 hook（**当前不具备**），否则 C 只能 `file`（改指纹、不共享缓存）。
 
 示例见 `tools/t271/batches.example.tsv`（含今晚 A/B/C/D）。
 

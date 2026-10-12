@@ -1,10 +1,11 @@
 # T274 夜跑批次表（TSV；# 注释；制表符分隔）
-# 列：name rounds agents seed switch resume_mode tree flush out side cmd
-#   tree: main(A,主树) | copy(默认,/tmp只读副本)
-#   resume_mode: native(默认, 前提=该 sha/配置上逐字节一致已自证) | overlap(显式回退, 落 rerun.jsonl)
-#   side: 留空=<run_dir>/side; 多批填同一路径 = 共享 freeze_cache 做干净消融
-name	rounds	agents	seed	switch	resume_mode	tree	flush	out	side	cmd
-A	84	20	42	-	native	main	12	/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_t236_canon_n20_llm.jsonl		
-B	84	20	42	world_director.json:enabled=false	native	copy	12			
-C	84	20	42	life_v2.json:sleep.enabled=false;life_v2.json:forgetting.enabled=false	native	copy	12			
-D	84	20	42	policy.json:wake.enabled=true	native	copy	12			
+# 列：name rounds agents seed switch switch_mode resume_mode tree flush out side cmd
+#   switch_mode: file(默认, 改副本文件=>进指纹) | override(运行时 cfg, 文件不动=>保指纹=>可共享缓存)
+#     ⚠ override 只对【引擎级】键(world_director/policy/economy/time_config/genesis)有效;
+#       life_v2(sleep/forgetting/persona_drift) 由 life 层直接读盘 => 只能 file(且会改指纹)
+#   side: 留空=<run_dir>/side; 多批填同一路径 + switch_mode=override = 共享 freeze_cache 干净消融
+name	rounds	agents	seed	switch	switch_mode	resume_mode	tree	flush	out	side	cmd
+A	84	20	42	-	file	native	main	12	/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_t236_canon_n20_llm.jsonl		
+B	84	20	42	world_director.json:enabled=false	override	native	copy	12			
+C	84	20	42	life_v2.json:sleep.enabled=false;life_v2.json:forgetting.enabled=false	file	native	copy	12			
+D	84	20	42	policy.json:wake.enabled=true	override	native	copy	12			

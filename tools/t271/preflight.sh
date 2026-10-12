@@ -14,8 +14,10 @@ df -h /
 echo "--- df -i / ---"
 df -i /
 avail=$(awk '/MemAvailable/{print int($2/1024)}' /proc/meminfo)
-echo "--- MemAvailable = ${avail} MB ---"
+freemb=$(awk '/^MemFree:/{print int($2/1024)}' /proc/meminfo)
+# 判据：看 available（含可回收 page cache），不看 free（free 列常被 cache 压到很小）
+echo "--- 内存判据字段：MemAvailable = ${avail} MB （看这列；MemFree=${freemb}MB 仅参考，cache 占用的可回收） ---"
 if [ "$avail" -lt 3072 ]; then
-  echo "[WARN] MemAvailable < 3G，跑批前先降并发/清缓存"
+  echo "[WARN] MemAvailable(available) < 3G —— 跑批前先降并发；判据是 available 不是 free"
 fi
 echo "[preflight] done"

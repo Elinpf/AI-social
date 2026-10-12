@@ -22,7 +22,10 @@ RUN_ROOT = os.environ.get("T271_RUN_ROOT", "/root/t271/runs/nightly")
 DEFAULT_ENV = os.path.join(REPO, "code", ".env.local")
 DEFAULT_CMD = ("/opt/openjiuwen/workswarm-venv/bin/python -m orchestration run --life "
                "--seed {seed} --agents {agents} --rounds {rounds} --out {out} "
-               "--side-root {side} --flush-every {flush} {resume_args}")
+               "--side-root {side} --flush-every {flush} {resume_args} {switch_args}")
+DEFAULT_OVERRIDE_CMD = ("/opt/openjiuwen/workswarm-venv/bin/python {bin}/run_override.py "
+                        "--seed {seed} --agents {agents} --rounds {rounds} --out {out} "
+                        "--side-root {side} --flush-every {flush} {resume_args} {switch_args}")
 
 
 FROZEN_DIRS = ("code/engine", "code/life", "code/freeze", "code/config",
@@ -37,6 +40,24 @@ def frozen_dirty():
 
 def now() -> str:
     return datetime.now().strftime("%F %T")
+
+
+def switch_to_override_args(spec: str) -> str:
+    """'file.json:dot.path=value;...' -> '--override top.path=value ...'（引擎级 cfg 键）。"""
+    if not spec or spec.strip() in ("-", ""):
+        return ""
+    out = []
+    for item in spec.split(";"):
+        item = item.strip()
+        if not item:
+            continue
+        loc, _, val = item.partition("=")
+        fname, _, keypath = loc.partition(":")
+        top = fname.strip()
+        if top.endswith(".json"):
+            top = top[:-5]
+        out.append(f"--override {top}.{keypath.strip()}={val}")
+    return " ".join(out)
 
 
 def sh(cmd, **kw):
@@ -64,6 +85,7 @@ def load_batches(path: str):
             row.setdefault("tree", "copy")
             row.setdefault("out", "")
             row.setdefault("side", "")
+            row.setdefault("switch_mode", "file")
             rows.append(row)
     return rows
 
@@ -206,17 +228,20 @@ def batch_state(name: str, run_root: str):
 # ---------------------------------------------------------------- launch helper
 def launch(name, copy, run_dir, sha, envfile, cmd_tmpl, rounds, agents, seed, flush,
            heartbeat, mem_high, mem_max, switch_val, resume_mode, extra_tag="", out_name="run.jsonl",
-           out_override=None, tree_val="", resuming=False, side_override=None):
+           out_override=None, tree_val="", resuming=False, side_override=None,
+           switch_args="", switch_mode="file"):
     out = out_override or os.path.join(run_dir, out_name)
     # side_root 可被批次表覆盖（多批共享 freeze_cache 做干净消融）；默认 <run_dir>/side
     side = side_override or os.path.join(run_dir, "side")
     # native 续跑：真 runner 用 --resume-from <已 flush 前缀> --target-round <目标>（复用同一 side_root）
     resume_args = f"--resume-from {out} --target-round {rounds}" if resuming else ""
+    tmpl = cmd_tmpl or (DEFAULT_OVERRIDE_CMD if switch_mode == "override" else DEFAULT_CMD)
     ctx = dict(out=out, side=side, hb=os.path.join(run_dir, "heartbeat.tsv"),
                copy=copy, rounds=rounds, agents=agents, seed=seed, flush=flush,
-               resume_args=resume_args)
-    cmd = (cmd_tmpl or DEFAULT_CMD).format(**ctx)
-    meta = [f"sha={sha}", f"copy={copy}", f"switch={switch_val}",
+               resume_args=resume_args, switch_args=switch_args, bin=BIN,
+               py="/opt/openjiuwen/workswarm-venv/bin/python")
+    cmd = tmpl.format(**ctx)
+    meta = [f"sha={sha}", f"copy={copy}", f"switch={switch_val}", f"switch_mode={switch_mode}",
             f"side_root={side}", f"flush_every={flush}", f"resume_mode={resume_mode}",
             f"rounds={rounds}", f"agents={agents}", f"seed={seed}"]
     if extra_tag:
@@ -267,22 +292,29 @@ def cmd_start(a):
         shutil.rmtree(run_dir, ignore_errors=True)
         os.makedirs(run_dir, exist_ok=True)
         tree = b.get("tree", "copy")
+        switch_mode = b.get("switch_mode", "file")
         if tree == "main":
-            copy = REPO            # A 批在主树（leader 口径）；不建副本、无开关
-            sw = "-"
+            copy = REPO            # A 批在主树（leader 口径）；不建副本
+            sw = "-" if switch_mode != "override" else b["switch"]
         else:
             copy = os.path.join(COPY_ROOT, f"t271-{name}")
             shutil.rmtree(copy, ignore_errors=True)
             os.makedirs(copy, exist_ok=True)
             sh(f"git -C '{REPO}' archive '{sha}' | tar -x -C '{copy}'", check=True)
-            sw = apply_switch(copy, b["switch"])
+            if switch_mode == "override":
+                sw = b["switch"]   # 运行时 cfg 覆盖：不改文件（保指纹=>保缓存命中）
+            else:
+                sw = apply_switch(copy, b["switch"])
+        switch_args = switch_to_override_args(b["switch"]) if switch_mode == "override" else ""
         sh([os.path.join(BIN, "capture_provenance.sh"), copy, run_dir])
         launch(name, copy, run_dir, sha, envfile, b["cmd"],
                b["rounds"], b["agents"], b["seed"], b["flush"], a.heartbeat,
                a.mem_high, a.mem_max, sw, b["resume_mode"],
                out_override=(b.get("out") or None), tree_val=tree,
-               side_override=(b.get("side") or None))
-        print(f"[start] {name}: tree={tree} copy={copy} switch={sw} resume_mode={b['resume_mode']}")
+               side_override=(b.get("side") or None),
+               switch_args=switch_args, switch_mode=switch_mode)
+        print(f"[start] {name}: tree={tree} switch_mode={switch_mode} copy={copy} "
+              f"switch={sw} resume_mode={b['resume_mode']}")
 
 
 def cmd_status(a):

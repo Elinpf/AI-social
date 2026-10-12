@@ -1,0 +1,21 @@
+{
+  "feature": "switch_mode=override —— 运行时 config-dict 覆盖，保 engine_version 指纹 => 保 cache_key => 共享 freeze_cache 可命中（干净消融）",
+  "author": "release-engineer",
+  "date": "2026-10-12",
+  "script": "tools/t271/run_override.py (calls run_e2e(config=<dict>))",
+  "mechanism": "engine.version.compute_fingerprint() 读的是 config FILES；run_e2e 的 config dict 只改行为 => 文件不动则指纹不变",
+  "verified_on_this_host": {
+    "params": "seed=1, agents=2, rounds=6, switch=world_director.json:enabled=false",
+    "base_fingerprint":     "sha256:23658bf8da45d935c30a84863d053674c098434ef16d9e02596f05de0f1f5973",
+    "override_fingerprint": "sha256:23658bf8da45d935c30a84863d053674c098434ef16d9e02596f05de0f1f5973",
+    "file_fingerprint":     "sha256:7aa8fd3a83ae5229e830306b0ab2c8f34cd1ca5e4631f0d1e7556a45bfb455a7",
+    "conclusion": "override == base (cache-hittable); file != base (cache-busting)"
+  },
+  "supported_keys": "仅引擎级（default_config() 顶层：world_director / policy / economy / time_config / genesis）",
+  "limitation": "life_v2(sleep/forgetting/persona_drift) 由 life 层【直接读盘】消费（life/sleep_window.py:25 等）=> config-dict override 不可达 => 含此类开关的批只能用 file 模式（改指纹、不共享缓存），除非 life 层加 hook（当前不具备）",
+  "columns": {
+    "switch_mode": "file(默认) | override",
+    "side": "多批填同一路径 = 共享 side_root/freeze_cache；配合 override 即完整干净消融编排"
+  },
+  "usage_example": "name=B switch=world_director.json:enabled=false switch_mode=override side=/root/t271/runs/shared_side"
+}
