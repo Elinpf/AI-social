@@ -26,6 +26,7 @@ python3 "$S/silhouette_check.py" >/dev/null
 python3 "$S/char_check.py" >/dev/null
 python3 "$S/check_single_source.py"                    # 门禁：palette 单一真源（T246）
 python3 "$SRC/tools/audit_event_cards.py"           # 事件卡机制区空槽门禁（有槽即非零退出）
+python3 "$SRC/tools/char_game_size_check.py"        # 角色「游戏尺寸」两两剪影可辨性门禁
 
 echo "[art] 3/4 自洽断言（JSON.distinct_colors == 落盘 PNG 实测）"
 python3 - "$SK" <<'PY'
@@ -52,6 +53,10 @@ cc = json.load(open(os.path.join(sk, "references/hand/char_check.json")))["gate_
 if not cc["pass"]:
     print("  FAIL char gate_pass=false ->", cc); sys.exit(1)
 print("  ok  - char gate_pass=true")
+gs = json.load(open("frontend/tools/char_game_size.json"))["gate_pass"]
+if not gs["pass"]:
+    print("  FAIL char game-size gate_pass=false ->", gs); sys.exit(1)
+print("  ok  - char game-size gate_pass=true (max_iou=%.3f)" % gs["max_iou"])
 PY
 
 echo "[art] 4/4 落盘（copy → frontend/assets/hand）"
@@ -77,5 +82,16 @@ for fs in groups:
     for f in sorted(fs):
         roll.update((os.path.relpath(f, os.path.dirname(root)) + ":" + hashlib.sha256(open(f, "rb").read()).hexdigest() + "\n").encode())
         n += 1
-print("[art] batch_id = %s  (%d files: hand[19b+8c+13p] + tiles+roads+icons + event_cards)" % (roll.hexdigest()[:16], n))
+bid = roll.hexdigest()[:16]
+import json as _json
+rec = {"batch_id": bid, "total_files": n,
+       "note": "美术资产批次指纹（治图旧资产新脱钩）；由 make art 生成，勿手改。"}
+# 落盘到机检可读的单一真源（assets + skill references）
+for dest in (os.path.join(os.path.dirname(root), "batch_id.json"),
+             os.path.join(os.path.expanduser("~"), ".jiuwenswarm/agent/workspace/skills/qingxi-pixel-art/references/batch_id.json")):
+    try:
+        _json.dump(rec, open(dest, "w"), ensure_ascii=False, indent=2)
+    except Exception as e:
+        print("  warn batch_id.json write:", e)
+print("[art] batch_id = %s  (%d files) -> frontend/assets/batch_id.json" % (bid, n))
 PY

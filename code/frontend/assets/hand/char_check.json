@@ -15,13 +15,13 @@
     },
     "villager_green": {
       "hair": "long",
-      "body": "tall",
+      "body": "normal",
       "cloth": "robe",
       "acc": "none"
     },
     "villager_blue": {
       "hair": "pony",
-      "body": "normal",
+      "body": "short",
       "cloth": "overalls",
       "acc": "glasses"
     },
@@ -67,16 +67,16 @@
       "ok": true
     },
     "villager_green": {
-      "top": 6,
-      "left": 12,
-      "right": 10,
+      "top": 12,
+      "left": 10,
+      "right": 8,
       "bottom": 2,
       "ok": true
     },
     "villager_blue": {
-      "top": 12,
-      "left": 10,
-      "right": 8,
+      "top": 24,
+      "left": 8,
+      "right": 4,
       "bottom": 2,
       "ok": true
     },

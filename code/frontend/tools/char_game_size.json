@@ -1,0 +1,11 @@
+{
+  "target_height": 34,
+  "threshold": 0.95,
+  "pairs": 28,
+  "max_iou": 0.916,
+  "failed": [],
+  "gate_pass": {
+    "pass": true,
+    "max_iou": 0.916
+  }
+}
