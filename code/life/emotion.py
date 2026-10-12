@@ -38,10 +38,15 @@ STRUCT_NEG_RE = re.compile(
 STRUCT_POS_RE = re.compile(r"明白了|懂了|有道理|不错|挺好|还行|值了")
 
 
+# `_reflect` 给每条反思追加的**包裹后缀** `（insight k）` 不是内容 ⇒ 判定前剔除，
+# 否则结构正则的「动作括号」会把包裹误当信号（实测会导致 natural 过触发）。
+_WRAPPER_RE = re.compile(r"（\s*insight\s*\d+\s*）")
+
+
 def emotion_sign(text: str, *, criterion: str = "natural",
                  lexicon: tuple[tuple[str, ...], tuple[str, ...]] | None = None) -> int:
     """返回 `+1/-1/0`（0=不产候选）。`lexicon=(pos,neg)` 供探针复用同一函数。"""
-    low = (text or "").lower()
+    low = _WRAPPER_RE.sub("", text or "").lower()
     if lexicon is not None:
         pos, neg = lexicon
     elif criterion == "strict":
