@@ -89,6 +89,49 @@ def _offset(agent_id: str, round_no: int) -> int:
     return int(hash_obj({"r": int(round_no), "a": str(agent_id)})[7:19], 16)
 
 
+# ---------------- M6：critical-only 的可列判定（T215 (a)） ----------------
+def critical_dimensions(config) -> set:
+    cfg = _budget_cfg(config)
+    return {str(d) for d in (cfg.get("critical_dimensions") or [])}
+
+
+def is_critical_dimension(dimension, config) -> bool:
+    return str(dimension) in critical_dimensions(config)
+
+
+def should_skip_judgment(dimension, level: int, config) -> bool:
+    """L3 只保 critical 维度；L1/L2 不在此跳过（分别由 freeze 抽样/降模型执行）。
+
+    **保守默认**：若 `critical_dimensions` 未配置（空）→ **一律不跳过**（宁可少降级，
+    也不"悄悄把判定全砍掉"）；待与 T213 对齐维度价值表后填入。"""
+    if int(level) < 3:
+        return False
+    crit = critical_dimensions(config)
+    if not crit:
+        return False  # 无表 → 不跳（保守）
+    return str(dimension) not in crit
+
+
+def skip_spec(round_no: int, dimension, parties, rule: str = "critical_only") -> "object":
+    """逐判定**可列**的可观测记录（DEGRADE 的 skipped 明细，而非仅计数）。"""
+    return spec(round_no, PHASE_COMMIT, "SYSTEM", "DEGRADE", {
+        "level": 3, "rule": rule, "action": "skip_judgment",
+        "skipped": [{"dimension": str(dimension),
+                     "parties": sorted(parties or []),
+                     "round": int(round_no)}],
+    })
+
+
+def should_skip_importance(level: int, config) -> bool:
+    """`importance` 不走 `LLM_JUDGMENT.dimension`（另一条轴）→ 单独键 `critical_importance`。
+
+    L3 且 `critical_importance=false` 时跳过；缺省 `false`/缺键 → **保守不跳**。"""
+    if int(level) < 3:
+        return False
+    cfg = _budget_cfg(config)
+    return not bool(cfg.get("critical_importance", False))
+
+
 def schedule_llm_agents(agents, round_no: int, kc: int, priority=None) -> list:
     """把本回合允许调用 LLM 的 agent 限到 ≤`kc`（峰值削平）。
 
@@ -105,4 +148,6 @@ def schedule_llm_agents(agents, round_no: int, kc: int, priority=None) -> list:
 __all__ = [
     "sim_day", "daily_token_usage", "daily_judge_calls", "degrade_level",
     "degrade_specs", "schedule_llm_agents",
+    "critical_dimensions", "is_critical_dimension", "should_skip_judgment", "skip_spec",
+    "should_skip_importance",
 ]

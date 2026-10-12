@@ -67,6 +67,61 @@ def test_scheduler_caps_peak_and_is_deterministic():
     assert "A" in r1                       # 关键路径优先（高 priority）
 
 
+def test_skip_is_listable_and_conservative():
+    # 无维度表 → L3 也**不跳过**（保守：不悄悄砍判定）
+    assert scheduling.should_skip_judgment("mentor_relation", 3, _cfg()) is False
+    cfg = {"policy": {"llm_budget": {"enabled": True,
+                                     "critical_dimensions": ["deal", "mentorship"]}}}
+    assert scheduling.should_skip_judgment("deal", 3, cfg) is False      # critical 保留
+    assert scheduling.should_skip_judgment("reputation", 3, cfg) is True # 非 critical 跳过
+    assert scheduling.should_skip_judgment("reputation", 2, cfg) is False  # L2 不跳
+    s = scheduling.skip_spec(5, "reputation", ["P2", "P1"])
+    assert s.payload["skipped"] == [{"dimension": "reputation",
+                                     "parties": ["P1", "P2"], "round": 5}]  # 可列
+
+
+def test_authoritative_critical_dimensions_and_exact_match():
+    """life 发布的 critical_dimensions（4 个，精确匹配；rel_respect ≠ respect）。"""
+    from engine.runner import load_config
+    crit = scheduling.critical_dimensions(load_config())
+    assert crit == {"weekly_focus", "rel_affinity", "rel_trust", "rel_respect"}
+    cfg = load_config()
+    assert scheduling.should_skip_judgment("rel_respect", 3, cfg) is False  # 保留
+    assert scheduling.should_skip_judgment("respect", 3, cfg) is True      # 不同维度 → 跳过
+    assert scheduling.should_skip_judgment("rel_familiarity", 3, cfg) is True
+    # importance 走单独键（默认 critical_importance=true → 不跳）
+    assert scheduling.should_skip_importance(3, cfg) is False
+    assert scheduling.should_skip_importance(3, {"policy": {"llm_budget": {"enabled": True,
+                                                                            "critical_importance": False}}}) is True
+
+
+def test_degrade_on_off_controlled_diff_n10():
+    """(b) 同 seed 开/关降级各跑 N=10：差异必须**可解释**（此处应仅多出 DEGRADE 标记）。"""
+    from engine.runner import load_config
+
+    w_off = build_world(seed=7, n=10)
+    e_off = w_off["engine"]
+    for r in range(12):
+        e_off.run_round(r)
+    c_off = Counter(rec["type"] for rec in e_off.ledger.records)
+    assert c_off.get("DEGRADE", 0) == 0
+
+    cfg_on = load_config()
+    cfg_on["policy"]["llm_budget"]["daily_token_budget"] = 1  # 极低预算 → 立即降级
+    w_on = build_world(seed=7, n=10, config=cfg_on)
+    e_on = w_on["engine"]
+    for r in range(12):
+        e_on.run_round(r)
+    c_on = Counter(rec["type"] for rec in e_on.ledger.records)
+    assert c_on.get("DEGRADE", 0) >= 1
+
+    # 除 DEGRADE 外，其余事件计数一致 → 差异 100% 可归因于「降级标记」本身
+    for t in set(c_off) | set(c_on):
+        if t == "DEGRADE":
+            continue
+        assert c_off.get(t, 0) == c_on.get(t, 0), f"{t}: off={c_off.get(t,0)} on={c_on.get(t,0)}"
+
+
 def test_non_degraded_path_unchanged_n10():
     """不降级路径行为与现状一致：预算充足时 DEGRADE=0，无 SYSTEM_ERROR。"""
     w = build_world(seed=7, n=10); eng = w["engine"]

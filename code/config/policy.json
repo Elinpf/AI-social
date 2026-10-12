@@ -71,7 +71,10 @@
     "judge_daily_cap": 1500,
     "l1_ratio_bp": 8000,
     "l2_ratio_bp": 10000,
-    "l3_ratio_bp": 15000
+    "l3_ratio_bp": 15000,
+    "critical_dimensions": ["weekly_focus", "rel_affinity", "rel_trust", "rel_respect"],
+    "_critical_dimensions_note": "L3 critical-only 保留的 LLM_JUDGMENT.dimension（精确字符串匹配；来源=life/constants.CRITICAL_DIMENSIONS 的发布投影；注意 rel_respect 与 respect 是不同维度，勿归一）",
+    "critical_importance": true
   },
   "safety_valve": {
     "net_worth_floor_mu": {
