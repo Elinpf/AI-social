@@ -1,0 +1,300 @@
+{
+  "schema": "hitt.decor_plan/1",
+  "note": "参考件：件与摆放规则由 pixel-asset-artist 出；最终落格由 art-director 在 layout 拍板。",
+  "region": {
+    "cols": 24,
+    "rows": 15,
+    "tile": 32
+  },
+  "rules": {
+    "road_side": {
+      "desc": "道路两侧每 4 tile ≥1 连接件",
+      "props": [
+        "lamp",
+        "flowerbed",
+        "crate",
+        "sign",
+        "bench"
+      ]
+    },
+    "door_front": {
+      "desc": "建筑门口必配 1–2 件",
+      "props": [
+        "sign",
+        "flowerbed",
+        "crate",
+        "fence"
+      ]
+    },
+    "block_cluster": {
+      "desc": "每 4×4 tile ≥1 装饰，簇状不均匀",
+      "props": [
+        "tree",
+        "bush",
+        "rock",
+        "flower",
+        "barrel"
+      ]
+    },
+    "landmark": {
+      "desc": "地标 2–3 处作构图焦点",
+      "props": [
+        "clocktower",
+        "arch_bridge",
+        "fountain",
+        "windmill"
+      ]
+    }
+  },
+  "items": [
+    {
+      "rule": "road_side",
+      "x": 5,
+      "y": 7,
+      "prop": "lamp"
+    },
+    {
+      "rule": "road_side",
+      "x": 9,
+      "y": 7,
+      "prop": "flowerbed"
+    },
+    {
+      "rule": "road_side",
+      "x": 13,
+      "y": 7,
+      "prop": "crate"
+    },
+    {
+      "rule": "road_side",
+      "x": 17,
+      "y": 7,
+      "prop": "sign"
+    },
+    {
+      "rule": "road_side",
+      "x": 21,
+      "y": 7,
+      "prop": "bench"
+    },
+    {
+      "rule": "door_front",
+      "x": 6,
+      "y": 7,
+      "prop": "sign"
+    },
+    {
+      "rule": "door_front",
+      "x": 8,
+      "y": 7,
+      "prop": "flowerbed"
+    },
+    {
+      "rule": "door_front",
+      "x": 13,
+      "y": 7,
+      "prop": "sign"
+    },
+    {
+      "rule": "door_front",
+      "x": 15,
+      "y": 7,
+      "prop": "flowerbed"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 5,
+      "y": 1,
+      "prop": "rock"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 8,
+      "y": 1,
+      "prop": "bush"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 14,
+      "y": 3,
+      "prop": "tree"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 15,
+      "y": 3,
+      "prop": "bush"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 16,
+      "y": 2,
+      "prop": "barrel"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 17,
+      "y": 2,
+      "prop": "tree"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 20,
+      "y": 3,
+      "prop": "flower"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 6,
+      "y": 5,
+      "prop": "bush"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 7,
+      "y": 5,
+      "prop": "rock"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 10,
+      "y": 7,
+      "prop": "tree"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 11,
+      "y": 7,
+      "prop": "bush"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 12,
+      "y": 7,
+      "prop": "barrel"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 16,
+      "y": 6,
+      "prop": "flower"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 22,
+      "y": 7,
+      "prop": "rock"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 5,
+      "y": 11,
+      "prop": "tree"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 6,
+      "y": 11,
+      "prop": "bush"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 10,
+      "y": 11,
+      "prop": "barrel"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 11,
+      "y": 11,
+      "prop": "tree"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 13,
+      "y": 10,
+      "prop": "flower"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 17,
+      "y": 9,
+      "prop": "rock"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 18,
+      "y": 9,
+      "prop": "flower"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 20,
+      "y": 9,
+      "prop": "bush"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 21,
+      "y": 9,
+      "prop": "rock"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 4,
+      "y": 14,
+      "prop": "barrel"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 5,
+      "y": 14,
+      "prop": "tree"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 10,
+      "y": 13,
+      "prop": "flower"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 11,
+      "y": 13,
+      "prop": "barrel"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 14,
+      "y": 13,
+      "prop": "rock"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 15,
+      "y": 13,
+      "prop": "flower"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 18,
+      "y": 13,
+      "prop": "bush"
+    },
+    {
+      "rule": "block_cluster",
+      "x": 22,
+      "y": 14,
+      "prop": "tree"
+    },
+    {
+      "rule": "landmark",
+      "x": 12,
+      "y": 11,
+      "prop": "well"
+    }
+  ],
+  "counts": {
+    "total": 41
+  }
+}
