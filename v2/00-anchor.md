@@ -164,6 +164,16 @@
 
 ## 7. 变更记录
 
+- **v1.3.35（01:51）**：
+  ① ✅ **`T298` 修复成【承重】并提交 `7f16c80`**（life）：`_comm_slot` 改按**尝试**重建（`MSG_*`(我发出) ∪ `INTENT_REJECTED{SOCIAL}`，取**最大 round**、`record.round` 反推 slot），并顺带重建 `_slept_days`/`_persona_state`/`_persona_p0`。**多 cut 语义一致**：`cut=75/89`（及 40/60）下 `one vs r1` / `one vs r2` / `r1 vs r2` 的 **`state_hash` 不等均为 0**。**反向验证（承重）**：临时禁用新增的 `INTENT_REJECTED` 来源 ⇒ **`cut=75` 重新出现 19 条 `state_hash` 不等、自 round76 起** ⇒ **非顺带变好**。
+  ② ⚠️ **Leader 把"逐回合等价"改为【每步等价】**（life 指出 wake=on 下"每回合每 agent"不适用，对）：**正确形式 = 对每个【agent 实际 step 的 `(agent, round)`】，两路 `_comm_slot` 必须相等**（**无需改配置**）；且**多跑必须分进程**。
+  ③ ⭐ **同型缺口 `_drift_streak`**（`PERSONA_DRIFT` 连续窗计数；life 同型排查后**唯一未重建**者）⇒ **已开 `T309`**（life，`depends_on T298`）：**可能无法纯由已发事件倒推 ⇒ 先定位"哪个 cut 能真触发"、再提方案（或先立 08 口径）**。
+  ④ ⭐ **Harness 教训（今晚第二例"装置造假象"）**：**同进程连续 `run_e2e` ⇒ 模块级状态污染 ⇒ 假分叉（`r1≠r2`，世界其实没变）** ⇒ **立规并广播：同配置多跑对比【必须各自独立进程】；出现"间歇/抖动"【先怀疑装置】；装置前提（kill 方式 / 进程边界 / 缓存冷热）写进报告。** 第一例 = release 的**墙钟 kill** 令 `cut` 在 75↔89 漂移、造出假"1/3 间歇"。
+- **v1.3.34（01:49）**：
+  ① ✅ **`T307` 门硬化完成（`88c45d4`）+ 非作者独立复跑全 PASS**（sandbox-test-lead）：`EXCLUDE` **仍且仅** 4 字段（未放宽/未收紧）；`PIN=PLACE_MOVE.day+1` 钉死、**缺字段 `rc=2`**；selftest 合成样本 `A ∧ 链级联覆盖 ∧ B` 全 True（`rc=0`）、真日志 `casc=False` **仅 info 非红**；**cut 双面读数与 release 的 `gate.json` 逐值一致**（`cut=89` PASS `8820493f` / `cut=75` 真阳性 `state_hash` 74）；**无墙钟**（跑到指定 round 再 kill，中断 round 稳定 79）。
+  ② ⭐ **她又拎出"存在但从未被走到"一例**：**`selftest` 的「缺字段 ⇒ `rc=2`」分支在正常 CLI【不可达】**（**构造器与搜索共用 `PIN_*` 常量** ⇒ 合成样本必含该字段；她只能 monkeypatch 触发）⇒ **安全网未被测到、会静默腐烂**。⇒ **已开 `T308`**（release）：**常量解耦 + 可从 CLI 触发的负向用例 `--selftest-missing-pin`**（`rc=2`），把它从"存在"变"**可断言**"；改门仍须非作者复跑。
+  ③ ✅ **`T306` 已 completed**（`32cb8ce`，五条逐条重述 + 命令读数挂 runbook §4）；**`T299` 保持 completed**（art 独立核已过）⇒ **台账不留双账**。
+  ⚠️ **操作教训（今晚第二次踩）**：**"completed 不能 reopen"**（`update_task` 仅支持 `cancelled`）—— 第一次 `T299`（判错后无法退回）、这次 `T307`（我在预授"标完成"之后又追加了 item iv，消息交叉）⇒ **立规：门/判据类任务，在"追加项也谈完"之前【不要先标 completed】；预授要更保守（只授"可标完成"当且仅当无待议追加项）**。
 - **v1.3.33（01:40）**：
   ① ✅ **`T299` 门获【独立核过】** —— **art-director 独立审阅**（`v2/refs/T299-gate-independent-review.md`，`ed5bc0e`）：三问全过（**排除集恰好**：真实日志 `LLM_CALL.payload` 恰 15 键、4 个排除项**均纯计量**、11 个保留项**均语义/配置**、非 `LLM_CALL` 事件**零越界**；**重算链正确复现引擎口径**（同构 `ledger.py:24`/`kernel.py:239`，`last_hash` 自然相等非断言）；**反向扰动够最小**（单值 +1、不改结构））+ **独立复跑**：`cut=89` PASS · `cut=75` FAIL=**真阳性** · `--selftest` A/B 均 True ⇒ **release 的 `completed` 遂有正当依据**（时序违规已记一笔、不再追）。
   ② ✅ **台账重述完成 `741a7f0`**（`v2/evidence/T299-ledger-restatement.md`，含**「独立核状态」列**：逐条标 作者自核 / 他人核 / 待核）—— **= `T306`**（已要求 release claim+complete 以闭环）。
