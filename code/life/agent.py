@@ -22,6 +22,8 @@ from . import relations as R
 from .llm import LLMClient, get_llm_client
 from .memory import AssociativeMemory, EmbeddingModel, HashEmbeddingModel, SideStore
 from .persona import Persona
+from . import persona_drift as PD
+from . import sleep_window as _sleep
 from .policy import social_enabled, exchange_enabled, m2b_judge_mode, m2b_importance_mode
 from .ports import (
     INTENT_ECON_OFFER,
@@ -78,6 +80,7 @@ class StepReport:
     narrated: bool = False
     accepted: list = field(default_factory=list)
     rejected: list = field(default_factory=list)
+    slept: int = 0
 
 
 class LifeLayerAgent:
@@ -109,6 +112,10 @@ class LifeLayerAgent:
         self._goals_set_weeks: set[int] = set()
         self._plan_slots: dict[str, dict] = {}
         self._observed_seqs: set[int] = set()
+        # T224 睡眠离线窗（默认关；见 config/life_v2.json）—— agent-local 表达层状态
+        self._persona_state: dict | None = None
+        self._persona_p0: dict | None = None
+        self._slept_days: set[int] = set()
 
     # ---- public entry ------------------------------------------------------
     def step(self) -> StepReport:
@@ -129,6 +136,7 @@ class LifeLayerAgent:
         self._communicate(wv)
         self._maybe_negotiate(wv)
         self._maybe_accept_offers(wv)
+        rep.slept = self._maybe_sleep_window(wv)
         return rep
 
     # ---- helpers -----------------------------------------------------------
@@ -547,6 +555,64 @@ class LifeLayerAgent:
             return                                    # ≤1 accept per round
 
     # ---- misc ------------------------------------------------------------
+    def _sleep_params(self) -> dict:
+        """T224：睡眠窗口参数（读 config/life_v2.json；默认关）。可被测试覆盖。"""
+        return _sleep.load_params()
+
+    def _maybe_sleep_window(self, wv) -> int:
+        """T224 挂载点：night 时段执行一次睡眠离线窗（固化/遗忘/人格漂移）。
+
+        **默认关**（`config/life_v2.json`）→ 直接返回 0、零副作用、行为与接入前逐项一致。
+        产出以 INTENT.MEMORY 意图提交（`op ∈ {sleep_start,forget,consolidate,sleep_end}`），
+        由裁决器落 `SLEEP_STARTED/MEMORY_FORGET/MEMORY_CONSOLIDATE/SLEEP_COMPLETED` 事件。
+        **不新增决策类 LLM 调用**（纯整数模块）。不触碰 M2b 判定调用点。
+        """
+        params = self._sleep_params()
+        if not _sleep.enabled(params):
+            return 0
+        slot = params["sleep"].get("slot", "night")
+        if wv.time.slot != slot:
+            return 0
+        day = int(wv.time.day)
+        if day in self._slept_days:
+            return 0
+        self._slept_days.add(day)
+
+        anchor = {"persona_id": self.persona.persona_id,
+                  "personality_big5": self.persona.personality_big5,
+                  "values": self.persona.values, "skills": self.persona.skills}
+        if self._persona_state is None:      # 锚定不写回：P(0)=anchor，之后只动表达层
+            self._persona_state = PD.init_state(anchor)
+            self._persona_p0 = dict(self._persona_state)
+        mems = [{"mem_id": n.mem_id, "kind": n.kind, "importance": n.importance,
+                 "last_access": n.last_access, "access_count": n.access_count,
+                 "subject": n.subject, "emo": 0, "consolidated": False}
+                for n in self.memory.nodes.values()]
+
+        planned = int(params["sleep"].get("planned_ticks", 3))
+        self.kernel.submit_intent(self.agent_id, Intent(INTENT_MEMORY, self.agent_id, {
+            "op": "sleep_start", "day": day, "slot": slot, "planned_ticks": planned}))
+        out = _sleep.run_sleep_window(self.agent_id, mems, wv.round, params,
+                                      day=day, slot=slot, anchor=anchor,
+                                      p_state=self._persona_state, p0=self._persona_p0)
+        n = 0
+        for a in out["forget"]:
+            if self.kernel.submit_intent(self.agent_id, Intent(INTENT_MEMORY, self.agent_id, {
+                    "op": "forget", "mem_id": a["mem_id"], "level": a["level"],
+                    "retention_permille": a["retention_permille"], "reason": a["reason"],
+                    "day": day, "slot": slot})).ok:
+                n += 1
+        for g in out["consolidate"]:
+            if self.kernel.submit_intent(self.agent_id, Intent(INTENT_MEMORY, self.agent_id, {
+                    "op": "consolidate", "subject": g["subject"],
+                    "source_mem_ids": g["source_mem_ids"],
+                    "produced_mem_id": f"M-{self.agent_id}-SM-{g['subject']}",
+                    "text": g["text"], "day": day, "slot": slot})).ok:
+                n += 1
+        self.kernel.submit_intent(self.agent_id, Intent(INTENT_MEMORY, self.agent_id, {
+            "op": "sleep_end", "day": day, "slot": slot, "actual_ticks": planned}))
+        return n
+
     def _current_goal(self) -> str:
         return str(self.persona.goal_tendencies[0].get("kind", "")) if self.persona.goal_tendencies else ""
 

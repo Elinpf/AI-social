@@ -98,6 +98,33 @@ def apply_event(state: dict, ev: dict) -> None:
             if ref:
                 ref["last_access"] = ev["round"]
                 ref["access_count"] += 1
+    elif t == "MEMORY_FORGET":
+        mid = p["mem_id"]
+        ref = state["memory_index"].get(mid)
+        if ref is not None and p.get("level") == "drop":
+            state["memory_index"].pop(mid, None)
+            a = _agent(state, p["agent_id"])
+            a["memories"] = [m for m in a["memories"] if m["mem_id"] != mid]
+        elif ref is not None:
+            ref["forgotten_level"] = p.get("level")
+    elif t == "MEMORY_CONSOLIDATE":
+        a = _agent(state, p["agent_id"])
+        src = set(p.get("source_mem_ids") or [])
+        for m in a["memories"]:
+            if m["mem_id"] in src:
+                m["consolidated"] = True
+        pid = p.get("produced_mem_id")
+        if pid and pid not in state["memory_index"]:
+            ref = {"mem_id": pid, "kind": "semantic",
+                   "body_ref": f"side://mem/{p['agent_id']}/{pid}.txt",
+                   "embed_ref": f"side://mem/{p['agent_id']}/{pid}.vec", "importance": 6,
+                   "day": p.get("day"), "slot": p.get("slot"), "subject": p.get("subject"),
+                   "source_event_seq": None, "last_access": ev["round"], "access_count": 0}
+            a["memories"].append(ref)
+            state["memory_index"][pid] = ref
+    elif t in ("SLEEP_STARTED", "SLEEP_COMPLETED"):
+        _agent(state, p["agent_id"]).setdefault("sleeps", []).append(
+            {"type": t, "day": p.get("day"), "slot": p.get("slot")})
     elif t == "OBSERVATION":
         state["observed"].setdefault(p["observer"], set()).add(p["target_event_seq"])
         _agent(state, p["observer"])["observed_event_seqs"].append(p["target_event_seq"])
@@ -353,6 +380,32 @@ class MiniKernel(KernelPort):
                                                 "triggered_by_mem_ids": p["triggered_by_mem_ids"],
                                                 "importance_sum": p["importance_sum"],
                                                 "produced_mem_id": p["produced_mem_id"]}, phase=35, actor=agent_id)
+            return IntentResult(ok=True, event_seqs=(seq,))
+        if op == "sleep_start":
+            seq = self._emit("SLEEP_STARTED", {"agent_id": agent_id, "day": p.get("day"),
+                                               "slot": p.get("slot"),
+                                               "planned_ticks": p.get("planned_ticks", 3)},
+                             phase=35, actor=agent_id)
+            return IntentResult(ok=True, event_seqs=(seq,))
+        if op == "sleep_end":
+            seq = self._emit("SLEEP_COMPLETED", {"agent_id": agent_id, "day": p.get("day"),
+                                                 "slot": p.get("slot"),
+                                                 "actual_ticks": p.get("actual_ticks", 3)},
+                             phase=35, actor=agent_id)
+            return IntentResult(ok=True, event_seqs=(seq,))
+        if op == "forget":
+            seq = self._emit("MEMORY_FORGET", {"agent_id": agent_id, "mem_id": p["mem_id"],
+                                               "level": p["level"],
+                                               "retention_permille": p["retention_permille"],
+                                               "reason": p.get("reason")},
+                             phase=35, actor=agent_id)
+            return IntentResult(ok=True, event_seqs=(seq,))
+        if op == "consolidate":
+            seq = self._emit("MEMORY_CONSOLIDATE", {"agent_id": agent_id, "subject": p["subject"],
+                                                    "source_mem_ids": p["source_mem_ids"],
+                                                    "produced_mem_id": p["produced_mem_id"],
+                                                    "day": p.get("day"), "slot": p.get("slot")},
+                             phase=35, actor=agent_id)
             return IntentResult(ok=True, event_seqs=(seq,))
         return None
 
