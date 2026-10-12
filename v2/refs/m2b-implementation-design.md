@@ -33,6 +33,36 @@
 
 ---
 
+### 1.1 逃生项（escape option）与完备性仪表 —— 约束解码的固有风险
+
+> **约束解码的反面**：模型**无法表达「没被列进 options 的东西」**。jev 式约束的卖点是「非法动作无法被表达」，但**反过来，合法动作也会被漏掉**：只要 options 表不完备，判别式就会**系统性地看不见真实可能性**，而且**看起来一切正常**（"假绿"的一种变体）。因此本设计**把 options 表的完备性当成一等可观测对象**，而非假设枚举天然完备。据此必须补两样：
+
+**（a）每维度必须带逃生项。** `JUDGMENT_OPTIONS[dim]` 在 §1 的语义候选之外，**必须追加一个逃生项**，保证"说不清 / 不合任何既定类别"时**不被强迫在既定候选里瞎选**：
+
+| dimension | 逃生项 | 语义（兜底走确定性，**不静默**） |
+|---|---|---|
+| `rel_affinity`/`rel_trust`/`rel_familiarity`/`rel_respect` | `other` | 既非 formed 亦非 not_formed（含"无从判断"）→ 兜底 `not_formed`，`method="rule"` |
+| `weekly_focus` | `other` | 不属于既定 5 类焦点 → 兜底 `balance` |
+| `stance` | `undecidable` | 无法判断接受/拒绝 → 兜底 `reject` |
+| `respect`/`affection` | `undecidable` | 无法判断高/低 → 兜底 `low` |
+| `importance` | `undecidable` | 无法定档 → 兜底默认档（如 `5`） |
+
+- 逃生项**同样是合法候选**（`decision ∈ options` 仍成立），命中后走**确定性兜底**，并**复用 §2.3/§4 的 `method`/`fallback` 审计字段**（如 `fallback="escape_option"`）——**绝不静默**。
+- **与 §1 完备性守卫的次序**：先在语义候选上附加逃生项，**再**断言 `len(options)≥2` 且去重；逃生项不得与既定项重名。
+
+**（b）监控逃生项与回退触发率 —— options 表完备性的仪表。** 定义（按维度聚合）：
+
+```
+escape_rate(dim)   = #(decision == 逃生项)      / #(该维度判定)
+fallback_rate(dim) = #(method != discriminative) / #(该维度判定)   # 含 confidence/margin 升级 + 走 rule
+```
+
+- **这两个速率高 → 首先怀疑「我们的枚举漏了东西」**（设计缺陷的**早期信号**，**不是模型的问题**），其次才是阈值 τ/θ 需要重标定。
+- 因此它们是**常设指标**，纳入 M2b 验收/观测（与 §6 成本/质量判据并列）：**任一维度 `escape_rate` 持续偏高，必须回看并补齐 §1 的候选枚举**，而不是调高阈值把问题压下去。
+- **记录入口**：`escape_rate`/`fallback_rate` 由 `LLM_JUDGMENT` 事件（`decision` + `method`）**按维度聚合**即可得到 —— **无需新增事件、无需改 `contracts`/`replay`**，守住 §3 的边界。
+
+---
+
 ## 2. 类型化打分：具体 schema（judge 判别式化）
 
 ### 2.1 输入 schema（life → freeze，判别式）
