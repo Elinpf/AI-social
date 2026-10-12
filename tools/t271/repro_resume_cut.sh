@@ -9,10 +9,13 @@ REPO="${T271_REPO:-/root/.jiuwenswarm/agent/workspace/work/尝试/social-experim
 PY=/opt/openjiuwen/workswarm-venv/bin/python
 SHA="${T271_REPRO_SHA:-$(git -C "$REPO" rev-parse HEAD)}"
 CUT="${1:-75}"; ROUNDS=150; SEED=9; N=2; FLUSH=5
-CO=/tmp/t271-repro          # 固定只读副本（从 SHA 建，避免活树漂移）
-[ -d "$CO/code" ] || bash "$BIN/make_batch_copy.sh" repro "$SHA" >/dev/null 2>&1
+# T313-②：输出/副本根可覆盖（默认不变）⇒ 守护 / release / 他人各用各的目录、互不覆盖
+CO="${T271_REPRO_COPY:-/tmp/t271-repro}"          # 只读副本根（从 SHA 建，避免活树漂移）
+CO_ROOT="$(dirname "$CO")"; CO_BATCH="$(basename "$CO")"; CO_BATCH="${CO_BATCH#t271-}"
+[ -d "$CO/code" ] || T271_COPY_ROOT="$CO_ROOT" bash "$BIN/make_batch_copy.sh" "$CO_BATCH" "$SHA" >/dev/null 2>&1
 [ -d "$CO/code" ] || { echo "副本缺失：$CO/code"; exit 2; }
-P=/root/t271/runs/repro; S="$P/side"; safe_rmrf "$P"; mkdir -p "$S"
+P="${T271_REPRO_ROOT:-/root/t271/runs/repro}"      # 输出根（可覆盖；默认不变）
+S="$P/side"; safe_rmrf "$P"; mkdir -p "$S"
 run(){ ( cd "$CO/code" && "$PY" -m orchestration run --life --seed "$SEED" --agents "$N" \
         --rounds "$ROUNDS" --out "$1" --side-root "$S" --flush-every "$FLUSH" ) ; }
 echo "sha=$(git -C "$REPO" rev-parse --short "$SHA")  cut=$CUT"
