@@ -170,6 +170,31 @@ def _load_social_cfg() -> dict:
         return {}
 
 
+# ---- INTENT -> 事件 装配契约（防"固定字段 dict 吞字段"）----
+# 控制键：intent 级指令/选择器，不属于事件 payload
+_ASSEMBLY_CONTROL = frozenset({"op", "act", "scope", "channel"})
+# 事件类型 -> 需**透传**的既定 additive 字段（08 已登记，勿静默丢）
+_PASSTHROUGH = {
+    "MEMORY_RETRIEVE": ("vec_available", "retrieval_mode", "query_digest"),
+    "MEMORY_REFLECT": ("produced_mem_ids",),
+    "OFFER_CREATED": ("enforceable",),
+}
+# 事件类型 -> 合法的 intent-only 路由/提示键（非事件字段，允许不入 payload，不算"丢失"）
+_HINTS = {
+    "PLACE_MOVE": {"slot_id", "activity_type"},
+    "PLACE_ARRIVED": {"slot_id", "activity_type", "to_place"},
+    "ACTIVITY_STARTED": {"slot_id"},
+    "SCHEDULE_PLANNED": {"slots", "horizon", "week"},
+    "MEMORY_WRITE": {"refs", "tick"},
+    "OFFER_CREATED": {"body"},
+    "OFFER_COUNTERED": {"terms", "act"},
+    "GOAL_SET": {"description", "description_ref", "status", "progress"},
+    "MSG_DM": {"to", "group_id", "topic"},
+    "MSG_PUBLIC": {"to", "group_id", "topic"},
+    "MSG_GROUP": {"to", "group_id", "topic"},
+}
+
+
 # ---------------------------------------------------------------- config loaders
 def load_places(path: str | Path | None = None) -> dict:
     p = Path(path) if path else (CONFIG_DIR / "places.json")
@@ -349,6 +374,34 @@ class KernelAdapter:
     def _t(self):
         return self.engine.derive_time(self.engine.state.round)
 
+    def _assemble(self, p: dict, base: dict, event: str) -> tuple[dict, list]:
+        """INTENT payload -> 事件 payload 的统一装配。
+
+        - 必需/显式字段 `base` 优先；
+        - 既定 additive 字段（`_PASSTHROUGH[event]`）**透传**；
+        - 其余既非 base、又非控制键、又非合法 intent-only 提示的键 -> 返回为 `unknown`
+          （调用方须落 `DROPPED{reason:"unknown_intent_field"}`，**不得静默丢弃**）。
+        """
+        p = p or {}
+        out = dict(base)
+        for k in _PASSTHROUGH.get(event, ()):
+            if k in p:
+                out[k] = p[k]
+        unknown = sorted(k for k in p
+                         if k not in _ASSEMBLY_CONTROL and k not in out
+                         and k not in _HINTS.get(event, ()))
+        return out, unknown
+
+    def _emit_assembled(self, event: str, p: dict, base: dict, *, phase: int, actor: str) -> int:
+        """装配并落账；若有未知字段，附带一条 `DROPPED{unknown_intent_field}` 审计。"""
+        payload, unknown = self._assemble(p, base, event)
+        seq = self._emit(event, payload, phase=phase, actor=actor)
+        if unknown:
+            self._emit("DROPPED", {"type": event, "reason": "unknown_intent_field",
+                                   "keys": unknown, "actor": actor},
+                       phase=phase, actor=actor)
+        return seq
+
     def _do_plan(self, agent_id, p):
         from life.ports import IntentResult
         slots = p.get("slots")
@@ -359,7 +412,7 @@ class KernelAdapter:
                 return None
             if s.get("activity_type") not in self._C.ACTIVITY_TYPES:
                 return None
-        seq = self._emit("SCHEDULE_PLANNED", {
+        seq = self._emit_assembled("SCHEDULE_PLANNED", p, {
             "agent_id": agent_id, "horizon": p.get("horizon", "week"),
             "week": p.get("week"), "slots": slots}, phase=PHASE_DECIDE, actor=agent_id)
         return IntentResult(ok=True, event_seqs=(seq,))
@@ -387,7 +440,8 @@ class KernelAdapter:
                 "target_metric": g.get("target_metric"),
                 "deadline_week": g.get("deadline_week"),
             }
-            seqs.append(self._emit("GOAL_SET", payload, phase=PHASE_DECIDE, actor=agent_id))
+            seqs.append(self._emit_assembled("GOAL_SET", g, payload,
+                                             phase=PHASE_DECIDE, actor=agent_id))
         return IntentResult(ok=True, event_seqs=tuple(seqs))
 
     def _do_move(self, agent_id, p):
@@ -404,11 +458,11 @@ class KernelAdapter:
         from_place = a.get("location", "residence")
         if from_place == to_place:
             return IntentResult(ok=True, event_seqs=())
-        s1 = self._emit("PLACE_MOVE", {"agent_id": agent_id, "from_place": from_place,
+        s1 = self._emit_assembled("PLACE_MOVE", p, {"agent_id": agent_id, "from_place": from_place,
                                        "to_place": to_place, "travel_ticks": 1,
                                        "day": t["day"], "slot": t["slot"]},
                         phase=PHASE_LIFE, actor=agent_id)
-        s2 = self._emit("PLACE_ARRIVED", {"agent_id": agent_id, "place": to_place,
+        s2 = self._emit_assembled("PLACE_ARRIVED", p, {"agent_id": agent_id, "place": to_place,
                                           "day": t["day"], "slot": t["slot"]},
                         phase=PHASE_LIFE, actor=agent_id)
         return IntentResult(ok=True, event_seqs=(s1, s2))
@@ -419,7 +473,7 @@ class KernelAdapter:
         if atype not in self._C.ACTIVITY_TYPES or place not in self.places or not slot_id:
             return None
         t = self._t()
-        seq = self._emit("ACTIVITY_STARTED", {
+        seq = self._emit_assembled("ACTIVITY_STARTED", p, {
             "activity_id": p.get("activity_id", f"ACT-{agent_id}-{slot_id}"),
             "agent_id": agent_id, "activity_type": atype, "place": place, "slot_id": slot_id,
             "start_tick": self.engine.state.round,
@@ -437,7 +491,7 @@ class KernelAdapter:
                 return None
             if not p.get("body_ref") or not p.get("embed_ref"):
                 return None
-            seq = self._emit("MEMORY_WRITE", {
+            seq = self._emit_assembled("MEMORY_WRITE", p, {
                 "mem_id": mid, "agent_id": agent_id, "kind": p["kind"],
                 "importance": int(p["importance"]), "day": int(p["day"]), "slot": p["slot"],
                 "subject": p.get("subject"), "body_ref": p["body_ref"],
@@ -445,14 +499,16 @@ class KernelAdapter:
                 phase=PHASE_LIFE, actor=agent_id)
             return IntentResult(ok=True, event_seqs=(seq,))
         if op == "retrieve":
-            seq = self._emit("MEMORY_RETRIEVE", {
+            # T228b：走统一装配，透传 `_PASSTHROUGH["MEMORY_RETRIEVE"]`
+            # （vec_available/retrieval_mode/query_digest）；未知字段落 DROPPED，不静默丢。
+            seq = self._emit_assembled("MEMORY_RETRIEVE", p, {
                 "agent_id": agent_id, "query_id": p["query_id"], "top_k": p["top_k"],
                 "selected_mem_ids": p["selected_mem_ids"], "scores": p["scores"],
                 "weights": p["weights"], "tie_order": p["tie_order"]},
                 phase=PHASE_DECIDE, actor=agent_id)
             return IntentResult(ok=True, event_seqs=(seq,))
         if op == "reflect":
-            seq = self._emit("MEMORY_REFLECT", {
+            seq = self._emit_assembled("MEMORY_REFLECT", p, {
                 "agent_id": agent_id, "triggered_by_mem_ids": p["triggered_by_mem_ids"],
                 "importance_sum": p["importance_sum"], "produced_mem_id": p["produced_mem_id"]},
                 phase=PHASE_LIFE, actor=agent_id)
@@ -465,7 +521,7 @@ class KernelAdapter:
         if target is None or target not in self.engine.state.event_index:  # L6 anchor
             return None
         t = self._t()
-        seq = self._emit("OBSERVATION", {"observer": agent_id, "target_event_seq": target,
+        seq = self._emit_assembled("OBSERVATION", p, {"observer": agent_id, "target_event_seq": target,
                                          "salience": p.get("salience", 0),
                                          "day": t["day"], "slot": t["slot"]},
                          phase=PHASE_LIFE, actor=agent_id)
@@ -478,7 +534,7 @@ class KernelAdapter:
             return None
         lo, hi = self._C.RELATION_RANGE[dim]
         after = max(lo, min(hi, int(p.get("after", 0))))
-        seq = self._emit("RELATION_CHANGE", {"from": agent_id, "to": p.get("to"), "dim": dim,
+        seq = self._emit_assembled("RELATION_CHANGE", p, {"from": agent_id, "to": p.get("to"), "dim": dim,
                                              "before": p.get("before", 0), "after": after,
                                              "cause": p.get("cause", ""),
                                              "cause_event_seq": p.get("cause_event_seq")},
@@ -508,7 +564,7 @@ class KernelAdapter:
         terms = p.get("terms")  # 价格自 terms 原样，不预设
         if act == "create":
             offer_id = p.get("offer_id") or f"O-{r}-{agent_id}"
-            seq = self._emit("OFFER_CREATED", {
+            seq = self._emit_assembled("OFFER_CREATED", p, {
                 "offer_id": offer_id, "from": agent_id, "to": list(p.get("to") or []),
                 "kind": p.get("kind"), "terms": terms, "round_no": r},
                 phase=PHASE_DECIDE, actor=agent_id)
@@ -524,7 +580,7 @@ class KernelAdapter:
         else:
             ev, pay = "OFFER_REJECTED", {"offer_id": oid, "by": agent_id,
                                          "reason": p.get("reason", "")}
-        seq = self._emit(ev, pay, phase=PHASE_DECIDE, actor=agent_id)
+        seq = self._emit_assembled(ev, p, pay, phase=PHASE_DECIDE, actor=agent_id)
         return IntentResult(ok=True, event_seqs=(seq,))
 
     def _do_contract_sign(self, agent_id, p):
@@ -535,7 +591,7 @@ class KernelAdapter:
             return self._reject_reason(agent_id, "INTENT.ECON.CONTRACT_SIGN", "missing_offer_id", p)
         r = self.engine.state.round
         cid = p.get("contract_id") or f"C-{r}-{oid}"
-        seq = self._emit("CONTRACT_CREATED", {
+        seq = self._emit_assembled("CONTRACT_CREATED", p, {
             "contract_id": cid, "offer_id": oid, "parties": p.get("parties"),
             "terms": p.get("terms"), "kind": p.get("kind"), "round_no": r},
             phase=PHASE_DECIDE, actor=agent_id)
@@ -695,7 +751,7 @@ class KernelAdapter:
                        "body": body, "body_ref": body_ref, "refs": refs, "tag_hints": tags,
                        "place": place, "day": t["day"], "slot": t["slot"]}
 
-        seq = self._emit(etype, payload, phase=PHASE_COMMUNICATE, actor=agent_id)
+        seq = self._emit_assembled(etype, p, payload, phase=PHASE_COMMUNICATE, actor=agent_id)
         return IntentResult(ok=True, event_seqs=(seq,))
 
 
