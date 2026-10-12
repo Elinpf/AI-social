@@ -630,10 +630,10 @@ visibility_class ∈ { global, place_local, members, private, participants_only,
 > - **D3 · `members` 含 `actor==agent_id` 回退**（`members = 群组成员 ∪ {actor}`）。理由：跨 class 一般规则「**当事人（`actor`）对自己发起的事件总可见**」（`subject_only`/`private`/`participants_only` 均已含）；不含则出现「自己发的 `MSG_GROUP` 自己看不见」反直觉缺口。**以 engine 现行语义为准**。
 > - **D1 · `OFFER_CREATED` 动态分档**（已由 **T137** 固化）：`to==[]` → `global`；`to` 非空 → `private`（对 `{from,to}∪to[]`）。**登记为显式特判**（表内无条目、由实现动态覆盖），消除"暗规则"。
 >
-> **G1–G3 · 同类未覆盖分支（Q4 扫描 → 裁定，2026-10-12）**：详见 `v2/refs/visibility-semantics-08.md` §8–§10（含证据/影响面）。
-> - **G1（已批准，Leader）**：`place_local` **增 `actor==agent_id` 回退**（补「当事人对自己发起的事件总可见」在 place_local 上的漏项）。**影响面**（`n20_week` 实测）：`PLACE_MOVE 420`（`place=None` 全量）+ `ACTIVITY_STARTED/COMPLETED 540` ≈ **960 条/84 回合 ≈ 11.4/回合（N=20）** 由「不可见」翻为「actor 本人可见」；下游 `L6 write_memories` 略增（`PLACE_MOVE` 不在 salient 集，净增有限）。**开关** `visibility.place_local_actor_fallback`（默认 `false`=行为不变）。**进 T236 重冻清单**。**测试**：actor 对自己发出的 place_local 事件、`place` 未知时**可见**。（实现归 kernel-dev/T264）
-> - **G3**：① **`private.to[]` 与 `OFFER_CREATED` 特判必须去重并证明等价**（Leader 批准）；② **`subject_only` 去 `from` = 等价简化**（**已取证**：`n20_week` 中 ≈127k 条 subject_only 事件，`from` 命中 **0**，该子句为 dead code）→ 可删（`subject_only` 保留 `{agent_id, observer, actor}`）。
-> - **G2**：`event_type→class` 权威清单见 ref §8（`TAG_EMITTED`/`NORM_*`/`GROUP_*`/`EXCHANGE_SETTLED`/`CONTRACT_*`/`PRODUCT*`/`WAKE`/`IDLE`/`WORLD_*` 等；补登记、不改语义，随 T264 落；落 scope 变指纹→T236 重冻）。
+> **G1–G3 · 同类未覆盖分支（Q4 扫描 → 裁定 → 已落地，2026-10-12）**：详见 `v2/refs/visibility-semantics-08.md` §8–§10。**实现已落地**（kernel-dev，commit `3ba744a`）。
+> - **G1（已批准·已落地）**：`place_local` **增 `actor==agent_id` 回退**（补「当事人对自己发起的事件总可见」在 place_local 上的漏项）。**影响面**（`n20_week` 实测）：`PLACE_MOVE 420`（`place=None` 全量）+ `ACTIVITY_STARTED/COMPLETED 540` ≈ **960 条/84 回合 ≈ 11.4/回合（N=20）** 由「不可见」翻为「actor 本人可见」；下游 `L6 write_memories` 略增（`PLACE_MOVE` 不在 salient 集，净增有限）。**开关 = `place_local_actor_fallback`（顶层于 `config/perception_scope.json`；默认 `false`=行为不变）**——单一真源，由 `engine.version.load_visibility_flags` + `life.constants.load_visibility_flags` **读同一文件**，三处调用点透传。**进 T236 重冻清单**（指纹已变）。**测试**：actor 对自己发出的 place_local 事件、`place` 未知时**可见**。
+> - **G3（已落地）**：① `private.to[]` 与 `OFFER_CREATED` 分档的关系澄清为——`OFFER_CREATED` 特判仅做**类选择**（`to!=[]`→`private`），`private` 谓词统一处理 `to[]` 成员；**等价性已由单测证明**（`tests/test_visibility_semantics_g.py`），故保留特判为类选择、无需再"去重"（**非两套规则判同一件事**）；② `subject_only` 已删 dead 的 `from` 子句（**已取证**：`n20_week` ≈127k 条 subject_only 事件、`from` 命中 **0**），保留 `{agent_id, observer, actor}`。
+> - **G2（已落地）**：`event_type→class` 权威清单见 ref §8，已由 kernel-dev 按 §8 补全 `config/perception_scope.json`（`_known_gaps` 清零；`VOTE_CAST`→`global`）。落 scope 变指纹 → **T236 重冻**。
 
 > **T247 口径（2026-10-12 定稿 · 记录性语义分类）**：`SKILL_PRACTICE / SKILL_LEVEL_UP / SKILL_OUTPUT` 在 `PERCEPTION_SCOPE` 无条目（落 `default=place_local`）。**记录其语义分类**（表明"08 事件表 ↔ `perception_scope.json` 真源未对齐"这一缺口）：
 > - `SKILL_PRACTICE` = **`place_local`**（payload 含 `place`，同场所可见其练习）
