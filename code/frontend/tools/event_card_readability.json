@@ -1,0 +1,243 @@
+{
+  "gate_pass": {
+    "pass": true,
+    "condition": {
+      "display_w": 150,
+      "render": "nearest(pixelated)",
+      "region": [
+        0,
+        0,
+        136,
+        84
+      ]
+    },
+    "contrast_min": 4.5,
+    "keep_min": 0.7,
+    "cards": 20,
+    "failed": [],
+    "min_contrast": 5.77,
+    "min_keep": 1.189
+  },
+  "cards": [
+    {
+      "card": "academic-collab.png",
+      "contrast": 6.64,
+      "keep": 1.312,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "combat-training.png",
+      "contrast": 5.94,
+      "keep": 1.292,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "counter-propose.png",
+      "contrast": 6.56,
+      "keep": 1.313,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "creative-collab.png",
+      "contrast": 6.44,
+      "keep": 1.318,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "diff-scoring.png",
+      "contrast": 6.41,
+      "keep": 1.31,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "emotion-burnout.png",
+      "contrast": 6.66,
+      "keep": 1.282,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "gift-giving.png",
+      "contrast": 6.03,
+      "keep": 1.256,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "group-proposal.png",
+      "contrast": 6.53,
+      "keep": 1.315,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "ice-breaking.png",
+      "contrast": 6.14,
+      "keep": 1.213,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "mentorship.png",
+      "contrast": 6.44,
+      "keep": 1.31,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "passion-salary.png",
+      "contrast": 6.12,
+      "keep": 1.276,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "polite-reject.png",
+      "contrast": 5.95,
+      "keep": 1.223,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "power-conflict.png",
+      "contrast": 6.38,
+      "keep": 1.31,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "rel-acceptance.png",
+      "contrast": 6.44,
+      "keep": 1.31,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "rel-maintain.png",
+      "contrast": 6.5,
+      "keep": 1.311,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "saving-money.png",
+      "contrast": 6.33,
+      "keep": 1.261,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "scarcity-buy.png",
+      "contrast": 6.05,
+      "keep": 1.233,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "select-location.png",
+      "contrast": 5.77,
+      "keep": 1.189,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "skill-practice.png",
+      "contrast": 6.03,
+      "keep": 1.289,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    },
+    {
+      "card": "whispered-comm.png",
+      "contrast": 6.36,
+      "keep": 1.298,
+      "min_stroke_native": 1,
+      "disp_size": [
+        68,
+        42
+      ],
+      "ok": true
+    }
+  ]
+}

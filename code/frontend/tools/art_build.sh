@@ -27,6 +27,7 @@ python3 "$S/char_check.py" >/dev/null
 python3 "$S/check_single_source.py"                    # 门禁：palette 单一真源（T246）
 python3 "$SRC/tools/audit_event_cards.py"           # 事件卡机制区空槽门禁（有槽即非零退出）
 python3 "$SRC/tools/char_game_size_check.py"        # 角色「游戏尺寸」两两剪影可辨性门禁
+python3 "$SRC/tools/event_card_readability_check.py" # 事件卡「内联显示尺寸」可读性门禁
 
 echo "[art] 3/4 自洽断言（JSON.distinct_colors == 落盘 PNG 实测）"
 python3 - "$SK" <<'PY'
@@ -57,6 +58,10 @@ gs = json.load(open("frontend/tools/char_game_size.json"))["gate_pass"]
 if not gs["pass"]:
     print("  FAIL char game-size gate_pass=false ->", gs); sys.exit(1)
 print("  ok  - char game-size gate_pass=true (max_iou=%.3f)" % gs["max_iou"])
+er = json.load(open("frontend/tools/event_card_readability.json"))["gate_pass"]
+if not er["pass"]:
+    print("  FAIL event-card readability gate_pass=false ->", er); sys.exit(1)
+print("  ok  - event-card readability gate_pass=true (min_contrast=%.2f min_keep=%.2f)" % (er["min_contrast"], er["min_keep"]))
 PY
 
 echo "[art] 4/4 落盘（copy → frontend/assets/hand）"
