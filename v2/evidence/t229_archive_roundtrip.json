@@ -1,0 +1,36 @@
+{
+  "_comment": "T229 归档 round-trip 实测证据（小 JSON；归档本体不入库，sha 在此）。作者 release-engineer 2026-10-12。",
+  "task": "T229-run-artifact-archive",
+  "git_sha": "3bbe67e",
+  "provider": "mock(offline)",
+  "run": {
+    "cmd": "python3 -m orchestration run --life --seed 42 --agents 3 --weeks 1 --out /root/t229/run_n3_w1.jsonl --side-root /root/t229/side",
+    "seed": 42, "n": 3, "rounds": 84, "weeks": 1,
+    "final_state_hash": "sha256:c6f4a12c77c4a1f87793fe9dd71bbfdcc1e30e7439824fde1fcbf09d6e3e0a44",
+    "chain_ok": true, "replay_parity": true, "conservation_ok": true,
+    "note": "side-root 必须在 /tmp 之外，否则 run_e2e 的 cleanup_side 会 rmtree（integration.py:681,744）"
+  },
+  "side_counts": { "mem_txt": 1324, "mem_vec": 1324, "freeze_cache_files": 167, "total_files": 2815 },
+  "side_bytes_real": 592650,
+  "side_bytes_du_block": 12582912,
+  "log_bytes": 2353281,
+  "event_counts": { "MEMORY_WRITE": 1324, "MEMORY_REFLECT": 21, "NARRATIVE": 3, "MSG_DM": 23, "MSG_PUBLIC": 10 },
+  "archive": {
+    "path": "run_n3_w1.archive.tar.gz",
+    "sha256": "47f07bcf3cea52bacde2396802d1869a62fe9e97bb7a283c6be080b20ccf9324",
+    "bytes": 509828,
+    "contains": ["run.jsonl", "side/"],
+    "in_git": false
+  },
+  "export_s2_from_archive": {
+    "result": "21 samples, missing_body=0",
+    "n_source_min_median_max": [0, 76, 86],
+    "sample_source_event_seq": 821,
+    "script": "/root/t229/export_s2.py (reference, read-only)",
+    "caveat": "provider=mock -> 正文为 mock:: 占位；验证的是归档->导出链路，不是内容质量"
+  },
+  "known_gaps": {
+    "narrative_body": "NARRATIVE.body_ref=side://narrative/... 但无 writer（life/agent.py:449），side/narrative 不存在",
+    "skill_body": "SKILL_OUTPUT.output_ref=side://skill/... 但无 writer（life/settlement.py:301）"
+  }
+}
