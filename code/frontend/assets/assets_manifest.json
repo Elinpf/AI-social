@@ -386,6 +386,48 @@
       "sha256": "a5a3ec940192a0720b714636b75d279851c56efd2519a18959eab195dd006657"
     },
     {
+      "id": "tile.grass_dark",
+      "type": "tile",
+      "file": "generated/tiles/grass_dark.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "c7f2c64095e20e830c6a3a6be181b472df34cae31a8d9f220e0979f044f5f57d"
+    },
+    {
+      "id": "tile.grass_mid",
+      "type": "tile",
+      "file": "generated/tiles/grass_mid.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "49a9ea18bb988f64eab7cd50f8b74c8cfd6c6db7010f8adbe5b3a26886724ca1"
+    },
+    {
+      "id": "tile.grass_light",
+      "type": "tile",
+      "file": "generated/tiles/grass_light.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "7297cf7e7b97490393899dae2fb96d0ce8fbeef1a9387badbb5675f399f21b01"
+    },
+    {
       "id": "tile.water_1",
       "type": "tile",
       "file": "generated/tiles/water_1.png",
