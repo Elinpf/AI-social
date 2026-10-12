@@ -77,6 +77,7 @@ def compile_rules(forbidden: list[dict]) -> list[dict]:
             "regex": re.compile(pattern),
             "exclude": f.get("exclude"),
             "allow_line_contains": f.get("allow_line_contains", []),
+            "name_hint": f.get("name_hint", ""),
         })
     return rules
 
@@ -91,6 +92,29 @@ def _is_excluded(line: str, match: re.Match, exclude: str | None) -> bool:
             return True
         idx = line.find(exclude, idx + 1)
     return False
+
+
+def _in_name(line: str, match: re.Match, names: list[str]) -> bool:
+    """命中落在**成员/角色名**内 → 放行（术语表不禁止称呼同事；见 lexicon.name_allowlist）。"""
+    start = match.start()
+    for name in names:
+        if not name:
+            continue
+        idx = line.find(name)
+        while idx != -1:
+            if idx <= start < idx + len(name):
+                return True
+            idx = line.find(name, idx + 1)
+    return False
+
+
+def load_name_allowlist(lexicon_path: Path) -> list[str]:
+    """成员/角色名白名单：出现在其中的禁用词一律放行（术语表用于防歧义，不用于禁称呼同事）。"""
+    try:
+        data = json.loads(lexicon_path.read_text(encoding="utf-8"))
+        return list(data.get("name_allowlist", []))
+    except Exception:
+        return []
 
 
 def _is_mention(line: str, rule: dict) -> bool:
@@ -124,6 +148,9 @@ def build_suggestion(line: str, rule: dict, category: str, match: re.Match | Non
     if category == "violation":
         hint = family or canonical or "规范名"
         sug += f"；若此处是【别名/映射提及】，请加提及标记（`→`、`已废弃`、或改写为 `{hint}`）"
+    nh = rule.get("name_hint", "")
+    if nh:
+        sug += f"；{nh}"
     return sug
 
 
@@ -180,7 +207,7 @@ def iter_targets(root: Path, only: list[Path] | None = None) -> Iterator[Path]:
             yield p
 
 
-def scan_file(path: Path, rules: list[dict], root: Path) -> list[dict]:
+def scan_file(path: Path, rules: list[dict], root: Path, names: list[str]) -> list[dict]:
     findings = []
     try:
         text = path.read_text(encoding="utf-8", errors="replace")
@@ -191,6 +218,8 @@ def scan_file(path: Path, rules: list[dict], root: Path) -> list[dict]:
         for r in rules:
             for m in r["regex"].finditer(line):
                 if _is_excluded(line, m, r["exclude"]):
+                    continue
+                if _in_name(line, m, names):
                     continue
                 category = "mention" if _is_mention(line, r) else "violation"
                 findings.append({
@@ -221,10 +250,11 @@ def counts_of(findings: list[dict]) -> dict[str, int]:
 def run_scan(root: Path, lexicon_path: Path, max_per_file: int,
              only: list[Path] | None = None) -> tuple[list[dict], int]:
     rules = compile_rules(load_forbidden(lexicon_path))
+    names = load_name_allowlist(lexicon_path)
     targets = list(iter_targets(root, only))
     findings: list[dict] = []
     for p in targets:
-        hits = scan_file(p, rules, root)
+        hits = scan_file(p, rules, root, names)
         if max_per_file and len(hits) > max_per_file:
             hits = hits[:max_per_file]
         findings.extend(hits)

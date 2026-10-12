@@ -28,6 +28,31 @@
     "engineering",
     "project"
   ],
+  "name_allowlist": [
+    "team-leader",
+    "sim-engine-stats-architect",
+    "sim-system-architect",
+    "econ-mechanism-designer",
+    "econ-dev",
+    "lifecycle-anticheat-designer",
+    "lifecycle-dev",
+    "sandbox-test-lead",
+    "emergence-researcher",
+    "emergence-observer-designer",
+    "persona-life-designer",
+    "solution-architect",
+    "delivery-reviewer",
+    "kernel-dev",
+    "life-layer-dev",
+    "freeze-layer-dev",
+    "obs-stats-dev",
+    "frontend-dev",
+    "visual-researcher",
+    "art-director",
+    "pixel-asset-artist",
+    "narrative-designer",
+    "design-synthesizer"
+  ],
   "entries": [
     {
       "term": "round",
@@ -1436,7 +1461,8 @@
       "mode": "substr",
       "canonical": "engine/kernel",
       "reason": "旧草稿内核包名，已统一（BP §1.1）",
-      "exclude": "sim-engine-stats-architect"
+      "exclude": "sim-engine-stats-architect",
+      "name_hint": "若此处指团队成员，请写**全名** `sim-engine-stats-architect`（在名字白名单内，不罚）"
     },
     {
       "variant": "COUNTER_OFFER",
