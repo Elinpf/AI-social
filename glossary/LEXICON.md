@@ -345,7 +345,8 @@ python3 glossary/tools/lint_terms.py --root . --update-baseline glossary/term_ba
 ```bash
 make lexicon-gate      # 术语棘轮门禁（CI 推荐）
 make lexicon-report    # 完整报告
-make gate              # lexicon-gate + code 测试 +（可选）lint-imports
+make gate              # 仓根级：lexicon-gate + code 测试 +（可选）lint-imports（**不含前端渲染**）
+make verify            # ★唯一总门：仓根门禁 + code/ 前端 CI 全跑（T280 消歧：全绿=真的全绿）
 ```
 - **棘轮语义**：`--baseline` 时，比较按 `(file, variant)` **计数**（对行号偏移稳健）；已知历史违规（`v1/**`）不报错，**只有新违规/新文件/计数上升才失败**（返回码 1）。
 - 扫描范围：`social-experiment/**/*.md` 与 `social-experiment/code/**/*.py`（跳过 `glossary/` 自身、`__pycache__`、`.pytest_cache`、`data/` 运行产物、`.jsonl`）。

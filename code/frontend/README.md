@@ -318,6 +318,7 @@ SVG 内容：① 17 处场所按类别配色 + 中文名 + 环层结构；② �
 | ② 真渲染 | `python frontend/tools/gate_render.py` | 真 Chromium/SwiftShader：无 `pageerror` + `_useLib===true` + `placeLayer===17` + `agentLayer≥1` | 「`new PIXI.Sprite(BaseTexture)` 抛异常 → `town.load()` 中止 → `placeLayer=0` → 画面空」这类**假绿** |
 
 **一键（CI 用这个）**：`make ci` 或 `bash frontend/tools/ci_gate.sh`（缺服务会自动后台拉起 `serve.py`）。
+（消歧 T280：`make ci`/`make gate` 在此指 **code/ 前端**门禁；仓根另有 `make gate`=术语+pytest。**想一次跑全部** → 到仓根 `make verify`；仅前端渲染门禁用 `make gate-front`。）
 
 **退出码（严禁把「没跑」当「通过」）**：`0=PASS` · `1=FAIL` · `3=SKIP`（真渲染门禁依赖缺失，未执行，不算通过）。
 

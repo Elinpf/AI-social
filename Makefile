@@ -3,18 +3,24 @@
 # 与 `pytest -q` / `lint-imports` / obs gate 并列的可跑门禁。
 # 术语合规采用「基线/棘轮」模式：仅当出现基线之外的【新】违规才失败。
 
-.PHONY: help lexicon-gate lexicon-report lexicon-baseline lexicon-dir-stats inert-gate pyclean code-test plugin-test stamp install-hooks gate
+.PHONY: help lexicon-gate lexicon-report lexicon-baseline lexicon-dir-stats inert-gate pyclean code-test plugin-test stamp install-hooks gate gate-repo verify
 
 help:
-	@echo "make lexicon-gate    # 术语合规 · 棘轮门禁（CI 推荐）"
+	@echo "== 仓根 Makefile（在仓库根目录跑）=="
+	@echo "make verify          # ★唯一总门：仓根门禁 + code/ 前端 CI 全跑（全绿=真的全绿）"
+	@echo "make gate-repo       # 消歧名 = 下面的 gate（仓根级门禁）"
+	@echo "make gate            # 仓根级门禁：术语棘轮 + inert + code-test + plugin-test（+可选 lint-imports）"
+	@echo "make lexicon-gate    # 术语合规 · 棘轮门禁"
 	@echo "make lexicon-report  # 术语合规 · 完整报告（违规/提及/按目录）"
 	@echo "make lexicon-baseline# 重冻术语基线（维护用）"
 	@echo "make inert-gate      # 已登记/未接线核对 · 棘轮门禁（登记 != 生效，T226）"
-	@echo "make code-test       # code/ 下 pytest"
-	@echo "make gate            # 全部可用门禁（lexicon + inert + code-test + 可选 lint-imports）"
+	@echo "make code-test       # 在 code/ 下跑 pytest"
+	@echo "make plugin-test     # 在 plugin-skeleton/ 下跑 pytest"
+	@echo "make stamp           # 记录本次门禁结论所绑定的 git 状态"
 	@echo ""
-	@echo "注：本 gate = 术语棘轮 + code 测试（非前端渲染门禁）；"
-	@echo "    前端真渲染门禁见 code/Makefile 的 'make -C code front-gate'。"
+	@echo "⚠ 消歧（T280）：本文件的 gate = 仓根级门禁，**不含前端渲染**。"
+	@echo "   前端渲染门禁在 code/ 下（make -C code ci 或 make -C code front-gate）。"
+	@echo "   想一次跑全部 → 用 'make verify'（唯一不会说错的总门）。"
 
 # 术语合规 · 棘轮门禁：基线外新违规 -> 非 0
 lexicon-gate:
@@ -70,3 +76,15 @@ gate: stamp lexicon-gate inert-gate code-test plugin-test
 	else \
 		echo "[gate] 跳过 lint-imports（未安装）"; \
 	fi
+
+# 消歧别名（T280）：仓根级门禁 = 本文件 `gate`（术语 + inert + pytest + plugin + 可选 lint-imports）。
+# 与 `code/Makefile` 的 `gate`（前端真渲染）**语义不同** —— 需要「跑全部」用 `make verify`。
+gate-repo: gate
+
+# ★唯一总门（T280）：仓根门禁 + code/ 前端 CI 全跑。
+#   「make verify 全绿」= 仓根门禁 与 前端 CI 都通过（唯一不会说错的目标）。
+#   前端 CI = code/Makefile 的 `ci`（smoke + 真渲染门禁 + R9 四指标 + D 段），退出码 0/1/3（3=SKIP≠PASS）。
+verify: gate
+	@echo "[verify] 仓根门禁通过 → 继续前端 CI（在 code/ 跑 make ci）"
+	@$(MAKE) -C code ci
+	@echo "[verify] OK · 仓根门禁 + 前端 CI 均通过（全绿）"

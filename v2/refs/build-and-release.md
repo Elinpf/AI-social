@@ -26,7 +26,8 @@
 
 | # | 入口 | 位置 | 做什么 | 退出码语义 | 实测 |
 |---|---|---|---|---|---|
-| E1 | `make gate` | 仓根 `Makefile` | 术语棘轮 + `code/` pytest +（可选）`lint-imports` | 失败非 0 | ✅ 存在 |
+| E1 | `make gate` / `make gate-repo` | 仓根 `Makefile` | 术语棘轮 + `code/` pytest + `plugin-test`（+可选 `lint-imports`）；**不含前端渲染** | 失败非 0 | ✅ 存在 |
+| E1b | **`make verify`（★唯一总门）** | 仓根 `Makefile` | 仓根门禁 + `make -C code ci`（前端全门禁）**全跑** | 任一门失败非 0 | ✅ 存在（T280） |
 | E2 | `make lexicon-gate / -report / -baseline / -dir-stats` | 仓根 `Makefile` | 术语合规（基线/棘轮） | 新违规非 0 | ✅ |
 | E3 | `make code-test` | 仓根 `Makefile` | `cd code && pytest -q` | pytest 码 | ✅ |
 | E4 | `make ci` | `code/Makefile` | 调 `frontend/tools/ci_gate.sh` | **0/1/3**（3=SKIP） | ✅ |
@@ -45,8 +46,9 @@
 ### 1.2 重叠与命名冲突（必须收口）
 
 - **两个 `make gate` 语义完全不同**：仓根 `gate` = 术语+pytest；`code/` `gate` = 前端真渲染门禁。**顶层同名极易误用**。
-  - **处置（Leader 裁决，分两步）**：**第一步（已做，零风险）**——`code/Makefile` 增 `front-gate` 别名（指向前端真渲染门禁），两份 `make help` 各写清区别；
-    **第二步（待 `make release` 落地、入口收口后一次做）**——再真正改名，避免现在打断 15 处引用。
+  - **第一步（已做）**：`code/Makefile` 增 `front-gate` 别名；两份 `make help` 写清区别。
+  - **T280（已做，零破坏消歧）**：新增 **唯一总门 `make verify`**（仓根门禁 + `make -C code ci`，全绿=真的全绿）+ 消歧别名 **`make gate-repo`**（仓根）/ **`make gate-front`**（`code/`）；两份 `make help` 标注「验什么 / 在哪跑」。**旧名 `gate` 两处均保留兼容**（不打断既有引用）。
+  - **第二步（待 `make release` 落地后）**：如需，可再真正改名/收口；现已有不会说错的目标，非阻塞。
 - **同端口两套绑定**：`serve.py` 默认 `127.0.0.1`，`ci_gate.sh` 用 `0.0.0.0:8848` —— 环境变量未统一。
 - **`scripts/*.py` 是「第二套入口」**：与 E6/E7/E8 CLI 并存、无 Makefile 收口、命名不成体系（`run_production_acceptance` / `run_econ_acceptance` / `lifecycle_*_run` …）。
 - **「复现/守恒」断言散落 4 处**：`engine verify`（E6）、`obs gate`（E8）、`tests/test_obs_repro_gate.py`、`tests/test_run_health_gate.py` —— 需一张**分级表**统一（T218 的活，本文只引用）。
@@ -224,7 +226,7 @@ git -C social-experiment ls-files -z \
 | 缺口（as-is） | 目标（to-be） | 影响 |
 |---|---|---|
 | G1 无「一条命令」构建 | §2.2 `make release` | 发布不可复现、靠人肉多步 |
-| G2 两个 `make gate` 同名异义 | 顶层 `gate` 收口所有门禁；前端门禁改名 `front-ci` | 误用风险 |
+| G2 两个 `make gate` 同名异义 | **已缓解（T280）**：新增唯一总门 `make verify`（仓根+前端全跑）+ 消歧别名 `gate-repo`/`gate-front`；旧名保留兼容 | 误用风险 → **有不会说错的目标** |
 | G3 无产物 manifest | §2.3 `manifest.json` | 无法回答「产物哪来的」 |
 | G4 版本弱（仅手写 sha） | §2.1 `VERSION` + git tag | 产物与代码无法对账 |
 | G5 无回滚 | §2.4 dist/ symlink + rollback.sh | 出事只能手改 |
@@ -240,10 +242,11 @@ git -C social-experiment ls-files -z \
 
 > 原则：**先盘点（本文）→ 再最小可跑 → 再加清单 → 再加回滚 → 最后 CI 编排**。**每加一道闸必须附「故意弄坏确实变红」的证明**（红线⑤）。
 
-1. **P1 · 统一入口消歧（分两步）**
-   - **第一步（已做，零风险）**：`code/Makefile` 增 `front-gate` **别名**（= 前端真渲染门禁）；两份 `make help` 均写明「仓根 `gate` = 术语+测试 / `code/` `front-gate` = 前端渲染」。
-   - **第二步（待 `make release` 落地后再做）**：真正改名 + 顶层 `gate` 增补调用前端门禁（可选 `front-ci`）。
-   - 反向验证：制造一个前端渲染错误 → `make -C code front-gate` 返回非 0；改回 → 复绿。
+1. **P1 · 统一入口消歧**
+   - **第一步（已做，零风险）**：`code/Makefile` 增 `front-gate` **别名**（= 前端真渲染门禁）；两份 `make help` 均写明区别。
+   - **T280（已做，零破坏消歧）**：新增 **`make verify`**（= 仓根门禁 + `make -C code ci`，全绿=真的全绿）+ 消歧别名 **`gate-repo`**（仓根）/ **`gate-front`**（`code/`）；两份 `make help` 标注「验什么 / 在哪跑」；旧名 `gate` 均保留兼容（不打断既有引用）。
+   - **第二步（可选，待 `make release` 落地后）**：如需再真正改名/收口；已有不会说错的目标，非阻塞。
+   - 反向验证：① 制造前端渲染错误 → `make -C code front-gate` 非 0，`make verify` 整链非 0；② 造「新鲜+陈旧混批」暂存 → 提交被 pre-commit 拦（见 quality-gates ④ 同源 RV）。
 2. **P2 · `scripts/release.sh` 最小版**（仅前置闸 + 跑门禁 + 算 VERSION + 打印，不出 dist）
    - 反向验证：`RELEASE_ALLOW_DIRTY` 未设时，touch 一个 tracked 文件 → 前置闸红。
 3. **P3 · manifest 生成 + `dist/<VERSION>/` 组装**

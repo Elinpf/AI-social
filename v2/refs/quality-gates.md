@@ -231,7 +231,8 @@
 |---|---|---|---|
 | `make code-test` | `pytest` | `code/tests` + **`code/life/tests`** | 旧版漏 `life/tests`（④ 已修）；含重 e2e，~4 min |
 | `make plugin-test` | `pytest` | `plugin-skeleton/tests` | ④ 新增 |
-| `make gate` | `stamp`+`lexicon-gate`+`code-test`+`plugin-test`(+`lint-imports`) | 上述全部 | 汇总入口；**首步打戳** |
+| `make gate` / `make gate-repo` | `stamp`+`lexicon-gate`+`code-test`+`plugin-test`(+`lint-imports`) | 上述全部（**不含前端**） | 仓根汇总入口；**首步打戳** |
+| `make verify`（★唯一总门，T280） | 仓根 `gate` + `make -C code ci` | 仓根门禁 + 前端全门禁 | **全绿=真的全绿**；消除「两个 gate 同名异义」 |
 | `obs gate` | `python -m obs gate --log …` | 无测试收集（读日志跑 G2–G7） | 观测层门禁 |
 | `tools/pytest_stamped.sh` | `pytest`（带戳） | 同 `pytest`（参数决定） | 「根 pytest 入口」推荐包法；**先打戳再 pytest**（⑥） |
 | `ci_gate.sh` | `node` + `python` | `frontend/tools/smoke_test.js` + 真渲染 | JS/渲染，非 pytest |
