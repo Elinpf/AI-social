@@ -270,10 +270,9 @@ def apply_exchange(state, round_no, ctx):
             continue
         _emit_deal(deal, f"ex:{round_no}:{i}")
     # (b) OFFER_ACCEPTED → deal（(B)；规则 1/2/3）
-    # ⚠️ 作用域限制（T137，已知）：「已结算 offer 集合」仅限**本回合**。跨回合重复接受同一要约
-    #   （实测 T133 基线 ~33%：如 O-12-P002 首笔在 r13、其余在 r14）在此仍会报 `insufficient_goods`，
-    #   而非 `offer_exhausted`。完整修法需跨回合持久状态（入 state_hash / 可折叠量），代价高、会挡 T136；
-    #   现由 **obs 侧离线复算**（扫完整日志，把"该 offer 此前已有成交"的 insufficient_goods 重分类）。
+    # ⚠️ 作用域限制（T137）：「已结算 offer 集合」仅限**本回合**。跨回合重复接受同一要约在此
+    #   仍会报 `insufficient_goods`，而非 `offer_exhausted`（完整修法需跨回合持久状态，代价高）。
+    #   如需**全日志口径**，由 **obs 侧离线复算**把"该 offer 此前已有成交"的 insufficient_goods 重分类。
     settled_offers: set = set()
     for seq, item in _accept_deals(state, round_no):
         if item[0] == "DROPPED":
