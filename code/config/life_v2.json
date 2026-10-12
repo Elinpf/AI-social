@@ -1,13 +1,13 @@
 {
-  "_comment": "T224 第一批：睡眠离线窗 / 遗忘三级 / 人格抗漂移 参数（T205 §1/§3）。**默认关闭**（enabled=false）——默认关不等于没影响：本文件已纳入 engine_version 指纹。比例为 permille 整数（1.0=1000）。纳入指纹的复现输入常数。",
+  "_comment": "T224 第一批：睡眠离线窗 / 遗忘三级 / 人格抗漂移 参数（T205 §1/§3）。T244 起默认开启（sleep.enabled=true / forgetting.enabled=true）——用户 #6 要的『有睡眠遗忘』需真实生效；各自可独立消融，改回 false 即回退。本文件纳入 engine_version 指纹。比例为 permille 整数（1.0=1000）。纳入指纹的复现输入常数。",
   "schema_version": "1.0",
   "sleep": {
-    "enabled": false,
+    "enabled": true,
     "slot": "night",
     "planned_ticks": 3
   },
   "forgetting": {
-    "enabled": false,
+    "enabled": true,
     "h0_slots": 14,
     "s_base_permille": 1000,
     "w_access": 500,

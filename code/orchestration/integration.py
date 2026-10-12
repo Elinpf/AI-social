@@ -513,6 +513,58 @@ class KernelAdapter:
                 "importance_sum": p["importance_sum"], "produced_mem_id": p["produced_mem_id"]},
                 phase=PHASE_LIFE, actor=agent_id)
             return IntentResult(ok=True, event_seqs=(seq,))
+        # ---- T244：睡眠离线窗 / 遗忘 / 记忆整合（08 §1.2 S）------------------
+        # 目的：让 `config/life_v2.json` 的 sleep/forgetting 开关**真实生效**（此前缺这 4 个 op，
+        # 意图被拒 → 目标三族恒 0）。均为非货币、纯审计/记忆结构事件；确定性、无 LLM。
+        if op == "sleep_start":
+            seq = self._emit_assembled("SLEEP_STARTED", p, {
+                "agent_id": agent_id, "day": p.get("day"), "slot": p.get("slot"),
+                "planned_ticks": p.get("planned_ticks")},
+                phase=PHASE_LIFE, actor=agent_id)
+            return IntentResult(ok=True, event_seqs=(seq,))
+        if op == "sleep_end":
+            seq = self._emit_assembled("SLEEP_COMPLETED", p, {
+                "agent_id": agent_id, "day": p.get("day"), "slot": p.get("slot"),
+                "actual_ticks": p.get("actual_ticks"),
+                "pf0": p.get("pf0"), "pf_t": p.get("pf_t"),
+                "drift_permille": p.get("drift_permille")},
+                phase=PHASE_LIFE, actor=agent_id)
+            return IntentResult(ok=True, event_seqs=(seq,))
+        if op == "forget":
+            if p.get("level") not in ("demote", "merge", "drop"):
+                return None
+            seq = self._emit_assembled("MEMORY_FORGET", p, {
+                "agent_id": agent_id, "mem_id": p.get("mem_id"), "level": p.get("level"),
+                "retention_permille": p.get("retention_permille"), "reason": p.get("reason"),
+                "protected": bool(p.get("protected")),
+                "protection_reason": p.get("protection_reason"),
+                "day": p.get("day"), "slot": p.get("slot")},
+                phase=PHASE_LIFE, actor=agent_id)
+            return IntentResult(ok=True, event_seqs=(seq,))
+        if op == "consolidate":
+            src = p.get("source_mem_ids") or []
+            pid = p.get("produced_mem_id")
+            if not src or not pid:
+                return None
+            seq = self._emit_assembled("MEMORY_CONSOLIDATE", p, {
+                "agent_id": agent_id, "subject": p.get("subject"),
+                "source_mem_ids": list(src), "produced_mem_id": pid,
+                "day": p.get("day"), "slot": p.get("slot")},
+                phase=PHASE_LIFE, actor=agent_id)
+            return IntentResult(ok=True, event_seqs=(seq,))
+        if op == "drift":
+            # T244 W3：由反思产出的**有界**人格漂移候选（单事件单维；08 §1.2 S）
+            if not p.get("dim"):
+                return None
+            seq = self._emit_assembled("PERSONA_DRIFT", p, {
+                "agent_id": agent_id, "dim": p.get("dim"),
+                "before": p.get("before"), "after": p.get("after"),
+                "anchor": p.get("anchor"), "cause_mem_id": p.get("cause_mem_id"),
+                "pf0": p.get("pf0"), "pf_t": p.get("pf_t"),
+                "drift_permille": p.get("drift_permille"),
+                "day": p.get("day"), "slot": p.get("slot")},
+                phase=PHASE_LIFE, actor=agent_id)
+            return IntentResult(ok=True, event_seqs=(seq,))
         return None
 
     def _do_observe(self, agent_id, p):

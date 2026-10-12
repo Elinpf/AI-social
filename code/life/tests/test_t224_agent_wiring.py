@@ -53,12 +53,17 @@ def _run_to_night(kernel, agent, rounds: int = 12):
         kernel.tick({"P003": agent})
 
 
-def test_disabled_default_no_sleep_events():
+def test_disabled_default_no_sleep_events(monkeypatch):
+    """T244：默认已开 → 显式关（回退路径）仍须零副作用。"""
+    disabled = SW.load_params()
+    disabled["sleep"] = dict(disabled["sleep"], enabled=False)
+    disabled["forgetting"] = dict(disabled["forgetting"], enabled=False)
+    monkeypatch.setattr(SW, "load_params", lambda path=None: disabled)
     with tempfile.TemporaryDirectory() as d:
         kernel, agent = _build(Path(d))
         _run_to_night(kernel, agent, rounds=12)
         types = [e["type"] for e in kernel.ledger]
-        assert "SLEEP_STARTED" not in types          # 默认关 → 零副作用
+        assert "SLEEP_STARTED" not in types          # 显式关 → 零副作用
 
 
 def test_enabled_sleep_window_wires_events(monkeypatch):

@@ -28,11 +28,16 @@ def _anchor() -> dict:
             "values": {"security": 65}, "skills": []}
 
 
-def test_default_config_is_disabled():
+def test_default_config_switch_reflects_file():
+    """T244：默认已开启（用户 #6 要「睡眠/遗忘」真实生效）；显式关仍返回空计划（可回退）。"""
     p = S.load_params()          # 读 code/config/life_v2.json
-    assert p["sleep"]["enabled"] is False
-    assert p["forgetting"]["enabled"] is False
-    out = S.run_sleep_window("P003", [_mem("M1")], 100, p, day=7, slot="night")
+    assert p["sleep"]["enabled"] is True
+    assert p["forgetting"]["enabled"] is True
+    # 把开关显式改回 false → 空计划、零副作用（回退方式）
+    p_off = dict(p)
+    p_off["sleep"] = dict(p["sleep"], enabled=False)
+    p_off["forgetting"] = dict(p["forgetting"], enabled=False)
+    out = S.run_sleep_window("P003", [_mem("M1")], 100, p_off, day=7, slot="night")
     assert out["consolidate"] == [] and out["forget"] == [] and out["events"] == []
 
 
