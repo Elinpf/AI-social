@@ -6,6 +6,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Dict, List, Optional
 
+from .capture import CaptureConfig
+
 
 class Mode(str, Enum):
     """运行模式。"""
@@ -168,6 +170,8 @@ class FreezeConfig:
     cache_schema: str = "freeze-v1"
     #: thinking 控制策略（按 purpose/tier 集中裁决，不散落硬编码）。
     thinking_policy: ThinkingPolicy = field(default_factory=ThinkingPolicy)
+    #: prompt 正文落盘（T227；默认关；配置进 engine_version 指纹）。
+    capture: "CaptureConfig" = field(default_factory=lambda: CaptureConfig())
 
     def __post_init__(self) -> None:
         if isinstance(self.mode, str):
@@ -180,10 +184,14 @@ class FreezeConfig:
         return self.thinking_policy.resolve(purpose, tier)
 
     def engine_version_with_policy(self) -> str:
-        """把 thinking 策略指纹折进 engine_version（供复现口径使用）。"""
+        """把 thinking 策略与 prompt 落盘配置指纹折进 engine_version（复现口径）。"""
         from .canonical import digest
 
-        return f"{self.engine_version}|thinking={digest(self.thinking_policy.fingerprint())[:16]}"
+        return (
+            f"{self.engine_version}"
+            f"|thinking={digest(self.thinking_policy.fingerprint())[:16]}"
+            f"|capture={digest(self.capture.fingerprint())[:16]}"
+        )
 
     @property
     def is_replay(self) -> bool:

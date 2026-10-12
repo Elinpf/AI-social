@@ -56,6 +56,7 @@ from .llm_client import (
     InvalidDecisionError,
 )
 from .embedding import EmbeddingFreezer
+from .capture import CaptureConfig, PromptCapture
 
 __all__ = [
     "canonical_json",
@@ -91,4 +92,6 @@ __all__ = [
     "CacheMissError",
     "InvalidDecisionError",
     "EmbeddingFreezer",
+    "CaptureConfig",
+    "PromptCapture",
 ]

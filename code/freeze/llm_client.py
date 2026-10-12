@@ -31,8 +31,10 @@
 from __future__ import annotations
 
 import math
+import os
 import re
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
 from .budget import LLMBudget
@@ -162,6 +164,37 @@ class LLMClient:
             version=embed_version,
         )
 
+        # T227：可选 prompt 正文落盘（默认关；四控见 freeze.capture）。
+        from .capture import PromptCapture
+
+        cap_cfg = config.capture
+        cap_root = cap_cfg.dir or str(Path(config.cache_dir) / "prompts")
+        redact_terms: List[str] = []
+        for _env in ("LLM_API_KEY", "VISION_API_KEY", "FREEZE_LLM_API_KEY", "OPENAI_API_KEY"):
+            _v = os.environ.get(_env)
+            if _v:
+                redact_terms.append(_v)
+        _base = getattr(provider, "base_url", None)
+        if _base:
+            redact_terms.append(_base)
+        self.capture = PromptCapture(cap_cfg, root=cap_root, redact_terms=redact_terms)
+
+    def _maybe_capture(self, *, purpose: str, system: str, user: str, cache_key: str,
+                       prompt_hash: str, output: str, model: str, thinking: bool,
+                       tier: str, round: int, phase: int, cached: bool) -> None:
+        cap = getattr(self, "capture", None)
+        if cap is None or not cap.is_active():
+            return
+        if not cap.should_capture(purpose, sample_key=cache_key):
+            cap.skipped += 1
+            return
+        cap.write({
+            "purpose": purpose, "cache_key": cache_key, "prompt_hash": prompt_hash,
+            "system": system, "user": user, "output": output, "model": model,
+            "thinking": thinking, "tier": tier, "round": round, "phase": phase,
+            "cached": cached, "engine_version": self.config.engine_version,
+        })
+
     # ------------------------------------------------------------------ #
     @property
     def embed_calls(self) -> int:
@@ -289,6 +322,10 @@ class LLMClient:
                 meta=meta,
                 thinking=hit.get("thinking", eff_thinking),
             )
+            self._maybe_capture(purpose=purpose, system=system, user=user, cache_key=cache_key,
+                                prompt_hash=prompt_hash, output=hit["text"], model=hit["model"],
+                                thinking=bool(hit.get("thinking", eff_thinking)),
+                                tier=hit.get("tier", tier.value), round=round, phase=phase, cached=True)
             return LLMResponse(
                 text=hit["text"],
                 model=hit["model"],
@@ -409,6 +446,10 @@ class LLMClient:
             meta=meta,
             thinking=eff_thinking,
         )
+        self._maybe_capture(purpose=purpose, system=system, user=user, cache_key=cache_key,
+                            prompt_hash=prompt_hash, output=resp.text, model=resp.model,
+                            thinking=bool(eff_thinking), tier=eff_tier.value, round=round,
+                            phase=phase, cached=False)
         return LLMResponse(
             text=resp.text,
             model=resp.model,

@@ -14,10 +14,12 @@
 
 from __future__ import annotations
 
+import json
 import math
 import os
 import sys
 import tempfile
+import time
 import unittest
 from dataclasses import replace
 
@@ -811,6 +813,113 @@ class FreezeLayerTest(unittest.TestCase):
         self.assertAlmostEqual(probs["formed"], 0.9, places=6)
         self.assertAlmostEqual(probs["not_formed"], 0.1, places=6)
         self.assertIsNone(_C._option_probs(None, ["formed"]))
+
+    # ------------------------------------------------------------------ #
+    # T227：可选 prompt 正文落盘（默认关 + 抽样 + 容量上限 + 脱敏硬门）
+    # ------------------------------------------------------------------ #
+    def _capture_path(self):
+        return os.path.join(self.tmp, "prompts", "prompts.jsonl")
+
+    def test_capture_default_off_no_write(self) -> None:
+        client = LLMClient(make_config(self.tmp), provider=MockProvider(), event_log=EventLog())
+        client.complete(purpose="dialogue", system="s", user="u")
+        self.assertFalse(client.capture.is_active())
+        self.assertFalse(os.path.exists(self._capture_path()))
+        self.assertEqual(client.capture.stats()["written"], 0)
+
+    def test_capture_purpose_selective(self) -> None:
+        import base64
+        import zlib
+
+        from freeze.capture import CaptureConfig
+
+        cfg = make_config(self.tmp)
+        cfg.capture = CaptureConfig(enabled=True, mode="purpose")
+        client = LLMClient(cfg, provider=MockProvider(), event_log=EventLog())
+        client.complete(purpose="dialogue", system="s", user="u1")
+        client.complete(purpose="judge", system="s", user="u2")   # 排除
+        lines = open(self._capture_path(), encoding="utf-8").read().strip().splitlines()
+        self.assertEqual(len(lines), 1)
+        rec = json.loads(zlib.decompress(base64.b64decode(json.loads(lines[0])["z"])))
+        self.assertEqual(rec["purpose"], "dialogue")
+        self.assertEqual(rec["user"], "u1")
+
+    def test_capture_sample_deterministic(self) -> None:
+        from freeze.capture import CaptureConfig, PromptCapture
+
+        cap = PromptCapture(CaptureConfig(enabled=True, mode="sample", sample_rate=0.5), root=self.tmp)
+        a = [cap.should_capture("dialogue", sample_key=f"k{i}") for i in range(20)]
+        cap2 = PromptCapture(CaptureConfig(enabled=True, mode="sample", sample_rate=0.5), root=self.tmp)
+        b = [cap2.should_capture("dialogue", sample_key=f"k{i}") for i in range(20)]
+        self.assertEqual(a, b, "抽样必须确定性可复现")
+
+    def test_capture_redaction_reverse_verification(self) -> None:
+        from freeze.capture import CaptureConfig
+
+        secret = "sk-supersecret-1234567890"
+        cfg = make_config(self.tmp)
+        cfg.capture = CaptureConfig(enabled=True, mode="purpose")
+        client = LLMClient(cfg, provider=MockProvider(), event_log=EventLog())
+        client.capture.redact_terms = [secret]
+        client.complete(purpose="dialogue", system=f"sys key={secret}",
+                        user=f"see https://172.16.3.41:31809/v1 with {secret}")
+        txt = open(self._capture_path(), encoding="utf-8").read()
+        self.assertNotIn(secret, txt)                 # 反向验证：key 不得入盘
+        self.assertNotIn("172.16.3.41:31809", txt)    # 端点不得入盘
+
+    def test_capture_refusal_gate(self) -> None:
+        from freeze.capture import CaptureConfig, PromptCapture
+
+        cap = PromptCapture(CaptureConfig(enabled=True, mode="purpose"), root=os.path.join(self.tmp, "prompts"))
+        cap.redact = lambda t: t                        # 模拟 redact 失效 → 扫描必须拦住
+        ok = cap.write({"purpose": "dialogue", "user": "https://x/v1", "output": "y"})
+        self.assertFalse(ok)
+        self.assertEqual(cap.refused, 1)
+        self.assertFalse(os.path.exists(self._capture_path()))
+
+    def test_capture_scan_clean(self) -> None:
+        from freeze.capture import CaptureConfig, PromptCapture
+
+        cap = PromptCapture(CaptureConfig(), root=self.tmp)
+        self.assertFalse(cap.scan_clean("see https://h/v1"))
+        self.assertFalse(cap.scan_clean("Authorization: Bearer abcdef123456"))
+        self.assertFalse(cap.scan_clean("sk-abcdef123456"))
+        self.assertTrue(cap.scan_clean("clean town dialogue"))
+
+    def test_capture_capacity_cap(self) -> None:
+        from freeze.capture import CaptureConfig
+
+        cfg = make_config(self.tmp)
+        cfg.capture = CaptureConfig(enabled=True, mode="purpose", max_bytes=200)
+        client = LLMClient(cfg, provider=MockProvider(), event_log=EventLog())
+        for i in range(50):
+            client.complete(purpose="dialogue", system="s", user=f"u{i}" * 20)
+        self.assertGreater(client.capture.capped, 0, "超容量上限应停写并计数")
+        self.assertTrue(client.capture.truncated, "触顶必须显式标记，不得静默停写")
+        txt = open(self._capture_path(), encoding="utf-8").read()
+        self.assertIn("capture_truncated", txt)      # 文件内 marker
+        self.assertLessEqual(os.path.getsize(self._capture_path()), 200 + 1024)
+
+    def test_capture_ttl_cleanup(self) -> None:
+        from freeze.capture import CaptureConfig, PromptCapture
+
+        cap = PromptCapture(CaptureConfig(enabled=True, mode="purpose", ttl_seconds=1), root=os.path.join(self.tmp, "prompts"))
+        cap.write({"purpose": "dialogue", "user": "u", "output": "o"})
+        p = self._capture_path()
+        self.assertTrue(os.path.exists(p))
+        os.utime(p, (time.time() - 10, time.time() - 10))   # 变旧
+        cap._maybe_cleanup()
+        self.assertFalse(os.path.exists(p))
+
+    def test_capture_fingerprint_in_engine_version(self) -> None:
+        from freeze.capture import CaptureConfig
+
+        cfg_off = make_config(self.tmp, "evCap")
+        cfg_on = make_config(self.tmp, "evCap")
+        cfg_on.capture = CaptureConfig(enabled=True, mode="purpose")
+        self.assertIn("capture=", cfg_off.engine_version_with_policy())
+        self.assertNotEqual(cfg_off.engine_version_with_policy(),
+                            cfg_on.engine_version_with_policy())
 
 
 if __name__ == "__main__":
