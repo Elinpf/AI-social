@@ -16,6 +16,7 @@
 - **开关**：`config-dict override`（B=`world_director.enabled=false`，D=`policy.wake.enabled=true`）；**不改文件 ⇒ 指纹不变**。
 - **树**：**当前 HEAD `63c200a`**（含 `T298` `7f16c80`/`801c880`/`8d4c8b9` + `T287` `76de474`），**≠ T292 的树 `8680737`** ⇒ 见 §3。
 - **指纹**：`sha256:f378d5d3…`（与 T292 同）⇒ cache 可复用（实测 A/B **99.6% 命中**）。
+- **并发**（按 Harness 规矩记录）：本 run 期间**同一时刻另有 `T304`（art，repro_resume_cut）与 `T314`（kernel，resume-guard）在跑**，**共享同一 LLM 端点与 CPU**。⇒ 本 run 由 **cache 主导（命中 99.6%）**，**未受争用影响**（B−A 干净复现）；但**装置前提含"并发"这一项**，复算须知。
 
 ## 2. 逐值对照（T292 同进程 vs T310 分进程）
 | 批 | T292（同进程，树 8680737+） | **T310（分进程，树 63c200a）** | 复现? |
