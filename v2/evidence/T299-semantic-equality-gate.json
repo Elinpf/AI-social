@@ -28,6 +28,13 @@
     }
   },
   "instrument_fix": "kill 从墙钟改为『跑到指定 round 再 kill』(T271_VR_KILLROUND)——墙钟 kill 使 cut 在 75↔89 漂移，制造假『间歇』；cut 显式参数化 T271_VR_CUT",
+  "t307_hardening": {
+    "whitelist_maintenance_rule": "EXCLUDE 是白名单: 新增纯计量字段必须入表并重跑 --selftest(A/B 双向); 语义/配置字段不得入表; 拿不准一律保留. 判纯计量=只影响本地 freeze 缓存命中/计费, 不影响 world 语义(不入 state_hash/不改事件流)",
+    "selftest_pinned_perturbation": "PLACE_MOVE.day +1 (明确类型/字段/增量, 跨版本可重复; 字段缺失=报错, 不静默换靶)",
+    "selftest_synthetic_cascade_sample": "用合成样本【保证压到哈希链级联】(LLM_CALL 紧跟 TURN_SEAL) => 链级联覆盖=True 成为可断言项(False=链覆盖失败=红); 真日志级联覆盖仅 info(False=样本未覆盖链, 非红)",
+    "self_test_reading": "合成样本: A 删计量不变=True / 链级联覆盖=True / B 钉死扰动 PLACE_MOVE.day+1 变=True; 回归 cut=89 PASS / cut=75 真阳性",
+    "independent_rerun": "改门须非作者独立复跑 (sandbox-test-lead 或 art-director) —— 见 T307"
+  },
   "known_real_defect": {
     "class": "②类 确定性 bias (已交 life-layer-dev)",
     "symptom": "同 sha 下 resume 对 cut 敏感: 从 TURN_SEAL@75 续跑 round 76 起与一次性跑分叉(state_hash 不等数=74); 从 @89 续跑一致",
