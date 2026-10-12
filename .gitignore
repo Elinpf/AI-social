@@ -25,5 +25,9 @@ code/logs/
 .DS_Store
 *.tmp
 
+# git worktree 分支拷贝（T303）：同一仓的分枝 checkout，不属于主树内容；
+# 不忽略会被 `git add -A` 裹带/污染 status（与 T273 提交范围守卫同族风险）。
+.worktrees/
+
 # 根级冻结缓存（可再生）
 freeze_cache/
