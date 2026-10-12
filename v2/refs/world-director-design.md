@@ -126,6 +126,8 @@
 
 > 判据：**(a) 显式事件**（落 `directed` 事件）、**(b) 可消融**（独立开关 + 剂量参数）、**(c) 不改过去**（只对未来）。另附「**可审计口径**」= 事后如何从日志复算「这是导演干的」。
 
+> ⚠️ **【T216 合并声明】** 本节的 `WD-1..WD-10` 判定表**已与 T204 的 `EF-1..EF-9` 合并**为 `v2/refs/world-event-mechanisms.md`（统一红线 A′）的**单一机制表**。机制判定**以该文件 §2 为准**；本表仅作**历史/溯旧**保留（WD 编号在该文件 `别名` 列可追）。**出现不一致时，以 `world-event-mechanisms.md` 为准。** 本节 §3.1 剂量曲线、§3.2 四项裁决**仍有效**（补充约定，不冲突）。
+
 | # | 宏观群体事件 | 触发（确定性/RNG 先定） | 产出（事件/情境） | (a) | (b) 开关·剂量 | (c) | 可审计口径 |
 |---|---|---|---|---|---|---|---|
 | **WD-1** | **节庆 / 集市 / 大型活动** | 日历相位 + Director 调度（RNG 先定） | `WORLD_DIRECTIVE`→`WORLD_GROUP_EVENT(kind=festival)`；场所开放、活动概率↑ | ✅ `directed=true` | 开关 `wd.festival.enabled`；剂量：频率（次/周）、规模（容量上限）、时长（slot 数） | ✅ 只影响 `t≥now` | 存在 `WORLD_GROUP_EVENT(directive_ref=…)`，且其 `directive_ref` 溯源到一条 `directed=true` 的 `WORLD_DIRECTIVE` |
