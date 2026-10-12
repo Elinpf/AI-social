@@ -1272,6 +1272,20 @@
       "sha256": "571923630d4390c3f7fd70aa030a5390bbfb877f6a340f185c057fc8bfbf1de3"
     },
     {
+      "id": "tile.edge_soil_grass_ne_outer",
+      "type": "tile",
+      "file": "generated/tiles/edge_soil_grass_ne_outer.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "d0ecf7fe5b2f030c404a207987cd117d26fbe4f58d6d006a7c23c941a56ddbb8"
+    },
+    {
       "id": "tile.edge_soil_grass_nw",
       "type": "tile",
       "file": "generated/tiles/edge_soil_grass_nw.png",
@@ -1284,6 +1298,20 @@
         0
       ],
       "sha256": "60ec6443e55a4c785edda0791f7badb136b9dde9e47a1d236ac3ac08f8587b11"
+    },
+    {
+      "id": "tile.edge_soil_grass_nw_outer",
+      "type": "tile",
+      "file": "generated/tiles/edge_soil_grass_nw_outer.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "82f0d15002274e5a69f526baa93ba7d42c61be4ca5f511a47cc31d184b30ea76"
     },
     {
       "id": "tile.edge_soil_grass_se",
@@ -1300,6 +1328,20 @@
       "sha256": "0e01c44eb319e2de4f54f834ffe80aa16dc2014687e3efac5bc36aa4a46a5266"
     },
     {
+      "id": "tile.edge_soil_grass_se_outer",
+      "type": "tile",
+      "file": "generated/tiles/edge_soil_grass_se_outer.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "d0a6bcd158b4a659d033783a8fb7212526e697a17e8282a39e77cb65847bfcf4"
+    },
+    {
       "id": "tile.edge_soil_grass_sw",
       "type": "tile",
       "file": "generated/tiles/edge_soil_grass_sw.png",
@@ -1312,6 +1354,524 @@
         0
       ],
       "sha256": "ea356595dc93cc17a03ff14733b2c55bb6ebde2f73808732f24e8eb8ab1d53e1"
+    },
+    {
+      "id": "tile.edge_soil_grass_sw_outer",
+      "type": "tile",
+      "file": "generated/tiles/edge_soil_grass_sw_outer.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "e3eb78e8a8c39b4302e922a46bcb6a8a1f688b7694d14c7b30805cda27a4dd6a"
+    },
+    {
+      "id": "tile.edge_stone_grass_n",
+      "type": "tile",
+      "file": "generated/tiles/edge_stone_grass_n.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "a5ed2d54f783a735b9068fc04f9fe112f92f205d95eca34fad1eb8f87e99edbd"
+    },
+    {
+      "id": "tile.edge_stone_grass_e",
+      "type": "tile",
+      "file": "generated/tiles/edge_stone_grass_e.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "8d7f79da6491bac5cdf94c89918654be7eca45685d5418e29a9443eaa139b7e1"
+    },
+    {
+      "id": "tile.edge_stone_grass_s",
+      "type": "tile",
+      "file": "generated/tiles/edge_stone_grass_s.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "be128e9025ddb895f2407c3d64c81c97d6636081fa57ae1fe6f3916178db6716"
+    },
+    {
+      "id": "tile.edge_stone_grass_w",
+      "type": "tile",
+      "file": "generated/tiles/edge_stone_grass_w.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "ec3b3a7016b5d01613a6d9b97365750b2f79e64e21b926f00378ab3ed59d069d"
+    },
+    {
+      "id": "tile.edge_stone_grass_ne",
+      "type": "tile",
+      "file": "generated/tiles/edge_stone_grass_ne.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "3039ad52776cf7b13a669f5f4d8b1ed756b75419778dca347559b55cec8d8c5a"
+    },
+    {
+      "id": "tile.edge_stone_grass_ne_outer",
+      "type": "tile",
+      "file": "generated/tiles/edge_stone_grass_ne_outer.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "7f8c83b53cf017d8c0250372a49840d0cb9d64b87811c82c2cc3d0a2c00e39f9"
+    },
+    {
+      "id": "tile.edge_stone_grass_nw",
+      "type": "tile",
+      "file": "generated/tiles/edge_stone_grass_nw.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "5d5872dce324230dafd90ce4b64029cbc165967140b848f017065857d0fe56cf"
+    },
+    {
+      "id": "tile.edge_stone_grass_nw_outer",
+      "type": "tile",
+      "file": "generated/tiles/edge_stone_grass_nw_outer.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "101d30f1d792456c3283f57a958f9c8ccd2b145d060bdb3e2d0c0d82b818507f"
+    },
+    {
+      "id": "tile.edge_stone_grass_se",
+      "type": "tile",
+      "file": "generated/tiles/edge_stone_grass_se.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "4925f36032af575ba169c97fe8dd5ccdc67a9373ffcbbd0648517588ba762ce7"
+    },
+    {
+      "id": "tile.edge_stone_grass_se_outer",
+      "type": "tile",
+      "file": "generated/tiles/edge_stone_grass_se_outer.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "234095487e681a78f6e6211e1c6940ca5ea3e5b263c7597206fc93dfed04aed2"
+    },
+    {
+      "id": "tile.edge_stone_grass_sw",
+      "type": "tile",
+      "file": "generated/tiles/edge_stone_grass_sw.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "0e5f58b4e3265d2a1f92c86d1acc0ee3482ec7ac052f90577e3a0f9abdd60d08"
+    },
+    {
+      "id": "tile.edge_stone_grass_sw_outer",
+      "type": "tile",
+      "file": "generated/tiles/edge_stone_grass_sw_outer.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "4b109743ef2be07f15b11d1010af5331f8ce743ccc25f914b50da0629526237d"
+    },
+    {
+      "id": "tile.edge_soil_stone_n",
+      "type": "tile",
+      "file": "generated/tiles/edge_soil_stone_n.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "3061e7fd94f132f41bbbbc7e049c62fa5a7733981c0faf9c9338beb0f7b6009e"
+    },
+    {
+      "id": "tile.edge_soil_stone_e",
+      "type": "tile",
+      "file": "generated/tiles/edge_soil_stone_e.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "427f8285f9cfe70c0457440915247a7a6a77e45e6b2b74c9827b3588a75974e6"
+    },
+    {
+      "id": "tile.edge_soil_stone_s",
+      "type": "tile",
+      "file": "generated/tiles/edge_soil_stone_s.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "559ba4277dba11b0a15f40ffb8f971807798d690397a5929a42c7349b81dbd94"
+    },
+    {
+      "id": "tile.edge_soil_stone_w",
+      "type": "tile",
+      "file": "generated/tiles/edge_soil_stone_w.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "b344f261b96cbf8dd38262ce6e953e92cf4d338cefd257123650a88d98e400da"
+    },
+    {
+      "id": "tile.edge_soil_stone_ne",
+      "type": "tile",
+      "file": "generated/tiles/edge_soil_stone_ne.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "11e0bdbc8369787b7070ecb8b3225fcb2029053791b1fc3ea3207cdd6d2f41bc"
+    },
+    {
+      "id": "tile.edge_soil_stone_ne_outer",
+      "type": "tile",
+      "file": "generated/tiles/edge_soil_stone_ne_outer.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "ed5767c309d9dca2ce87a11924f1dd13a441399bd75ad0e43a71c52ab4cfc079"
+    },
+    {
+      "id": "tile.edge_soil_stone_nw",
+      "type": "tile",
+      "file": "generated/tiles/edge_soil_stone_nw.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "00efa6af2df1dc462c2df6425ab2ee3848b71c5d9865a5b1d6fe5b2f2e233fbf"
+    },
+    {
+      "id": "tile.edge_soil_stone_nw_outer",
+      "type": "tile",
+      "file": "generated/tiles/edge_soil_stone_nw_outer.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "63cbde5875fd270d8a2e9d0ec096563a25a5b177035167b3b3123b5209da780b"
+    },
+    {
+      "id": "tile.edge_soil_stone_se",
+      "type": "tile",
+      "file": "generated/tiles/edge_soil_stone_se.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "8b002d204a62741993e4ae15279ade5585b9a9b7ee277a5699205a608344ebf8"
+    },
+    {
+      "id": "tile.edge_soil_stone_se_outer",
+      "type": "tile",
+      "file": "generated/tiles/edge_soil_stone_se_outer.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "b6f8a83f94a7125cdaec4aaa5424d669d5e9e1b5a7946de3907154a70b4799fb"
+    },
+    {
+      "id": "tile.edge_soil_stone_sw",
+      "type": "tile",
+      "file": "generated/tiles/edge_soil_stone_sw.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "3b723f593eeccc541e11d41641e2197ffa75f54f90bbbcf8a5d447485ce1dc8f"
+    },
+    {
+      "id": "tile.edge_soil_stone_sw_outer",
+      "type": "tile",
+      "file": "generated/tiles/edge_soil_stone_sw_outer.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "cd823bdf009fcdc8fceae530d058b3f4d205fd0adac17f029270754b3710e030"
+    },
+    {
+      "id": "tile.edge_grass_soil_n",
+      "type": "tile",
+      "file": "generated/tiles/edge_grass_soil_n.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "612fc6b97af67ea57f0e021333c57f1afed97007ee14a54ea83d0dfbacb003e4"
+    },
+    {
+      "id": "tile.edge_grass_soil_e",
+      "type": "tile",
+      "file": "generated/tiles/edge_grass_soil_e.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "48030cf5d887fb90ba81e75b323c79fe6655e4ebb9d5b693639fe96142f2dac2"
+    },
+    {
+      "id": "tile.edge_grass_soil_s",
+      "type": "tile",
+      "file": "generated/tiles/edge_grass_soil_s.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "25b984eafac62928911f40d34e9f4a2f92e40b457e082eaff68ee080ed16215e"
+    },
+    {
+      "id": "tile.edge_grass_soil_w",
+      "type": "tile",
+      "file": "generated/tiles/edge_grass_soil_w.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "2137de63b4fe2bbca03938bac26212a634a02c5f326f57e98c4b47c0b8d23ec1"
+    },
+    {
+      "id": "tile.edge_grass_soil_ne",
+      "type": "tile",
+      "file": "generated/tiles/edge_grass_soil_ne.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "056800725e2d057f2a51bd5b87739e98e43cd805875d7eeeba2822e35ffe9c76"
+    },
+    {
+      "id": "tile.edge_grass_soil_ne_outer",
+      "type": "tile",
+      "file": "generated/tiles/edge_grass_soil_ne_outer.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "2db907c9afdfc30b6b90cfd5ca7d056536d3a4b8e919c397d021caadf3e15181"
+    },
+    {
+      "id": "tile.edge_grass_soil_nw",
+      "type": "tile",
+      "file": "generated/tiles/edge_grass_soil_nw.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "1611289b2697a03f60e1bd93843460408259e5742a60303ee786cedd94b33ef3"
+    },
+    {
+      "id": "tile.edge_grass_soil_nw_outer",
+      "type": "tile",
+      "file": "generated/tiles/edge_grass_soil_nw_outer.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "34dcba65d20729101434b1b70fbad621ee0e2d5202c6fb2b33d8ee17d3ecc3e9"
+    },
+    {
+      "id": "tile.edge_grass_soil_se",
+      "type": "tile",
+      "file": "generated/tiles/edge_grass_soil_se.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "256b1ca439a5fd2cd76bb8f559e413870b79fc1f6c6e09a729230bb540402496"
+    },
+    {
+      "id": "tile.edge_grass_soil_se_outer",
+      "type": "tile",
+      "file": "generated/tiles/edge_grass_soil_se_outer.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "d4190bfdf5d613056f5149266fe23832b091b6866e8c81fccb672e59c34ef120"
+    },
+    {
+      "id": "tile.edge_grass_soil_sw",
+      "type": "tile",
+      "file": "generated/tiles/edge_grass_soil_sw.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "42cd117b777e88d90d73b548145ea5493a95b0b303a70e1535751d46093df817"
+    },
+    {
+      "id": "tile.edge_grass_soil_sw_outer",
+      "type": "tile",
+      "file": "generated/tiles/edge_grass_soil_sw_outer.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "e53305447ad296befa7cbdfe199bdcfa389273f3e6e2a66b827164387a993b97"
     },
     {
       "id": "icon.mint",
