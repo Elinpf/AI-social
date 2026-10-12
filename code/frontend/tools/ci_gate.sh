@@ -53,6 +53,13 @@ echo "  （校准条件：view=default · scale=1 · 960×720；日志 $IMMERSIO
 node frontend/tools/immersion_metrics.js --log "$IMMERSION_LOG"; imm_rc=$?
 [ "$imm_rc" -ne 0 ] && rc=1
 
+# T267 D 段：前端资产/常量「定义了却零引用」（睡着的资产）。含反向验证自检。
+echo "== [D] 睡着的资产核对：tools/check_inert_registry.py（D 段）=="
+python3 ../tools/check_inert_registry.py --self-test | sed 's/^/  /'
+python3 ../tools/check_inert_registry.py 2>&1 | sed -n '/\[D\]/,/^-\{10,\}/p' | sed 's/^/  /'
+python3 ../tools/check_inert_registry.py >/dev/null 2>&1; ir_rc=$?
+if [ "$ir_rc" -ne 0 ]; then echo "  → D 段红：棘轮不一致 / 自动枚举命中（详见上方 [D]）"; rc=1; else echo "  D 段 ok（含反向验证）"; fi
+
 echo
 case "$rc" in
   0) echo "CI GATE: PASS" ;;

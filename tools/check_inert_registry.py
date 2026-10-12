@@ -237,12 +237,176 @@ def auto_switches(policy_path: Path, code_dir: Path, exclude_parts: set[str]) ->
     return rows
 
 
+# ------------------------------------------------------------------ D. 前端资产/常量（定义↔引用）
+# 「睡着的资产」：一个资产/常量**定义了却零引用**（死帧 / 未接线素材）。案例：grassLight。
+# 与 A/B/C 同构：同入口/同退出码/同 JSON（只新增 `auto_assets` 键）。
+#
+# ⚠️ 两态纪律（Leader 采纳入锚定书）：JS 有**动态访问**（`TILES[k]`/`sprites[id]`/数字索引）
+#   → "名字搜不到" ≠ "没被引用"。故输出三态：
+#     referenced / zero_ref / dynamic_ref_unknown。**zero_ref 才可报警；后者只报"未知"。**
+# 只做**数据级**（映射表的键 vs 引用点）；**局部未用变量交 ESLint `no-unused-vars`**，本器不判。
+D_STATES = ("referenced", "zero_ref", "dynamic_ref_unknown")
+ASSET_MODULES = ("src/sprites.js",)   # 顶层资产映射所在（可扩展）
+# 值(id)引用：仅当 id ≥ 100（tile id 量级）才算，避免 0/1/2 这类结构下标刷屏。
+
+
+def _asset_defs(frontend_dir: Path) -> list[tuple[str, list, str, str]]:
+    """枚举顶层映射表键（值形如 `[271, 226, ...]`）→ [(key, [ids], 定义文件rel, 所属映射名)]。"""
+    out = []
+    for rel in ASSET_MODULES:
+        p = frontend_dir / rel
+        if not p.exists():
+            continue
+        text = p.read_text(encoding="utf-8")
+        for m in re.finditer(r"const\s+([A-Za-z_]\w*)\s*=\s*\{(.*?)\n\s*\};", text, re.S):
+            map_name = m.group(1)
+            for km in re.finditer(r"([A-Za-z_]\w*)\s*:\s*\[([0-9,\s]+)\]", m.group(2)):
+                ids = [int(x) for x in re.findall(r"\d+", km.group(2))]
+                out.append((km.group(1), ids, rel, map_name))
+    return out
+
+
+def _refs_asset(sym: str, ids: list, frontend_dir: Path, define_rel: str, map_name: str):
+    """返回 (refs_name, refs_value, dynamic_scope)。
+    名字=`.sym`/`'sym'`；值=id(≥100)字面量（定义文件除外）；
+    dynamic_scope **只对 sym 所属的映射 `map_name`** 的非字面量键访问为真（别的映射动态访问不影响本符号）。"""
+    rn: list[str] = []
+    rv: list[str] = []
+    dyn = False
+    name_re = re.compile(r"\." + re.escape(sym) + r"\b|[\"']" + re.escape(sym) + r"[\"']")
+    dyn_re = re.compile(r"\b" + re.escape(map_name) + r"\s*\[\s*[^\"'\]]")
+    # 值(id)命中需落在"瓦片消费"上下文，避免 id 在注释/坐标里被误当引用。
+    tile_ctx = re.compile(r"pick\(|slice\(|texture|Texture|Rectangle|frame")
+    for f in sorted(frontend_dir.rglob("*.js")):
+        rel = f.relative_to(frontend_dir).as_posix()
+        try:
+            lines = f.read_text(encoding="utf-8").splitlines()
+        except Exception:
+            continue
+        for i, raw in enumerate(lines, 1):
+            code = raw.split("//", 1)[0]           # 去掉行尾注释：注释不是"引用"
+            if not code.strip():
+                continue
+            if name_re.search(code):
+                rn.append(f"{rel}:{i}")
+            if rel != define_rel and tile_ctx.search(code):
+                for idv in ids:
+                    if idv >= 100 and re.search(r"\b" + str(idv) + r"\b", code):
+                        rv.append(f"{rel}:{i}:{idv}")
+            if dyn_re.search(code):
+                dyn = True
+    return rn, rv, dyn
+
+
+def d_state(name: str, value_ids: list, refs_name: list, refs_value: list, dynamic_scope: bool) -> str:
+    """资产/常量三态（与事件三态同构）：
+    - referenced: 名字命中 **或** 值(id)命中；
+    - zero_ref: 名字与值均零命中，**且**无动态索引（可确证零引用）；
+    - dynamic_ref_unknown: 零命中但存在动态索引 → **未知，绝不写 zero_ref**。"""
+    if refs_name or refs_value:
+        return "referenced"
+    return "dynamic_ref_unknown" if dynamic_scope else "zero_ref"
+
+
+def _load_asset_ratchet(frontend_dir: Path) -> dict:
+    """棘轮：`code/frontend/tools/inert_assets.json` 的 `entries`（显式声明 expected_status）。"""
+    p = frontend_dir / "tools" / "inert_assets.json"
+    if not p.exists():
+        return {}
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    return {e["name"]: e for e in data.get("entries", []) if e.get("name")}
+
+
+def auto_assets(frontend_dir: Path, include_auto: bool = True) -> list[dict]:
+    ratchet = _load_asset_ratchet(frontend_dir)
+    seen: set[str] = set()
+    rows: list[dict] = []
+    for name, ids, rel, map_name in (_asset_defs(frontend_dir) if include_auto else []):
+        seen.add(name)
+        rn, rv, dyn = _refs_asset(name, ids, frontend_dir, rel, map_name)
+        st = d_state(name, ids, rn, rv, dyn)
+        e = ratchet.get(name, {})
+        exp = e.get("expected_status")
+        rows.append({
+            "name": name, "kind": "asset", "status": st,
+            "defined_in": "code/frontend/" + rel, "value_ids": ids,
+            "refs_name": rn[:3], "refs_value": rv[:3], "dynamic_scope": dyn,
+            "hits": (rn or rv)[:3],
+            "expected_status": exp, "expected_ok": (exp == st) if exp else None,
+            "purpose": e.get("purpose"), "owner": e.get("owner"),
+        })
+    for name, e in ratchet.items():   # 棘轮里但未被自动枚举：报出来（可能名字/路径变了）
+        if name in seen:
+            continue
+        exp = e.get("expected_status")
+        rows.append({
+            "name": name, "kind": "asset", "status": "-", "defined_in": e.get("defined_in"),
+            "value_ids": [], "refs_name": [], "refs_value": [], "dynamic_scope": None, "hits": [],
+            "expected_status": exp, "expected_ok": None, "purpose": e.get("purpose"), "owner": e.get("owner"),
+            "note": "棘轮条目未被自动枚举（查名字/路径；--no-auto 下正常）",
+        })
+    return rows
+
+
+def _self_test() -> int:
+    """反向验证（写死）：用 grassLight 的三种接线状态造夹具，断言三态判据**能报红**。
+    一个只会报"绿"的核对器没有价值；能对"未接线"报 zero_ref 的才算判据。"""
+    import tempfile
+    ok = True
+    sp = "const TILES = {\n  grassLight: [745, 1015],\n};\n"
+    cases = [
+        ("未接线 → zero_ref", sp, "const x = 1;\n", "zero_ref"),
+        ("已接线(town.js 具名) → referenced", sp, "const g = W.TILES.grassLight;\n", "referenced"),
+        ("动态键访问 → dynamic_ref_unknown", sp, "const g = TILES[k];\n", "dynamic_ref_unknown"),
+        ("动态键访问(普通下标不算)", sp, "const r = road[ty][tx];\n", "zero_ref"),
+    ]
+    for label, s, t, expect in cases:
+        d = Path(tempfile.mkdtemp())
+        (d / "src").mkdir()
+        (d / "tools").mkdir()
+        (d / "src" / "sprites.js").write_text(s, encoding="utf-8")
+        (d / "src" / "town.js").write_text(t, encoding="utf-8")
+        got = next((r["status"] for r in auto_assets(d) if r["name"] == "grassLight"), None)
+        mark = "OK" if got == expect else "FAIL"
+        ok = ok and got == expect
+        print(f"  [{mark}] {label}: got={got} expect={expect}")
+
+    # 真实资产复现（对齐验收原文）：用真 sprites.js；town.js 去掉/保留 grassLight 引用
+    real = ROOT / "code" / "frontend" / "src"
+    if (real / "sprites.js").exists() and (real / "town.js").exists():
+        sp_real = (real / "sprites.js").read_text(encoding="utf-8")
+        town_real = (real / "town.js").read_text(encoding="utf-8")
+        town_nowire = "\n".join(ln for ln in town_real.splitlines() if "grassLight" not in ln)
+        for label, town_src, expect in [
+            ("真实 assets · town.js 去掉 grassLight 引用 → zero_ref", town_nowire, "zero_ref"),
+            ("真实 assets · town.js 原样(已接线) → referenced", town_real, "referenced"),
+        ]:
+            d = Path(tempfile.mkdtemp())
+            (d / "src").mkdir()
+            (d / "tools").mkdir()
+            (d / "src" / "sprites.js").write_text(sp_real, encoding="utf-8")
+            (d / "src" / "town.js").write_text(town_src, encoding="utf-8")
+            got = next((r["status"] for r in auto_assets(d) if r["name"] == "grassLight"), None)
+            mark = "OK" if got == expect else "FAIL"
+            ok = ok and got == expect
+            print(f"  [{mark}] {label}: got={got} expect={expect}")
+    return 0 if ok else 1
+
+
 # ------------------------------------------------------------------ main
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--no-auto", action="store_true")
+    ap.add_argument("--self-test", action="store_true", help="D 段反向验证（夹具断言三态判据）")
     args = ap.parse_args()
+
+    if args.self_test:
+        print("D 段反向验证（grassLight 三态）：")
+        return _self_test()
 
     reg = _load_registry()
     code_dir = ROOT / reg.get("scan_root", "code")
@@ -252,6 +416,8 @@ def main() -> int:
     mism = [r for r in manual if r["expected_ok"] is False]
     ev = [] if args.no_auto else auto_events(code_dir, exclude)
     sw = [] if args.no_auto else auto_switches(code_dir / "config" / "policy.json", code_dir, exclude)
+    ass = auto_assets(ROOT / "code" / "frontend", include_auto=not args.no_auto)
+    asset_mism = [r for r in ass if r.get("expected_ok") is False]
     # 对自动事件附「三分类」（Leader 裁决：reserved / missing_wiring / deprecated）
     cls_map = reg.get("auto_event_classification", {})
     for r in ev:
@@ -262,9 +428,9 @@ def main() -> int:
     if args.json:
         print(json.dumps({
             "manual": manual, "mismatches": [r["name"] for r in mism],
-            "auto_events": ev, "auto_switches": sw,
+            "auto_events": ev, "auto_switches": sw, "auto_assets": ass,
         }, ensure_ascii=False, indent=2))
-        return 1 if mism else 0
+        return 1 if (mism or asset_mism) else 0
 
     W = 78
     print("=" * W)
@@ -313,9 +479,31 @@ def main() -> int:
         for r in sw:
             print(f"  - {r['name']:<28} {r['status']}")
 
+    if ass:
+        n_zero = sum(1 for r in ass if r["status"] == "zero_ref")
+        n_unk = sum(1 for r in ass if r["status"] == "dynamic_ref_unknown")
+        n_ref = sum(1 for r in ass if r["status"] == "referenced")
+        print("-" * W)
+        print(f"[D] 自动枚举 · 前端资产/常量（定义↔引用）：共 {len(ass)}"
+              f"  referenced={n_ref} zero_ref={n_zero} dynamic_ref_unknown={n_unk}")
+        print("    三态纪律：zero_ref 才可报警；dynamic_ref_unknown **只报未知**（动态键访问，不得写成 zero_ref）")
+        for r in ass:
+            exp = r.get("expected_status")
+            mark = "" if r.get("expected_ok") is None else (" OK" if r["expected_ok"] else " MISMATCH")
+            print(f"  - {r['name']:<22} {r['status']:<20} ids={r['value_ids']} "
+                  f"dyn={r['dynamic_scope']} hits={r['hits'] or '-'}"
+                  + (f" 期望 {exp}->{mark}" if exp else ""))
+            if r.get("purpose"):
+                print(f"      用途: {r['purpose']}")
+            if r.get("note"):
+                print(f"      ⚠ {r['note']}")
+        if asset_mism:
+            print(f"  棘轮不一致 {len(asset_mism)}：{', '.join(r['name'] for r in asset_mism)}"
+                  f"（接线状态变了但 expected_status 未同步）")
+
     print("-" * W)
     print("盲区：静态扫描不保证运行时真产生 -> 重大条目叠加 `grep '\"type\":\"XXX\"' <LOG>`。")
-    return 1 if mism else 0
+    return 1 if (mism or asset_mism) else 0
 
 
 if __name__ == "__main__":

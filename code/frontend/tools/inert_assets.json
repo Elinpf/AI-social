@@ -4,5 +4,23 @@
   "gate_pass": {
     "pass": true,
     "count": 0
-  }
+  },
+  "_comment": "棘轮条目：D 段（T267）读取本文件的 entries 做 expected_status 比对；接线状态变化而此处未同步 = 红（非 bug，是棘轮本义）。每条须写 purpose（该键的语义用途，不靠名字匹配）。",
+  "entries": [
+    {
+      "name": "grassLight",
+      "defined_in": "code/frontend/src/sprites.js",
+      "expected_status": "referenced",
+      "purpose": "AI Town tileset 亮绿草地 tile id（低频色斑点缀）；渲染于 town.js 无缝草地层，用 W.TILES.grassLight 取 id 后经 W.pick 选 tile",
+      "owner": "art-director/pixel-asset-artist",
+      "note": "T258e 曾因未接线（glight 零使用）而 'sleeping'，AD 已在 town.js:425 真接线"
+    },
+    {
+      "name": "grass",
+      "defined_in": "code/frontend/src/sprites.js",
+      "expected_status": "referenced",
+      "purpose": "AI Town tileset 主草地 tile id（271 为主、无缝）；town.js 无缝草地层主色底",
+      "owner": "art-director/pixel-asset-artist"
+    }
+  ]
 }
