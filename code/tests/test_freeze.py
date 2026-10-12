@@ -14,6 +14,7 @@
 
 from __future__ import annotations
 
+import math
 import os
 import sys
 import tempfile
@@ -737,6 +738,79 @@ class FreezeLayerTest(unittest.TestCase):
         self.assertEqual(captured["body"]["chat_template_kwargs"], {"thinking": False})
         prov.complete(system="s", user="u", extra={"purpose": "judge", "thinking": True})
         self.assertEqual(captured["body"]["chat_template_kwargs"], {"thinking": True})
+
+    # ------------------------------------------------------------------ #
+    # T222：judge_discriminative（受限选择 + thinking=false + margin）
+    # ------------------------------------------------------------------ #
+    def test_judge_discriminative_end_to_end(self) -> None:
+        provider = MockProvider()
+        run = LLMClient(make_config(self.tmp), provider=provider, event_log=EventLog())
+        fj = run.judge_discriminative(
+            judgment_id="DJ-1", dimension="mentor_relation", question_ref="q.mentor.v1",
+            envelope={"options": ["formed", "not_formed"], "threshold": 0.5, "rng_branch": "b0"},
+            context={"a": "alice", "b": "bob"}, rng_branch="b0", parties=["alice", "bob"],
+        )
+        self.assertIn(fj.decision, ["formed", "not_formed"])
+        self.assertIsNotNone(fj.margin)          # 回传候选分差
+        self.assertIsNotNone(fj.label_probs)
+        # LLM_JUDGMENT：四要素 + margin（只增不改）
+        ev = run.event_log.of_type("LLM_JUDGMENT")[-1]["payload"]
+        self.assertIs(ev["frozen"], True)
+        self.assertEqual(ev["model"], provider.model)
+        self.assertTrue(ev["context_digest"])
+        self.assertIn("margin", ev)
+        # thinking=false（判别式路径）
+        call = run.event_log.of_type("LLM_CALL")[-1]["payload"]
+        self.assertEqual(call["purpose"], "judge")
+        self.assertIs(call["thinking"], False)
+
+        # 重放：读冻结判定，零 LLM 调用
+        replay = LLMClient(make_config(self.tmp, mode=Mode.REPLAY),
+                           provider=MockProvider(), event_log=EventLog())
+        fj2 = replay.judge_discriminative(
+            judgment_id="DJ-1", dimension="mentor_relation", question_ref="q.mentor.v1",
+            envelope={"options": ["formed", "not_formed"]}, context={},
+        )
+        self.assertEqual(fj2.decision, fj.decision)
+        self.assertEqual(replay.llm_calls, 0)
+
+    def test_judge_discriminative_invalid_raises(self) -> None:
+        provider = MockProvider(responder=lambda s, u, e: "nonsense")
+        run = LLMClient(make_config(self.tmp), provider=provider, event_log=EventLog())
+        with self.assertRaises(InvalidDecisionError):
+            run.judge_discriminative(
+                judgment_id="DJ-bad", dimension="d", question_ref="q",
+                envelope={"options": ["formed", "not_formed"]}, context={"x": 1},
+            )
+        self.assertTrue(run.event_log.of_type("SYSTEM_ERROR"))
+
+    def test_judge_discriminative_method_optional(self) -> None:
+        run = LLMClient(make_config(self.tmp), provider=MockProvider(), event_log=EventLog())
+        run.judge_discriminative(
+            judgment_id="DJ-m", dimension="d", question_ref="q",
+            envelope={"options": ["formed", "not_formed"]}, context={},
+            method="discriminative",
+        )
+        ev = run.event_log.of_type("LLM_JUDGMENT")[-1]["payload"]
+        self.assertEqual(ev.get("method"), "discriminative")
+        # 不传 method → 不加字段
+        run.judge_discriminative(
+            judgment_id="DJ-m2", dimension="d", question_ref="q",
+            envelope={"options": ["formed", "not_formed"]}, context={"y": 2},
+        )
+        ev2 = run.event_log.of_type("LLM_JUDGMENT")[-1]["payload"]
+        self.assertNotIn("method", ev2)
+
+    def test_option_probs_helper(self) -> None:
+        from freeze.llm_client import LLMClient as _C
+
+        lp = {"content": [{"token": "formed", "logprob": math.log(0.9),
+                           "top_logprobs": [{"token": "formed", "logprob": math.log(0.9)},
+                                            {"token": "not_formed", "logprob": math.log(0.1)}]}]}
+        probs = _C._option_probs(lp, ["formed", "not_formed"])
+        self.assertAlmostEqual(probs["formed"], 0.9, places=6)
+        self.assertAlmostEqual(probs["not_formed"], 0.1, places=6)
+        self.assertIsNone(_C._option_probs(None, ["formed"]))
 
 
 if __name__ == "__main__":

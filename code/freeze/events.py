@@ -167,14 +167,18 @@ def llm_judgment_payload(
     context_ref: Optional[str] = None,
     effect_ref: Optional[int] = None,
     frozen: bool = True,
+    confidence: Optional[float] = None,
+    margin: Optional[float] = None,
+    method: Optional[str] = None,
 ) -> Dict[str, Any]:
     """``LLM_JUDGMENT`` 载荷——强制四要素：decision/model/context_digest/frozen。
 
     frozen 恒为 True；若调用方传入 False 将直接报错（冻结语义不可协商）。
+    可选：`confidence`/`margin`（判别式路径）、`method`（由调用方传入，freeze 不推断语义）。
     """
     if frozen is not True:
         raise ValueError("LLM_JUDGMENT.frozen 必须为 True（冻结语义）")
-    return {
+    payload = {
         "judgment_id": judgment_id,
         "parties": list(parties),
         "dimension": dimension,
@@ -190,6 +194,13 @@ def llm_judgment_payload(
         "frozen": True,
         "effect_ref": effect_ref,
     }
+    if confidence is not None:
+        payload["confidence"] = float(confidence)
+    if margin is not None:
+        payload["margin"] = float(margin)
+    if method is not None:
+        payload["method"] = str(method)
+    return payload
 
 
 def narrative_payload(

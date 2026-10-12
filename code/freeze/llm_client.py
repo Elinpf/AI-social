@@ -30,6 +30,7 @@
 
 from __future__ import annotations
 
+import math
 import re
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional
@@ -77,6 +78,8 @@ class LLMResponse:
     tokens_in: int = 0
     tokens_out: int = 0
     provider: str = ""
+    #: 可空：判别式路径的 `choices[0].logprobs`（用于取候选分差 margin）。
+    logprobs: Optional[Dict[str, Any]] = None
 
 
 @dataclass
@@ -94,6 +97,9 @@ class FrozenJudgment:
     question_ref: str
     envelope: Dict[str, Any]
     effect_ref: Optional[int] = None
+    #: 可空：判别式路径的候选分差（top1−top2）与标签概率分布。
+    margin: Optional[float] = None
+    label_probs: Optional[Dict[str, float]] = None
     event: Optional[Dict[str, Any]] = None
 
 
@@ -231,6 +237,8 @@ class LLMClient:
         meta: Optional[Dict[str, Any]] = None,
         thinking: Optional[bool] = None,
         options: Optional[List[str]] = None,
+        logprobs: bool = False,
+        top_logprobs: Optional[int] = None,
     ) -> LLMResponse:
         """统一补全入口（首跑落盘 / 重放零调用）。"""
         assert_purpose_allowed(purpose)
@@ -248,6 +256,8 @@ class LLMClient:
             "max_tokens": max_tokens,
             "response_format": response_format,
             "thinking": eff_thinking,
+            "logprobs": bool(logprobs),
+            "top_logprobs": top_logprobs,
         }
         prompt_hash = self._prompt_hash(system, user, params, messages)
         requested_model = self._resolve_model(model, tier)
@@ -290,6 +300,7 @@ class LLMClient:
                 tokens_in=hit.get("tokens_in", 0),
                 tokens_out=hit.get("tokens_out", 0),
                 provider=hit.get("provider", ""),
+                logprobs=hit.get("logprobs"),
             )
 
         # ---- 未命中：重放模式一律报错，绝不回退真实调用 ---- #
@@ -360,7 +371,8 @@ class LLMClient:
             max_tokens=max_tokens,
             tier=eff_tier.value,
             extra={"purpose": purpose, "response_format": response_format,
-                   "thinking": eff_thinking, "options": options},
+                   "thinking": eff_thinking, "options": options,
+                   "logprobs": bool(logprobs), "top_logprobs": top_logprobs},
         )
         self.llm_calls += 1
         if self.budget is not None:
@@ -377,6 +389,7 @@ class LLMClient:
             "tokens_in": resp.tokens_in,
             "tokens_out": resp.tokens_out,
             "thinking": eff_thinking,
+            "logprobs": getattr(resp, "logprobs", None),
         }
         self.store.put_response(cache_key, record)
         self._emit_call(
@@ -407,6 +420,7 @@ class LLMClient:
             tokens_in=resp.tokens_in,
             tokens_out=resp.tokens_out,
             provider=getattr(self.provider, "name", ""),
+            logprobs=getattr(resp, "logprobs", None),
         )
 
     # ------------------------------------------------------------------ #
@@ -596,6 +610,178 @@ class LLMClient:
         )
 
     @staticmethod
+    def _option_probs(logprobs: Optional[Dict[str, Any]], options: List[str]) -> Optional[Dict[str, float]]:
+        """从 provider 的 `choices[0].logprobs` 取候选标签的概率分布（归一化到 options）。"""
+        if not logprobs or not isinstance(logprobs, dict):
+            return None
+        content = logprobs.get("content")
+        if not content:
+            return None
+
+        def _norm(s: Any) -> str:
+            return re.sub(r"[^a-z0-9]", "", str(s).lower())
+
+        for tok in content:
+            probs: Dict[str, float] = {}
+            nv = _norm(tok.get("token"))
+            for o in options:
+                if nv == _norm(o) and tok.get("logprob") is not None:
+                    probs[o] = math.exp(float(tok["logprob"]))
+            for t in (tok.get("top_logprobs") or []):
+                for o in options:
+                    if _norm(t.get("token")) == _norm(o) and t.get("logprob") is not None:
+                        probs[o] = max(probs.get(o, 0.0), math.exp(float(t["logprob"])))
+            if probs:
+                tot = sum(probs.values()) or 1.0
+                return {o: probs[o] / tot for o in probs}
+        return None
+
+    def judge_discriminative(
+        self,
+        *,
+        judgment_id: str,
+        dimension: str,
+        question_ref: str,
+        envelope: Dict[str, Any],
+        context: Dict[str, Any],
+        rng_branch: Any = None,
+        parties: Optional[List[str]] = None,
+        created_round: int = 0,
+        phase: int = 2,
+        round: Optional[int] = None,
+        model: Optional[str] = None,
+        context_ref: Optional[str] = None,
+        effect_ref: Optional[int] = None,
+        top_logprobs: Optional[int] = None,
+        method: Optional[str] = None,
+    ) -> FrozenJudgment:
+        """**判别式软判定**（受限选择 + `thinking=false`，T222 的 provider 支撑路径）。
+
+        与 :meth:`judge` 对齐的签名；差异：
+        - 强制 `response_format=json_schema(enum=envelope.options)`，即**受限选择**；
+        - `thinking=false`（求快；端点判别式路径 `reasoning=0`）；
+        - 请求 `logprobs`，回传 **`margin`（top1−top2）** 与可选 `label_probs`；
+        - `LLM_JUDGMENT` **四要素只增不改**，另加可选 `confidence`/`margin`（+ 调用方传入的 `method`）；
+        - **非法/拒答/解析失败 → 抛 `InvalidDecisionError`**（不吞；交调用方回退）。
+        重放模式直接读冻结判定（IF-6），**零 LLM 调用**。
+        """
+        round = created_round if round is None else round
+        if self.is_replay:
+            return self.get_frozen_judgment(judgment_id)
+
+        parties = list(parties or [])
+        options = list(envelope.get("options") or [])
+        if not options:
+            raise ValueError("judge_discriminative 需要 envelope.options（受限候选）")
+        context_digest = digest(context)
+        system = (
+            "你是社会仿真中的【软判定层】。只做定性社会判断，只输出一个标签，"
+            "必须严格选自给定选项，不产出任何金额/死亡/结算数字。"
+        )
+        user = canonical_json(
+            {
+                "question_ref": question_ref,
+                "dimension": dimension,
+                "parties": parties,
+                "envelope": envelope,
+                "rng_branch": rng_branch,
+                "context": context,
+            }
+        )
+        schema = {
+            "type": "json_schema",
+            "json_schema": {
+                "name": "judgment",
+                "schema": {
+                    "type": "object",
+                    "properties": {"label": {"type": "string", "enum": options}},
+                    "required": ["label"],
+                    "additionalProperties": False,
+                },
+            },
+        }
+        k = top_logprobs if top_logprobs is not None else max(2, min(len(options), 8))
+        resp = self.complete(
+            purpose="judge",
+            system=system,
+            user=user,
+            tier=Tier.T1,
+            thinking=False,
+            response_format=schema,
+            options=options,
+            logprobs=True,
+            top_logprobs=k,
+            model=model,
+            round=round,
+            phase=phase,
+            meta={"judgment_id": judgment_id, "dimension": dimension, "method": method or "discriminative"},
+        )
+        decision = self._normalize_decision(resp.text, options)
+        if decision not in options:
+            self.event_log.append(
+                "SYSTEM_ERROR",
+                {"kind": "invalid_judgment_decision", "judgment_id": judgment_id,
+                 "decision": decision, "options": options, "path": "discriminative"},
+                round=round, phase=phase,
+            )
+            raise InvalidDecisionError(
+                f"判定 {decision!r} 不在 envelope.options={options} 内"
+            )
+
+        label_probs = self._option_probs(resp.logprobs, options)
+        confidence = label_probs.get(decision) if label_probs else None
+        margin = None
+        if label_probs and len(label_probs) >= 2:
+            vs = sorted(label_probs.values(), reverse=True)
+            margin = float(f"{vs[0] - vs[1]:.6f}")
+
+        payload = llm_judgment_payload(
+            judgment_id=judgment_id,
+            decision=decision,
+            model=resp.model,
+            context_digest=context_digest,
+            prompt_hash=resp.prompt_hash,
+            envelope=envelope,
+            rng_branch=rng_branch,
+            parties=parties,
+            dimension=dimension,
+            question_ref=question_ref,
+            created_round=created_round,
+            context_ref=context_ref,
+            effect_ref=effect_ref,
+            frozen=True,
+            confidence=confidence,
+            margin=margin,
+            method=method,
+        )
+        event = self.event_log.append(
+            "LLM_JUDGMENT", payload,
+            actor=parties[0] if parties else "SYSTEM", round=round, phase=phase,
+        )
+        record = dict(payload)
+        record["cache_key"] = resp.cache_key
+        record["seq"] = event["seq"]
+        self.store.put_judgment(judgment_id, record)
+        self._emit_audit("LLM_JUDGMENT", payload, round, phase)
+
+        return FrozenJudgment(
+            judgment_id=judgment_id,
+            decision=decision,
+            model=resp.model,
+            context_digest=context_digest,
+            frozen=True,
+            prompt_hash=resp.prompt_hash,
+            parties=parties,
+            dimension=dimension,
+            question_ref=question_ref,
+            envelope=envelope,
+            effect_ref=effect_ref,
+            margin=margin,
+            label_probs=label_probs,
+            event=event,
+        )
+
+    @staticmethod
     def _normalize_decision(text: str, options: Optional[List[Any]]) -> str:
         """把模型原始输出归一到某个 option。
 
@@ -641,6 +827,7 @@ class LLMClient:
             question_ref=rec.get("question_ref", ""),
             envelope=rec.get("envelope", {}),
             effect_ref=rec.get("effect_ref"),
+            margin=rec.get("margin"),
         )
 
     # ================================================================== #

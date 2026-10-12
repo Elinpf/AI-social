@@ -13,6 +13,7 @@
 from __future__ import annotations
 
 import json
+import math
 import time
 import urllib.error
 import urllib.request
@@ -33,6 +34,8 @@ class ProviderResponse:
     tokens_in: int = 0
     tokens_out: int = 0
     raw: Dict[str, Any] = field(default_factory=dict)
+    #: 可空：判别式路径的 `choices[0].logprobs`（含 content/top_logprobs），用于取候选分差 margin。
+    logprobs: Optional[Dict[str, Any]] = None
 
 
 class Provider(Protocol):
@@ -105,20 +108,38 @@ class MockProvider:
         self.calls += 1
         self.last_prompts.append(user)
         resolved = model or self.model_by_tier.get(tier) or self.model
-        opts = (extra or {}).get("options")
+        extra = extra or {}
+        opts = extra.get("options")
         if self.responder is not None:
-            text = self.responder(system, user, extra or {})
+            text = self.responder(system, user, extra)
         elif opts:
             # 软判定：**确定性地**从 envelope.options 中选一个（保证 decision ∈ options、可复现）。
             h = int(sha256_hex(system + "\x00" + user)[:16], 16)
             text = str(opts[h % len(opts)])
         else:
             text = f"mock::{sha256_hex(system + '\x00' + user)[:16]}"
+
+        logprobs = None
+        if extra.get("logprobs"):
+            # 合成确定性 logprobs：被选 label 高概率，其余选项按序递减，取 top-2 分差。
+            cand = list(opts) if opts else [text]
+            chosen = text if text in cand else cand[0]
+            base = 0.90
+            lps = []
+            for i, o in enumerate(cand):
+                lps.append({"token": str(o), "logprob": math.log(max(base - i * 0.2, 0.01))})
+            # content：被选 token 带 top_logprobs
+            top = [{"token": str(o), "logprob": math.log(max(base - i * 0.2, 0.01))}
+                   for i, o in enumerate(cand)]
+            logprobs = {"content": [{"token": chosen,
+                                     "logprob": math.log(max(base - cand.index(chosen) * 0.2, 0.01)),
+                                     "top_logprobs": top}]}
         return ProviderResponse(
             text=text,
             model=resolved,
             tokens_in=self.tokens,
             tokens_out=self.tokens,
+            logprobs=logprobs,
         )
 
     def embed(self, text: str, *, model: Optional[str] = None) -> List[float]:
@@ -227,6 +248,11 @@ class OpenAICompatProvider:
             # 用户要求：按 purpose/tier 控制 thinking（由冻结层 config 集中裁决后传入）。
             if extra.get("thinking") is not None:
                 body["chat_template_kwargs"] = {"thinking": bool(extra["thinking"])}
+            # 判别式路径：请求 per-token logprobs，用于候选分差 margin。
+            if extra.get("logprobs"):
+                body["logprobs"] = True
+                if extra.get("top_logprobs"):
+                    body["top_logprobs"] = int(extra["top_logprobs"])
         data = self._post("/chat/completions", body)
         choice = (data.get("choices") or [{}])[0]
         text = (choice.get("message") or {}).get("content", "")
@@ -237,6 +263,7 @@ class OpenAICompatProvider:
             tokens_in=int(usage.get("prompt_tokens", 0)),
             tokens_out=int(usage.get("completion_tokens", 0)),
             raw=data,
+            logprobs=choice.get("logprobs"),
         )
 
     def embed(self, text: str, *, model: Optional[str] = None) -> List[float]:

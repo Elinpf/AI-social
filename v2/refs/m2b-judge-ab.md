@@ -33,6 +33,18 @@
 - **取数口径（obs）**：可空字段各自剔除并计数——`agreement_N` / `ece_N` / `gap_N` 单列；`certain` 作真值可信度开关；门禁 ECE 只取 `certain & constructed` 子集。
 - **指标一律调 `obs.calibration`**（`agreement_rate` / `calibration_report` / `score_gap_analysis`），**不自写第二份 ECE**。
 
+### 1.1 维度名映射（**同名不同义**入口，务必看）
+
+T212 的维度名是**探针脚本自定的样本分组标签**，映射如下：
+
+| T212 维度名 | life/obs 正式维度？ | 说明 |
+|---|---|---|
+| `mentor_relation` | ✅ **已登记** | `config/activity_templates.json`（`soft_judgment.dimension`）+ `obs/params.py::SOFT_JUDGMENT_DIMENSIONS` 首位；**life 无对应 `LLM_JUDGMENT` 调用点**＝"已登记、未接线" |
+| `reputation` | ❌ **无** | `config/ obs/ life/` 无登记/调用点（仅 `v1.2/01` 等文档提及）→ **T212 内部标签** |
+| `trust` | ⚠️ **部分** | life 有 `trust` **数值关系维**（`[W_MIN,W_MAX]`），但本集用**二元 `increased/decreased`** → **T212 内部标签，非该维语义** |
+
+> ⚠️ **下游注意**：Leader 据此下的「`mentor_relation` 维加规则兜底」指令，针对的是**已登记但 life 无调用点**的维度——**接线后才生效**；`reputation`/`trust` 的结论只适用于 T212 内部标签，**不得直接映射到 life**。
+
 ---
 
 ## 2. 数字
@@ -69,6 +81,7 @@
 - **可靠性图：仅 1 个非空档**（0.9–1.0，count=81，avg_conf=0.997，acc=1.0）；
 - `tiered`：`n_nonempty_tiers=1`、`monotonic=true`（**平凡成立**）、`top_minus_bottom=0.0`；
 - `confidence_fallback_allowed = true`（因 ECE≤0.05）——**但这是退化判据**（单档、无负例），**不足以支撑校准结论**；
+  > 独立复算（obs-stats-dev）：**obs 门 `evidence_sufficient=False`**（`n=81,n_pos=81,n_neg=0,tiers=1` → `allowed=False`）——commit `3645e08`；与本节结论一致。
 - **分差相关性（`score_gap_analysis`）：不可测**（门禁集无错误样本 → 无正负类）→ 【未验证】。
 - 分维度准确率（B vs 真值）：mentor_relation 27/27=1.0、reputation 54/54=1.0；**trust 0**（certain 项 confidence 提取失败，未纳入）。
 
