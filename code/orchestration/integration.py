@@ -257,9 +257,12 @@ class KernelAdapter:
         # PERCEPTION_SCOPE 以引擎 config 为 canonical 真源；life 常量仅作回退
         try:
             from engine.perceive import load_perception_scope
-            self._scope_table = load_perception_scope().get("scope", {})
+            _s = load_perception_scope()
+            self._scope_table = _s.get("scope", {})
+            self._default_cls = _s.get("default_visibility_class", "place_local")
         except Exception:
             self._scope_table = {}
+            self._default_cls = "place_local"
         self._social = _load_social_cfg()
         self._permit_round = None
         self._permits = None  # None=未启用（全许可）；set=本回合允许调 LLM 的 agent
@@ -284,40 +287,16 @@ class KernelAdapter:
         a = st.ensure_agent(agent_id)
         r = st.round
         loc = a.get("location", "residence")
-        visible = []
-        for ev in self.engine.ledger.records:
-            if ev["round"] < r - self.VISIBLE_WINDOW_ROUNDS:
-                continue
-            p = ev.get("payload", {})
-            vis = self._visibility(ev["type"])
-            # 定向要约分档（关键契约）：OFFER_CREATED.to==[] -> global（广播）；to 非空 -> private（仅名单可见）
-            if ev["type"] == "OFFER_CREATED":
-                vis = "global" if not (p.get("to") or []) else "private"
-            if vis == "global":
-                ok = True
-            elif vis == "place_local":
-                ok = (p.get("place") == loc)
-            elif vis == "private":
-                ok = (agent_id in (p.get("from"), p.get("to"))
-                      or agent_id in (p.get("to") or [])
-                      or p.get("agent_id") == agent_id
-                      or p.get("observer") == agent_id or ev.get("actor") == agent_id)
-            elif vis == "subject_only":
-                ok = (p.get("agent_id") == agent_id or p.get("observer") == agent_id
-                      or ev.get("actor") == agent_id)
-            elif vis == "participants_only":
-                ok = agent_id in (p.get("participants") or []) or agent_id in (
-                    p.get("from"), p.get("to"), ev.get("actor"))
-            elif vis == "members":
-                gid = p.get("group_id")
-                ok = gid is not None and agent_id in self._members(gid)
-            else:
-                ok = (ev.get("actor") == agent_id)
-            if not ok:
-                continue
-            visible.append(EventView(seq=ev["seq"], round=ev["round"], phase=ev["phase"],
-                                     actor=ev["actor"], type=ev["type"], payload=p,
-                                     place=p.get("place")))
+        # T264：可见性委托**唯一真源** `contracts.visibility`（与 engine/life 同源）
+        from contracts.visibility import visible_events as _ve
+        recs = _ve(self.engine.ledger.records, agent_id, r,
+                   scope_table=self._scope_table, default_cls=self._default_cls,
+                   window_rounds=self.VISIBLE_WINDOW_ROUNDS, location=loc)
+        visible = [EventView(seq=ev["seq"], round=ev["round"], phase=ev["phase"],
+                             actor=ev["actor"], type=ev["type"],
+                             payload=ev.get("payload", {}),
+                             place=ev.get("payload", {}).get("place"))
+                   for ev in recs]
         memrefs = tuple(MemoryRef(
             mem_id=m["mem_id"], kind=m["kind"], body_ref=m["body_ref"], embed_ref=m["embed_ref"],
             importance=int(m["importance"]), day=int(m["day"]), slot=m["slot"],

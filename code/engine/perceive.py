@@ -39,41 +39,17 @@ def location_of(records: list, agent_id: str, upto_round: int) -> str:
 
 
 def visible_events(records: list, agent_id: str, upto_round: int, config: dict | None = None) -> list:
+    """T264：选择委托**唯一真源** `contracts.visibility`；仍返回 dict 投影（保持本模块对外契约）。"""
+    from contracts.visibility import visible_events as _ve
     scope = load_perception_scope()
-    table = scope.get("scope", {})
-    default_cls = scope.get("default_visibility_class", "place_local")
-    loc = location_of(records, agent_id, upto_round)
-    out = []
-    for rec in records:
-        if rec["round"] > upto_round:
-            break
-        cls = table.get(rec["type"], default_cls)
-        p = rec.get("payload", {})
-        if rec["type"] == "OFFER_CREATED":  # 定向要约分档：to==[] -> global；to 非空 -> private
-            cls = "global" if not (p.get("to") or []) else "private"
-        if cls == "global":
-            ok = True
-        elif cls == "place_local":
-            ok = (p.get("place") == loc)
-        elif cls == "private":
-            ok = (agent_id in (p.get("from"), p.get("to"))
-                  or agent_id in (p.get("to") or []))
-        elif cls == "participants_only":
-            ok = agent_id in (p.get("participants") or []) or agent_id in (p.get("from"), p.get("to"), p.get("actor"))
-        elif cls == "subject_only":
-            ok = (agent_id in (p.get("agent_id"), p.get("observer"), p.get("from"))
-                  or rec["actor"] == agent_id)
-        elif cls == "members":
-            ok = (agent_id in (p.get("members") or []) or rec["actor"] == agent_id)
-        else:
-            ok = False
-        if ok:
-            out.append({
-                "seq": rec["seq"], "round": rec["round"], "phase": rec["phase"],
-                "actor": rec["actor"], "type": rec["type"],
-                "payload": p, "place": p.get("place"),
-            })
-    return out
+    recs = _ve(records, agent_id, upto_round,
+               scope_table=scope.get("scope", {}),
+               default_cls=scope.get("default_visibility_class", "place_local"))
+    return [{
+        "seq": r["seq"], "round": r["round"], "phase": r["phase"],
+        "actor": r["actor"], "type": r["type"],
+        "payload": r.get("payload", {}), "place": r.get("payload", {}).get("place"),
+    } for r in recs]
 
 
 def memory_refs(records: list, agent_id: str, upto_round: int) -> list:

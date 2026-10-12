@@ -8,49 +8,18 @@ test-double kernel and mirrors `engine.perceive.visible_events`.
 from __future__ import annotations
 
 from . import constants as C
+# T264：委托**唯一真源** `contracts.visibility`（与 engine/adapter 同源，杜绝漂移）
+from contracts.visibility import location_of as _loc, visible_events as _ve
 
 
 def location_of(records: list, agent_id: str, upto_round: int,
                 initial: str = "residence") -> str:
-    loc = initial
-    for rec in records:
-        if rec["round"] > upto_round:
-            break
-        if rec["type"] in ("PLACE_MOVE", "PLACE_ARRIVED"):
-            p = rec.get("payload", {})
-            if p.get("agent_id") == agent_id:
-                loc = p.get("to_place") or p.get("place") or loc
-    return loc
-
-
-def _visible(cls: str, agent_id: str, actor: str, p: dict, loc: str) -> bool:
-    if cls == "global":
-        return True
-    if cls == "place_local":
-        return p.get("place") == loc
-    if cls in ("subject_only", "private"):
-        return (p.get("agent_id") == agent_id or p.get("observer") == agent_id
-                or p.get("subject") == agent_id or actor == agent_id)
-    if cls == "participants_only":
-        return (agent_id in (p.get("participants") or [])
-                or agent_id in (p.get("from"), p.get("to"), actor))
-    if cls == "members":
-        return agent_id in (p.get("members") or [])
-    return actor == agent_id
+    return _loc(records, agent_id, upto_round, initial)
 
 
 def visible_events(records: list, agent_id: str, upto_round: int,
                    window_rounds: int | None = None, *, location: str | None = None) -> list:
-    """Return the events `agent_id` can directly perceive, per PERCEPTION_SCOPE."""
-    loc = location if location is not None else location_of(records, agent_id, upto_round)
-    out = []
-    for rec in records:
-        if rec["round"] > upto_round:
-            break
-        if window_rounds is not None and rec["round"] < upto_round - window_rounds:
-            continue
-        cls = C.PERCEPTION_SCOPE.get(rec["type"], C.DEFAULT_VISIBILITY)
-        p = rec.get("payload", {})
-        if _visible(cls, agent_id, rec.get("actor", "SYSTEM"), p, loc):
-            out.append(rec)
-    return out
+    """Return the events `agent_id` can directly perceive, per PERCEPTION_SCOPE（单一真源）。"""
+    return _ve(records, agent_id, upto_round,
+               scope_table=C.PERCEPTION_SCOPE, default_cls=C.DEFAULT_VISIBILITY,
+               window_rounds=window_rounds, location=location)
