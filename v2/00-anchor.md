@@ -164,6 +164,12 @@
 
 ## 7. 变更记录
 
+- **v1.3.17（22:18）**：⚠️ **门禁口径更正 —— 又一条"门禁只跑一半"的假绿**：**`cd code && make ci` 不跑 pytest** ✗（它只跑 smoke + gate_render + R9 + D 段）。
+  今晚全量 `pytest -q` = **548 passed, 1 failed**，失败项 = **`life/tests/test_skeleton.py`**（仍期望 `body_ref` 前缀 `side://mem/`，而 **T268 已改 `side://src/`** ⇒ **过期测试**）—— **它一直没被发现，正因为 `ci` 不含 pytest**。
+  ⇒ **即时生效**：**凡改动涉及 `code/`，门禁用 `make verify`**（= 仓根门禁（**含 pytest**）+ `make -C code ci` 全跑，T280 已建）；**只写 `cd code && make ci` 不再算"全绿"**。
+  ⚠️ **`make verify` 很慢**（Leader 实测全量 pytest 跑 **5 分钟未完成**）⇒ **别在批期跑；分段跑**（先 `cd code && python -m pytest tests -q`，再 `make -C code ci`）。
+  **同族记一笔**：**T280（两个 `gate` 同名异义）+ 本条（`ci` 不含 pytest）** —— 共同的形态是「**以为验过了，其实只验了一半**」。
+  **派生**：过期测试已派 **T294**（life）—— 要求**不只看前缀字符串**，改成"**同文本共享同一 ref**"的**有意义断言** + **反向验证**（写错前缀必须红）。
 - **v1.3.16（22:06）**：⭐ **T276→T288 链闭合：被打断的夜跑可以"续跑"了**。
   **T288 达成「逐字节一致」**（三档全过：seed42/n=4/0..8 ✓ · 0..24 ✓ · **N=20×24（cut12）`one==two`、start_round=12** ✓；回归 **497 passed**、`lint-imports` 9/0）。
   **根因（life 侧，非引擎）**：`restore()` 重建软判定去重集时按「**parties 含我**」归属 —— 前缀里 `J-P003-P001-affinity-weak-11`（parties=`['P003','P001']`）被**误加进 P001 的 `_judged`** ⇒ P001 在 round22 的判定被**在 `_judge_skip` 之前**挡掉（所以续跑侧打点**根本没进 `_judge_skip`**）⇒ **kernel 对 M6 的排除完全正确**（两层判断对上）。**修法**：按 **jid 归属人**（`J-<owner>-<to>-<dim>-…`，`owner==self` 才记）。
