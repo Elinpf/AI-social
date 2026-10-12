@@ -11,6 +11,7 @@ Covers the three acceptance criteria:
 from __future__ import annotations
 
 import json
+import hashlib
 import tempfile
 from pathlib import Path
 
@@ -112,17 +113,33 @@ def test_activity_completes_and_needs_update():
 
 # ---- ② memory goes through the log and is replayable ------------------------
 def test_memory_write_retrieve_logged_and_replayable():
-    kernel, _ = _run(rounds=13)
+    kernel, agents = _run(rounds=13)
+    side = next(iter(agents.values())).memory.side
     types = [e["type"] for e in kernel.ledger]
     assert "MEMORY_WRITE" in types, "observations should be written to the log"
     assert "MEMORY_RETRIEVE" in types, "retrieval hits must be logged (C4)"
 
     # every MEMORY_WRITE stores refs (never the body) — 06 §3.2 / AR-C4
+    # T268: bodies are content-addressed under `side://src/<sha256(body)>.txt|.vec`
+    refs, bodies = [], []
     for e in kernel.ledger:
         if e["type"] == "MEMORY_WRITE":
-            assert e["payload"]["body_ref"].startswith("side://mem/")
-            assert e["payload"]["embed_ref"].startswith("side://mem/")
-            assert "text" not in e["payload"]
+            body_ref = e["payload"]["body_ref"]
+            embed_ref = e["payload"]["embed_ref"]
+            assert body_ref.startswith("side://src/") and body_ref.endswith(".txt"), body_ref
+            assert embed_ref.startswith("side://src/") and embed_ref.endswith(".vec"), embed_ref
+            assert "text" not in e["payload"], "the body must never be in the log"
+            # content-addressing: ref == side://src/<sha256(body)>.txt  (same text ⇒ same ref)
+            text = side.read_body(body_ref)
+            expect = SideStore.shared_body_ref(hashlib.sha256(text.encode()).hexdigest())
+            assert body_ref == expect, f"ref must be content-addressed by body: {body_ref} != {expect}"
+            refs.append(body_ref)
+            bodies.append(text)
+    assert refs, "expected some MEMORY_WRITE events"
+    # T268 core semantics: a body text observed more than once shares ONE ref
+    # (strictly fewer unique refs than writes ⇒ de-dup actually happened)
+    assert len(set(refs)) < len(refs), "repeated body text must share one content-addressed ref"
+    assert len(set(refs)) == len(set(bodies)), "distinct bodies must map to distinct refs"
 
     # retrieval selection is fully recorded (replay must not recompute embeddings)
     for e in kernel.ledger:
