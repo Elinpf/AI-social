@@ -86,29 +86,47 @@ def _cmd_census(args) -> int:
     return 0
 
 
-def _git_stamp() -> None:
-    """打印 git 状态三行（T220 三）：sha / dirty_files / `[CLEAN]`|`[DIRTY — 结论仅供参考]`。
+def _git_stamp() -> dict:
+    """打印 git+磁盘 状态五行（T220 三）：sha / dirty_files / disk / 状态 / 磁盘。
 
-    并行编辑同一工作树时，门禁结论必须绑 git 状态（"证据绑版本"）。**绝不因此崩溃**。
+    并行编辑同一工作树时，门禁结论必须绑 git 状态；**磁盘满会伪装成代码坏**，故同时打磁盘余量。
+    返回 `{"dirty":int,"low":bool}`（供 `GIT_STAMP_STRICT=1` 时判放行）。**打戳失败不阻断门禁**。
     """
+    import os
     import subprocess
     from pathlib import Path
     root = Path(__file__).resolve().parents[2]  # repo root（social-experiment/）
+
+    def _run(*a):
+        return subprocess.run(a, capture_output=True, text=True).stdout.strip()
+
     try:
-        sha = subprocess.run(["git", "-C", str(root), "rev-parse", "--short", "HEAD"],
-                             capture_output=True, text=True).stdout.strip()
-        por = subprocess.run(["git", "-C", str(root), "status", "--porcelain"],
-                             capture_output=True, text=True).stdout.strip()
+        sha = _run("git", "-C", str(root), "rev-parse", "--short", "HEAD")
+        por = _run("git", "-C", str(root), "status", "--porcelain")
         n = len([l for l in por.splitlines() if l.strip()])
+        dbi = _run("df", "-i", "/").splitlines()[-1].split()
+        dbb = _run("df", "-B1", "/").splitlines()[-1].split()
+        avail_b, avail_i, use = int(dbb[3]), int(dbi[3]), dbb[4]
+        min_b = int(os.environ.get("DISK_MIN_AVAIL_BYTES", "1073741824"))   # 1 GiB
+        min_i = int(os.environ.get("DISK_MIN_INODE_AVAIL", "100000"))
+        low = avail_b < min_b or avail_i < min_i
         print(f"sha: {sha}")
         print(f"dirty_files: {n}")
+        print(f"disk: avail_bytes={avail_b} avail_inode={avail_i} use={use}")
         print("状态: " + ("[CLEAN]" if n == 0 else "[DIRTY — 结论仅供参考]"))
+        print("磁盘: " + ("[DISK LOW — 结论仅供参考]" if low else "[DISK OK]"))
+        return {"dirty": n, "low": low}
     except Exception as e:  # 打戳失败不得影响门禁本身
         print(f"[git_stamp unavailable: {e}]")
+        return {"dirty": -1, "low": False}
 
 
 def _cmd_gate(args) -> int:
-    _git_stamp()
+    import os
+    st = _git_stamp()
+    if os.environ.get("GIT_STAMP_STRICT") == "1" and (st["dirty"] > 0 or st["low"]):
+        print("GIT_STAMP STRICT → FAIL（脏树/磁盘低，结论不可作通过依据）")
+        return 1
     log = ReadOnlyLog(read_log(args.log))
     # 三态（T220）：none（显式跳过，必须打印）/ auto（默认）/ <id>
     if args.baseline == "none":
