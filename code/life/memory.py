@@ -334,18 +334,40 @@ class AssociativeMemory:
 
     # ---- rebuild cache from the (authoritative) log refs ------------------
     def sync_from_refs(self, refs: Iterable[MemoryRef]) -> None:
+        refs = list(refs)
+        keep = set()
         for r in refs:
+            keep.add(r.mem_id)
             if r.mem_id in self.nodes:
                 node = self.nodes[r.mem_id]
                 node.last_access = r.last_access
                 node.access_count = r.access_count
                 continue
             self._load_ref(r)
+        # T298: 运行期缓存对齐权威 —— 权威集（账本 `a["memories"]`）之外的节点必须移出缓存。
+        # `FORGET(drop)` 会从权威集摘除记忆，但缓存此前只增不减 ⇒ 一次性仍把"已丢弃"的
+        # 记忆喂给 `plan_forgetting`（续跑按权威重建、不会）⇒ 分叉。**权威是账本，不是内存对象。**
+        for stale in [m for m in self.nodes if m not in keep]:
+            self._drop_node(stale)
         # keep the seq counter ahead of anything seen in the log
         for mem_id in self.nodes:
             tail = mem_id.rsplit("-", 1)[-1]
             if tail.isdigit():
                 self._next_seq = max(self._next_seq, int(tail) + 1)
+
+    def _drop_node(self, mem_id: str) -> None:
+        """T298: 从缓存移除一个权威集外的节点，并同步向量索引与未反思累加器。"""
+        node = self.nodes.pop(mem_id, None)
+        if node is None:
+            return
+        self._norm_cache.pop(mem_id, None)
+        if node.kind == "observation" and not node.reflected:
+            self._unreflected_importance -= node.importance
+        if mem_id in self._vec_pos:
+            self._vec_ids = [i for i in self._vec_ids if i != mem_id]
+            self._vec_rows = [self.nodes[i].embed for i in self._vec_ids]
+            self._vec_pos = {i: idx for idx, i in enumerate(self._vec_ids)}
+            self._mat = None
 
     def _load_ref(self, r: MemoryRef) -> MemoryNode:
         try:
