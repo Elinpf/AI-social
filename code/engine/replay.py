@@ -640,6 +640,7 @@ _NOOP_TYPES = [
     "VOTE_CAST",
     "CONTRACT_CREATED", "CONTRACT_FULFILLED", "CONTRACT_VIOLATED", "CONTRACT_EXPIRED",
     "ORDER_CANCEL",
+    "SERVICE_DELIVERED",  # T278/08 §1.2 V：服务即时交付 → inventory-neutral（noop 折叠，不改库存/现金）
     # 世界导演/事件制造机（Fork B：审计折叠，不改世界状态；replay 遇之不报错）
     "WORLD_DIRECTIVE", "WORLD_GROUP_EVENT", "WORLD_DIRECTIVE_REJECTED", "FORGE_FIRED",
     "INTENT_REJECTED", "DROPPED",

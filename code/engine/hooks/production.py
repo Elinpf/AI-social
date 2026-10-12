@@ -34,8 +34,13 @@ P4 = PHASE_ARBITRATE
 ACTIVITY_GOOD: dict[str, list] = {
     "work": ["material", "food"],       # 采集+耕作（material 先，供 food 投入链）
     "skill_practice": ["tool"],         # 练习 → 制具
-    "socialize": ["service"],           # 社交 → 服务
+    # "socialize" 不再产入库商品：改发 SERVICE_DELIVERED（即时交付、inventory-neutral，T278）
     "leisure": ["art"],                 # 休闲 → 艺术品
+}
+
+# 即时交付的服务类活动：activity → good（不进货品库存，发 SERVICE_DELIVERED；T278/08 §1.2 V）
+ACTIVITY_SERVICE: dict[str, str] = {
+    "socialize": "service",
 }
 
 _PROD_DEFAULTS = {
@@ -132,6 +137,21 @@ def production_enabled_from_config(config) -> bool:
     return _production_enabled(c)
 
 
+def _service_enabled(ctx) -> bool:
+    """服务即时交付开关（T278）：`policy.service_delivered.enabled` / `config.service_delivered.enabled`，默认 true。"""
+    cfg = getattr(ctx, "config", None)
+    if isinstance(cfg, dict):
+        rt = cfg.get("service_delivered")
+        if isinstance(rt, dict) and "enabled" in rt:
+            return bool(rt["enabled"])
+        pol = cfg.get("policy")
+        if isinstance(pol, dict):
+            sd = pol.get("service_delivered")
+            if isinstance(sd, dict) and "enabled" in sd:
+                return bool(sd["enabled"])
+    return True
+
+
 def apply_production(state, round_no, ctx):
     if not _production_enabled(ctx):
         # 显式关闭：零生产事件，但留一条审计（flag=production_disabled）；双账本守恒平凡成立
@@ -173,6 +193,32 @@ def apply_production(state, round_no, ctx):
             if r["dropped"] > 0:
                 specs.append(spec(round_no, P4, aid, "PRODUCE_OVERFLOW", {
                     "agent_id": aid, "good_id": good, "qty_dropped": int(r["dropped"])}))
+
+    # ---- (1b) 服务即时交付：socialize → SERVICE_DELIVERED（inventory-neutral；T278/08 §1.2 V）----
+    svc_on = _service_enabled(ctx)
+    for _seq, aid, place, atype, p_ in _labor_completions(state, round_no):
+        if not aid:
+            continue
+        sg = ACTIVITY_SERVICE.get(str(atype))
+        if not sg:
+            continue
+        if not svc_on:
+            specs.append(spec(round_no, P4, "SYSTEM", "DROPPED",
+                              {"reason": "service_disabled", "flag": "service_disabled",
+                               "agent_id": aid}))
+            continue
+        skill = _skill_level(state, aid, sg)
+        res = P.resource_factor_milli(seed, round_no, place or "residence", base_res, params)
+        qty = P.produce_qty(sg, skill, res, 0, params)     # 服务无库存/工具加成
+        if qty <= 0:
+            continue
+        # counterparty：参与者中除自己外恰一人 → 其 id；否则 None（自服务 → subject_only）
+        others = [x for x in (p_.get("participants") or []) if x and x != aid]
+        payload = {"agent_id": aid, "good_id": sg, "qty": int(qty), "place": place,
+                   "round": int(round_no)}
+        if len(others) == 1:
+            payload["counterparty"] = others[0]
+        specs.append(spec(round_no, P4, aid, "SERVICE_DELIVERED", payload))
 
     # ---- (2) 折旧（工具资产，δ/回合，floor 0）----
     for aid in _real_agents(state):

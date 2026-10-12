@@ -72,7 +72,12 @@
     "l1_ratio_bp": 8000,
     "l2_ratio_bp": 10000,
     "l3_ratio_bp": 15000,
-    "critical_dimensions": ["weekly_focus", "rel_affinity", "rel_trust", "rel_respect"],
+    "critical_dimensions": [
+      "weekly_focus",
+      "rel_affinity",
+      "rel_trust",
+      "rel_respect"
+    ],
     "_critical_dimensions_note": "L3 critical-only 保留的 LLM_JUDGMENT.dimension（精确字符串匹配；来源=life/constants.CRITICAL_DIMENSIONS 的发布投影；注意 rel_respect 与 respect 是不同维度，勿归一）",
     "critical_importance": true,
     "schedule_enabled": false
@@ -82,8 +87,16 @@
     "enabled": false,
     "base_cadence_rounds": 12,
     "triggers": {
-      "W1": true, "W2": true, "W3": true, "W4": true, "W5": true,
-      "W6": true, "W7": true, "W8": true, "W9": true, "W10": true
+      "W1": true,
+      "W2": true,
+      "W3": true,
+      "W4": true,
+      "W5": true,
+      "W6": true,
+      "W7": true,
+      "W8": true,
+      "W9": true,
+      "W10": true
     },
     "_W6_note": "W6 共处默认开（Leader 裁定：最高频人际触发；语义=现有 RELATION_ENCOUNTER）；可置 false 消融。",
     "_no_DUE_note": "无 DUE 类型：到期经 WAKE{reason∈{W1,W7,W9}, source_event_seq} 承载（08）。"
@@ -178,6 +191,10 @@
   },
   "exchange": {
     "_comment": "v2 交换原语档（T126/T129；T131 实现）。policy.exchange.enabled（runtime config.exchange.enabled 优先），默认 true（行为不变）。语义=控制「agent↔agent 成交」（世界市场 MARKET 保留）。OFF → EXCHANGE_SETTLED=0、agent-as-seller 的 MARKET_TRADE=0、CONTRACT_CREATED=0，发审计 DROPPED{reason/flag=exchange_disabled}，**不 fail-loud**；与 economy.enabled 为 AND。改本块变 engine_version 指纹（属预期）。",
+    "enabled": true
+  },
+  "service_delivered": {
+    "_comment": "T278/08 §1.2 V：服务即时交付档。policy.service_delivered.enabled（runtime config.service_delivered.enabled 优先），默认 true（新机制默认开、行为不变）。语义=socialize 产出经 SERVICE_DELIVERED 即时交付（inventory-neutral、不进货品库存式），不再发 PRODUCE{service}。OFF → 不产 + 发 DROPPED{reason/flag:'service_disabled'}，不 fail-loud；与 economy.enabled = AND。改本块变 engine_version 指纹（属预期）。",
     "enabled": true
   }
 }

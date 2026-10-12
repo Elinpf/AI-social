@@ -71,6 +71,9 @@ class VisibilityIndex:
         for v in (p.get("participants") or []):
             if isinstance(v, str):
                 self.by_key.setdefault(("participants", v), []).append(rec)
+        v = p.get("counterparty")   # T278：participants_only 纳入 counterparty（service 受方可见）
+        if isinstance(v, str):
+            self.by_key.setdefault(("counterparty", v), []).append(rec)
         self._n += 1
 
     # ---- 同步 / 重建 ----
@@ -117,7 +120,7 @@ class VisibilityIndex:
     # ---- 查询 ----
     def _candidates(self, agent_id: str) -> list:
         cand = []
-        for field in ("agent_id", "observer", "from", "actor", "to", "participants"):
+        for field in ("agent_id", "observer", "from", "actor", "to", "participants", "counterparty"):
             cand.extend(self.by_key.get((field, agent_id), []))
         cand.extend(self.members_cls)
         cand.extend(self.global_cls)

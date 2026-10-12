@@ -55,7 +55,9 @@ def visible(cls: str, agent_id: str, actor: str, p: dict, loc: str,
                 or actor == agent_id)
     if cls == "participants_only":
         return (agent_id in (p.get("participants") or [])
-                or agent_id in (p.get("from"), p.get("to"), actor))
+                or agent_id in (p.get("from"), p.get("to"), actor)
+                # T278：一等当事人字段 `counterparty`（SERVICE_DELIVERED 受方需可见；08 §1.2 V）
+                or (p.get("counterparty") is not None and agent_id == p.get("counterparty")))
     if cls == "members":
         gid = p.get("group_id")
         gm = (group_members or {}).get(gid, []) if gid is not None else []
