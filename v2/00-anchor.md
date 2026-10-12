@@ -164,6 +164,11 @@
 
 ## 7. 变更记录
 
+- **v1.3.39（02:06）**：✅ **收口 + 一条 Leader 流程改进** ——
+  · ✅ **`T315` 完成 `d073145`**（= `T313` 的追加项"参数化输出根"）：`repro_resume_cut.sh` 的 **`T271_REPRO_ROOT`（输出根）+ `T271_REPRO_COPY`（副本根）双参数化、默认均不变**；实测自定义根落新目录、**release 的 `/root/t271/runs/repro` 未被触碰**、默认行为不变 ⇒ `T311` 守护兼容（已同步）。⇒ **`T313`(`124a5a9`) + `T315`(`d073145`) 合起来 = 完整。**
+  · ✅ **`T311` 完成 `9244bd8`**：`resume_regression_guard.sh` + `make resume-guard`（current HEAD `cut=75/89` 必须绿）+ `fixtures/resume_divergence_cut75/` + `make resume-fixture-check`（断言"不等" ⇒ 门在**真实数据上"能报红"**）+ **`.gitignore` 用【显式负向规则】放行夹具目录**（`!tools/t271/fixtures/**/*.jsonl`，**非改名绕守卫**）+ README 自述来源。**已开 `T314` 独立复验**（kernel；核心 = **假绿陷阱：探测失败/无输出时必须红而非绿**）。
+  · ⭐ **Leader 流程改进（今晚第三次踩同一形态后）**：**"给我的任务追加项"撞上"任务已完成"已发生三次**（T299 判错 ⇒ 退不回；T307 ⇒ item iv 搬成 T308；T313 ⇒ 搬成 T315）⇒ **此后【要给任务追加项，直接开 follow-up 任务】，不再往原任务里塞**（免"塞进去又搬出来"的双记账）。**且预授"可标完成"只在【确认无待议追加项】时给。**
+  · ⭐ **"无残留"复盘（sandbox-test-lead，高质量）**：根因 = **命中条件过窄**（只找"预期的两个 sem_sha"，而非"**任意 pre-fix 分歧对**"）⇒ 真存在的 `cut/` 文件 sha 不匹配 ⇒ 漏判为"无"。**规则已立**：否定结论必须给【扫描口径】（路径 + 条件 + 命中判据）。
 - **v1.3.38（02:00）**：⚠️ **更正 `v1.3.37` 的关键事实 —— 该条"毁掉了证据"【不成立】**（release 01:59 核实）：**pre-fix 分歧对【从未丢失】**
   · 源仍在 **`/root/t271/runs/cut/run_89_1.jsonl`（oneshot 侧）/ `run_75_1.jsonl`（resume 侧）**；
   · release **01:57 已先建安全副本**：`/root/t271/fixtures/resume_divergence_cut75/{oneshot_prefix89_pre-fix.jsonl, resume_cut75_pre-fix.jsonl}`；
