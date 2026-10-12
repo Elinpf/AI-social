@@ -87,7 +87,7 @@ class Event:
 
 > **产生者/钩子（应 T17 裁决补全，已定）**：
 > - `GOAL_ACHIEVED`：**确定性达成钩子**——Phase 3.5 **L4 `apply_needs`**（或 L3 末）中，目标 `target_metric`/`progress` 达 `≥ 1.0`（或达 `deadline` 内完成条件）时，由确定性规则落 `GOAL_ACHIEVED`；`reward_intents[]` 交 4.x。
-> - `GOAL_ABANDON`：**确定性放弃钩子**——`deadline_week` 过期未达成、或连续 W 窗口 `progress` 停滞、或 Agent 主动 `INTENT`（经校验）时落事件；`reason ∈ {deadline, stalled, superseded, voluntary}`。
+> - `GOAL_ABANDON`：**确定性放弃钩子**——触发（T8 裁决 T231 **写死**）：**周 REVIEW 时 `status=active` 且本周窗口 `progress` 增量 `== 0`** → `GOAL_ABANDON{reason:"stalled"}`；`deadline`（`deadline_week` 过期未达成）/`voluntary`（Agent 主动 `INTENT`，经校验）保持**已定义但暂不启用**；`reason ∈ {deadline, stalled, superseded, voluntary}`。**不得为凑事件强发或改 `progress`**；某窗口无停滞目标则 **0 事件**（允许空）。
 > - `GOAL_PROGRESS`：由活动/技能/经济事件**确定性推导**（progress = f(相关技能提升/资源/活动计数)）。
 
 **D. 关系（M3）**

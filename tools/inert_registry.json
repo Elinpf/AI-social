@@ -28,7 +28,7 @@
     },
     "GOAL_ABANDON": {
       "class": "missing_wiring",
-      "note": "08 §1.2 C 已定义**确定性放弃钩子**（deadline/stalled/voluntary），life L4 未实现发射",
+      "note": "08 §1.2 C 确定性放弃钩子；T8 裁决口径（T231）：**stalled 写死 = 周 REVIEW 时 status=active 且本周 progress 增量==0 → GOAL_ABANDON{reason:\"stalled\"}**；deadline/voluntary 保持已定义但暂不启用；**不得为凑事件强发/改 progress**；无停滞目标则 0 事件。life L4 未实现发射",
       "wire_task": "T231（life-layer-dev，depends_on T222）"
     },
     "LOAN_REPAY": {
@@ -47,14 +47,14 @@
       "wire_task": "已完成 T230（econ-dev）"
     },
     "SCHEDULE_REVISED": {
-      "class": "missing_wiring",
-      "note": "08 §1.2 A/CO2：life L2 日解析『计划微调』本应发射；现无发射点",
-      "wire_task": "T231（life-layer-dev，depends_on T222）"
+      "class": "reserved",
+      "note": "T8 裁决（T231）：06 §4.4 把它设计为 need/消息触发的**周内改计划**，接线=**新增一套周内重规划行为（改世界）**，非纯补审计；按『只给手段、不预设行为』纪律，在做出该**设计决策前 reserved**（要做则另立设计任务，不塞进『补事件』名义）",
+      "wire_task": "待设计决策（非『接线』；另立任务）"
     },
     "ACTIVITY_INTERRUPTED": {
-      "class": "missing_wiring",
-      "note": "08 §1.2 A：活动中断；life 尚无中断判定/发射（也可能应改为 reserved，请 life-layer-dev 定）",
-      "wire_task": "T231（life-layer-dev，先定性）"
+      "class": "reserved",
+      "note": "T8 裁决（T231）：08 §1.2 B 只登记类型、**未定义中断语义**；实测 N=3×1周 84/84 计划 slot 全部 start+complete、0 漂移 → 当前**无『该发』的语义**，保留类型不接线（硬造=造数）",
+      "wire_task": "保留（待定义中断语义）"
     }
   },
   "entries": [
