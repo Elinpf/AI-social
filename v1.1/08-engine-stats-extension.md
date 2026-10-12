@@ -616,14 +616,21 @@ def derive_time(round: int, cfg) -> dict:
 PERCEPTION_SCOPE: { event_type -> visibility_class }
 visibility_class ∈ { global, place_local, members, private, participants_only, subject_only }
 ```
-| visibility_class | 判定（确定性谓词） | 典型 event_type |
+| visibility_class | 判定（确定性谓词，**唯一实现** `contracts/visibility.py::visible()`） | 典型 event_type |
 |---|---|---|
-| `global` | 全体存活 Agent 可见 | `MSG_PUBLIC`、重大事件（见 D3 白名单） |
-| `place_local` | `e.place == location(agent, e.round)` 且 `alive(agent, e.round)` | `ACTIVITY_*`、`PLACE_MOVE`、`RELATION_ENCOUNTER`、生活/涌现事件 |
-| `members` | `agent ∈ members(group_id, e.round)`（R3） | `MSG_GROUP` |
-| `private` | `agent ∈ {from, to}` | `MSG_DM` |
-| `participants_only` | `agent ∈ (participants ∪ {actor})` | `TRANSFER`、`MARKET_TRADE` |
-| `subject_only` | `agent ∈ {actor} ∪ subject` | 特定主观事件 |
+| `global` | 全体可见 | `MSG_PUBLIC`、重大事件（见 D3 白名单） |
+| `place_local` | `e.place == location(agent, e.round)`（**无 `actor` 回退**，见 G1） | `ACTIVITY_*`、`PLACE_MOVE`、`RELATION_ENCOUNTER` |
+| `members` | `agent ∈ group_members(group_id, e.round)`（R3） **∪ `{actor}`**（**D3**） | `MSG_GROUP` |
+| `private` | `agent ∈ {from, to} ∪ to[] ∪ {agent_id, observer, actor}` | `MSG_DM`、定向要约 |
+| `participants_only` | `agent ∈ participants ∪ {from, to, actor}` | `TRANSFER`、`MARKET_TRADE` |
+| `subject_only` | `agent ∈ {agent_id, observer, from} ∪ {actor}`（**不含 `subject`**，**D2**） | 主观事件（`NEED_UPDATE`/`GOAL_*`/`MEMORY_*`…） |
+
+> **D2/D3 口径裁定（应 T266，2026-10-12，已定）**：
+> - **D2 · `payload.subject` 不纳入可见性**（`subject_only`/`private` 均**不含** `subject`）。理由：`subject` = 「事件**关于谁**」（他者视角的宾语/注意力对象），**不是当事人**；纳入会让 **actor 的私有认知泄漏**给被指向者（如 `MEMORY_WRITE{agent_id=A, subject=C}` → C 读到 A 的私有记忆），违反「可见性=谁该知道」，并与记忆口径冲突。**以 engine 现行语义为准**（life 旧实现含 subject 属越权泄漏，已随 T264 收敛删除）。
+> - **D3 · `members` 含 `actor==agent_id` 回退**（`members = 群组成员 ∪ {actor}`）。理由：跨 class 一般规则「**当事人（`actor`）对自己发起的事件总可见**」（`subject_only`/`private`/`participants_only` 均已含）；不含则出现「自己发的 `MSG_GROUP` 自己看不见」反直觉缺口。**以 engine 现行语义为准**。
+> - **D1 · `OFFER_CREATED` 动态分档**（已由 **T137** 固化）：`to==[]` → `global`；`to` 非空 → `private`（对 `{from,to}∪to[]`）。**登记为显式特判**（表内无条目、由实现动态覆盖），消除"暗规则"。
+>
+> **G1–G3 · 同类未覆盖分支（Q4 扫描，报告为主）**：**G1** `place_local` **无 `actor` 回退**（缺 `place`/location 未同步 → 本人也看不到自己事件；建议加回退，**改语义须先裁**）；**G2** **scope 表未覆盖 v2 新增事件**（`EXCHANGE_SETTLED`/`CONTRACT_*`/`DEPOSIT`/`WITHDRAW`/`OFFER_*`/`SKILL_*`/`GROUP_*`/`WAKE`/`IDLE`/`NORM_*`/`TAG_EMITTED`/`ROLE_CHANGE`… 落 default=place_local；**可感知事件应有条目**，随 T264 补登记）；**G3** `subject_only` 现含 `from`、`private.to[]` 与 `OFFER_CREATED` 特判重叠（建议收敛进本表；`subject_only` 去 `from` 待裁）。详见 `v2/refs/visibility-semantics-08.md`。
 
 > **T247 口径（2026-10-12 定稿 · 记录性语义分类）**：`SKILL_PRACTICE / SKILL_LEVEL_UP / SKILL_OUTPUT` 在 `PERCEPTION_SCOPE` 无条目（落 `default=place_local`）。**记录其语义分类**（表明"08 事件表 ↔ `perception_scope.json` 真源未对齐"这一缺口）：
 > - `SKILL_PRACTICE` = **`place_local`**（payload 含 `place`，同场所可见其练习）

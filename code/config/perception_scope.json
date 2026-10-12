@@ -2,6 +2,17 @@
   "_comment": "PERCEPTION_SCOPE：event_type -> visibility_class（08 §3.5 R2 / §1.2 R5）。引擎侧 canonical 真源；版本纳入 engine_version 指纹。",
   "version": "v1.2-r2",
   "default_visibility_class": "place_local",
+  "_class_semantics": {
+    "_note": "08 §3.5 权威类语义（visibility_class → 判据字段集）。T266 裁定：D2 不含 payload.subject；D3 members 含 actor 回退。仅注释性真源（人读/对照），机器行为唯一实现在 contracts/visibility.py::visible()；三处（engine/perceive、life/visibility、adapter）只调用它，不内联。",
+    "global": [],
+    "place_local": ["e.place == location(agent, round)"],
+    "members": ["group_members(group_id, round)", "payload.members", "actor"],
+    "private": ["payload.from", "payload.to", "payload.to[]", "payload.agent_id", "payload.observer", "actor"],
+    "participants_only": ["payload.participants", "payload.from", "payload.to", "actor"],
+    "subject_only": ["payload.agent_id", "payload.observer", "payload.from", "actor"],
+    "_dynamic": {"OFFER_CREATED": "to==[] -> global ; 否则 -> private (T137)"},
+    "_known_gaps": ["G1 place_local 无 actor 回退(待裁)", "G2 部分 v2 新事件无 scope 条目(待补)", "G3 subject_only 含 from / private.to[] 与 OFFER_CREATED 特判重叠(待收敛)"]
+  },
   "scope": {
     "MSG_PUBLIC": "global",
     "AGENT_DIED": "global",
