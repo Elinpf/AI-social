@@ -64,6 +64,7 @@ python3 "$REPO/tools/t271/nightly.py" resume --batches <表> --env-file "$REPO/c
 - **`native`（默认；T276/T288 落地后）**：真 runner 用 **`--resume-from <已 flush 前缀> --target-round <目标>`**，从 flush 前缀**接着跑到目标回合**，日志被重写为**完整日志（前缀+续跑段）**，`collect` 末条 round 即 target ✓。**必须复用同一 `side_root`**（共享源正文/缓存）。
   - **前提（硬）**：该 **sha + 该配置** 上「**逐字节一致**」已被验证。**换 sha 或换配置（seed/N/rounds/开关）后须重新核**。
   - **实测（本机）**：参数正确、状态判对（`bash tools/t271/verify_native_resume.sh` 门禁 PASS）。**但该脚本的逐字节【探针】在 `seed=9/n=2/150r` 上不一致**（续跑与一次性跑在 **round 93** 的 `MEMORY_FORGET` 分叉）→ 说明「逐字节一致」**并非所有配置都成立**；native 用于新配置前**必须自证**。详见 `v2/evidence/T292-native-resume-verify.json`。
+  - **自证用法（对新 sha/配置，分钟级）**：`T271_VR_SEED=42 T271_VR_AGENTS=4 T271_VR_ROUNDS=24 T271_VR_KILL_AFTER=1 T271_VR_GATE=1 bash tools/t271/verify_native_resume.sh`。`T271_VR_GATE=1` ⇒ **逐字节不一致即失败**（=native 前提自证不通过）。注意 **rounds 要够大**（mock 跑得快，太小则批次在 kill 前已跑完 → 中断项 `[SKIP]`）。
 - **`overlap`（显式回退，保留）**：重跑到目标回合，输出 `rerun.jsonl` → `meta.resume_mode=overlap_rerun`（此处 `rerun` 指"重跑产物文件名"，非 `replay` 重放）。**不假装能续**；`native` 前提不满足时用它。
 
 ## 5. 长期账：清理 / 保留 / inode 监控

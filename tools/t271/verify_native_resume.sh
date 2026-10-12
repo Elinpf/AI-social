@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 # native 续跑链验证（T276/T288 落地后）：真 orchestration 中断 -> nightly native 续跑 ->
 # 到目标回合 -> collect 报 SUCCESS；并与「一次性跑」逐字节比对（复用同一 side_root）。
+#
+# native 自证用法（对新 sha / 新配置跑；分钟级）：
+#   T271_VR_SEED=42 T271_VR_AGENTS=4 T271_VR_ROUNDS=24 T271_VR_KILL_AFTER=1 T271_VR_GATE=1 \
+#     bash tools/t271/verify_native_resume.sh
+# 门禁 = 参数正确 + 判对状态；T271_VR_GATE=1 时"逐字节不一致"也判失败（=native 前提自证）。
 set -uo pipefail
 BIN="$(cd "$(dirname "$0")" && pwd)"
 REPO="${T271_REPO:-/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment}"
@@ -10,7 +15,8 @@ export T271_RUN_ROOT="$VR"
 rm -rf "$VR"; mkdir -p "$VR/_env"
 printf 'T271_NOOP=1\n' > "$VR/_env/dummy.env"
 ENVF="$VR/_env/dummy.env"
-ROUNDS=150; SEED=9; AGENTS=2; FLUSH=5
+SEED=${T271_VR_SEED:-9}; AGENTS=${T271_VR_AGENTS:-2}; ROUNDS=${T271_VR_ROUNDS:-150}
+FLUSH=${T271_VR_FLUSH:-5}; KILL_AFTER=${T271_VR_KILL_AFTER:-2}; GATE=${T271_VR_GATE:-0}
 
 PASS=1
 ck(){ if [ "$1" = "$2" ]; then echo "  ok: $3"; else echo "  FAIL: $3 (got='$1' want='$2')"; PASS=0; fi; }
@@ -21,13 +27,17 @@ lastround(){ tail -1 "$1" 2>/dev/null | python3 -c 'import sys,json;print(json.l
 
 echo "### 1) 起 N1（真 orchestration, mock provider），中途 kill"
 python3 "$BIN/nightly.py" start --batches "$VR/batches.tsv" --env-file "$ENVF" --heartbeat 600 >"$VR/N1.launch.log" 2>&1
-sleep 2
+sleep "$KILL_AFTER"
 BP=$(cat "$VR/N1/batch.pid" 2>/dev/null || echo '')
-echo "  kill pid=$BP"; kill -9 "$BP" 2>/dev/null || true
-sleep 2
-LR=$(lastround "$VR/N1/run.jsonl")
-echo "  中断时日志 round=$LR (应 < $((ROUNDS-1)))"
-ck "$(python3 "$BIN/nightly.py" status --run-root "$VR" | awk '$1=="N1"{print $2}')" "INTERRUPTED" "中断被检出"
+if [ -n "$BP" ] && kill -0 "$BP" 2>/dev/null; then
+  echo "  kill pid=$BP"; kill -9 "$BP" 2>/dev/null || true
+  sleep 2
+  LR=$(lastround "$VR/N1/run.jsonl")
+  echo "  中断时日志 round=$LR (应 < $((ROUNDS-1)))"
+  ck "$(python3 "$BIN/nightly.py" status --run-root "$VR" | awk '$1=="N1"{print $2}')" "INTERRUPTED" "中断被检出"
+else
+  echo "  [SKIP] N1 在 ${KILL_AFTER}s 内已跑完（rounds 太少/太快）—— 无法测中断；请加大 rounds 或减小 KILL_AFTER"
+fi
 
 echo "### 2) nightly native 续跑"
 python3 "$BIN/nightly.py" resume --batches "$VR/batches.tsv" --env-file "$ENVF" --heartbeat 600 2>&1 | grep -E "resume\]" || true
@@ -63,9 +73,15 @@ echo "  resumed(x)=$S1"; echo "  oneshot  =$S2"
 # 注：逐字节一致是【runner/life 层（T276/T288）】的承诺，不是本流水线的门禁。
 # 本脚本的门禁 = native 参数正确 + 判对状态；逐字节结果仅作【探针】如实打印。
 if [ "$S1" = "$S2" ]; then
-  echo "  PROBE ok: native 续跑 == 一次性跑（逐字节）"
+  echo "  PROBE ok: native 续跑 == 一次性跑（逐字节）  [seed=$SEED n=$AGENTS rounds=$ROUNDS]"
 else
-  echo "  ⚠️ PROBE 不一致（非流水线问题；T276/T288 关注）：resumed=$S1 oneshot=$S2"
+  echo "  ✗ PROBE 不一致（逐字节）：resumed=$S1 oneshot=$S2  [seed=$SEED n=$AGENTS rounds=$ROUNDS]"
+  if [ "$GATE" = "1" ]; then
+    echo "  (T271_VR_GATE=1 ⇒ 该 sha/配置【未通过】native 前提自证 → 建议用 overlap)"
+    PASS=0
+  else
+    echo "  (仅探针；要把它当门禁请设 T271_VR_GATE=1)"
+  fi
 fi
 
 for u in t271-N1; do systemctl stop "$u" 2>/dev/null; systemctl reset-failed "$u" 2>/dev/null; done
