@@ -110,3 +110,29 @@
 **B. 人工量表（3 分钟盲测，5 人，1–5 分）**：
 ① 这看起来是"一个在运转的小镇"吗？② 我大致知道"谁在做什么"吗？③ 画面乱/糊吗（反向）？
 **判据**：三题均值 ≥4，且**无人给 ≤2**。样本片段固定为 `run_c_n20.play.jsonl` 的 5 段（round 6/21/33/45/60）。
+
+## 2d. T259 批次 4：前景 / 天空 / 地面 层次层（`#grading`）
+
+**目的**：给画面加"空气感 / 镜头景深"，直接对应「**增加效果和输出的丰富程度**」里的"层次（前景/天空）"。
+**纯 CSS 覆盖层**（`index.html` `#grading` + `styles/app.css`），与昼夜光照层（`town.setLighting`，z-index=5）**分离**：本层只做天空冷色(顶)、暗角(前景)、地面暖色渐隐(底)、极细扫描颗粒，z-index=6（HUD 之下）。**不碰任何世界语义 / config**。
+
+**取证参数**：`?grade=0` = 关闭本层（"改前"对照）；默认开（"改后"）。still 单帧、view=default、1500×950、`sample/run_c_n20.play.jsonl`。
+
+| 场景 | 改前 | 改后 | 逐像素差(mean/max/占比) |
+|---|---|---|---|
+| 白天 round 60 06:00 | `T259-g4-layer-day-before.png` | `T259-g4-layer-day-after.png` | 5.12 / 119 / 54.5% |
+| 夜间 round 45 00:00 | `T259-g4-layer-night-before.png` | `T259-g4-layer-night-after.png` | 4.59 / 118 / 55.4% |
+
+**改前/改后差异来自覆盖层本身**（暗角使边缘变暗、顶部偏冷），**世界内容零改动**（同日志、同 round、placeLayer=17 不变）。
+**回退**：删 `#grading` div + `.grading` 样式即可；或运行时 `?grade=0`。
+
+## 4. B 部分「播放件」（★ leader 指定，供真人盲测）
+
+**入口**：`frontend/review.html` → `http://<host>:8848/review.html`（**用户点开即用**）。
+**形态**：左侧 5 个片段按钮（`round 6/21/33/45/60`，时刻由 `wallClock` 口径确定性标注）+ 5×5 打分表（维度×片段，1–5）+「汇总结果」；右侧 iframe 内嵌小镇播放器，点片段即 `?round=X&speed=150&autoplay=1` 自动播放。
+**指令**：看完 5 段（≤3 分钟）逐格打分 → 汇总见均分与达标。
+**判据**：均分 ≥4 **且** 无人 ≤2。
+
+新增 URL 参数（`main.js`）：`?autoplay=1`（载入即播）、`?speed=<ms>`（定速）。二者仅影响播放控制，不改变渲染数据。
+**截图**：`T259-g4-review.png`（页面 + 内嵌播放器 + 打分表）。
+**门禁**：`make ci` → **PASS**（smoke + gate_render placeLayer=17 + R9 四指标全绿）。

@@ -79,6 +79,10 @@
 
       const rq = qs.get("round");
       if (rq != null && state.replay) { stopPlay(); jumpTo(parseInt(rq, 10) || 0); }
+      // T259-B 播放件：?speed=<ms> 定速；?autoplay=1 载入即自动播放（供真人盲测片段）
+      const sp = qs.get("speed");
+      if (sp) el("speed-select").value = String(sp);
+      if (qs.get("autoplay") === "1" && state.replay) play();
 
       // 证据截图用：?card=<slug> 直接放大某张事件卡（如 card=scarcity-buy）
       const cardSlug = qs.get("card");
@@ -102,6 +106,8 @@
       // 便于截图/演示：?audit=1 打开审计抽屉；?agent=<id> 或 ?place=<id> 打开详情
       if (qs.get("audit") === "1") openDrawer("audit");
       if (qs.get("debug") === "1") document.body.classList.add("show-debug");   // 证据截图用：展开调试/回放控件
+      // T259 层次层对照：?grade=0 关闭天空/暗角/地面渐隐（"改前"截图用）
+      if (qs.get("grade") === "0") document.body.classList.add("no-grade");
       if (["social","weekly","chronicle","econ"].includes(qs.get("tab"))) { openDrawer("audit"); switchAuditTab(qs.get("tab")); }
       if (qs.get("settings") === "1") el("settings-pop").hidden = false;
       if (qs.get("agent")) selectAgent(qs.get("agent"));

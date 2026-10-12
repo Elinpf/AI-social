@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>青溪镇 · 游戏质感盲测（片段播放件）</title>
+<style>
+  :root { --bg:#0d1117; --panel:#161b22; --line:#30363d; --fg:#e6edf3; --muted:#8b949e; --accent:#58a6ff; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:14px/1.6 -apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; }
+  header { padding:14px 20px; border-bottom:1px solid var(--line); position:sticky; top:0; background:var(--bg); z-index:10; }
+  h1 { margin:0 0 4px; font-size:18px; }
+  .sub { color:var(--muted); font-size:13px; }
+  .wrap { display:grid; grid-template-columns: 320px 1fr; gap:0; height:calc(100vh - 62px); }
+  .side { border-right:1px solid var(--line); padding:16px; overflow:auto; }
+  .stage { padding:0; position:relative; background:#000; }
+  iframe { border:0; width:100%; height:100%; display:block; }
+  .clipbtn { display:flex; justify-content:space-between; align-items:center; width:100%; padding:10px 12px; margin-bottom:8px;
+    background:var(--panel); border:1px solid var(--line); border-radius:8px; color:var(--fg); cursor:pointer; text-align:left; }
+  .clipbtn:hover { border-color:var(--accent); }
+  .clipbtn.active { border-color:var(--accent); background:#1d2b3a; }
+  .clipbtn .tt { font-weight:600; }
+  .clipbtn .tm { color:var(--muted); font-size:12px; }
+  h2 { font-size:14px; margin:18px 0 8px; }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  th,td { border:1px solid var(--line); padding:6px 5px; text-align:center; }
+  th { background:var(--panel); font-weight:600; }
+  th.dim { text-align:left; }
+  select { background:var(--panel); color:var(--fg); border:1px solid var(--line); border-radius:5px; padding:3px; }
+  .instr { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:12px; font-size:12.5px; color:#c9d1d9; }
+  .instr ol { margin:6px 0 0; padding-left:18px; }
+  #result { margin-top:12px; padding:12px; border-radius:8px; border:1px solid var(--line); background:var(--panel); font-size:13px; display:none; }
+  .ok { color:#3fb950; } .bad { color:#f85149; }
+  .big { font-size:20px; font-weight:700; }
+  .note { color:var(--muted); font-size:11.5px; margin-top:10px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>青溪镇 · 游戏质感盲测（片段播放件）</h1>
+  <div class="sub">5 个固定片段 + 打分表 · 全程 ≤ 3 分钟 · 点左侧片段即可播放</div>
+</header>
+
+<div class="wrap">
+  <aside class="side">
+    <h2>① 逐个播放片段</h2>
+    <div id="clips"></div>
+
+    <h2>② 打分（1–5）</h2>
+    <table id="score">
+      <thead><tr><th class="dim">维度 \ 片段</th></tr></thead>
+      <tbody></tbody>
+    </table>
+
+    <button class="clipbtn" style="margin-top:12px;justify-content:center" id="calc">📊 汇总结果</button>
+    <div id="result"></div>
+
+    <div class="instr" style="margin-top:14px">
+      <b>怎么用</b>
+      <ol>
+        <li>点左侧一个片段 → 右侧自动播放该时段的小镇（约 3–20 秒）。</li>
+        <li>看完 5 个片段，对每个片段在每个维度打 <code>1</code>（差）到 <code>5</code>（好）。</li>
+        <li>点「汇总结果」，看到均分与是否达标。</li>
+      </ol>
+      <div class="note">判据：均分 ≥ 4 且没有人打 ≤ 2 视为「游戏质感」达标。<br>维度 1–4 为画面观感；维度 5 为整体沉浸感。</div>
+    </div>
+  </aside>
+
+  <main class="stage">
+    <iframe id="player" title="片段播放器"></iframe>
+  </main>
+</div>
+
+<script>
+  // 固定 5 个片段（round 6/21/33/45/60）。时刻由 wallClock 口径确定性派生：1 tick=2h。
+  const LOG = "sample/run_c_n20.play.jsonl";
+  const CLIPS = [6, 21, 33, 45, 60];
+  const DIMS = [
+    "画面丰富度（层次/光影）",
+    "世界在运转",
+    "事件表现（看懂发生了啥）",
+    "信息可读性（不糊不挤）",
+    "整体沉浸感",
+  ];
+
+  function wallClock(round) {
+    const day = Math.floor(round / 12) + 1;
+    const slotName = ["晨", "午", "暮", "夜"][Math.floor((round % 12) / 3)];
+    const hour = (6 + (round % 12) * 2) % 24;
+    const hhmm = String(hour).padStart(2, "0") + ":00";
+    return { day, slotName, hhmm };
+  }
+
+  const clipsEl = document.getElementById("clips");
+  const player = document.getElementById("player");
+  let activeIdx = 0;
+
+  function label(r) {
+    const w = wallClock(r);
+    return { tt: `片段 ${CLIPS.indexOf(r) + 1} · round ${r}`, tm: `第 ${w.day} 日 ${w.hhmm}（${w.slotName}）` };
+  }
+
+  function loadClip(i) {
+    activeIdx = i;
+    const r = CLIPS[i];
+    // autoplay=1：载入即播放；speed=150（5x）；caption 标注片段；view=default 保持首屏分层
+    player.src = `index.html?round=${r}&log=${encodeURIComponent(LOG)}&view=default&speed=150&autoplay=1&caption=${encodeURIComponent("片段 " + (i + 1) + " · round " + r)}`;
+    document.querySelectorAll(".clipbtn[data-clip]").forEach((b) => b.classList.toggle("active", Number(b.dataset.clip) === i));
+  }
+
+  CLIPS.forEach((r, i) => {
+    const { tt, tm } = label(r);
+    const b = document.createElement("button");
+    b.className = "clipbtn"; b.dataset.clip = i;
+    b.innerHTML = `<span class="tt">${tt}</span><span class="tm">${tm}</span>`;
+    b.onclick = () => loadClip(i);
+    clipsEl.appendChild(b);
+  });
+
+  // 打分表：列 = 片段，行 = 维度
+  const thead = document.querySelector("#score thead tr");
+  CLIPS.forEach((r, i) => {
+    const th = document.createElement("th");
+    th.textContent = "片段" + (i + 1);
+    thead.appendChild(th);
+  });
+  const tbody = document.querySelector("#score tbody");
+  DIMS.forEach((dim, di) => {
+    const tr = document.createElement("tr");
+    const th = document.createElement("th");
+    th.className = "dim"; th.textContent = (di + 1) + ". " + dim;
+    tr.appendChild(th);
+    CLIPS.forEach((r, ci) => {
+      const td = document.createElement("td");
+      const sel = document.createElement("select");
+      sel.dataset.dim = di; sel.dataset.clip = ci;
+      sel.innerHTML = `<option value="">–</option>` + [1, 2, 3, 4, 5].map((v) => `<option value="${v}">${v}</option>`).join("");
+      td.appendChild(sel); tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById("calc").onclick = () => {
+    const sels = [...document.querySelectorAll("#score select")];
+    const vals = sels.map((s) => s.value).filter((v) => v !== "").map(Number);
+    const box = document.getElementById("result");
+    box.style.display = "block";
+    if (!vals.length) { box.innerHTML = `<span class="bad">还没有打分</span>`; return; }
+    const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+    const min = Math.min(...vals);
+    const pass = mean >= 4 && min > 2;
+    box.innerHTML =
+      `已打 <b>${vals.length}</b> / ${DIMS.length * CLIPS.length} 个分<br>` +
+      `均分 <span class="big ${pass ? "ok" : "bad"}">${mean.toFixed(2)}</span>（判据 ≥ 4）<br>` +
+      `最低分 <span class="${min <= 2 ? "bad" : ""}">${min}</span>（判据 无人 ≤ 2）<br>` +
+      `<b class="${pass ? "ok" : "bad"}">${pass ? "✅ 达标" : "❌ 未达标"}</b>`;
+  };
+
+  loadClip(0);
+</script>
+</body>
+</html>
