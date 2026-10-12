@@ -95,6 +95,30 @@ def test_authoritative_critical_dimensions_and_exact_match():
                                                                             "critical_importance": False}}}) is True
 
 
+def test_note_skip_emits_listable_degrade():
+    """life 跳过判定 → 引擎发可列 DEGRADE（ADR-08，入本回合缓冲）。"""
+    w = build_world(seed=7, n=3); ad = w["adapter"]; eng = w["engine"]
+    eng.state.round = 1; eng.ctx = eng.ctx.at(1, 0); eng.arbiter.discard()
+    ad.note_skip("rel_familiarity", ["P002", "P001"])
+    eng.state, _ = eng.arbiter.commit(eng.state)
+    d = [r for r in eng.ledger.records if r["type"] == "DEGRADE"]
+    assert d and d[0]["payload"]["action"] == "skip_judgment"
+    assert d[0]["payload"]["skipped"] == [{"dimension": "rel_familiarity",
+                                           "parties": ["P001", "P002"], "round": 1}]
+
+
+def test_llm_permit_default_all_and_capped_when_enabled():
+    w = build_world(seed=7, n=10); ad = w["adapter"]; eng = w["engine"]
+    pids = sorted(w["personas"])
+    # 默认 schedule_enabled=false → 全许可（行为与现状一致）
+    assert all(ad.perceive(a).llm_permit for a in pids)
+    # 开 M4 → 本轮许可 ≤ Kc
+    eng.config["policy"]["llm_budget"]["schedule_enabled"] = True
+    eng.config["policy"]["llm_budget"]["max_concurrency_kc"] = 3
+    ad._permit_round = None
+    assert sum(ad.perceive(a).llm_permit for a in pids) == 3
+
+
 def test_degrade_on_off_controlled_diff_n10():
     """(b) 同 seed 开/关降级各跑 N=10：差异必须**可解释**（此处应仅多出 DEGRADE 标记）。"""
     from engine.runner import load_config

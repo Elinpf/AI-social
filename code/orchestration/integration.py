@@ -103,6 +103,8 @@ class KernelAdapter:
         except Exception:
             self._scope_table = {}
         self._social = _load_social_cfg()
+        self._permit_round = None
+        self._permits = None  # None=未启用（全许可）；set=本回合允许调 LLM 的 agent
 
     # ---- 只读辅助 ----
     def current_round(self) -> int:
@@ -169,6 +171,8 @@ class KernelAdapter:
                     if int(q) > 0)
         from engine import production as _P
         tg = tuple(g for g, _q in inv if _P.is_transferable(g))  # 可转让自有 goods（供 life 选货）
+        permits = self._llm_permits(r)
+        permit = True if permits is None else (agent_id in permits)  # M4：默认全许可
         # 注：不暴露 p_ref_mu（Leader 口径：不给 agent 世界定价锚；p_ref 仅用于统计/铸币）；
         #     成交价只由 OFFER_ACCEPTED.terms 决定。
         return WorldView(
@@ -176,7 +180,7 @@ class KernelAdapter:
             status=a.get("status", "alive"), location=loc,
             cash=int(st.cash.get(agent_id, 0)), net_worth=st.net_worth(agent_id),
             visible_events=tuple(visible), memory_refs=memrefs,
-            inventory=inv, transferable_goods=tg,
+            inventory=inv, transferable_goods=tg, llm_permit=permit,
         )
 
     # ---- 落账辅助（唯一经 Arbiter；D1：入本回合缓冲，P6 落盘）----
@@ -403,6 +407,28 @@ class KernelAdapter:
             "terms": p.get("terms"), "kind": p.get("kind"), "round_no": r},
             phase=PHASE_DECIDE, actor=agent_id)
         return IntentResult(ok=True, event_seqs=(seq,))
+
+    # ---- M4 分时调度：本回合 LLM 许可集（仅 schedule_enabled 时启用）----
+    def _llm_permits(self, round_no: int):
+        cfg = (self.engine.config.get("policy", {}) or {}).get("llm_budget", {}) or {}
+        if not cfg.get("schedule_enabled", False):
+            return None  # 未启用 → 全许可（行为与现状一致）
+        if self._permit_round == round_no:
+            return self._permits
+        st = self.engine.state
+
+        def pri(aid):
+            return {"near_death": 3, "warning": 2, "revived": 1}.get(
+                st.agents.get(aid, {}).get("status"), 0)
+        self._permits = set(self.engine.schedule_llm(sorted(st.agents), round_no, priority=pri))
+        self._permit_round = round_no
+        return self._permits
+
+    def note_skip(self, dimension, parties) -> int:
+        """M6 可列：life 跳过一个判定时调用 → 内核发 `DEGRADE{action:"skip_judgment"}`（ADR-08）。"""
+        from engine.scheduling import skip_spec
+        seqs = self.engine.emit_specs([skip_spec(self.engine.state.round, dimension, parties)])
+        return seqs[0] if seqs else -1
 
     # ---- v2 社会层：三通道 MSG（T97）----
     def _members(self, group_id: str) -> list:

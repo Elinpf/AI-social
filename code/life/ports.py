@@ -124,6 +124,9 @@ class WorldView:
     inventory: tuple[tuple[str, int], ...] = ()
     # 自有且**可转让**的 goods（good_id 升序）：供 life 过滤不可转让品（如 service）
     transferable_goods: tuple[str, ...] = ()
+    # M4 分时调度：本回合是否允许该 agent 调用 LLM。默认恒 True（仅当
+    # policy.llm_budget.schedule_enabled=true 时按 Kc 限流，否则**行为与现状一致**）。
+    llm_permit: bool = True
     # optional: unconsumed messages addressed to the agent
     inbox: tuple[EventView, ...] = ()
 
