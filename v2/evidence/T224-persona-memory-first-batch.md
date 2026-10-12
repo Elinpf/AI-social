@@ -14,9 +14,9 @@
 | `code/life/tests/test_t224_*.py` | 22 个单元测试 |
 
 **未做（按 Leader「同一文件同一改动者」规矩 + T35/M2b 重构中）**：
-- 未改 `life/agent.py`（睡眠窗口**挂载点接线**待 T222 释放 `agent.py` 后与 life-layer-dev 约时再接）；
-- 未改 `engine/events.py::EVENT_TYPES` / `replay.apply_event` 折叠器（事件 schema 已由 sim-engine-stats-architect 登记 `08 §1.2 S`，commit `d5dfb69`；代码注册待重构收敛后补）。
-→ **因此"引擎级 N=10×84 drift 不越界"的端到端证据留到接线后**；本批给**模块级降规模 harness**（§4）。
+- ✅ **已补（增量，sha `6975f18`）**：`life/agent.py` 睡眠挂载点接线（在 life-layer-dev 释放 `7481f6f` 之后，纯新增 66 行、未改其 M2b 段）+ `mini_kernel` 新事件折叠 + 接线测试 → 见 **§7**。
+- ⏳ 仍未改 `engine/events.py::EVENT_TYPES` / `replay.apply_event` 折叠器（事件 schema 已由 sim-engine-stats-architect 登记 `08 §1.2 S`，commit `d5dfb69`；**代码注册待重构收敛后补**）。
+→ 因此"顶级引擎 N=10×84"的端到端证据仍在接线后；本批给**模块级降规模 harness**（§4）与 **life 级接线测试**（§7）。
 
 **成本结论**：本批 **新增决策类 LLM 调用 = 0**（模块纯整数、无 LLM import；测试 `test_no_llm_dependency` 守护）。
 
@@ -62,3 +62,23 @@
 ## 6. 未验证 / 待办
 - `【未验证】`：遗忘曲线形状与系数（`h0/w_*/θ_*`）为**工程初值**，待沙盒标定；`1000 回合`长期漂移；引擎级端到端。
 - **待办（接线）**：① `life/agent.py` 睡眠点调用 `run_sleep_window`（待 T222 释放）；② `engine/events.py` + `replay.apply_event` 注册新事件折叠（待重构收敛）；③ 观测指标 `metrics.life.memory/persona`（T9/obs 侧）。
+
+## 7. 增量：挂载点接线（sha `6975f18`）
+**内容**：
+- `life/agent.py`：新增 `_maybe_sleep_window()`（在 `step()` 尾部调用；**默认关**）。night 时段每模拟日执行一次睡眠离线窗，经 `INTENT.MEMORY` 提交 `op∈{sleep_start,forget,consolidate,sleep_end}`；**不触碰 M2b 判定调用点**，**不新增 LLM**。
+- `life/tests/support/mini_kernel.py`：新增 4 个 op 的落事件 + 5 类新事件的确定性折叠（仅测试替身，非引擎）。
+- `life/tests/test_t224_agent_wiring.py`：3 个 life 级接线测试。
+
+**命令 / 结果**：
+| 项 | 命令 | 结果 |
+|---|---|---|
+| T224 全部单测 | `python -m pytest life/tests/test_t224_*.py -q` | **25 passed** |
+| life 全套 | `python -m pytest life/tests -q` | **54 passed** |
+| 全量 | `python -m pytest -q` | **439 passed, 0 failed**（较上批：obs 的 Fork B 收口后已恢复） |
+| 术语 | `make lexicon-gate` | 退出 0（新增违规 0） |
+| 导入边界 | `lint-imports` | 9 kept / 0 broken |
+
+**默认关验证**：`test_disabled_default_no_sleep_events`（不开 → 无 `SLEEP_STARTED`，行为与接入前一致）。
+**保护名单在事件流验证**：`test_enabled_sleep_window_wires_events`（开 → 受保护记忆事件 `level=="demote"`）。
+
+**仍未做（待办 2/3）**：`engine/events.py`+`replay` 折叠；`metrics.life.{memory,persona}` 观测口径。
