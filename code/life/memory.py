@@ -36,6 +36,16 @@ try:  # optional vectorized relevance (T264-adjacent perf, T265-approved ②); o
 except Exception:  # pragma: no cover
     _np = None
 
+# Default ON (Leader-approved ②, `d2f9007`), with a fallback to the scalar path.
+#
+# ⚠️ RISK / RECALIBRATION: the only observable risk of the numpy path is a
+#    changed *tie order* — pairwise summation differs from Python's sequential
+#    `sum` at the ULP level, and exact ties are broken by (last_access, mem_id).
+#    This was pressure-tested with **duplicate vectors** in
+#    `life/tests/test_t265_memory_perf_equiv.py`. If anyone changes the sort key,
+#    the retrieval precision, or the embedding, **re-run that test** (and the
+#    engine `state_hash`/replay parity) before trusting the numpy path again.
+#    A cheap revert is `USE_NUMPY_RELEVANCE = False` (keeps ①/④).
 USE_NUMPY_RELEVANCE = _np is not None
 
 
