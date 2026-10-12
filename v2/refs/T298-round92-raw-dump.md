@@ -44,6 +44,15 @@
   - **`life/` 部分 = 已提交 `8d4c8b9`**（无未提交 life 改动）✓
   - **含未提交的 kernel 改动**：`code/engine/{events,kernel,ledger,runner,version}.py`（T287，**default-off**）+ 未跟踪 `code/engine/time_model.py`、`code/config/time.json`、`code/tests/test_t287_time_model.py`
 - ⇒ 复算时请注意：**结果包含上述未提交 kernel/time 改动**（T287 默认关，预期不改变本三档结果）；**非纯 HEAD 快照**。
+- **两条机制必须分清（勿混）**：
+  - **探针**`verify_native_resume.sh`（§5 的逐字节 FAIL / 残差刻画）＝ **`tree=copy`（提交快照）**；
+  - **本 dump（§1–§3）与三档回归（§3c）** ＝ **活树**。
+- **③ 三档 = "条件性通过"**：跑在活树（含 T287 default-off 未提交改动）。**解冻后需在【纯 HEAD 快照】上补跑一次**，以消除"活树 ≡ 快照"这一 caveat（不用"default-off 所以没事"的推理收尾）。
+
+## 3c) 三档回归（活树，条件性通过）
+- `seed42/n=4/0..8` ✅ · `seed42/n=4/0..24` ✅ · `seed7/N=20×24` ✅（均 `one==two`）。
+- 命令：`run_e2e(seed, rounds, n, ...)` 三段式（one / prefix+flush / resume），见 `/tmp/t298_reg.py`。
+
 
 
 ## 4) 两路新日志（可读路径）
