@@ -93,7 +93,7 @@ output: narrative_body
 meta:   fact_event_seqs[], anchor_digest, style, pov, spec_flags
 ```
 **【事实(run)】样例（`NARRATIVE`）**：`body_ref="side://narrative/P001/N-P001-0.txt"`，`fact_event_seqs=[120293,120294,120667,...]`，`affects_state=false`，`anchor_digest=sha256:0b0e...`。
-→ **可用，但必须过 §3 的"不得编造事实"门**（对齐 `v1.1/17` H-1/S-4）。
+→ **可用，但 ①必须过 §3 的"不得编造事实"门；②⚠️ 当前 `side/narrative` 目录无 writer（`life/agent.py:449` 只发指针未落正文），S4 目前无源——见 §8。**
 
 ### S5 · 判别/偏好样本（**现无真值，需另造**）
 ```
@@ -196,13 +196,17 @@ train_ready(dataset) =
 ## 8. 未验证 / 待确认
 
 - **【已核实】** LLM_CALL/responses **确实完全不落 prompt 正文**（freeze-layer-dev 确认）。
-- **【事实·重要】** **side 正文（`.txt`）未随 run 保留**：现有 canonical run 只留事件 `.jsonl`（含 `body_ref` 指针），盘上无 `side/` 目录 → **S2/S3/S4 依赖的正文当前不可导**（需重跑且保留 side，或先落 T227 的 prompt 正文）。
-- **【事实·实测】** **S1（对话）可从现有日志直接导出**：在 `run_t136_real_llm_canon_n20.jsonl` 上实测得 **232 条**（过滤 `mock::` 后）；样例见下（示例 4 条）：
+- **【事实·更新（release-engineer T229 实测）】** **"S2/S3/S4 不可导"这句要按类型拆开**：
+  - **S2/S3 可导（实测，非"应该能"）**：用**非 `/tmp` 路径**保留 side 跑 N=3×1 周 → `mem .txt=1324`、打包 `tar.gz=510 KB`；**解包后仅凭归档导出 S2 = 21 条、`missing_body=0`**（证据 `v2/evidence/t229_archive_roundtrip.json`，sha 关联 `3bbe67e`；provider=离线 mock → 验的是**归档→导出链路**，非正文质量）。
+  - **根因**：`run_e2e` 默认 side 建在 tempdir 且**结尾 rmtree**（`integration.py:681,744`）→ **连 `--side-root /tmp/...` 也会被删**（这就是 canonical run 盘上无 side 的原因）。→ 需按 **T229 归档口径**保留 side。
+  - **S4 仍无源（新发现，非归档问题）**：`NARRATIVE.body_ref=side://narrative/...` **只有指针、没有写入方**（`code/life/agent.py:449` 只发 `NARRATIVE` 事件，未落 `side/narrative`）；`SKILL_OUTPUT.output_ref`（`code/life/settlement.py:301`）同 → **`side/narrative`、`side/skill` 目录根本不生成**。**这不是"归档丢了正文"，是"从未写过"** → 需 `life-layer-dev`/`narrative-designer` 补 writer。
+- **【事实·实测】** **S1（对话）可从现有日志直接导出**：在 `run_t136_real_llm_canon_n20.jsonl` 上实测得 **232 条**（过滤 `mock::` 后）；样例见下（示例 2 条）：
   ```json
   {"kind":"MSG_DM","from":"P004","to":"P013","place":"library","slot":"morning","tag_hints":["mentorship"],"utterance":"秀娘笑眯眯地递过一块刚出炉的桂花糕：“来，尝尝看，做点心啊，最要紧的是心里装着吃的人，你多试几次就摸着门道了。”","source_event_seq":81,"round":0}
   {"kind":"MSG_PUBLIC","from":null,"to":null,"slot":"morning","tag_hints":["skill_practice"],"utterance":"（刨花卷着木香落下）慢点，再慢点。","source_event_seq":61,"round":0}
   ```
   → **S1 走通"无 GPU 也能导出"，且与 §3 质量门兼容**（带 `source_event_seq`、可过滤 mock）。
+- **【结论·原料链】** #10 完整原料 = **T227（input：prompt 正文）+ T228（正文侧：side `.txt` 分档保留）+ T229（归档：正文不随 run 消失）三者齐**；S4 另需**补 narrative/skill writer**。
 - **【未验证】** 本机算力规格（是否无 GPU）。
 - **【未验证】** §5 各阈值（N_min/多样性/一致性）为经验初值，需实测标定。
 - **【未验证】** S1/S2/S3/S4 的**真实可用样本量与质量**（本文只抽样核对结构，未全量统计质量）。
