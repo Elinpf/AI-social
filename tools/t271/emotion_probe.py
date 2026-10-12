@@ -40,6 +40,19 @@ def _load_terms(path):
     return tuple(terms)
 
 
+def _load_emotion_sign():
+    """T333 单一真源：优先 import `life.emotion.emotion_sign`；不可用则回退自带 26 表（显式告警，不静默）。"""
+    code = os.environ.get("T271_CODE",
+                          "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code")
+    if code and code not in sys.path:
+        sys.path.insert(0, code)
+    try:
+        from life.emotion import emotion_sign  # noqa: PLC0415
+        return emotion_sign
+    except Exception:
+        return None
+
+
 def main():
     rd = sys.argv[1]
     nsamp = 8
@@ -53,6 +66,16 @@ def main():
     if "--neg-file" in sys.argv:
         NEG = _load_terms(sys.argv[sys.argv.index("--neg-file") + 1]); neg_src = "file"
     print(f"# lexicon: POS={len(POS)}({pos_src}) NEG={len(NEG)}({neg_src})")
+    # T333：判定式单一真源 —— 优先 import life.emotion.emotion_sign；--criterion strict|natural。
+    crit = "strict"
+    if "--criterion" in sys.argv:
+        crit = sys.argv[sys.argv.index("--criterion") + 1]
+    lexicon_given = ("--pos-file" in sys.argv) or ("--neg-file" in sys.argv)
+    emo_fn = _load_emotion_sign()
+    if emo_fn is not None:
+        print(f"# 判定: life.emotion.emotion_sign (criterion={crit}, lexicon={'custom' if lexicon_given else 'default'})")
+    else:
+        print("# [WARN] life.emotion.emotion_sign 不可用 -> 回退自带 26 表（仅 strict；显式告警，不静默）")
     log = os.path.join(rd, "run.jsonl")
     if not os.path.exists(log):
         c = sorted(glob.glob(os.path.join(rd, "*.jsonl")))
@@ -79,8 +102,12 @@ def main():
             miss += 1; continue
         low = txt.lower()
         hp = [w for w in POS if w in low]; hn = [w for w in NEG if w in low]
-        e = bool(hp or hn); imp = int(p.get("importance") or 0)
-        tot += 1; emo += e; posn += bool(hp); negn += bool(hn)
+        if emo_fn is not None:
+            sign = emo_fn(txt, criterion=crit, lexicon=((POS, NEG) if lexicon_given else None))
+        else:
+            sign = 1 if hp else (-1 if hn else 0)
+        e = sign != 0; imp = int(p.get("importance") or 0)
+        tot += 1; emo += e; posn += (sign > 0); negn += (sign < 0)
         if imp >= 7:
             i7t += 1; i7e += e
         if e:
@@ -92,7 +119,8 @@ def main():
     print(f"# T326 emotion probe (v2)  log={log}")
     print(f"# LLM_CALL provider 计数: {prov}")
     print(f"reflect_write(kind=reflection)={len(refl)}  body可读={tot}  取正文失败={miss}")
-    print(f"含情感词(hit any of {len(POS)+len(NEG)} 子串): {emo}/{tot} = {emo/max(tot,1):.1%}  (POS={posn}, NEG={negn})")
+    print(f"含情感词(sign!=0; criterion={crit}, lexicon={'custom' if lexicon_given else 'default'}, "
+          f"provider={'life.emotion' if emo_fn else 'fallback26'}): {emo}/{tot} = {emo/max(tot,1):.1%}  (+{posn}/-{negn})")
     print(f"importance>=7 子集: {i7e}/{i7t} = {i7e/max(i7t,1):.1%}")
     print(f"== 原始样本 {len(samples)} 条（供人眼判『有没有情绪』）==")
     for s in samples:
