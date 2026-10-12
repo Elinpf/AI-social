@@ -86,7 +86,29 @@ def _cmd_census(args) -> int:
     return 0
 
 
+def _git_stamp() -> None:
+    """打印 git 状态三行（T220 三）：sha / dirty_files / `[CLEAN]`|`[DIRTY — 结论仅供参考]`。
+
+    并行编辑同一工作树时，门禁结论必须绑 git 状态（"证据绑版本"）。**绝不因此崩溃**。
+    """
+    import subprocess
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[2]  # repo root（social-experiment/）
+    try:
+        sha = subprocess.run(["git", "-C", str(root), "rev-parse", "--short", "HEAD"],
+                             capture_output=True, text=True).stdout.strip()
+        por = subprocess.run(["git", "-C", str(root), "status", "--porcelain"],
+                             capture_output=True, text=True).stdout.strip()
+        n = len([l for l in por.splitlines() if l.strip()])
+        print(f"sha: {sha}")
+        print(f"dirty_files: {n}")
+        print("状态: " + ("[CLEAN]" if n == 0 else "[DIRTY — 结论仅供参考]"))
+    except Exception as e:  # 打戳失败不得影响门禁本身
+        print(f"[git_stamp unavailable: {e}]")
+
+
 def _cmd_gate(args) -> int:
+    _git_stamp()
     log = ReadOnlyLog(read_log(args.log))
     # 三态（T220）：none（显式跳过，必须打印）/ auto（默认）/ <id>
     if args.baseline == "none":
@@ -108,6 +130,10 @@ def _cmd_gate(args) -> int:
                       f"engine_version={d.get('baseline_engine_version')}")
                 print(f"  判定：事件量 ≥ 基线×{d.get('min_event_ratio')}（增长应通过、塌陷才失败）")
                 _print_distribution_table(d.get("comparison", []))
+    # 诊断级（不进退出码）—— Fork B：字节相等降诊断；只打印、不判 FAIL
+    for dg in res.get("diagnostics", []):
+        st = "PASS" if dg["ok"] else ("SKIP" if dg["ok"] is None else "FAIL")
+        print(f"[DIAG] {dg['name']} ok={st} {dg['detail']}")
     print("GATE " + ("PASS" if res["ok"] else "FAIL"))
     return 0 if res["ok"] else 1
 

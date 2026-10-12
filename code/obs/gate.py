@@ -65,9 +65,6 @@ def check_llm_judged_zero(log, t=None, time_cfg=None, params: ObsParams | None =
     return {"name": "llm_judged_metric_count_zero", "ok": n == 0, "detail": {"count": n}}
 
 
-def run_gates(log, t=None, time_cfg=None, params: ObsParams | None = None) -> dict:
-    """运行观测层门禁，返回 {ok, gates:[...]}。"""
-    reset_llm_calls()
 def check_distribution(log, baseline, time_cfg=None) -> dict:
     """G6：黄金基线 / 事件量-分布回归门禁。
 
@@ -213,7 +210,11 @@ def _repro_hint(first) -> list:
 
 def run_gates(log, t=None, time_cfg=None, params: ObsParams | None = None,
               baseline=None, schema_strict: bool = True) -> dict:
-    """运行观测层门禁，返回 {ok, gates:[...]}。
+    """运行观测层门禁，返回 `{ok, gates, diagnostics}`。
+
+    `gates` = **must**（进 `ok`/退出码）；`diagnostics` = **诊断**（不进 `ok`、退出码恒 0）。
+    must：`llm_zero` / `llm_judged_zero` / `conservation` /（`schema`）/（`distribution`）。
+    diagnostic（Fork B 降级）：`metrics_bitwise`(G2a) / `census_bitwise`(G2b)。
 
     `baseline`：None（显式 none，不含 G6，由 CLI 打印跳过）/ 基线 dict / baseline_id 字符串 / "auto"。
       **fail-loud（T220）**：`"auto"` 未命中或 `id` 不存在 → G6 `ok=False`（拒绝通过）。
@@ -221,9 +222,8 @@ def run_gates(log, t=None, time_cfg=None, params: ObsParams | None = None,
     `schema_strict`：True（默认）→ 纳入 G7 schema 合约（阻塞 FAIL）。
     """
     reset_llm_calls()
+    # ── must（进 `ok` / 退出码）—— Q-12.1 + 门禁分级 v3 ──
     gates = [
-        check_metrics_bitwise(log, t, time_cfg, params),
-        check_census_bitwise(log, params),
         check_llm_zero(log, t, time_cfg, params),
         check_llm_judged_zero(log, t, time_cfg, params),
         check_conservation(log),
@@ -232,9 +232,14 @@ def run_gates(log, t=None, time_cfg=None, params: ObsParams | None = None,
         gates.append(check_schema_conformance(log))
     if baseline is not None:
         gates.append(check_distribution(log, baseline, time_cfg))
+    # ── diagnostic（**不进 `ok`**、`[DIAG]` 打印、退出码恒 0）—— Fork B：字节相等降诊断 ──
+    diagnostics = [
+        check_metrics_bitwise(log, t, time_cfg, params),   # G2a
+        check_census_bitwise(log, params),                 # G2b
+    ]
     # ok：忽略 skipped（ok=None）的门禁
     ok = all(g["ok"] is not False for g in gates)
-    return {"ok": ok, "gates": gates}
+    return {"ok": ok, "gates": gates, "diagnostics": diagnostics}
 
 
 def _digest(s: str) -> str:

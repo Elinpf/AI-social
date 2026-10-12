@@ -495,6 +495,10 @@ def build_evidence(log_path: str | Path, out_dir: str | Path, *,
         if g["ok"] is False and g["name"] == "schema_conformance":
             for line in g["detail"].get("repro", []):
                 gate_lines.append(f"    复现：{line}")
+    # 诊断级（不进退出码）—— Fork B：字节相等降诊断；只打印、不判 FAIL
+    for dg in gate_res.get("diagnostics", []):
+        ds = "PASS" if dg["ok"] else ("SKIP" if dg["ok"] is None else "FAIL")
+        gate_lines.append(f"[DIAG] {dg['name']} ok={ds} {json.dumps(dg['detail'], ensure_ascii=False)}")
     gate_lines.append("GATE " + ("PASS" if gate_res["ok"] else "FAIL"))
     _write(out_dir / "gate.txt", "\n".join(gate_lines) + "\n")
 

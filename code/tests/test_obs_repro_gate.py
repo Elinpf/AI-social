@@ -105,6 +105,18 @@ def test_full_obs_gate(tmp_path):
     assert out["ok"] is True
 
 
+def test_g2_diagnostic_does_not_block_ok(tmp_path, monkeypatch):
+    """反向验证（防假降级回归）：G2a 强制 FAIL → run_gates.ok 仍 True、进 diagnostics。"""
+    p, _ = _log_file(tmp_path)
+    log = ReadOnlyLog(read_log(str(p)))
+    monkeypatch.setattr(gate, "check_metrics_bitwise",
+                        lambda *a, **k: {"name": "metrics_bitwise", "ok": False, "detail": {"injected": True}})
+    res = gate.run_gates(log)
+    assert res["ok"] is True                                   # 诊断不进 ok
+    assert any(d["name"] == "metrics_bitwise" and d["ok"] is False for d in res["diagnostics"])
+    assert all(g["name"] != "metrics_bitwise" for g in res["gates"])  # 已移出 must
+
+
 def test_cli_gate_baseline_none_skips(tmp_path):
     # 显式 --baseline none → 跳过 G6，rc=0，且**必须显式打印**（T220）
     p, _ = _log_file(tmp_path)
@@ -115,6 +127,7 @@ def test_cli_gate_baseline_none_skips(tmp_path):
     assert cp.returncode == 0, cp.stdout + cp.stderr
     assert "GATE PASS" in cp.stdout
     assert "baseline=none" in cp.stdout  # 显式跳过必须可见
+    assert "[DIAG]" in cp.stdout         # 诊断级仍打印（不进退出码）
 
 
 def test_cli_gate_auto_unmatched_fails_loud(tmp_path):
