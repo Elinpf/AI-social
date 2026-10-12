@@ -897,6 +897,11 @@ def build_world(seed: int, config: dict | None = None, *, n: int | None = None,
     config = config or default_config()
     if endow is not None:
         config.setdefault("genesis", {})["initial_endowment_mu"] = int(endow)
+    # T297b: life 直读配置的运行时注入（与引擎 override 同机制）—— 把 config["life_v2"]
+    # 注入 life（不落盘、不改指纹）；`None` 即清除、行为回到纯读盘。build_world 是**唯一**
+    # 世界构造入口（run_e2e 亦经此），故此处注入即覆盖所有路径。
+    from life import config as _lcfg
+    _lcfg.set_override(config.get("life_v2"))
     places = load_places(places_path)
     personas_all = load_life_personas(personas_path)
     if n and n > len(personas_all):

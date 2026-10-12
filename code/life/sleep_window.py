@@ -36,7 +36,10 @@ def load_params(path: str | Path | None = None) -> dict[str, Any]:
             for k, v in (data.get("sleep") or {}).items():
                 if k in sleep:
                     sleep[k] = v
-    return {"sleep": sleep, "forgetting": forgetting, "persona_drift": persona}
+    # T297b: 运行时注入 hook —— 组合根可经 `config["life_v2"]` 覆盖（不落盘、不改指纹）。
+    from . import config as _lcfg
+    return _lcfg.apply("life_v2", {"sleep": sleep, "forgetting": forgetting,
+                                   "persona_drift": persona})
 
 
 def enabled(params: dict) -> bool:
