@@ -3,7 +3,7 @@
 # 与 `pytest -q` / `lint-imports` / obs gate 并列的可跑门禁。
 # 术语合规采用「基线/棘轮」模式：仅当出现基线之外的【新】违规才失败。
 
-.PHONY: help lexicon-gate lexicon-report lexicon-baseline lexicon-dir-stats inert-gate pyclean code-test plugin-test stamp install-hooks gate gate-repo verify
+.PHONY: help lexicon-gate lexicon-report lexicon-baseline lexicon-dir-stats inert-gate pyclean code-test plugin-test stamp install-hooks gate gate-repo verify resume-fixture-check resume-guard
 
 help:
 	@echo "== 仓根 Makefile（在仓库根目录跑）=="
@@ -17,6 +17,8 @@ help:
 	@echo "make code-test       # 在 code/ 下跑 pytest"
 	@echo "make plugin-test     # 在 plugin-skeleton/ 下跑 pytest"
 	@echo "make stamp           # 记录本次门禁结论所绑定的 git 状态"
+	@echo "make resume-fixture-check # 快 · must-be-red 夹具检查（pre-fix 分歧对语义投影必须【不等】）"
+	@echo "make resume-guard    # 慢 · current HEAD 上 cut=75/89 续跑一致性回归守护（独立、不挂 verify）"
 	@echo ""
 	@echo "⚠ 消歧（T280）：本文件的 gate = 仓根级门禁，**不含前端渲染**。"
 	@echo "   前端渲染门禁在 code/ 下（make -C code ci 或 make -C code front-gate）。"
@@ -88,3 +90,13 @@ verify: gate
 	@echo "[verify] 仓根门禁通过 → 继续前端 CI（在 code/ 跑 make ci）"
 	@$(MAKE) -C code ci
 	@echo "[verify] OK · 仓根门禁 + 前端 CI 均通过（全绿）"
+
+# ===== T311 · resume 回归守护（重口径门；**不挂 gate/verify**，避免与前端 CI/夜跑叠加）=====
+# resume-fixture-check：快 —— must-be-red 夹具（pre-fix 分歧对）语义投影必须【不等】。
+# resume-guard：慢 —— current HEAD 上 cut=75/89 续跑必须 == oneshot（每 cut ≈4×150r run）。
+#   ⚠ 一人一次；与 `make verify`、obs 跑批错开。详见 tools/t271/resume_regression_guard.sh 头部装置前提。
+resume-fixture-check:
+	@bash tools/t271/negative_fixture_check.sh
+
+resume-guard:
+	@bash tools/t271/resume_regression_guard.sh

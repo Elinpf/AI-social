@@ -29,5 +29,11 @@ code/logs/
 # 不忽略会被 `git add -A` 裹带/污染 status（与 T273 提交范围守卫同族风险）。
 .worktrees/
 
+# ===== 例外：有意入库的 frozen 测试夹具（显式承认，非绕过守卫）=====
+# tools/t271/fixtures/** 下的 *.jsonl 是 T311 的 must-be-red 负向夹具（pre-fix 分歧对，
+# 内容一字不改、有意入库）；上方 `**/*.jsonl` 默认忽略的是运行日志。
+# 用【显式负向规则】放行夹具目录 —— 不改名绕守卫（T311 纪律）。
+!tools/t271/fixtures/**/*.jsonl
+
 # 根级冻结缓存（可再生）
 freeze_cache/
