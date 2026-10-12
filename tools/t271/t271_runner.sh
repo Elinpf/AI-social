@@ -53,4 +53,8 @@ done
 wait "$CHILD"; rc=$?
 printf '%s\t%s\t%s\t%s\n' "$(date '+%F %T')" "$(stat -c %s "$OUT" 2>/dev/null || echo -1)" "EXIT" "$(rss_of $CHILD)" >> "$HBLOG"
 echo "[runner] batch exited rc=$rc"
+# 结束时即回填 meta（engine_version 指纹 + ended_at），不依赖事后 collect
+if [ -x "$(dirname "$0")/finalize_meta.sh" ]; then
+  bash "$(dirname "$0")/finalize_meta.sh" "$RUN_DIR" >/dev/null 2>&1 || true
+fi
 exit $rc

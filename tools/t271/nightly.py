@@ -147,38 +147,58 @@ def batch_state(name: str, run_root: str):
                 if len(r) > 2 and r[2].lstrip("-").isdigit() and int(r[2]) >= 0:
                     st["last_round"] = int(r[2])
     out_p = st.get("out") or os.path.join(rd, "run.jsonl")
+    log_round = None
     if os.path.exists(out_p):
         n = sum(1 for _ in open(out_p, encoding="utf-8", errors="ignore"))
         st["events"] = n
-        tail = open(out_p, "rb").read()[-4096:]
+        tail = open(out_p, "rb").read()[-262144:]
         st["run_end"] = b"RUN_END" in tail
+        for line in reversed(tail.split(b"\n")):
+            line = line.strip()
+            if not line or not line.startswith(b"{"):
+                continue
+            try:
+                r = json.loads(line)
+            except Exception:
+                continue
+            if isinstance(r, dict) and isinstance(r.get("round"), int):
+                log_round = r["round"]
+                break
+    st["log_round"] = log_round
     hl = os.path.join(rd, "host.log")
     if os.path.exists(hl):
         for line in open(hl, encoding="utf-8", errors="ignore"):
             m = re.search(r"batch exited rc=(-?\d+)", line)
             if m:
                 st["rc"] = int(m.group(1))
-    # classify
+    # 是否达标以【日志实测回合】为准；心跳 round 只作「死在哪一刻」用（10min 间隔会滞后）。
+    reached = log_round if log_round is not None else st.get("last_round")
+    if reached is not None:
+        st["last_round"] = reached
+    st["reached"] = reached
+    target = st.get("target")
+    hit = bool(target) and reached is not None and reached >= target - 1
+
     if st.get("run_end"):
         st["status"] = "SUCCESS"; st["reason"] = "RUN_END"
-        if st.get("target"):
-            st["last_round"] = st["target"] - 1
+        if target:
+            st["last_round"] = max(reached or 0, target - 1)
     elif st["alive"]:
         st["status"] = "RUNNING"; st["reason"] = "进程存活"
-    elif st["rc"] is not None and st["target"] and st["last_round"] is not None \
-            and st["last_round"] >= st["target"] - 1:
-        st["status"] = "SUCCESS"; st["reason"] = f"到目标回合 {st['last_round']}/{st['target']-1}"
-    elif st["rc"] == 0 and st["target"] and st["last_round"] is not None \
-            and st["last_round"] >= st["target"] - 1:
-        st["status"] = "SUCCESS"; st["reason"] = "rc=0 且到目标回合"
     elif st["rc"] in (137, 143) or (st["rc"] is not None and st["rc"] < 0):
         st["status"] = "INTERRUPTED"
         st["reason"] = f"被信号终止 rc={st['rc']}（外因中断，非批内错误）"
+    elif hit and st["rc"] in (0, None):
+        st["status"] = "SUCCESS"
+        st["reason"] = f"日志到目标回合 {reached}/{target-1}（rc={st['rc']}）"
+    elif hit:
+        st["status"] = "FAILED"
+        st["reason"] = f"回合已到但引擎自检失败 rc={st['rc']}"
     elif st["rc"] is not None and st["rc"] != 0:
         st["status"] = "FAILED"; st["reason"] = f"rc={st['rc']}"
     else:
         st["status"] = "INTERRUPTED"
-        st["reason"] = f"进程已死且未达目标（last_round={st['last_round']}, target={st['target']}）"
+        st["reason"] = f"未达目标（日志回合={reached}, target={target}, rc={st['rc']}）"
     return st
 
 
