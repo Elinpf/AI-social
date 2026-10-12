@@ -193,3 +193,17 @@ class PromptCapture:
         return {"written": self.written, "refused": self.refused,
                 "skipped": self.skipped, "capped": self.capped,
                 "truncated": self.truncated, "bytes": self._bytes}
+
+
+# --------------------------------------------------------------------------- #
+# 模块级便捷函数（供归档/其他成员复用同一套脱敏规则，避免第二套口径）
+# --------------------------------------------------------------------------- #
+
+def redact_text(text: str, terms: Optional[List[str]] = None) -> str:
+    """按 capture 的规则脱敏任意文本（端点/密钥）。归档前可复用。"""
+    return PromptCapture(CaptureConfig(), root=".", redact_terms=terms).redact(text)
+
+
+def scan_clean_text(text: str, terms: Optional[List[str]] = None) -> bool:
+    """按 capture 的规则扫描文本是否无端点/密钥残留（扫不到=True）。"""
+    return PromptCapture(CaptureConfig(), root=".", redact_terms=terms).scan_clean(text)
