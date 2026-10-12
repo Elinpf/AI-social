@@ -80,8 +80,36 @@ def main() -> int:
             pg.screenshot(path=args.out)
         finally:
             b.close()
-    print(f"SHOT OK: {args.out}  elapsed={time.time()-t0:.2f}s  mean_brightness={_mean_brightness(args.out)}")
+    # ★ T259「非空白校验」：就绪 ≠ 非空白。防"盲测撞上白帧被判 1 分"。
+    frac, col = _largest_color_frac(args.out)
+    if frac >= _BLANK_FRAC:
+        print(f"SHOT FAIL: 画面近乎单色（最大单色占比 {frac:.2%} ≥ {_BLANK_FRAC:.0%}，色≈{col}）"
+              f" —— 疑似空白/白帧，拒绝判为 OK  {args.out}")
+        return 1
+    print(f"SHOT OK: {args.out}  elapsed={time.time()-t0:.2f}s  mean_brightness={_mean_brightness(args.out)}"
+          f"  max_color_frac={frac:.2%}")
     return 0
+
+
+# T259 非空白判据：整帧量化(16级/通道)后**最大单色占比**上限。
+# 标定：正常帧 ≈0.12–0.15；曾出现的白帧 ≈0.57。取 0.5 分隔，两侧余量大。
+_BLANK_FRAC = 0.5
+
+
+def _largest_color_frac(path: str):
+    """整帧最大单色占比（量化到 16 级/通道以吸收抗锯齿），及该颜色。用于"非空白"判据。"""
+    try:
+        from PIL import Image
+        from collections import Counter
+        im = Image.open(path).convert("RGB")
+        q = im.resize((max(1, im.width // 4), max(1, im.height // 4)))
+        px = list(q.getdata())
+        c = Counter(((r >> 4) << 4, (g >> 4) << 4, (b >> 4) << 4) for r, g, b in px)
+        n = len(px) or 1
+        col, v = c.most_common(1)[0]
+        return v / n, col
+    except Exception:
+        return 0.0, None
 
 
 def _mean_brightness(path: str) -> str:

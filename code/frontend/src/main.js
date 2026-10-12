@@ -80,6 +80,12 @@
       const rq = qs.get("round");
       if (rq != null && state.replay) { stopPlay(); jumpTo(parseInt(rq, 10) || 0); }
       // T259-B 播放件：?speed=<ms> 定速；?autoplay=1 载入即自动播放（供真人盲测片段）
+      // T259 修观感：首屏默认拉近 + 聚焦活动最密处（"离远看哪哪都一样"→"看成一个地方"）。
+      // ?cam=fit 保留旧的全景行为（可回退对照）；?camscale=<name> 调焦聚倍率。仅在未显式定位时生效。
+      if (qs.get("cam") !== "fit") {
+        const cs = parseFloat(qs.get("camscale")) || 1.6;
+        focusCamera(cs);
+      }
       const sp = qs.get("speed");
       if (sp) el("speed-select").value = String(sp);
       if (qs.get("autoplay") === "1" && state.replay) play();
@@ -503,10 +509,32 @@
     town.inst.worldLayer.position.set(cam.x, cam.y);
     // T116：随缩放自动分层（近景 info / 全景 default）。带滞回，避免拖动边界抖动；
     // 用户显式选择「景观」时不自动覆盖。
-    if (state.view !== "landscape" && !state.explicitView && typeof town.inst.setMode === "function") {
+    if (state.view !== "landscape" && !state.explicitView && !cam._focusLock && typeof town.inst.setMode === "function") {
       const tier = cam.scale >= 1.45 ? "info" : (cam.scale <= 1.15 ? "default" : state.view);
       if (tier !== state.view) setView(tier);
     }
+  }
+
+  // T259 修观感：把首屏镜头拉近并居中到"当前活动最密处"（全体角色质心），
+  // 让开场读成一个"地方"而非一张"地图"。只在未显式定位时调用；可回退（?cam=fit）。
+  function focusCamera(scale) {
+    if (!town.inst) return;
+    const ids = Object.keys(town.inst.agents || {});
+    let sx = 0, sy = 0, n = 0;
+    ids.forEach((id) => {
+      const rec = town.inst.agents[id];
+      const t = rec && (rec.target || rec.container);
+      if (t && isFinite(t.x) && isFinite(t.y)) { sx += t.x; sy += t.y; n++; }
+    });
+    const v = town.inst.app.view;
+    cam.scale = Math.max(1, Math.min(4, scale));
+    const cx = n ? sx / n : v.width / 2;
+    const cy = n ? sy / n : v.height / 2;
+    cam.x = v.width / 2 - cx * cam.scale;
+    cam.y = v.height / 2 - cy * cam.scale;
+    cam._focusLock = true;   // 首屏聚焦时抑制"近景自动切 info(显 NPC ID)"的档位跳变，保持建筑名分层
+    clampCam(); applyCam();
+    cam._focusLock = false;
   }
 
   // T116 信息分层：landscape | default | info（默认 default：建筑名可见、NPC ID 隐藏）
