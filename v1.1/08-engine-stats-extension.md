@@ -1002,17 +1002,18 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
 > 定位：**只改"时间如何表达与排序"，不改结算频率**。round 仍是**结算拍**（84/周不变；代谢/税/计息/守恒/观测切片每回合一次）。08 为本节单一真源。
 
 - **微时刻**：`μt = round * U + sub`，`sub ∈ [0, U)`；`U` = 每回合微时刻数（config，**默认 6、可调 1–12**；**`U=1` 退化为现状"原子"**）。μt 只用于**排序/重叠/先后/进行中**。
-- **区间字段（既有事件加【可选】，不新增类型）**：`span = {start_round, start_sub, end_round, end_sub}`；**缺省 = 瞬时 `(round, 0)`**；`start==end` = 瞬时；**允许 `end.round > start.round`（进行中，跨结算拍）**。
+- **区间字段（既有事件加【可选】，不新增类型）**：`spec(..., span={start_round, start_sub, end_round, end_sub})`；**`span=None`/缺省 = 瞬时 `(round, 0)`**；`start==end` = 瞬时；**允许 `end.round > start.round`（进行中，跨结算拍）**。
 - **带区间最小事件集**：`PLACE_MOVE` / `PLACE_ARRIVED`、`ACTIVITY_STARTED` / `ACTIVITY_COMPLETED` / `ACTIVITY_INTERRUPTED`。（`MSG_*` / `OFFER_*` 等留三期。）
 - **排序键（写死，二者并存、不可混用）**：
   - **事实序 = `seq`（全局唯一事实序，红线不变）** —— append/重放按 `seq`。
-  - **语义时间序 = `(start_μt, agent_id, seq)`** —— 按 μt 排序/结算/判先后（跨 agent 用 `agent_id` 定 tie-break，再 `seq`，全序）。
+  - **语义时间序 = `(start_μt, actor, seq)`** —— 按 μt 排序/结算/判先后（跨主体用 `actor` 定 tie-break，再 `seq`，全序）；纯函数 `derive_order` 依此。（字段名取事件外壳的 `actor`。）
 - **独占 / 重叠判定（排他性，确定性与可解释拒绝）**：**同一 `agent` 的「独占动作」（移动 / 劳作）区间不得重叠**；重叠 ⇒ **确定性拒绝**，发 **`INTENT_REJECTED{reason:"exclusive_overlap", agent_id, activity_class, span, conflicting_seq}`**（**复用既有 `INTENT_REJECTED`，不新增类型**）。**不同 agent 允许交错**（区间可重叠；除非共享资源：同场所容量 / 市场撮合）。**先后/因果**：`reply.start_μt ≥ original.end_μt`（或 `≥ start_μt`，**待标定**）。
 - **进行中 = 派生视图**（如 `current_activity`，可由日志重建）：**不新增真相源、不入 `state_hash`、不入事件语义**（沿用 §5.9「可重建派生集合」口径）。
 - **兼容**：无 `span` 的旧事件 = 瞬时；**旧日志可读、不强制迁移**。
-- **时间模型版本戳（分界线）**：`TURN_SEAL` 加**可选字段** `time_model ∈ {"atomic", "interval-U<U>"}` 与 `U`；**历史基线仅同版本内可比**（B 前/B 后不可直接比）。
+- **时间模型版本戳（分界线；位置已定）**：**`WORLD_INIT` 总是**写 `time_model` / `time_U`（off = `atomic`，on = `interval-U<U>`；跨 sha 自描述）；**`TURN_SEAL` 仅 on 时**加戳（**off 时字节不变**）。**历史基线仅同版本内可比**（B 前/B 后不可直接比）。
 - **轻索引（§5.9 协同）**：轻索引增**可选 `start_sub`**（仅区间事件；供 T285 回读/排序精度；`U` 由版本确定）——默认（原子）不占。
-- **开关族（默认 `false`，进 `engine_version` 指纹）**：`time.interval.enabled`（期① 口径，默认 off=旧行为）、`time.ongoing.enabled`（期②）、`time.interleave.enabled`（期③）。
+- **开关族（`config/time.json`；进 `engine_version` 指纹）**：`time.interval.enabled`（`U` 默认 6）、`time.ongoing.enabled`、`time.interleave.enabled`（后二者默认 off）。**`config/time.json` 加入 `FINGERPRINT_FILES`** —— 按 Leader 裁定「**不进指纹的开关 = 日志解释不了的配置**」。
+- **验收口径（off 对照，Leader 修订）**：`time.interval.enabled=off` 时，**除 `WORLD_INIT`/`config_digest` 指纹行及其派生（链哈希、`LLM_CALL.engine_version`/`cache_key`）外，事件流逐条逐字节一致**；**指纹行允许、且应当变化**（新增一个默认 off 的键）——**对照实验须显式标注"唯一差异 = 指纹及其派生"**。（实测：off 对照内容差异 **0/1635**、`TURN_SEAL.state_hash` 相等。）
 - **`state_hash`**：期①（默认瞬时）**不变**；期②/③ 改行为 → 变 → **T236 联动**。
 - **`U=6` 取值理由（Leader 要求）**：① **分辨率 vs 体积**——`U` 翻倍 ⇒ 同回合可区分的先后段数翻倍、区间字段值域翻倍；过大则"同回合被切太细、多余片段增多"；② **动作粒度**——最小可感时长以**时段（=3 回合）**为量级，`U=6` ⇒ 每回合 6 微时刻，**一次移动(0–3 回合)与一次会话往复都能落整数微时刻**，无需更细；③ **退化**——`U=1` = 现状原子，可调 1–12 供标定；④ **【未验证】**——`U` 对日志体积/排序开销的实测影响须在期①对照里量。
 - **逐回合"切片结算"定界（交 08 定，与 kernel-dev 点 2 对齐）**：若跨回合区间的"本回合切片"是**已记录 `span` + `round` 的纯函数** ⇒ **可由日志推导、无需新事件**；若切片含**独立事实**（无法由区间推出，如真实进度量）⇒ **必须发事件 / 扩 `ACTIVITY_*` 加性字段**（**优先复用、不新增类型**）。判定基准 = **能否由已提交日志重建**（§5.9「可重建派生集合」口径）。
