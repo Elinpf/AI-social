@@ -162,5 +162,18 @@ allow_indirect_imports = true
 #  `engine.time.derive_time` 是**纯函数、无状态**，且 `obs.report`/`obs.econ` 已同样只读依赖它；
 #  放行是为**避免重复实现"周/日/时段"口径**（口径唯一不复制）。
 #  engine 的 state/arbiter/ledger/replay/hooks 等写路径对 devtools 仍**禁止**（直接 import 会红）。
+#
+# T256 追加两条窄白名单（同族：均为**纯函数/只读**依赖，理由与 chronicle -> engine.time 一致）：
+#  ① devtools.storyteller -> engine.time
+#     storyteller（T249）与 chronicle 同源使用 `derive_time`（周/日/时段口径）——同一理由放行，
+#     避免重复实现时间口径（口径唯一不复制）。
+#  ② devtools.storyteller -> narrative.weights
+#     `narrative.weights` 是 `config/narrative_weights.json` 的**唯一读取入口**（纯加载/校验，
+#     `narrative__only_read` 契约已保证 narrative 只读、且其唯一依赖 engine.canon 为纯函数）。
+#     storyteller 复用该权重做"确定性选片"，**若改为直读 JSON 即为"复制真源"**（违反口径唯一）。
+#     `narrative.*` 其余模块、以及 life/freeze/orchestration/frontend 对 devtools 仍**禁止**
+#     （直接 import 会红）。同理 engine 的写路径（state/arbiter/ledger/replay/hooks）仍禁止。
 ignore_imports =
     devtools.chronicle -> engine.time
+    devtools.storyteller -> engine.time
+    devtools.storyteller -> narrative.weights
