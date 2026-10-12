@@ -83,3 +83,18 @@
 | dm 连线 | `d1fb4d57…` | `05410d4f…` | 0.066% |
 
 `make ci` → **PASS**（7.10s）。可回退：同上（新增分支 + 调用点，`?fx=0` 全关）。
+
+## 2c. T259 批次 3：G-12 经济 / 制度因果面板（依 obs 面板契约 v2 P3/T101）
+
+新增观测台 tab 「💰 经济」（`index.html` + `audit.js::renderEcon`），**只读、由当前日志确定性重算**（同日志可复现）：
+
+| 区块 | 内容 | 来源（只读日志重算） |
+|---|---|---|
+| 经济循环 | `M(t)`（货币总量）+ 逐回合迷你折线、铸/销毁累计、税池、交易额/笔数、**流速 V**、**净值 Gini** | `TURN_SEAL.money_supply`、`MONEY_MINTED/BURNED`、`TAX_LEVIED/UBI_PAID`、`TRANSFER/MARKET_TRADE`、当前余额 |
+| 制度涌现 | 规范**提议→采纳**漏斗 + 采纳率、群组数、契约/投票（**未产出**如实标注） | `NORM_PROPOSED/ADOPTED`、`GROUP_CREATED` |
+| 沟通通道 | 私聊/公开/群聊 条形 | `MSG_DM/PUBLIC/GROUP` |
+
+**诚实标注**：① 已知缺口 **G-P1-1**（Agent 间零交易/无工资 → 商品→货币通道缺失，V 偏低属预期）；② 契约/投票当前事件表无事件 → 标「未产出」；③ **口径说明**：`M(t)` 取 `TURN_SEAL`，而"铸/销毁"按事件累计，**二者口径不同，数值不吻合非异常**。
+
+**证据**：`T259-g12-before.png`（改前：无该 tab）`b1e6cf5f…` ｜ `T259-g12-after.png`（改后）`4ec82b05…`。
+**门禁**：`make ci` 曾 **FAIL**——`gate_render` 抓到 `pageerror: Unexpected identifier 'TURN_SEAL'`（我在模板串里误用了反引号），**mock 版 smoke 抓不到**；修复后 `make ci` **PASS**。→ **这正是"双门禁"存在的价值**（真渲染门禁抓到 mock 抓不到的真错）。

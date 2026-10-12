@@ -190,6 +190,9 @@ function testE() {
   check(/eventCardSlug/.test(audit) && /EVENT_CARDS_BY_TEMPLATE/.test(audit) && /机械事件/.test(audit), "事件卡门控（机械事件默认不配卡；template 驱动）");
   check(/_wireCardArt/.test(audit) && /ev-lightbox/.test(audit), "事件卡点击放大（lightbox）");
   check(/ev-cardart-img/.test(fs.readFileSync(path.join(ROOT, "styles", "app.css"), "utf8")), "事件卡样式在 app.css（shell 侧）");
+  // G-12 经济/制度面板
+  check(/data-tab="econ"/.test(html) && /id="econ-body"/.test(html), "经济/制度面板（econ tab + pane）");
+  check(/renderEcon/.test(audit) && /giniOf/.test(audit) && /sparkline/.test(audit), "经济面板由日志确定性重算（renderEcon/gini/sparkline）");
   testECrossGate();
 }
 

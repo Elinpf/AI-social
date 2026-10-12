@@ -102,7 +102,7 @@
       // 便于截图/演示：?audit=1 打开审计抽屉；?agent=<id> 或 ?place=<id> 打开详情
       if (qs.get("audit") === "1") openDrawer("audit");
       if (qs.get("debug") === "1") document.body.classList.add("show-debug");   // 证据截图用：展开调试/回放控件
-      if (["social","weekly","chronicle"].includes(qs.get("tab"))) { openDrawer("audit"); switchAuditTab(qs.get("tab")); }
+      if (["social","weekly","chronicle","econ"].includes(qs.get("tab"))) { openDrawer("audit"); switchAuditTab(qs.get("tab")); }
       if (qs.get("settings") === "1") el("settings-pop").hidden = false;
       if (qs.get("agent")) selectAgent(qs.get("agent"));
       else if (qs.get("place")) selectPlace(qs.get("place"));
@@ -230,6 +230,7 @@
     if (animateFx && !state.still) handleKeyEvents(rp, rd);
     if (state.auditTab === "social" && audit && audit.renderSocial) audit.renderSocial(rp, rd);
     else if (state.auditTab === "weekly" && audit && audit.renderWeekly) audit.renderWeekly(rp, rd);
+    else if (state.auditTab === "econ" && audit && audit.renderEcon) audit.renderEcon(rp, rd);
     if (state.sel) refreshInspector();   // 详情面板跟随当前回合
   }
 
@@ -890,15 +891,17 @@
   }
 
   function switchAuditTab(tab) {
-    state.auditTab = (tab === "social" || tab === "weekly") ? tab : "chronicle";
+    state.auditTab = (tab === "social" || tab === "weekly" || tab === "econ") ? tab : "chronicle";
     document.querySelectorAll("#audit .tab").forEach((x) => x.classList.toggle("active", x.dataset.tab === state.auditTab));
-    const c = el("pane-chronicle"), s = el("pane-social"), w = el("pane-weekly");
+    const c = el("pane-chronicle"), s = el("pane-social"), w = el("pane-weekly"), e = el("pane-econ");
     if (c) c.hidden = state.auditTab !== "chronicle";
     if (s) s.hidden = state.auditTab !== "social";
     if (w) w.hidden = state.auditTab !== "weekly";
+    if (e) e.hidden = state.auditTab !== "econ";
     if (state.replay && audit) {
       if (state.auditTab === "social" && audit.renderSocial) audit.renderSocial(state.replay, state.round);
       else if (state.auditTab === "weekly" && audit.renderWeekly) audit.renderWeekly(state.replay, state.round);
+      else if (state.auditTab === "econ" && audit.renderEcon) audit.renderEcon(state.replay, state.round);
     }
   }
 

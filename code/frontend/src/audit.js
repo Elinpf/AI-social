@@ -256,6 +256,78 @@
       });
     }
 
+    // ---------------- 经济 / 制度 因果面板（G-12；依 obs 面板契约 v2 P3/T101）----------------
+    // 只读：全部由当前日志**确定性重算**（同日志逐字节可复现）；诚实标注已知缺口。
+    renderEcon(replay, rd) {
+      const doc = global.document;
+      if (!doc) return;
+      const body = doc.getElementById("econ-body");
+      if (!body) return;
+      const nm = this.ctx.name;
+      // 逐回合货币总量（TURN_SEAL.money_supply 优先，缺则取 facts）
+      const series = [];
+      let minted = 0, burned = 0, taxIn = 0, ubiOut = 0, volume = 0, nTrade = 0, nProduce = 0;
+      const cnt = (t) => (replay.eventTypeCount[t] || 0);
+      for (let r = (replay.rounds[0] || 0); r <= rd; r++) {
+        const f = replay.facts[r] || {};
+        series.push(f.moneySupply || 0);
+        for (const e of replay.eventsInRound(r)) {
+          const p = e.payload || {};
+          if (e.type === "MONEY_MINTED") minted += num(p.amount);
+          else if (e.type === "MONEY_BURNED") burned += num(p.amount);
+          else if (e.type === "TAX_LEVIED") taxIn += num(p.amount);
+          else if (e.type === "UBI_PAID") ubiOut += num(p.amount);
+          else if (e.type === "TRANSFER" || e.type === "MARKET_TRADE") { volume += num(p.amount != null ? p.amount : p.price); nTrade++; }
+          else if (e.type === "ACTIVITY_COMPLETED") nProduce++;
+        }
+      }
+      const supply = (replay.facts[rd] || {}).moneySupply || 0;
+      const balances = Object.keys(replay.snapshots[rd] || {}).map((id) => Math.max(0, (replay.snapshots[rd][id].money) || 0));
+      const gini = giniOf(balances);
+      const V = supply ? volume / supply : 0;
+      const taxPool = taxIn - ubiOut;
+      // 制度
+      const nProp = cnt("NORM_PROPOSED"), nAdopt = cnt("NORM_ADOPTED"), nGroup = cnt("GROUP_CREATED");
+      const nContract = cnt("CONTRACT_CREATED") + cnt("CONTRACT_SIGNED");   // 当前事件表无契约事件 → 0
+      const admitRate = nProp ? nAdopt / nProp : 0;
+      // 通道
+      const cDM = cnt("MSG_DM"), cPUB = cnt("MSG_PUBLIC"), cGRP = cnt("MSG_GROUP");
+      const chTot = Math.max(1, cDM + cPUB + cGRP);
+      // 已知缺口（诚实）
+      const gapP1 = (nTrade === 0) || (volume === 0);
+      const spark = sparkline(series);
+      const money = (v) => (v >= 1000 ? v.toLocaleString("en-US") : String(Math.round(v * 100) / 100));
+      const card = (k, v, sub) => `<div class="kfact"><div class="k">${escapeHtml(k)}</div><div class="v">${v}</div>${sub ? `<div class="k" style="margin-top:2px">${sub}</div>` : ""}</div>`;
+      const bar = (label, n, total, color) => `<div class="bar"><span class="lbl">${escapeHtml(label)}</span><span class="track"><span class="fill" style="width:${total ? Math.round(100 * n / total) : 0}%;background:${color}"></span></span><span>${n}</span></div>`;
+      body.innerHTML = `
+        <div class="insp-sec"><h4>经济循环 ${helpTip("只读日志确定性重算；货币总量优先取每回合 TURN_SEAL.money_supply。")}</h4>
+          <div class="kfacts">
+            ${card("货币总量 M(t)", money(supply) + " mu", "round ≤ " + rd)}
+            ${card("铸 / 销毁（累计）", money(minted) + " / " + money(burned), "net " + money(minted - burned))}
+            ${card("税池", money(taxPool) + " mu", "税入 " + money(taxIn) + " − UBI " + money(ubiOut))}
+            ${card("交易额 / 笔数", money(volume) + " mu", nTrade + " 笔")}
+            ${card("货币流速 V", V.toFixed(4), "交易额 / 货币总量")}
+            ${card("净值 Gini", gini.toFixed(3), balances.length + " 人")}
+          </div>
+          <div class="sec-sub">M(t) 走势（逐回合）</div>
+          <div class="econspark">${spark}</div>
+          ${gapP1 ? `<div class="soc-note">已知缺口 <b>G-P1-1</b>：本 run Agent 间<span>零交易/无工资</span>——"商品→货币转换通道"缺失；V 偏低属预期，非异常。</div>` : ""}
+        </div>
+        <div class="insp-sec"><h4>制度涌现 ${helpTip("规范采纳漏斗；契约/投票当前事件表未产出则标『未产出』。")}</h4>
+          <div class="sec-sub">规范：提议 ${nProp} → 采纳 ${nAdopt}（采纳率 ${(admitRate * 100).toFixed(0)}%）</div>
+          <div class="track" style="height:10px"><div class="fill" style="width:${nProp ? Math.round(100 * nAdopt / nProp) : 0}%"></div></div>
+          <div class="kv"><span class="k">群组（GROUP_CREATED）</span><span>${nGroup}</span></div>
+          <div class="kv"><span class="k">契约 / 投票</span><span>${nContract}（未产出）</span></div>
+        </div>
+        <div class="insp-sec"><h4>沟通通道</h4>
+          ${bar("私聊 DM", cDM, chTot, "#5cc8ff")}
+          ${bar("公开 PUBLIC", cPUB, chTot, "#ffcf5c")}
+          ${bar("群聊 GROUP", cGRP, chTot, "#c08bff")}
+          <div class="muted" style="font-size:11px;margin-top:4px">数据源：只读日志重算（同日志逐字节可复现）</div>
+          <div class="muted" style="font-size:11px">口径：M(t) 取 TURN_SEAL.money_supply；『铸/销毁』仅按 MONEY_MINTED/BURNED 事件累计，二者口径不同（play 视图剔噪/其它沉淀），**数值不吻合非异常**。</div>
+        </div>`;
+    }
+
     _row(ev, h) {
       const st = h.style || {};
       const actor = h.actor && /^[PA]\d+/.test(h.actor) ? h.actor : "";
@@ -467,6 +539,23 @@
   }
 
   function helpTip(tip) { return `<span class="help" title="${escapeHtml(tip)}">?</span>`; }
+  function num(v) { return (typeof v === "number" && isFinite(v)) ? v : 0; }
+  // Gini（非负数组）
+  function giniOf(a) {
+    if (!a || !a.length) return 0;
+    const s = a.slice().sort((x, y) => x - y), n = s.length, sum = s.reduce((p, c) => p + c, 0);
+    if (sum <= 0) return 0;
+    let cum = 0; for (let i = 0; i < n; i++) cum += (i + 1) * s[i];
+    return (2 * cum) / (n * sum) - (n + 1) / n;
+  }
+  // 迷你折线（自包含 SVG）
+  function sparkline(vals) {
+    if (!vals || vals.length < 2) return `<div class="muted" style="font-size:11px">（回合不足，无走势）</div>`;
+    const w = 100, h = 30, mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals), rng = (mx - mn) || 1;
+    const pts = vals.map((v, i) => `${(i / (vals.length - 1) * w).toFixed(1)},${(h - (v - mn) / rng * h).toFixed(1)}`).join(" ");
+    return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" width="100%" height="40" class="spark">` +
+      `<polyline points="${pts}" fill="none" stroke="#5cc8ff" stroke-width="2"/></svg>`;
+  }
 
   function formatMoney(v) {
     if (v == null) return "—";
