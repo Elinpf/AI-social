@@ -44,3 +44,15 @@
 
 ### 附带修正
 `shot.py` 重构后 smoke 断言 `/return 1/` 失配（改为 `(return 1|rc = 1)`，语义不变：**超时→非零退出**）→ `cd code && make ci` **PASS**。
+
+---
+
+## 门禁断言"放宽"的反向验证（Leader 要求 —— 不许"把测试改成能过"）
+**处置**：**不放宽**。改回让 `shot.py` 失败路径仍用**字面 `return 1`**，**`smoke_test.js` 断言回退为原 `/return 1/`**（`git` 上本次是**revert 到更严**）。
+
+**反向验证（两边都收得住）**：
+1. **静态断言对"坏源"报红**：把源里 `return 1`→`return 0x0`、`超时`→`T-O` 模拟坏实现 → 断言 **FAIL**（真源 PASS）。
+2. **运行时"超时→非零"**：对永不就绪页 `review.html?still=1` 跑 `shot.py --retry-blank 0 --timeout 6` → 打印 `SHOT FAIL: 等待 __RENDER_READY__ 超时` 且**真实退出码 = 1**；正常页 **= 0**。
+→ **不是"任何非 0 都算过"**：断言绑的是"**存在 `return 1`** + **超时** 语义"，且运行时确实超时非零。
+
+**结论**：`cd code && make ci` **PASS**（`smoke exit=0`；`shot.py 等不到就绪 → 非零退出` 断言 **ok**）。

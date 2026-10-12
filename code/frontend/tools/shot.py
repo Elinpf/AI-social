@@ -59,7 +59,6 @@ def main() -> int:
     t0 = time.time()
     attempts = max(1, args.retry_blank + 1)
     blanks = 0
-    rc = 1
     for attempt in range(1, attempts + 1):
         st, msg = _try_capture(args, still)
         if st == "ok":
@@ -69,8 +68,8 @@ def main() -> int:
             if blanks:
                 print(f"  ⚠ 本次取证出现空白帧 {blanks} 次（已重试通过；"
                       f"空白是零星 bug 的信号，勿被重试抹掉）")
-            rc = 0
-            break
+            _stats_bump(blanks)
+            return 0
         if st == "blank":
             blanks += 1
             last = attempt == attempts
@@ -78,16 +77,14 @@ def main() -> int:
                   f" —— 第 {blanks} 次空白{'（重试耗尽）' if last else '，重试'}")
             if last:
                 print(f"  ⚠ 空白 {blanks}/{attempts} 次；重试是取证容错、不是修白帧")
-                rc = 1
-                break
+                _stats_bump(blanks)
+                return 1
             continue
         print("SHOT FAIL:", msg)   # 非空白类失败（未就绪/pageerror）：不重试
-        rc = 1
-        break
-    # 观察哨：跨次累计留痕（只记录，不抑制/不告警）。若累计变频繁 → 环境变了，重新追。
-    cum = _stats_bump(blanks)
-    print(f"  blank_cumulative={cum['blanks']}/{cum['runs']} 次空白/总取证（T282 观察哨，仅留痕）")
-    return rc
+        _stats_bump(blanks)
+        return 1
+    _stats_bump(blanks)
+    return 1
 
 
 def _stats_bump(blanks: int) -> dict:
@@ -104,6 +101,7 @@ def _stats_bump(blanks: int) -> dict:
         open(p, "w", encoding="utf-8").write(json.dumps(d, ensure_ascii=False))
     except Exception:
         pass
+    print(f"  blank_cumulative={d['blanks']}/{d['runs']} 次空白/总取证（T282 观察哨，仅留痕）")
     return d
 
 
