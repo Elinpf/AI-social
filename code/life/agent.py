@@ -665,6 +665,15 @@ class LifeLayerAgent:
                     "produced_mem_id": f"M-{self.agent_id}-SM-{g['subject']}",
                     "text": g["text"], "day": day, "slot": slot})).ok:
                 n += 1
+        # T244 W2b: 把 run_sleep_window 产出的 PERSONA_DRIFT 待发事件提交为 intent
+        # （op="drift"，由 adapter `_do_memory` 落 PERSONA_DRIFT 事件；无候选/单窗不发）。
+        for ev in out.get("events", []):
+            if ev.get("type") != "PERSONA_DRIFT":
+                continue
+            p = dict(ev.get("payload") or {})
+            p["op"] = "drift"
+            if self.kernel.submit_intent(self.agent_id, Intent(INTENT_MEMORY, self.agent_id, p)).ok:
+                n += 1
         self.kernel.submit_intent(self.agent_id, Intent(INTENT_MEMORY, self.agent_id, {
             "op": "sleep_end", "day": day, "slot": slot, "actual_ticks": planned}))
         return n
