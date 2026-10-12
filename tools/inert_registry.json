@@ -180,6 +180,54 @@
       "expected_status": "未到达",
       "owner": "freeze-layer-dev / life-layer-dev / kernel-dev（三方直连修）",
       "due_condition": "08 已登记、intent 里已写（life/memory.py），但**装配点 `_do_memory` 的固定字段白名单把它丢了** → 事件 payload 里没有（登记落空）。Leader 裁决：白名单须有明确扩展路径 + **不得静默丢弃**。到达时脚本判『已到达事件』。wire_task：三方直连修（Leader 已裁）"
+    },
+    {
+      "name": "WORLD_DIRECTIVE",
+      "kind": "event",
+      "owner_event": "WORLD_DIRECTIVE",
+      "declared_in": [
+        "v1.1/08-engine-stats-extension.md §1.2 T",
+        "v2/refs/world-director-design.md §4"
+      ],
+      "expected_status": "未接线",
+      "owner": "kernel-dev（WD-Core）",
+      "due_condition": "08 已登记（T238）。装配点：**WD-Core 决策器**生成意图 → 内核合规校验器（R1–R6）封装落事件。wire_task：T239（world-director v1，被 T238 阻塞→现已解锁）。未在 engine/events.py::EVENT_TYPES 登记前，事件不可能出现"
+    },
+    {
+      "name": "WORLD_GROUP_EVENT",
+      "kind": "event",
+      "owner_event": "WORLD_GROUP_EVENT",
+      "declared_in": [
+        "v1.1/08-engine-stats-extension.md §1.2 T",
+        "v2/refs/world-event-mechanisms.md §2.1"
+      ],
+      "expected_status": "未接线",
+      "owner": "kernel-dev（EF-Core/Opp/Incident）",
+      "due_condition": "08 已登记（T238）；kind 14 值以 T216 §2.1 为权威；≠GROUP_*。装配点：**EF-Core/EF-Opp/EF-Incident 机制库**触发 → 内核据 WORLD_DIRECTIVE+RNG 封装。wire_task：T239"
+    },
+    {
+      "name": "WORLD_DIRECTIVE_REJECTED",
+      "kind": "event",
+      "owner_event": "WORLD_DIRECTIVE_REJECTED",
+      "declared_in": [
+        "v1.1/08-engine-stats-extension.md §1.2 T",
+        "v2/refs/world-director-design.md §4"
+      ],
+      "expected_status": "未接线",
+      "owner": "kernel-dev（WD-Core 合规校验器）",
+      "due_condition": "08 已登记（T238）。装配点：**WD-Core 合规校验器**（R1–R6 判定树）在拒绝/告警时发（reason∈rewrites_past/targets_individual/contains_hard_kernel_number/invalid_mechanism/dose_curve_unknown；severity∈reject/warn）。wire_task：T239"
+    },
+    {
+      "name": "FORGE_FIRED",
+      "kind": "event",
+      "owner_event": "FORGE_FIRED",
+      "declared_in": [
+        "v1.1/08-engine-stats-extension.md §1.2 T",
+        "v2/refs/story-and-event-engine.md §1.4/§1.5"
+      ],
+      "expected_status": "未接线",
+      "owner": "kernel-dev（EF-Control）",
+      "due_condition": "08 已登记（T238）。**审计事件族（audit-only，无 result 事件）**；装配点：**EF-Control 控制面**在机制调度触发时发；必含 machine-check `social_result_emits==0`（E-3）。wire_task：T239"
     }
   ]
 }

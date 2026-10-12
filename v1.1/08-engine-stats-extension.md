@@ -347,6 +347,85 @@ class Event:
 
 > **G7/兼容**：均为**新增类型**（旧日志不出现）→ **G7 不受影响**；与既有 66 类不冲突（只增不改，X1/X4）。
 
+**T. v2 世界导演 + 事件制造机事件族（应 T238 / T204·T210·T216，已登记）**
+
+> 权威来源：字段以 `v2/refs/world-director-design.md` §4（T210）为准；`kind` 枚举**以 `v2/refs/world-event-mechanisms.md` §2.1（T216）为唯一权威**；机制合规判据以 T216 单一机制表为准（取代 T204 §1.3 EF 表 / T210 §3 WD 表）。**红线 A′**：世界层可「导演未来」，三条保底不变。
+>
+> **actor 枚举扩展（已定）**：08 既有 actor 取值为 `AgentId | "SYSTEM" | "OBSERVER"`；本族**新增一等 actor `"DIRECTOR"`**（与 `"OBSERVER"` 同列），使「世界侧介入」可**一条过滤捞出**（`actor="DIRECTOR"`）。
+>
+> **⚠️ 装配点纪律（T235 教训）**：**每个字段都必须指明「由哪个装配点产生」**——08 登记了字段、装配白名单却**静默丢弃**（`MEMORY_RETRIEVE.vec_available` 曾是 0/60）是本项目已知病。**下表「装配点/产生方」列即为此**：实现方须确保这些字段**真的到达事件 payload**（装配白名单不得静默丢弃；不接收则显式报错）。
+
+**T.1 `WORLD_DIRECTIVE`**（世界层**指令**＝导演意图；phase=3.5；`actor="DIRECTOR"`；**由内核校验后封装**）
+
+| 字段 | 必填 | 语义边界 |
+|---|---|---|
+| `directive_id` | ✅ | 全局唯一 |
+| `round, phase, actor("DIRECTOR")` | ✅ | v1 外壳；`actor` 为导演来源 |
+| `directed=true` | ✅ | **保底(a)** 恒真；「导演介入」可一次检索 |
+| `mechanism_id` | ✅ | 对应 T216 §2 机制ID（`WM-xx`/`wd.*`）；**保底(b)** 开关挂载点 |
+| `kind` | ✅ | ∈ §2.1 的 WD-x/机制 kind（见 T.2，14 值） |
+| `scope{level∈global\|place\|group\|agents, place?, group_ref?, agents?[]}` | ✅ | 作用对象；`level=agents` 且规模<K → **告警(非拒绝)**（WD-D1） |
+| `params{}` | ✅ | 情境参数（规模/时长/强度）；**不得含金额/死亡/胜负数值**（R5） |
+| `dose`, `dose_curve∈conservative\|moderate\|aggressive` | ✅ | **保底(b)** 剂量与曲线档（§3.1） |
+| `issued_round`, `effective_from_round`（**≥ issued_round**） | ✅ | **保底(c)**：「只对未来生效」硬校验；违者 → `WORLD_DIRECTIVE_REJECTED{reason:"rewrites_past"}` |
+| `seed_ref` | ✅ | RNG 流/seed 溯源（**RNG 先定**） |
+| `place`(null=全局), `expires_round`, `rng_branch`, `rationale_ref`, `model` | ⭕ | 可选；`rationale_ref` 侧存储（N 类，不进判定）；`model` 审计四要素（若理由由 LLM 生成） |
+
+- **什么算它**：世界层发起的**宏观情境指令**（节庆/灾害/政令/访客/供给冲击/疫病/公共工程/紧张升级/季节/大规模事件）。
+- **什么不算它**：任何**社会结果**（关系/契约/规范/组织/排名/胜负）不得由 `WORLD_DIRECTIVE` 表达——那些必须由 Agent 自主行为产生。
+- **装配点/产生方**：**WD-Core 决策器**（world-director）在决策相（Phase 2/3.5）生成意图 → **内核合规校验器**（§1.2 判定树 R1–R6）通过后封装落 `WORLD_DIRECTIVE`（经 IF-2 通道）。
+
+**T.2 `WORLD_GROUP_EVENT`**（世界层**群体事件事实**；phase=3.5/4；`actor="DIRECTOR"`）
+
+| 字段 | 必填 | 语义边界 |
+|---|---|---|
+| `group_event_id` | ✅ | 全局唯一 |
+| `directive_ref` | ✅ | **溯源到 `WORLD_DIRECTIVE`**（可审计口径核心：每条宏观情境事件都能追到「哪条导演指令」） |
+| `round, phase, actor, place?(null=全局), directed=true` | ✅ | v1 外壳 + **保底(a)** |
+| `kind` | ✅ | **14 值**：`season, festival, opportunity, public_works, supply_shock, scarcity, tension, incident, disaster, epidemic, visitor, edict, agenda, mass_event`（**T216 §2.1 权威**） |
+| `scope, params` | ✅ | 实际生效的作用域与情境参数（**无金额/死亡/胜负数值**） |
+| `start_round` | ✅ | 生效起点（**≥ 对应 DIRECTIVE 的 `issued_round`**） |
+| `end_round`, `affected_scope_count`, `per_agent_impact_ref` | ⭕ | `per_agent_impact_ref`：**灾难级(`aggressive`)开启时**指向「逐 Agent 影响」可复算侧产物（WD-D4） |
+
+- **命名去歧义（硬约定）**：`WORLD_GROUP_EVENT ≠ GROUP_*`；其 `kind`（14 值，世界/环境）与 `GROUP_CREATED.kind`（`chat/guild/…`，组织）**枚举互不重叠**。
+- **装配点/产生方**：**EF-Core / EF-Opp / EF-Incident**（T216 机制库）按日历/RNG 触发 → **内核据 `WORLD_DIRECTIVE` + RNG 确定性封装**为事实（**涉及金额/死亡的部分由内核从情境+RNG 推导为独立事件**，与本族**分列**）。
+
+**T.3 `WORLD_DIRECTIVE_REJECTED`**（内核**拒绝 / 审计告警**；phase=3.5/4；`actor="SYSTEM"`）
+
+| 字段 | 必填 | 语义边界 |
+|---|---|---|
+| `directive_id` | ✅ | 被拒/告警的指令 |
+| `round, phase, actor("SYSTEM")` | ✅ | v1 外壳 |
+| `reason` | ✅ | `rewrites_past` / `targets_individual` / `contains_hard_kernel_number` / `invalid_mechanism` / `dose_curve_unknown` |
+| `severity` | ✅ | `reject`（拒绝）/ `warn`（审计告警，如 `scope` 规模 < K，WD-D1） |
+
+- **装配点/产生方**：**WD-Core 合规校验器**（§1.2 判定树 R1–R6）在**拒绝或告警**时发；`rewrites_past`/`targets_individual`/`contains_hard_kernel_number` 对应三条保底与越权红线。
+
+**T.4 `FORGE_FIRED`**（事件制造机**审计事件族**；phase=3.5/4；`actor="SYSTEM"|"DIRECTOR"`）
+
+> **明确：`FORGE_*` 只有「审计事件族」，无「结果事件族」。** 事件制造机的「产物」经**既有事件**承载（`TIME_MARK` / `SEED_EVENT` / `MARKET` 上架 / `NEED_UPDATE` / `PRODUCE`…），**不新增 result 事件**（守 T216 红线：只造环境/机会/压力，不造社会结果）。
+
+| 字段 | 必填 | 语义边界 |
+|---|---|---|
+| `mechanism_id` | ✅ | 触发的机制（`WM-xx`） |
+| `cause` | ✅ | 触发原因（日历/库存/概率/条件），可回溯「哪个机制、哪个 RNG 分支」（E-5） |
+| `seed_ref`, `rng_branch` | ✅ | RNG 先定（可复算） |
+| `induced` | ✅ | 是否观察者/导演**诱导**（外部冲击/机会注入须标，禁被叙述成自发） |
+| `effective_from_round`, `enabled_flag` | ✅ | 只对未来 + 当时开关态（**保底(b)**） |
+| `social_result_emits` | ✅ | **恒 `0`**（E-3 机器可校验：forge 不得 emit 社会结果事件） |
+| `dose`, `dose_curve` | ⭕ | 剂量（与 DIRECTIVE 对齐时填） |
+
+- **装配点/产生方**：**EF-Control 控制面**（T216 机制库）在机制被调度触发时发射。
+
+> **三条保底的机器可校验判据（落成字段，A′ 宪法）**：
+> | 保底 | 字段承载 | 判据（可复算） |
+> |---|---|---|
+> | **(a) 显式介入** | `directed=true`（T.1/T.2） | `count(介入型事件, directed≠true)==0` |
+> | **(b) 可消融** | `mechanism_id` + per-mech `wd.*.enabled` + `dose`/`dose_curve`（T.1/T.4） | 关闭机制 m → 其 `kind` 的 `WORLD_GROUP_EVENT` 归零/显著下降 |
+> | **(c) 不改过去** | `effective_from_round ≥ issued_round`（T.1/T.2） | `∀DIRECTIVE: eff≥issued`；无存活 `WORLD_DIRECTIVE_REJECTED(reason="rewrites_past")` |
+
+> **G7/兼容**：`WORLD_DIRECTIVE`/`WORLD_GROUP_EVENT`/`WORLD_DIRECTIVE_REJECTED`/`FORGE_FIRED` 均为**新增类型**（旧日志不出现）→ **G7 不受影响**；与既有 66 类不冲突（只增不改，X1/X4）。**引擎实现**（`engine/events.py::EVENT_TYPES` + `replay.apply_event` 折叠器 + WD-Core/EF-* hook）由实现阶段（T239 等）落地，本节只登记 schema。**`inert_registry.json` 已同步登记其「装配点/预期状态」**。
+
 > **通信事件复用 v1**：`MSG_PUBLIC / MSG_DM / MSG_GROUP` 不新增，但新增可选字段 `refs[]`（引用 msg_id）与 `tag_hints[]`（供 `TAG_EMITTED` 关联，实为内容层）。传播边由 `OBSERVATION.target_event_seq` 与 msg `refs` 共同构建（§4.3）。
 
 > **对齐提示（供 persona-life-designer / emergence-observer-designer）**：上表 `dim`、`activity_type`、`place`、`tag` 的**取值枚举**由你们在 06/07 分册定义；本文件只固定**结构、必带字段与语义**。我会在看到 06/07 后按需在 §8 补一张「枚举取值对齐表」。
@@ -923,6 +1002,7 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
 | **配置口径登记** | 一等开关 `policy.production.enabled`（默认 true、只控「是否产生」）+ 三态 fail-loud 协同（显式关闭不 fail-loud/静默失效必 FAIL）+ `social.enabled` 同族 | §5.8 |
 | **新增事件（v2 交换，T126/T129）** | `EXCHANGE_SETTLED`（4.1，多腿双边原子交换，零和）+ `MARKET_TRADE.channel∈{orderbook}`（允许 seller∈Agent）+ 一等字段 `counterparty` + 意图 `ORDER_CANCEL` + 统计口径（`distinct_sellers_excl_world`/agent↔agent 占比） | §1.2 R |
 | **配置口径登记（v2 交换）** | `policy.exchange.enabled`（默认 true，同开关族；OFF→Agent 间交易归零 + `DROPPED{flag=exchange_disabled}`，不 fail-loud） | §5.8 |
+| **新增事件（v2 世界导演+事件制造机，T238）** | `WORLD_DIRECTIVE` / `WORLD_GROUP_EVENT`（kind 14 值，≠`GROUP_*`）/ `WORLD_DIRECTIVE_REJECTED` / `FORGE_FIRED`（审计-only）；新增一等 actor `"DIRECTOR"`；三条保底落成字段（`directed` / `mechanism_id`+`dose`+`dose_curve` / `effective_from_round≥issued_round`）；**每字段标「装配点」** | §1.2 T |
 | **新增事件（v2 睡眠/记忆/人格，T224）** | `SLEEP_STARTED/SLEEP_COMPLETED`、`MEMORY_CONSOLIDATE/MEMORY_FORGET`、`PERSONA_DRIFT`（`PERSONA_FINGERPRINT` 为快照非事件）+ 统计 `metrics.life.memory/persona` | §1.2 S |
 
 > **合计**：新增事件 **11** 类（商品 4 + 契约 4 + 投票 1 + 社会 2）；字段扩展 **3** 事件；不变量 **2** 条；字段语义登记 **1** 项（商品族 `qty` milli-unit 口径）。**均只增不改**，与既有 66 类不冲突；G7 对既有日志仍通过（新增类型旧日志不出现、可选字段被容忍）。**引擎实现**（`engine/events.py` EVENT_TYPES + `replay.apply_event` 折叠器 + `apply_production()/apply_contracts()` hook）由 v2 实现阶段（econ-dev T91 等）落地，本任务只出 schema。
