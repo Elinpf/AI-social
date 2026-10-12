@@ -164,6 +164,77 @@
 
 ## 7. 变更记录
 
+- **v1.3.31（00:52）**：✅ **`T287`（tick 内时间 期①）完成并提交 `76de474`；`make verify` 全绿**（仓根门禁 + `code` CI 均 PASS）；对照证据 `v2/evidence/T287-phase1-off-control.md`：**剥离 `hash`/`prev_hash` 与指纹派生字段后逐条差异 0/1635 + `TURN_SEAL.state_hash` 完全相等 + 唯一差异 = 指纹行及其派生**（含 `WORLD_INIT.time_model/time_U` + `config_digest` → 链哈希 → `LLM_CALL.engine_version`/`cache_key`），**显式标注、无行为变化** ✓（与约定口径一致）。交付：`config/time.json` · `engine/time_model.py` · `engine/{events,ledger,kernel,runner,version}.py` · `tests/test_t287_time_model.py`。
+  ⇒ **`T295` 解锁**，kernel 认领（Leader 已批）。⚠️ **新约束：`engine/replay.py` = `T295` 与 `T298`（cut 修复）的【共享热点】** ⇒ 按"同一文件不跨人交错"：**开工前私信对方、约定先后、不并行编辑**；T295 **若新增 config 键（如 `start_sub`）须在交付里显式标"是否改指纹"**（`T300` 重冻要用）。
+- **v1.3.30（00:51）**：🎯 **"间歇性分歧"判决 = ②类【确定性】、`cut` 相关；三条假设被证伪** —— release 决定性实测（固定前缀、同一 sha）：
+
+  | 试验（cut=75） | 结果 |
+  |---|---|
+  | `PYTHONHASHSEED ∈ {0,0,1,2,3,UNSET,UNSET}` | **7 次全同 `9e2534bb`** ⇒ **不是哈希序** |
+  | resume ×2 | **恒等** ⇒ **不是竞态** |
+  | resume vs oneshot | **分歧**（`9e2534bb ≠ 172669467a`，`state_hash` 不等 **74**，**首个不等 round = 76**） |
+  | cut=89 resume×2 vs oneshot | **全一致** |
+
+  ⇒ ① **早前"1/3"= 探针的【墙钟 kill】让 `cut` 在 75↔89 漂移** —— **仪器缺陷，不是世界缺陷** ⇒ **探针 kill 必须改为"跑到指定 round 再 kill"**（否则"间歇"会持续误导）。
+  ⇒ ② **真 bug = `cut` 相关的【确定性】`restore()` 缺陷**（cut=75 起 round 76 分叉）⇒ **交 life**；最小复现 `bash tools/t271/repro_resume_cut.sh 75`（对照 `89`）。
+  ⇒ ⚠️ **两条裁定更新**：
+  (a) **"固定 `PYTHONHASHSEED`" 被实测证伪**（结果对种**完全不敏感**）⇒ **从待办撤下**（不用改门、不用因此重冻）；
+  (b) **T299 门设计被"双面真数据"验证**（**cut=89 绿 / cut=75 红 = 真阳性**）⇒ **可落盘**；我先前"暂缓"的判据随之精确化：**条件① = "在【无真分歧】的配置上排除后必须 byte-equal"，不是"任何 cut 都 byte-equal"**。
+  ⇒ ⚠️ **T298 验收加严**（原验收只测 kill@89 ⇒ 太窄 —— 又一条"证据只在它被测的那条路径上成立"）：**"续跑 ≡ 一次性"必须【跨多个 cut 点】（≥75/89）成立**。
+- **v1.3.29（00:48）**：🔎 **间歇性续跑分歧的强候选 = 进程级哈希随机化** —— **Leader 实查：全仓【无任何 `PYTHONHASHSEED` 固定】**（`grep -i 'PYTHONHASHSEED|hashseed|hash_seed'` **命中 0**）⇒ **Python 默认逐进程随机化哈希** ⇒ **`for x in <set>`（str 键）若产出有序结构，顺序就随进程变** ⇒ **正是"1/3 随机分岔"的典型形态**（life 候选 B）。**决定性试验（已派 release）**：同固定前缀 `resume` 跑两次，**`PYTHONHASHSEED=0` 各跑一次**（再用**两个不同的固定 seed** 对照）—— 固定后一致、换种不一致 ⇒ **锁定哈希序**。
+  ⇒ ⚠️ **对 T299 门定义的直接后果**：**跨进程"逐字节一致"必须先固定 `PYTHONHASHSEED`**，否则门测的是"进程哈希序"、不是"世界语义"；**门自描述须写明"在固定 `PYTHONHASHSEED=` 下"**。
+  ⇒ ⚠️ **与 D1 的关系**：D1（用户）已放开"逐位可复现"、只保"全量日志 + 种子化随机" ⇒ **不固定哈希种**与 D1 一致，但**"续跑可验证性"受损**；**固定哈希种** = 一个**便宜、可解释的进程级确定性**（代价：**可能轻微改变既有基线** ⇒ 须与"加 config 键"同等待遇 = **重冻 + 变更清单标注**）。**此条待用户/Leader 拍板。**
+  · life 另两条候选须**分开验**：**A) 可见性窗口（12 回合）vs `restore()` 全扫 ⇒ 成员集不同** = **确定性偏差**（r1=r2≠oneshot），**与 1/3 的随机性不同**；其余"成员判断类"（`keep`/`_judged`/`_appraised`）**不产序**，可作证伪靶。
+- **v1.3.28（00:45）**：🚨 **新发现：续跑路径【间歇性】语义分歧（1/3）—— T299 落盘暂缓、T298 不得据此收尾** —— release 用新语义门重跑 `seed=9/n=2/150r`（同脚本同输入）：`run@00:39` 一致 · **`run@00:41` 分歧**（`resumed=7c3bcb55…` vs `oneshot=172669467a…`，**`TURN_SEAL.state_hash` 不等 = 54 条**）· `run@00:43` 一致。**oneshot 跨 run 恒稳定 `172669467a`；分歧永远出在【续跑】**；kill 点一致（round 89）；期间 `code/` 未变（**非代码漂移**）。
+  ⇒ **按 T299 自家条件①（"排除后两路必须 byte-equal，否则撤销/另查"）**：现在**不是恒 byte-equal** ⇒ **暂缓落盘、先查**（T299 设计无误，保留在工作副本）。
+  ⇒ ⚠️ **连带修正**：**T298「语义已收敛」的证据可能只是"运气好的那 2/3 次"** ⇒ **T298 不能据此标完成**；**art 的 ①否②否 也需在稳定复现下重述**。
+  **决定性试验（已派 release，≤30min）**：**同固定前缀，`resume` 两次 vs `oneshot`** —— r1≠r2 ⇒ resume 自身非确定；r1=r2≠oneshot ⇒ 确定性偏差（可复现 bug）；r1=r2=oneshot ⇒ 早前分歧 = 探针竞态。**并先排除"kill 由墙钟驱动（`@2s`）⇒ 前缀边界随负载漂移"**（若是，改成"跑到指定 round 再 kill"）。
+  · **候选③（"cache 命中状态影响语义"）已被弱化**：**oneshot 跨 run 稳定**，而其 cache 冷热逐 run 不同 ⇒ 若 cache 影响语义，oneshot 也该抖。**优先查 ①探针竞态 / ②续跑残留**（②则交 life）。
+  · **life 已完成 T298 出口项④**：纯 HEAD worktree（`.worktrees/t298head` @ `e959dc3`，**无未提交改动**）跑三档 `0..8` / `0..24` / `N=20×24` 均 `one==two` ⇒ **"活树 ≡ 快照"的 caveat 已用实测消除**（非推理）。⚠️ **但这三档 ≠ 目标配置 `seed=9/n=2/150r`，不能替代间歇项的稳定复现**（间歇分歧正是在目标配置上出现）。
+- **v1.3.27（00:42）**：🚨 **门禁范围缺陷阻断全员提交（已派 `T301`）** —— `make verify` 在仓根 **`lexicon-gate`** 挂：`glossary/tools/lint_terms.py` 的 `SKIP_DIRS` **未含 `.worktrees`** ⇒ **扫进 life 的 worktree 分枝副本** `.worktrees/t298head/v1/*.md` ⇒ **全员 `make verify` / pre-commit `lexicon-gate` 变红、无法提交**（kernel 的 T287 已被拦）。与 **T220（门禁范围过宽）同族**。**已派 `T301` 给 `sandbox-test-lead`**（门禁线域主）：`SKIP_DIRS` **增 `.worktrees`**（与 `.git` 同族；**范围纠正、非放宽断言**）+ **双向反向验证**（`.worktrees/x/a.md` 忽略；**根树内同词仍报红**）+ 确认 `.worktrees/` 在 `.gitignore`。
+  **纪律要点**：**kernel 作为"被门禁拦的人"，不得自己去改门禁**（"改门禁者不应是等门禁放行的人"）；**life 不必拆 worktree**（拆是治标，下一个人建又复现）；**根治靠 T301**。**→ 00:42 更新：该文件 owner 实为 `design-synthesizer`（lexicon/glossary 线），他已自行修掉并提交 `c5cb553`**（排除集增 `.worktrees`；反向验证：`.worktrees/` 忽略、仓根同内容仍报红；`make lexicon-gate` 新增违规 0 / exit 0）⇒ **`T301` 已取消、并急告 `sandbox-test-lead` 停手（防同一文件跨人交错）；重复编辑 0**。**kernel 已重跑 `make verify`。**→ 00:45 闭环：`T302` 独立复验 PASS**（sandbox-test-lead，作者不自证）：`c5cb553` **仅 1 insertion**、只在 `EXCLUDE_DIR_PARTS` 增 `.worktrees`（含注释），**词表/断言/`--baseline` 语义一字未动**；双向验证 ✓（`.worktrees/*` 违规被忽略；**根树同词 → 新增违规 1 / exit 1**）；`.worktrees` 在场时 `lexicon-gate` 新增违规 0 ✓。**`.gitignore` 缺口由 `T303` 补（`38de107`，含反向验证 ✓）** ⇒ **gate 线闭环**。
+  ⚠️ **Leader 自纠（今晚第 5 次）**：**派活看【文件 owner】，不看【任务族】。** 我按"门禁范围修复族（T220/T237）"派给了 `sandbox-test-lead`，而 `lint_terms.py` 的 owner 是 `design-synthesizer` ⇒ **差点造成两人同改一门禁文件**。**立规：派门禁/工具类修复前，先确认"这个文件是谁的"。**
+- **v1.3.26（00:39）**：🔔 **T292 完成 → 解冻**（commit `e959dc3`；`v2/evidence/t292-shared-cache-ablation.md` + `t292_shared_results.json`）。**Leader 实核：`t271-*` 无在飞 unit、无残留进程 ⇒ 主树恢复自由**（HEAD `e959dc3`）。
+  · **共享 cache、同指纹 `f378d5d3` 的 A/B/C/D**：A 301,332 · **B(导演 off) 301,330 / 99.6% ⇒ 干净，B−A = −2 = 2 个 noop** · **C(三族 off) 301,332 / 100% ⇒ 零结果**（`life_v2` 直读盘、`override` 够不到 ⇒ 机制缺口 = `T297b`）· **D(wake on) 304,452 / 88.6% ⇒ 半干净**。
+  · ⭐ **D−A 按类型**：`MEMORY_FORGET +2109` · `WAKE +1294` · `RELATION_CHANGE +912` · `IDLE +84`；减 `MEMORY_RETRIEVE −415` / `OFFER_ACCEPTED −167` / `EXCHANGE_SETTLED −18` ⇒ **D9 双时钟是真行为变更 ✓**（非 inert）。
+  · 边界（obs 已声明）：本批用**主树 code**（出处非某 sha，**内部对照成立**）；22:28 外部误停记为环境事件；下晚可用 `tools/t271` 的 `side` + `switch_mode=override` 复现 B/D 干净。
+  · **解冻后开工顺序**：**release → T299**（前置已满足）· **kernel → T287**（`make verify` 分段 → 提交）→ T295 · **life → T298 收尾**（纯 HEAD 三档 → 等 T299 门 → 新口径探针 + `make verify`）。**`make verify` 同一时刻只跑一个。**
+- **v1.3.25（23:44）**：🎯 **T292 干净对照（A/B）出结果，并【实证 D3 未达成】** —— 共享 cache、同指纹 `f378d5d3`：
+
+  | 批 | 事件 | LLM 调用 | cached | 耗时 | WD | WGE |
+  |---|---:|---:|---:|---:|---:|---:|
+  | **A 基线** | 301,332 | 4797 | 3120 (65%) | 65min | 1 | 1 |
+  | **B 导演 off** | 301,330 | 4797 | **4777 (99.6%)** | 8.4min | 0 | 0 |
+
+  · ⭐ **B−A = −2，恰好 = director 的 2 个事件（`WORLD_DIRECTIVE=1` + `WORLD_GROUP_EVENT=1`）** ⇒ **关掉世界导演后，除这 2 个 `_NOOP_TYPES` 外世界逐项一致** ⇒ **今晚"B 反比 A 多 11"纯属跨批分叉噪声（证伪）**。
+  ⇒ ⭐ **D3（世界 AI 导演产生宏观群体事件、不只是观察者）= 🔴 未达成，现由"干净消融"钉死**：**默认剂量下 director = 纯旁白**（2 个 noop、**零下游行为影响**）；与 **T289** 诊断（84 回合只真介入 1 次）互证。**已上呈用户拍口径**（①旁白型够 / ②改"世界层参数"真影响行为 / ③其他）。
+  · ⚠️ **同轮实测暴露一条副作用**：**A(`f378d5d3`) = 301,332 ≠ 今晚 A(`f1ea31a3`) = 301,384（差 52）** —— **不是行为变了，而是"新增 default-off 开关进指纹 ⇒ cache 全 miss ⇒ 新 LLM 答案"**。⇒ **§5.8 通则被实证：加"默认 off"的键也会让新批与旧基线不可直接比**（T287 的 `time.json` 正是此例）。
+  · **C 本轮 = "零结果"**：`life_v2` 直读盘、`override` 够不到 ⇒ **C ≈ A、测不到三族**（据实标注）⇒ **正是 `T297b` 的缺口**；**今晚早先 C 的"事件减半"用的是 `file` 模式，仍然成立**。
+- **v1.3.24（22:57）**：✅ **T298 语义层面已收敛（art 独立确认）；探针 FAIL 的真因 = 闸门口径 —— 已拍板重定义门。**
+  · **art 独立复核**（`v2/refs/T298-round92-attribution.md`，只读、自算折叠）：结论 **①否 · ②否** ⇒ 残余 diff **仅 freeze-cache 计量、非世界语义**。证据：两日志 **9809=9809**；规范化后**差异仅 150 条且全是 `TURN_SEAL.last_hash`**；`LLM_CALL` 154 条去三字段后 **payload 0 处不等**；**`TURN_SEAL.state_hash` 不等 = 0**；非 LLM/SEAL 事件 payload 不等 = 0；**`MEMORY_FORGET` 两路 4380=4380、逐回合差 = []** ⇒ **round93 分岔已消除**。反向检查（若为语义差异必有 `state_hash`/非 LLM 事件不等；实测均 0）⇒ ①/② 排除。
+  · **对账**：art 侧（sha `8d4c8b9` 日志）`FORGET` 两路相等 ⇒ **life 22:45 的 `537/667` 只能是"修复前"读数**；本按"修复前分岔、修复后收敛"记载。
+  · **release 看代码**（`verify_native_resume.sh` **L70-71 / L75-80**）：门 = **整份日志 sha256、无字段排除** ⇒ **把 `cached/tokens` 也算进去了**；**"预热对等"不成立**（预热后仍 `false 89 / true 65` 混合；oneshot `true:154`）⇒ **现状门比的是"本地 freeze 缓存命中状态"**。
+  · ⭐ **Leader 拍板：门重定义为「回答『世界语义是否一致』」** —— **排除 `cached`/`tokens_in`/`tokens_out`/`cost_units`**；**保留** `cache_key`/`prompt_hash`/`meta_digest`/`engine_version`/`provider`/`purpose`/`degraded`… 且 **`state_hash` 必须相等**。**四硬条件**：①以 art 独立归因为前置（**排除后必须 byte-equal**，否则撤销本改动、另查）②**反向验证：注入真语义差异须仍报红** ③脚本自描述排除清单 ④**批期禁改运行中的 `t271_runner.sh`**（bash 逐行读脚本）。**release 已按正解 (a) 实现**（据 `engine/ledger.py:24` `record["hash"]=compute_event_hash(整条记录含 payload)` / `engine/kernel.py:239` `TURN_SEAL.payload.last_hash = ledger.last_hash()` ⇒ **计量字段发射时已进哈希链**，只删"显示层 payload 字段"**不充分**）：`semantic_log_sha.py` **规范化后重算链**（`prev_hash`/`hash`/`TURN_SEAL.last_hash`），selftest 断言**"链级联覆盖=True"**（补上此前未覆盖的"`TURN_SEAL` 紧跟被改 `LLM_CALL`"依赖）。**依据：D1 已定"逐位可复现非必须" ⇒ 门的目的是"续跑有没有改变世界"。**
+  · **已开 `T299-semantic-equality-gate`（release，`depends_on T292`）**；**台账要求：T276/T288/T292… 此前所有"逐字节一致"结论须按新口径重述一次**。
+  · **T298 出口盘点**：①语义一致 ✅（art 独立）· ④三档 ✅**（条件性：实跑在【活树】、含 kernel 的 default-off 未提交改动 ⇒ 解冻后须在【纯 HEAD 快照】补跑一次，消掉 caveat）** · ②T299 门落地 ⏳ · ③新门口径探针 PASS ⏳ · ⑤`make verify` ⏳。⚠️ **工具约束（22:20 实测）**：**Leader 不能给 `in_progress` 任务 `add_blocked_by`**（报 `Cannot add dependency … in terminal or executing status: in_progress`）⇒ 想把这些外部阻塞项标 `blocked` **只能先 `cancel`**，不划算 ⇒ **只能保持 `in_progress` + 让成员忽略 stale-claim 自动提示**。**教训：建任务时凡"要等外部前置"的，一开始就写成 `pending` + `depends_on`。**
+  · ⚠️ **两套机制必须分清（报结论时标明来源，勿混）**：**探针 `verify_native_resume.sh` 走 `tree=copy`**；**life 手跑的三档/dump 走【活树】**。life 的时间线：`537/667` = 修复前（copy 无未提交修复）· `计数差=0` = 修复后。
+- **v1.3.23（22:53）**：⭐ **T298 的残余 FAIL 被重新定性为"闸门定义问题"（待 art 独立确认）** —— life 交原始 dump `v2/refs/T298-round92-raw-dump.md`：修复 `8d4c8b9` 后，**两路**（一次性 / 续跑）**事件流"逐回合类型计数差异 = 0"、两日志等长 9809**；**9652 条只差 `LLM_CALL.payload.{cached,tokens_in,tokens_out}`**（例 line7 `cached False vs True`、`tokens 8 vs 0`），**150 条 `TURN_SEAL.last_hash`** 差（由 payload 哈希链**下游带偏**，非语义）⇒ **残余差异疑为"freeze-cache 冷热计量"，而非世界语义**（round92 `nodes` mem_id **对称差 = 0**、`mems` 集两路相同）。
+  ⚠️ **由此暴露一个更深的问题（Leader 裁定点，未定）**：**`verify_native_resume.sh` 的"逐字节一致"到底该比什么？** 两路**缓存冷热天然不同**（一次性全冷 / 续跑带前缀缓存）⇒ **若把 `LLM_CALL` 计量也算进"逐字节"，则该门实际比的是"本地缓存命中状态"、不是"世界语义"，可能恒红**。**处置**：**归因 → art（独立）**；**闸门定义 → release 出方案、Leader 拍板、须附反向验证（真语义差异仍必须报红）**；**不许为"让它过"而放宽**（放宽的是与语义无关的字段，不是语义）。
+  ⚠️ **一处待对账的矛盾**：life **22:45** 报"round93 `MEMORY_FORGET` resumed 537 vs oneshot 667"、**22:52** 报"类型计数差异 = 0、日志等长" ⇒ **不可能同时为真**，已要求 life 标明两次测量相对提交点 `8d4c8b9` 的前/后位置。
+- **v1.3.22（22:46）**：⭐ **T298 未完成（如实上报，good）** —— life 的"缓存对齐权威"修复**已提交 `8d4c8b9`**，但**目标探针（`T271_VR_GATE=1`，kill@2s→round89）仍 FAIL**：`resumed=b83d55ee…` ≠ `oneshot=662e9bee…`（**两侧 hash 都变 ⇒ 修复确实动了行为，但不充分**）。逐字节 diff：**前缀到 round92 一致、round93 起分岔，只差 `MEMORY_FORGET` 条数（resumed `537` vs oneshot `667`）** ⇒ **续跑喂给 `plan_forgetting` 的记忆数仍少于一次性**（"缓存≠权威"未完全消除，或另有前向态使 `mems` 不同）。
+  ⚠️ **一条必须先记的教训（life 自纠；"证据只在它被测的那条路径上成立"今日又一例）**：life 先前报的"目标配置 `one==two` True"**是无效证据** —— 它跑的是**主树活代码**，而**探针用 `tree=copy`（提交快照）** ⇒ **未提交的修复根本不进探针**。**立规：探针/验收若跑 `tree=copy`，证据必须来自"提交后"的同一 tree —— "活树跑过" ≠ "提交快照跑过"。**
+  **下一步（已定）**：在 **round92** dump **两路 `self.memory.nodes`（mem_id 集 + 各字段）与喂给 `plan_forgetting` 的 `mems`**，一次分清 **①缓存裁剪仍不对** / **②睡眠·人格前向态（T244）使 `mems` 不同**。**T298 保持 in_progress、不标完成**；并须**在提交快照上补验既有三档不回归**（旧"不回归"结论同样来自无效的活树跑）。
+  ⚠️ **该修复【动行为】**（life：**两侧 hash 都变**）⇒ 它**不是 no-op** ⇒ **T298 定稿后必须重冻基线**（主树从此不复现 T236 基线）。**对今晚批无影响**（obs 进程 22:28 已 import、`8d4c8b9` 22:45 才提交）。
+  **归因分工已定**：**life 只交原始 dump**（round92 两路 `nodes`+字段 / 喂 `plan_forgetting` 的 `mems` / 前向态 / 两路日志）；**art 独立归因**（清单 `v2/refs/T298-round92-check-list.md`，先折叠 `AUTH92`，再判 **①缓存裁剪只覆盖 restore 未覆盖 live** vs **②前向态**；**先验不作结论**）。
+- **v1.3.21（22:30）**：① 🚨 **操作事故 + 立规**：`22:28:21` release 收尾清理时用 **`systemctl stop $(全部 t271-*)`**，**误停 obs 在跑的 `t271-t292`**（跑到 round 35，journal 为 "Stopping" 非 Killed/OOM，可区分）——release **已自报**、已告知 obs 并给精确续跑命令；obs 于 `22:28:46` **同 `side_root=/tmp/t292` 重启**（cache 持久化 ⇒ 前缀命中、预计快很多）。**立规：停 unit / 清理只点【自己显式的单元名或自己的 run 目录】，禁止 `t271-*` 之类通配**（同族：**用错信号 = 范围过宽 = 误伤**）。
+  ② ⚠️ **本条内 Leader 当众判错一次（同日由 release + obs 纠正，放行已撤回）**：我据 `ExecStart` 含 `/tmp/t292` 路径，判"读副本 ⇒ **主树自由**、T296（T298）现在就能落" —— **错**。真相：**`t271-t292` 的参数与日志在 `/tmp`，但它 `sys.path` 导入的是【主树 `code/`】**（release 给脚本内 `CODE = <主树>/code` 证据；obs 确认单进程 + 只有 side/日志在 `/tmp`）。
+  ⇒ **撤回"主树自由"。改判（最终口径，22:37 细化）：`t271-t292` 运行窗口内，主树 `code/` 按「批启动那刻的树状态」冻结** ——
+  ① **`config/*.json` = 硬冻结**（life 逐调用直读盘 ⇒ 会真串进运行批）。**"冻结"含"不得移出"**：kernel 一度把 `config/time.json` 移出主树（stash+`/tmp`）——**移出也是改这棵树**，若后续子批新起进程读到的指纹会 ≠ A 批 ⇒ **已令其恢复**。
+  ② **`code/**/*.py` = 允许改**（不改 `config` 的前提下）—— 依据：**`engine_version` 只由 `config` 指纹构成、不含 `.py`** ⇒ **不改指纹、不破 cache 共享**；且 obs 的 A/B/C/D 是**单进程、启动即 import** ⇒ **运行中的批行为不受 `.py` 影响**（**批主 obs 亲证**，"已加载模块不因改盘而变"）。**代价只余"溯源"** ⇒ 以 **【批启动树状态：HEAD `8680737` + 未提交 diff 摘要】** 作溯源锚。
+  ③ **重型 `make verify` 排解冻后**（免扰批）。**T298 的 `.py` 修复可留主树**；**T297 的落盘排 T298 之后**（已改为 `T297b`，`depends_on T298`）。此判与 **D10「冻结窗=跑批实际时长」**一致。
+  ④ ✅ **obs 22:39 亲证 + 把约束收紧到"唯一硬约束"**：**A/B/C/D 全程同一进程、无子进程** ✓；**但「单进程」≠「config 只读一次」** —— 他脚本**每批 `default_config()` 重读盘**、`engine_version`/`cache_key` **每次 `run_e2e` 内重算** ⇒ **唯一硬约束 = `config/*.json` 在【A 启动(22:28) → B/C/D 结束】全窗口【逐字节一致】**（否则 B/C/D 重算出不同 fingerprint ⇒ cache miss ⇒ 跨批分叉，对照作废）。**`config/time.json` 已于 22:38 恢复在场（config 共 14 文件、与 A 启动一致）** ⇒ 四批 fp 均 `f378d5d3` ✓。**★ 跑批进度判据（22:59 实核）：看 `heartbeat.tsv` 的 round，不看日志 `size/mtime`** —— 日志**只在 flush 点跳变**（实测：22:38 与 22:48 同为 15,957B/round 0，22:58 才跳 26MB/round 23）⇒ **拿"日志 10 分钟没长"当"卡死"是用错信号**；**连续信号看 `freeze_cache` 文件数与最新写入时刻**。（A：23:06 = round 35 / 38min ≈ 1.05 round/min ⇒ ETA ≈ 00:00–00:20。**"idle 10 分钟"的自动停滞上报对"等长批"是假阳性** —— 顶住催办、不为消面板动手。）**kernel 恢复后回头核 `compute_fingerprint()` 实测 = `f378d5d3`** ⇒ 多进程风险从"逻辑消除"升级为"实测消除" ✓。
+  **新增判据（"证据只在它被测的路径上成立" 今日第 7 例）**：**"命令行参数指向 `/tmp`" ≠ "代码出处是 `/tmp`"** —— 判"某批读哪棵树"要看 **import 根 / `sys.path`**，不看命令行路径。**这次是我读错**。
+  ③ ⭐ **release 新实测数据点（把 v1.3.18 的规矩钉死）**：**同一 sha、只改回合数** —— `seed=9/n=2/rounds=24` **一致 ✓** · `rounds=60` **一致 ✓** · `rounds=150` **round 93 分叉 ✗** ⇒ **"逐字节一致"必须在【目标配置】上自证，不能拿别的配置代表**；`verify_native_resume.sh` 已参数化（`T271_VR_SEED/AGENTS/ROUNDS/KILL_AFTER` + **`T271_VR_GATE=1` 不一致即失败**，`8680737`）。
 - **v1.3.20（22:26）**：① ⚠️ **口径更正（会决定"今晚能不能跑"）**：**判断内存看 `available`，不看 `free` 列** —— 实测同一时刻 `free 1.8Gi` 而 **`available = 18Gi`**（`free` 列小是因为 **16Gi 被 page cache 占着、可随时回收**）。sim-system-architect 曾据 `free 1.3Gi` 判"内存紧张" ⇒ **若按 `free` 判，会把"能跑"误判成"别跑"**。**跑批预检报数须写清字段**（例：`available=18Gi`；平台 `anon` 单列）。**同族**：读错一列 = 换了一个判据。
   ② ✅ **`config/time.json` 已进 `FINGERPRINT_FILES`**（kernel 按裁定做了 ✓）—— **新增开关进指纹 ⇒ 日志可解释** ✓（T287 期①的开关不会被藏在指纹之外）。
   ③ **T296 两半合并**：**sim-system-architect 的 4 条候选 + 核验法落盘提交 → `art-director` 以其为检查清单去复现取证 → `life-layer-dev` 修复**。它的归因里有一次漂亮的推理排除：「**merge vs drop 都属非保护分支 ⇒ 更可能是 `access_count`/`last_access` 重建口径，而非 `is_protected`**」。
@@ -237,6 +308,7 @@
   ⇒ **两个相位（团队从今天起按此工作）**：
   - **开发相位（白天）**：**世界层开放**（可改、可试、可重构）；**画面层随时可改**；
   - **跑批相位（夜间）**：**`code/{engine,life,freeze,config,obs,contracts,orchestration}` 冻结**；跑批在 **`/tmp` 只读副本**里进行（**主树自由**）；明晨**收**（归档 + 重冻基线 + 变更清单 + 解冻）。
+    ⚠️ **2026-10-12 22:30 更正（此处的"跑批在 `/tmp` 副本、主树自由"是错的，勿再据此判断）**：实际**参数/日志在 `/tmp`，但 `sys.path` 导入的是【主树 `code/`】** ⇒ **跑批相位 = 主树 `code/` 按批启动状态冻结**（`config/*.json` 硬冻含不得移出；`code/**/*.py` 允许改）。判读"批读哪棵树"看 **import 根/`sys.path`**，不看命令行路径。详见 §7 **v1.3.21② / v1.3.22**。
   ⇒ **三条立即推论**：① **冻结不是一次性事件，而是每晚例行的相位切换**；② **断点续跑从"锦上添花"变必需**（被中断不能白费一晚）；③ **每晚都跑 → 磁盘/inode/内存要有长期账**（4 批/晚 ≈ 140MB 日志 + side）。④ **今晚的日志 = 明天白天的素材**（画面重渲、数据管线、消融分析）。
   ⇒ 已开 **T274 夜跑流水线**（release-engineer）。
 - **v1.3.8（16:50）**：
