@@ -29,6 +29,7 @@
     "drift_max_permille": 150,
     "drift_dim_max_permille": 200,
     "min_importance": 7,
-    "min_windows": 2
+    "min_windows": 2,
+    "criterion": "natural"
   }
 }

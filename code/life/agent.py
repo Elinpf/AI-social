@@ -24,6 +24,7 @@ from .llm import LLMClient, get_llm_client
 from .memory import AssociativeMemory, EmbeddingModel, HashEmbeddingModel, SideStore
 from .persona import Persona
 from . import persona_drift as PD
+from . import emotion as E
 from . import sleep_window as _sleep
 from .policy import (social_enabled, exchange_enabled, m2b_judge_mode, m2b_importance_mode,
                      narrative_persist_enabled)
@@ -859,10 +860,9 @@ class LifeLayerAgent:
         return str(self.persona.goal_tendencies[0].get("kind", "")) if self.persona.goal_tendencies else ""
 
     # T244 W3: 由**既有**反思（MEMORY_REFLECT 产出）转成**有界**人格漂移候选（不新增 LLM）。
-    _DRIFT_POS = ("帮助", "成长", "喜悦", "连接", "感谢", "陪伴", "温暖", "成功",
-                  "support", "growth", "joy", "connect", "thanks")
-    _DRIFT_NEG = ("冲突", "失败", "孤独", "失去", "争吵", "痛苦", "挫折", "焦虑",
-                  "conflict", "loss", "lonely", "fail", "struggle")
+    # T333：情感判定**单一真源**在 `life/emotion.py`（此处仅别名，供既有引用/测试）。
+    _DRIFT_POS = E.STRICT_POS
+    _DRIFT_NEG = E.STRICT_NEG
 
     def _reflection_drift_events(self, params: dict, *, day: int, slot: str, window: int) -> list[dict]:
         """把既有反思节点转成**有界**漂移候选（06 §1.2；T244 W3）。
@@ -880,14 +880,13 @@ class LifeLayerAgent:
         min_imp = int(pd.get("min_importance", PD.DEFAULTS["min_importance"]))
         dmax = int(pd.get("delta_max", 1))
         min_windows = int(pd.get("min_windows", PD.DEFAULTS["min_windows"]))
+        criterion = str(pd.get("criterion", "natural"))   # T333：strict|natural（默认 natural）
         dims = PD.BIG5_DIMS
         cand: dict[str, tuple[int, str]] = {}          # dim -> (sign, mem_id)
         for n in sorted(self.memory.nodes.values(), key=lambda x: x.mem_id):
             if n.kind != "reflection" or n.importance < min_imp:
                 continue
-            low = (n.text or "").lower()
-            sign = 1 if any(k in low for k in self._DRIFT_POS) else (
-                -1 if any(k in low for k in self._DRIFT_NEG) else 0)
+            sign = E.emotion_sign(n.text or "", criterion=criterion)   # 单一真源
             if sign == 0:
                 continue
             dim = dims[int(sha256_hex(n.mem_id)[:8], 16) % len(dims)]

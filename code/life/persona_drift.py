@@ -15,7 +15,7 @@ from .util import canonical_hash
 
 BIG5_DIMS = ("openness", "conscientiousness", "extraversion", "agreeableness", "neuroticism")
 
-DEFAULTS: dict[str, int] = {
+DEFAULTS: dict[str, object] = {
     "alpha_permille": 20,   # 每步回归系数 α = 0.02（越大越"弹回"锚点）
     "delta_max": 1,         # 单事件单维最大 ±δ（分）
     "drift_max_permille": 150,   # 全维归一化漂移上限（0.15）
@@ -23,6 +23,8 @@ DEFAULTS: dict[str, int] = {
     # T323/T320：漂移候选阈值（原硬编码 7/2，现入键集使可配置；默认=现状）
     "min_importance": 7,      # 反思节点 importance ≥ 此值才算候选（0–10）
     "min_windows": 2,         # 需连续 N 个睡眠窗含候选才发 PERSONA_DRIFT（<N=抖动不发）
+    # T333/T332：情感判据档位（strict ⟺ 现 26 子串；natural=扩后，默认）—— 一等可消融键
+    "criterion": "natural",
 }
 
 
