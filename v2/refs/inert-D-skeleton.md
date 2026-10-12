@@ -63,23 +63,37 @@ def _symbol_value_map(frontend_dir: Path) -> dict[str, list]:
     """符号 -> 值(id) 映射（供值引用搜索）。"""
 
 # ---- 引用搜索（排除定义处）----
-def _refs(sym: str, ids: list, frontend_dir: Path) -> tuple[list, bool]:
-    """返回 (命中行列表, 作用域内是否含动态索引)。
+def _dynamic_on_mapping(sym: str, frontend_dir: Path) -> bool:
+    """**限定到"映射容器本身"的动态键访问**——不是任意 `arr[i]`。
 
-    - 命中 = 名字 `sym` 或任一 id 字面量出现在**非定义**的 frontend 代码里；
-    - 动态索引探测：正则 `\\[[a-zA-Z_]`、`\\.pick\\(`、`eval`、`window\\[` 等（近似，标【近似】）。
+    仅当对**同名映射对象**做**非字面量键**访问时才算动态（近似）：
+        `TILES[` / `sprites[` / `<NAME>[`  且 键非常量（如 `TILES[k]`、`sprites[id]`）
+    单纯 `road[ty][tx]` / `gset[0]` **不算**（那是普通数组，遍地都是）。
+    ⚠ 早期草稿用「任意下标 `\\[[a-zA-Z_]`」→ **恒真** → 会让器永不输出 `zero_ref`、且反向验证必挂（frontend-dev 评审指出）。**已修正**。
+    """
+    # 近似：正则命中「<映射名>[<非常量>]」形式
+    ...
+
+def _refs(sym: str, ids: list, frontend_dir: Path) -> tuple[list, list, bool]:
+    """返回 `(refs_name, refs_value, dyn)`——**名字命中与值命中分开**。
+
+    - `refs_name` ：符号名 `sym`（具名访问，如 `W.TILES.grassLight`）的命中行。
+    - `refs_value`：其**值( id )** 的命中行，**且限定上下文**（出现在 `.pick(`/`slice(`/tile 索引附近）——
+      否则 `745` 这类数字在别处当坐标会**假阳**；不满足上下文则**不计**（或标【近似】）。
+    - `dyn`       ：见 `_dynamic_on_mapping`（**仅映射容器非字面量键**）。
     """
 
 # ---- 单条判据（对应 B 的 classify）----
 def classify_asset(entry: dict, frontend_dir: Path) -> dict:
     name = entry["name"]
     ids = _symbol_value_map(frontend_dir).get(name, entry.get("values", []))
-    rn, dyn = _refs(name, ids, frontend_dir)
-    status = d_state(name, ids, rn, rn, dyn)
+    rn, rv, dyn = _refs(name, ids, frontend_dir)          # 名字/值/动态 分开取
+    status = d_state(name, ids, rn, rv, dyn)              # 分参数传入（勿把 rn 当两用）
     exp = entry.get("expected_status")
     return {
         "name": name, "kind": "asset", "status": status,
-        "value_ids": ids, "hits": (rn or [])[:5],
+        "value_ids": ids, "hits": (rn + rv)[:5],
+        "refs_name": rn[:3], "refs_value": rv[:3], "dynamic_scope": dyn,
         "expected_status": exp,
         "expected_ok": (exp == status) if exp else None,
         "owner": entry.get("owner"), "note": entry.get("note"),
@@ -89,10 +103,10 @@ def classify_asset(entry: dict, frontend_dir: Path) -> dict:
 def auto_assets(frontend_dir: Path) -> list[dict]:
     rows = []
     for name, ids in _asset_defs(frontend_dir):
-        rn, dyn = _refs(name, ids, frontend_dir)
-        st = d_state(name, ids, rn, rn, dyn)
+        rn, rv, dyn = _refs(name, ids, frontend_dir)
+        st = d_state(name, ids, rn, rv, dyn)
         rows.append({"name": name, "status": st, "value_ids": ids,
-                     "hits": (rn or [])[:3], "produced": bool(rn)})
+                     "hits": (rn + rv)[:3], "produced": bool(rn or rv)})
     return rows
 ```
 
