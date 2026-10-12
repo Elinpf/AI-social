@@ -430,6 +430,17 @@ class KernelAdapter:
         seqs = self.engine.emit_specs([skip_spec(self.engine.state.round, dimension, parties)])
         return seqs[0] if seqs else -1
 
+    def should_skip_judgment(self, dimension, parties) -> bool:
+        """critical-only 逐判定 gate（T221 消费）：判跳则**内核侧落可列 DEGRADE** 并返回 True。
+
+        life 在 `soft.judge(...)` 前调用；True → 不发起调用。life 不 import engine。
+        """
+        from engine import scheduling
+        if scheduling.should_skip_judgment(dimension, self.engine.llm_budget_level, self.engine.config):
+            self.note_skip(dimension, parties)
+            return True
+        return False
+
     # ---- v2 社会层：三通道 MSG（T97）----
     def _members(self, group_id: str) -> list:
         return list(self.engine.state.groups.get(group_id, {}).get("members", []))

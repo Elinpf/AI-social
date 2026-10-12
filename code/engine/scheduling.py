@@ -132,6 +132,25 @@ def should_skip_importance(level: int, config) -> bool:
     return not bool(cfg.get("critical_importance", False))
 
 
+def schedule_skip_spec(state, round_no: int, config, priority=None):
+    """M4「不可静默」：`schedule_enabled` 且本轮有 agent 未被许可 → 发一条**可列**的
+    `DEGRADE{action:"schedule_skip", round, skipped_agents:[...]}`（每回合一条汇总，防刷屏）。"""
+    cfg = _budget_cfg(config)
+    if not cfg.get("schedule_enabled", False):
+        return None
+    kc = int(cfg.get("max_concurrency_kc", 0) or 0)
+    ids = sorted(state.agents)
+    pri = priority or (lambda _a: 0)
+    permit = set(schedule_llm_agents(ids, round_no, kc, priority=pri))
+    skipped = [a for a in ids if a not in permit]
+    if not skipped:
+        return None
+    return spec(round_no, PHASE_COMMIT, "SYSTEM", "DEGRADE", {
+        "action": "schedule_skip", "round": int(round_no),
+        "level": int(getattr(state, "budget_level", 0) or 0),
+        "skipped_agents": skipped})
+
+
 def schedule_llm_agents(agents, round_no: int, kc: int, priority=None) -> list:
     """把本回合允许调用 LLM 的 agent 限到 ≤`kc`（峰值削平）。
 
@@ -149,5 +168,5 @@ __all__ = [
     "sim_day", "daily_token_usage", "daily_judge_calls", "degrade_level",
     "degrade_specs", "schedule_llm_agents",
     "critical_dimensions", "is_critical_dimension", "should_skip_judgment", "skip_spec",
-    "should_skip_importance",
+    "should_skip_importance", "schedule_skip_spec",
 ]

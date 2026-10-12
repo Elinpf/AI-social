@@ -187,6 +187,11 @@ class Engine:
         else:
             # M6：级位上升时发 DEGRADE（可观测，禁止静默；入本回合缓冲随 P6 commit）
             self._emit(scheduling.degrade_specs(self.state, round_no, self.config))
+            # M4：本轮未被调度许可的 agent 也要显式落 DEGRADE（不静默）
+            skip = scheduling.schedule_skip_spec(self.state, round_no, self.config,
+                                                 priority=_status_pri(self.state))
+            if skip is not None:
+                self._emit([skip])
             self.state, _ = self.arbiter.commit(self.state)
         self._seal(round_no)
 
@@ -217,6 +222,14 @@ class Engine:
         for r in range(int(rounds)):
             self.run_round(r)
         return self.state
+
+
+def _status_pri(state):
+    """M4 调度优先级：濒死 > 预警 > 复活缓冲 > 常规（关键路径优先）。"""
+    def pri(aid):
+        return {"near_death": 3, "warning": 2, "revived": 1}.get(
+            state.agents.get(aid, {}).get("status"), 0)
+    return pri
 
 
 def _coerce_specs(round_no: int, raw: list) -> list:

@@ -95,6 +95,31 @@ def test_authoritative_critical_dimensions_and_exact_match():
                                                                             "critical_importance": False}}}) is True
 
 
+def test_schedule_skip_is_visible():
+    cfg = _cfg()
+    cfg["policy"]["llm_budget"]["schedule_enabled"] = True
+    cfg["policy"]["llm_budget"]["max_concurrency_kc"] = 1
+    st = initial_state(1)
+    for a in ("A", "B", "C"):
+        st.ensure_agent(a)
+    sp = scheduling.schedule_skip_spec(st, 2, cfg)
+    assert sp is not None and sp.payload["action"] == "schedule_skip"
+    assert len(sp.payload["skipped_agents"]) == 2  # 3 agents, Kc=1 → 2 未许可（不静默）
+
+
+def test_adapter_should_skip_judgment_gate():
+    w = build_world(seed=7, n=3); ad = w["adapter"]; eng = w["engine"]
+    eng.config["policy"]["llm_budget"]["critical_dimensions"] = ["deal"]
+    eng.state.budget_level = 3
+    eng.state.round = 1; eng.ctx = eng.ctx.at(1, 0); eng.arbiter.discard()
+    assert ad.should_skip_judgment("reputation", ["P001"]) is True     # 非 critical → 跳
+    assert ad.should_skip_judgment("deal", ["P001"]) is False          # critical → 保留
+    eng.state, _ = eng.arbiter.commit(eng.state)
+    d = [r for r in eng.ledger.records if r["type"] == "DEGRADE"
+         and r["payload"].get("action") == "skip_judgment"]
+    assert d and d[0]["payload"]["skipped"][0]["dimension"] == "reputation"
+
+
 def test_note_skip_emits_listable_degrade():
     """life 跳过判定 → 引擎发可列 DEGRADE（ADR-08，入本回合缓冲）。"""
     w = build_world(seed=7, n=3); ad = w["adapter"]; eng = w["engine"]
