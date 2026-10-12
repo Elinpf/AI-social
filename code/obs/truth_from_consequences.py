@@ -1,22 +1,27 @@
-"""「确定性后果」真值口径 —— 给判别式判定(T212)提供**可复算的 TRUE_label**。
+"""「确定性后果」真值口径 —— **单一真源**（T257 合并；`obs/truth.py` 已废弃并入）。
 
 **只读日志、纯函数、确定性**（无随机/无时钟）。**不把生成式 A 的标签当正确答案**：
-本模块用**判定之后的确定性后果事件**（不需要 LLM）反推真值：
+用**判定之后的确定性后果事件**（不需 LLM）反推 TRUE_label。
 
-| 维度 | 后果事件 | TRUE_label 规则 |
-|---|---|---|
-| `rel_affinity` | `RELATION_CHANGE{dim:affinity,from:a,to:b}` | 窗口内`Δ>0` → `formed`；有事件但无正向 → `not_formed` |
-| `rel_familiarity` | `RELATION_CHANGE{dim:familiarity}` | 同上 → `formed` / `not_formed` |
-| `rel_trust` | `RELATION_CHANGE{dim:trust}` | 同上 → `formed` / `not_formed` |
-| `respect` | `RELATION_CHANGE{dim:respect}` | `Δ>0` → `high`；有事件无正向 → `low` |
-| `stance` | `OFFER_ACCEPTED/REJECTED`（`by=a` 且 offer creator=b） | 有 accept → `accept`；有 reject → `reject` |
-| `affection` | —— | **默认剔除**（无「affection」关系维；疑似→affinity，**未验证**） |
-| `weekly_focus` | —— | **默认剔除**（后果为活动模式，无干净口径，**未验证**） |
+**口径权威 = 08 §4.x「确定性后果真值」（行 440，sim-engine-stats-architect 裁定）**：
+
+| 维度族（`life/constants.py::JUDGMENT_OPTIONS`） | 后果事件 | TRUE_label | 无事件 |
+|---|---|---|---|
+| `rel_affinity`/`rel_familiarity`/`rel_trust`/`rel_respect`/`mentor_relation`（`formed`/`not_formed`） | 窗口内 `RELATION_CHANGE{dim}.after` | **`max(after) ≥ θ_dim` ⇒ `formed`；有事件但均 `<θ` ⇒ `not_formed`** | **undecidable（剔除）** |
+| `respect`（`high`/`low`） | 同上（`dim=respect`） | `after ≥ θ_respect` ⇒ `high` 否则 `low` | 剔除 |
+| `stance`（`accept`/`reject`） | **行为性** `OFFER_ACCEPTED`/`OFFER_REJECTED`（`by=a` 且 creator=b） | accept⇒`accept`；reject⇒`reject` | 剔除 |
+| `affection` / `weekly_focus` / `importance` | —— | **无干净后果 ⇒ 剔除** | 剔除 |
+
+**词表（依 `JUDGMENT_OPTIONS`，唯一权威）**：`rel_*`/`mentor_relation` 用 **`formed`/`not_formed`**；
+`respect`/`affection` 用 **`high`/`low`**；**`respect` 与 `rel_respect` 不得归一**（不同维族）。
 
 **三条硬约束（Leader 批准）**：
-  (a) **窗口 W 参数化**（默认 12 回合 ≈ 1 仿真日；可 `dim_windows` 按维度覆盖）；
-  (b) **被剔除的样本按维度计数并单列**（避免 ECE 样本数悄悄缩水）；
-  (c) **人工核抽样规则确定**（按 `judgment_id` 排序，等距取 ≤20 条）。
+  (a) **窗口 W 参数化**（默认 12 回合 ≈ 1 仿真日；`dim_windows` 按维覆盖）；
+  (b) **θ 参数化**（默认 ε=20，可 `dim_thresholds` 按维覆盖【待标定】）；
+  (c) **被剔除样本按维计数并单列**；**人工核抽样规则确定**（`judgment_id` 升序等距 ≤20）。
+
+**口径变更声明（T257）**：旧 `obs/truth.py` 的 `Δ>0`、`rel_trust→high/low`、`stance=关系净符号`
+已被 08 弃用；本模块并入后**在变更处输出随之变**（"逐字节不变"只在**合并机制**层成立，跨口径不成立）。
 """
 
 from __future__ import annotations
@@ -26,27 +31,25 @@ import json
 from pathlib import Path
 
 __all__ = [
-    "CONSEQUENCE_RULES", "DEFAULT_WINDOW", "truth_from_consequences",
+    "CONSEQUENCE_RULES", "DEFAULT_WINDOW", "DEFAULT_THETA", "truth_from_consequences",
     "correct_from_truth", "human_sample",
 ]
 
-DEFAULT_WINDOW = 12  # 回合
+DEFAULT_WINDOW = 12   # 回合
+DEFAULT_THETA = 20    # ε（06/07 弱边阈）；按维可覆盖，【待标定】
 
-# 默认规则表（可传 rules 覆盖）。value = (kind, param)
-#   kind="rc"    param=关系维名（RELATION_CHANGE.dim）
-#   kind="offer" param=None（按 by/offer creator 配对）
-#   kind=None    默认剔除（原因写 reason）
+# value = (kind, param)；kind="rc"→关系维; kind="offer"→offers; kind=None→剔除
 CONSEQUENCE_RULES = {
-    "rel_affinity":   {"kind": "rc", "rc_dim": "affinity",
-                       "pos": "formed", "neg": "not_formed"},
-    "rel_familiarity": {"kind": "rc", "rc_dim": "familiarity",
-                        "pos": "formed", "neg": "not_formed"},
-    "rel_trust":      {"kind": "rc", "rc_dim": "trust",
-                       "pos": "formed", "neg": "not_formed"},
-    "respect":        {"kind": "rc", "rc_dim": "respect", "pos": "high", "neg": "low"},
-    "stance":         {"kind": "offer", "pos": "accept", "neg": "reject"},
-    "affection":      {"kind": None, "reason": "no_affection_dim(未验证; 疑似→affinity)"},
-    "weekly_focus":   {"kind": None, "reason": "no_clean_consequence(未验证)"},
+    "rel_affinity":    {"kind": "rc", "rc_dim": "affinity",    "pos": "formed", "neg": "not_formed"},
+    "rel_familiarity": {"kind": "rc", "rc_dim": "familiarity", "pos": "formed", "neg": "not_formed"},
+    "rel_trust":       {"kind": "rc", "rc_dim": "trust",       "pos": "formed", "neg": "not_formed"},
+    "rel_respect":     {"kind": "rc", "rc_dim": "respect",     "pos": "formed", "neg": "not_formed"},
+    "mentor_relation": {"kind": "rc", "rc_dim": "mentor_relation", "pos": "formed", "neg": "not_formed"},
+    "respect":         {"kind": "rc", "rc_dim": "respect",     "pos": "high", "neg": "low"},
+    "stance":          {"kind": "offer", "pos": "accept", "neg": "reject"},
+    "affection":       {"kind": None, "reason": "no_affection_consequence(剔除)"},
+    "weekly_focus":    {"kind": None, "reason": "no_clean_consequence(剔除)"},
+    "importance":      {"kind": None, "reason": "no_consequence(剔除)"},
 }
 
 
@@ -54,8 +57,12 @@ def _p(r):
     return r.get("payload") or {}
 
 
+def _pair(a, b):
+    return tuple(sorted([str(a), str(b)]))
+
+
 def _offer_creator(offer_id):
-    """从 offer_id 取创建者：`O-<r>-<creator>` 或 `O-<r>-<from>-<to>` → 第 3 段。"""
+    """从 offer_id 取创建者：`O-<r>-<creator>[...]` → 第 3 段。"""
     if not offer_id:
         return None
     parts = str(offer_id).split("-")
@@ -63,63 +70,68 @@ def _offer_creator(offer_id):
 
 
 def _index(records):
-    """建索引：关系变化 / 成交接受 / 拒绝 / 判定。"""
-    rc = []           # (round, from, to, dim, delta)
-    acc, rej = [], []
+    """建索引：关系变化 / 成交接受 / 拒绝 / 判定轮次。"""
+    rc = []            # (round, pair, dim, after)
+    acc, rej = [], []  # (round, by, creator)
+    jround = {}
     for r in records:
         t = r["type"]
         p = _p(r)
         if t == "RELATION_CHANGE":
-            rc.append((int(r.get("round", 0)), p.get("from"), p.get("to"), p.get("dim"),
-                       int(p.get("after", 0)) - int(p.get("before", 0))))
+            f, to, d = p.get("from"), p.get("to"), p.get("dim")
+            if f is None or to is None or d is None:
+                continue
+            try:
+                after = int(p.get("after", 0))
+            except (TypeError, ValueError):
+                continue
+            rc.append((int(r.get("round", 0)), _pair(f, to), d, after))
         elif t == "OFFER_ACCEPTED":
             acc.append((int(r.get("round", 0)), p.get("by"), _offer_creator(p.get("offer_id"))))
         elif t == "OFFER_REJECTED":
             rej.append((int(r.get("round", 0)), p.get("by"), _offer_creator(p.get("offer_id"))))
-    return rc, acc, rej
+        elif t == "LLM_JUDGMENT":
+            jid = p.get("judgment_id")
+            if jid is not None:
+                jround[jid] = int(r.get("round", 0))
+    return rc, acc, rej, jround
 
 
-def _rc_truth(rc, dim, a, b, r0, w):
-    """窗口 [r0, r0+w] 内 (a→b, dim) 的关系变化：有事件→pos/neg，无事件→None(剔除)。"""
-    hit = [d for (r, f, t, dm, d) in rc if dm == dim and f == a and t == b and r0 <= r <= r0 + w]
-    if not hit:
-        return None
-    return "pos" if any(d > 0 for d in hit) else "neg"
+def _rc_label(rc, rc_dim, pair, r0, w):
+    """窗口 `(r0, r0+w]` 内 (pair, rc_dim) 的 `after` 列表；无事件→None。"""
+    after = [a for (r, pr, d, a) in rc if d == rc_dim and pr == pair and r0 < r <= r0 + w]
+    return after if after else None
 
 
-def _offer_truth(acc, rej, a, b, r0, w):
-    """窗口内 by=a 且 offer creator=b 的接受/拒绝：有 accept→pos，有 reject→neg，皆无→None。"""
-    ok = any(r0 <= r <= r0 + w for (r, by, cr) in acc if by == a and cr == b)
-    no = any(r0 <= r <= r0 + w for (r, by, cr) in rej if by == a and cr == b)
-    if ok:
+def _offer_label(acc, rej, a, b, r0, w):
+    """窗口内 `by=a` 且 creator=b：有 accept→pos，有 reject→neg，皆无→None（accept 优先）。"""
+    if any(r0 < r <= r0 + w for (r, by, cr) in acc if by == a and cr == b):
         return "pos"
-    if no:
+    if any(r0 < r <= r0 + w for (r, by, cr) in rej if by == a and cr == b):
         return "neg"
     return None
 
 
 def human_sample(judgment_ids, cap=20):
-    """确定性人工核抽样：按 id 升序、等距取 ≤cap 条（不随输入顺序变）。"""
+    """确定性人工核抽样：按 id 升序、等距取 ≤cap 条。"""
     ids = sorted(judgment_ids)
     n = len(ids)
     if n == 0:
         return []
-    k = max(1, n // cap)
-    return ids[::k][:cap]
+    return ids[:: max(1, n // cap)][:cap]
 
 
 def truth_from_consequences(records, pairs, window=DEFAULT_WINDOW, dim_windows=None,
-                            rules=None) -> dict:
-    """由日志反推每条 judge 请求的 TRUE_label。
+                            rules=None, dim_thresholds=None) -> dict:
+    """由日志反推每条 judge 请求的 TRUE_label（见模块 docstring 的 08 口径表）。
 
-    `pairs`: 每项 `{judgment_id, dimension, parties:[a,b], round}`（`round` 缺失时从日志
-    `LLM_JUDGMENT.judgment_id` 反查）。返回 labels / 逐维 exclude 计数 / 覆盖率 / 抽样。
+    `pairs`: `{judgment_id, dimension, parties:[a,b], round?}`（round 缺失则从日志反查）。
+    返回 `{labels, excluded_by_reason, coverage, excluded_detail, human_sample, rules, params}`。
     """
     rules = dict(CONSEQUENCE_RULES if rules is None else rules)
     dim_windows = dim_windows or {}
-    rc, acc, rej = _index(records)
-    jround = {(_p(r).get("judgment_id")): int(r.get("round", 0))
-              for r in records if r["type"] == "LLM_JUDGMENT"}
+    dim_thresholds = dim_thresholds or {}
+    rc, acc, rej, jround = _index(records)
 
     labels, excluded, cov, excluded_detail = {}, {}, {}, []
     for pair in pairs:
@@ -139,16 +151,24 @@ def truth_from_consequences(records, pairs, window=DEFAULT_WINDOW, dim_windows=N
             cov[dim]["excluded"] += 1
             excluded_detail.append({"judgment_id": jid, "dimension": dim, "reason": reason})
             continue
+
         w = int(dim_windows.get(dim, window))
-        a, b = parties[0], parties[1]
+        a, b = str(parties[0]), str(parties[1])
+        pr = _pair(a, b)
+        theta = int(dim_thresholds.get(dim, DEFAULT_THETA))
+
         if rule["kind"] == "rc":
-            v = _rc_truth(rc, rule["rc_dim"], a, b, int(r0), w)
-            lab = None if v is None else (rule["pos"] if v == "pos" else rule["neg"])
-            reason = "no_rc_event_in_window"
+            after = _rc_label(rc, rule["rc_dim"], pr, int(r0), w)
+            if after is None:
+                lab, reason = None, "no_rc_event_in_window"
+            else:
+                lab = rule["pos"] if max(after) >= theta else rule["neg"]
+                reason = "after>=%d" % theta
         else:  # offer
-            v = _offer_truth(acc, rej, a, b, int(r0), w)
+            v = _offer_label(acc, rej, a, b, int(r0), w)
             lab = None if v is None else (rule["pos"] if v == "pos" else rule["neg"])
             reason = "no_offer_event_in_window"
+
         if lab is None:
             excluded[reason] = excluded.get(reason, 0) + 1
             cov[dim]["excluded"] += 1
@@ -159,7 +179,9 @@ def truth_from_consequences(records, pairs, window=DEFAULT_WINDOW, dim_windows=N
 
     return {
         "window_default": int(window),
+        "theta_default": int(DEFAULT_THETA),
         "dim_windows": {k: int(v) for k, v in sorted(dim_windows.items())},
+        "dim_thresholds": {k: int(v) for k, v in sorted(dim_thresholds.items())},
         "labels": {k: labels[k] for k in sorted(labels)},
         "excluded_by_reason": {k: excluded[k] for k in sorted(excluded)},
         "coverage": {k: cov[k] for k in sorted(cov)},
@@ -170,9 +192,8 @@ def truth_from_consequences(records, pairs, window=DEFAULT_WINDOW, dim_windows=N
 
 
 def correct_from_truth(pairs, labels) -> tuple:
-    """把 `(pairs, truth.labels)` 折成 `correct` 布尔序列（仅**有真值**的样本，保持 pairs 顺序）。"""
-    pred = []
-    corr = []
+    """折成 `correct` 布尔序列（仅**有真值**的样本，保持 pairs 顺序）。"""
+    pred, corr = [], []
     for pair in pairs:
         jid = pair.get("judgment_id")
         if jid in labels and pair.get("predicted_label") is not None:
@@ -183,9 +204,9 @@ def correct_from_truth(pairs, labels) -> tuple:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="obs.truth_from_consequences",
-                                 description="由日志反推 judge 请求的确定性后果真值")
-    ap.add_argument("--log", required=True, help="运行日志 jsonl")
-    ap.add_argument("--pairs", required=True, help="配对 JSONL（judgment_id/dimension/parties/round[/predicted_label]）")
+                                 description="确定性后果真值（08 口径，只读，单一真源）")
+    ap.add_argument("--log", required=True)
+    ap.add_argument("--pairs", required=True)
     ap.add_argument("--window", type=int, default=DEFAULT_WINDOW)
     ap.add_argument("--out", default=None)
     a = ap.parse_args(argv)
