@@ -35,16 +35,47 @@ def main() -> int:
     ap.add_argument("--wait-fn", default=None,
                     help="可选：等待该 JS 表达式为真再截（用于非 still 页面，如 devtools 查看器）。"
                          "省略且 URL 无 still=1 时，退化为等 #pixi-host canvas。")
+    ap.add_argument("--retry-blank", type=int, default=2,
+                    help="遇空白帧自动重试次数（取证容错，不降标准；会打印空白/重试次数，默认 2）。")
     args = ap.parse_args()
 
     try:
-        from playwright.sync_api import sync_playwright
+        from playwright.sync_api import sync_playwright  # noqa: F401（探测依赖是否可用）
     except Exception as e:
         print("SHOT SKIP: 未找到 Python playwright（依赖缺失），未执行:", e)
         return 3
 
     still = "still=1" in args.url
     t0 = time.time()
+    attempts = max(1, args.retry_blank + 1)
+    blanks = 0
+    for attempt in range(1, attempts + 1):
+        st, msg = _try_capture(args, still)
+        if st == "ok":
+            extra = f"  blank_retries={blanks}/{attempts - 1}" if attempts > 1 else ""
+            print(f"SHOT OK: {args.out}  elapsed={time.time()-t0:.2f}s"
+                  f"  mean_brightness={_mean_brightness(args.out)}  max_color_frac={msg}{extra}")
+            if blanks:
+                print(f"  ⚠ 本次取证出现空白帧 {blanks} 次（已重试通过；"
+                      f"空白是零星 bug 的信号，勿被重试抹掉）")
+            return 0
+        if st == "blank":
+            blanks += 1
+            last = attempt == attempts
+            print(f"SHOT {'FAIL' if last else 'WARN'}: 画面近乎单色（{msg}）"
+                  f" —— 第 {blanks} 次空白{'（重试耗尽）' if last else '，重试'}")
+            if last:
+                print(f"  ⚠ 空白 {blanks}/{attempts} 次；重试是取证容错、不是修白帧")
+                return 1
+            continue
+        print("SHOT FAIL:", msg)   # 非空白类失败（未就绪/pageerror）：不重试
+        return 1
+    return 1
+
+
+def _try_capture(args, still):
+    """单次抓取 → ('ok'|'blank'|'fail', 说明)。blank 可被外层重试；fail 直接返回。"""
+    from playwright.sync_api import sync_playwright
     with sync_playwright() as p:
         b = p.chromium.launch(
             executable_path=CHROME,
@@ -56,39 +87,31 @@ def main() -> int:
             pg.on("pageerror", lambda e: errs.append(str(e)))
             pg.goto(args.url, wait_until="load", timeout=int(args.timeout * 1000))
             if still:
-                # ★ 等前端就绪信号，而非固定 sleep
                 try:
                     pg.wait_for_function("() => window.__RENDER_READY__ === true || "
                                          "document.documentElement.getAttribute('data-render-ready') === '1'",
                                          timeout=int(args.timeout * 1000))
                 except Exception:
-                    print("SHOT FAIL: 等待 __RENDER_READY__ 超时（未就绪，拒绝产出可能的黑图）"
-                          f"  elapsed={time.time()-t0:.2f}s")
-                    return 1
+                    return ("fail", "等待 __RENDER_READY__ 超时（未就绪，拒绝产出可能的黑图）")
             else:
-                # 非 still：优先用 --wait-fn（devtools 等），否则等 canvas 出现（惰性回退，明确标注）
                 try:
                     if args.wait_fn:
                         pg.wait_for_function(args.wait_fn, timeout=int(args.timeout * 1000))
                     else:
                         pg.wait_for_selector("#pixi-host canvas", timeout=int(args.timeout * 1000))
                 except Exception:
-                    print("SHOT FAIL: 等待就绪失败（wait-fn/canvas）"); return 1
+                    return ("fail", "等待就绪失败（wait-fn/canvas）")
                 time.sleep(1.2)
             if errs:
-                print("SHOT FAIL: 页面报错 pageerror:", " | ".join(errs[:2])); return 1
+                return ("fail", "页面报错 pageerror: " + " | ".join(errs[:2]))
             pg.screenshot(path=args.out)
         finally:
             b.close()
     # ★ T259「非空白校验」：就绪 ≠ 非空白。防"盲测撞上白帧被判 1 分"。
     frac, col = _largest_color_frac(args.out)
     if frac >= _BLANK_FRAC:
-        print(f"SHOT FAIL: 画面近乎单色（最大单色占比 {frac:.2%} ≥ {_BLANK_FRAC:.0%}，色≈{col}）"
-              f" —— 疑似空白/白帧，拒绝判为 OK  {args.out}")
-        return 1
-    print(f"SHOT OK: {args.out}  elapsed={time.time()-t0:.2f}s  mean_brightness={_mean_brightness(args.out)}"
-          f"  max_color_frac={frac:.2%}")
-    return 0
+        return ("blank", f"最大单色占比 {frac:.2%} ≥ {_BLANK_FRAC:.0%}，色≈{col}")
+    return ("ok", f"{frac:.2%}")
 
 
 # T259 非空白判据：整帧量化(16级/通道)后**最大单色占比**上限。
