@@ -124,13 +124,127 @@ def memory_metrics(records) -> dict:
         if (r.get("payload") or {}).get("selected_mem_ids"):
             hits += 1
     imp = [int((r.get("payload") or {}).get("importance", 0)) for r in writes]
-    return {
+    out = {
         "mem_write_count": len(writes),
         "mem_retrieve_count": len(retrieves),
         "mem_reflect_count": len(reflects),
         "retrieval_hit_rate": round(hits / len(retrieves), 6) if retrieves else 0.0,
         "mean_importance": round(sum(imp) / len(imp), 6) if imp else 0.0,
         "reflection_rate": round(len(reflects) / alive, 6) if alive else 0.0,
+    }
+    out.update(_memory_forget_metrics(records))
+    out.update(_memory_consolidate_metrics(records))
+    return out
+
+
+# 遗忘保留度直方图固定分箱（千分比 0..1000，确定性；口径单源在 life）
+RETENTION_BINS = [f"{i}-{i + 99}" for i in range(0, 1000, 100)] + ["1000"]
+
+
+def _retention_bucket(v: int) -> str:
+    if v >= 1000:
+        return "1000"
+    if v < 0:
+        v = 0
+    return f"{(v // 100) * 100}-{(v // 100) * 100 + 99}"
+
+
+def _memory_forget_metrics(records) -> dict:
+    """遗忘口径（T233 / 08 §1.2 S）。**只 count 事件，不复刻 life 的保护规则**（单源在 life）。"""
+    by_level = {"demote": 0, "merge": 0, "drop": 0}
+    hist = {b: 0 for b in RETENTION_BINS}
+    protected_kept = 0
+    protected_by_reason: dict = {}
+    n = 0
+    for r in records:
+        if r["type"] != "MEMORY_FORGET":
+            continue
+        n += 1
+        p = r.get("payload") or {}
+        lvl = p.get("level")
+        if lvl in by_level:
+            by_level[lvl] += 1
+        rp = p.get("retention_permille")
+        if rp is not None:
+            hist[_retention_bucket(int(rp))] += 1
+        if p.get("protected"):
+            protected_kept += 1
+            reason = p.get("protection_reason") or "unspecified"
+            protected_by_reason[reason] = protected_by_reason.get(reason, 0) + 1
+    return {
+        "forget_count": n,
+        "forget_count_by_level": by_level,
+        "retention_hist": hist,
+        "protected_kept": protected_kept,
+        "protected_by_reason": {k: protected_by_reason[k] for k in sorted(protected_by_reason)},
+    }
+
+
+def _memory_consolidate_metrics(records) -> dict:
+    """记忆整合口径（T233 / 08 §1.2 S）：整合次数 + 被并入的源记忆条数。"""
+    n = 0
+    src_total = 0
+    subjects: dict = {}
+    for r in records:
+        if r["type"] != "MEMORY_CONSOLIDATE":
+            continue
+        n += 1
+        p = r.get("payload") or {}
+        src_total += len(p.get("source_mem_ids") or [])
+        subj = p.get("subject")
+        if subj:
+            subjects[subj] = subjects.get(subj, 0) + 1
+    return {
+        "consolidate_count": n,
+        "consolidate_source_count": src_total,
+        "consolidate_by_subject": {k: subjects[k] for k in sorted(subjects)},
+    }
+
+
+# 人格维度枚举（06 §2.2 / 08 §1.2 S：单事件单维）
+PERSONA_DIMS = ["openness", "conscientiousness", "extraversion", "agreeableness", "neuroticism"]
+
+
+def persona_metrics(records) -> dict:
+    """人格漂移与指纹口径（T233 / 08 §1.2 S）。
+
+    `PERSONA_FINGERPRINT` 是**快照非事件**；其派生视图由 `SLEEP_COMPLETED`（每次睡眠必发）
+    与 `PERSONA_DRIFT` 携带，故本函数从这两类事件读取 `pf0/pf_t/drift_permille`。
+    纯 count/聚合，不复刻 life 侧的漂移规则。
+    """
+    drifts = [r for r in records if r["type"] == "PERSONA_DRIFT"]
+    by_dim: dict = {d: 0 for d in PERSONA_DIMS}
+    for r in drifts:
+        d = (r.get("payload") or {}).get("dim")
+        if d is not None:
+            by_dim[d] = by_dim.get(d, 0) + 1
+
+    # 每 agent 最新指纹视图（按日志顺序折叠；确定性）
+    last_fp: dict = {}
+    for r in records:
+        if r["type"] not in ("SLEEP_COMPLETED", "PERSONA_DRIFT"):
+            continue
+        p = r.get("payload") or {}
+        aid = p.get("agent_id")
+        if aid is None or p.get("drift_permille") is None:
+            continue
+        last_fp[aid] = {"pf0": p.get("pf0"), "pf_t": p.get("pf_t"),
+                        "drift_permille": int(p["drift_permille"])}
+
+    drift_vals = sorted(v["drift_permille"] for v in last_fp.values())
+    alive = _alive_count(records)
+    return {
+        "n_drift_events": len(drifts),
+        "drift_by_dim": {k: by_dim[k] for k in sorted(by_dim)},
+        "n_fingerprint_views": len(last_fp),
+        "pf0": {a: last_fp[a]["pf0"] for a in sorted(last_fp)},
+        "pf_t": {a: last_fp[a]["pf_t"] for a in sorted(last_fp)},
+        "drift_permille": {
+            "mean": round(sum(drift_vals) / len(drift_vals), 6) if drift_vals else 0.0,
+            "max": max(drift_vals) if drift_vals else 0,
+            "min": min(drift_vals) if drift_vals else 0,
+        },
+        "drift_coverage": round(len(last_fp) / alive, 6) if alive else 0.0,
     }
 
 
@@ -171,10 +285,11 @@ def life_metrics(records) -> dict:
         "activity": activity_metrics(records),
         "need": need_metrics(records),
         "memory": memory_metrics(records),
+        "persona": persona_metrics(records),
         "skill": skill_metrics(records),
         "goal": goal_metrics(records),
     }
 
 
 __all__ = ["life_metrics", "activity_metrics", "need_metrics", "memory_metrics",
-           "skill_metrics", "goal_metrics"]
+           "persona_metrics", "skill_metrics", "goal_metrics"]
