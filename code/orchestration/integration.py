@@ -264,6 +264,7 @@ class KernelAdapter:
             self._scope_table = {}
             self._default_cls = "place_local"
         self._social = _load_social_cfg()
+        self._vindex = None  # T264：可见性增量索引（惰性构建，不入 state_hash）
         self._permit_round = None
         self._permits = None  # None=未启用（全许可）；set=本回合允许调 LLM 的 agent
 
@@ -280,6 +281,16 @@ class KernelAdapter:
             return self._scope_table[etype]
         return self._C.PERCEPTION_SCOPE.get(etype, self._C.DEFAULT_VISIBILITY)
 
+    def visibility_query(self, agent_id: str, upto_round: int, *,
+                         window_rounds: int | None = None, location: str | None = None) -> list:
+        """T264：经增量索引取可见事件（候选超集 + `contracts.visible` 裁决；逐字节不变）。"""
+        if self._vindex is None:
+            from .visibility_index import VisibilityIndex
+            self._vindex = VisibilityIndex(self._scope_table, self._default_cls)
+        self._vindex.sync(self.engine.ledger.records)
+        return self._vindex.visible(agent_id, upto_round,
+                                    window_rounds=window_rounds, location=location)
+
     # ---- IF-1 perceive ----
     def perceive(self, agent_id: str):
         from life.ports import EventView, MemoryRef, WorldView
@@ -287,11 +298,8 @@ class KernelAdapter:
         a = st.ensure_agent(agent_id)
         r = st.round
         loc = a.get("location", "residence")
-        # T264：可见性委托**唯一真源** `contracts.visibility`（与 engine/life 同源）
-        from contracts.visibility import visible_events as _ve
-        recs = _ve(self.engine.ledger.records, agent_id, r,
-                   scope_table=self._scope_table, default_cls=self._default_cls,
-                   window_rounds=self.VISIBLE_WINDOW_ROUNDS, location=loc)
+        # T264 步骤⑤：可见性走**组合根构建的增量索引**（候选超集 + 单一真源谓词；逐字节不变）
+        recs = self.visibility_query(agent_id, r, window_rounds=self.VISIBLE_WINDOW_ROUNDS, location=loc)
         visible = [EventView(seq=ev["seq"], round=ev["round"], phase=ev["phase"],
                              actor=ev["actor"], type=ev["type"],
                              payload=ev.get("payload", {}),
@@ -908,6 +916,12 @@ def build_world(seed: int, config: dict | None = None, *, n: int | None = None,
                              peers=pids)
               for pid in pids]
     engine.agent_steppers = agents
+    # T264：把「可见性增量索引」注册给 life（L6 记忆写入）——按 id(records) 绑定，避免多世界串扰
+    try:
+        import life.visibility as _LV
+        _LV.register_index(engine.ledger.records, adapter.visibility_query)
+    except Exception:
+        pass
     # T247（用 T253 seam）：把 life 的 SKILL_OUTPUT 正文 writer 注册为「emit 后监听」观察者。
     # read-only、run-only（replay 不回调）；engine 不认识 life/盘格式（格式在 life.side_emit）；
     # 开关 `life.skill.persist_body` 关时不注册、不写（可消融）。
@@ -1009,6 +1023,12 @@ def run_e2e(seed: int = 42, rounds: int = 84, n: int = 3, config: dict | None = 
             "log_path": str(out_path) if out_path else None,
         }
     finally:
+        # T264：注销可见性索引（防跨世界串扰）
+        try:
+            import life.visibility as _LV
+            _LV.unregister_index(world["engine"].ledger.records)
+        except Exception:
+            pass
         # T232：自动创建的 side 目录**无论如何**释放（异常/中断也走到这里）
         if cleanup_side and auto:
             _safe_rmtree(world.get("side_root"))
