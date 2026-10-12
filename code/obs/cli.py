@@ -197,7 +197,10 @@ def _cmd_evidence(args) -> int:
                              baseline=args.baseline, notes=args.note,
                              compare_segments=segments or None,
                              current_label=args.current_label,
-                             compare_note=args.compare_note)
+                             compare_note=args.compare_note,
+                             archive=args.archive,
+                             archive_sha256=args.archive_sha256,
+                             archive_command=args.archive_command)
     print(f"evidence written: {args.out_dir}")
     print(f"  events={summary['n_events']} bytes={summary['log_bytes']} "
           f"N={summary['n_agents']} rounds={summary['rounds']} "
@@ -260,6 +263,12 @@ def main(argv=None) -> int:
                     help="本次运行在对比表中的段名")
     ev.add_argument("--compare-note", default=None,
                     help="census_compare.md 顶部根因标注")
+    ev.add_argument("--archive", default=None,
+                    help="run 归档文件（T229）：obs 不产归档，只在 summary.json 记录其引用")
+    ev.add_argument("--archive-sha256", default=None,
+                    help="归档 sha256（调用方传入；缺省且给了 --archive 时按文件现算）")
+    ev.add_argument("--archive-command", default=None,
+                    help="归档生成命令（写入 summary.json 的 archive.command）")
     ev.set_defaults(func=_cmd_evidence)
 
     gf = sub.add_parser("golden-freeze", help="从良好日志固化黄金基线（G6）")

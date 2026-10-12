@@ -437,7 +437,10 @@ def build_evidence(log_path: str | Path, out_dir: str | Path, *,
                    compare_segments: list | None = None,
                    current_label: str = "post_life_fix",
                    current_meta: dict | None = None,
-                   compare_note: str | None = None) -> dict:
+                   compare_note: str | None = None,
+                   archive: str | Path | None = None,
+                   archive_sha256: str | None = None,
+                   archive_command: str | None = None) -> dict:
     """构建证据包，落盘全部报告与摘要，返回 summary。"""
     log_path = Path(log_path)
     out_dir = Path(out_dir)
@@ -507,6 +510,18 @@ def build_evidence(log_path: str | Path, out_dir: str | Path, *,
     summary["schema_anomalies"] = anomalies
     if notes:
         summary["notes"] = list(notes)
+    # T229：run 归档**只透传记录**（obs 不产归档）；未提供则不写该键（保字节兼容）
+    if archive or archive_sha256:
+        import hashlib
+        sha = archive_sha256
+        if sha is None and archive and Path(archive).exists():
+            sha = "sha256:" + hashlib.sha256(Path(archive).read_bytes()).hexdigest()
+        summary["archive"] = {
+            "sha256": sha,
+            "ref": (Path(archive).name if archive else None),
+            "command": archive_command,
+            "in_git": False,
+        }
     _write(out_dir / "summary.json", json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + "\n")
     _write(out_dir / "README.md", readme_md(out_dir, summary))
     return summary

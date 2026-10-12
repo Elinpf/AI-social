@@ -37,6 +37,23 @@ def _write(path, recs):
     return path
 
 
+def test_evidence_archive_field(tmp_path):
+    """T229：提供 --archive 时 summary.json 记 archive 块；未提供则不写该键（字节兼容）。"""
+    p = _write(tmp_path / "run.jsonl", _life_like_log(rounds=12))
+    arc = tmp_path / "run_X.tar.gz"
+    arc.write_bytes(b"fake")
+    a = build_evidence(p, tmp_path / "ev_a", baseline=None,
+                       archive=str(arc), archive_command="python run --id X")
+    assert a["archive"]["ref"] == "run_X.tar.gz"
+    assert a["archive"]["command"] == "python run --id X" and a["archive"]["in_git"] is False
+    assert a["archive"]["sha256"].startswith("sha256:")
+    b = build_evidence(p, tmp_path / "ev_b", baseline=None)
+    assert "archive" not in b
+    c = build_evidence(p, tmp_path / "ev_c", baseline=None,
+                       archive_sha256="sha256:deadbeef", archive=str(arc))
+    assert c["archive"]["sha256"] == "sha256:deadbeef"
+
+
 def test_build_evidence_writes_all_files(tmp_path):
     log_p = _write(tmp_path / "run.jsonl", _life_like_log())
     out = tmp_path / "evidence"
