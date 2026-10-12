@@ -231,20 +231,35 @@ def calibration_report(confidences, correct, score_gaps=None, n_bins: int = 10,
     n = len(confidences)
     ece = expected_calibration_error(confidences, correct, n_bins)
     tier = tiered_hit_rate(confidences, correct, n_bins)
-    allowed = bool(ece <= ece_threshold) or bool(
-        tier["monotonic"] and tier["n_nonempty_tiers"] >= 2
-        and (tier["top_minus_bottom"] is not None and tier["top_minus_bottom"] >= monotone_min_gap))
+    n_pos = sum(1 for k in correct if k)
+    n_neg = n - n_pos
+    # 证据充分性：**≥2 个非空档 且 正负例都在** —— 否则 ECE/单调都无意义
+    #   （单档、全对 ⇒ ECE 天然≈0，是"证据不足"而非"校准好"；这正是 T212 的坑）
+    evidence_ok = bool(tier["n_nonempty_tiers"] >= 2 and n_pos > 0 and n_neg > 0)
+    ece_branch = bool(ece <= ece_threshold)
+    tier_branch = bool(tier["monotonic"] and tier["n_nonempty_tiers"] >= 2
+                       and tier["top_minus_bottom"] is not None
+                       and tier["top_minus_bottom"] >= monotone_min_gap)
+    allowed = evidence_ok and (ece_branch or tier_branch)
+    if allowed:
+        rule = "confidence"
+    elif not evidence_ok:
+        rule = "rule:insufficient_evidence（单档/缺正负例 → 置信度回退禁用）"
+    else:
+        rule = "rule:score_gap_threshold（置信度不可信 → 退回规则判定）"
     rep = {
         "n": n,
         "n_bins": n_bins,
-        "accuracy": round(sum(1 for k in correct if k) / n, 6) if n else 0.0,
+        "n_pos": n_pos,
+        "n_neg": n_neg,
+        "accuracy": round(n_pos / n, 6) if n else 0.0,
         "ece": ece,
         "ece_threshold": ece_threshold,
         "reliability": reliability_diagram(confidences, correct, n_bins),
         "tiered": tier,
+        "evidence_sufficient": evidence_ok,
         "confidence_fallback_allowed": allowed,
-        "fallback_rule": ("confidence" if allowed
-                          else "rule:score_gap_threshold（置信度不可信 → 退回规则判定）"),
+        "fallback_rule": rule,
     }
     if score_gaps is not None:
         sg = list(score_gaps)

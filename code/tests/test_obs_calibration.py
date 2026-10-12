@@ -63,11 +63,22 @@ def test_score_gap_auc_direction():
 
 
 def test_report_gate_allows_when_calibrated():
-    conf = [0.5] * 10
-    correct = [True] * 5 + [False] * 5
+    # 2 档、单调、正负例齐全 → 允许置信度回退（即便 ECE>0.05，走单调分支）
+    conf = [0.2] * 5 + [0.8] * 5
+    correct = [False] * 5 + [True] * 5
     rep = calibration_report(conf, correct)
-    assert rep["ece"] <= 0.05 and rep["confidence_fallback_allowed"] is True
+    assert rep["evidence_sufficient"] is True
+    assert rep["confidence_fallback_allowed"] is True
     assert rep["fallback_rule"] == "confidence"
+
+
+def test_report_insufficient_evidence_denies():
+    # 单档、全对 → ECE=0 但**证据不足**（无负例/单档）→ 禁用置信度回退（T212 的坑）
+    rep = calibration_report([1.0] * 6, [True] * 6)
+    assert rep["ece"] == 0.0
+    assert rep["evidence_sufficient"] is False
+    assert rep["confidence_fallback_allowed"] is False
+    assert "insufficient_evidence" in rep["fallback_rule"]
 
 
 def test_report_gate_denies_when_uncalibrated():
