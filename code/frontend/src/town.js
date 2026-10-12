@@ -233,6 +233,20 @@
     _libTex(id) { const A = global.HITTAssets; return (this._useLib && A && A.texture) ? A.texture(id) : null; }
     _libMeta(id) { const A = global.HITTAssets; return (this._useLib && A && A.meta) ? A.meta(id) : null; }
 
+    // T269「没层次」：按世界深度 y 给**精灵**做三层色阶 tint（远冷 / 中中性 / 近暖）
+    // —— 这是顶视图里最可读的"远"信号：连最大的视觉体量（建筑/地标）也参与分层，而非只有地面 overlay。
+    _mix(r1, g1, b1, r2, g2, b2, i) {
+      i = Math.max(0, Math.min(1, i));
+      const r = Math.round(r1 + (r2 - r1) * i), g = Math.round(g1 + (g2 - g1) * i), b = Math.round(b1 + (b2 - b1) * i);
+      return (r << 16) | (g << 8) | b;
+    }
+    _depthTint(y) {
+      const t = Math.max(0, Math.min(1, y / (this.world.height || 1)));
+      if (t < 0.34) return this._mix(255, 255, 255, 198, 210, 236, 0.40 * (1 - t / 0.34));  // 远：冷、去饱和
+      if (t > 0.66) return this._mix(255, 255, 255, 255, 240, 210, 0.28 * ((t - 0.66) / 0.34)); // 近：暖
+      return 0xffffff;                                                                         // 中：中性
+    }
+
     // 库版建筑：精灵 + 接地软影 + 名称牌 + 夜间窗光点（保持 placeLayer 每场所 1 子节点）
     _libPlace(P, place, node) {
       let tex = this._libTex("place." + place.place_id);
@@ -246,12 +260,13 @@
       // ① 接地软影 + 方向投影（提质量：光左上前 → 影投右下；资产不烘影，渲染层统一施加）
       const sh = new P.Graphics();
       const hw = sz[0] * 0.36, hh = sz[0] * 0.13;
-      fillEllipse(sh, hw * 0.36, 0, hw, hh, 0x0e1a10, 0.13);          // 方向投影（右下）
-      fillEllipse(sh, hw * 0.20, -2, hw * 0.72, hh * 0.72, 0x0e1a10, 0.16);
-      fillEllipse(sh, 0, -4, hw * 0.5, hh * 0.5, 0x0e1a10, 0.22);      // 接地核心（更实）
+      fillEllipse(sh, hw * 0.30, 2, hw * 1.05, hh * 1.15, 0x0e1a10, 0.18);  // 方向投影（底边之下、右偏）
+      fillEllipse(sh, hw * 0.12, 1, hw * 0.62, hh * 0.85, 0x0e1a10, 0.26);  // 接地核心（可见、不被精灵覆盖）
+      fillEllipse(sh, hw * 0.02, 0, hw * 0.30, hh * 0.50, 0x0e1a10, 0.34);  // 最实接触点（长在地上）
       c.addChild(sh);
       const sp = new P.Sprite(tex);
       sp.anchor.set(anc[0] / sz[0], anc[1] / sz[1]);
+      sp.tint = this._depthTint(node.y);                                // T269：建筑也参与远/中/近三层色阶
       c.addChild(sp);
       const label = new P.Text(place.name_cn || place.place_id, {
         fontFamily: '"PingFang SC","Microsoft YaHei",sans-serif', fontSize: 13,
@@ -287,9 +302,9 @@
       const depth = new P.Graphics();
       for (let i = 0; i < height; i += 2) {                                                // 2px 步进 → 带缘更细、少"横向硬带"
         const t = i / height;
-        fillRect(depth, 0, i, width, 2, 0x0a1420, 0.22 * (1 - t));                        // 远端冷暗
-        fillRect(depth, 0, i, width, 2, 0x2a3550, 0.14 * (1 - t) * (1 - t));              // 空气透视：远端去饱和/偏冷
-        if (t > 0.4) fillRect(depth, 0, i, width, 2, 0xffd9a0, 0.09 * (t - 0.4) / 0.6);   // 近端暖亮
+        fillRect(depth, 0, i, width, 2, 0x0a1420, 0.28 * (1 - t));                        // 远端冷暗（T269 加强）
+        fillRect(depth, 0, i, width, 2, 0x2a3550, 0.16 * (1 - t) * (1 - t));              // 空气透视：远端去饱和/偏冷
+        if (t > 0.34) fillRect(depth, 0, i, width, 2, 0xffd9a0, 0.13 * (t - 0.34) / 0.66); // 近端暖亮（T269 加强）
       }
       G2.addChild(depth);
       // 轻微颗粒/抖动（避免"太干净"，贴近手绘像素）
@@ -678,13 +693,6 @@
       const DEPTH_H = this._rows * TILE;
       const depthAt = (y) => Math.max(0, Math.min(1, y / DEPTH_H));
       const depthScale = (t) => 0.88 + 0.14 * t;                 // 远端略小、近端略大
-      const coolTint = (t) => {                                  // 远端去饱和偏冷（白→冷灰蓝）
-        const i = Math.max(0, Math.min(1, 0.34 * (1 - t)));
-        const r = Math.round(255 - (255 - 200) * i);
-        const g = Math.round(255 - (255 - 212) * i);
-        const b = Math.round(255 - (255 - 236) * i);
-        return (r << 16) | (g << 8) | b;
-      };
       const clearOf = (x, y, rad) => nodes.every((n) => {
         const dx = n.x - x, dy = n.y - y;
         return dx * dx + dy * dy > rad * rad;
@@ -738,7 +746,7 @@
           sp.anchor.set(0.5, 1);
           sp.x = cx; sp.y = cy + TILE / 2;
           sp.scale.set(scale * depthScale(dt));                       // T269：尺度随距离衰减
-          if (dt < 0.9) sp.tint = coolTint(dt);                       // T269：远端空气透视（去饱和偏冷）
+          sp.tint = this._depthTint(cy);                              // T269：三层色阶 tint（同源：远冷/中/近暖）
           deco.addChild(sp);
           // T269「像贴图」：接地 AO/接触影（每株装饰都"踩"在地上，不飘）——统一光向左上前→影偏右下
           const ao = new P.Graphics();
@@ -914,6 +922,7 @@
         if (!node) return;
         let sp = this._useLib ? this._libPlace(P, p, node) : null;   // 资产库（T87）
         if (!sp) sp = W.makePlaceSprite(P, p, node);                 // 回退：旧程序化
+        if (sp && typeof sp.tint !== "undefined") sp.tint = this._depthTint(node.y);  // T269：回退路径同源分层
         const py = Math.max(112, Math.min(this.world.height - 26, node.y));
         sp.y = py; sp.zIndex = py;
         // T269：建筑尺度随距离衰减（远端略小 → 顶视图"远"的信号之一）
@@ -958,6 +967,7 @@
         fillEllipse(sh, 1, -2, 16, 5, 0x0e1a10, 0.18);
         c.addChild(sh);
         const sp = new P.Sprite(t); sp.anchor.set(0.5, 60 / 64);
+        sp.tint = this._depthTint(it[2]);                               // T269：地标参与深度分色
         c.addChild(sp);
         this.landmarkLayer.addChild(c);
       });
