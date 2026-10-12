@@ -99,13 +99,13 @@
 | `GROUP_JOINED` / `GROUP_LEFT` | **reserved** | 默认「组队不可变」（08 §1.2 M / v2/02 §3.2） | 行会/互助需要成员变动时 |
 | `VOTE_CAST` | **reserved** | 08 §1.2 P：显式投票**可选**，默认用 `NORM_PROPOSED.support_count` | 需显式投票审计时 |
 | `GOAL_ABANDON` | **missing_wiring** | 08 §1.2 C 已定义确定性放弃钩子，life L4 未发射 | 报 Leader 排期（life 目标钩子） |
-| `LOAN_REPAY` | **missing_wiring** | 经济循环应有（4.2）；econ 已实现在期/续命贷，无还款发射点 | 报 Leader 排期（econ 4.2） |
-| `MONEY_BURNED` | **missing_wiring** | 销毁现经 `METABOLISM/PENALTY` 的 `money_burned_total` 承载，独立事件无发射点 | 报 Leader 排期（econ/审计） |
-| `OFFER_EXPIRED` | **missing_wiring** | 08 §1.2 K：协商超限终止；协商通道未接线 | 报 Leader 排期（协商状态机） |
+| `LOAN_REPAY` | ~~missing_wiring~~ → **已接线（T230，econ-dev）** | 原无发射点；T230 已接 4.2 还款发射点 | — |
+| `MONEY_BURNED` | ~~missing_wiring~~ → **已接线（T230，econ-dev）** | 原经 `money_burned_total` 承载、无独立事件；T230 已接（含**防双计口径**） | — |
+| `OFFER_EXPIRED` | ~~missing_wiring~~ → **已接线（T230，econ-dev）** | 08 §1.2 K 协商超限终止；T230 已接协商发射点 | — |
 | `SCHEDULE_REVISED` | **missing_wiring** | 08 §1.2 A：life L2「计划微调」本应发射 | 报 Leader 排期（life L2） |
 | `ACTIVITY_INTERRUPTED` | **missing_wiring**（倾向） | 08 §1.2 A：活动中断；life 无中断判定（也可能应为 reserved，请 life-layer-dev 定） | 报 Leader 排期 |
 
-  **小计：`missing_wiring=6`，`reserved=3`，`deprecated=0`，未分类=0。** → 含义："schema/`EVENT_TYPES` 里有，但**当前没有生产侧代码会发射**"；三分类区分「接口预留」与「该做没做」。
+  **小计（脚本判定，快照 2026-10-12）：`missing_wiring=3`，`reserved=3`，`deprecated=0`，未分类=0**（原 6 条 missing 中 `LOAN_REPAY`/`MONEY_BURNED`/`OFFER_EXPIRED` 已由 **T230** 接线，脚本随之转`已接线`）。 → 含义："schema/`EVENT_TYPES` 里有，但**当前没有生产侧代码会发射**"；三分类区分「接口预留」与「该做没做」。
 - 其余 ~76 个判为"已接线(有发射点)" —— **均标【未验证】**（静态扫描不保证运行时真产生）。
 
 **[C] 全部 `code/config/policy.json` 的 `*.enabled` 开关**（当前 **6**）：`economy / lifecycle / social / production / exchange / llm_budget` —— 全判"已接线(疑似)"。**近似判定【未验证】**：判据是"生产侧代码是否出现该 section 名且含 `enabled`"；**开关类必须叠加一次"开/关实跑"核对**（开关"看起来存在但没接上"是最危险的一类）。
