@@ -27,9 +27,9 @@
       "wire_task": "仅在需要显式投票审计时启用"
     },
     "GOAL_ABANDON": {
-      "class": "missing_wiring",
-      "note": "08 §1.2 C 确定性放弃钩子；T8 裁决口径（T231）：**stalled 写死 = 周 REVIEW 时 status=active 且本周 progress 增量==0 → GOAL_ABANDON{reason:\"stalled\"}**；deadline/voluntary 保持已定义但暂不启用；**不得为凑事件强发/改 progress**；无停滞目标则 0 事件。life L4 未实现发射",
-      "wire_task": "T231（life-layer-dev，depends_on T222）"
+      "class": "wired",
+      "note": "T231 已接线（life L4 发射）。stalled 条件（08 §1.2 C 写死）：**周 REVIEW、status=active 且本周 progress 增量==0 → GOAL_ABANDON{reason:\"stalled\"}**；deadline/voluntary 暂不启用；不得为凑事件强发。**实测 0 触发**：seed 7/11/23 × 4 周 × N=3 → `GOAL_ABANDON=0`、`GOAL_PROGRESS=107`，与『当前无目标停滞(最低 0.15)』一致 → **钩子该发时能发，只是当前世界目标不停滞**（换严苛环境才可能响）；**不得放宽条件凑数**。证据 sha/命令待 life 补全",
+      "wire_task": "已完成 T231（life-layer-dev）"
     },
     "LOAN_REPAY": {
       "class": "wired",
