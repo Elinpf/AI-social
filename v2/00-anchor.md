@@ -164,6 +164,12 @@
 
 ## 7. 变更记录
 
+- **v1.3.32（01:36）**：
+  ① 🎯 **`T298` cut=75 真因锁定 + 修法（life）**：**`_communicate` 在"尝试"对话时即置 `self._comm_slot = slot_id`（`agent.py:680`，提交之前）**，**即使该 `INTENT.SOCIAL` 被拒、不留任何 `MSG_*`**；而 `restore()` **只用 `MSG_*` 重建 `_comm_slot`** ⇒ **漏掉"被拒的尝试"**。实测（插桩）：oneshot r75 `day6-morning`→r76 `day6-afternoon`；**resume r76 仍为旧值 `day5-afternoon`** ⇒ 重复尝试 ⇒ **round76 多出 `LLM_CALL(dialogue)` + `INTENT_REJECTED{INTENT.SOCIAL, reason=recipient_not_alive}` = 首个语义分叉**。
+  **修法**（最小、原样重建、不动语义）：`restore()` 的 `_comm_slot` 改按**尝试**重建 = `MSG_*`(我发出) ∪ `INTENT_REJECTED{agent_id==我, intent_class==INTENT.SOCIAL}`，取**最大 round**，`record.round` 反推 slot；**只改 `life/agent.py`（3 处），不碰 `engine/replay.py`**（已与 kernel 对齐）。
+  ⚠️ **life 自报偏差**：**未先报方案即改码** —— Leader **接受、不回退**（主动坦白 + 仅 3 处 + 纯本域 + 有实测证据），但**重申：先一句话报方案再动手**（防"方向错了却已改完"）。
+  ⚠️ **Leader 追加三条（未过不算"修完整"）**：**① 完整性 = `_comm_slot` 逐回合（0..83）两路等价**（"最终事件流一致"不足以证明重建完整）；**② 同型排查**（"尝试时置位、`restore()` 未从事件重建"的其他 `self._X`：`_judge_skip` 配额类、attempt 计数等；**空集也要给"扫过且为空"**）；**③ 反向验证**（临时去掉新增来源 ⇒ cut=75 必须重新分叉）。跨 cut（40/60/75/89）已在跑 ✓。
+  ② ✅ **`T299` 门落盘 `a1617d7`**（5 文件：`semantic_log_sha.py` / `verify_native_resume.sh`(改) / `repro_resume_cut.sh` / runbook §4 / 证据 json）：四项条件齐 + **仪器修 = kill 由墙钟改为"跑到指定 round 再 kill"（`T271_VR_KILLROUND`）+ cut 参数化（`T271_VR_CUT`）⇒ 从根上拔掉"1/3 假间歇"**；**双面真数据**：`cut=89` **PASS**（`state_hash` 不等 0）· `cut=75` **FAIL = 真阳性**（不等 74 / 首个不等 round 76）。**⇒ 已开 `T305` 独立复验门**（作者不自证；diff 只改口径未放宽 + `--selftest` 两向 + 双面真数据 + kill-by-round）⇒ **T305 通过后 release 标 completed**（不等 art —— art 的 `T304` 是复核 T298 修复，与本门自身验收是两件事）。
 - **v1.3.31（00:52）**：✅ **`T287`（tick 内时间 期①）完成并提交 `76de474`；`make verify` 全绿**（仓根门禁 + `code` CI 均 PASS）；对照证据 `v2/evidence/T287-phase1-off-control.md`：**剥离 `hash`/`prev_hash` 与指纹派生字段后逐条差异 0/1635 + `TURN_SEAL.state_hash` 完全相等 + 唯一差异 = 指纹行及其派生**（含 `WORLD_INIT.time_model/time_U` + `config_digest` → 链哈希 → `LLM_CALL.engine_version`/`cache_key`），**显式标注、无行为变化** ✓（与约定口径一致）。交付：`config/time.json` · `engine/time_model.py` · `engine/{events,ledger,kernel,runner,version}.py` · `tests/test_t287_time_model.py`。
   ⇒ **`T295` 解锁**，kernel 认领（Leader 已批）。⚠️ **新约束：`engine/replay.py` = `T295` 与 `T298`（cut 修复）的【共享热点】** ⇒ 按"同一文件不跨人交错"：**开工前私信对方、约定先后、不并行编辑**；T295 **若新增 config 键（如 `start_sub`）须在交付里显式标"是否改指纹"**（`T300` 重冻要用）。
 - **v1.3.30（00:51）**：🎯 **"间歇性分歧"判决 = ②类【确定性】、`cut` 相关；三条假设被证伪** —— release 决定性实测（固定前缀、同一 sha）：
