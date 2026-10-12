@@ -643,6 +643,8 @@ _NOOP_TYPES = [
     # 世界导演/事件制造机（Fork B：审计折叠，不改世界状态；replay 遇之不报错）
     "WORLD_DIRECTIVE", "WORLD_GROUP_EVENT", "WORLD_DIRECTIVE_REJECTED", "FORGE_FIRED",
     "INTENT_REJECTED", "DROPPED",
+    # T265 个体决策节拍（08 §1.2 S）：唤醒/静默为审计事件，不改世界状态（no-op 折叠）
+    "WAKE", "IDLE",
 ]
 for _t in _NOOP_TYPES:
     _APPLIERS.setdefault(_t, lambda state, rec, p: None)

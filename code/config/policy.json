@@ -77,6 +77,17 @@
     "critical_importance": true,
     "schedule_enabled": false
   },
+  "wake": {
+    "_comment": "T265 个体决策节拍（08 §1.2 S / §3.2）。世界结算节拍=回合不变；本块只决定「谁在本回合进入 DECIDE」。enabled 默认 false=行为不变（先落地后启用）；每个触发器独立开关供消融。改本块变 engine_version 指纹（属预期）。",
+    "enabled": false,
+    "base_cadence_rounds": 12,
+    "triggers": {
+      "W1": true, "W2": true, "W3": true, "W4": true, "W5": true,
+      "W6": true, "W7": true, "W8": true, "W9": true, "W10": true
+    },
+    "_W6_note": "W6 共处默认开（Leader 裁定：最高频人际触发；语义=现有 RELATION_ENCOUNTER）；可置 false 消融。",
+    "_no_DUE_note": "无 DUE 类型：到期经 WAKE{reason∈{W1,W7,W9}, source_event_seq} 承载（08）。"
+  },
   "m2b": {
     "_comment": "M2b 受限选择路径（T222）。默认 generative=走旧生成式，行为与现状逐项一致。新键进 engine_version 指纹（Leader ③）。判据来自 T212（v2/refs/m2b-judge-ab.md）：一致率 0.9902、成本降一个量级；置信度回退证据不足→默认不开。",
     "judge": {

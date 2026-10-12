@@ -16,6 +16,7 @@ from .constants import (
 from . import conservation
 from . import hooks as hook_registry
 from . import scheduling
+from . import wake
 from .events import spec
 from .ledger import Ledger
 from .rng import Ctx
@@ -44,6 +45,8 @@ class Engine:
         self.ctx = Ctx(self.seed, config, 0, 0)
         # 生活层驱动：每回合在 Phase 2 DECIDE 调用 agent.step()（注入，不 import life）
         self.agent_steppers: list = []
+        # T265：本轮唤醒集（{agent_id: {...}}）；wake.enabled=False 时恒为 None（不解算）
+        self._wake_set: dict | None = None
         # T253：通用「emit 后监听」扩展点 —— read-only 观察者，仅 **run 模式**在 P6 唯一
         # append 之后回调（replay 不经 run_round，故天然不回调）。engine 只提供注册+触发，
         # **不认识 life/side 格式**（谁注册、写什么由上层决定）。注册回调默认无 → 零影响。
@@ -137,8 +140,32 @@ class Engine:
 
     # ---- 六个主阶段（骨架，产 EventSpec）----
     def phase_route(self, round_no: int) -> None:
-        # P0：事件队列出队到点事件；计算唤醒集合（按 agent_id 升序，W1–W6）。
-        return None
+        # P0：个体决策节拍（T265）—— 计算本轮唤醒集 W1–W10（确定性纯函数）。
+        # **默认 wake.enabled=False → 不解算、零行为变化**（保 T236 基线）。
+        self._wake_set = None
+        if not wake.enabled(self.config):
+            return
+        ws = wake.compute_wake_set(self.state, round_no, self.config)
+        self._wake_set = ws
+        specs = []
+        for aid in sorted(ws):
+            info = ws[aid]
+            specs.append(spec(round_no, PHASE_ROUTE, aid, "WAKE", {
+                "agent_id": aid, "round": round_no,
+                "reason": info["reason"],
+                "source_event_seq": info["source_event_seq"],
+                "all_reasons": list(info["all_reasons"]),
+            }))
+        total = len(self.state.agents)
+        woken = len(ws)
+        by_reason = {w: 0 for w in wake.W_REASONS}
+        for info in ws.values():
+            by_reason[info["reason"]] = by_reason.get(info["reason"], 0) + 1
+        specs.append(spec(round_no, PHASE_ROUTE, "SYSTEM", "IDLE", {
+            "round": round_no, "total_agents": total,
+            "woken": woken, "idle": total - woken, "by_reason": by_reason,
+        }))
+        self._emit(specs)
 
     def phase_perceive(self, round_no: int) -> None:
         # P1：为被唤醒 Agent 构造只读 world_view（IF-1），无副作用、不产事件。
@@ -146,8 +173,17 @@ class Engine:
 
     def phase_decide(self, round_no: int) -> None:
         # P2：T0/T1/T2 决策。life 模式下调用被注入的 agent.step()（经 IF-2 即时入缓冲）。
-        if self.agent_steppers:
-            for agent in sorted(self.agent_steppers, key=lambda a: a.agent_id):
+        # T265：wake.enabled 时**仅被唤醒的 Agent** 进入 DECIDE；其余安静（不 step）。
+        if not self.agent_steppers:
+            return
+        steppers = sorted(self.agent_steppers, key=lambda a: a.agent_id)
+        if wake.enabled(self.config) and self._wake_set is not None:
+            woken = set(self._wake_set)
+            for agent in steppers:
+                if agent.agent_id in woken:
+                    agent.step()
+        else:
+            for agent in steppers:
                 agent.step()
 
     def phase_communicate(self, round_no: int) -> None:
