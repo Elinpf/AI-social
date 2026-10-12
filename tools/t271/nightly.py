@@ -281,7 +281,9 @@ def cmd_start(a):
 
 def cmd_status(a):
     root = a.run_root or RUN_ROOT
-    names = sorted(d for d in os.listdir(root) if os.path.isdir(os.path.join(root, d)))
+    names = sorted(d for d in os.listdir(root)
+                   if os.path.isdir(os.path.join(root, d))
+                   and os.path.exists(os.path.join(root, d, "meta.json")))
     for n in names:
         st = batch_state(n, root)
         print(f"{n:12s} {st['status']:11s} round={st['last_round']}/{st['target']} "
@@ -326,7 +328,9 @@ def cmd_cleanup(a):
 
 def cmd_collect(a):
     root = a.run_root or RUN_ROOT
-    names = sorted(d for d in os.listdir(root) if os.path.isdir(os.path.join(root, d)))
+    names = sorted(d for d in os.listdir(root)
+                   if os.path.isdir(os.path.join(root, d))
+                   and os.path.exists(os.path.join(root, d, "meta.json")))
     for n in names:
         sh([os.path.join(BIN, "finalize_meta.sh"), os.path.join(root, n)])  # 回填指纹/结束时刻
     states = [batch_state(n, root) for n in names]
@@ -373,7 +377,9 @@ def cmd_collect(a):
 def cmd_resume(a):
     batches = {b["name"]: b for b in load_batches(a.batches)}
     root = a.run_root or RUN_ROOT
-    names = sorted(d for d in os.listdir(root) if os.path.isdir(os.path.join(root, d)))
+    names = sorted(d for d in os.listdir(root)
+                   if os.path.isdir(os.path.join(root, d))
+                   and os.path.exists(os.path.join(root, d, "meta.json")))
     if a.only:
         keep = set(a.only.split(","))
         names = [n for n in names if n in keep]
