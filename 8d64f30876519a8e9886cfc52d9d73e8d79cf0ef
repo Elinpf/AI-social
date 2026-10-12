@@ -1,0 +1,1 @@
+本提交含两处归属：① life-layer-dev 的 T228b（life 侧 persist_vec + 降级标记）；② kernel-dev 的 T235 修复 hunk（orchestration/integration.py 统一装配入口 _assemble/_emit_assembled + MEMORY_RETRIEVE 透传 vec_available/retrieval_mode）。后者被发现时已在飞、被 pathspec 提交一并带入。【Leader 注记 2026-10-12】不重写历史，以 notes 归因。
