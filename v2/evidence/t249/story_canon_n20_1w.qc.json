@@ -1,0 +1,53 @@
+{
+ "meta": {
+  "source_log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_t136_real_llm_canon_n20.jsonl",
+  "log_hash": "sha256:06f64eb7ba63dc948834f7f224385afc7ce5b61a562a2179051c582703a747fd",
+  "seed": 42,
+  "max_round": 83,
+  "chain_ok": true,
+  "n_events": 130296,
+  "n_atoms": 1476,
+  "narrated_types": [
+   "AGENT_BORN",
+   "AGENT_DIED",
+   "AGENT_REVIVED",
+   "CONFLICT_RESOLVED",
+   "CONFLICT_STARTED",
+   "GOAL_ACHIEVED",
+   "GOAL_SET",
+   "MARKET_TRADE",
+   "MSG_DM",
+   "MSG_GROUP",
+   "MSG_PUBLIC",
+   "NORM_ADOPTED",
+   "NORM_PROPOSED",
+   "OFFER_ACCEPTED",
+   "OFFER_COUNTERED",
+   "OFFER_CREATED",
+   "OFFER_REJECTED",
+   "RELATION_CHANGE",
+   "RELATION_ENCOUNTER",
+   "SKILL_LEVEL_UP",
+   "SKILL_OUTPUT",
+   "STATE_CHANGE",
+   "TRANSFER"
+  ],
+  "by_origin": {
+   "spontaneous": 1476
+  },
+  "week_scores": {
+   "0": 0.45
+  },
+  "note": "只读派生；成文=确定性模板（无 LLM 调用）；事实唯一来源=日志 payload；人名=personas 冻结映射。接 LLM 成文须过同一 QC。"
+ },
+ "qc": {
+  "n_sentences": 60,
+  "anchor_coverage": 1.0,
+  "unanchored": 0,
+  "hard_fact_violations": 0,
+  "hard_fact_violation_examples": [],
+  "origin_mislabel": 0,
+  "origin_mislabel_examples": [],
+  "hard_gate_pass": true
+ }
+}
