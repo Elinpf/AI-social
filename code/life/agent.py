@@ -148,6 +148,20 @@ class LifeLayerAgent:
                       last_access=int(m.get("last_access", 0)),
                       access_count=int(m.get("access_count", 0)))
             for m in a.get("memories", [])))
+        # memory reflection state (reflection dedup + unreflected accumulator):
+        # otherwise the resumed run re-fires MEMORY_REFLECT (observed at N=20).
+        _W = (C.TIME_CONFIG["DAYS_PER_WEEK"] * len(C.TIME_CONFIG["SLOTS_PER_DAY"])
+              * C.TIME_CONFIG["ROUNDS_PER_SLOT"])
+        for rec in records:
+            if rec.get("type") == "MEMORY_REFLECT" and (rec.get("payload") or {}).get("agent_id") == self.agent_id:
+                for mid in ((rec.get("payload") or {}).get("triggered_by_mem_ids") or []):
+                    nd = self.memory.nodes.get(mid)
+                    if nd is not None:
+                        nd.reflected = True
+                self.memory.note_reflection(int(rec.get("round", 0)) // _W)
+        self.memory._unreflected_importance = sum(
+            n.importance for n in self.memory.nodes.values()
+            if n.kind == "observation" and not n.reflected)
         # observed: engine-authoritative OBSERVATION set ∪ this agent's MEMORY_WRITE sources
         obs = set(a.get("observed_event_seqs", []))
         for rec in records:
