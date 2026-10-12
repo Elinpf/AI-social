@@ -74,7 +74,7 @@
         "code/life/constants.py",
         "v1.1/08-engine-stats-extension.md"
       ],
-      "expected_status": "未接线",
+      "expected_status": "missing_wiring",
       "owner": "life-layer-dev / persona-life-designer",
       "due_condition": "life 决策相位对『师徒关系质变』调用 IF-2b 提交 LLM_JUDGMENT(dimension=mentor_relation)；届时脚本应判为『已接线』"
     },
@@ -84,13 +84,15 @@
       "declared_in": [
         "v1.1/08-engine-stats-extension.md §1.2 S"
       ],
-      "expected_status": "已接线",
+      "expected_status": "wired_not_observed",
       "owner": "life-layer-dev（T224）",
       "due_condition": "① 登记 engine/events.py::EVENT_TYPES + replay.apply_event 折叠器；② life/sleep_window 接线并由 agent 落账  [接线确认] wired_by=6975f18（T224 agent.py 睡眠挂载点→INTENT.MEMORY→裁决器落事件）",
       "wired_by": "6975f18",
-      "default_state": "off",
+      "default_state": "on",
       "switch": "config/life_v2.json::sleep.enabled",
-      "default_state_note": "默认关（睡眠窗流程 enabled = sleep.enabled OR forgetting.enabled）；sleep 与 forgetting 默认均 false"
+      "default_state_note": "T244 已接通：orchestration/integration.py::_do_memory 补 sleep_start/sleep_end/forget/consolidate 4 op （此前缺 → 意图被拒、三族恒 0）。有效默认 = sleep.enabled AND 归属开关；回退：把 config/life_v2.json 对应 enabled 改回 false。",
+      "observed": false,
+      "block_reason": "真 run 0 发生：① default_state=off（life_v2 sleep/forgetting 均 false）；② 即便打开，_do_memory 未实现 sleep_start/sleep_end → 意图被内核拒收（INTENT_REJECTED 5→2786）。单测用 run_sleep_window() 直调+mini_kernel 绕过真装配点"
     },
     {
       "name": "SLEEP_COMPLETED",
@@ -98,13 +100,15 @@
       "declared_in": [
         "v1.1/08-engine-stats-extension.md §1.2 S"
       ],
-      "expected_status": "已接线",
+      "expected_status": "wired_not_observed",
       "owner": "life-layer-dev（T224）",
       "due_condition": "同 SLEEP_STARTED  [接线确认] wired_by=6975f18（T224 agent.py 睡眠挂载点→INTENT.MEMORY→裁决器落事件）",
       "wired_by": "6975f18",
-      "default_state": "off",
+      "default_state": "on",
       "switch": "config/life_v2.json::sleep.enabled",
-      "default_state_note": "默认关（睡眠窗流程 enabled = sleep.enabled OR forgetting.enabled）；sleep 与 forgetting 默认均 false"
+      "default_state_note": "T244 已接通：orchestration/integration.py::_do_memory 补 sleep_start/sleep_end/forget/consolidate 4 op （此前缺 → 意图被拒、三族恒 0）。有效默认 = sleep.enabled AND 归属开关；回退：把 config/life_v2.json 对应 enabled 改回 false。",
+      "observed": false,
+      "block_reason": "真 run 0 发生：① default_state=off（life_v2 sleep/forgetting 均 false）；② 即便打开，_do_memory 未实现 sleep_start/sleep_end → 意图被内核拒收（INTENT_REJECTED 5→2786）。单测用 run_sleep_window() 直调+mini_kernel 绕过真装配点"
     },
     {
       "name": "MEMORY_CONSOLIDATE",
@@ -113,13 +117,15 @@
         "v1.1/08-engine-stats-extension.md §1.2 S",
         "code/life/sleep_window.py"
       ],
-      "expected_status": "已接线",
+      "expected_status": "wired_not_observed",
       "owner": "life-layer-dev（T224）",
       "due_condition": "sleep_window 已产『待发事件』，但未登记 EVENT_TYPES、未接线落账 → 一旦登记+接线即『已接线』  [接线确认] wired_by=6975f18（T224 agent.py 睡眠挂载点→INTENT.MEMORY→裁决器落事件）",
       "wired_by": "6975f18",
-      "default_state": "off",
+      "default_state": "on",
       "switch": "config/life_v2.json::forgetting.enabled",
-      "default_state_note": "默认关；关闭时 plan_forgetting 恒空"
+      "default_state_note": "T244 已接通：orchestration/integration.py::_do_memory 补 sleep_start/sleep_end/forget/consolidate 4 op （此前缺 → 意图被拒、三族恒 0）。有效默认 = sleep.enabled AND 归属开关；回退：把 config/life_v2.json 对应 enabled 改回 false。",
+      "observed": false,
+      "block_reason": "同上：default off + _do_memory 未实现 forget/consolidate 意图 → 真 run 0（被拒收）；单测绕过装配点"
     },
     {
       "name": "MEMORY_FORGET",
@@ -128,13 +134,15 @@
         "v1.1/08-engine-stats-extension.md §1.2 S",
         "code/life/sleep_window.py"
       ],
-      "expected_status": "已接线",
+      "expected_status": "wired_not_observed",
       "owner": "life-layer-dev（T224）",
       "due_condition": "同 MEMORY_CONSOLIDATE  [接线确认] wired_by=6975f18（T224 agent.py 睡眠挂载点→INTENT.MEMORY→裁决器落事件）",
       "wired_by": "6975f18",
-      "default_state": "off",
+      "default_state": "on",
       "switch": "config/life_v2.json::forgetting.enabled",
-      "default_state_note": "默认关；关闭时 plan_forgetting 恒空"
+      "default_state_note": "T244 已接通：orchestration/integration.py::_do_memory 补 sleep_start/sleep_end/forget/consolidate 4 op （此前缺 → 意图被拒、三族恒 0）。有效默认 = sleep.enabled AND 归属开关；回退：把 config/life_v2.json 对应 enabled 改回 false。",
+      "observed": false,
+      "block_reason": "同上：default off + _do_memory 未实现 forget/consolidate 意图 → 真 run 0（被拒收）；单测绕过装配点"
     },
     {
       "name": "PERSONA_DRIFT",
@@ -143,13 +151,16 @@
         "v1.1/08-engine-stats-extension.md §1.2 S",
         "code/life/sleep_window.py"
       ],
-      "expected_status": "已接线",
+      "expected_status": "wired_not_observed",
       "owner": "life-layer-dev（T224）",
       "due_condition": "同 MEMORY_CONSOLIDATE  [接线确认] wired_by=6975f18（T224 agent.py 睡眠挂载点→INTENT.MEMORY→裁决器落事件）",
       "wired_by": "6975f18",
-      "default_state": "off",
-      "switch": "config/life_v2.json::sleep.enabled",
-      "default_state_note": "默认关；随睡眠窗流程运行，无独立开关"
+      "default_state": "on",
+      "switch": "config/life_v2.json::sleep.enabled（随睡眠窗；无独立开关）",
+      "default_state_note": "T244 已接通：orchestration/integration.py::_do_memory 补 sleep_start/sleep_end/forget/consolidate 4 op （此前缺 → 意图被拒、三族恒 0）。有效默认 = sleep.enabled AND 归属开关；回退：把 config/life_v2.json 对应 enabled 改回 false。  ⚠️ 漂移『来源』(drift_events) 尚待 W2（life-layer-dev，agent.py）接通；接通前 PERSONA_DRIFT=0，属『线路已接但源未供』，不是噪声。",
+      "observed": false,
+      "dependency_missing": true,
+      "block_reason": "依赖未接通：随睡眠窗流程（default off），且缺 drift 来源/接线；真 run 0"
     },
     {
       "name": "PERSONA_FINGERPRINT",
@@ -157,7 +168,7 @@
       "declared_in": [
         "v1.1/08-engine-stats-extension.md §1.2 S（快照非事件）"
       ],
-      "expected_status": "未接线",
+      "expected_status": "missing_wiring",
       "owner": "persona-life-designer (T224)",
       "due_condition": "作为快照入 metrics/侧存储；非事件、不落哈希链（本项『未接线』指尚未产出快照）"
     },
@@ -175,13 +186,15 @@
         "narrative[^\\n]*\\.write\\(",
         "write_[a-z_]*narrative"
       ],
-      "expected_status": "已接线",
+      "expected_status": "wired_not_observed",
       "owner": "life-layer-dev / freeze-layer-dev（T234/T53）",
       "due_condition": "NARRATIVE 事件已由 life/agent.py 发射（body_ref=side://narrative/...），但**指向的正文无写入方** → 即使 side 保留也导不出（非归档问题，是从未写过）。接线：narrative-designer 落正文到 side 存储。wire_task：待派（narrative-designer 域）  [接线确认] wired_by=74f75d0（T234 phase1: SideStore 叙事正文 writer + persist_body 开关）；事件发射点 agent.py:499 _submit_audit('NARRATIVE')",
       "wired_by": "74f75d0",
       "default_state": "on",
       "switch": "code/config/policy.json::life.narrative.persist_body",
-      "default_state_note": "persist_body 默认 true=on（env N50_NARR_BODY=0 可关） | 拆两事实：①【事件 NARRATIVE 发射】无独立开关 → default_state=on（agent.py:499）；②【正文落盘 body_ref→side txt】受 life.narrative.persist_body 控制，默认 on"
+      "default_state_note": "persist_body 默认 true=on（env N50_NARR_BODY=0 可关） | 拆两事实：①【事件 NARRATIVE 发射】无独立开关 → default_state=on（agent.py:499）；②【正文落盘 body_ref→side txt】受 life.narrative.persist_body 控制，默认 on",
+      "observed": false,
+      "block_reason": "① 事件 NARRATIVE 无独立开关（agent.py:499）——有路径；② 正文落盘受 life.narrative.persist_body（默认 on）；但**未在真 run 取证正文落盘** → wired_not_observed（事件发射有 T53 断言(narrative>0)属二手，正文未证）"
     },
     {
       "name": "SKILL_OUTPUT(body)",
@@ -197,7 +210,7 @@
         "write_[a-z_]*skill",
         "output_ref[^\\n]*write"
       ],
-      "expected_status": "未接线",
+      "expected_status": "missing_wiring",
       "owner": "life 侧",
       "due_condition": "SKILL_OUTPUT 事件已由 life/settlement.py 发射（output_ref=side://skill/...），但**指向的正文/产物无写入方** → 技能正文导不出。接线：life 落产出到 side 存储。wire_task：待派（life 域）"
     },
@@ -209,12 +222,18 @@
         "v1.1/08-engine-stats-extension.md §1.2 E",
         "code/life/memory.py"
       ],
-      "expected_status": "已到达",
+      "expected_status": "wired_observed",
       "owner": "已完成（T235）",
       "due_condition": "T235 已落地：72/72 携带 vec_available。证据：T235（见 v2/refs/inert-registry.md / T235 提交）",
       "default_state": "on",
       "switch": "code/config/policy.json::life.memory.persist_vec",
-      "default_state_note": "persist_vec 默认 true=on（env N50_VEC=0 可关→vec_available=false）"
+      "default_state_note": "persist_vec 默认 true=on（env N50_VEC=0 可关→vec_available=false）",
+      "observed": true,
+      "observed_evidence": {
+        "sha": "T235",
+        "note": "实测 72/72 事件携带 vec_available（Leader 2026-10-12 转述 T235 结论）",
+        "N": "72/72"
+      }
     }
   ],
   "assembly_points": {

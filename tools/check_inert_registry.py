@@ -78,6 +78,23 @@ def _has_fold(name: str, replay_py: Path) -> bool:
 
 
 # ------------------------------------------------------------------ A. 手工条目（棘轮）
+THREE_STATES = ("wired_observed", "wired_not_observed", "missing_wiring")
+
+
+def three_state(alive_static: bool, observed) -> str:
+    """三态判据（Leader 2026-10-12 裁决，T244）：
+
+    - `wired_observed`：**真 run 日志里至少观察到一次**（须附 observed_evidence: 命令+sha+N/rounds）。
+    - `wired_not_observed`：代码路径存在、但真 run 未观察到（须说明原因：default off / 条件未触发 / 依赖未接通）。
+    - `missing_wiring`：无代码路径。
+
+    "有代码路径"≠"参加了反应" —— 故静态命中只到 `wired_not_observed`，要 `wired_observed` 必须 `observed=True`。
+    """
+    if not alive_static:
+        return "missing_wiring"
+    return "wired_observed" if observed is True else "wired_not_observed"
+
+
 def classify(entry: dict, code_dir: Path, exclude_parts: set[str]) -> dict:
     name = entry["name"]
     kind = entry.get("kind", "event")
@@ -132,13 +149,23 @@ def classify(entry: dict, code_dir: Path, exclude_parts: set[str]) -> dict:
     else:
         status = "已接线" if used_beyond_decl else "未接线(仅声明)"
     alive = status.startswith("已接线") or status.startswith("已到达")
+    observed = entry.get("observed")
+    three = three_state(alive, observed)
+    ev = entry.get("observed_evidence")
+    warn = []
+    if observed is True and not ev:
+        warn.append("wired_observed 缺 observed_evidence(命令+sha+N/rounds)")
     return {
-        "name": name, "kind": kind, "status": status, "alive": alive,
+        "name": name, "kind": kind, "status": three, "static_status": status, "alive": alive,
+        "observed": observed, "observed_evidence": ev,
+        "dependency_missing": bool(entry.get("dependency_missing")),
+        "block_reason": entry.get("block_reason"),
         "registered": registered, "folds": folds, "produced": bool(hits_prod),
         "hits": (hits_prod or hits)[:5], "declared_in": sorted(declared),
         "expected_status": entry.get("expected_status"),
-        "expected_ok": _expected_ok(entry.get("expected_status"), alive),
+        "expected_ok": _expected_ok(entry.get("expected_status"), three, alive),
         "owner": entry.get("owner"), "due_condition": entry.get("due_condition"),
+        "warn": warn,
     }
 
 
@@ -146,10 +173,13 @@ def _in_event_types(name: str, events_py: Path) -> bool:
     return name in _event_types(events_py)
 
 
-def _expected_ok(expected: str | None, alive: bool) -> bool | None:
+def _expected_ok(expected: str | None, three: str, alive: bool) -> bool | None:
     if expected is None:
         return None
     e = expected.strip()
+    if e in THREE_STATES:
+        return e == three
+    # 兼容旧口径
     exp_alive = e.startswith("已接线") or e.startswith("已到达")
     return exp_alive == alive
 
@@ -238,12 +268,23 @@ def main() -> int:
     print("=" * W)
     print("T226 · inert registry（登记 != 生效）—— 棘轮：未接线显式声明，接线后须更新 expected_status")
     print("=" * W)
-    print("[A] 手工条目（含 expected_status，参与退出码）")
+    print("[A] 手工条目（三态：wired_observed / wired_not_observed / missing_wiring）")
     for r in manual:
         mark = "OK" if r["expected_ok"] else "MISMATCH"
         print(f"  - {r['name']:<22} [{r['kind']:<13}] {r['status']:<20} 期望 {r['expected_status']} -> {mark}")
-        print(f"      hits={r['hits'] or '-'}")
-    print(f"  小计 {len(manual)} 条；与期望不一致 {len(mism)}"
+        if r.get("observed"):
+            print(f"      observed_evidence={r.get('observed_evidence')}")
+        if r.get("dependency_missing"):
+            print(f"      ⚠ 依赖未接通: {r.get('block_reason')}")
+        elif r.get("block_reason") and r["status"] == "wired_not_observed":
+            print(f"      未观测原因: {r.get('block_reason')}")
+        for w in r.get("warn", []):
+            print(f"      ⚠ {w}")
+        print(f"      hits={r['hits'] or '-'}  (static: {r['static_status']})")
+    dist = {s: sum(1 for r in manual if r["status"] == s) for s in THREE_STATES}
+    print(f"  小计 {len(manual)} 条；三态分布 wired_observed={dist['wired_observed']}"
+          f" wired_not_observed={dist['wired_not_observed']} missing_wiring={dist['missing_wiring']}"
+          f"；与期望不一致 {len(mism)}"
           f"{' -> ' + ', '.join(x['name'] for x in mism) if mism else ''}")
 
     if ev:
@@ -252,8 +293,8 @@ def main() -> int:
         n_res = sum(1 for r in un if r.get("class") == "reserved")
         n_dep = sum(1 for r in un if r.get("class") == "deprecated")
         print("-" * W)
-        print(f"[B] 自动枚举 · EVENT_TYPES 事件：共 {len(ev)}，未接线 {len(un)}"
-              f"（其余 已接线 = 有生产侧调用点且已折叠；仍须实跑确认【未验证】）")
+        print(f"[B] 自动枚举 · EVENT_TYPES 事件：共 {len(ev)}，无发射点 {len(un)}"
+              f"（有发射点=静态命中，**≠**真 run 观测到；观测证据见 [A]/实跑日志）")
         print(f"    未接线三分类：missing_wiring={n_mis}  reserved={n_res}  deprecated={n_dep}"
               f"  未分类={len(un) - n_mis - n_res - n_dep}（不要求清零，要求分类）")
         for r in un:
