@@ -61,6 +61,67 @@ class Provider(Protocol):
 
 
 # --------------------------------------------------------------------------- #
+# Mock 自然语言文本池（T325：让 mock 在自然语言用途产出**可读、带情绪**的句子）
+# --------------------------------------------------------------------------- #
+#
+# 目的（装置保真度）：旧 mock 对自然语言用途一律返回 `mock::<hash>`（**纯哈希、无句子**），
+# 导致 `purpose=reflect` 的反思节点**必然**不含情感词 ⇒ `PERSONA_DRIFT` 在 mock 下**无法 e2e 触发**。
+# 现按 purpose 从**确定性文本池**取可读句子；`reflect` 池**每句至少含 1 个**情感词。
+#
+# ⚠️ 保真度声明：mock 文本是**测试替身**，与真实 LLM 措辞无关；且
+#    **mock 可触发 ≠ 真世界可触发**（T326 实测：真 LLM 下 26 词表命中 0/63，
+#     主根因是判据太窄，属 T332/T333，**本条不解决真世界问题**）。
+# 情感词判定依据 = `life/agent.py::LifeLayerAgent._DRIFT_POS/_DRIFT_NEG`（共 26 子串，lower 后子串匹配）。
+_REFLECT_POOL = (
+    "今天帮邻居修好了篱笆，心里踏实又有点温暖。",          # 帮助 / 温暖
+    "和同伴把集市收拾干净，感到被陪伴，挺开心。",          # 陪伴
+    "想起上周那场小争吵，胸口还是发紧、有点焦虑。",        # 争吵 / 焦虑
+    "这段时间总觉着孤独，像被热闹落下了一样。",            # 孤独
+    "把活计一点点做完，有种小小的成功感，想感谢大家。",    # 成功 / 感谢
+    "和旧友重逢那一刻，忽然觉得人和人的连接很珍贵。",      # 连接
+    "看着地里的秧苗抽穗，心里涌起一阵喜悦。",              # 喜悦
+    "接连的挫折让我有些泄气，但还是想慢慢长进。",          # 挫折 / 成长
+)
+_DIALOGUE_POOL = (
+    "早上好呀，今天的集市看着挺热闹。",
+    "最近雨水多，出门记得带把伞。",
+    "你家菜园子今年的收成怎么样？",
+    "忙了一天，晚上去广场转转吧。",
+)
+_PLAN_POOL = (
+    "上午先去田里看看，中午到集市出摊，傍晚回家休整。",
+    "今天打算去工坊赶活儿，午后去一趟图书馆。",
+    "先把手头的订单做完，下午抽空去诊所拿点药。",
+)
+_DESCRIBE_POOL = (
+    "小镇又平静地过去了一天，人来人往，各有各的忙。",
+    "暮色里的广场渐渐安静下来，只剩几盏灯还亮着。",
+    "这一周过得不算轻松，但镇子依旧照常运转。",
+)
+#: 走文本池的“自然语言”用途；其余用途（软判定 options、importance 等）保持原行为。
+_NL_PURPOSES = frozenset({"reflect", "dialogue", "plan", "describe", "narrate",
+                          "negotiation", "decide_t2"})
+_NL_POOLS = {
+    "reflect": _REFLECT_POOL,
+    "dialogue": _DIALOGUE_POOL,
+    "plan": _PLAN_POOL,
+    "describe": _DESCRIBE_POOL,
+    "narrate": _DESCRIBE_POOL,
+    "negotiation": _DIALOGUE_POOL,
+    "decide_t2": _PLAN_POOL,
+}
+
+
+def _mock_nl_text(purpose: str, system: str, user: str) -> Optional[str]:
+    """按 purpose 从确定性文本池取可读句子；非自然语言用途返回 ``None``。"""
+    pool = _NL_POOLS.get(purpose)
+    if not pool:
+        return None
+    h = int(sha256_hex(purpose + "\x00" + system + "\x00" + user)[:16], 16)
+    return pool[h % len(pool)]
+
+
+# --------------------------------------------------------------------------- #
 # Mock：离线确定性，不触网
 # --------------------------------------------------------------------------- #
 
@@ -117,7 +178,9 @@ class MockProvider:
             h = int(sha256_hex(system + "\x00" + user)[:16], 16)
             text = str(opts[h % len(opts)])
         else:
-            text = f"mock::{sha256_hex(system + '\x00' + user)[:16]}"
+            # T325：自然语言用途 → 可读（reflect 带情绪词）文本；其余保持 `mock::<hash>`。
+            nl = _mock_nl_text(str(extra.get("purpose") or ""), system, user)
+            text = nl if nl is not None else f"mock::{sha256_hex(system + '\x00' + user)[:16]}"
 
         logprobs = None
         if extra.get("logprobs"):

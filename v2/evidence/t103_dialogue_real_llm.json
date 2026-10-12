@@ -63,7 +63,7 @@
       "llm_calls_during_replay": 0,
       "client_llm_calls": 29
     },
-    "engine_version": "sha256:f378d5d3eb0d4e726c9436d9ed82cc88706b441a3109e2fbb5878c6cf30afdf7"
+    "engine_version": "sha256:1c9c44305f8e0ec2ee1e18c543fb154d45de7904245a79f32af60246a7f9136c"
   },
   "real_run": {
     "provider": "OpenAICompatProvider",
@@ -92,22 +92,22 @@
       "judge": {
         "n": 18,
         "tin": 2257,
-        "tout": 3800
+        "tout": 3628
       },
       "plan": {
         "n": 3,
         "tin": 268,
-        "tout": 92
+        "tout": 89
       },
       "dialogue": {
         "n": 6,
         "tin": 657,
-        "tout": 121
+        "tout": 118
       },
       "importance": {
         "n": 4,
         "tin": 34,
-        "tout": 652
+        "tout": 362
       }
     },
     "replay": {
@@ -119,7 +119,7 @@
       "llm_calls_during_replay": 0,
       "client_llm_calls": 29
     },
-    "engine_version": "sha256:f378d5d3eb0d4e726c9436d9ed82cc88706b441a3109e2fbb5878c6cf30afdf7"
+    "engine_version": "sha256:1c9c44305f8e0ec2ee1e18c543fb154d45de7904245a79f32af60246a7f9136c"
   },
   "body_divergence": {
     "paired_by": "record_order",
@@ -132,20 +132,20 @@
       {
         "channel": "MSG_PUBLIC",
         "msg_id": "P-0-0",
-        "mock": "mock::0f52ea028d55414f",
+        "mock": "早上好呀，今天的集市看着挺热闹。",
         "real": "（刨花卷着木香落了一地）这榫头，差一毫都不行。"
       },
       {
         "channel": "MSG_DM",
         "msg_id": "D-3-0",
-        "mock": "mock::07155e018c8415d4",
+        "mock": "你家菜园子今年的收成怎么样？",
         "real": "（摆摆手）不了，地里的活还等着我，改天再说吧。"
       },
       {
         "channel": "MSG_DM",
         "msg_id": "D-3-0",
-        "mock": "mock::cefec7e03f831b85",
-        "real": "（低头刨木）料不够，只能先紧着祠堂的梁。"
+        "mock": "忙了一天，晚上去广场转转吧。",
+        "real": "这批料子有裂，我得挑着用。"
       }
     ],
     "verdict": "DIVERGED"
@@ -159,7 +159,7 @@
     {
       "msg_id": "D-3-0",
       "channel": "MSG_DM",
-      "body": "（低头刨木）料不够，只能先紧着祠堂的梁。"
+      "body": "这批料子有裂，我得挑着用。"
     },
     {
       "msg_id": "D-6-0",
