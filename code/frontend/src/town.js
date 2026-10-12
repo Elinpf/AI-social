@@ -507,11 +507,22 @@
             const r1 = W.hash2(tx * 7 + s, ty * 13 + s, 41), r2 = W.hash2(tx * 3 + s, ty * 5 + s, 47);
             fillRect(g, (x + 3 + r1 * (TILE - 8)) | 0, (y + 3 + r2 * (TILE - 8)) | 0, 2, 2, s % 2 ? lt : dk, 0.7);
           }
-          // 朝草地一侧描深边（定义路形）
-          if (!isRoad(tx - 1, ty)) fillRect(g, x, y, 2, TILE, dk);
-          if (!isRoad(tx + 1, ty)) fillRect(g, x + TILE - 2, y, 2, TILE, dk);
-          if (!isRoad(tx, ty - 1)) fillRect(g, x, y, TILE, 2, dk);
-          if (!isRoad(tx, ty + 1)) fillRect(g, x, y + TILE - 2, TILE, 2, dk);
+          // 路面↔草地：**材质过渡带**（1px 深线 + 外侧 3px Bayer 抖动带，替代硬边）——T124 ①
+          const trans = (side) => {
+            for (let s = 0; s < TILE; s += 2) {
+              const chk = ((s >> 1) & 1) === 0;               // 棋盘密度 50%/25%
+              let bx, by;
+              if (side === 0) { fillRect(g, x, y + s, 1, 2, dk); bx = x - (chk ? 2 : 1); by = y + s; }
+              else if (side === 1) { fillRect(g, x + TILE - 1, y + s, 1, 2, dk); bx = x + TILE + (chk ? 0 : 1); by = y + s; }
+              else if (side === 2) { fillRect(g, x + s, y, 2, 1, dk); bx = x + s; by = y - (chk ? 2 : 1); }
+              else { fillRect(g, x + s, y + TILE - 1, 2, 1, dk); bx = x + s; by = y + TILE + (chk ? 0 : 1); }
+              fillRect(g, bx, by, 2, 2, base, chk ? 0.55 : 0.30);   // 抖动的路面色渗入草地
+            }
+          };
+          if (!isRoad(tx - 1, ty)) trans(0);
+          if (!isRoad(tx + 1, ty)) trans(1);
+          if (!isRoad(tx, ty - 1)) trans(2);
+          if (!isRoad(tx, ty + 1)) trans(3);
         }
       }
       // 草地→路面 的碎屑过渡
