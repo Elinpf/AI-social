@@ -929,6 +929,13 @@ def build_world(seed: int, config: dict | None = None, *, n: int | None = None,
                              peers=pids)
               for pid in pids]
     engine.agent_steppers = agents
+    # T247（用 T253 seam）：把 life 的 SKILL_OUTPUT 正文 writer 注册为「emit 后监听」观察者。
+    # read-only、run-only（replay 不回调）；engine 不认识 life/盘格式（格式在 life.side_emit）；
+    # 开关 `life.skill.persist_body` 关时不注册、不写（可消融）。
+    from life.policy import skill_persist_enabled
+    from life.side_emit import make_emit_observer
+    if skill_persist_enabled():
+        engine.register_emit_observer(make_emit_observer(side_root))
     return {"engine": engine, "adapter": adapter, "agents": agents,
             "personas": personas, "places": places, "side_root": side_root}
 
