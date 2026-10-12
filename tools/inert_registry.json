@@ -1,0 +1,64 @@
+{
+  "_comment": "T226 inert registry 数据源（机器可校验）。由 tools/check_inert_registry.py 扫描 code/ 自动判定『已接线|未接线』；本文件只声明『被测对象 + 登记位置 + 期望状态』，状态由脚本核实，不手工维护。",
+  "schema_version": "1.0",
+  "scan_root": "code",
+  "production_exclude_parts": ["tests", "scripts", "__pycache__", "frontend", "freeze_cache"],
+  "entries": [
+    {
+      "name": "mentor_relation",
+      "kind": "judgment_dim",
+      "declared_in": ["code/config/activity_templates.json", "code/life/constants.py", "v1.1/08-engine-stats-extension.md"],
+      "expected_status": "未接线",
+      "owner": "life-layer-dev / persona-life-designer",
+      "due_condition": "life 决策相位对『师徒关系质变』调用 IF-2b 提交 LLM_JUDGMENT(dimension=mentor_relation)；届时脚本应判为『已接线』"
+    },
+    {
+      "name": "SLEEP_STARTED",
+      "kind": "event",
+      "declared_in": ["v1.1/08-engine-stats-extension.md §1.2 S"],
+      "expected_status": "未接线",
+      "owner": "persona-life-designer (T224) / kernel-dev",
+      "due_condition": "① 登记 engine/events.py::EVENT_TYPES + replay.apply_event 折叠器；② life/sleep_window 接线并由 agent 落账"
+    },
+    {
+      "name": "SLEEP_COMPLETED",
+      "kind": "event",
+      "declared_in": ["v1.1/08-engine-stats-extension.md §1.2 S"],
+      "expected_status": "未接线",
+      "owner": "persona-life-designer (T224) / kernel-dev",
+      "due_condition": "同 SLEEP_STARTED"
+    },
+    {
+      "name": "MEMORY_CONSOLIDATE",
+      "kind": "event",
+      "declared_in": ["v1.1/08-engine-stats-extension.md §1.2 S", "code/life/sleep_window.py"],
+      "expected_status": "未接线",
+      "owner": "persona-life-designer (T224) / kernel-dev",
+      "due_condition": "sleep_window 已产『待发事件』，但未登记 EVENT_TYPES、未接线落账 → 一旦登记+接线即『已接线』"
+    },
+    {
+      "name": "MEMORY_FORGET",
+      "kind": "event",
+      "declared_in": ["v1.1/08-engine-stats-extension.md §1.2 S", "code/life/sleep_window.py"],
+      "expected_status": "未接线",
+      "owner": "persona-life-designer (T224) / kernel-dev",
+      "due_condition": "同 MEMORY_CONSOLIDATE"
+    },
+    {
+      "name": "PERSONA_DRIFT",
+      "kind": "event",
+      "declared_in": ["v1.1/08-engine-stats-extension.md §1.2 S", "code/life/sleep_window.py"],
+      "expected_status": "未接线",
+      "owner": "persona-life-designer (T224) / kernel-dev",
+      "due_condition": "同 MEMORY_CONSOLIDATE"
+    },
+    {
+      "name": "PERSONA_FINGERPRINT",
+      "kind": "snapshot",
+      "declared_in": ["v1.1/08-engine-stats-extension.md §1.2 S（快照非事件）"],
+      "expected_status": "未接线",
+      "owner": "persona-life-designer (T224)",
+      "due_condition": "作为快照入 metrics/侧存储；非事件、不落哈希链（本项『未接线』指尚未产出快照）"
+    }
+  ]
+}
