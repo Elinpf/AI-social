@@ -333,12 +333,12 @@ class Event:
 | type | phase | payload 关键字段 | 归属族 / 说明 |
 |---|---|---|---|
 | `SLEEP_STARTED` | 3.5 | `agent_id, day, slot, planned_ticks` | **E-LIFE**：睡眠开始（日程 L2/L4） |
-| `SLEEP_COMPLETED` | 3.5 | `agent_id, day, slot, actual_ticks` | **E-LIFE**：睡眠结束 |
+| `SLEEP_COMPLETED` | 3.5 | `agent_id, day, slot, actual_ticks` + `pf0, pf_t, drift_permille`（**每次睡眠必发**） | **E-LIFE**：睡眠结束；**携带人格指纹派生视图**（`pf0`/`pf_t`/`drift_permille`），保证 obs 能取到指纹（因 `PERSONA_FINGERPRINT` 为快照非事件，读不到） |
 | `MEMORY_CONSOLIDATE` | 3.5 | `agent_id, source_mem_ids[], produced_mem_id, subject` | **E-MEM**：记忆**整合**（由源记忆产出新记忆；与 `MEMORY_REFLECT` 反思区分——整合是结构合并，非高层反思） |
-| `MEMORY_FORGET` | 3.5 | `agent_id, mem_id, level∈{demote,merge,drop}, retention_permille, reason` | **E-MEM**：记忆**遗忘/降级**（`demote` 降权 / `merge` 并入 / `drop` 丢弃；`retention_permille` = 保留度千分比） |
-| `PERSONA_DRIFT` | 3.5 | `agent_id, dim, before, after, anchor, cause_mem_id` | **E-LIFE-PERSONA**：人格维度漂移（**单事件单维**；`dim` 取值见 06 人格维度；`anchor` 为不变量基线） |
+| `MEMORY_FORGET` | 3.5 | `agent_id, mem_id, level∈{demote,merge,drop}, retention_permille, reason` + `protected(bool)`、`protection_reason?(str)` | **E-MEM**：记忆**遗忘/降级**（`demote` 降权 / `merge` 并入 / `drop` 丢弃；`retention_permille`=保留度千分比）。`protected`=受保护未忘；**保护名单单源在 life**，obs 直接 count、**不复刻规则** |
+| `PERSONA_DRIFT` | 3.5 | `agent_id, dim, before, after, anchor, cause_mem_id` + `pf0, pf_t, drift_permille` | **E-LIFE-PERSONA**：人格维度漂移（**单事件单维**；`dim` 取值见 06 人格维度；`anchor` 为不变量基线）。**对齐用** `pf0`/`pf_t`/`drift_permille`（漂移发生时与 `SLEEP_COMPLETED` 的指纹视图对齐） |
 
-- **`PERSONA_FINGERPRINT` 为快照、非事件**：`{agent_id, pf0, pf_t, drift_permille}` 建议入 **metrics / 侧存储**（或 `PERSONA_DRIFT` 的派生视图），**不登记为事件类型、不落哈希链**。
+- **`PERSONA_FINGERPRINT` 为快照、非事件**：`{agent_id, pf0, pf_t, drift_permille}` 建议入 **metrics / 侧存储**，**不登记为事件类型、不落哈希链**。**其派生视图由 `SLEEP_COMPLETED`（每次睡眠必发）与 `PERSONA_DRIFT` 携带**（否则 obs 读不到"快照非事件"的指纹）。
 - **审计字段**：本族 life 事件均带 `day/slot`（`PERSONA_DRIFT` 亦带）；如需 `place` 视实现补。
 - **引擎接入（不在本节）**：`engine/events.py::EVENT_TYPES` + `replay.apply_event` 折叠器由 **persona-life-designer** 在 T35/M2b 重构收敛后补——本节只登记 schema。
 - **统计口径（建议，入 `metrics.life` 子键，按字典序）**：
