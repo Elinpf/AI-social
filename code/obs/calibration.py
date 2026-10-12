@@ -25,12 +25,53 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 
 __all__ = [
     "reliability_diagram", "expected_calibration_error", "tiered_hit_rate",
     "score_gap_analysis", "calibration_report", "agreement_rate",
+    "multiclass_brier", "multiclass_logloss", "multiclass_report",
 ]
+
+
+def _probs_of(rec):
+    return rec.get("probs") or rec.get("label_probs") or {}
+
+
+def multiclass_brier(records) -> float | None:
+    """多类 Brier = mean_rec Σ_k (p_k − 1[k==true])²（对 `label_probs` 的**排序键**累加，确定性）。
+
+    `records`：每项 `{"true_label": str|None, "probs"|"label_probs": {option: prob}}`。
+    仅取 `true_label` 与 `probs` 都存在的样本；无样本 → None。
+    """
+    vals = []
+    for rec in records:
+        tl, probs = rec.get("true_label"), _probs_of(rec)
+        if tl is None or not probs:
+            continue
+        vals.append(sum((float(probs[k]) - (1.0 if k == tl else 0.0)) ** 2
+                        for k in sorted(probs)))
+    return round(sum(vals) / len(vals), 6) if vals else None
+
+
+def multiclass_logloss(records, eps: float = 1e-12) -> float | None:
+    """多类 log-loss = mean(−ln p_true)，`p_true` 截断到 [eps,1]。确定性。"""
+    vals = []
+    for rec in records:
+        tl, probs = rec.get("true_label"), _probs_of(rec)
+        if tl is None or not probs:
+            continue
+        p = probs.get(tl, eps)
+        p = min(1.0, max(eps, float(p)))
+        vals.append(-math.log(p))
+    return round(sum(vals) / len(vals), 6) if vals else None
+
+
+def multiclass_report(records) -> dict:
+    recs = [r for r in records if r.get("true_label") is not None and _probs_of(r)]
+    return {"n": len(recs), "brier": multiclass_brier(records),
+            "logloss": multiclass_logloss(records)}
 
 
 def agreement_rate(predicted, reference) -> float:

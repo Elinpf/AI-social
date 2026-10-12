@@ -6,6 +6,7 @@ import pytest
 
 from obs.calibration import (
     agreement_rate, calibration_report, expected_calibration_error,
+    multiclass_brier, multiclass_logloss, multiclass_report,
     reliability_diagram, score_gap_analysis, tiered_hit_rate,
 )
 
@@ -96,6 +97,19 @@ def test_agreement_rate_and_not_calibration():
     assert agreement_rate([], []) == 0.0
     with pytest.raises(ValueError):
         agreement_rate(["a"], ["a", "b"])
+
+
+def test_multiclass_brier_and_logloss():
+    perfect = [{"true_label": "formed", "label_probs": {"formed": 1.0, "not_formed": 0.0}}]
+    assert multiclass_brier(perfect) == 0.0
+    assert multiclass_logloss(perfect) == 0.0
+    worst = [{"true_label": "formed", "label_probs": {"formed": 0.0, "not_formed": 1.0}}]
+    assert multiclass_brier(worst) == 2.0  # (0-1)^2+(1-0)^2
+    assert multiclass_logloss(worst) > 10.0  # -ln(clip(0))
+    # 跳过 true_label 或 probs 缺失
+    rep = multiclass_report([{"true_label": None, "label_probs": {"a": 1.0}},
+                             {"true_label": "a"}, {"true_label": "a", "label_probs": {"a": 1.0}}])
+    assert rep["n"] == 1 and rep["brier"] == 0.0
 
 
 def test_deterministic_byte_equal():
