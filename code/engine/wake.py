@@ -107,10 +107,14 @@ def compute_wake_set(state, round_no: int, config=None) -> dict:
             return
         aff.setdefault(aid, {}).setdefault(reason, seq)
 
-    idx = getattr(state, "event_index", None) or {}
-    for rec in idx.values():
-        if int(rec.get("seq", 0) or 0) <= floor:
-            continue
+    from .event_acc import seqs_of_round  # T312：按 round 取（替代跨全历史扫）
+    # floor 所在回合（floor=0 或无对应记录 → 0 ⇒ 退化为从回合 0 起，语义不变）
+    fr = int((state.event_index.get(floor) or {}).get("round", 0)) if floor else 0
+    _cand: list = []
+    for rd in range(fr, int(round_no) + 1):
+        _cand.extend(s for s in seqs_of_round(state, rd) if s > floor)
+    for _seq in _cand:
+        rec = state.event_index[_seq]
         t = rec.get("type")
         p = rec.get("payload") or {}
         if t == "MSG_DM":

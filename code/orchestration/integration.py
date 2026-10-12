@@ -675,6 +675,18 @@ class KernelAdapter:
             return True
         return False
 
+    # ---- T312：跨层只读「按回合取事件」端口（life 经 KernelPort 调用，life 不 import engine）----
+    def round_events(self, round_no: int, types: tuple | None = None) -> list:
+        """某回合的事件记录（**seq 升序、顺序不变**）。
+
+        - `types=None` ⇒ 该回合**全部**事件；`types=(t1,...)` ⇒ 仅这些 type。
+        - 返回 `state.event_index` 中的**原始记录**（只读；调用方不得修改）。
+        - 内部走 T295 派生累加器（`engine.event_acc.recs_of_round`），与全表扫逐条等价。
+        """
+        from engine import event_acc
+        return event_acc.recs_of_round(self.engine.state, round_no,
+                                       tuple(types) if types else None)
+
     # ---- v2 社会层：三通道 MSG（T97）----
     def _members(self, group_id: str) -> list:
         return list(self.engine.state.groups.get(group_id, {}).get("members", []))
