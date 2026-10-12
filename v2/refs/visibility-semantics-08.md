@@ -105,3 +105,56 @@
 ---
 
 *（本文为 T266 交付：D2/D3 口径定案 + Q3 表达方式 + Q4 缺口扫描 + 08 登记内容 + 影响面。完成后通知 kernel-dev（T264）与 Leader。）*
+
+---
+
+## 8. G2 权威 `event_type → visibility_class` 清单（T266 裁定，补登记；供 kernel-dev 落 `perception_scope.json`）
+
+> 依据真实日志 `code/frontend/sample/n20_week.jsonl`（N=20，84 回合，148,869 事件）扫描「不在 scope 的事件」后，补齐如下分类。**可感知事件必须有条目**；纯审计/不感知事件**留在 scope 外**（走 default 或被 perceive 过滤），本表单列标注「不感知」。
+
+| event_type | class | 备注 |
+|---|---|---|
+| `TAG_EMITTED` | `global` | 公开观点/标签发射（当前缺条目→place_local→不可见，实测 420 条） |
+| `NORM_PROPOSED` / `NORM_ADOPTED` / `NORM_VIOLATED` | `global` | 公共规范（实测 12 条缺条目） |
+| `GROUP_CREATED` / `GROUP_DISSOLVED` | `global` | 组织成立/终结=公共事件 |
+| `GROUP_JOINED` / `GROUP_LEFT` | `members` | 组内成员变化 |
+| `VOTE_CAST` | `global` | 公共表决（group 作用域时可视情况改 `members`，标【待定】） |
+| `ROLE_CHANGE` | `global` | 职业/身份转变（社会结构变化，公共可见） |
+| `PUBLIC_REACTION` | `global` | 抵制等公共反应 |
+| `EXCHANGE_SETTLED` | `participants_only` | 双边交换（`parties`/`legs`） |
+| `CONTRACT_CREATED` / `CONTRACT_FULFILLED` / `CONTRACT_VIOLATED` / `CONTRACT_EXPIRED` | `participants_only` | 契约双方 |
+| `OFFER_CREATED` | **动态** | `to==[]`→`global`；否则 `private`（T137） |
+| `OFFER_ACCEPTED` / `OFFER_REJECTED` / `OFFER_COUNTERED` / `OFFER_EXPIRED` | `private` | 协商双方 |
+| `SKILL_PRACTICE` | `place_local` | 有 `place`（同场所可见） |
+| `SKILL_LEVEL_UP` / `SKILL_OUTPUT` | `subject_only` | 自身成长/产物 |
+| `PRODUCE` / `CONSUME` / `DEPRECIATE` / `PRODUCE_OVERFLOW` | `subject_only` | 私有生产/库存 |
+| `DEPOSIT` / `WITHDRAW` / `INTEREST_CHARGED` / `INTEREST_PAID` | `subject_only` | 私有银行行为 |
+| `LOAN_ISSUED` / `LOAN_REPAY` / `LOAN_DEFAULT` | `participants_only` | 借贷双方 |
+| `TAX_LEVIED` / `UBI_PAID` / `METABOLISM` / `PENALTY_APPLIED` / `REVIVE_FEE_PAID` | `subject_only` | 对本人账户的系统动作 |
+| `WAKE` | `subject_only` | 唤醒的是本人 |
+| `IDLE` | `global` | 全局聚合（`actor=SYSTEM`） |
+| `WORLD_DIRECTIVE` / `WORLD_GROUP_EVENT` | `global` | 世界层公共情境 |
+| `INTENT_REJECTED` | `subject_only` | 对发起者的拒绝 |
+| **不感知（留 scope 外）** | — | `WORLD_INIT`/`AGENT_BORN`/`INIT_ENDOW`/`MONEY_MINTED`/`MONEY_BURNED`/`TURN_SEAL`/`DROPPED`/`SYSTEM_ERROR`/`ECONOMY_INVARIANT_VIOLATION`/`LLM_CALL`(已在subject_only)/`NARRATIVE`/`WORLD_DIRECTIVE_REJECTED`/`FORGE_FIRED` |
+
+> **落 scope 会变 `engine_version` 指纹 → T236 重冻**（已知悉）。
+
+## 9. G3 `from` 证据（裁定"删 `from` 是否等价简化"）
+
+**证据**：真实日志 `n20_week`（84 回合）统计 `subject_only` 类事件——`MEMORY_RETRIEVE 1680 / MEMORY_WRITE 59188 / OBSERVATION 58768 / NEED_UPDATE 3506 / GOAL_PROGRESS 249 / MEMORY_REFLECT 140 / GOAL_SET 39 / GOAL_ACHIEVED 24 / SCHEDULE_PLANNED 20`，**共 ≈127,xxx 条，`from` 字段命中数 = 0**（所有 subject_only 事件类型 payload **均无 `from`**；`from` 仅出现在 `TRANSFER`/`RELATION_CHANGE`/`EXCHANGE_SETTLED`（后两者非 subject_only，前者 participants_only））。
+
+**结论**：`subject_only` 判据里的 `from` 子句**从未生效（dead）** → **删它是等价简化** ✓（不改任何现有事件可见性；`from` 的语义属 `private`/`participants_only`，`subject_only` 保留 `{agent_id, observer, actor}` 即可）。
+
+## 10. G1 影响面（Leader 已批准，附影响/开关/重冻/测试）
+
+**证据**（`n20_week`，84 回合）：`place_local` 事件 = `PLACE_MOVE 420 / PLACE_ARRIVED 420 / ACTIVITY_STARTED 420 / ACTIVITY_COMPLETED 420 / RELATION_ENCOUNTER 190`。
+- **`place=None`：`PLACE_MOVE` 420 条（全量）**——`PLACE_MOVE` payload 用 `from_place/to_place`、**无 `place`** → 现状对**所有人含 actor**都不可见；加 `actor` 回退后 → **对 mover 自己可见**。
+- **`actor` 当时 location ≠ `place`**：`ACTIVITY_COMPLETED 300` + `ACTIVITY_STARTED 240` = **540 条** → 加回退后翻为「本人可见」。
+- **合计 ≈ 960 条 / 84 回合 ≈ 11.4 条/回合（N=20）** 由「不可见」翻为「actor 本人可见」。
+
+**影响面**：
+- **事件类型**：`PLACE_MOVE`（420）、`ACTIVITY_STARTED/COMPLETED`（540）；`PLACE_ARRIVED`/`RELATION_ENCOUNTER` 基本已可见，影响小。
+- **下游消费**：`L6 write_memories`（走 `visible_events`）→ 本人对自身 `PLACE_MOVE/ACTIVITY` 可能新增 `OBSERVATION/MEMORY_WRITE`（仅 `_SALIENT_EVENTS` 内者；`PLACE_MOVE` 不在 salient 集，**净增有限**）→ **token/记忆量略↑**。
+- **开关（可消融）**：`visibility.place_local_actor_fallback`（默认 `false`=行为不变；`true` 启用）→ 进 `engine_version` 指纹。
+- **重冻**：改语义 → `state_hash`/`canonical` 变 → **进 T236 重冻变更清单**（Leader 同步 obs）。
+- **测试（要求）**：`actor` 对自己发出的 `place_local` 事件、在 `place` 未知时**可见**。

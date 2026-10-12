@@ -630,7 +630,10 @@ visibility_class ∈ { global, place_local, members, private, participants_only,
 > - **D3 · `members` 含 `actor==agent_id` 回退**（`members = 群组成员 ∪ {actor}`）。理由：跨 class 一般规则「**当事人（`actor`）对自己发起的事件总可见**」（`subject_only`/`private`/`participants_only` 均已含）；不含则出现「自己发的 `MSG_GROUP` 自己看不见」反直觉缺口。**以 engine 现行语义为准**。
 > - **D1 · `OFFER_CREATED` 动态分档**（已由 **T137** 固化）：`to==[]` → `global`；`to` 非空 → `private`（对 `{from,to}∪to[]`）。**登记为显式特判**（表内无条目、由实现动态覆盖），消除"暗规则"。
 >
-> **G1–G3 · 同类未覆盖分支（Q4 扫描，报告为主）**：**G1** `place_local` **无 `actor` 回退**（缺 `place`/location 未同步 → 本人也看不到自己事件；建议加回退，**改语义须先裁**）；**G2** **scope 表未覆盖 v2 新增事件**（`EXCHANGE_SETTLED`/`CONTRACT_*`/`DEPOSIT`/`WITHDRAW`/`OFFER_*`/`SKILL_*`/`GROUP_*`/`WAKE`/`IDLE`/`NORM_*`/`TAG_EMITTED`/`ROLE_CHANGE`… 落 default=place_local；**可感知事件应有条目**，随 T264 补登记）；**G3** `subject_only` 现含 `from`、`private.to[]` 与 `OFFER_CREATED` 特判重叠（建议收敛进本表；`subject_only` 去 `from` 待裁）。详见 `v2/refs/visibility-semantics-08.md`。
+> **G1–G3 · 同类未覆盖分支（Q4 扫描 → 裁定，2026-10-12）**：详见 `v2/refs/visibility-semantics-08.md` §8–§10（含证据/影响面）。
+> - **G1（已批准，Leader）**：`place_local` **增 `actor==agent_id` 回退**（补「当事人对自己发起的事件总可见」在 place_local 上的漏项）。**影响面**（`n20_week` 实测）：`PLACE_MOVE 420`（`place=None` 全量）+ `ACTIVITY_STARTED/COMPLETED 540` ≈ **960 条/84 回合 ≈ 11.4/回合（N=20）** 由「不可见」翻为「actor 本人可见」；下游 `L6 write_memories` 略增（`PLACE_MOVE` 不在 salient 集，净增有限）。**开关** `visibility.place_local_actor_fallback`（默认 `false`=行为不变）。**进 T236 重冻清单**。**测试**：actor 对自己发出的 place_local 事件、`place` 未知时**可见**。（实现归 kernel-dev/T264）
+> - **G3**：① **`private.to[]` 与 `OFFER_CREATED` 特判必须去重并证明等价**（Leader 批准）；② **`subject_only` 去 `from` = 等价简化**（**已取证**：`n20_week` 中 ≈127k 条 subject_only 事件，`from` 命中 **0**，该子句为 dead code）→ 可删（`subject_only` 保留 `{agent_id, observer, actor}`）。
+> - **G2**：`event_type→class` 权威清单见 ref §8（`TAG_EMITTED`/`NORM_*`/`GROUP_*`/`EXCHANGE_SETTLED`/`CONTRACT_*`/`PRODUCT*`/`WAKE`/`IDLE`/`WORLD_*` 等；补登记、不改语义，随 T264 落；落 scope 变指纹→T236 重冻）。
 
 > **T247 口径（2026-10-12 定稿 · 记录性语义分类）**：`SKILL_PRACTICE / SKILL_LEVEL_UP / SKILL_OUTPUT` 在 `PERCEPTION_SCOPE` 无条目（落 `default=place_local`）。**记录其语义分类**（表明"08 事件表 ↔ `perception_scope.json` 真源未对齐"这一缺口）：
 > - `SKILL_PRACTICE` = **`place_local`**（payload 含 `place`，同场所可见其练习）
