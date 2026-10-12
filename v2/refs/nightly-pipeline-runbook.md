@@ -45,7 +45,8 @@ python3 "$REPO/tools/t271/nightly.py" start \
 ```bash
 python3 "$REPO/tools/t271/nightly.py" collect
 ```
-- 分类规则：`RUN_END`/到达目标回合 → **SUCCESS**；进程存活 → **RUNNING**；`rc∈{137,143}` 或负 → **INTERRUPTED（被信号终止=外因中断，非批内错误）**；其他非 0 → **FAILED**。
+- 分类规则（**完成判据以【日志实测回合】为准，心跳 round 只作「死在哪一刻」**）：`RUN_END` 或 **日志末条 round ≥ target-1 且 rc∈{0,None}** → **SUCCESS**；进程存活 → **RUNNING**；`rc∈{137,143}` 或负 → **INTERRUPTED（被信号终止=外因中断，非批内错误）**；回合已到但 `rc≠0`（引擎自检失败）→ **FAILED**；其他非 0 → **FAILED**；未达目标 → **INTERRUPTED**。
+  > ⚠️ **不要用 `heartbeat.tsv` 末行 round 判完成**：10min 心跳间隔内批可能已跑完（末行是 `EXIT`）→ 读到滞后 round 会误判未达标（T274 实测踩过：四批实际 `round=83/rc=0`，却被心跳的 71 误判为 `INTERRUPTED`）。
 - 早报（`<run_root>/morning-report-<date>.md`）：**总览 + 逐批**（sha / `engine_version` 指纹 / 开关 / 回合进度 / 事件数 / 峰值 RSS / 起止 / 产物路径 / 续跑模式），并附**盘前/盘后 `df -h` `df -i`**。机器可读：`summary.json`。
 
 ## 4. 失败可续（⚠️ 诚实口径）
