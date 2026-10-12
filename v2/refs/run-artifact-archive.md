@@ -40,8 +40,8 @@
 | A9 | **命令 + git 状态** | `manifest.json`：`cmd` / `seed` / `n` / `rounds` / `git.sha` / `git.dirty` | ✅ | 取 `tools/git_stamp.sh` 三行，不另算 |
 | A10 | **manifest** | `<run_id>/manifest.json` | ✅ | 见 T219 §2.3 扩展（本任务加 `artifacts.archive` + side 统计） |
 | A11 | freeze 输出缓存 | `side/freeze_cache/`（responses/judgments/embeddings） | ⚠️ 默认不归档 | 可再生；**若某结论依赖它，该 cache 的 sha 必须进 evidence**（T219 §2.3） |
-| A12 | prompt 正文（T227） | `.../prompts/prompts.jsonl`（**默认关**） | ⚠️ 按开关 | 开则归档（脱敏后）；解锁 input 侧 |
-| A13 | **密钥零残留** | —— | ✅ | 归档前扫描：`.env*`/`*.key`/`secret*`/`sk-*`/`Bearer`/`http(s)://`（自由文本字段）；**命中即拒归档** |
+| A12 | prompt 正文（T227） | `.../prompts/prompts.jsonl`（**默认关**） | ⚠️ 按开关 | 开则归档（脱敏后）；**同时记**：`prompts.jsonl` 的 **sha256** + `capture.stats()`（`written/refused/capped/truncated`）+ `capture.fingerprint()`（已进 `engine_version`）。**`truncated=true` 必须可见**——否则"数据少"会被误读成"调用少"。【已核实 freeze-layer-dev】 |
+| A13 | **密钥零残留** | —— | ✅ | **复用 freeze 的模块级函数**（`freeze.capture`，commit `3863ee7`）：`redact_text()` → `scan_clean_text()` **通过才归档**；**不写第二套**。规则=env 密钥+base_url 术语 + url/`sk-`/`Bearer`/`key=`/32+hex 正则，**只扫自由文本字段**。【已核实】 |
 
 **A13 关键**：`.txt` 正文是 LLM 生成文本，**天然可能含端点/密钥回声** → 归档前必须过一遍脱敏扫描（复用 T227 `capture` 的 redact 规则）。
 
@@ -157,6 +157,8 @@ print(f"S2 exported: {len(out)} samples, missing_body={miss}")
 | **正文侧**（side `.txt`） | **T228**（`.txt` 留 / `.vec` 关） | ⏳ 口径已定 | 有指针无正文 → **S2/S3/S4 导不出** |
 | **归档侧**（正文随日志归档） | **T229（本文）** | ⏳ 本文给方案 | 有正文但 run 结束即删 → **正文永久丢**（本任务根因） |
 
+> **T227 已确认接口**（freeze-layer-dev 2026-10-12）：`prompts.jsonl` 无归档口径（仅本地滚动 `max_bytes`+TTL，**归档=拷贝，不冲突**）；归档时记 **sha256 + `capture.stats()` + `capture.fingerprint()`**；脱敏直接用 `freeze.capture.redact_text/scan_clean_text`（commit `3863ee7`）。
+
 **三者关系（一张图）**：
 ```
 LLM 调用 ──T227──▶ prompt 正文(input) ┐
@@ -167,6 +169,8 @@ LLM 调用 ──T227──▶ prompt 正文(input) ┐
 - **缺 T228/T229** ⇒ 只有指针、没正文（current，S2–S4 断源）。
 - **T227/T228/T229 全齐 + 补 narrative/skill writer** ⇒ #10 的 S1–S4 才**完整可导、可复算**。
 
+- **对 obs 无影响**【已核实 obs-stats-dev】：**obs 完全不读 side**，所有指标只从 `.jsonl` 重算 → census/涌现指标**不因 narrative/skill 断源而失真**；**仅当某结论要引叙事正文**时才是"当前无源"。
+
 > **额外待办（不属本文，需 `life-layer-dev`/`narrative-designer`）**：`NARRATIVE`/`SKILL_OUTPUT` **只有指针没有写入方** —— 这不是「留不留给 side」的问题，是**从未写过**。需补 writer，否则 S4 永远无源。
 
 ---
@@ -174,8 +178,17 @@ LLM 调用 ──T227──▶ prompt 正文(input) ┐
 ## 6. 与 T219（构建/发布）的衔接
 
 - 本口径 = T219 **「跑批产物清单」的扩展**：T219 管 `dist/`（代码+配置资产），T229 管 **run 产物**（日志+正文）。
-- `manifest.json` 增字段：`artifacts.archive = {path, sha256, bytes, n_files, has_side:true, side_txt:n, side_vec:0}`；`git.sha/dirty` 取 `tools/git_stamp.sh`。
-- 发布/跑批入口首行调 `bash tools/git_stamp.sh`（T220 契约）；`[DIRTY]` 时归档结论**标"仅供参考"**。
+- **共享归档描述符（字段名唯一，T219 manifest / obs evidence 同名）**【已核实 obs-stats-dev 2026-10-12】：
+
+  ```jsonc
+  "archive": { "sha256": "…", "ref": "run_<id>.tar.gz", "command": "…", "in_git": false,
+               // T219/run 侧附加（evidence 侧可不带）：
+               "bytes": 509828, "n_files": 2815, "has_side": true, "side_txt": 1324, "side_vec": 0 }
+  ```
+
+  - `obs evidence` 增**可选** `--archive <path>` / `--archive-sha256 <hex>`；提供时写入上述块（**未提供则不写该键**，保持既有 evidence 字节兼容 → G2 诊断不漂）。
+  - T219 manifest 用**同名三字段** `sha256/ref/command`（+`in_git`），**不另起名**。
+- `git.sha/dirty` 取 `tools/git_stamp.sh`；发布/跑批入口首行调它（T220 契约）；`[DIRTY]` 时归档结论**标"仅供参考"**。
 
 ---
 

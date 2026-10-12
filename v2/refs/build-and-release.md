@@ -153,6 +153,9 @@ cd social-experiment && make release
 - 一次运行产出的**日志 + 报告**用 `obs evidence` 生成证据包；manifest 只引用其 `log_hash`。
 - **证据依赖的 LLM 输出缓存必须留 sha**：若某次运行的结论**依赖某份 freeze cache**，该 cache 的 **sha256 必须记进 evidence**——
   否则那条结论**无法被复核**（Fork B 放开了「重跑一致」，但没放开「**可被复算**」）。
+- **run 归档描述符（与 obs evidence 同名，口径唯一不复制，T229）**：manifest 增
+  `"archive": {"sha256", "ref", "command", "in_git"}`（run 侧可附 `bytes/n_files/has_side/side_txt/side_vec`）；
+  字段名与 `obs evidence --archive*` 写入 `summary.json` 的块**逐字一致**。详见 `v2/refs/run-artifact-archive.md` §6。
 
 ### 2.4 回滚（退到上一个可用版本，含配置与资产）
 
