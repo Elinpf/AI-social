@@ -994,6 +994,23 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
 - **不新增事件**；段锚点**复用 `TURN_SEAL` 可选字段**（只增不改）：`segment_id` / `segment_file` / `segment_first_seq` / `segment_last_seq` / `segment_last_hash`。
 - **开关族（默认 `false`，进 `engine_version` 指纹）**：`segment.enabled`、`index.slim`（§5.8 家族；`OFF`=旧行为）。
 
+### 5.10 tick 内时间区间口径（应 T286 路径 B，已定；纯 schema/口径，**默认瞬时=行为不变**）
+
+> 定位：**只改"时间如何表达与排序"，不改结算频率**。round 仍是**结算拍**（84/周不变；代谢/税/计息/守恒/观测切片每回合一次）。08 为本节单一真源。
+
+- **微时刻**：`μt = round * U + sub`，`sub ∈ [0, U)`；`U` = 每回合微时刻数（config，**默认 6、可调 1–12**；**`U=1` 退化为现状"原子"**）。μt 只用于**排序/重叠/先后/进行中**。
+- **区间字段（既有事件加【可选】，不新增类型）**：`span = {start_round, start_sub, end_round, end_sub}`；**缺省 = 瞬时 `(round, 0)`**；`start==end` = 瞬时；**允许 `end.round > start.round`（进行中，跨结算拍）**。
+- **带区间最小事件集**：`PLACE_MOVE` / `PLACE_ARRIVED`、`ACTIVITY_STARTED` / `ACTIVITY_COMPLETED` / `ACTIVITY_INTERRUPTED`。（`MSG_*` / `OFFER_*` 等留三期。）
+- **排序键（写死，二者并存、不可混用）**：
+  - **事实序 = `seq`（全局唯一事实序，红线不变）** —— append/重放按 `seq`。
+  - **语义时间序 = `(start_μt, agent_id, seq)`** —— 按 μt 排序/结算/判先后（跨 agent 用 `agent_id` 定 tie-break，再 `seq`，全序）。
+- **进行中 = 派生视图**（如 `current_activity`，可由日志重建）：**不新增真相源、不入 `state_hash`、不入事件语义**（沿用 §5.9「可重建派生集合」口径）。
+- **兼容**：无 `span` 的旧事件 = 瞬时；**旧日志可读、不强制迁移**。
+- **时间模型版本戳（分界线）**：`TURN_SEAL` 加**可选字段** `time_model ∈ {"atomic", "interval-U<U>"}` 与 `U`；**历史基线仅同版本内可比**（B 前/B 后不可直接比）。
+- **轻索引（§5.9 协同）**：轻索引增**可选 `start_sub`**（仅区间事件；供 T285 回读/排序精度；`U` 由版本确定）——默认（原子）不占。
+- **开关族（默认 `false`，进 `engine_version` 指纹）**：`time.interval.enabled`（期① 口径，默认 off=旧行为）、`time.ongoing.enabled`（期②）、`time.interleave.enabled`（期③）。
+- **`state_hash`**：期①（默认瞬时）**不变**；期②/③ 改行为 → 变 → **T236 联动**。
+
 ---
 
 ## 6. 与 v1 的兼容性（覆盖要求 6）
