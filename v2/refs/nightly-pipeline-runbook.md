@@ -10,14 +10,15 @@
 `nightly.py` 把 T271 的托管封装成**每晚例行**：读一张批次表 → 一键起全部批（各在自己的 transient unit、`/tmp` 只读副本、文件开关、心跳落盘）→ 一键收出**一页早报** → 中断批可续（或重叠重跑）→ 清理长期账。
 
 ## 1. 批次表（TSV，制表符分隔）
-列：`name rounds agents seed switch resume_mode tree flush out cmd`
+列：`name rounds agents seed switch resume_mode tree flush out side cmd`
 | 列 | 取值 | 说明 |
 |---|---|---|
 | `switch` | `file.json:dot.path=value`，多个用 `;`；`-`=无 | 消融开关**以文件落副本**（非 dict override） |
-| `resume_mode` | `native`｜`overlap` | `native`=命令本身支持从 flush 前缀续跑（如 mock）；`overlap`=真 runner（当前不支持续跑） |
+| `resume_mode` | `native`（默认）｜`overlap`（回退） | `native`=真 runner `--resume-from/--target-round` 从 flush 前缀续跑；`overlap`=重跑（见 §4） |
 | `tree` | `copy`（默认）｜`main` | `main`=在主树跑（A 批口径，无副本/无开关）；`copy`=`/tmp` 只读副本 |
 | `out` | 绝对路径；留空=默认 | 覆盖批次日志落点（如 A 落 `v2/evidence/run_t236_canon_n20_llm.jsonl`）；**run 元数据仍落 `<run_root>/<name>/`** |
-| `cmd` | 留空=默认 | 默认绝对 venv python：`/opt/openjiuwen/workswarm-venv/bin/python -m orchestration run …`（**不赌 `python3` 解析**） |
+| `side` | 绝对路径；留空=默认 | 覆盖 `side_root`（默认 `<run_dir>/side`）。**多批填同一个 = 共享 `freeze_cache`/源正文，做干净消融（B−A 差值不被缓存冷热污染）**；`native` 续跑自动沿用 `meta.side_root` |
+| `cmd` | 留空=默认 | 默认绝对 venv python：`/opt/openjiuwen/workswarm-venv/bin/python -m orchestration run … {resume_args}`（**不赌 `python3` 解析**） |
 
 示例见 `tools/t271/batches.example.tsv`（含今晚 A/B/C/D）。
 

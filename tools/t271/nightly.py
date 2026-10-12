@@ -63,6 +63,7 @@ def load_batches(path: str):
             row.setdefault("flush", "12")
             row.setdefault("tree", "copy")
             row.setdefault("out", "")
+            row.setdefault("side", "")
             rows.append(row)
     return rows
 
@@ -205,9 +206,10 @@ def batch_state(name: str, run_root: str):
 # ---------------------------------------------------------------- launch helper
 def launch(name, copy, run_dir, sha, envfile, cmd_tmpl, rounds, agents, seed, flush,
            heartbeat, mem_high, mem_max, switch_val, resume_mode, extra_tag="", out_name="run.jsonl",
-           out_override=None, tree_val="", resuming=False):
+           out_override=None, tree_val="", resuming=False, side_override=None):
     out = out_override or os.path.join(run_dir, out_name)
-    side = os.path.join(run_dir, "side")
+    # side_root 可被批次表覆盖（多批共享 freeze_cache 做干净消融）；默认 <run_dir>/side
+    side = side_override or os.path.join(run_dir, "side")
     # native 续跑：真 runner 用 --resume-from <已 flush 前缀> --target-round <目标>（复用同一 side_root）
     resume_args = f"--resume-from {out} --target-round {rounds}" if resuming else ""
     ctx = dict(out=out, side=side, hb=os.path.join(run_dir, "heartbeat.tsv"),
@@ -278,7 +280,8 @@ def cmd_start(a):
         launch(name, copy, run_dir, sha, envfile, b["cmd"],
                b["rounds"], b["agents"], b["seed"], b["flush"], a.heartbeat,
                a.mem_high, a.mem_max, sw, b["resume_mode"],
-               out_override=(b.get("out") or None), tree_val=tree)
+               out_override=(b.get("out") or None), tree_val=tree,
+               side_override=(b.get("side") or None))
         print(f"[start] {name}: tree={tree} copy={copy} switch={sw} resume_mode={b['resume_mode']}")
 
 
@@ -409,7 +412,8 @@ def cmd_resume(a):
             launch(n, copy, run_dir, sha, a.env_file or DEFAULT_ENV, b["cmd"],
                    b["rounds"], b["agents"], b["seed"], b["flush"], a.heartbeat,
                    a.mem_high, a.mem_max, st.get("switch") or "-", "native",
-                   out_override=st.get("out"), resuming=True)
+                   out_override=st.get("out"), resuming=True,
+                   side_override=meta.get("side_root") or None)
         else:
             print(f"[resume] {n}: overlap 重叠重跑（回退；重跑到目标 {b['rounds']} 回合，落 rerun.jsonl）")
             launch(n, copy, run_dir, sha, a.env_file or DEFAULT_ENV, b["cmd"],
