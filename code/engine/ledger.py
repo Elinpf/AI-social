@@ -20,7 +20,8 @@ class Ledger:
     records: list = field(default_factory=list)
     _round_seq: dict = field(default_factory=dict)  # round -> 本回合内已追加条数
 
-    def append(self, round_no: int, phase: int, actor: str, type_: str, payload: dict | None = None) -> dict:
+    def append(self, round_no: int, phase: int, actor: str, type_: str, payload: dict | None = None,
+               span: dict | None = None) -> dict:
         seq = len(self.records)
         prev_hash = self.records[-1]["hash"] if self.records else GENESIS_HASH
         rs = self._round_seq.get(int(round_no), 0)
@@ -36,13 +37,16 @@ class Ledger:
             "mono_ts": mono_ts,
             "prev_hash": prev_hash,
         }
+        if span is not None:  # T287 期①：可选区间；None ⇒ 不写字段（off 字节不变）
+            record["span"] = span
         record["hash"] = compute_event_hash(record)  # 哈希覆盖去掉 hash 字段的整条记录
         self.records.append(record)
         return record
 
     def append_spec(self, ev: EventSpec) -> dict:
         kw = ev.as_kwargs()
-        return self.append(kw["round"], kw["phase"], kw["actor"], kw["type"], kw["payload"])
+        return self.append(kw["round"], kw["phase"], kw["actor"], kw["type"], kw["payload"],
+                           span=kw.get("span"))
 
     # ---- 校验 ----
     def verify_chain(self) -> tuple[bool, str | None]:

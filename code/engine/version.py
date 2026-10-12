@@ -27,6 +27,7 @@ FINGERPRINT_FILES = (
     "social.json",
     "life_v2.json",
     "world_director.json",
+    "time.json",
 )
 
 REQUIRED_PERCEPTION_SCOPE_VERSION = "v1.2-r2"

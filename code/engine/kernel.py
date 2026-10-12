@@ -16,6 +16,7 @@ from .constants import (
 from . import conservation
 from . import hooks as hook_registry
 from . import scheduling
+from . import time_model as _time_model
 from . import wake
 from .events import spec
 from .ledger import Ledger
@@ -133,6 +134,9 @@ class Engine:
             "fingerprint": self.fingerprint,
             "config_components": _config_components(),
             "config_digest": _digest(self.config),
+            # T287 期①：时间模型版本戳（**总是**写入，跨 sha 自描述；off=atomic）
+            "time_model": _time_model.time_model_of(self.config),
+            "time_U": _time_model.U_of(self.config),
         })]
         born: list[tuple[str, str, dict]] = []
         if personas:
@@ -238,6 +242,10 @@ class Engine:
             "money_minted_total": self.state.money_minted_total,
             "money_burned_total": self.state.money_burned_total,
         }
+        # T287 期①：仅在区间启用时给 TURN_SEAL 埋版本戳（off ⇒ 字节不变）
+        if _time_model.interval_enabled(self.config):
+            payload["time_model"] = _time_model.time_model_of(self.config)
+            payload["time_U"] = _time_model.U_of(self.config)
         self._direct_append([spec(round_no, PHASE_COMMIT, "SYSTEM", "TURN_SEAL", payload)])
 
     # ---- 单个回合（D1：emit 入缓冲，P6 唯一 append，异常/守恒→整回合回滚）----

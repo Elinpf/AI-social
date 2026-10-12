@@ -1,0 +1,8 @@
+{
+  "_comment": "tick 内时间区间口径（08 §5.10 / T287 期①）。全部默认 off=原子（行为不变）。**进 engine_version 指纹**（Leader 裁定：不进指纹的开关=日志解释不了的配置）。time_model 戳：off=atomic / on=interval-U<U>。",
+  "version": "1.0",
+  "U": 6,
+  "interval": {"enabled": false},
+  "ongoing": {"enabled": false},
+  "interleave": {"enabled": false}
+}

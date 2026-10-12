@@ -76,6 +76,8 @@ class EventSpec:
     actor: str
     type: str
     payload: dict = field(default_factory=dict)
+    # T287 期①：可选区间 span{start_round,start_sub,end_round,end_sub}；None=瞬时（向后兼容）
+    span: dict | None = None
 
     def as_kwargs(self) -> dict:
         return {
@@ -84,13 +86,16 @@ class EventSpec:
             "actor": self.actor,
             "type": self.type,
             "payload": self.payload,
+            "span": self.span,
         }
 
 
-def spec(round_no: int, phase: int, actor: str, type_: str, payload: dict | None = None) -> EventSpec:
+def spec(round_no: int, phase: int, actor: str, type_: str, payload: dict | None = None,
+         span: dict | None = None) -> EventSpec:
     if type_ not in EVENT_TYPES:
         raise ValueError(f"未登记的事件类型: {type_!r}（请在 engine/events.py 登记并在 apply_event 注册折叠器）")
-    return EventSpec(round=round_no, phase=phase, actor=actor, type=type_, payload=payload or {})
+    return EventSpec(round=round_no, phase=phase, actor=actor, type=type_, payload=payload or {},
+                     span=span)
 
 
 def compute_event_hash(record_without_hash: dict) -> str:

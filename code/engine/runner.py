@@ -30,6 +30,10 @@ def load_config(path: str | Path | None = None) -> dict:
     if wd.exists():
         with open(wd, "r", encoding="utf-8") as f:
             cfg["world_director"] = json.load(f)  # 世界导演档（开关/剂量，进指纹）
+    tp = _CONFIG_DIR / "time.json"
+    if tp.exists():
+        with open(tp, "r", encoding="utf-8") as f:
+            cfg["time"] = json.load(f)  # tick 内时间区间口径（开关/U，进指纹；T287 期①）
     return cfg
 
 
