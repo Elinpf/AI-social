@@ -38,6 +38,8 @@ EVENT_TYPES = {
     "MEMORY_WRITE", "MEMORY_RETRIEVE", "MEMORY_REFLECT",
     # T233 / 08 §1.2 S：睡眠 / 记忆整合遗忘 / 人格漂移（Fork B 口径：可审计）
     "SLEEP_STARTED", "SLEEP_COMPLETED", "MEMORY_CONSOLIDATE", "MEMORY_FORGET", "PERSONA_DRIFT",
+    # T322 / 08 §1.2 W：人格漂移**候选**（identity fold、不入 state_hash；audit）
+    "PERSONA_DRIFT_CANDIDATE",
     # v1.1 涌现/传播
     "OBSERVATION", "SEED_EVENT", "TAG_EMITTED", "ROLE_CHANGE",
     "NORM_PROPOSED", "NORM_ADOPTED", "NORM_VIOLATED",

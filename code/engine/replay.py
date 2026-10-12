@@ -646,6 +646,8 @@ _NOOP_TYPES = [
     "INTENT_REJECTED", "DROPPED",
     # T265 个体决策节拍（08 §1.2 S）：唤醒/静默为审计事件，不改世界状态（no-op 折叠）
     "WAKE", "IDLE",
+    # T322 / 08 §1.2 W：人格漂移候选 —— identity fold，不改世界状态、不入 state_hash
+    "PERSONA_DRIFT_CANDIDATE",
 ]
 for _t in _NOOP_TYPES:
     _APPLIERS.setdefault(_t, lambda state, rec, p: None)

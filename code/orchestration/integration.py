@@ -545,6 +545,17 @@ class KernelAdapter:
                 "day": p.get("day"), "slot": p.get("slot")},
                 phase=PHASE_LIFE, actor=agent_id)
             return IntentResult(ok=True, event_seqs=(seq,))
+        if op == "drift_candidate":
+            # T322 / 08 §1.2 W：人格漂移**候选**（identity fold、non-state、audit）
+            if not p.get("dim") or p.get("sign") not in (-1, 1):
+                return None
+            seq = self._emit_assembled("PERSONA_DRIFT_CANDIDATE", p, {
+                "agent_id": agent_id, "dim": p.get("dim"), "sign": int(p.get("sign")),
+                "window": p.get("window"), "mem_id": p.get("mem_id"),
+                "reached_threshold": bool(p.get("reached_threshold")),
+                "day": p.get("day"), "slot": p.get("slot")},
+                phase=PHASE_LIFE, actor=agent_id)
+            return IntentResult(ok=True, event_seqs=(seq,))
         if op == "drift":
             # T244 W3：由反思产出的**有界**人格漂移候选（单事件单维；08 §1.2 S）
             if not p.get("dim"):
