@@ -168,6 +168,18 @@
       "expected_status": "未接线",
       "owner": "life 侧",
       "due_condition": "SKILL_OUTPUT 事件已由 life/settlement.py 发射（output_ref=side://skill/...），但**指向的正文/产物无写入方** → 技能正文导不出。接线：life 落产出到 side 存储。wire_task：待派（life 域）"
+    },
+    {
+      "name": "MEMORY_RETRIEVE.vec_available",
+      "kind": "field",
+      "owner_event": "MEMORY_RETRIEVE",
+      "declared_in": [
+        "v1.1/08-engine-stats-extension.md §1.2 E",
+        "code/life/memory.py"
+      ],
+      "expected_status": "未到达",
+      "owner": "freeze-layer-dev / life-layer-dev / kernel-dev（三方直连修）",
+      "due_condition": "08 已登记、intent 里已写（life/memory.py），但**装配点 `_do_memory` 的固定字段白名单把它丢了** → 事件 payload 里没有（登记落空）。Leader 裁决：白名单须有明确扩展路径 + **不得静默丢弃**。到达时脚本判『已到达事件』。wire_task：三方直连修（Leader 已裁）"
     }
   ]
 }

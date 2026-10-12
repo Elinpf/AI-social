@@ -109,9 +109,29 @@ def classify(entry: dict, code_dir: Path, exclude_parts: set[str]) -> dict:
                 continue
         found = any(re.search(p, t) for p in probes for t in code_texts)
         status = "已接线(有正文写入方)" if found else "未接线(仅声明)"
+    elif kind == "field":
+        # 「字段到达」类（Leader 2026-10-12）：**登记了字段，但它是否真的到达事件 payload？**
+        # 判据：存在**装配点**（含 emit 调用 `_emit(`/`spec(`/`EventSpec(`）同时出现 `owner_event` 与字段名。
+        # 否则 = 被装配白名单静默丢弃 → 登记落空。
+        owner = entry.get("owner_event", "")
+        leaf = name.split(".")[-1]
+        arrived = False
+        for f in _py_files(code_dir, exclude_parts):
+            rel = f.relative_to(ROOT).as_posix()
+            if not any(rel.startswith(s) for s in PRODUCER_SCOPE):
+                continue
+            try:
+                t = f.read_text(encoding="utf-8")
+            except Exception:
+                continue
+            is_assembler = ("_emit(" in t) or ("spec(" in t) or ("EventSpec(" in t)
+            if is_assembler and owner and (owner in t) and (leaf in t):
+                arrived = True
+                break
+        status = "已到达事件" if arrived else "未到达(登记未达事件·被装配丢弃?)"
     else:
         status = "已接线" if used_beyond_decl else "未接线(仅声明)"
-    alive = status.startswith("已接线")
+    alive = status.startswith("已接线") or status.startswith("已到达")
     return {
         "name": name, "kind": kind, "status": status, "alive": alive,
         "registered": registered, "folds": folds, "produced": bool(hits_prod),
@@ -129,7 +149,9 @@ def _in_event_types(name: str, events_py: Path) -> bool:
 def _expected_ok(expected: str | None, alive: bool) -> bool | None:
     if expected is None:
         return None
-    return expected.strip().startswith("已接线") == alive
+    e = expected.strip()
+    exp_alive = e.startswith("已接线") or e.startswith("已到达")
+    return exp_alive == alive
 
 
 # ------------------------------------------------------------------ B. 自动枚举事件
