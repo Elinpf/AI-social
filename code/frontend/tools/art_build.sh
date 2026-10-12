@@ -28,6 +28,8 @@ python3 "$S/check_single_source.py"                    # 门禁：palette 单一
 python3 "$SRC/tools/audit_event_cards.py"           # 事件卡机制区空槽门禁（有槽即非零退出）
 python3 "$SRC/tools/char_game_size_check.py"        # 角色「游戏尺寸」两两剪影可辨性门禁
 python3 "$SRC/tools/event_card_readability_check.py" # 事件卡「内联显示尺寸」可读性门禁
+# 生成期硬约束（T258c）：机制标注线宽 ≥3px 原生。遗留卡 warn；卡片重生成后应转硬门禁。
+python3 "$S/check_card_stroke.py" "$ASSETS/generated/event_cards_hand" --warn-only
 
 echo "[art] 3/4 自洽断言（JSON.distinct_colors == 落盘 PNG 实测）"
 python3 - "$SK" <<'PY'
