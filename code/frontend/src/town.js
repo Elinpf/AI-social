@@ -283,6 +283,15 @@
         if (big) { fillRect(snow, (x - 1) | 0, (y + 1) | 0, 1, 1, 0xffffff, 0.5); fillRect(snow, (x + r) | 0, (y - 1) | 0, 1, 1, 0xffffff, 0.5); }
       }
       G2.addChild(snow);
+      // T269「没层次」：纵向纵深色调带 —— 上（远/北）偏冷暗、下（近/南）偏暖亮（俯视读远近；不动拓扑）
+      const depth = new P.Graphics();
+      for (let i = 0; i < height; i += 4) {
+        const t = i / height;
+        fillRect(depth, 0, i, width, 4, 0x0a1420, 0.22 * (1 - t));                        // 远端冷暗（加强）
+        fillRect(depth, 0, i, width, 4, 0x2a3550, 0.14 * (1 - t) * (1 - t));              // 空气透视：远端去饱和/偏冷
+        if (t > 0.4) fillRect(depth, 0, i, width, 4, 0xffd9a0, 0.09 * (t - 0.4) / 0.6);   // 近端暖亮（加强）
+      }
+      G2.addChild(depth);
       // 轻微颗粒/抖动（避免"太干净"，贴近手绘像素）
       // T120：颗粒减弱（保留轻质颗粒、不再是"屏幕噪点"）
       const grain = new P.Graphics();
@@ -714,6 +723,10 @@
           sp.x = cx; sp.y = cy + TILE / 2;
           sp.scale.set(scale);
           deco.addChild(sp);
+          // T269「像贴图」：接地 AO/接触影（每株装饰都"踩"在地上，不飘）——统一光向左上前→影偏右下
+          const ao = new P.Graphics();
+          fillEllipse(ao, cx + 2, cy + TILE / 2 - 1, 8 * scale, 3 * scale, 0x0e1a10, 0.22);
+          deco.addChild(ao);
         }
       }
       // 地表随机点缀：小石 / 枯枝 / 高草（弱化平铺重复感）
@@ -760,6 +773,7 @@
       };
       const flowerBed = (x, y) => {
         const g = new P.Graphics();
+        fillEllipse(g, x + 2, y - 1, 14, 4, 0x0e1a10, 0.22);   // T269 接地 AO
         fillRound(g, x - 12, y - 6, 24, 10, 3, 0x8a6636);
         fillRect(g, x - 12, y - 6, 24, 3, 0x9c7a44);
         const cols = [0xff7fb0, 0xffd45c, 0xff8f6b, 0xc08bff, 0xfff2c0];
