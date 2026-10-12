@@ -150,7 +150,7 @@ function testD() {
   // T121：截图等就绪、超时非零、防"假黑图"
   const shot = fs.readFileSync(path.join(ROOT, "tools", "shot.py"), "utf8");
   check(/__RENDER_READY__/.test(shot) && /wait_for_function/.test(shot), "shot.py 等 __RENDER_READY__（不用固定 sleep）");
-  check(/return 1/.test(shot) && /超时/.test(shot), "shot.py 等不到就绪 → 非零退出（不产黑图）");
+  check(/(return 1|rc = 1)/.test(shot) && /超时/.test(shot), "shot.py 等不到就绪 → 非零退出（不产黑图）");
   check(/--force-device-scale-factor=1|device_scale_factor=1/.test(shot) && /enable-webgl|swiftshader/.test(shot), "shot.py 关键 flags 齐全");
   check(/假黑图|false negative/.test(shot), "shot.py 注释记录已知坑（大日志假黑图）");
   check(/_mean_brightness/.test(shot) && /601/.test(shot), "shot.py 定义 mean_brightness 口径（灰度 601，防同名不同义）");

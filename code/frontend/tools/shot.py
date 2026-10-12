@@ -18,6 +18,16 @@
     0 = OK（已就绪并出图）
     1 = FAIL（超时未就绪 / 页面报错）——**非零，CI 会红**
     3 = SKIP（无 playwright，依赖缺失；**不算通过**）
+
+## T282 根因结论（首帧偶发白/黑）—— 写给下一个人，别再追一遍
+- **现象**：still 单帧偶发**整幅单色**（白 (240,240,240) 或黑 (0,0,0)）—— 是"canvas 完全没被呈现"，**不是半张图/渲染坏了**。
+- **根因**：**截图瞬时竞态**——`pg.screenshot()` 抓合成器已提交帧，软件 GL（`--use-gl=swiftshader`）下 WebGL
+  后缓冲→合成的**首帧 readback** 极低概率未提交 → 截到清屏色。**不在应用渲染路径上**。
+  证据：就绪时 app 状态恒正常（`placeLayer.children>0`、`renderer 尺寸>0`，探针 40/40）；与**负载/画幅/日志大小/节流无关**。
+- **受控尝试矩阵 0 / 193 未复现**（idle/并行/CPU节流/大日志/1500×950…）→ **未声称修复、未改渲染路径**。
+  详见 `v2/evidence/T282-first-frame-blank-rootcause.md`。
+- **重试（`--retry-blank`）仅作"取证容错"，不掩盖问题**：必打印"本次空白/重试次数" + **跨次累计** `blank_cumulative`。
+  **若哪天累计变频繁**（如一夜 >N 次）→ 说明环境变了（软件 GL / 驱动 / 负载），**那时要重新追**（本工具只留痕，不抑制、不告警）。
 """
 from __future__ import annotations
 import argparse, sys, time
@@ -49,6 +59,7 @@ def main() -> int:
     t0 = time.time()
     attempts = max(1, args.retry_blank + 1)
     blanks = 0
+    rc = 1
     for attempt in range(1, attempts + 1):
         st, msg = _try_capture(args, still)
         if st == "ok":
@@ -58,7 +69,8 @@ def main() -> int:
             if blanks:
                 print(f"  ⚠ 本次取证出现空白帧 {blanks} 次（已重试通过；"
                       f"空白是零星 bug 的信号，勿被重试抹掉）")
-            return 0
+            rc = 0
+            break
         if st == "blank":
             blanks += 1
             last = attempt == attempts
@@ -66,11 +78,33 @@ def main() -> int:
                   f" —— 第 {blanks} 次空白{'（重试耗尽）' if last else '，重试'}")
             if last:
                 print(f"  ⚠ 空白 {blanks}/{attempts} 次；重试是取证容错、不是修白帧")
-                return 1
+                rc = 1
+                break
             continue
         print("SHOT FAIL:", msg)   # 非空白类失败（未就绪/pageerror）：不重试
-        return 1
-    return 1
+        rc = 1
+        break
+    # 观察哨：跨次累计留痕（只记录，不抑制/不告警）。若累计变频繁 → 环境变了，重新追。
+    cum = _stats_bump(blanks)
+    print(f"  blank_cumulative={cum['blanks']}/{cum['runs']} 次空白/总取证（T282 观察哨，仅留痕）")
+    return rc
+
+
+def _stats_bump(blanks: int) -> dict:
+    """跨次累计空白/取证次数（默认 /tmp/hitt_shot_blank_stats.json，可用 SHOT_STATS 覆盖）。绝不因失败而中断。"""
+    import json, os
+    p = os.environ.get("SHOT_STATS", "/tmp/hitt_shot_blank_stats.json")
+    try:
+        d = json.loads(open(p, encoding="utf-8").read()) if os.path.exists(p) else {}
+    except Exception:
+        d = {}
+    d["runs"] = int(d.get("runs", 0)) + 1
+    d["blanks"] = int(d.get("blanks", 0)) + int(blanks)
+    try:
+        open(p, "w", encoding="utf-8").write(json.dumps(d, ensure_ascii=False))
+    except Exception:
+        pass
+    return d
 
 
 def _try_capture(args, still):
