@@ -1198,13 +1198,14 @@
               fillRect(g, cx + xx, cy + yy, CELL, CELL, color, a * mul);
             }
         };
-        // 地面暖光池（T124③：夜光"铺地"，同 dither 手法、压扁放大）
+        // 地面暖光池（T124③：夜光"铺地"；T269③：加低频噪声斑驳=漫反射，破"均匀贴片"）
         for (let yy = -r * 1.3; yy < r * 1.3; yy += CELL)
           for (let xx = -r * 3.0; xx < r * 3.0; xx += CELL) {
             const d = Math.sqrt((xx / (r * 3.0)) ** 2 + (yy / (r * 1.3)) ** 2); if (d > 1) continue;
             const idx = d * TIER.length, i = Math.min(3, Math.floor(idx)), f = idx - i;
             const a = (f > dth(x, y + r, xx, yy)) ? TIER[Math.min(3, i + 1)] : TIER[i];
-            fillRect(g, x + xx, y + r + yy, CELL, CELL, color, a * 0.95);
+            const nz = W.hash2((((x + xx) / 5) | 0) + 7, (((y + r + yy) / 5) | 0) + 13, 555);   // 低频斑驳（漫反射）
+            fillRect(g, x + xx, y + r + yy, CELL, CELL, color, a * 0.95 * (0.55 + 0.7 * nz));
           }
         band(x, y, r * 2.4, 1);        // 光晕主体（dither 环带，放大）
         G.addChild(g);
