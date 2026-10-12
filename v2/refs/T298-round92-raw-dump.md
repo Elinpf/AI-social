@@ -37,6 +37,15 @@
 ## 3) 前向态（可选项，**未捕获**）
 `_slept_days` / `_persona_state` / `_persona_p0` / `_drift_streak`：本轮 dump **未采集**（如需，我再补一次带这些字段的 dump）。
 
+## 3b) 溯源：三档/本 dump 跑在**哪个树状态**（纪律补录）
+> 关键：**"主树无未提交 `life/` 改动 ⇒ 活树 ≡ HEAD" 只对 `life/` 成立**；活树 ≠ 纯 HEAD。
+
+- **本 dump 与三档回归**均跑在**活树**（非 `tree=copy`），其状态（`git status`，HEAD `2f956b6`）：
+  - **`life/` 部分 = 已提交 `8d4c8b9`**（无未提交 life 改动）✓
+  - **含未提交的 kernel 改动**：`code/engine/{events,kernel,ledger,runner,version}.py`（T287，**default-off**）+ 未跟踪 `code/engine/time_model.py`、`code/config/time.json`、`code/tests/test_t287_time_model.py`
+- ⇒ 复算时请注意：**结果包含上述未提交 kernel/time 改动**（T287 默认关，预期不改变本三档结果）；**非纯 HEAD 快照**。
+
+
 ## 4) 两路新日志（可读路径）
 - resumed：`/root/t271/runs/nr/N1/run.jsonl`
 - oneshot：`/root/t271/runs/nr/ref.jsonl`
