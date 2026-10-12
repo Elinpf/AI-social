@@ -104,6 +104,22 @@ body.no-grade .grading { display: none; }
 }
 .caption[hidden] { display: none; }
 
+/* 事件表现：最近事件走马条（紧凑/半透明，不喧宾夺主；bottom-left，避开控制条） */
+.evticker {
+  position: absolute; left: 14px; bottom: 84px; z-index: 9; pointer-events: none;
+  display: flex; flex-direction: column; gap: 3px; max-width: 42%;
+}
+.evticker .row {
+  background: rgba(12,16,22,0.55); border-left: 2px solid var(--accent);
+  border-radius: 6px; padding: 3px 9px; font-size: 12px; line-height: 1.35;
+  color: #e8eef5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  opacity: 0; transform: translateY(4px); transition: opacity 320ms ease, transform 320ms ease;
+}
+.evticker .row.show { opacity: 0.92; transform: translateY(0); }
+.evticker .row.old { opacity: 0.5; }
+.evticker .row .ic { margin-right: 5px; }
+body.no-ticker .evticker { display: none; }
+
 /* 左上 HUD */
 #hud { position: absolute; top: 12px; left: 12px; display: flex; flex-direction: column; gap: 6px; pointer-events: none; z-index: 8; max-width: 46%; }
 .hud-item { background: rgba(14,18,24,0.72); border: 1px solid var(--line); border-radius: 8px; padding: 5px 10px; font-size: 12px; }

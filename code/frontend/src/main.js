@@ -114,6 +114,8 @@
       if (qs.get("debug") === "1") document.body.classList.add("show-debug");   // 证据截图用：展开调试/回放控件
       // T259 层次层对照：?grade=0 关闭天空/暗角/地面渐隐（"改前"截图用）
       if (qs.get("grade") === "0") document.body.classList.add("no-grade");
+      // T279 事件表现对照：?ticker=0 关闭最近事件走马条（"改前"截图用）
+      if (qs.get("ticker") === "0") document.body.classList.add("no-ticker");
       if (["social","weekly","chronicle","econ"].includes(qs.get("tab"))) { openDrawer("audit"); switchAuditTab(qs.get("tab")); }
       if (qs.get("settings") === "1") el("settings-pop").hidden = false;
       if (qs.get("agent")) selectAgent(qs.get("agent"));
@@ -239,6 +241,7 @@
     renderClock(rp, rd);
     renderTimebar(rp, rd);
     renderLighting(rp, rd);
+    renderEvticker(rp, rd);   // 事件表现：最近事件走马条（纯展示，随回合确定性派生）
     if (animateFx && !state.still) handleKeyEvents(rp, rd);
     if (state.auditTab === "social" && audit && audit.renderSocial) audit.renderSocial(rp, rd);
     else if (state.auditTab === "weekly" && audit && audit.renderWeekly) audit.renderWeekly(rp, rd);
@@ -892,6 +895,29 @@
       <div class="kv"><span class="k">从${escapeHtml(fromName)}到${escapeHtml(toName)}</span><span>${n} tick</span></div>
       <div class="muted" style="font-size:11px;margin-top:4px">${note}</div></div>`;
   }
+  // ---- 事件表现：最近事件走马条（"世界在运转"要看得见，但不喧宾夺主）----
+  // 取最近 SPAN 轮、每轮最高优先 notable 事件各 1 条，末 N 条紧凑显示；**随 (log, round) 确定性派生**。
+  function renderEvticker(rp, rd) {
+    const box = el("evticker");
+    if (!box) return;
+    const SPAN = 5, N = 4;
+    const ctx = (audit && audit.ctx) || { name: nameOf, place: placeNameOf };
+    const picked = [];
+    for (let r = Math.max(0, rd - SPAN); r <= rd; r++) {
+      const evs = rp.eventsInRound(r).filter((e) => KEY_EVENTS[e.type]);
+      if (!evs.length) continue;
+      evs.sort((a, b) => KEY_EVENTS[b.type].pri - KEY_EVENTS[a.type].pri);
+      picked.push(evs[0]);            // 每轮 1 条 → 连续感
+    }
+    const last = picked.slice(-N);
+    box.innerHTML = last.map((e, i) => {
+      const ic = KEY_EVENTS[e.type].icon;
+      const t = R.humanize(e, ctx).text;
+      const cls = i === last.length - 1 ? "row show" : "row show old";
+      return `<div class="${cls}"><span class="ic">${ic}</span>${escapeHtml(t)}</div>`;
+    }).join("");
+  }
+
   function escapeHtml(s) { return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 
   // ---------------- 播放控制 ----------------
