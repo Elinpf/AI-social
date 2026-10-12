@@ -1,5 +1,7 @@
 # 08 · 确定性引擎与统计程序扩展（生活层 + 涌现观测层）v1.1
 
+> **【Fork B 时效标注 · 2026-10-12】** 凡本文（X5 / §5.3 / §5.4 / §6）以「同日志逐位一致 / `metrics()` 两次字节相等」作**验收口径**处，按 Leader Q-12.1 修正为「**放开"必须可复现"、保留"可被复算"**」：`replay` 确定性保留，「字节相等」**降为诊断**。**单一口径见 `v2/refs/gate-grading.md`。**
+
 > 作者：仿真引擎与统计架构师（sim-engine-stats-architect）
 > 状态：v1.1 设计草案（在 v1 `03-engine-stats.md` 基础上扩展，供 Leader 汇总）
 > 设计基准（2026-10-09 用户拍板）：**先做「模拟周」时间尺度**（§3.1 回合→时段→日→周定稿）；**单一小镇场景**（§3.3，不做多场景派生）；总体架构以 `00-architecture.md`（T12）为对齐基准，未落盘前按本文默认推进、差异记 §7 XT-4。
@@ -323,6 +325,27 @@ class Event:
 > - **`exchange.enabled=false` 消融** → `distinct_sellers_excl_world = 0`（世界市场保留，`distinct_sellers` 可能 =1）、`agent↔agent 成交占比 = 0`、`I_eff` P50=0、`CONTRACT_CREATED=0`（证伪力见 §5.8）。
 
 > **G7/兼容**：`EXCHANGE_SETTLED` 为**新增类型**（旧日志不出现）、`channel` 为**可选字段**（被容忍）——**G7 不受影响**；与既有 66 类不冲突（只增不改，X1/X4）。**引擎实现**（`EVENT_TYPES`/`apply_event` 折叠器/两个 hook/意图）由 econ/kernel 实现阶段落地，本节只登记 schema。
+
+**S. v2 睡眠 / 记忆整合遗忘 / 人格漂移事件（E-LIFE / E-MEM / E-LIFE-PERSONA，应 T224，已登记）**
+
+> 口径：按用户 09:53 拍板的 **Fork B**——本族事件服务「**可审计**」（全量日志 + 种子化随机 + sha + 生成命令），**不要求「逐位重放一致」**；故 `retention_permille` 等可为**确定性规则/近似量**，无需为逐位一致做定点妥协。
+
+| type | phase | payload 关键字段 | 归属族 / 说明 |
+|---|---|---|---|
+| `SLEEP_STARTED` | 3.5 | `agent_id, day, slot, planned_ticks` | **E-LIFE**：睡眠开始（日程 L2/L4） |
+| `SLEEP_COMPLETED` | 3.5 | `agent_id, day, slot, actual_ticks` | **E-LIFE**：睡眠结束 |
+| `MEMORY_CONSOLIDATE` | 3.5 | `agent_id, source_mem_ids[], produced_mem_id, subject` | **E-MEM**：记忆**整合**（由源记忆产出新记忆；与 `MEMORY_REFLECT` 反思区分——整合是结构合并，非高层反思） |
+| `MEMORY_FORGET` | 3.5 | `agent_id, mem_id, level∈{demote,merge,drop}, retention_permille, reason` | **E-MEM**：记忆**遗忘/降级**（`demote` 降权 / `merge` 并入 / `drop` 丢弃；`retention_permille` = 保留度千分比） |
+| `PERSONA_DRIFT` | 3.5 | `agent_id, dim, before, after, anchor, cause_mem_id` | **E-LIFE-PERSONA**：人格维度漂移（**单事件单维**；`dim` 取值见 06 人格维度；`anchor` 为不变量基线） |
+
+- **`PERSONA_FINGERPRINT` 为快照、非事件**：`{agent_id, pf0, pf_t, drift_permille}` 建议入 **metrics / 侧存储**（或 `PERSONA_DRIFT` 的派生视图），**不登记为事件类型、不落哈希链**。
+- **审计字段**：本族 life 事件均带 `day/slot`（`PERSONA_DRIFT` 亦带）；如需 `place` 视实现补。
+- **引擎接入（不在本节）**：`engine/events.py::EVENT_TYPES` + `replay.apply_event` 折叠器由 **persona-life-designer** 在 T35/M2b 重构收敛后补——本节只登记 schema。
+- **统计口径（建议，入 `metrics.life` 子键，按字典序）**：
+  `metrics.life.memory{ forget_count_by_level, retention_hist, protected_kept, consolidate_count }`；
+  `metrics.life.persona{ drift_permille, pf0, pf_t }`。
+
+> **G7/兼容**：均为**新增类型**（旧日志不出现）→ **G7 不受影响**；与既有 66 类不冲突（只增不改，X1/X4）。
 
 > **通信事件复用 v1**：`MSG_PUBLIC / MSG_DM / MSG_GROUP` 不新增，但新增可选字段 `refs[]`（引用 msg_id）与 `tag_hints[]`（供 `TAG_EMITTED` 关联，实为内容层）。传播边由 `OBSERVATION.target_event_seq` 与 msg `refs` 共同构建（§4.3）。
 
@@ -900,6 +923,7 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
 | **配置口径登记** | 一等开关 `policy.production.enabled`（默认 true、只控「是否产生」）+ 三态 fail-loud 协同（显式关闭不 fail-loud/静默失效必 FAIL）+ `social.enabled` 同族 | §5.8 |
 | **新增事件（v2 交换，T126/T129）** | `EXCHANGE_SETTLED`（4.1，多腿双边原子交换，零和）+ `MARKET_TRADE.channel∈{orderbook}`（允许 seller∈Agent）+ 一等字段 `counterparty` + 意图 `ORDER_CANCEL` + 统计口径（`distinct_sellers_excl_world`/agent↔agent 占比） | §1.2 R |
 | **配置口径登记（v2 交换）** | `policy.exchange.enabled`（默认 true，同开关族；OFF→Agent 间交易归零 + `DROPPED{flag=exchange_disabled}`，不 fail-loud） | §5.8 |
+| **新增事件（v2 睡眠/记忆/人格，T224）** | `SLEEP_STARTED/SLEEP_COMPLETED`、`MEMORY_CONSOLIDATE/MEMORY_FORGET`、`PERSONA_DRIFT`（`PERSONA_FINGERPRINT` 为快照非事件）+ 统计 `metrics.life.memory/persona` | §1.2 S |
 
 > **合计**：新增事件 **11** 类（商品 4 + 契约 4 + 投票 1 + 社会 2）；字段扩展 **3** 事件；不变量 **2** 条；字段语义登记 **1** 项（商品族 `qty` milli-unit 口径）。**均只增不改**，与既有 66 类不冲突；G7 对既有日志仍通过（新增类型旧日志不出现、可选字段被容忍）。**引擎实现**（`engine/events.py` EVENT_TYPES + `replay.apply_event` 折叠器 + `apply_production()/apply_contracts()` hook）由 v2 实现阶段（econ-dev T91 等）落地，本任务只出 schema。
 
