@@ -59,3 +59,26 @@ python3 /tmp/t228_check.py   # 见 §3（N=3×20, seed=7, 逐档 build_world + �
 
 - freeze 侧（嵌入能力 / 降级 schema / 开关 / 指纹）**完成并验证**；life 侧 `SideStore` honors 开关**完成并验证**（−50% 文件、默认不变）。
 - **T228 整体未关闭**：卡在 **kernel `_do_memory` 透传**（不静默丢 additive 字段）。kernel 落地后需复验 `event_marked>0` 再关闭。
+
+---
+
+## 6. 复验（kernel 透传修复后）—— ✅ 达成关闭判据
+
+**状态**：`_do_memory` `op=="retrieve"` 已改为走统一装配 `_emit_assembled(...)`（`_PASSTHROUGH["MEMORY_RETRIEVE"]`），不再用固定字段 dict。
+**基线**：HEAD `8d64f30` **+ 工作树 `orchestration/integration.py`**（该透传修复**尚未提交**，属 life/kernel 侧）。命令：`python3 /tmp/t228_check.py`（N=3×20, seed=7）。
+
+| 档 | `.txt` | `.vec` | 总 | `MEMORY_RETRIEVE` | **带标记** | `final_state_hash` |
+|---|---|---|---|---|---|---|
+| 默认（无 env） | 276 | 276 | 552 | 60 | **60/60** | `…de0ab9a…` |
+| 显式 ON `1` | 276 | 276 | 552 | 60 | **60/60** | `…de0ab9a…` |
+| OFF `0` | 276 | **0** | **276** | 60 | **60/60** | `…de0ab9a…` |
+
+- ✅ **`event_marked > 0`**（60/60）→ 满足 Leader 关闭判据。
+- ✅ **默认行为不变**：三档 `final_state_hash` **完全相同**（`…de0ab9a…`），且默认/ON 文件数一致 → 只加字段、不改行为。
+- ✅ **标记取值（OFF）**：`MEMORY_RETRIEVE` 中 **57/60 = `(vec_available=false, retrieval_mode="lexical")`**；
+  另 **3/60 = `(true,"vector")`** 经定位均为 **round 0、`selected_mem_ids` 为空（尚无任何记忆）** 的检索 → **无候选时的默认标记，良性**（未真正使用向量），非降级失败。
+- ✅ 无新增 `DROPPED` 归因于本改动（`DROPPED=5` 为既有重复折叠；两侧一致）。
+- 命令/计数原文见上表；`event_marked=0`（修复前）→ `60`（修复后）。
+
+**结论**：T228 关闭判据达成（`event_marked>0` + OFF 显式 lexical 降级 + 行为不变）。**注**：关闭依赖的 `integration.py` 透传修复**当前在工作树未提交**，请其归属方提交后基线方稳定。
+
