@@ -214,9 +214,11 @@
         "write_[a-z_]*skill",
         "output_ref[^\\n]*write"
       ],
-      "expected_status": "missing_wiring",
+      "expected_status": "wired_observed",
+      "observed": true,
+      "observed_evidence": "真 run：（build_world seed=7 n=3 rounds=84，sha 4f1afe3）注册 T253 emit-observer 后 SKILL_OUTPUT→side/skill/P001/general 写入；tar→unpack→read_skill roundtrip missing=0；关时 N50_SKILL_BODY=0 → 0 文件；on/off 事件日志与 final_state_hash 逐条一致（行为中性）。代码：life/memory.py write_skill(4eea28b) + life/side_emit.py(4179068) + 注册(4f1afe3)。",
       "owner": "life-layer-dev",
-      "due_condition": "SKILL_OUTPUT 事件已由 life/settlement.py 发射（output_ref=side://skill/...），但**指向的正文/产物无写入方** → 技能正文导不出。接线：life 落产出到 side 存储。wire_task：待派（life 域）",
+      "due_condition": "已完成 T247：life 侧 SideStore.write_skill + 注册到 T253 emit-observer seam（build_world）→ 正文可导出；开关 life.skill.persist_body（默认 true）关时不写。",
       "disposition": "该做没做",
       "disposition_note": "`SKILL_OUTPUT` 事件已由 `life/settlement.py:301` 发射（`output_ref=side://skill/<aid>/<skill>`），但**指向的正文/产物无 side writer** → 正文导不出"
     },
