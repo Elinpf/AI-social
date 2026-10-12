@@ -940,13 +940,39 @@ def build_world(seed: int, config: dict | None = None, *, n: int | None = None,
             "personas": personas, "places": places, "side_root": side_root}
 
 
+def _flush_log_atomic(records: list, path) -> None:
+    """把**已提交的完整前缀**原子落盘（临时文件 + os.replace）。
+
+    只写 `engine.ledger.records`（P6 已提交的完整回合），**不引入半条/不重排/不重复**；
+    与 `write_log` 同序列化口径（规范 JSON、键排序、紧凑分隔），最终字节一致。
+    原子替换保证：消费者任一时刻看到的要么是旧前缀、要么是新前缀，**绝无半条记录**。
+    """
+    from engine.canon import canonical_json
+    p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    tmp = p.with_name(p.name + ".tmp")
+    with open(tmp, "w", encoding="utf-8") as f:
+        for r in records:
+            f.write(canonical_json(r))
+            f.write("\n")
+        f.flush()
+        try:
+            os.fsync(f.fileno())
+        except OSError:
+            pass
+    os.replace(tmp, p)
+
+
 def run_e2e(seed: int = 42, rounds: int = 84, n: int = 3, config: dict | None = None,
             *, out_path=None, side_root=None, personas_path=None, places_path=None,
-            llm=None, cleanup_side: bool = True) -> dict:
+            llm=None, cleanup_side: bool = True, flush_every: int = 0) -> dict:
     """在真内核上跑 N 个 Agent 共 `rounds` 回合，返回端到端证据。
 
     T232：自动创建的 side 目录**异常/中断/SIGTERM 也会释放**（try/finally + 信号兜底）；
     显式传入的 `side_root` 不被删除（调用方负责）。
+
+    T262 周期 flush：`flush_every > 0` 时每 N 回合把**已提交前缀**原子落盘（默认 0＝仅末尾写，
+    行为与产物字节不变）。中途被 kill 时，已 flush 的完整前缀可被 `verify`/`replay` 消费。
     """
     auto = side_root is None
     world = build_world(seed, config, n=n, personas_path=personas_path,
@@ -954,9 +980,14 @@ def run_e2e(seed: int = 42, rounds: int = 84, n: int = 3, config: dict | None = 
     try:
         engine = world["engine"]
         side_root = world["side_root"]
+        fe = int(flush_every) if flush_every else 0
+        if out_path and fe > 0:
+            _flush_log_atomic(engine.ledger.records, out_path)  # 起始（创世已提交）
         t0 = time.perf_counter()
         for r in range(int(rounds)):
             engine.run_round(r)
+            if out_path and fe > 0 and (r + 1) % fe == 0:
+                _flush_log_atomic(engine.ledger.records, out_path)
         elapsed = time.perf_counter() - t0
 
         records = engine.ledger.records
@@ -974,7 +1005,10 @@ def run_e2e(seed: int = 42, rounds: int = 84, n: int = 3, config: dict | None = 
         unknown = sorted({rec["type"] for rec in records if rec["type"] not in EVENT_TYPES})
 
         if out_path:
-            write_log(records, out_path)
+            if fe > 0:
+                _flush_log_atomic(records, out_path)  # 最终（含尾段）
+            else:
+                write_log(records, out_path)
         # log_bytes 与落盘文件口径一致：规范 JSON（键排序、紧凑分隔）+ 每行 '\n'
         from engine.canon import canonical_json
         log_bytes = sum(len(canonical_json(rec).encode("utf-8")) + 1 for rec in records)
