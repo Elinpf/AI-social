@@ -9,6 +9,8 @@
 
 from __future__ import annotations
 
+from contracts.actors import is_agent_actor
+
 from .folds import (
     familiarity, relation_weights, same_skill, skill_levels,
 )
@@ -144,12 +146,14 @@ def semantic_census(records, params: EmergenceParams | None = None) -> dict:
             if frm and to and _affinity_at_tl(aff_tl, frm, to, int(r["seq"])) >= params.epsilon:
                 acc["E6_whispered_comm"].hit(r["round"], {frm, to}, key=(frm, to, r["seq"]))
 
-    # E7 Emotion Burnout
+    # E7 Emotion Burnout（T248：非 Agent 主体 agent_id 不得当居民，复用 contracts.actors）
     cons: dict[str, int] = {}
     for r in sorted(records, key=lambda x: x["seq"]):
         if r["type"] in ("NEED_UPDATE", "NEEDS_UPDATE"):
             p = r.get("payload") or {}
             aid = p.get("agent_id")
+            if not is_agent_actor(aid):
+                continue
             dim = p.get("dim")
             after = p.get("after")
             if dim in ("energy", "leisure") and after is not None:
@@ -161,7 +165,7 @@ def semantic_census(records, params: EmergenceParams | None = None) -> dict:
                     cons[aid] = 0
         elif r["type"] == "STATE_CHANGE":
             p = r.get("payload") or {}
-            if p.get("to") == "exhausted":
+            if p.get("to") == "exhausted" and is_agent_actor(p.get("agent_id")):
                 acc["E7_emotion_burnout"].hit(r["round"], {p.get("agent_id")}, key=("sc", r["seq"]))
 
     # E8 Diff Scoring

@@ -7,7 +7,7 @@ from __future__ import annotations
 
 # 非 Agent actor（世界/系统/观测/导演/哨兵）—— 不得被当成某个 Agent 串计入 agent 级指标。
 # 口径唯一真源 = contracts.actors（T241 收敛，消除 obs/frontend 各自复制白名单的同名不同义风险）。
-from contracts.actors import NON_AGENT_ACTORS as _NON_AGENT_ACTORS, agent_or_none
+from contracts.actors import NON_AGENT_ACTORS as _NON_AGENT_ACTORS, agent_or_none, is_agent_actor
 
 
 def _agent_of(rec) -> str | None:
@@ -87,17 +87,28 @@ def activity_metrics(records) -> dict:
 
 
 def need_metrics(records) -> dict:
-    """需求满足度（取每 Agent 每维最后一笔 after）。"""
+    """需求满足度（取每 Agent 每维最后一笔 after）。
+
+    T248 止血：**非 Agent 主体不得进居民级聚合** —— `agent_id` 字段名暗示 Agent，实际可含
+    `MARKET`/`SYSTEM`/…（生产侧 `life/settlement.py` 会把世界市场写成 `agent_id=MARKET`）。
+    复用 `contracts.actors` 单一真源（T241），不另写白名单。
+    """
     latest: dict[tuple, float] = {}
+    n_all = 0
+    n_nonagent = 0
     for r in records:
         if r["type"] not in ("NEED_UPDATE", "NEEDS_UPDATE"):
             continue
         p = r.get("payload") or {}
-        key = (p.get("agent_id"), p.get("dim"))
+        n_all += 1
+        aid = p.get("agent_id")
+        if not is_agent_actor(aid):          # 非 Agent 主体（如 MARKET）→ 不入居民级聚合
+            n_nonagent += 1
+            continue
+        key = (aid, p.get("dim"))
         if p.get("after") is not None:
             latest[key] = float(p["after"])
     dims = sorted({k[1] for k in latest})
-    alive = _alive_count(records)
     out = {}
     for d in dims:
         vals = sorted(v for (a, dd), v in latest.items() if dd == d)
@@ -108,8 +119,8 @@ def need_metrics(records) -> dict:
             "p10": _pct(vals, 0.10),
             "p90": _pct(vals, 0.90),
         }
-    return {"dims": out, "n_need_updates": sum(
-        1 for r in records if r["type"] in ("NEED_UPDATE", "NEEDS_UPDATE"))}
+    return {"dims": out, "n_need_updates": n_all - n_nonagent,
+            "n_need_updates_non_agent_excluded": n_nonagent}
 
 
 def _pct(sorted_vals: list, q: float) -> float:
