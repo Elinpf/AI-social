@@ -164,6 +164,13 @@
 
 ## 7. 变更记录
 
+- **v1.3.36（01:57）**：**本段收口快照**（便于再锚定）——
+  · **已完成**：`T295`（`a0785fe`：派生累加器 + 7 族消费点改造；**逐条等价 / live==replay 双侧 / `state_hash` 不变 / 反向验证 / ×46.5 实测**）、`T308`（`5c9d9ce`：门负向用例 `--selftest-missing-pin`，经非作者复跑）。
+  · **在办**：`T298`（life，待**每步等价** + `make verify`）、`T310`（obs，**分进程 + 共享 cache** 确认性复跑 T292）、`T311`（sandbox-test-lead，**resume 回归守护 + frozen 负向夹具**）。
+  · **新立**：`T312`（kernel，低优先）：**`wake.compute_wake_set` 跨全历史扫（`wake` 默认 ON = 活路径）** + `life/settlement.events_this_round`（跨层先对接口）。
+  · **阻塞**：`T309`/`T297b`（on T298）· `T304`（on T298+T299✓）· `T300`（on T287✓+T298+T295✓）。
+  · **freeze 域**：两处对比 harness（`T103`、`small_run_real_llm`）**均已分进程隔离**（`00edfe2`/`c010cbb`）且**对照后结论不变**。⭐ **新判据：生成侧字段（`tokens_out`/`wall`/文本 body）默认【不可逐次复现】** ⇒ 要复现必须绑 **cache 命中状态 + 装置前提**（与"A 漂移"同源）。
+  · **`make verify` 资源已释放；无在飞 unit。**
 - **v1.3.35（01:51）**：
   ① ✅ **`T298` 修复成【承重】并提交 `7f16c80`**（life）：`_comm_slot` 改按**尝试**重建（`MSG_*`(我发出) ∪ `INTENT_REJECTED{SOCIAL}`，取**最大 round**、`record.round` 反推 slot），并顺带重建 `_slept_days`/`_persona_state`/`_persona_p0`。**多 cut 语义一致**：`cut=75/89`（及 40/60）下 `one vs r1` / `one vs r2` / `r1 vs r2` 的 **`state_hash` 不等均为 0**。**反向验证（承重）**：临时禁用新增的 `INTENT_REJECTED` 来源 ⇒ **`cut=75` 重新出现 19 条 `state_hash` 不等、自 round76 起** ⇒ **非顺带变好**。
   ② ⚠️ **Leader 把"逐回合等价"改为【每步等价】**（life 指出 wake=on 下"每回合每 agent"不适用，对）：**正确形式 = 对每个【agent 实际 step 的 `(agent, round)`】，两路 `_comm_slot` 必须相等**（**无需改配置**）；且**多跑必须分进程**。
