@@ -108,7 +108,7 @@
         "reject": 67,
         "error": 68
       },
-      "sha256": "bacc870eab8ec0fb8a7f772fc10218257c358593307a47cc7f661555dec4805a"
+      "sha256": "8ba8f710758ecfc86d561d123444a1cdf214300fa877914795970ef9f35c3169"
     },
     "atlas16": {
       "url": "assets/generated/icons_atlas_16.png",
@@ -185,7 +185,7 @@
         "reject": 67,
         "error": 68
       },
-      "sha256": "8577bc495b7aa7ca30f5771ed9970c0cdde10c94fa921e17b1e9dc8f61459701"
+      "sha256": "cf66dcd62348641cd4fb5e3c806921c3ed65cd5043f30ee2cca871685af96079"
     },
     "atlas_white": {
       "url": "assets/generated/icons_atlas_white.png",
@@ -262,7 +262,7 @@
         "reject": 67,
         "error": 68
       },
-      "sha256": "39c9ded37460931cbf0342d603763a14cba503b47c43e595ac524ea589c8b221"
+      "sha256": "2f15f1d4568e66e858de1b164620dd615ad9ba963c2eb3a2eda3bb91d3ef682f"
     },
     "atlas_white16": {
       "url": "assets/generated/icons_atlas_white_16.png",
@@ -339,7 +339,7 @@
         "reject": 67,
         "error": 68
       },
-      "sha256": "386872f03a459cb39e33d92c3e9899ccfd1fa4420bd087994ff5596d2ac5cf66"
+      "sha256": "374eae6e741a24de56a3c94657f97aaaf065c4fb00b72c7d40dfa2e5ac482c1c"
     }
   },
   "assets": [
@@ -397,7 +397,7 @@
         0,
         0
       ],
-      "sha256": "0acb55d8031ee9ddd8fa5c27d186fcf35db333e74088ebe1116d63191574aed6"
+      "sha256": "b7b5856b835ea97f84aa5eef98ed7172d19b941b0ba30a7b9f5e610c64eeaed1"
     },
     {
       "id": "tile.water_edge",
@@ -495,7 +495,7 @@
         0,
         0
       ],
-      "sha256": "0433633375a69cbeb38ba35ec573988f702f67e9c29980e5a2e72e3c8dc9b038"
+      "sha256": "107f8dd872c670d300dbb233fd4c7c56843543cfac11de789385498cfe9e7824"
     },
     {
       "id": "road.bridge",
@@ -514,7 +514,7 @@
     {
       "id": "place.residence",
       "type": "building",
-      "file": "hand/buildings128/residence.png",
+      "file": "generated/buildings/residence.png",
       "size": [
         128,
         128
@@ -525,12 +525,12 @@
       ],
       "category": "living",
       "frames": 1,
-      "sha256": "352deed97644044df572629a873b098d6016ac0cc35a2053a3d6d41a1f642851"
+      "sha256": "d018eb9584c8141ca5391b378d0b4691d0764de7df463365871a4c5a594f8497"
     },
     {
       "id": "place.farm",
       "type": "building",
-      "file": "hand/buildings128/farm.png",
+      "file": "generated/buildings/farm.png",
       "size": [
         128,
         128
@@ -541,12 +541,12 @@
       ],
       "category": "work_production",
       "frames": 1,
-      "sha256": "327bfe96fdb0f833e00587b7b547928cebb0476ebd6f1dc8fb7ed2e016df1b9e"
+      "sha256": "da30a6efc60e91aab1e94276bb6f925ee248e9b0624213966dbdd5a0356d9ed2"
     },
     {
       "id": "place.workshop",
       "type": "building",
-      "file": "hand/buildings128/workshop.png",
+      "file": "generated/buildings/workshop.png",
       "size": [
         128,
         128
@@ -557,12 +557,12 @@
       ],
       "category": "work_production",
       "frames": 1,
-      "sha256": "81fedf490df606d56ac92abd742a8d2fed93b553db5dc9a09468e2e467aec40f"
+      "sha256": "f6faeca628ab53e1cba10c784b0a452cb5ca8bc49faa5c7e498cc8a9f68cbfa2"
     },
     {
       "id": "place.kitchen",
       "type": "building",
-      "file": "hand/buildings128/kitchen.png",
+      "file": "generated/buildings/kitchen.png",
       "size": [
         128,
         128
@@ -573,12 +573,12 @@
       ],
       "category": "work_processing",
       "frames": 1,
-      "sha256": "a8310db5480620bf9c5833c0988c1592903b1a3304432fc3069de1dcd17efc27"
+      "sha256": "a88e9f4f66a7961c9ae74237deb736899c234e112751123518bc040d89b5016e"
     },
     {
       "id": "place.clinic",
       "type": "building",
-      "file": "hand/buildings128/clinic.png",
+      "file": "generated/buildings/clinic.png",
       "size": [
         128,
         128
@@ -589,12 +589,12 @@
       ],
       "category": "work_service",
       "frames": 1,
-      "sha256": "476592afe1d58943af0c0dbfceab4e74dabf8a2551d04db23818459c7b1578fe"
+      "sha256": "7525650a461cc7649c65ab2f7dd1de878d737ab517956fcab2d55d81563bde12"
     },
     {
       "id": "place.school",
       "type": "building",
-      "file": "hand/buildings128/school.png",
+      "file": "generated/buildings/school.png",
       "size": [
         128,
         128
@@ -605,12 +605,12 @@
       ],
       "category": "work_education",
       "frames": 1,
-      "sha256": "046836abda88ebb35d08c251635d8b48274e7d5c1e64cd2489f404933e135a1f"
+      "sha256": "169f481a3e68f827261af329d19683e584d9ea3afe2760f0dce8293f03028ae8"
     },
     {
       "id": "place.office",
       "type": "building",
-      "file": "hand/buildings128/office.png",
+      "file": "generated/buildings/office.png",
       "size": [
         128,
         128
@@ -621,12 +621,12 @@
       ],
       "category": "work_admin",
       "frames": 1,
-      "sha256": "a7eae816a50397eda75cb6b96e997e58d82a829d3ec9c30ee2b8957138e577c9"
+      "sha256": "f5d8afd2b172ec531abd3c35d83cf2f8b564ed830502e4f4ec5ba86c84c50833"
     },
     {
       "id": "place.market",
       "type": "building",
-      "file": "hand/buildings128/market.png",
+      "file": "generated/buildings/market.png",
       "size": [
         128,
         128
@@ -637,12 +637,12 @@
       ],
       "category": "trade",
       "frames": 1,
-      "sha256": "dae111bc63348bb36610d54b6487773462bf951c6474d2d4721e842d3c13ab40"
+      "sha256": "0ed52af58d61c3303bfe3745b7113b5dd9f5c2473b752ca3fd9de09031c3c9e5"
     },
     {
       "id": "place.bank",
       "type": "building",
-      "file": "hand/buildings128/bank.png",
+      "file": "generated/buildings/bank.png",
       "size": [
         128,
         128
@@ -653,12 +653,12 @@
       ],
       "category": "trade",
       "frames": 1,
-      "sha256": "cf4034cfd320157d4ac0c81366be35d814d7fea0c6a4153b5581cc6be1f06358"
+      "sha256": "cacd5d74bbc564240b00fc56c35687e07b6c035e1b0fdb9bc9152588339822ac"
     },
     {
       "id": "place.plaza",
       "type": "building",
-      "file": "hand/buildings128/plaza.png",
+      "file": "generated/buildings/plaza.png",
       "size": [
         128,
         128
@@ -669,12 +669,12 @@
       ],
       "category": "public",
       "frames": 1,
-      "sha256": "a50ef6c44494d00d2530ef956b6104165ee088d378cbd0a8414d24c7b5b1737c"
+      "sha256": "a52fed4f3547c401b069bb923464aefc8ea5563df694ef4bca09420dd952a96d"
     },
     {
       "id": "place.town_hall",
       "type": "building",
-      "file": "hand/buildings128/town_hall.png",
+      "file": "generated/buildings/town_hall.png",
       "size": [
         128,
         128
@@ -685,12 +685,12 @@
       ],
       "category": "public",
       "frames": 1,
-      "sha256": "2c25585aff81d755f4a3f1aa1a3f236967ff561175518f26e915bf20fbfb146e"
+      "sha256": "0d3338ad7e76d9ebd271457049ac634640027ba1a862ce3c4a6014172537ec9c"
     },
     {
       "id": "place.library",
       "type": "building",
-      "file": "hand/buildings128/library.png",
+      "file": "generated/buildings/library.png",
       "size": [
         128,
         128
@@ -701,12 +701,12 @@
       ],
       "category": "public",
       "frames": 1,
-      "sha256": "23673c701ae00a3c7851db8a8912801fa64eb199e1b4de578f1c4baa506532f9"
+      "sha256": "256cc40853d2bae3ed222974496303e25f44dee3ef588d0e51fb80acff338150"
     },
     {
       "id": "place.community_center",
       "type": "building",
-      "file": "hand/buildings128/community_center.png",
+      "file": "generated/buildings/community_center.png",
       "size": [
         128,
         128
@@ -717,12 +717,12 @@
       ],
       "category": "public",
       "frames": 1,
-      "sha256": "0628cce44cd0d9f8c10b4e00c7891d78889488adc0470a13533e8779e753cced"
+      "sha256": "486baadc999ddacca6f2fcc144877b2480f4ae2ef9be003d2fc780dd4ab1e0c8"
     },
     {
       "id": "place.cafe",
       "type": "building",
-      "file": "hand/buildings128/cafe.png",
+      "file": "generated/buildings/cafe.png",
       "size": [
         128,
         128
@@ -733,12 +733,12 @@
       ],
       "category": "leisure",
       "frames": 1,
-      "sha256": "923be737abb26e11205571534298d9338a1a6fbe7359b16e3619ad7a55c85577"
+      "sha256": "a88e9f4f66a7961c9ae74237deb736899c234e112751123518bc040d89b5016e"
     },
     {
       "id": "place.park",
       "type": "building",
-      "file": "hand/buildings128/park.png",
+      "file": "generated/buildings/park.png",
       "size": [
         128,
         128
@@ -749,12 +749,12 @@
       ],
       "category": "leisure",
       "frames": 1,
-      "sha256": "06e939db6a3fcee11adaec75030a0c0297fcfa8e3834db1c69867918632c47c2"
+      "sha256": "af01c8ec4bfdda2152781e158ade4044f0bde121d4b75a7fd188e2025d578ca9"
     },
     {
       "id": "place.hall",
       "type": "building",
-      "file": "hand/buildings128/hall.png",
+      "file": "generated/buildings/hall.png",
       "size": [
         128,
         128
@@ -765,12 +765,12 @@
       ],
       "category": "leisure",
       "frames": 1,
-      "sha256": "152ae75fb23c2170de23fcc7e31ca2d030127f8d8b31c84ffcf2f1efe2e7ac7e"
+      "sha256": "510ad31608c6b961b15e5939575402686ae00174bde866be3af5020132a437a0"
     },
     {
       "id": "place.gate",
       "type": "building",
-      "file": "hand/buildings128/gate.png",
+      "file": "generated/buildings/gate.png",
       "size": [
         128,
         128
@@ -781,12 +781,12 @@
       ],
       "category": "edge",
       "frames": 1,
-      "sha256": "cb42104f19635cbcd501c29e45868071b218e69bafd773036bf7e5b23a14c96a"
+      "sha256": "242812ffbe86a4216d769947fbbd6b74a6e736eaac7c5d1f700507c082e86c6d"
     },
     {
       "id": "char.villager_red",
       "type": "character",
-      "file": "hand/chars/villager_red.png",
+      "file": "generated/characters/villager_red.png",
       "size": [
         144,
         96
@@ -800,12 +800,12 @@
         96
       ],
       "frames": 3,
-      "sha256": "409a007084ea696c3f800fa387a9101fc024302bb8d4e1f647809ca6f74d7f12"
+      "sha256": "5e0706a43571aab7c764f90e6d422e07cee792eaaa70d0d85918c15232790782"
     },
     {
       "id": "char.villager_green",
       "type": "character",
-      "file": "hand/chars/villager_green.png",
+      "file": "generated/characters/villager_green.png",
       "size": [
         144,
         96
@@ -819,12 +819,12 @@
         96
       ],
       "frames": 3,
-      "sha256": "7bd62af46ec740a31330ad5d98ae9364cec84ac5a83a56d62a4c7386eaa28983"
+      "sha256": "0d8bd4bf6ad18856dd32329aee538401ab0a028986b1221990a322135557b5c9"
     },
     {
       "id": "char.villager_blue",
       "type": "character",
-      "file": "hand/chars/villager_blue.png",
+      "file": "generated/characters/villager_blue.png",
       "size": [
         144,
         96
@@ -838,12 +838,12 @@
         96
       ],
       "frames": 3,
-      "sha256": "a683c726d436011d044274444104c64bc82518f5b8c8f3243364c8c541710084"
+      "sha256": "f98d57dda48a05eb1fe48e2aa6de14d082b29a6d62923eefdab312dfb567c6c4"
     },
     {
       "id": "char.villager_yellow",
       "type": "character",
-      "file": "hand/chars/villager_yellow.png",
+      "file": "generated/characters/villager_yellow.png",
       "size": [
         144,
         96
@@ -857,12 +857,12 @@
         96
       ],
       "frames": 3,
-      "sha256": "085da91119b84d91ea296a1131528c4b9fd07f7870c04c8b6799eb82a1da9976"
+      "sha256": "08fe7bd2925894cd706507a4c171387462c74263d2dcfab940a62b29c0d80ac2"
     },
     {
       "id": "char.villager_purple",
       "type": "character",
-      "file": "hand/chars/villager_purple.png",
+      "file": "generated/characters/villager_purple.png",
       "size": [
         144,
         96
@@ -876,12 +876,12 @@
         96
       ],
       "frames": 3,
-      "sha256": "58fb64014dfbaa1a1dfceed0ce833a0dd46000abff20059885dece088c2800e3"
+      "sha256": "1be56804fff93a019744181255ab8ecf380dbf1ae11fa7adb0e48a3a9d62569c"
     },
     {
       "id": "char.villager_teal",
       "type": "character",
-      "file": "hand/chars/villager_teal.png",
+      "file": "generated/characters/villager_teal.png",
       "size": [
         144,
         96
@@ -895,12 +895,12 @@
         96
       ],
       "frames": 3,
-      "sha256": "f850cb2b1e64fa8fd2d77c817814e0a9a76a63f60eb7857fd793dd979893db7d"
+      "sha256": "f9923d5df27159e3efd287fbb28e314b68093f63183884c448db043b1b73f455"
     },
     {
       "id": "char.villager_orange",
       "type": "character",
-      "file": "hand/chars/villager_orange.png",
+      "file": "generated/characters/villager_orange.png",
       "size": [
         144,
         96
@@ -914,12 +914,12 @@
         96
       ],
       "frames": 3,
-      "sha256": "5f03a0d1be9ce6c1ee27be3088f5898a6e97568d4e7a0e3255d29b6c356e7da7"
+      "sha256": "5b63c8009f88e412a026879231983ff43e95b47587f2439ef72024be6b7394b6"
     },
     {
       "id": "char.villager_slate",
       "type": "character",
-      "file": "hand/chars/villager_slate.png",
+      "file": "generated/characters/villager_slate.png",
       "size": [
         144,
         96
@@ -933,7 +933,7 @@
         96
       ],
       "frames": 3,
-      "sha256": "146bfa26c80a49267c4222e07f733868f230a7de1ba5cb397bbbf84a9e25591e"
+      "sha256": "d98bcc65d022100776a6dace845868d3c17caec71ccb8ce7cae4eb08eabc6c54"
     },
     {
       "id": "prop.tree",
@@ -1117,8 +1117,8 @@
         16
       ],
       "color": "#E8B84B",
-      "sha256": "2e52ebee854f72b3252389a8170e27d0344df23316929a2205e8d59ab710f45f",
-      "sha256_white": "51bb7ce1c8fe9338cc4062ae93840890f2258f1263d6cffe06ea17fc8c5865d5"
+      "sha256": "8e3f7dcc340e7abaf6366e46aebecd190039b9328abd3a32c7d1bb761b264756",
+      "sha256_white": "0085c231777b14e85699e3ea32dc225f6e0dcd58a6c7a37b9d4355492396be39"
     },
     {
       "id": "icon.coin-init",
@@ -1134,8 +1134,8 @@
         16
       ],
       "color": "#E8B84B",
-      "sha256": "0ff4a98a8d342cce27d491e89164bf65506daf6c4995358c426334d3fd25595d",
-      "sha256_white": "670dd62e6c2e51d9dc6c24a0c0afbd46101a04897f90a762ffa9aaee2916bb9c"
+      "sha256": "ea5ca14577467c6e4e2d2b4879ca84389cb50f7401e3cb59b64d6efa00b070fe",
+      "sha256_white": "7b48ba99393d5d1ad44eae2bbcc5c3ff1f8b970a2a32045cd2394bd7af41a3b5"
     },
     {
       "id": "icon.coin-arrow",
@@ -1151,8 +1151,8 @@
         16
       ],
       "color": "#E8B84B",
-      "sha256": "50551d858f0de3b88a8ab00b2cabd1dac0738f1a1ab6e287065fe3b529d4990d",
-      "sha256_white": "c59e3e94a18223b27cefc353655d8564c33f1aa1ceadf2959b2ebe72fca3a22b"
+      "sha256": "a9d0d02a6b0844b3c4ae31e0882b8d1db102ed135afd21667e381c2fbf52b9ba",
+      "sha256_white": "198fc830e0d51c28f81cbaeb0c196d176f304fa372914ee86d0453516fb1bbd5"
     },
     {
       "id": "icon.shop",
@@ -1287,8 +1287,8 @@
         16
       ],
       "color": "#E8B84B",
-      "sha256": "2e52ebee854f72b3252389a8170e27d0344df23316929a2205e8d59ab710f45f",
-      "sha256_white": "51bb7ce1c8fe9338cc4062ae93840890f2258f1263d6cffe06ea17fc8c5865d5"
+      "sha256": "8e3f7dcc340e7abaf6366e46aebecd190039b9328abd3a32c7d1bb761b264756",
+      "sha256_white": "0085c231777b14e85699e3ea32dc225f6e0dcd58a6c7a37b9d4355492396be39"
     },
     {
       "id": "icon.gift-ubi",
@@ -2276,12 +2276,5 @@
       "sha256": "3575ad61add75de079861524dc18a9f42e56e1d5b62ebf193c2de24d4499ce31",
       "sha256_white": "30a57a10298dc8c2529f74f2e7b1e77cde61dbb236603c478e21428ac3dab5d4"
     }
-  ],
-  "placeVariants": {
-    "residence": [
-      "hand/buildings128/residence_v2.png",
-      "hand/buildings128/residence_v3.png"
-    ]
-  },
-  "_handWired": "T107: place.*/char.* -> hand/ (variants via placeVariants; config place ids unchanged)"
+  ]
 }

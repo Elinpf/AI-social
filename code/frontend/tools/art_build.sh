@@ -18,6 +18,7 @@ python3 "$S/gen_hand_grids.py"
 python3 "$S/gen_hand_buildings128.py"
 python3 "$S/gen_hand_chars.py"
 python3 "$S/gen_hand_props.py"
+python3 "$SRC/tools/gen_assets_pixel.py" --set all    # 基础 tile/road/icon（含 Bayer 抖动）
 python3 "$SRC/tools/gen_event_cards_hand.py"        # 事件卡 20 张（单一在用集）
 
 echo "[art] 2/4 校验（剪影同一趟：色数/同形/门禁 + 角色差分）"
@@ -68,11 +69,12 @@ root = sys.argv[1]
 roll = hashlib.sha256()
 n = 0
 import glob as _g
+_groot = os.path.dirname(root)
 groups = [_g.glob(os.path.join(root, g, "*.png")) for g in ("buildings128", "chars", "props")] \
-       + [_g.glob(os.path.join(os.path.dirname(root), "generated", "event_cards_hand", "*.png"))]
+       + [_g.glob(os.path.join(_groot, "generated", d, "*.png")) for d in ("tiles", "roads", "icons", "event_cards_hand")]
 for fs in groups:
     for f in sorted(fs):
         roll.update((os.path.relpath(f, os.path.dirname(root)) + ":" + hashlib.sha256(open(f, "rb").read()).hexdigest() + "\n").encode())
         n += 1
-print("[art] batch_id = %s  (%d files: 19 buildings + 8 chars + 13 props + 20 event_cards)" % (roll.hexdigest()[:16], n))
+print("[art] batch_id = %s  (%d files: hand[19b+8c+13p] + tiles+roads+icons + event_cards)" % (roll.hexdigest()[:16], n))
 PY
