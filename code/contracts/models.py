@@ -18,7 +18,7 @@ class Event:
     seq: int
     round: Round
     phase: Phase
-    actor: str            # AgentId | "SYSTEM" | "OBSERVER"
+    actor: str            # AgentId | "SYSTEM" | "OBSERVER" | "DIRECTOR"
     type: str
     payload: dict
     mono_ts: int

@@ -26,6 +26,10 @@ def load_config(path: str | Path | None = None) -> dict:
         cfg = json.load(f)
     from .version import load_policy
     cfg["policy"] = load_policy()  # 合并政策档（缺失→ConfigError）
+    wd = _CONFIG_DIR / "world_director.json"
+    if wd.exists():
+        with open(wd, "r", encoding="utf-8") as f:
+            cfg["world_director"] = json.load(f)  # 世界导演档（开关/剂量，进指纹）
     return cfg
 
 

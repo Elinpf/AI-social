@@ -51,8 +51,12 @@ except Exception as _ex_exc:  # pragma: no cover
     def apply_contracts(state, round_no, ctx):
         return []
 
+# v2 世界导演（WD）：机制表 + 剂量曲线 → WORLD_DIRECTIVE/WORLD_GROUP_EVENT（登记门控 emit）
+from .world_director import apply_world_director
+
 # ---- Phase 4 ARBITRATE：4.1–4.8（顺序冻结，X2）----
 PHASE4_CHAIN = [
+    ("apply_world_director", apply_world_director),  # v2 世界导演（最前：情境先于经济结算）
     ("apply_production", apply_production),    # v2 首项：生产/库存（4.1 前）
     ("settle_market", settle_market),          # 4.1
     ("apply_exchange", apply_exchange),        # v2 交换原语（4.1 同层，settle_market 后）
