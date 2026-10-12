@@ -160,6 +160,8 @@ def classify(entry: dict, code_dir: Path, exclude_parts: set[str]) -> dict:
         "observed": observed, "observed_evidence": ev,
         "dependency_missing": bool(entry.get("dependency_missing")),
         "block_reason": entry.get("block_reason"),
+        "disposition": entry.get("disposition"),
+        "disposition_note": entry.get("disposition_note"),
         "registered": registered, "folds": folds, "produced": bool(hits_prod),
         "hits": (hits_prod or hits)[:5], "declared_in": sorted(declared),
         "expected_status": entry.get("expected_status"),
@@ -278,6 +280,8 @@ def main() -> int:
             print(f"      ⚠ 依赖未接通: {r.get('block_reason')}")
         elif r.get("block_reason") and r["status"] == "wired_not_observed":
             print(f"      未观测原因: {r.get('block_reason')}")
+        if r.get("disposition"):
+            print(f"      定性[{r['disposition']}] owner={r.get('owner')}: {r.get('disposition_note')}")
         for w in r.get("warn", []):
             print(f"      ⚠ {w}")
         print(f"      hits={r['hits'] or '-'}  (static: {r['static_status']})")

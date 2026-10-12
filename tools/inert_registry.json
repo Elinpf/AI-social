@@ -75,8 +75,10 @@
         "v1.1/08-engine-stats-extension.md"
       ],
       "expected_status": "missing_wiring",
-      "owner": "life-layer-dev / persona-life-designer",
-      "due_condition": "life 决策相位对『师徒关系质变』调用 IF-2b 提交 LLM_JUDGMENT(dimension=mentor_relation)；届时脚本应判为『已接线』"
+      "owner": "life-layer-dev（life soft judge / E1 Mentorship 接线）",
+      "due_condition": "life 决策相位对『师徒关系质变』调用 IF-2b 提交 LLM_JUDGMENT(dimension=mentor_relation)；届时脚本应判为『已接线』",
+      "disposition": "该做没做",
+      "disposition_note": "登记维（activity_templates.json 声明 mentor_relation）但 life `_maybe_soft_judge` 无该维调用点（`MENTOR_DIMENSION_WIRED=False`）→ 等 E1 Mentorship 真正接线才生效；inert 期**不得假装它有活**"
     },
     {
       "name": "SLEEP_STARTED",
@@ -169,8 +171,10 @@
         "v1.1/08-engine-stats-extension.md §1.2 S（快照非事件）"
       ],
       "expected_status": "missing_wiring",
-      "owner": "persona-life-designer (T224)",
-      "due_condition": "作为快照入 metrics/侧存储；非事件、不落哈希链（本项『未接线』指尚未产出快照）"
+      "owner": "persona-life-designer（设计）/ obs（消费）",
+      "due_condition": "作为快照入 metrics/侧存储；非事件、不落哈希链（本项『未接线』指尚未产出快照）",
+      "disposition": "保留不用",
+      "disposition_note": "**设计上=快照非事件**（不落哈希链）；其派生视图由 `SLEEP_COMPLETED`/`PERSONA_DRIFT` 携带 `pf0/pf_t/drift_permille`（obs 从此两类读）。故**不从事件落链**是有理由的保留，非“忘了”"
     },
     {
       "name": "NARRATIVE(body)",
@@ -211,8 +215,10 @@
         "output_ref[^\\n]*write"
       ],
       "expected_status": "missing_wiring",
-      "owner": "life 侧",
-      "due_condition": "SKILL_OUTPUT 事件已由 life/settlement.py 发射（output_ref=side://skill/...），但**指向的正文/产物无写入方** → 技能正文导不出。接线：life 落产出到 side 存储。wire_task：待派（life 域）"
+      "owner": "life-layer-dev",
+      "due_condition": "SKILL_OUTPUT 事件已由 life/settlement.py 发射（output_ref=side://skill/...），但**指向的正文/产物无写入方** → 技能正文导不出。接线：life 落产出到 side 存储。wire_task：待派（life 域）",
+      "disposition": "该做没做",
+      "disposition_note": "`SKILL_OUTPUT` 事件已由 `life/settlement.py:301` 发射（`output_ref=side://skill/<aid>/<skill>`），但**指向的正文/产物无 side writer** → 正文导不出"
     },
     {
       "name": "MEMORY_RETRIEVE.vec_available",
