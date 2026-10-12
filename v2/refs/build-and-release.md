@@ -110,7 +110,10 @@ cd social-experiment && make release
 ```
 
 该命令应依次做（**全绿才产出**）：
-1. **前置闸**：tree 干净（或 `RELEASE_ALLOW_DIRTY=1` 显式豁免）；`df -h` / `df -i` 富余；tracked 文件密钥扫描。
+1. **前置闸 —— 首行打戳 git 状态**（T220 契约，见 §6.3）：调 `bash tools/git_stamp.sh`，**输出打头三行** `sha / dirty_files / 状态`；
+   随后 tree 干净（或 `RELEASE_ALLOW_DIRTY=1` 显式豁免）；`df -h` / `df -i` 富余；tracked 文件密钥扫描。
+   - **发版语义**：`make release`（**产出发版**）以 **`GIT_STAMP_STRICT=1`** 调打戳 → 脏树直接 rc≠0 **停**（对齐「树干净前置闸不放松」+ git tag 条件①）。
+   - **诊断语义**：`make release-check` 等**只检查不产出**的入口用**非 strict** → 脏树打印 `[DIRTY — 结论仅供参考]` 但**继续**（结果不得当作「通过」依据）。
 2. **门禁闸**（调用统一聚合，不新写门禁）：术语棘轮 + `pytest -q` + `lint-imports` + `obs gate`(基准日志) + `orchestration verify`(日志自洽)。
 3. **算版本**：`VERSION = …`（§2.1）。
 4. **组装 `dist/<VERSION>/`**：用 `git archive` 取**仅 tracked** 的源码树；**另附 config 快照**（`config/` 是复现真源）、`personas.json`/`places.json`、`THIRD_PARTY_NOTICES.md`、`licenses/`、前端 `assets/` 清单。
@@ -198,7 +201,7 @@ make dev            # 起前端静态服务（= python frontend/tools/serve.py -
 | R3 | 术语棘轮 | `make lexicon-gate` | 基线外**新**违规 |
 | R4 | 观测门禁 | `python -m obs gate --log <基准日志>` | `GATE FAIL` |
 | R5 | 日志自洽重放 | `python -m orchestration verify --log <log>` | 两次哈希不等 / FAIL |
-| R6 | 树干净 | `git status --porcelain` | 非空且未显式豁免 |
+| R6 | 树干净 | `bash tools/git_stamp.sh`（发版用 `GIT_STAMP_STRICT=1`） | 非空且未显式豁免（strict → rc≠0） |
 | R7 | 无密钥入库 | tracked 文件扫描（见下） | 命中 `.env`/`*.key`/`secret*` |
 | R8 | 磁盘/inode | `df -h . && df -i .` | 磁盘 >85% 或 inode >90% |
 | R9 | 前端门禁 | `bash code/frontend/tools/ci_gate.sh` | 返回 1（**返回 3=SKIP 必须记录，不得当通过**） |
@@ -306,6 +309,22 @@ make dev                      # 一键起前端服务
 
 → 建议把这张表交给 **T218** 纳入门禁分级表的「诊断级 / 阻塞级」两栏；**obs 侧不复制**，仅**引用**。
 > **Leader 2026-10-12 裁决：同意**将此三分法交 T218 并入分级表。
+
+### 6.3 门禁打戳契约（T217/T220，唯一实现 `tools/git_stamp.sh`）
+
+**复用**（不另写第二套）：
+
+```bash
+bash tools/git_stamp.sh                       # 打头三行：sha / dirty_files / 状态；rc 恒 0
+GIT_STAMP_STRICT=1 bash tools/git_stamp.sh    # 脏树 → rc 1（供「脏即不通过」的入口）
+```
+
+- 输出契约：`sha: <short>` / `dirty_files: <N>` / `状态: [CLEAN] | [DIRTY — 结论仅供参考] | [NO-GIT — 结论仅供参考]`。
+- **发布入口的接线**（T219 落实，脚本落地时执行）：
+  - `release.sh` / `rollback.sh` **开头即调**打戳；
+  - **发版** `make release` → **strict**（脏树停）；
+  - **只检查** `make release-check` → 非 strict（脏树**继续但标注仅供参考**，**不得当作通过依据**）。
+- manifest 里 `git.sha` / `git.dirty` 直接取打戳结果，**不另算**。
 
 ---
 
