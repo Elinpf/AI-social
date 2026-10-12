@@ -11,6 +11,9 @@ help:
 	@echo "make lexicon-baseline# 重冻术语基线（维护用）"
 	@echo "make code-test       # code/ 下 pytest"
 	@echo "make gate            # 全部可用门禁（lexicon + code-test + 可选 lint-imports）"
+	@echo ""
+	@echo "注：本 gate = 术语棘轮 + code 测试（非前端渲染门禁）；"
+	@echo "    前端真渲染门禁见 code/Makefile 的 'make -C code front-gate'。"
 
 # 术语合规 · 棘轮门禁：基线外新违规 -> 非 0
 lexicon-gate:
