@@ -584,8 +584,13 @@ visibility_class ∈ { global, place_local, members, private, participants_only,
 | `participants_only` | `agent ∈ (participants ∪ {actor})` | `TRANSFER`、`MARKET_TRADE` |
 | `subject_only` | `agent ∈ {actor} ∪ subject` | 特定主观事件 |
 
-> **T247 口径（2026-10-12 修订 · 记录性，替代此前"漏登记"表述）**：`SKILL_LEVEL_UP` / `SKILL_OUTPUT` 在 `PERCEPTION_SCOPE` **无条目**、payload 无 `place` → self 不可见。**这是 by design**：二者**不经 `perceive` 消费**（正文/产物由 **emit 边界物化**，T247 走 emit 侧写正文）→ **不是漏登记、无需 `perception_scope.json` 变更**。`SKILL_PRACTICE` 含 `place`，如需同场所可见可显式置 `place_local`（**可选**，非必需）。
-> **一般口径（记录）**：**并非所有事件都经 `perceive` 消费**——`visible_events(agent)` 只覆盖「供 Agent 决策/记忆」的事件；**emit 边界物化的正文/产物、以及纯审计类事件无需 `PERCEPTION_SCOPE` 条目**（缺条目 ≠ 漏登记）。三态纪律同理：**缺 scope 条目的事件**应在此说明"为何不经 perceive"，而非默认为缺口。
+> **T247 口径（2026-10-12 定稿 · 记录性语义分类）**：`SKILL_PRACTICE / SKILL_LEVEL_UP / SKILL_OUTPUT` 在 `PERCEPTION_SCOPE` 无条目（落 `default=place_local`）。**记录其语义分类**（表明"08 事件表 ↔ `perception_scope.json` 真源未对齐"这一缺口）：
+> - `SKILL_PRACTICE` = **`place_local`**（payload 含 `place`，同场所可见其练习）
+> - `SKILL_LEVEL_UP` = **`subject_only`**（自己的成长）
+> - `SKILL_OUTPUT` = **`subject_only`**（自己的产出物）
+>
+> **但 config 本轮不应用（by design）**：T247 最终裁定**在 emit 边界物化正文/产物**（行为中性、无数据丢失）→ **不需要 `SKILL_OUTPUT` 经 `perceive` 可见**；且 `SKILL_*` **不在** life `_SALIENT_EVENTS` → 加 scope 条目**今天零效果、却改复现输入/`engine_version` 指纹**。**故本轮不改 `config/perception_scope.json`。** 若**未来**把 `SKILL_*` 加入 `_SALIENT_EVENTS`（进入 LLM observation），须**届时应用本分类并重估 token/行为**。
+> **一般口径（记录）**：**并非所有事件都经 `perceive` 消费**——`visible_events(agent)` 只覆盖「供 Agent 决策/记忆」的事件；**emit 边界物化的正文/产物、纯审计类事件无需 `PERCEPTION_SCOPE` 条目（缺条目 ≠ 漏登记）**。
 
 - **版本入 `engine_version`**（比照 TOPOLOGY，00 AR-D2 / 08 §5.6）：`PERCEPTION_SCOPE` 表落 config，纳入引擎版本指纹，保证可复现。
 - **`location(agent, t)`**：由 `PLACE_MOVE / PLACE_ARRIVED` 折叠的占用时间线（初始 = `residence`），纯函数。
