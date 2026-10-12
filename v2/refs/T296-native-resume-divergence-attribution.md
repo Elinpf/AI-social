@@ -23,6 +23,14 @@
 
 > **总方向**：`restore()`（`life/agent.py:126`）的镜像重建不完美（**与 T276 同源**）。
 
+### 2.0 ★【已定位】根因（art-director 取证 `T296-art-forensics-round90-diff.md`，2026-10-12 22:27）
+
+- **归属 = life 侧**：**运行期缓存 `self.memory.nodes` 只增不减**（`FORGET(drop)` 不摘除节点）；`restore()` 从**权威** `a["memories"]` 重建 ⇒ **续跑正确排除了已 drop 的记忆，而一次性跑仍把已 drop 的记忆喂给 `plan_forgetting`**。→ 就是"**缓存 ≠ 权威集**"。
+- **决定性证据（round93）**：FORGET 条数 **ref 349 / n1b 275**；**only-in-n1b=[]（续跑是子集）**；**交集内 `level/reason/retention` 不一致 = 0**；差的 **74 条 = 恰"r90 前已 drop"的 74 条**；指纹 `M-000003`（r45 已 drop）**一次性每 12 回合重复 drop（r45→r141）**、续跑 r81 后停止。**round90 权威集两路相同（343=343）⇒ 排除 engine 折叠差异**。
+- **对本清单的判定**：**候选 (2) 证伪** ✓；**候选 (2′)（T244 前向态）本取证不支持为本因**（若分岔，SLEEP/CONSOLIDATE/REFLECT 计数与"交集判定"应变——实测全一致、交集 0 处不一致）；**实际根因 = 候选 (3) 的一个变体："缓存只增不减 vs 权威集"**（非 `reflected` 回填问题）。
+- **最小修法（属 life，另任务）**：让缓存对齐权威（`FORGET(drop)` 时同步移除 `nodes[mid]`，或 `sync_from_refs` 裁剪不在 refs 的节点）／输入改用权威 `memory_refs`。**不动语义、不做有界化**。
+- ⇒ 下方 §2 的 4 候选**保留为"探索轨迹"**（含主动排除），**结论以本节为准**。
+
 ### 候选 (1) `emo` / `referenced_by_reflection` 不在账本记忆 ref
 - **依据**：`MEMORY_WRITE` 折叠的 ref（`replay.py:331-344`）与 `MemoryRef`/`sync_from_refs`（`life/memory.py:336`）**都不带** `emo`、`referenced_by_reflection`；而 `forgetting.is_protected`（`life/forgetting.py:4-21`）**用**它们。
 - ⇒ 一次性跑用**活节点**（有这两个字段）、续跑用**重建节点**（缺）→ `is_protected` 可能不同。
