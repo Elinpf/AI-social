@@ -24,7 +24,8 @@ from .memory import AssociativeMemory, EmbeddingModel, HashEmbeddingModel, SideS
 from .persona import Persona
 from . import persona_drift as PD
 from . import sleep_window as _sleep
-from .policy import social_enabled, exchange_enabled, m2b_judge_mode, m2b_importance_mode
+from .policy import (social_enabled, exchange_enabled, m2b_judge_mode, m2b_importance_mode,
+                     narrative_persist_enabled)
 from .ports import (
     INTENT_ECON_OFFER,
     INTENT_GOAL, INTENT_MEMORY, INTENT_MOVE, INTENT_OBSERVE, INTENT_PLAN, INTENT_RELATION,
@@ -96,6 +97,7 @@ class LifeLayerAgent:
         self.llm = llm or get_llm_client()
         self.embedding = embedding or HashEmbeddingModel()
         self.memory = AssociativeMemory(agent_id, self.embedding, side_store, memory_params)
+        self.side_store = side_store       # T234: 叙事正文 writer 复用同一 side root
         self.places = places or {}
         self.peers = [p for p in (peers or []) if p and p != agent_id]
         self.soft = get_soft_layer(self.llm)
@@ -453,9 +455,13 @@ class LifeLayerAgent:
         self._narrated_weeks.add(wv.time.week)
         seqs = [ev.seq for ev in wv.visible_events][-20:]
         nid = f"N-{self.agent_id}-{wv.time.week}"
-        payload, emitted = self.soft.narrate(
+        body_ref = SideStore.narrative_ref(self.agent_id, nid)
+        payload, emitted, text = self.soft.narrate(
             narrative_id=nid, fact_event_seqs=seqs,
-            body_ref=f"side://narrative/{self.agent_id}/{nid}.txt", round_no=wv.round)
+            body_ref=body_ref, round_no=wv.round)
+        # T234: 写入叙事正文到 side（IF-7 body_ref 的 writer）；开关关时不写。
+        if emitted and text and narrative_persist_enabled():
+            self.side_store.write_narrative(self.agent_id, nid, text)
         if not emitted:
             self._submit_audit("NARRATIVE", payload, phase=6)
         return True

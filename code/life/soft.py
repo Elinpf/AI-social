@@ -144,18 +144,24 @@ class SoftLayer:
 
     def narrate(self, *, narrative_id: str, fact_event_seqs: list, body_ref: str,
                 style: str = "chronicle", pov: str = "omniscient", facts: Any = None,
-                round_no: int = 0, phase: int = 6) -> tuple[dict, bool]:
+                round_no: int = 0, phase: int = 6) -> tuple[dict, bool, str]:
+        """返回 ``(payload, emitted, text)``。
+
+        T234：把 inner 的叙事**正文文本**一并返回，供 life 侧写入 side
+        （`side://narrative/<agent>/<nid>.txt`）。无 inner（离线规则客户端）时
+        ``emitted=False``、``text=""``（不写 None，调用点判 falsy）。
+        """
         inner = self._inner()
         if inner is not None and hasattr(inner, "narrate"):
-            inner.narrate(fact_event_seqs=list(fact_event_seqs), narrative_id=narrative_id,
-                          body_ref=body_ref, facts=facts, style=style, pov=pov,
-                          created_round=round_no, round=round_no, phase=phase)
+            text = inner.narrate(fact_event_seqs=list(fact_event_seqs), narrative_id=narrative_id,
+                                 body_ref=body_ref, facts=facts, style=style, pov=pov,
+                                 created_round=round_no, round=round_no, phase=phase)
             payload = {"narrative_id": narrative_id, "fact_event_seqs": list(fact_event_seqs),
                        "body_ref": body_ref, "affects_state": False}
-            return payload, True
+            return payload, True, (text or "")
         payload = {"narrative_id": narrative_id, "fact_event_seqs": list(fact_event_seqs),
                    "body_ref": body_ref, "affects_state": False}
-        return payload, False
+        return payload, False, ""
 
 
 def get_soft_layer(base) -> SoftLayer:
