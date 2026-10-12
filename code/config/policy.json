@@ -63,6 +63,16 @@
   },
   "money_floor_mu": 0,
   "_note_money_floor_mu": "裸整数，非 dict（conservation 与 lifecycle 均按 int 读取；Leaders 裁定统一裸 int）",
+  "llm_budget": {
+    "_comment": "M6 预算与可观测降级（T215）。单位 token/仿真日；Kc=峰值并发上限。降级必须发 DEGRADE 事件（禁止静默）。改本块变 engine_version 指纹（属预期）。",
+    "enabled": true,
+    "daily_token_budget": 3000000,
+    "max_concurrency_kc": 8,
+    "judge_daily_cap": 1500,
+    "l1_ratio_bp": 8000,
+    "l2_ratio_bp": 10000,
+    "l3_ratio_bp": 15000
+  },
   "safety_valve": {
     "net_worth_floor_mu": {
       "default": -10000,

@@ -36,7 +36,7 @@ _ATTR_KEYS = frozenset({
     "round", "seed", "agents", "cash", "deposits", "loans", "tax_pool", "bank_reserve",
     "money_minted_total", "money_burned_total", "judgments", "pending_intents",
     "audit_violations", "memory_index", "event_index", "observed", "rejected",
-    "relations", "encounters", "tags", "norms", "groups", "inventory",
+    "relations", "encounters", "tags", "norms", "groups", "inventory", "budget_level",
 })
 
 
@@ -88,6 +88,7 @@ class WorldState:
     norms: dict = field(default_factory=dict)         # norm_id -> {...}
     groups: dict = field(default_factory=dict)        # group_id -> {group_id, members:[...], created_round}
     inventory: dict = field(default_factory=dict)     # owner_id -> good_id -> qty:int（v2 物理层）
+    budget_level: int = 0                             # M6 当前降级级位 L0–L3（单调不减；由 DEGRADE 折叠）
     _extra: dict = field(default_factory=dict)        # 未知映射键
 
     # ---- 便捷访问 ----

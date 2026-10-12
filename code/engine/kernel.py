@@ -15,6 +15,7 @@ from .constants import (
 )
 from . import conservation
 from . import hooks as hook_registry
+from . import scheduling
 from .events import spec
 from .ledger import Ledger
 from .rng import Ctx
@@ -184,12 +185,25 @@ class Engine:
                 for v in viols
             ])
         else:
+            # M6：级位上升时发 DEGRADE（可观测，禁止静默；入本回合缓冲随 P6 commit）
+            self._emit(scheduling.degrade_specs(self.state, round_no, self.config))
             self.state, _ = self.arbiter.commit(self.state)
         self._seal(round_no)
 
     # ---- IF-1/IF-2 端口辅助（Adapter 也复用）----
     def current_round(self) -> int:
         return self.state.round
+
+    # ---- M4/M6（T215）----
+    @property
+    def llm_budget_level(self) -> int:
+        return int(getattr(self.state, "budget_level", 0) or 0)
+
+    def schedule_llm(self, agents, round_no: int | None = None, priority=None) -> list:
+        """M4 峰值削平：返回本回合允许调用 LLM 的 agent_id 列表（≤ Kc）。"""
+        kc = int(scheduling._budget_cfg(self.config).get("max_concurrency_kc", 0) or 0)
+        r = self.state.round if round_no is None else round_no
+        return scheduling.schedule_llm_agents(agents, r, kc, priority=priority)
 
     def derive_time(self, round_no: int | None = None) -> dict:
         from .time import derive_time as _derive

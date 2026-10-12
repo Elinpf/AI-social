@@ -548,6 +548,13 @@ def _apply_exchange_settled(state, rec, p):
 
 # ---------------- 审计 / 无状态折叠 ----------------
 
+@register("DEGRADE")
+def _apply_degrade(state, rec, p):
+    # M6 降级：单调记录当前级位（可观测；不改钱/货）
+    lvl = int(p.get("level", 0) or 0)
+    if lvl > state.budget_level:
+        state.budget_level = lvl
+
 @register("ECONOMY_INVARIANT_VIOLATION")
 def _apply_violation(state, rec, p):
     # 纯审计事件：恒等折叠，**不改变世界状态**（保证 D1 回滚后状态不变）。
