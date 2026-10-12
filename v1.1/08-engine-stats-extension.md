@@ -993,6 +993,9 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
 - **可重建派生集合（单一口径）**：`state.observed` / 各 agent `_observed_seqs` / `memories` 索引等**派生集合** = **可由日志重建**、**不入 `state_hash`**、**不入 08 事件语义**。⚠️ **与 T276 的 `LifeAgent.restore(state, records)` 是同一状态**——**必须一次对齐、不得两处各定义**（避免"可重建集合"口径分叉）。
 - **不新增事件**；段锚点**复用 `TURN_SEAL` 可选字段**（只增不改）：`segment_id` / `segment_file` / `segment_first_seq` / `segment_last_seq` / `segment_last_hash`。
 - **开关族（默认 `false`，进 `engine_version` 指纹）**：`segment.enabled`、`index.slim`（§5.8 家族；`OFF`=旧行为）。
+- **选路口径 / 最小切片先行（应 T285 spike `41c60d7`）**：spike 结论=**主成本在"耗计算"**（`event_index` 每回合**全表扫、近 O(N²)**），内存常驻为次 → **最小切片 = 先做「增量 `event_index` 聚合 + 轻索引」（`index.slim`）**，`segment.enabled`（尾段常驻）**其次**。理由：先攻计算瓶颈、风险更低，且轻索引是尾段常驻的**前置**（先立索引，段常驻才有意义）。
+- **轻索引与 §5.10 共享一份口径（两件共用、不得各写）**：`seq → {round,type,phase,actor,offset,len}`，**默认不含 `sub`**；**区间事件（T287）增可选 `start_sub`**。
+- **`seq_base` / `chain_head` 外置登记**：tail-only 须外置并随段/索引**原子同替**（见上「落地条件」）；属**可重建/存储元数据**，**不入 `state_hash`、不入事件语义**。
 
 ### 5.10 tick 内时间区间口径（应 T286 路径 B，已定；纯 schema/口径，**默认瞬时=行为不变**）
 
@@ -1004,6 +1007,7 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
 - **排序键（写死，二者并存、不可混用）**：
   - **事实序 = `seq`（全局唯一事实序，红线不变）** —— append/重放按 `seq`。
   - **语义时间序 = `(start_μt, agent_id, seq)`** —— 按 μt 排序/结算/判先后（跨 agent 用 `agent_id` 定 tie-break，再 `seq`，全序）。
+- **独占 / 重叠判定（排他性，确定性与可解释拒绝）**：**同一 `agent` 的「独占动作」（移动 / 劳作）区间不得重叠**；重叠 ⇒ **确定性拒绝**，发 **`INTENT_REJECTED{reason:"exclusive_overlap", agent_id, activity_class, span, conflicting_seq}`**（**复用既有 `INTENT_REJECTED`，不新增类型**）。**不同 agent 允许交错**（区间可重叠；除非共享资源：同场所容量 / 市场撮合）。**先后/因果**：`reply.start_μt ≥ original.end_μt`（或 `≥ start_μt`，**待标定**）。
 - **进行中 = 派生视图**（如 `current_activity`，可由日志重建）：**不新增真相源、不入 `state_hash`、不入事件语义**（沿用 §5.9「可重建派生集合」口径）。
 - **兼容**：无 `span` 的旧事件 = 瞬时；**旧日志可读、不强制迁移**。
 - **时间模型版本戳（分界线）**：`TURN_SEAL` 加**可选字段** `time_model ∈ {"atomic", "interval-U<U>"}` 与 `U`；**历史基线仅同版本内可比**（B 前/B 后不可直接比）。
