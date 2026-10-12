@@ -18,6 +18,11 @@ export PATH="/root/.local/share/pi-node/node-v22.23.1-linux-x64/bin:$PATH"
 GATE_PY="${GATE_PY:-frontend/tools/gate_render.py}"
 rc=0
 
+# T220 三：门禁结论必须说明「在哪个 git 状态上跑的」（证据绑版本）。
+# 打头三行 sha/dirty_files/状态；DIRTY 时结论仅供参考。CI 可用 GIT_STAMP_STRICT=1 强制脏树即失败。
+_GS="$(cd "$ROOT/.." && pwd)/tools/git_stamp.sh"
+if [ -f "$_GS" ]; then bash "$_GS"; fi
+
 echo "== [1/2] 无浏览器快速门禁：smoke_test.js =="
 if [ "${HITT_SKIP_SMOKE:-0}" = "1" ]; then
   echo "  (跳过：HITT_SKIP_SMOKE=1)"

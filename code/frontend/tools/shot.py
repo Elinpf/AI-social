@@ -32,6 +32,9 @@ def main() -> int:
     ap.add_argument("--width", type=int, default=1500)
     ap.add_argument("--height", type=int, default=950)
     ap.add_argument("--timeout", type=float, default=60.0, help="等待就绪的总超时（秒）")
+    ap.add_argument("--wait-fn", default=None,
+                    help="可选：等待该 JS 表达式为真再截（用于非 still 页面，如 devtools 查看器）。"
+                         "省略且 URL 无 still=1 时，退化为等 #pixi-host canvas。")
     args = ap.parse_args()
 
     try:
@@ -63,11 +66,14 @@ def main() -> int:
                           f"  elapsed={time.time()-t0:.2f}s")
                     return 1
             else:
-                # 非 still：无就绪信号，等 canvas 出现（惰性回退，明确标注）
+                # 非 still：优先用 --wait-fn（devtools 等），否则等 canvas 出现（惰性回退，明确标注）
                 try:
-                    pg.wait_for_selector("#pixi-host canvas", timeout=int(args.timeout * 1000))
+                    if args.wait_fn:
+                        pg.wait_for_function(args.wait_fn, timeout=int(args.timeout * 1000))
+                    else:
+                        pg.wait_for_selector("#pixi-host canvas", timeout=int(args.timeout * 1000))
                 except Exception:
-                    print("SHOT FAIL: canvas 未出现"); return 1
+                    print("SHOT FAIL: 等待就绪失败（wait-fn/canvas）"); return 1
                 time.sleep(1.2)
             if errs:
                 print("SHOT FAIL: 页面报错 pageerror:", " | ".join(errs[:2])); return 1

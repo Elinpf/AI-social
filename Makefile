@@ -41,7 +41,9 @@ pyclean:
 	@find code -type d -name __pycache__ -prune -exec rm -rf {} + 2>/dev/null || true
 	@rm -rf code/.pytest_cache
 
-code-test: pyclean
+# code-test 前置打戳（T220 追加）：pytest 结论须自带环境戳；
+# 且戳里含「最近改动的模块」，把「红」与「谁在改什么」对上（避免"长期红来源不明"）。
+code-test: pyclean stamp
 	cd code && PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q -p no:cacheprovider
 
 # 插件骨架测试（独立于 code/，自成一体）；T220 四补齐覆盖，避免静默缺口。
