@@ -15,6 +15,10 @@
       this.onOpenAgent = null;      // (id)=>void  点名字→角色卡
       this.onJumpRound = null;      // (round)=>void 点因果→跳回合
       this.opts = { level: "narrative", q: "", auditMode: false, range: 0 };
+      this._seqIndex = null;        // seq→round（由 main 注入，因果跳转用）
+      this._eventsBySeq = null;     // seq→record（由 main 注入，剧情卡因果链用）
+      this.weeklyWeek = null;       // 周报指定周（null=当前回合所在周）
+      this._expandSeq = null;       // ?expand=<seq> 自动展开某行详情（证据用）
     }
 
     renderFacts(replay, rd) {
@@ -78,6 +82,11 @@
           setTimeout(() => row.classList.remove("focus"), 2200);
         }
         this._focusSeq = null;
+      }
+      // 证据/检索用：?expand=<seq> 自动展开某一行的详情（含剧情卡因果链）
+      if (this._expandSeq != null) {
+        const row = this.streamEl.querySelector(`.ev-card[data-seq="${this._expandSeq}"]`);
+        if (row) { const d = row.querySelector(".ev-detail"); if (d) d.hidden = false; if (row.scrollIntoView) row.scrollIntoView({ block: "center" }); }
       }
     }
 
@@ -208,6 +217,45 @@
       });
     }
 
+    // ---------------- 小镇周报（T240/G-9）：全部取自日志，逐条可溯源，不编造 ----------------
+    renderWeekly(replay, rd) {
+      const doc = global.document; if (!doc) return;
+      const body = doc.getElementById("weekly-body"); if (!body) return;
+      const RPW = 84;                                   // 1 周 = 7 日 × 12 回合
+      const wk = (this.weeklyWeek != null) ? this.weeklyWeek : Math.floor(rd / RPW);
+      const start = wk * RPW, end = Math.min(rd, start + RPW - 1);
+      const evs = [];
+      for (let r = start; r <= end; r++) for (const e of replay.eventsInRound(r)) evs.push(e);
+      const cnt = {};
+      evs.forEach((e) => { cnt[e.type] = (cnt[e.type] || 0) + 1; });
+      const f = replay.facts[end] || {};
+      const facts = [
+        ["存活 / 总数", `${f.alive} / ${f.total}`],
+        ["货币总量 (mu)", String(f.moneySupply)],
+        ["本周事件", String(evs.length)],
+        ["死亡 / 复活", `${cnt.AGENT_DIED || 0} / ${cnt.AGENT_REVIVED || 0}`],
+      ];
+      const HL = { AGENT_BORN: 1, AGENT_DIED: 1, AGENT_REVIVED: 1, MARKET_TRADE: 1, CONFLICT_STARTED: 1,
+        CONFLICT_RESOLVED: 1, NORM_ADOPTED: 1, ROLE_CHANGE: 1, GOAL_ACHIEVED: 1, OFFER_ACCEPTED: 1,
+        OFFER_REJECTED: 1, SEED_EVENT: 1 };
+      const hl = evs.filter((e) => HL[e.type]).sort((a, b) => a.seq - b.seq).slice(0, 14);
+      const msgs = evs.filter((e) => /^MSG_/.test(e.type)).slice(-6);
+      const narr = evs.filter((e) => e.type === "NARRATIVE").slice(0, 4);
+      const hlRows = hl.map((e) => `<div class="wk-row"><a class="wl" data-seq="${e.seq}">r${e.round}</a> ${escapeHtml(R.humanize(e, this.ctx).text)}</div>`).join("") || "<div class='muted'>本周无关键事件</div>";
+      const msgRows = msgs.map((e) => `<div class="wk-quote">${escapeHtml(R.humanize(e, this.ctx).text)} <a class="wl" data-seq="${e.seq}">#${e.seq}</a></div>`).join("") || "<div class='muted'>本周无发言</div>";
+      const narrRows = narr.map((e) => `<div class="wk-narr">${escapeHtml(R.humanize(e, this.ctx).text)} <a class="wl" data-seq="${e.seq}">#${e.seq}</a></div>`).join("");
+      body.innerHTML = `
+        <div class="insp-sec"><h4>第 ${wk + 1} 周 · 小镇周报 ${helpTip('"本周" = 7日 × 12回合；数字与句子全部取自日志，逐条可点回溯（不编造）。')}</h4>
+          <div class="kfacts">${facts.map(([k, v]) => `<div class="kfact"><div class="k">${escapeHtml(k)}</div><div class="v">${escapeHtml(v)}</div></div>`).join("")}</div>
+        </div>
+        ${narrRows ? `<div class="insp-sec"><h4>周报正文（日志叙事 · 可溯源）</h4>${narrRows}</div>` : ""}
+        <div class="insp-sec"><h4>本周纪事（编年史高光）</h4>${hlRows}</div>
+        <div class="insp-sec"><h4>镇民之言（原话引用，未改写）</h4>${msgRows}</div>`;
+      body.querySelectorAll(".wl").forEach((el) => {
+        el.onclick = (e) => { e.stopPropagation(); const s = Number(el.dataset.seq); const r = (this._seqIndex || {})[s]; if (r != null && this.onJumpRound) { this._focusSeq = s; this.onJumpRound(r); } };
+      });
+    }
+
     _row(ev, h) {
       const st = h.style || {};
       const actor = h.actor && /^[PA]\d+/.test(h.actor) ? h.actor : "";
@@ -293,10 +341,23 @@
           `${c.inferred ? "" : `（来源 #${ev.seq}）`}</div>`);
       }
       if (c.links && c.links.length) {
-        parts.push(`<div class="why-links">` + c.links.map((l) =>
-          l.seq != null ? `<a class="wl" data-seq="${l.seq}">${escapeHtml(l.label)} #${l.seq}</a>`
-                        : `<span class="wl">${escapeHtml(l.label)} ${escapeHtml(l.goalId || "")}</span>`
-        ).join("") + `</div>`);
+        const seqLinks = c.links.filter((l) => l.seq != null);
+        // G-8 剧情卡：有 seq→record 映射时，渲染「因果链」（上游事件 → 本条），事实分色、链节可点溯源
+        if (seqLinks.length && this._eventsBySeq) {
+          const nodes = seqLinks.map((l) => {
+            const rec = this._eventsBySeq[l.seq];
+            const txt = rec ? R.humanize(rec, this.ctx).text : `（事件 #${l.seq}）`;
+            return `<div class="cc-node fact"><a class="wl" data-seq="${l.seq}">#${l.seq} ${escapeHtml(l.label || "起因")}</a><span class="cc-txt">${escapeHtml(txt)}</span></div>`;
+          });
+          parts.push(`<div class="causal-chain"><div class="cc-title">剧情卡 · 因果链（事实，可点溯源）</div>` +
+            nodes.join(`<div class="cc-arrow">↓</div>`) +
+            `<div class="cc-arrow">↓</div><div class="cc-node effect">本条：${escapeHtml(h.text || "")}</div></div>`);
+        } else {
+          parts.push(`<div class="why-links">` + c.links.map((l) =>
+            l.seq != null ? `<a class="wl" data-seq="${l.seq}">${escapeHtml(l.label)} #${l.seq}</a>`
+                          : `<span class="wl">${escapeHtml(l.label)} ${escapeHtml(l.goalId || "")}</span>`
+          ).join("") + `</div>`);
+        }
       }
       if (this.opts.auditMode) {
         parts.push(`<pre class="raw">${escapeHtml(JSON.stringify(ev, null, 1))}</pre>`);

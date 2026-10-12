@@ -391,3 +391,12 @@ landscape + 夜间时，小角色**对比不足、较难辨认**；根因主要�
 > 与 `obs.recount_cards.gated_slug`（统计）；**任何一边改映射/门控即静默分叉**。`smoke_test [E]` 现将
 > 二者在 **35 个代表性事件**上**逐例对拍**（无条件类型/全量 template/语义条件/机械事件/`template=rel_accept` 反造假），
 > **不一致即红**。反向验证：把 JS `SCARCITY_THETA` 改坏 → `FAIL（JS=- PY=scarcity-buy）`；还原 → PASS。
+
+## 16. 游戏质感 G 清单落地（T240）
+
+G-1..G-14 可执行清单见 `v2/refs/gamefeel-executable-tasks-T240.md`。本任务**先落地 3 项 P0**（均只读日志、无前置资产）：
+- **G-8 剧情卡 · 因果链**：事件行「⌄ 为什么」展开为**因果链**（上游事件 `#seq` → ↓ → 本条），**事实分色、链节可点溯源**（复用 `_focusSeq` 跳转）。实现：`audit.js::_detail` + `_eventsBySeq`。
+- **G-9 小镇周报**：观测台新增「📰 周报」页——`第 N 周` K 事实（存活/货币/本周事件/死亡复活，**逐字取日志**）+ 本周纪事高光 + 镇民原话引用（**未改写**）+ 若日志含 `NARRATIVE` 则作正文。实现：`audit.js::renderWeekly`。
+- **G-14 关系图**：角色卡内**节点-边关系图**（中心「我」，边粗=好感强度、绿正/红负；点节点切换角色卡）。实现：`main.js::relGraphSVG`。
+
+演示参数：`?tab=weekly` / `?audit=1&expand=<seq>` / `?agent=<id>`。证据：`v2/evidence/T240-{before,after}-*.png`。**修复**：`.pane{display:flex}` 会盖过 `[hidden]`，致分页旧面板残留 → 加 `.pane[hidden]{display:none!important}`。`make ci` PASS。

@@ -370,3 +370,19 @@ select {
 body:not(.show-debug) .debug-only { display: none !important; }
 body:not(.show-debug) #controls { bottom: 18px; }        /* 时间轴隐藏时控制条贴底，不留空档 */
 body:not(.show-debug) #timebar-wrap { display: none !important; }
+
+/* ---------- T240 游戏质感：周报 / 剧情卡因果链 / 关系图 ---------- */
+.wk-row { font-size: 12px; padding: 3px 0; border-bottom: 1px dashed rgba(48,58,73,0.5); }
+.wk-quote { font-size: 12px; border-left: 2px solid var(--accent); padding: 4px 6px; margin: 3px 0; background: rgba(35,43,55,0.5); border-radius: 4px; }
+.wk-narr { font-size: 12px; color: #d8cdf0; background: rgba(60,50,80,0.35); border-left: 2px solid #b07ce8; padding: 4px 6px; margin: 3px 0; border-radius: 4px; }
+.causal-chain { margin-top: 6px; border: 1px solid var(--line); border-radius: 8px; padding: 6px; background: rgba(20,26,34,0.5); }
+.causal-chain .cc-title { font-size: 11px; color: var(--accent-2); margin-bottom: 4px; }
+.causal-chain .cc-node { font-size: 12px; padding: 3px 6px; border-radius: 6px; }
+.causal-chain .cc-node.fact { color: #cfe8ff; background: rgba(92,200,255,0.08); }
+.causal-chain .cc-node.effect { color: #fff; background: rgba(232,184,75,0.16); font-weight: 600; }
+.causal-chain .cc-node .cc-txt { margin-left: 6px; color: var(--fg); }
+.causal-chain .cc-arrow { text-align: center; color: var(--muted); font-size: 11px; line-height: 1.2; }
+.relgraph { display: block; }
+
+/* T240 修复：`.pane{display:flex}` 会盖过 [hidden]，导致分页切换时旧面板仍显示 */
+.pane[hidden] { display: none !important; }

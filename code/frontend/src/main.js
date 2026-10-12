@@ -10,7 +10,7 @@
   const R = window.HITTReplay;
 
   const el = (id) => document.getElementById(id);
-  const state = { places: [], topology: null, replay: null, round: 0, timer: null, playing: false, source: "", sel: null, still: false, snapAgents: false, personas: {}, seqRound: null, socialTab: false, view: "default", explicitView: false };
+  const state = { places: [], topology: null, replay: null, round: 0, timer: null, playing: false, source: "", sel: null, still: false, snapAgents: false, personas: {}, seqRound: null, auditTab: "chronicle", view: "default", explicitView: false, fx: true, fxHold: false };
   const cam = { scale: 1, x: 0, y: 0 };
 
   const town = { inst: null };
@@ -56,6 +56,7 @@
       audit.ctx = { name: nameOf, place: placeNameOf };
       audit.onOpenAgent = (id) => selectAgent(id);
       audit.onJumpRound = (r) => { stopPlay(); pauseFollow(); jumpTo(r); };
+      audit._expandSeq = qs.get("expand");   // 证据用：自动展开某行详情（剧情卡因果链）
       renderLegend();
 
       const loadP = town.inst.load("assets/").catch((e) => {
@@ -101,13 +102,26 @@
       // 便于截图/演示：?audit=1 打开审计抽屉；?agent=<id> 或 ?place=<id> 打开详情
       if (qs.get("audit") === "1") openDrawer("audit");
       if (qs.get("debug") === "1") document.body.classList.add("show-debug");   // 证据截图用：展开调试/回放控件
-      if (qs.get("tab") === "social") { openDrawer("audit"); switchAuditTab("social"); }
+      if (["social","weekly","chronicle"].includes(qs.get("tab"))) { openDrawer("audit"); switchAuditTab(qs.get("tab")); }
       if (qs.get("settings") === "1") el("settings-pop").hidden = false;
       if (qs.get("agent")) selectAgent(qs.get("agent"));
       else if (qs.get("place")) selectPlace(qs.get("place"));
       // 关键帧说明条（?caption=文字）
       const cap = qs.get("caption");
       if (cap) { const c = el("caption"); c.textContent = cap; c.hidden = false; }
+
+      // G-13：?fx=0 关闭世界内反馈（"改前"对照）；?fxhold=1 保持峰值（still 取证）；?fxg=<trade|conflict|norm> 触发一次演示
+      if (qs.get("fx") === "0") state.fx = false;
+      if (qs.get("fxhold") === "1") state.fxHold = true;
+      const fxg = qs.get("fxg");
+      if (fxg) {
+        state.fxHold = true;
+        let pos = null;
+        if (fxg === "conflict") { const ids = Object.keys(town.inst.agents); pos = agentXY(ids[0]); }
+        else if (fxg === "norm") pos = placeXY("plaza");
+        else pos = placeXY("market");
+        if (pos) worldFx(fxg, pos.x, pos.y);
+      }
 
       // 单帧模式：快照后停掉持续渲染，置就绪标志供截图脚本等待
       if (state.still) finalizeStill();
@@ -145,10 +159,12 @@
     if (!records.length) throw new Error("日志为空或不含事件");
     state.replay = new R.Replay(records);
     state.round = state.replay.rounds[0] || 0;
-    // seq → round 索引（因果链接跳转用）
+    // seq → round 索引（因果链接跳转用）；seq → record（剧情卡因果链用）
     state.seqRound = {};
-    for (const rec of records) { if (rec.seq != null) state.seqRound[rec.seq] = rec.round; }
-    if (audit) audit._seqIndex = state.seqRound;
+    const bySeq = {};
+    for (const rec of records) { if (rec.seq != null) { state.seqRound[rec.seq] = rec.round; bySeq[rec.seq] = rec; } }
+    state.eventsBySeq = bySeq;
+    if (audit) { audit._seqIndex = state.seqRound; audit._eventsBySeq = bySeq; }
     const slider = el("round-slider");
     slider.min = String(state.replay.rounds[0] || 0);
     slider.max = String(state.replay.maxRound);
@@ -209,7 +225,8 @@
     renderTimebar(rp, rd);
     renderLighting(rp, rd);
     if (animateFx && !state.still) handleKeyEvents(rp, rd);
-    if (state.socialTab && audit && audit.renderSocial) audit.renderSocial(rp, rd);
+    if (state.auditTab === "social" && audit && audit.renderSocial) audit.renderSocial(rp, rd);
+    else if (state.auditTab === "weekly" && audit && audit.renderWeekly) audit.renderWeekly(rp, rd);
     if (state.sel) refreshInspector();   // 详情面板跟随当前回合
   }
 
@@ -338,11 +355,13 @@
       if (hap.length >= 4) break;
     }
     if (town.inst && town.inst.setHappenings) town.inst.setHappenings(hap);
-    // 高亮动画：交易→市场；其余→相关角色
+    // 高亮 + G-13 世界内反馈：交易→市场(金)；冲突→当事人(红叹号)；规范采纳→广场(金环)；其余→相关角色
     evs.slice(0, 4).forEach((e) => {
       const p = e.payload || {};
-      const aid = p.agent_id || p.from || p.buyer;
-      if (e.type === "MARKET_TRADE") highlightPlace("market");
+      const aid = p.agent_id || p.from || p.buyer || p.winner || (p.parties && p.parties[0]);
+      if (e.type === "MARKET_TRADE") { highlightPlace("market"); const m = placeXY("market"); if (m) worldFx("trade", m.x, m.y); }
+      else if (e.type === "CONFLICT_STARTED" || e.type === "CONFLICT_RESOLVED") { const a = agentXY(aid); if (a) worldFx("conflict", a.x, a.y); else { highlightAgent(aid); } }
+      else if (e.type === "NORM_ADOPTED" || e.type === "NORM_PROPOSED") { const pl = placeXY("plaza"); if (pl) worldFx("norm", pl.x, pl.y); highlightPlace("town_hall"); }
       else if (aid) highlightAgent(aid);
     });
   }
@@ -393,6 +412,46 @@
       g.alpha = 1 - k;
       if (k < 1) requestAnimationFrame(tick);
       else { fxLayer.removeChild(g); g.destroy(); }
+    };
+    requestAnimationFrame(tick);
+  }
+
+  // ---- G-13 世界内反馈短动效（只读；复用 fxLayer；`?fx=0` 关闭用于"改前"对照）----
+  function placeXY(pid) { const n = town.inst && town.inst.nodeById && town.inst.nodeById[pid]; return n ? { x: n.x, y: n.y } : null; }
+  function agentXY(id) { const r = town.inst && town.inst.agents && town.inst.agents[id]; return r ? { x: r.container.x, y: r.container.y } : null; }
+  // 峰值图形（still/`?fxhold=1` 下保持不动，便于可复现取证；否则短促放大淡出）
+  function worldFx(kind, x, y) {
+    if (!state.fx || !fxLayer || !window.PIXI || x == null) return;
+    const g = new PIXI.Graphics();
+    let label = "";
+    if (kind === "trade") {                                   // 成交：金环 + 上浮金币
+      g.lineStyle(4, 0xffcf5c, 1); g.drawCircle(0, 0, 26);
+      g.beginFill(0xffd76a, 1); [-16, 0, 16].forEach((dx, i) => g.drawCircle(dx, -34 - i * 5, 6)); g.endFill();
+      label = "🪙 成交";
+    } else if (kind === "conflict") {                         // 冲突：红色叹号 + 红环
+      g.lineStyle(4, 0xe4572e, 1); g.drawCircle(0, 0, 24);
+      g.beginFill(0xe4572e, 1); g.drawRect(-3, -44, 6, 20); g.drawRect(-3, -20, 6, 6); g.endFill();
+      label = "⚔ 冲突";
+    } else if (kind === "norm") {                             // 规范采纳：金色双环
+      g.lineStyle(4, 0xf0c14a, 1); g.drawCircle(0, 0, 28);
+      g.lineStyle(2, 0xf0c14a, 0.7); g.drawCircle(0, 0, 42);
+      label = "📜 采纳";
+    } else { g.lineStyle(4, 0x5cc8ff, 1); g.drawCircle(0, 0, 24); }
+    g.x = x; g.y = y; fxLayer.addChild(g);
+    let tx = null;
+    if (label) {
+      tx = new PIXI.Text(label, { fontFamily: '"PingFang SC","Microsoft YaHei",sans-serif', fontSize: 15,
+        fill: 0xffffff, stroke: 0x0b0e12, strokeThickness: 5 });
+      tx.anchor.set(0.5, 1); tx.x = x; tx.y = y - 46; fxLayer.addChild(tx);
+    }
+    if (state.fxHold) { g.alpha = 1; g.scale.set(1.15); if (tx) tx.alpha = 1; return; }   // 证据：保持峰值
+    const start = performance.now(), dur = 1200;
+    const tick = () => {
+      const k = Math.min(1, (performance.now() - start) / dur);
+      g.scale.set(0.7 + k * 1.5); g.alpha = 1 - k;
+      if (tx) { tx.alpha = 1 - k; tx.y = y - 46 - k * 14; }
+      if (k < 1) requestAnimationFrame(tick);
+      else { fxLayer.removeChild(g); g.destroy(); if (tx) { fxLayer.removeChild(tx); tx.destroy(); } }
     };
     requestAnimationFrame(tick);
   }
@@ -526,6 +585,27 @@
     return "#" + [0x5cc8ff, 0xffcf5c, 0x5ddc82, 0xff8f6b, 0xc08bff, 0x66e0c0, 0xff7fb0, 0x9ad0ff]
       .concat()[((idx < 0 ? 0 : idx)) % 8].toString(16).padStart(6, "0");
   }
+
+  // G-14：角色卡内迷你关系图（只读；节点=有关系的他人，边粗=好感强度，绿正/红负；点节点切换角色卡）
+  function relGraphSVG(selfId, rels, nameOf, colorOf) {
+    const ids = Object.keys(rels || {});
+    const title = `<h4>关系图 ${help("边越粗=好感/信任越高；绿=正面、红=负面。点节点切换角色卡。")}</h4>`;
+    if (!ids.length) return `<div class="insp-sec">${title}<div class='muted'>暂无关系边</div></div>`;
+    const W = 240, H = 240, cx = 120, cy = 120, R = 92, n = ids.length;
+    const edges = [], nodes = [];
+    ids.forEach((to, i) => {
+      const a = Math.PI * 2 * i / n - Math.PI / 2;
+      const x = cx + R * Math.cos(a), y = cy + R * Math.sin(a);
+      const aff = (rels[to].affinity != null) ? rels[to].affinity : ((rels[to].trust != null) ? rels[to].trust : 0);
+      const w = (1 + Math.min(5, Math.abs(aff) / 12)).toFixed(1);
+      const col = aff >= 0 ? "#5ddc82" : "#e4572e";
+      edges.push(`<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${col}" stroke-width="${w}" opacity="0.7"/>`);
+      nodes.push(`<g class="rg-node" data-agent="${escapeHtml(to)}" style="cursor:pointer"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="12" fill="${colorOf(to)}" stroke="#0b0e12" stroke-width="2"/><text x="${x.toFixed(1)}" y="${(y + 24).toFixed(1)}" text-anchor="middle" font-size="9" fill="#e6ebf2">${escapeHtml(String(nameOf(to)).slice(-4))}</text></g>`);
+    });
+    nodes.push(`<circle cx="${cx}" cy="${cy}" r="14" fill="${colorOf(selfId)}" stroke="#ffffff" stroke-width="2"/><text x="${cx}" y="${cy + 28}" text-anchor="middle" font-size="9" fill="#e6ebf2">我</text>`);
+    return `<div class="insp-sec">${title}<svg class="relgraph" viewBox="0 0 ${W} ${H}" width="100%" height="230">${edges.join("")}${nodes.join("")}</svg></div>`;
+  }
+
   function gatherAgent(rp, id, rd) {
     const persona = state.personas[id] || null;
     let cash = 0, debt = 0, deposits = 0;
@@ -685,6 +765,7 @@
       </div>
       <div class="insp-sec"><h4>需求 ${help("六项需求 0–100，越低越紧迫；由睡眠/进食/社交/活动等变化。")}</h4>${needBars}</div>
       <div class="insp-sec"><h4>关系（可点切换）${help("对他人四个维度：好感/信任/敬重/熟悉度，均 0–100，越高越强。")}</h4>${relRows}</div>
+      ${relGraphSVG(id, d.rels, nameOf, agentColor)}
       <div class="insp-sec"><h4>人格背景 ${help("他的性格底色：五大人格与价值取向均为 0–100，越高代表该特质越明显；括号内为英文键对照。")}</h4>
         <div class="cc-bg">${escapeHtml(p.background || "—")}</div>
         <div class="sec-sub">五大人格 ${help("开放性=乐于尝试新事物；尽责性=自律有条理；外向性=爱社交；宜人性=体贴他人；情绪稳定性=情绪是否平稳（neuroticism 原始分越高=越易波动）。")}</div>
@@ -700,6 +781,7 @@
       <div class="insp-sec"><h4>因果时间线（事实/推测）</h4>${tlRows}</div>`;
     // 关系人名可点切换；因果 seq 可跳
     el("insp-body").querySelectorAll(".relname").forEach((a) => { a.onclick = () => selectAgent(a.dataset.agent); });
+    el("insp-body").querySelectorAll(".rg-node").forEach((g) => { g.onclick = () => selectAgent(g.dataset.agent); });
     el("insp-body").querySelectorAll(".wl").forEach((a) => {
       a.onclick = () => { const s = Number(a.dataset.seq); const r = state.seqRound && state.seqRound[s]; if (r != null) { stopPlay(); pauseFollow(); jumpTo(r); } };
     });
@@ -775,12 +857,16 @@
   }
 
   function switchAuditTab(tab) {
-    state.socialTab = tab === "social";
-    document.querySelectorAll("#audit .tab").forEach((x) => x.classList.toggle("active", x.dataset.tab === tab));
-    const c = el("pane-chronicle"), s = el("pane-social");
-    if (c) c.hidden = state.socialTab;
-    if (s) s.hidden = !state.socialTab;
-    if (state.socialTab && audit && audit.renderSocial && state.replay) audit.renderSocial(state.replay, state.round);
+    state.auditTab = (tab === "social" || tab === "weekly") ? tab : "chronicle";
+    document.querySelectorAll("#audit .tab").forEach((x) => x.classList.toggle("active", x.dataset.tab === state.auditTab));
+    const c = el("pane-chronicle"), s = el("pane-social"), w = el("pane-weekly");
+    if (c) c.hidden = state.auditTab !== "chronicle";
+    if (s) s.hidden = state.auditTab !== "social";
+    if (w) w.hidden = state.auditTab !== "weekly";
+    if (state.replay && audit) {
+      if (state.auditTab === "social" && audit.renderSocial) audit.renderSocial(state.replay, state.round);
+      else if (state.auditTab === "weekly" && audit.renderWeekly) audit.renderWeekly(state.replay, state.round);
+    }
   }
 
   function wireControls() {
