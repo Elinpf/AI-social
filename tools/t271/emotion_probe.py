@@ -31,11 +31,28 @@ def read_body(rd, ref):
         return None
 
 
+def _load_terms(path):
+    terms = []
+    for l in open(path, encoding="utf-8"):
+        l = l.strip()
+        if l and not l.startswith("#"):
+            terms.append(l)
+    return tuple(terms)
+
+
 def main():
     rd = sys.argv[1]
     nsamp = 8
     if "--samples" in sys.argv:
         nsamp = int(sys.argv[sys.argv.index("--samples") + 1])
+    # T334: 可换词表（离线复算，无端点）。默认 = 与 life/agent.py:862-864 相同的 26 子串。
+    global POS, NEG
+    pos_src, neg_src = "default(26)", "default(26)"
+    if "--pos-file" in sys.argv:
+        POS = _load_terms(sys.argv[sys.argv.index("--pos-file") + 1]); pos_src = "file"
+    if "--neg-file" in sys.argv:
+        NEG = _load_terms(sys.argv[sys.argv.index("--neg-file") + 1]); neg_src = "file"
+    print(f"# lexicon: POS={len(POS)}({pos_src}) NEG={len(NEG)}({neg_src})")
     log = os.path.join(rd, "run.jsonl")
     if not os.path.exists(log):
         c = sorted(glob.glob(os.path.join(rd, "*.jsonl")))
@@ -75,7 +92,7 @@ def main():
     print(f"# T326 emotion probe (v2)  log={log}")
     print(f"# LLM_CALL provider 计数: {prov}")
     print(f"reflect_write(kind=reflection)={len(refl)}  body可读={tot}  取正文失败={miss}")
-    print(f"含情感词(hit any of 26 子串): {emo}/{tot} = {emo/max(tot,1):.1%}  (POS={posn}, NEG={negn})")
+    print(f"含情感词(hit any of {len(POS)+len(NEG)} 子串): {emo}/{tot} = {emo/max(tot,1):.1%}  (POS={posn}, NEG={negn})")
     print(f"importance>=7 子集: {i7e}/{i7t} = {i7e/max(i7t,1):.1%}")
     print(f"== 原始样本 {len(samples)} 条（供人眼判『有没有情绪』）==")
     for s in samples:
