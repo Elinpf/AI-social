@@ -33,7 +33,13 @@
     "selftest_pinned_perturbation": "PLACE_MOVE.day +1 (明确类型/字段/增量, 跨版本可重复; 字段缺失=报错, 不静默换靶)",
     "selftest_synthetic_cascade_sample": "用合成样本【保证压到哈希链级联】(LLM_CALL 紧跟 TURN_SEAL) => 链级联覆盖=True 成为可断言项(False=链覆盖失败=红); 真日志级联覆盖仅 info(False=样本未覆盖链, 非红)",
     "self_test_reading": "合成样本: A 删计量不变=True / 链级联覆盖=True / B 钉死扰动 PLACE_MOVE.day+1 变=True; 回归 cut=89 PASS / cut=75 真阳性",
-    "independent_rerun": "改门须非作者独立复跑 (sandbox-test-lead 或 art-director) —— 见 T307"
+    "independent_rerun": "改门须非作者独立复跑 (sandbox-test-lead 或 art-director) —— 见 T307",
+    "t308_negative_case": {
+      "cli": "semantic_log_sha.py --selftest-missing-pin",
+      "mechanism": "构造器(build_cascade_sample include_pin=False)与搜索常量解耦 => 缺字段分支可达",
+      "expected": "缺 PLACE_MOVE.day => selftest rc=2; 用例外层 rc=0(按预期报错)",
+      "default_selftest_unchanged": "A=True / 链级联覆盖=True / B=True, rc=0"
+    }
   },
   "known_real_defect": {
     "class": "②类 确定性 bias (已交 life-layer-dev)",

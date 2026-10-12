@@ -29,6 +29,7 @@
 用法：
     T271_CODE=<code_dir> semantic_log_sha.py <log> [<log> ...]   # 打印语义投影 sha256
     T271_CODE=<code_dir> semantic_log_sha.py --selftest [<log>]  # A:删计量不变 / B:钉死扰动须变 / 合成样本须压到链级联
+    T271_CODE=<code_dir> semantic_log_sha.py --selftest-missing-pin  # 负向用例: 缺字段必须报错 rc=2 (CLI 可直接触发)
 """
 from __future__ import annotations
 import sys, os, json, hashlib, copy, tempfile
@@ -97,7 +98,8 @@ def _cascade(recs):
     return False
 
 
-def _mk(recs, prev, seq, rnd, phase, actor, typ, payload, ceh):
+def _mk(recs, prev, rnd, phase, actor, typ, payload, ceh):
+    seq = len(recs)
     r = {"seq": seq, "round": rnd, "phase": phase, "actor": actor, "type": typ,
          "payload": payload, "mono_ts": seq, "prev_hash": prev}
     r["hash"] = ceh(r)
@@ -105,24 +107,27 @@ def _mk(recs, prev, seq, rnd, phase, actor, typ, payload, ceh):
     return r["hash"]
 
 
-def build_cascade_sample(ceh, gen):
-    """构造【保证压到哈希链级联】的合成样本：LLM_CALL 紧跟 TURN_SEAL + 含 PIN 字段。"""
+def build_cascade_sample(ceh, gen, include_pin=True):
+    """构造【保证压到哈希链级联】的合成样本：LLM_CALL 紧跟 TURN_SEAL。
+    include_pin=False 时**不含 PIN 字段** —— 供负向用例，使"缺字段报错(rc=2)"分支**可达**
+    （与搜索常量解耦，避免"存在但从未被走到"）。"""
     recs = []
-    prev = _mk(recs, gen, 0, 0, 0, "SYSTEM", "WORLD_INIT",
+    prev = _mk(recs, gen, 0, 0, "SYSTEM", "WORLD_INIT",
                {"seed": 1, "fingerprint": "sha256:" + "a" * 64,
                 "config_digest": "sha256:" + "b" * 64, "config_components": {}}, ceh)
-    prev = _mk(recs, prev, 1, 0, 1, "P001", PIN_TYPE,
-               {"agent_id": "P001", PIN_FIELD: 3, "place": "park"}, ceh)
-    prev = _mk(recs, prev, 2, 0, 2, "SYSTEM", "LLM_CALL",
+    if include_pin:
+        prev = _mk(recs, prev, 0, 1, "P001", PIN_TYPE,
+                   {"agent_id": "P001", PIN_FIELD: 3, "place": "park"}, ceh)
+    prev = _mk(recs, prev, 0, 2, "SYSTEM", "LLM_CALL",
                {"purpose": "judge", "provider": "mock", "model": "mock-1",
                 "cached": False, "tokens_in": 8, "tokens_out": 8, "cost_units": 0,
                 "cache_key": "sha256:" + "c" * 64, "engine_version": "sha256:" + "a" * 64}, ceh)
-    prev = _mk(recs, prev, 3, 0, 3, "SYSTEM", "TURN_SEAL",
+    prev = _mk(recs, prev, 0, 3, "SYSTEM", "TURN_SEAL",
                {"round": 0, "state_hash": "sha256:" + "d" * 64, "last_hash": prev}, ceh)
     return recs
 
 
-def selftest(path=None):
+def selftest(path=None, include_pin=True):
     ceh, cj, gen = _engine()
     fd, tmp = tempfile.mkstemp(suffix=".jsonl"); os.close(fd)
 
@@ -131,8 +136,8 @@ def selftest(path=None):
             for r in rs:
                 f.write(json.dumps(r, ensure_ascii=False) + "\n")
 
-    # 合成样本（保证压到级联）+ 真日志（可选，仅 info）
-    syn = build_cascade_sample(ceh, gen)
+    # 合成样本（保证压到级联；include_pin=False 用于负向用例）+ 真日志（可选，仅 info）
+    syn = build_cascade_sample(ceh, gen, include_pin=include_pin)
     write(syn)
     syn_orig = sem_sha(tmp, ceh, cj, gen)
 
@@ -179,6 +184,14 @@ if __name__ == "__main__":
     args = sys.argv[1:]
     if args and args[0] == "--selftest":
         sys.exit(selftest(args[1] if len(args) > 1 else None))
+    if args and args[0] == "--selftest-missing-pin":
+        # 负向用例：构造【不含 PIN 字段】的样本 -> 期望 selftest 走"缺字段报错"分支 rc=2
+        rc = selftest(None, include_pin=False)
+        if rc == 2:
+            print("[selftest-missing-pin] 用例通过：缺字段按预期报错 rc=2（分支可达且行为正确）")
+            sys.exit(0)
+        print(f"[selftest-missing-pin] 用例失败：意外 normal（rc={rc} ≠ 2）—— 缺字段分支未按预期报错")
+        sys.exit(1)
     ceh, cj, gen = _engine()
     for p in args:
         print(sem_sha(p, ceh, cj, gen), p)
