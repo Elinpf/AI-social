@@ -591,7 +591,40 @@ def settle_obligations(state, round_no, ctx):
         e = liq.net_worth_of(state, aid)
         specs.append(_issue_loan_spec(round_no, params, aid, principal, e0, e, "revival_credit"))
 
-    # ---- (c) 存款利息（默认关）----
+    # ---- (c) 按期还本 → LOAN_REPAY（T230）----
+    # 口径（MONEY_BURNED 防双计，已定）：`METABOLISM`/`PENALTY_APPLIED` 的销毁**维持由各自折叠器
+    #   内部 `burned += amt` 承载、不额外发 `MONEY_BURNED`**；`MONEY_BURNED` **只承载"未被内嵌字段计过"
+    #   的销毁**——当前唯一用途=**系统贷（lender=None）还款回收**（`LOAN_REPAY` 折叠只扣 cash、不记 burned，
+    #   必须配 `MONEY_BURNED(amt)` 才守恒）。两条路径**不重叠 → 无双重计**。
+    repay_bp = int(params.get("loan_repay_bp", 1000))     # 每回合还本比例（默认 10%）
+    if repay_bp > 0:
+        for lid in sorted(state.loans):
+            loan = state.loans[lid]
+            if loan.get("status") not in ("active", "overdue"):
+                continue
+            borrower = loan.get("borrower")
+            if not _is_real_agent(state, borrower):
+                continue
+            outstanding = int(loan.get("outstanding", 0))
+            cash = int(state.cash.get(borrower, 0))
+            if outstanding <= 0 or cash <= 0:
+                continue
+            # 系统贷还款=销毁（真减 M）→ 受**世界预算**约束（与坏账 forfeit 共用 burn_left），防击穿 μ_floor
+            amt = min(outstanding, cash * repay_bp // 10000, burn_left)
+            if amt <= 0:
+                continue
+            burn_left -= amt
+            lender = loan.get("lender")
+            specs.append(spec(round_no, P4, borrower, "LOAN_REPAY", {
+                "loan_id": lid, "amount": amt, "payer": borrower, "lender": lender,
+                "reason": "scheduled_repay"}))
+            if lender is None:
+                specs.append(spec(round_no, P4, "SYSTEM", "MONEY_BURNED", {
+                    "amount": amt, "reason": "loan_repay_system", "loan_id": lid,
+                    "flag": "loan_repay"}))
+            # lender 为 Agent 时：还款应为 TRANSFER（当前世界银行单贷方，无此情形）
+
+    # ---- (e) 存款利息（默认关）----
     dep_rate = int(params.get("deposit_rate_bp", 0))
     if dep_rate > 0:
         for aid in _alive_real_agents(state):

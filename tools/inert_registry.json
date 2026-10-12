@@ -32,19 +32,19 @@
       "wire_task": "T231（life-layer-dev，depends_on T222）"
     },
     "LOAN_REPAY": {
-      "class": "missing_wiring",
-      "note": "经济循环应有（4.2 结算）；econ 已实现在期/续命贷，但无 LOAN_REPAY 发射点",
-      "wire_task": "T230（econ-dev）"
+      "class": "wired",
+      "note": "T230 已接线：econ 4.2 按期还本发射 LOAN_REPAY（系统贷配 MONEY_BURNED，守恒不破）",
+      "wire_task": "已完成 T230（econ-dev）"
     },
     "MONEY_BURNED": {
-      "class": "missing_wiring",
-      "note": "销毁当前经 METABOLISM/PENALTY 的 money_burned_total 承载；独立 MONEY_BURNED 事件无发射点。⚠️ 接线前须先定口径（Leader 裁决）：新增独立事件后『原 money_burned_total 字段是否仍计销毁』必须明确，否则守恒断言会双计。先定口径，再写代码。",
-      "wire_task": "T230（econ-dev）：先定双计口径，再发独立事件"
+      "class": "wired",
+      "note": "T230 已接线：仅承载未被 METABOLISM/PENALTY 内嵌 burned 计过的销毁（当前=系统贷还款回收），两条路径不重叠、无双重计",
+      "wire_task": "已完成 T230（econ-dev）"
     },
     "OFFER_EXPIRED": {
-      "class": "missing_wiring",
-      "note": "08 §1.2 K：协商超限确定性终止；协商(OFFER_*)通道未接线",
-      "wire_task": "T230（econ-dev）"
+      "class": "wired",
+      "note": "T230 已接线：exchange.apply_contracts@4.2 对超窗口未终态要约发 OFFER_EXPIRED",
+      "wire_task": "已完成 T230（econ-dev）"
     },
     "SCHEDULE_REVISED": {
       "class": "missing_wiring",
@@ -132,6 +132,42 @@
       "expected_status": "未接线",
       "owner": "persona-life-designer (T224)",
       "due_condition": "作为快照入 metrics/侧存储；非事件、不落哈希链（本项『未接线』指尚未产出快照）"
+    },
+    {
+      "name": "NARRATIVE(body)",
+      "kind": "pointer",
+      "declared_in": [
+        "v1.1/08-engine-stats-extension.md §1.2 I",
+        "code/life/agent.py",
+        "code/narrative/"
+      ],
+      "pointer_event": "NARRATIVE",
+      "writer_probe": [
+        "open\\([^)]*narrative[^)]*[\\\"']w",
+        "narrative[^\\n]*\\.write\\(",
+        "write_[a-z_]*narrative"
+      ],
+      "expected_status": "未接线",
+      "owner": "narrative-designer 侧",
+      "due_condition": "NARRATIVE 事件已由 life/agent.py 发射（body_ref=side://narrative/...），但**指向的正文无写入方** → 即使 side 保留也导不出（非归档问题，是从未写过）。接线：narrative-designer 落正文到 side 存储。wire_task：待派（narrative-designer 域）"
+    },
+    {
+      "name": "SKILL_OUTPUT(body)",
+      "kind": "pointer",
+      "declared_in": [
+        "v1.1/08-engine-stats-extension.md §1.2 J",
+        "code/life/settlement.py"
+      ],
+      "pointer_event": "SKILL_OUTPUT",
+      "writer_probe": [
+        "open\\([^)]*skill[^)]*[\\\"']w",
+        "skill[^\\n]*\\.write\\(",
+        "write_[a-z_]*skill",
+        "output_ref[^\\n]*write"
+      ],
+      "expected_status": "未接线",
+      "owner": "life 侧",
+      "due_condition": "SKILL_OUTPUT 事件已由 life/settlement.py 发射（output_ref=side://skill/...），但**指向的正文/产物无写入方** → 技能正文导不出。接线：life 落产出到 side 存储。wire_task：待派（life 域）"
     }
   ]
 }

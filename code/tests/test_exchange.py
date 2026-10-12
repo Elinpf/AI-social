@@ -242,3 +242,22 @@ def test_offer_exhausted_vs_true_shortage():
     outs2 = X.apply_exchange(st2, 1, _ctx(_cfg()))
     dr2 = [s for s in outs2 if s.type == "DROPPED"]
     assert any(d.payload.get("reason") == "insufficient_goods" for d in dr2)
+
+
+def test_offer_expired_after_window():
+    st, _ = _three()
+    _inj(st, 1, "OFFER_CREATED", {"offer_id": "o1", "from": "A", "to": ["B"], "kind": "sale",
+                                  "terms": {"good_id": "food", "price_mu": 1, "qty": 1},
+                                  "enforceable": False}, rd=1)
+    outs = X.apply_contracts(st, 8, _ctx(_cfg()))          # 8-1=7 >= 默认窗口 7
+    assert any(s.type == "OFFER_EXPIRED" and s.payload["offer_id"] == "o1" for s in outs)
+
+
+def test_offer_not_expired_if_terminal():
+    st, _ = _three()
+    _inj(st, 1, "OFFER_CREATED", {"offer_id": "o1", "from": "A", "to": ["B"], "kind": "sale",
+                                  "terms": {"good_id": "food", "price_mu": 1, "qty": 1},
+                                  "enforceable": False}, rd=1)
+    _inj(st, 2, "OFFER_ACCEPTED", {"offer_id": "o1", "by": "B"}, rd=1)
+    outs = X.apply_contracts(st, 8, _ctx(_cfg()))
+    assert not any(s.type == "OFFER_EXPIRED" for s in outs)

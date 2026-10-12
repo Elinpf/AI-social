@@ -429,3 +429,36 @@ def test_fallback_mint_off_by_default():
     cfg = _cfg(fallback_issue_max_mu=5000)        # 未开 enabled
     outs = econ.apply_tax(st, 1, _ctx(cfg))
     assert _by_type(outs, "MONEY_MINTED") == []
+
+
+def test_loan_repay_and_money_burned_pair_conserves():
+    """T230：系统贷按期还本 → LOAN_REPAY + MONEY_BURNED（配对，守恒不破、无双重计）。"""
+    st, led, ap = _make()
+    ap(spec(0, 0, "SYSTEM", "LOAN_ISSUED", {
+        "loan_id": "L1", "lender": None, "borrower": "A", "principal": 1000,
+        "outstanding": 1000, "rate_bp": 0, "due_round": 100}))
+    assert conservation.check_conservation(st) == []
+    cfg = _cfg(income_tax_bp=0, ubi_mu=0, loan_repay_bp=1000)
+    outs = econ.settle_obligations(st, 1, _ctx(cfg))
+    rp = _by_type(outs, "LOAN_REPAY")
+    mb = _by_type(outs, "MONEY_BURNED")
+    assert len(rp) == 1 and rp[0].payload["loan_id"] == "L1"
+    assert len(mb) == 1 and mb[0].payload["amount"] == rp[0].payload["amount"]
+    _apply(st, led, outs)
+    assert st.loans["L1"]["status"] == "repaid"
+    assert conservation.check_conservation(st) == []
+
+
+def test_loan_repay_respects_world_budget():
+    """T230：系统贷还款=销毁 → 受世界预算约束，不得击穿 μ_floor。"""
+    st, led, ap = _make(endow=100)
+    # 把 A 现金打到很低、M 逼近地板
+    ap(spec(0, 0, "SYSTEM", "METABOLISM", {"agent_id": "B", "amount": 190}))  # M: 200->10
+    ap(spec(0, 0, "SYSTEM", "LOAN_ISSUED", {"loan_id": "L1", "lender": None,
+                                            "borrower": "A", "principal": 0,
+                                            "outstanding": 50, "rate_bp": 0, "due_round": 100}))
+    cfg = _cfg(income_tax_bp=0, ubi_mu=0, loan_repay_bp=10000, mu_floor=0)
+    outs = econ.settle_obligations(st, 1, _ctx(cfg))
+    _apply(st, led, outs)
+    assert conservation.check_conservation(st) == []
+    assert money_total(st) >= 0

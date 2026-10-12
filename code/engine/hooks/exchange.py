@@ -301,6 +301,38 @@ def apply_exchange(state, round_no, ctx):
 
 
 # ---------------------------------------------------------------- 契约执行器
+def _expire_offers(state, round_no, ctx):
+    """T230：协商超限确定性终止 → `OFFER_EXPIRED`（08 §1.2 K）。
+
+    对每个 `OFFER_CREATED` 后**未出现终态**（ACCEPTED/REJECTED/EXPIRED；COUNTERED 非终态）的要约，
+    距创建 ≥ `offer_expire_rounds`（默认 7）即发一次 `OFFER_EXPIRED`（发后即终态，不重复）。
+    """
+    w = 7
+    cfg = getattr(ctx, "config", None)
+    if isinstance(cfg, dict) and isinstance(cfg.get("exchange"), dict):
+        try:
+            w = int(cfg["exchange"].get("offer_expire_rounds", w))
+        except Exception:
+            w = 7
+    idx = getattr(state, "event_index", {}) or {}
+    created: dict[str, int] = {}
+    terminal: set = set()
+    for r in sorted(idx.values(), key=lambda x: int(x.get("seq", 0))):
+        t, p = r.get("type"), (r.get("payload") or {})
+        if t == "OFFER_CREATED" and p.get("offer_id"):
+            created.setdefault(p["offer_id"], int(r.get("round", 0)))
+        elif t in ("OFFER_ACCEPTED", "OFFER_REJECTED", "OFFER_EXPIRED") and p.get("offer_id"):
+            terminal.add(p["offer_id"])
+    out = []
+    for oid in sorted(created):                            # 确定性全序
+        if oid in terminal:
+            continue
+        if int(round_no) - created[oid] >= w:
+            out.append(spec(round_no, P4, "SYSTEM", "OFFER_EXPIRED", {
+                "offer_id": oid, "created_round": created[oid], "round": int(round_no)}))
+    return out
+
+
 def _active_contracts(state, round_no):
     """从 `CONTRACT_CREATED` 折叠出未结契约（按 contract_id 升序，确定性）。"""
     idx = getattr(state, "event_index", {}) or {}
@@ -331,7 +363,7 @@ def apply_contracts(state, round_no, ctx):
     if not exchange_enabled(ctx):
         return [spec(round_no, P4, "SYSTEM", "DROPPED",
                      {"reason": "exchange_disabled", "flag": "exchange_disabled"})]
-    specs = []
+    specs = _expire_offers(state, round_no, ctx)          # T230：协商超限 → OFFER_EXPIRED
     for cid, c in _active_contracts(state, round_no):
         kind = str(c.get("kind", "")).upper()
         terms = c.get("terms") or {}
