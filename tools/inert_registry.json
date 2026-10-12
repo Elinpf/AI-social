@@ -81,9 +81,10 @@
       "declared_in": [
         "v1.1/08-engine-stats-extension.md §1.2 S"
       ],
-      "expected_status": "未接线",
-      "owner": "persona-life-designer (T224) / kernel-dev",
-      "due_condition": "① 登记 engine/events.py::EVENT_TYPES + replay.apply_event 折叠器；② life/sleep_window 接线并由 agent 落账"
+      "expected_status": "已接线",
+      "owner": "life-layer-dev（T224）",
+      "due_condition": "① 登记 engine/events.py::EVENT_TYPES + replay.apply_event 折叠器；② life/sleep_window 接线并由 agent 落账  [接线确认] wired_by=6975f18（T224 agent.py 睡眠挂载点→INTENT.MEMORY→裁决器落事件）",
+      "wired_by": "6975f18"
     },
     {
       "name": "SLEEP_COMPLETED",
@@ -91,9 +92,10 @@
       "declared_in": [
         "v1.1/08-engine-stats-extension.md §1.2 S"
       ],
-      "expected_status": "未接线",
-      "owner": "persona-life-designer (T224) / kernel-dev",
-      "due_condition": "同 SLEEP_STARTED"
+      "expected_status": "已接线",
+      "owner": "life-layer-dev（T224）",
+      "due_condition": "同 SLEEP_STARTED  [接线确认] wired_by=6975f18（T224 agent.py 睡眠挂载点→INTENT.MEMORY→裁决器落事件）",
+      "wired_by": "6975f18"
     },
     {
       "name": "MEMORY_CONSOLIDATE",
@@ -102,9 +104,10 @@
         "v1.1/08-engine-stats-extension.md §1.2 S",
         "code/life/sleep_window.py"
       ],
-      "expected_status": "未接线",
-      "owner": "persona-life-designer (T224) / kernel-dev",
-      "due_condition": "sleep_window 已产『待发事件』，但未登记 EVENT_TYPES、未接线落账 → 一旦登记+接线即『已接线』"
+      "expected_status": "已接线",
+      "owner": "life-layer-dev（T224）",
+      "due_condition": "sleep_window 已产『待发事件』，但未登记 EVENT_TYPES、未接线落账 → 一旦登记+接线即『已接线』  [接线确认] wired_by=6975f18（T224 agent.py 睡眠挂载点→INTENT.MEMORY→裁决器落事件）",
+      "wired_by": "6975f18"
     },
     {
       "name": "MEMORY_FORGET",
@@ -113,9 +116,10 @@
         "v1.1/08-engine-stats-extension.md §1.2 S",
         "code/life/sleep_window.py"
       ],
-      "expected_status": "未接线",
-      "owner": "persona-life-designer (T224) / kernel-dev",
-      "due_condition": "同 MEMORY_CONSOLIDATE"
+      "expected_status": "已接线",
+      "owner": "life-layer-dev（T224）",
+      "due_condition": "同 MEMORY_CONSOLIDATE  [接线确认] wired_by=6975f18（T224 agent.py 睡眠挂载点→INTENT.MEMORY→裁决器落事件）",
+      "wired_by": "6975f18"
     },
     {
       "name": "PERSONA_DRIFT",
@@ -124,9 +128,10 @@
         "v1.1/08-engine-stats-extension.md §1.2 S",
         "code/life/sleep_window.py"
       ],
-      "expected_status": "未接线",
-      "owner": "persona-life-designer (T224) / kernel-dev",
-      "due_condition": "同 MEMORY_CONSOLIDATE"
+      "expected_status": "已接线",
+      "owner": "life-layer-dev（T224）",
+      "due_condition": "同 MEMORY_CONSOLIDATE  [接线确认] wired_by=6975f18（T224 agent.py 睡眠挂载点→INTENT.MEMORY→裁决器落事件）",
+      "wired_by": "6975f18"
     },
     {
       "name": "PERSONA_FINGERPRINT",
@@ -152,9 +157,10 @@
         "narrative[^\\n]*\\.write\\(",
         "write_[a-z_]*narrative"
       ],
-      "expected_status": "未接线",
-      "owner": "narrative-designer 侧",
-      "due_condition": "NARRATIVE 事件已由 life/agent.py 发射（body_ref=side://narrative/...），但**指向的正文无写入方** → 即使 side 保留也导不出（非归档问题，是从未写过）。接线：narrative-designer 落正文到 side 存储。wire_task：待派（narrative-designer 域）"
+      "expected_status": "已接线",
+      "owner": "life-layer-dev / freeze-layer-dev（T234/T53）",
+      "due_condition": "NARRATIVE 事件已由 life/agent.py 发射（body_ref=side://narrative/...），但**指向的正文无写入方** → 即使 side 保留也导不出（非归档问题，是从未写过）。接线：narrative-designer 落正文到 side 存储。wire_task：待派（narrative-designer 域）  [接线确认] wired_by=74f75d0（T234 phase1: SideStore 叙事正文 writer + persist_body 开关）；事件发射点 agent.py:499 _submit_audit('NARRATIVE')",
+      "wired_by": "74f75d0"
     },
     {
       "name": "SKILL_OUTPUT(body)",
