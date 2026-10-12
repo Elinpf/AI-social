@@ -158,6 +158,18 @@
 
 ## 7. 变更记录
 
+- **v1.3.12（17:35）**：**下午收口段（T283 / T272 / T280 / T274）+ 冻结前状态**。
+  ⭐ **T283 诊断：用户"行动一瞬间"= 世界层本来就没有「过程」（判定 (a)）**，三项硬证据：
+  ① **日志无中间位置** —— `PLACE_MOVE→PLACE_ARRIVED` 回合差**恒为 0**（511/512/420 次全为 0）；
+  ② **`travel_ticks` 硬编码为 1**（`orchestration/integration.py:455` `_do_move`，**同一调用内连发 MOVE+ARRIVED** ⇒ 移动占 **0 回合**）；
+  ③ ★ **`config/topology.json:114` 的 0–3「移动耗时」表存在，但 `_do_move` 从未引用** ⇒ **「定义了但没生效」今日第 5 例**（第 4 例 = `grassLight`）。
+  **对照**：`ACTIVITY` **有** `duration_ticks`；**`MSG_DM`/`MARKET_TRADE`/`TRANSFER` 完全没有时长字段** ⇒ "聊天/交易一瞬间"是**世界层没这个维度**，不是渲染丢了。
+  ⇒ **用户第四个维度**（与「动得生硬」不同：那是**质量**、这是**时长/过程不可见**）。**呈现层治不了**（会"让画面替世界撒谎" ✗）⇒ **已给用户三选项**：**①接上那张已存在的 `travel_ticks` 表（Leader 推荐：非新设定，"让作者写下的设定生效"，对齐 D5）· ②给对话/交易加 duration 维度（新语义 + 08 登记）· ③只改呈现（不推荐）**。**执行：明天白天相位、先方案、用户拍板。今晚不动。**
+  **T272（R8 定位，已 completed）**：**主项 = `ledger.records` 全量常驻 3.065 MB/回合（占已归因 78.9%，本身超线性 ~1.9×）** ⇒ **下一刀在账本、不在记忆**（T268 已把节点降到 0.28）；**未归因 ~4.55 MB/回合（54%）如实标"未定位"、未凑表**；`life.forward_state` **同结构两个病但量级极小（<1MB）**：它是 **T276 的正确性障碍**、**不是内存主因** ⇒ 已开 **T281**（账本常驻削减方案，sim-system-architect）。
+  **T280（已 completed）**：**两个 Makefile 同名异义**（根 `gate`≠`code/` 下 `gate`；**根无 `ci`**）→ **零破坏消歧**：新增 **`make verify`（唯一总门）** + `gate-repo`/`gate-front` 别名 + 两份 `make help` 写清"验什么/哪跑"。**纪律：报门禁必须写清"哪个目录的哪个目标"。**
+  **T274 + T271 已入 git `bb4366e`**（`tools/t271/` + 2 runbook + 2 evidence）⇒ 今晚流水线**绑得上 sha**；**脏树门禁**已装（`tree=copy` 用已提交树 vs `tree=main` 跑活树 ⇒ 冻结区脏则消融不可比，**不 clean 就 abort**）。
+  **T262 证据已归档**：`v2/evidence/archive/run_t236_canon_n20_llm.partial-r35.jsonl`（34,041,041 B / 74,457 行 / max_round=35）+ `t236_flush_curve.txt`。
+  **19:00 冻结前状态**：冻结区干净 · 平台 anon 4.83G（< 7.0G 阈值）· 变更清单 = T228/T234/T221c/T244/T247/T255/T248/**T264/T265/T266/T268/T276** · 4 批已批（A/B/C/D）。
 - **v1.3.11（17:18）**：
   ① ✅ **T276 路线① 落地**（sha `5d6b0aa`）：`run_e2e --resume-from/--target-round`（**加性、未使用时不改行为**）；红测试改 `xfail(strict=True)` 当**棘轮**（理由=待 life `LifeAgent.restore()`，明天白天）；实测 `481 passed, 1 xfailed` / `lint-imports 9 kept/0 broken` / `lexicon-gate` exit 0 → **世界层干净、门禁绿**（19:00 冻结条件满足）。
   ② ⭐ **新纪律（由 kernel 自查换来）**：**"重放路径成立 ≠ 实时运行路径成立"** —— 同一逻辑的**两条执行路径**，**证据必须分别取**。实例：他的 (b)（consolidate 合成 ref 置 `None`）在**重放**路径无风险，在**实时运行**路径让 life 读到 `None` → `SYSTEM_ERROR`（7 项失败）→ **他自查、`git checkout` 回退、并更正了自己先前的"无风险"判断**。**若未自查，今晚 A 批会在实时路径上撞错，且要到早报才看得出。**
