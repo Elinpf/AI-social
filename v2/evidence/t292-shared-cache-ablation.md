@@ -5,6 +5,8 @@
 > 硬约束遵守：**未碰 `code/{engine,life,freeze,config,obs,contracts,orchestration}`**。跑批托管 = T271 transient（逃逸平台 cgroup）。
 
 ## 0. 结论（先给）
+> **⚠️ 与本"冻结基线"的关系（读前必看）**：本轮 A 的指纹 = **`f378d5d3`**，而 `v2/evidence/t236-refreeze.md` 的冻结基线 A 指纹 = **`f1ea31a3`** ⇒ **两个 A 的事件数不同（301,332 vs 301,384）不是行为差异，是"22:22 新增 `time.json` 进指纹 ⇒ cache 全 miss ⇒ 新 LLM 答案"**。**两者不可直接比；本轮表内 A 只作本轮 B/C/D 的内部基准。** 详见 §3。
+
 - ★ **`B−A = −2`**（301,330 − 301,332），**恰好 = 世界导演的 2 个事件**（`WORLD_DIRECTIVE=1`+`WORLD_GROUP_EVENT=1`）⇒ **关掉世界导演后世界逐项一致** ⇒ **世界导演默认剂量 = 纯旁白（`_NOOP_TYPES`），无下游行为影响 ⇒ D3 未达成**（与 T289 互证）。
 - **今晚"B 反而比 A 多 11"纯粹是跨批分叉噪声**（每批独立 `freeze_cache`+真 LLM）—— 共享 cache 后该噪声消失。
 - **C 是"零结果"（机制缺口）**：`cfg['life_v2']` override **够不到**（life **直读盘** `config/life_v2.json`）⇒ **C ≡ A（100% 缓存、同 `state_hash`）**；**不代表"三族无效果"**（今晚 `file` 模式 C 的"事件减半"仍成立）。⇒ **T297b 的理由**。
@@ -43,6 +45,14 @@
 
 ## 5. 复现
 ```bash
-# 同 side_root、config-dict 覆盖；A 先填 cache，B/C/D 复用
+# 本 run：同 side_root、config-dict 覆盖；A 先填 cache，B/C/D 复用
 python3 /tmp/t292_shared_run.py     # 结果 /tmp/t292/t292_shared_results.json
+```
+**下晚（经流水线，一键复现 B/D 干净对照）**：批次表用 **`side` 填同一路径** + **`switch_mode=override`**（开关作 runtime cfg 覆盖，不改副本文件、保 `cache_key` 命中）：
+```bash
+# tools/t271/batches.example.tsv: B/D 行 side=<同一路径>, switch_mode=override
+R=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+python3 "$R/tools/t271/nightly.py" start --batches "$R/tools/t271/batches.example.tsv" \
+  --sha "$(git -C "$R" rev-parse HEAD)" --env-file "$R/code/.env.local" --heartbeat 600
+# ⚠️ C(life_v2) 仍需 life 注入 hook（T297b）才能 override；否则只能 file 模式=半干净。
 ```
