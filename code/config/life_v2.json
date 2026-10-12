@@ -27,6 +27,8 @@
     "alpha_permille": 20,
     "delta_max": 1,
     "drift_max_permille": 150,
-    "drift_dim_max_permille": 200
+    "drift_dim_max_permille": 200,
+    "min_importance": 7,
+    "min_windows": 2
   }
 }

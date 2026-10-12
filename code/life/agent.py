@@ -184,6 +184,25 @@ class LifeLayerAgent:
                 if v is not None:
                     st[k] = int(v)
             self._persona_state = st
+        # T323：`_drift_streak` 按"**逐维**、连续含候选窗数"原样重建
+        # （每睡眠窗：该维有候选→+1；`reached_threshold`→清零；缺失→0）
+        cand_reached: dict = {}
+        for rec in records:
+            p = rec.get("payload") or {}
+            if rec.get("type") == "PERSONA_DRIFT_CANDIDATE" and p.get("agent_id") == self.agent_id:
+                cand_reached[(p.get("window"), p.get("dim"))] = bool(p.get("reached_threshold"))
+        if slept or cand_reached:
+            streak: dict = {}
+            for w in sorted(slept):
+                for dim in PD.BIG5_DIMS:
+                    key = (w, dim)
+                    if key in cand_reached:
+                        streak[dim] = streak.get(dim, 0) + 1
+                        if cand_reached[key]:
+                            streak[dim] = 0
+                    else:
+                        streak[dim] = 0
+            self._drift_streak = streak
         # observed: engine-authoritative OBSERVATION set ∪ this agent's MEMORY_WRITE sources
         obs = set(a.get("observed_event_seqs", []))
         for rec in records:
@@ -805,7 +824,8 @@ class LifeLayerAgent:
         out = _sleep.run_sleep_window(self.agent_id, mems, wv.round, params,
                                       day=day, slot=slot, anchor=anchor,
                                       p_state=self._persona_state, p0=self._persona_p0,
-                                      drift_events=self._reflection_drift_events(params))
+                                      drift_events=self._reflection_drift_events(
+                                          params, day=day, slot=slot, window=day))
         n = 0
         for a in out["forget"]:
             if self.kernel.submit_intent(self.agent_id, Intent(INTENT_MEMORY, self.agent_id, {
@@ -844,7 +864,7 @@ class LifeLayerAgent:
     _DRIFT_NEG = ("冲突", "失败", "孤独", "失去", "争吵", "痛苦", "挫折", "焦虑",
                   "conflict", "loss", "lonely", "fail", "struggle")
 
-    def _reflection_drift_events(self, params: dict) -> list[dict]:
+    def _reflection_drift_events(self, params: dict, *, day: int, slot: str, window: int) -> list[dict]:
         """把既有反思节点转成**有界**漂移候选（06 §1.2；T244 W3）。
 
         规则（确定性、**宁缺毋滥**、不新增 LLM 调用）：
@@ -857,9 +877,9 @@ class LifeLayerAgent:
           * 幅度 = `±delta_max`（`bounded_update` 再夹一层）。
         """
         pd = params.get("persona_drift", {}) or {}
-        min_imp = int(pd.get("min_importance", 7))
+        min_imp = int(pd.get("min_importance", PD.DEFAULTS["min_importance"]))
         dmax = int(pd.get("delta_max", 1))
-        min_windows = int(pd.get("min_windows", 2))
+        min_windows = int(pd.get("min_windows", PD.DEFAULTS["min_windows"]))
         dims = PD.BIG5_DIMS
         cand: dict[str, tuple[int, str]] = {}          # dim -> (sign, mem_id)
         for n in sorted(self.memory.nodes.values(), key=lambda x: x.mem_id):
@@ -876,13 +896,20 @@ class LifeLayerAgent:
         evs: list[dict] = []
         for dim in dims:
             if dim in cand:
+                sign, mem_id = cand[dim]
                 self._drift_streak[dim] = self._drift_streak.get(dim, 0) + 1
+                reached = self._drift_streak[dim] >= min_windows
+                # T323：每窗每"有候选"维落一条 CANDIDATE（identity fold、non-state）——
+                # 让 restore() 可按"连续含候选窗数"**逐维**原样重建 _drift_streak。
+                self.kernel.submit_intent(self.agent_id, Intent(INTENT_MEMORY, self.agent_id, {
+                    "op": "drift_candidate", "dim": dim, "sign": sign, "window": int(window),
+                    "mem_id": mem_id, "reached_threshold": bool(reached),
+                    "day": day, "slot": slot}))
+                if reached:  # 持续 = 真漂移；单窗 = 抖动，不发
+                    evs.append({"dim": dim, "delta": sign * dmax, "cause_mem_id": mem_id})
+                    self._drift_streak[dim] = 0            # 发出后冷却
             else:
                 self._drift_streak[dim] = 0
-            if self._drift_streak[dim] >= min_windows:  # 持续 = 真漂移；单窗 = 抖动，不发
-                sign, mem_id = cand[dim]
-                evs.append({"dim": dim, "delta": sign * dmax, "cause_mem_id": mem_id})
-                self._drift_streak[dim] = 0            # 发出后冷却
         return evs
 
     def _describe_event(self, ev) -> str:

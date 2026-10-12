@@ -20,6 +20,9 @@ DEFAULTS: dict[str, int] = {
     "delta_max": 1,         # 单事件单维最大 ±δ（分）
     "drift_max_permille": 150,   # 全维归一化漂移上限（0.15）
     "drift_dim_max_permille": 200,  # 单维归一化漂移上限（0.20）
+    # T323/T320：漂移候选阈值（原硬编码 7/2，现入键集使可配置；默认=现状）
+    "min_importance": 7,      # 反思节点 importance ≥ 此值才算候选（0–10）
+    "min_windows": 2,         # 需连续 N 个睡眠窗含候选才发 PERSONA_DRIFT（<N=抖动不发）
 }
 
 
