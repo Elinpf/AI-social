@@ -106,6 +106,9 @@ def _git_stamp() -> dict:
         n = len([l for l in por.splitlines() if l.strip()])
         dbi = _run("df", "-i", "/").splitlines()[-1].split()
         dbb = _run("df", "-B1", "/").splitlines()[-1].split()
+        # ⚠️ caveat：`avail_bytes` 取 `df` 的 avail 列，**不含 5% root 保留位** ——
+        #    root 场景下"明明能写却报 DISK LOW"是**保守误报**（安全的错法），不是 bug；
+        #    如需"实际可写量"可改用 total−used，但会与 `tools/git_stamp.sh` 分叉 → 保持 avail 列。
         avail_b, avail_i, use = int(dbb[3]), int(dbi[3]), dbb[4]
         min_b = int(os.environ.get("DISK_MIN_AVAIL_BYTES", "1073741824"))   # 1 GiB
         min_i = int(os.environ.get("DISK_MIN_INODE_AVAIL", "100000"))
