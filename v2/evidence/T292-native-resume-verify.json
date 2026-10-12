@@ -1,0 +1,35 @@
+{
+  "task": "native-resume wiring + verification (follow-up to T270/T290)",
+  "author": "release-engineer",
+  "date": "2026-10-12",
+  "runbook": "v2/refs/nightly-pipeline-runbook.md §4",
+  "scripts": "tools/t271/nightly.py, tools/t271/verify_native_resume.sh, tools/t271/batches.example.tsv",
+  "resume_mechanism": {
+    "real_runner_flags": "--resume-from <flushed_prefix_log> --target-round <N> (orchestration/cli.py; run_e2e(resume_from=, target_round=))",
+    "semantics": "read prefix -> truncate to last TURN_SEAL -> engine.load_prefix -> life restore() hook -> continue; final flush rewrites out with FULL records (prefix+continued) => last round == target-1",
+    "requirement": "MUST reuse the same side_root (shared source/cache)"
+  },
+  "pipeline_verification": {
+    "cmd": "bash tools/t271/verify_native_resume.sh",
+    "result": "PASS",
+    "checks": [
+      "interrupt (kill mid-run) detected as INTERRUPTED",
+      "nightly native resume completes to target round (149)",
+      "collect classifies native-resumed batch as SUCCESS (log last round == target, not heartbeat round)"
+    ]
+  },
+  "byte_identity_probe": {
+    "claim_under_test": "resume result == one-shot result, byte-identical (T276/T288)",
+    "params": "seed=9, agents=2, rounds=150, flush-every=5, kill at round 89",
+    "result": "MISMATCH",
+    "resumed_sha256": "b3ae4c56d7b90586f64299dd4a2411acd1d71f48000468b938733bc3712a69cc",
+    "oneshot_sha256": "eecade7e285ffc700e00652df5a1a54d888b9d10500464a6e06a792cd4253b6c",
+    "first_divergence": {"line": 5081, "round": 93, "type": "MEMORY_FORGET",
+      "detail": "resumed chose level=merge mem_id=M-P001-000005 ; oneshot chose level=drop mem_id=M-P001-000003"},
+    "interpretation": "prefix (rounds 0-89) reproduced identically; divergence appears 4 rounds AFTER resume start (90) => restored life/memory state at round 90 differs subtly from one-shot. Likely a life-layer restore() gap, OR a scope difference from T288's tested configs (seed42/n=4/0..8, seed42/n=4/0..24, N=20x24 cut12 all PASSED).",
+    "caveat": "This probe is the runner/life contract (T276/T288), NOT the nightly pipeline. Pipeline flips default resume_mode=native per leader; native should be self-verified per (sha,config).",
+    "side_root_note": "cold vs warm freeze_cache changes the 'cached' field in LLM_CALL records (observed at line 7 in an earlier cold-comparison) -> byte-identity comparisons must use matched cache warmth; this probe warmed first."
+  },
+  "default_change": "batches.example.tsv resume_mode: overlap -> native (overlap kept as explicit fallback)",
+  "repro": "T271_NR_ROOT=/tmp/nr bash tools/t271/verify_native_resume.sh"
+}

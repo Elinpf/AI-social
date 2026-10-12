@@ -55,9 +55,10 @@ python3 "$REPO/tools/t271/nightly.py" collect
 ```bash
 python3 "$REPO/tools/t271/nightly.py" resume --batches <表> --env-file "$REPO/code/.env.local"
 ```
-- **`native`**（命令支持续跑，如 mock）：从 **flush 前缀**继续（实测：kill 于 round 10 → `[resume] 完整前缀到 round 10 → 续跑` → 完成）。
-- **`overlap`**（真 runner 现状）：**不支持从死点续跑** → 走**重叠重跑**：用**同一副本/同一开关/同一 sha** 重跑到目标回合，输出到 `rerun.jsonl`，`meta.resume_mode=overlap_rerun`。**用的是既有 `--flush-every` 前缀**（可 replay 到死亡回合），但**新批是重头再跑**（重叠）。**不假装能续。**
-- **T276 落地后**：把真 runner 的 `resume_mode` 改成 `native`、并核「续跑结果与一次性跑**逐字节一致**」，再启用 native。
+- **`native`（默认；T276/T288 落地后）**：真 runner 用 **`--resume-from <已 flush 前缀> --target-round <目标>`**，从 flush 前缀**接着跑到目标回合**，日志被重写为**完整日志（前缀+续跑段）**，`collect` 末条 round 即 target ✓。**必须复用同一 `side_root`**（共享源正文/缓存）。
+  - **前提（硬）**：该 **sha + 该配置** 上「**逐字节一致**」已被验证。**换 sha 或换配置（seed/N/rounds/开关）后须重新核**。
+  - **实测（本机）**：参数正确、状态判对（`bash tools/t271/verify_native_resume.sh` 门禁 PASS）。**但该脚本的逐字节【探针】在 `seed=9/n=2/150r` 上不一致**（续跑与一次性跑在 **round 93** 的 `MEMORY_FORGET` 分叉）→ 说明「逐字节一致」**并非所有配置都成立**；native 用于新配置前**必须自证**。详见 `v2/evidence/T292-native-resume-verify.json`。
+- **`overlap`（显式回退，保留）**：重跑到目标回合，输出 `rerun.jsonl` → `meta.resume_mode=overlap_rerun`（此处 `rerun` 指"重跑产物文件名"，非 `replay` 重放）。**不假装能续**；`native` 前提不满足时用它。
 
 ## 5. 长期账：清理 / 保留 / inode 监控
 ```bash

@@ -22,7 +22,7 @@ RUN_ROOT = os.environ.get("T271_RUN_ROOT", "/root/t271/runs/nightly")
 DEFAULT_ENV = os.path.join(REPO, "code", ".env.local")
 DEFAULT_CMD = ("/opt/openjiuwen/workswarm-venv/bin/python -m orchestration run --life "
                "--seed {seed} --agents {agents} --rounds {rounds} --out {out} "
-               "--side-root {side} --flush-every {flush}")
+               "--side-root {side} --flush-every {flush} {resume_args}")
 
 
 FROZEN_DIRS = ("code/engine", "code/life", "code/freeze", "code/config",
@@ -205,11 +205,14 @@ def batch_state(name: str, run_root: str):
 # ---------------------------------------------------------------- launch helper
 def launch(name, copy, run_dir, sha, envfile, cmd_tmpl, rounds, agents, seed, flush,
            heartbeat, mem_high, mem_max, switch_val, resume_mode, extra_tag="", out_name="run.jsonl",
-           out_override=None, tree_val=""):
+           out_override=None, tree_val="", resuming=False):
     out = out_override or os.path.join(run_dir, out_name)
     side = os.path.join(run_dir, "side")
+    # native 续跑：真 runner 用 --resume-from <已 flush 前缀> --target-round <目标>（复用同一 side_root）
+    resume_args = f"--resume-from {out} --target-round {rounds}" if resuming else ""
     ctx = dict(out=out, side=side, hb=os.path.join(run_dir, "heartbeat.tsv"),
-               copy=copy, rounds=rounds, agents=agents, seed=seed, flush=flush)
+               copy=copy, rounds=rounds, agents=agents, seed=seed, flush=flush,
+               resume_args=resume_args)
     cmd = (cmd_tmpl or DEFAULT_CMD).format(**ctx)
     meta = [f"sha={sha}", f"copy={copy}", f"switch={switch_val}",
             f"side_root={side}", f"flush_every={flush}", f"resume_mode={resume_mode}",
@@ -390,18 +393,25 @@ def cmd_resume(a):
         b = batches.get(n)
         if not b:
             print(f"[resume] {n}: 无批次表条目，跳过"); continue
-        copy = os.path.join(COPY_ROOT, f"t271-{n}")
-        run_dir = os.path.join(root, n)
         sha = st.get("sha") or sh(["git", "-C", REPO, "rev-parse", "HEAD"]).stdout.strip()
+        # 副本可能已被 cleanup 删：优先用 meta 记录的副本，缺失则从 sha 重建并重落开关
+        meta = st.get("meta") or {}
+        copy = meta.get("copy") or os.path.join(COPY_ROOT, f"t271-{n}")
+        if not os.path.isdir(os.path.join(copy, "code")):
+            print(f"[resume] {n}: 副本缺失，从 sha 重建 -> {copy}")
+            shutil.rmtree(copy, ignore_errors=True); os.makedirs(copy, exist_ok=True)
+            sh(f"git -C '{REPO}' archive '{sha}' | tar -x -C '{copy}'", check=True)
+            apply_switch(copy, meta.get("switch") or "-")
+        run_dir = os.path.join(root, n)
         mode = b["resume_mode"]
         if mode == "native":
-            print(f"[resume] {n}: native 续跑（同一日志，从 flush 前缀继续）")
+            print(f"[resume] {n}: native 续跑（--resume-from 已 flush 前缀，--target-round {b['rounds']}，复用同一 side_root）")
             launch(n, copy, run_dir, sha, a.env_file or DEFAULT_ENV, b["cmd"],
                    b["rounds"], b["agents"], b["seed"], b["flush"], a.heartbeat,
                    a.mem_high, a.mem_max, st.get("switch") or "-", "native",
-                   out_name=os.path.basename(st.get("out") or "run.jsonl"))
+                   out_override=st.get("out"), resuming=True)
         else:
-            print(f"[resume] {n}: overlap 重叠重跑（真 runner 不支持续跑；重跑到目标 {b['rounds']} 回合）")
+            print(f"[resume] {n}: overlap 重叠重跑（回退；重跑到目标 {b['rounds']} 回合，落 rerun.jsonl）")
             launch(n, copy, run_dir, sha, a.env_file or DEFAULT_ENV, b["cmd"],
                    b["rounds"], b["agents"], b["seed"], b["flush"], a.heartbeat,
                    a.mem_high, a.mem_max, st.get("switch") or "-", "overlap_rerun",
