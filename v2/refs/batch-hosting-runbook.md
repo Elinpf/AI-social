@@ -1,0 +1,132 @@
+# 跑批托管 runbook —— 让长批次扛得住平台重启（T271）
+
+> 作者：release-engineer ｜ 2026-10-12 ｜ 任务：T271-batch-hosting-survives-platform-restart
+> 状态：**已实测**（mock/decoy 验证；未实测处标 **【未验证】**）。交付对象：obs-stats-dev / team-leader。
+> 脚本：`tools/t271/`（本目录内，已实测）；运行产物默认落 `/root/t271/runs/<batch>/`（仓库外，不进 git）。
+
+---
+
+## 0. 一句话
+长跑批必须**跑在 `jiuwenswarm.service` cgroup 之外**，否则 memguard 重启平台会把它连坐回收。
+做法：`systemd-run --unit=<name>` 起一个**独立 transient unit**（在 `system.slice` 下、与平台服务平级）。
+本 runbook 给出：**逃逸实测 + 重启存活验证 + 心跳 + 续跑口径 + 可复制粘贴启动清单**。
+
+---
+
+## 1. 元凶与机制（事实）
+- `jiuwenswarm.service` 的 `KillMode=control-group`：**重启该单元 = 回收其 cgroup 内所有进程（含 detached 子进程）**。
+- memguard 于 **15:52:24** 触发 `systemctl restart jiuwenswarm` → 服务组内进程被回收 → T236 在 round 35 **静默死亡**（无 OOM、无 traceback）。
+- 实测：我们启动的进程 cgroup = `/system.slice/jiuwenswarm.service`。
+
+## 2. 逃逸实测（三种方式对照，2026-10-12 16:41）
+| 启动方式 | `/proc/<pid>/cgroup` | 逃逸？ |
+|---|---|---|
+| `setsid sleep 300` | `0::/system.slice/jiuwenswarm.service` | ❌ **否** |
+| `systemd-run --scope --unit=X sleep 300` | `0::/system.slice/X.scope` | ✅ 是 |
+| `systemd-run --unit=X sleep 300` | `0::/system.slice/X.service` | ✅ 是 |
+
+**结论**：`setsid` 只换 session、**不换 cgroup** → 照样连坐；**必须用 `systemd-run`**。长跑批用 `--unit=<name>`（transient **service**，立即 detach、由 PID 1 托管、可查可停、可设内存上限）。
+
+## 3. 重启存活实测（decoy 复现同一 KillMode + 反向对照，2026-10-12 16:46）
+用 `t271-guard.service`（**与 jiuwenswarm.service 同为 `KillMode=control-group`**）复现杀组语义，一次重启同时观察两个对象：
+
+| 对象 | 位置 | 重启前 | 重启后 | 判据 |
+|---|---|---|---|---|
+| 受害者（in-cgroup，`setsid` detached） | `.../t271-guard.service` | pid=72956 alive | **alive=no** | **反向对照**：它没死则测试无效 |
+| 候选批（逃逸，独立 unit） | `.../t271-restart-cand.service` | pid=73117 alive | **alive=yes（同 pid）** | 逃逸存活 |
+| 候选批心跳 | `cand/mock.hb` | 重启前有行 | 重启后仍有行 | 跨越重启时刻**连续** |
+
+结果：**`RESULT: PASS`**。受害者心跳末行冻结在 `2026-10-12 16:46:45`（=重启时刻）——**恰好复现 T236「死在哪一刻」**。
+> 语义等价说明：只重启 decoy，**绝不真重启平台**（会打断全员会话）；decoy 与平台服务**同一 `KillMode`**，唯一杀组手段相同 → 结论对平台成立。
+
+## 4. 启动清单（复制粘贴；一批一跑）
+> 约定：`REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`；批次名 `<B>`（如 `A`）；跑批产物落 `RUN=/root/t271/runs/<B>`。
+
+**① 预检（必看：平台 anon < 7.0G 是第一原则）**
+```bash
+bash "$REPO/tools/t271/preflight.sh" | tee -a "$RUN/preflight.txt"   # free / df -h / df -i / MemAvailable
+```
+
+**② 建只读副本（零 git 操作；开关以【文件】落在副本里）**
+```bash
+SHA=$(git -C "$REPO" rev-parse HEAD)
+bash "$REPO/tools/t271/make_batch_copy.sh" <B> "$SHA"     # → /tmp/t271-<B>/
+# 消融批次：在此改 /tmp/t271-<B>/code/config/<file>.json（只改那一个开关，不提交、不碰 .git）
+bash "$REPO/tools/t271/capture_provenance.sh" /tmp/t271-<B> "$RUN"   # 源sha + config 全文 sha256 + 开关 diff 存档
+```
+
+**③ 托管启动（脱离 cgroup）**
+```bash
+RUN=/root/t271/runs/<B>; mkdir -p "$RUN"
+bash "$REPO/tools/t271/host_batch.sh" \
+  --name <B> --out "$RUN/run.jsonl" --workdir /tmp/t271-<B>/code \
+  --env-file "$REPO/code/.env.local" \
+  --mem-high 6G --mem-max 8G --heartbeat 600 \
+  --meta sha="$SHA" --meta copy=/tmp/t271-<B> --meta switch=<开关值> \
+  --meta side_root="$RUN/side" --meta flush_every=12 \
+  -- python3 -m orchestration run --life --seed 42 --agents 20 --weeks <W> \
+       --out "$RUN/run.jsonl" --side-root "$RUN/side" --flush-every 12
+```
+> ⚠️ **凭据只走 `--env-file`（= `systemd-run -p EnvironmentFile=<主树>/code/.env.local`）**；
+> **绝不用 `--setenv`**——实测 `--setenv` 会把密钥带进 `systemctl show`/`ps`/journal（永久留痕）；
+> `EnvironmentFile` 方式下 `systemctl show -p Environment` 为空、**不泄**（只记录文件路径）。
+
+**④ 跑完收尾（回填指纹/结束时刻）**
+```bash
+bash "$REPO/tools/t271/finalize_meta.sh" "$RUN"    # engine_version 指纹取自日志首行 WORLD_INIT
+```
+
+**⑤ 运行期观测**
+```bash
+watch -n 60 "bash $REPO/tools/t271/status.sh $RUN"   # 组合视图
+tail -f "$RUN/heartbeat.tsv"                          # 时间 / size / round / RSS_MB
+```
+> **心跳必须落文件**（`heartbeat.tsv`），**绝不依赖会话内轮询**——平台重启会杀掉 Agent 会话，重启后回读文件即可判「死在哪一刻」。
+
+**每批 run 元数据（`meta.json`，缺一不可）**：批名 / `sha` / `engine_version_fingerprint` / `switch` / `started_at` / `ended_at` / `heartbeat_file` / `copy`（副本路径）/ `side_root` / `flush_every` / `cmd`。
+
+## 5. 平台重启后如何判读
+1. `cat "$RUN/meta.json"` → 确认批次身份（sha/开关/指纹）。
+2. `cat "$RUN/heartbeat.tsv"` → **末行时间 = 死亡（或结束）时刻**；末行 round/size 就是死点。
+3. `cat "$RUN/cgroup.txt"` → 证明该批单元 cgroup（**不含** `jiuwenswarm.service`）。
+4. 若 pid 仍活 → 该批**已扛过重启**。
+
+## 6. 断点续跑口径
+- **真 runner（`python -m orchestration run`）现状**：
+  - `--flush-every N`（T262）每 N 回合把**已提交前缀原子落盘**（tmp+`os.replace`，**绝无半条记录**）→ 被 kill 后日志是**可 `replay`/`verify` 的完整前缀**。
+  - **但不支持从第 k 回合续跑**（`run_e2e` 恒从创世开始）→ **真批「从死点续跑」【不可行】**（需改 `orchestration`，本次冻结不做）。
+  - 因此真批断点口径 = **flush 前缀保命**：可从死点**回放状态、指标算到死亡回合**，最后不足一个 flush 周期的回合需重跑。
+- **续跑模式已用 mock 证明可行**（`mock_batch.py`）：SIGKILL 后重跑同命令 → **截断未完成尾巴 → 从 flush 前缀继续**。
+  - 实测：kill 于 round 6（flush 前缀）→ 重跑输出 `[resume] 完整前缀到 round 6 → 续跑` → 跑到 40，事件数自洽（161 行）。
+- **[未验证]** 若日后要真批续跑，需给 runner 加 `--resume-from <prefix_log>`（**属 code 改动，本次不做**）。
+
+## 7. memguard 触发阈值（排班依据）
+| 项 | 值 |
+|---|---|
+| 定时器 | `jiuwenswarm-memguard.timer` 每 **2 分钟**（`OnUnitActiveSec=2min`，开机后 5min 首次，`AccuracySec=30s`） |
+| 判定量 | cgroup **anon（匿名内存）**，**非** memory.current（含可回收 page cache） |
+| SOFT | `7168 MB`（anon ≥7.0G 且**空闲 ≥120s** → 重启） |
+| HARD | `9728 MB`（anon ≥9.5G **连续 2 次** → 不等空闲立即重启） |
+| 其他 | `IDLE_SECONDS=120`、`HARD_STRIKES=2`；平台 `MemoryHigh=10G / MemoryMax=14G / MemorySwapMax=4G` |
+| 今晚复盘 | 15:50 anon=10182→strikes 1/2；15:52 anon=10269→strikes 2/2 → RESTART |
+
+**排班结论**：**平台 anon < 7.0G → 完全不触发**；7.0–9.5G 区间仅在**空闲≥120s** 才软重启（跑批有活动→只记日志）；≥9.5G 连续 4min 才硬重启。
+→ **控并发/人机会话把 anon 压在 7G 以下，就根本不需要逃逸兜底**；逃逸是第二道保险（且**跑批在独立 unit，其内存不再计入平台 cgroup**——逃逸顺带降低平台 anon）。
+
+## 8. 实测证据（本 runbook 结论的复算入口）
+| 编号 | 内容 | 复现命令 | 观测 |
+|---|---|---|---|
+| E1 | 逃逸对照 | 见 §2 | setsid ❌ / systemd-run ✅ |
+| E2 | 重启存活（反向对照+PASS） | `bash tools/t271/restart_harness.sh` | victim alive=no；cand alive=yes；心跳连续；RESULT PASS |
+| E3 | 断点续跑 | `mock_batch.py` kill→重跑 | 从 round 6 续到 40 |
+| E4 | env-file 不泄 | `host_batch.sh --env-file <dummy>` + `systemctl show -p Environment` | `Environment=` 空 |
+| E5 | 副本+开关+托管+指纹 | §4 ①–④（mock provider） | cgroup=`.../t271-copyA.service`；指纹回填成功；`switch.diff` 19 行 |
+
+原始产物：`/root/t271/runs/{smoke1,restart-test,resume-demo,env-test,wtmock,copyA}/`（心跳/pid/cgroup/meta/log 齐全，**仓库外**）。
+
+## 9. 未验证 / 边界
+- **【未验证】** 真 LLM 端点并发上限（B/C/D 并行探针上验证，不在此）。
+- **【未验证】** N=20 真批的单批内存峰值（用 `--mem-max` 先给 8G 上限兜底；到点看 `heartbeat.tsv` 的 RSS）。
+- **【不可行】** 真 runner 从死点续跑（见 §6）。
+- **边界**：脚本默认路径写死 `REPO`/`T271_COPY_ROOT=/tmp`；改路径用环境变量 `T271_REPO`/`T271_COPY_ROOT` 覆盖。
+- **红线遵守**：不改 `code/{engine,life,freeze,config}`；跑批在 `/tmp` 只读副本内进行，**不向主树写 pyc/缓存/中间产物**；密钥只走 `EnvironmentFile`，不落盘/不入日志/不入报告。

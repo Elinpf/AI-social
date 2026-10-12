@@ -1,0 +1,86 @@
+{
+  "task": "T271-batch-hosting-survives-platform-restart",
+  "author": "release-engineer",
+  "date": "2026-10-12",
+  "runbook": "v2/refs/batch-hosting-runbook.md",
+  "scripts_dir": "tools/t271/",
+  "raw_artifacts_dir": "/root/t271/runs/",
+  "root_cause": {
+    "unit": "jiuwenswarm.service",
+    "kill_mode": "control-group",
+    "self_cgroup_observed": "0::/system.slice/jiuwenswarm.service",
+    "trigger": {
+      "time": "2026-10-12 15:52:24",
+      "actor": "jiuwenswarm-memguard.service -> systemctl restart jiuwenswarm",
+      "effect": "T236 batch (started 14:46) died silently at round 35/84 (no OOM, no traceback)"
+    }
+  },
+  "memguard_thresholds": {
+    "timer": "jiuwenswarm-memguard.timer every 2min (OnUnitActiveSec=2min), OnBootSec=5min, AccuracySec=30s",
+    "metric": "cgroup anon (not memory.current)",
+    "soft_mb": 7168,
+    "hard_mb": 9728,
+    "idle_seconds": 120,
+    "hard_strikes": 2,
+    "platform_cgroup": { "MemoryHigh": "10G", "MemoryMax": "14G", "MemorySwapMax": "4G" },
+    "incident_replay": [
+      "15:50 anon=10182MB strikes=1/2",
+      "15:52 anon=10269MB strikes=2/2 -> RESTART"
+    ],
+    "policy_note": "platform anon < 7.0G never triggers; keep concurrency low to avoid memguard entirely"
+  },
+  "verification": [
+    {
+      "id": "E1",
+      "name": "cgroup escape (three ways)",
+      "time": "2026-10-12 16:41",
+      "observations": {
+        "setsid_sleep300": { "cgroup": "0::/system.slice/jiuwenswarm.service", "escaped": false },
+        "systemd_run_scope": { "cgroup": "0::/system.slice/t271-scope-test.scope", "escaped": true },
+        "systemd_run_unit": { "cgroup": "0::/system.slice/t271-svc-test.service", "escaped": true }
+      },
+      "conclusion": "setsid does NOT escape cgroup; systemd-run does"
+    },
+    {
+      "id": "E2",
+      "name": "restart survival via decoy (same KillMode) + reverse control",
+      "time": "2026-10-12 16:46",
+      "decoy_unit": "t271-guard.service (KillMode=control-group, mimics jiuwenswarm.service)",
+      "victim": { "placement": "in t271-guard.service cgroup (setsid detached)", "pid": 72956, "after_restart_alive": false, "heartbeat_last_line": "2026-10-12 16:46:45" },
+      "candidate": { "placement": "own unit t271-restart-cand.service", "pid": 73117, "after_restart_alive": true, "same_pid": true, "heartbeat_continuous_across_restart": true },
+      "restart_ts": "2026-10-12 16:46:45",
+      "result": "PASS",
+      "note": "decoy only; real platform never restarted (would kill all sessions)"
+    },
+    {
+      "id": "E3",
+      "name": "resume from flushed prefix (mock)",
+      "time": "2026-10-12 16:47",
+      "detail": "SIGKILL at round 6 (flush-every=3) -> relaunch same cmd -> '[resume] 完整前缀到 round 6 → 续跑' -> reached round 40; 161 event lines consistent"
+    },
+    {
+      "id": "E4",
+      "name": "env-file injection does not leak",
+      "time": "2026-10-12 16:48",
+      "detail": "host_batch.sh --env-file <dummy>: child env contains var; systemctl show -p Environment == empty; only EnvironmentFiles path recorded",
+      "rule": "credentials only via systemd-run -p EnvironmentFile=<main_repo>/code/.env.local; never --setenv"
+    },
+    {
+      "id": "E5",
+      "name": "archive copy + file switch + hosted real binary + fingerprint backfill",
+      "time": "2026-10-12 16:53",
+      "source_sha": "b92f8afe94f19ca79d6561a2829a52e192742929",
+      "copy": "/tmp/t271-copyA",
+      "candidate_cgroup": "0::/system.slice/t271-copyA.service",
+      "engine_version_fingerprint": "sha256:03636bf9e40ec1ef1f9a1284ca1a1df8388d63d67594b4999731408e189b5e7e",
+      "fingerprint_source": "World record's payload.fingerprint in run.jsonl first line (WORLD_INIT), matches meta.json backfill",
+      "switch": "social.json modified as file (ablation_demo=true); capture_provenance.sh produced switch.diff (19 lines)",
+      "red_line": "no change to code/{engine,life,freeze,config}; copy runs in /tmp (no pyc/cache written to main tree)"
+    }
+  ],
+  "unverified": [
+    "real LLM endpoint concurrency limit (to be probed by parallel probe)",
+    "N=20 real batch peak memory (cap via --mem-max 8G, watch heartbeat RSS)",
+    "native resume-from-death for the real runner is NOT supported (no --resume-from; would need code change)"
+  ]
+}

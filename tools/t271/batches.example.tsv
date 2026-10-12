@@ -1,0 +1,9 @@
+# T274 夜跑批次表（TSV；# 注释；制表符分隔）
+# 列：name rounds agents seed switch resume_mode tree flush out cmd
+#   tree: main(A,主树) | copy(默认,/tmp只读副本). out 留空=<run_root>/<name>/run.jsonl
+#   resume_mode: native(T276后) | overlap(当前真runner只能重叠重跑)
+name	rounds	agents	seed	switch	resume_mode	tree	flush	out	cmd
+A	84	20	42	-	overlap	main	12	/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_t236_canon_n20_llm.jsonl	
+B	84	20	42	world_director.json:enabled=false	overlap	copy	12		
+C	84	20	42	life_v2.json:sleep.enabled=false;life_v2.json:forgetting.enabled=false	overlap	copy	12		
+D	84	20	42	policy.json:wake.enabled=true	overlap	copy	12		

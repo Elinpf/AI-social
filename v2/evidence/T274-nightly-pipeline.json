@@ -1,0 +1,59 @@
+{
+  "task": "T274-nightly-run-pipeline",
+  "author": "release-engineer",
+  "date": "2026-10-12",
+  "runbook": "v2/refs/nightly-pipeline-runbook.md",
+  "scripts": "tools/t271/nightly.py (+ host_batch.sh / make_batch_copy.sh / capture_provenance.sh / finalize_meta.sh / mock_batch.py / demo_nightly.sh / batches.example.tsv)",
+  "source_task": "T271 (hosting). T274 = T271 + nightly orchestration + resume + report + cleanup",
+  "acceptance_demo": {
+    "cmd": "bash tools/t271/demo_nightly.sh",
+    "time": "2026-10-12 17:09-17:10",
+    "steps": [
+      "start 2 mock batches m1/m2 -> each own unit (cgroup .../t271-m1.service, outside jiuwenswarm.service)",
+      "SIGKILL m2 -> collect reports INTERRUPTED (reason: signal rc=137)",
+      "resume (native) -> '[resume] 完整前缀到 round 10 → 续跑'",
+      "final collect -> m1/m2 both SUCCESS (round 39/40, events=121 consistent)",
+      "cleanup -> removed /tmp copies, reclaimed ~351-527 MB; df -i before/after recorded"
+    ],
+    "result": "PASS"
+  },
+  "overlap_demo": {
+    "time": "2026-10-12 17:07",
+    "detail": "o1 (resume_mode=overlap) SIGKILL -> INTERRUPTED -> resume -> 'overlap 重叠重跑' -> rerun.jsonl created, meta.resume_mode=overlap_rerun"
+  },
+  "classification": {
+    "SUCCESS": "RUN_END present OR reached target round",
+    "RUNNING": "pid alive",
+    "INTERRUPTED": "rc in {137,143} or rc<0 (signal -> external interruption, not batch error)",
+    "FAILED": "other non-zero rc"
+  },
+  "resume_semantics": {
+    "native": "command supports resume from flushed prefix (e.g. mock); verified",
+    "overlap": "real runner CANNOT resume from death (run_e2e always starts at genesis); fallback = overlap rerun into rerun.jsonl with same copy/switch/sha",
+    "blocked_on": "T276 (kernel-dev) to make real runner resume from flush prefix; acceptance = byte-identical to one-shot run",
+    "honesty": "flush only guarantees a replayable complete prefix, NOT resumability; last partial flush window must be rerun"
+  },
+  "cleanup_policy": {
+    "tmp_copies": "deleted after collect; measured ~175.6 MB/copy; 4 batches/night ~700 MB/night",
+    "small_metadata": "keep permanently (meta.json/heartbeat.tsv/provenance.txt/switch.diff/summary.json/report)",
+    "side": "tar to side.tar.gz + sha256 then delete dir (inode); per-batch keep_side marker opts out (evidence-grade)",
+    "logs": "evidence-grade permanent; probe-grade TTL 7d [unverified]",
+    "monitor": "collect records df -h / df -i before+after; preflight warns on low MemAvailable; watch df -i (was near 89%)"
+  },
+  "observations": {
+    "unit_cgroup_examples": ["0::/system.slice/t271-m1.service", "0::/system.slice/t271-m2.service"],
+    "self_cgroup": "0::/system.slice/jiuwenswarm.service",
+    "disk_reclaimed_by_cleanup_MB": [351.1, 526.7]
+  },
+  "dirty_tree_guard": {
+    "why": "tree=copy uses git archive <sha> (committed only); tree=main runs live working tree (includes uncommitted) -> if frozen dirs dirty, A and B/C/D run different code",
+    "implemented": "start prints frozen-dirty warning; capture_provenance.sh records source_git_dirty_count + frozen dirty file list per batch",
+    "action_required": "ensure code/{engine,life,freeze,config,obs,contracts,orchestration} clean before start; else abort and report leader"
+  },
+  "unverified": [
+    "real runner native resume (pending T276)",
+    "real LLM endpoint concurrency (probe B/C/D)",
+    "N=20 single-batch peak RSS (cap --mem-max 8G, watch heartbeat)",
+    "probe-grade log TTL calibration"
+  ]
+}
