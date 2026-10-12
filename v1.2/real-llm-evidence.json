@@ -1,5 +1,5 @@
 {
-  "engine_version": "v1.1-rim-run|thinking=sha256:d08abbe09",
+  "engine_version": "v1.1-rim-run|thinking=sha256:d08abbe09|capture=sha256:86ff54a7a",
   "model": "DeepSeek-Flash",
   "endpoint": "http://172.16.3.41:31809/v1",
   "thinking_policy": {
@@ -22,38 +22,45 @@
     "rounds": 10,
     "n_items": 33
   },
+  "instrument": {
+    "multi_run_isolation": "separate_process",
+    "note": "real / replay / rulebased 各在独立子进程运行（团队 harness 规矩：多跑对比必须分进程）；replay 复用 real 的 cache_dir（同 engine_version）"
+  },
   "real_run": {
+    "engine_version": "v1.1-rim-run|thinking=sha256:d08abbe09|capture=sha256:86ff54a7a",
     "provider_calls": 33,
     "http_attempts": 33,
     "llm_calls_counter": 33,
     "n_calls": 33,
     "tokens_in": 1587,
-    "tokens_out": 2755,
+    "tokens_out": 2415,
     "by_purpose": {
       "plan": {
         "n": 12,
         "tin": 440,
-        "tout": 272
+        "tout": 288
       },
       "dialogue": {
         "n": 18,
         "tin": 654,
-        "tout": 393
+        "tout": 377
       },
       "judge": {
         "n": 2,
         "tin": 314,
-        "tout": 1703
+        "tout": 1421
       },
       "describe": {
         "n": 1,
         "tin": 179,
-        "tout": 387
+        "tout": 329
       }
     },
-    "wall_seconds": 40.43,
-    "mean_call_seconds": 1.225,
-    "max_call_seconds": 13.994
+    "wall_seconds": 23.753,
+    "mean_call_seconds": 0.72,
+    "max_call_seconds": 7.345,
+    "model": "DeepSeek-Flash",
+    "endpoint": "http://172.16.3.41:31809/v1"
   },
   "real_judgments": [
     {
@@ -76,10 +83,15 @@
     }
   ],
   "replay": {
+    "which": "replay",
+    "engine_version": "v1.1-rim-run|thinking=sha256:d08abbe09|capture=sha256:86ff54a7a",
     "llm_calls": 0,
-    "provider_calls": 0
+    "provider_calls": 0,
+    "n_llm_call_events": 31,
+    "n_cached": 31
   },
   "rulebased_run": {
+    "engine_version": "v1.1-rim-run|thinking=sha256:d08abbe09|capture=sha256:86ff54a7a",
     "llm_calls_counter": 33,
     "n_calls": 33,
     "tokens_in": 264,
@@ -107,14 +119,14 @@
       }
     },
     "wall_seconds": 0.011,
-    "mean_call_seconds": 0.000343
+    "mean_call_seconds": 0.00033
   },
   "behavior_samples_real": [
     {
       "kind": "plan",
       "round": 0,
       "agent": "alice",
-      "text": "上午去镇东的集市买些新鲜蔬菜，顺便到老李家取回上周订的竹篮。"
+      "text": "上午去镇东的集市买些新鲜蔬菜，顺便到老王家取回上周订的竹篮。"
     },
     {
       "kind": "plan",
@@ -132,19 +144,19 @@
       "kind": "dialogue",
       "round": 1,
       "agent": "alice",
-      "text": "青溪镇的早晨真舒服，你家的菜园子今年收成咋样啊？"
+      "text": "青溪镇的早晨真舒服，你吃了吗？"
     },
     {
       "kind": "dialogue",
       "round": 1,
       "agent": "bob",
-      "text": "哟，Carol，今儿个去菜市场买菜了没？"
+      "text": "哟，Carol，今儿个去河边洗衣裳啊？水凉不凉？"
     },
     {
       "kind": "dialogue",
       "round": 1,
       "agent": "carol",
-      "text": "青溪镇今天阳光正好，Carol 笑着对 Alice 说：“吃了吗？这天气晒得人心里都暖洋洋的。”"
+      "text": "青溪镇今天天气不错，你家的菜园子长得咋样啦？"
     }
   ],
   "behavior_samples_rulebased": [
