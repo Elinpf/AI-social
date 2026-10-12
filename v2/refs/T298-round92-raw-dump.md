@@ -1,5 +1,18 @@
 # T298 round92 原始 dump（原始数据，不含归因）
 
+## 0) 时间线（相对提交点 `8d4c8b9`）—— 消除台账矛盾
+- **22:45 的读数（`MEMORY_FORGET` resumed 537 vs oneshot 667）＝ 修复【前】**
+  —— 该探针走 **`tree=copy`（提交快照）**，而当时修复**尚未提交** ⇒ 快照**不含**修复。
+- **22:52 的读数（两日志等长 9809、逐回合类型计数差 = 0）＝ 修复【后】**
+  —— `8d4c8b9` 已提交，探针快照**含**修复。
+- ⇒ 结论：**修复前分岔、修复后语义收敛**（两读数不矛盾，是提交点前后的两个快照）。
+
+## 0b) 残差精确刻画（修复后，`N1/run.jsonl` vs `ref.jsonl`）
+- **真正的语义差异 = 0 条**。
+- 9652 条：**仅差** `LLM_CALL.payload.{cached,tokens_in,tokens_out}`。
+- 150 条：`TURN_SEAL`，**仅差 `last_hash`**（哈希链下游），其 `payload.state_hash` **150 条全部相等**。
+
+
 - **提交 sha**: `8d4c8b9`（`code/life/memory.py`：`sync_from_refs` 缓存对齐权威 + `_drop_node`）
 - **诊断命令**（两路，`seed=9 n=2 rounds=150`，cut/ kill@89）：
   - 一次性：`python -m orchestration run --life --seed 9 --agents 2 --rounds 150 --out …/one.jsonl`
