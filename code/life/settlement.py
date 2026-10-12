@@ -45,8 +45,9 @@ class EventSpec:
 class LifeState:
     """Duck-typed view over the kernel state mapping (read-only for hooks)."""
 
-    def __init__(self, state: dict) -> None:
+    def __init__(self, state: dict, kernel=None) -> None:
         self.s = state
+        self.kernel = kernel  # T319: 内核只读端口（提供 round_events）；缺省则回退全扫
 
     @property
     def round(self) -> int:
@@ -73,7 +74,11 @@ class LifeState:
     def norms(self) -> dict:
         return self.s.get("norms", {}) or {}
 
-    def events_this_round(self, round_no: int, etype: str | None = None) -> list:
+    def events_this_round(self, round_no: int, etype: str | None = None, kernel=None) -> list:
+        # T319: 走内核只读端口（派生累加器，去全扫）；无端口（如 mini 测试内核）时回退全扫。
+        fn = getattr(kernel if kernel is not None else self.kernel, "round_events", None)
+        if fn is not None:
+            return fn(round_no, (etype,) if etype else None)
         out = []
         for rec in self.s.get("event_index", {}).values():
             if rec.get("round") != round_no:
@@ -454,7 +459,7 @@ def apply_needs(state: dict, round_no: int, ctx: Ctx) -> list[EventSpec]:
     #     Read the SAME-ROUND ACTIVITY_COMPLETED events (already folded by serial L3),
     #     not `current_activity` (L3 clears it).
     done_by_agent: dict[str, list[str]] = {}
-    for rec in st.events_this_round(round_no, "ACTIVITY_COMPLETED"):
+    for rec in st.events_this_round(round_no, "ACTIVITY_COMPLETED", kernel=ctx):
         done_by_agent.setdefault(rec["payload"]["agent_id"], []).append(rec["payload"]["activity_type"])
     for aid in st.agent_ids():
         acted = sorted(set(done_by_agent.get(aid, [])))
@@ -547,13 +552,13 @@ def update_relations(state: dict, round_no: int, ctx: Ctx) -> list[EventSpec]:
     # co-located trades / rescues — read the PREVIOUS round's committed econ events
     # (Phase 4 runs after Phase 3.5, so this round's econ is not available yet).
     econ_round = round_no - 1
-    for rec in st.events_this_round(econ_round, "MARKET_TRADE"):
+    for rec in st.events_this_round(econ_round, "MARKET_TRADE", kernel=ctx):
         p = rec["payload"]
         buyer, seller = p.get("buyer"), p.get("seller")
         if buyer and seller and buyer != seller:
             events += _relation_specs(state, buyer, seller, "trade_success", amount=int(p.get("amount", 0)))
             events += _relation_specs(state, seller, buyer, "trade_success", amount=int(p.get("amount", 0)))
-    for rec in st.events_this_round(econ_round, "TRANSFER"):
+    for rec in st.events_this_round(econ_round, "TRANSFER", kernel=ctx):
         p = rec["payload"]
         frm, to, reason = p.get("from"), p.get("to"), str(p.get("reason", ""))
         if frm and to and frm != to and any(k in reason for k in ("rescue", "help", "gift", "aid")):
@@ -593,7 +598,7 @@ def emit_tags(state: dict, round_no: int, ctx: Ctx) -> list[EventSpec]:
     # (a) TAG_EMITTED: one per completed activity — read the SAME-ROUND
     #     ACTIVITY_COMPLETED events (folded by serial L3), deterministic topic prior.
     tag_emitters: dict[tuple[str, str], set] = {}
-    for rec in st.events_this_round(round_no, "ACTIVITY_COMPLETED"):
+    for rec in st.events_this_round(round_no, "ACTIVITY_COMPLETED", kernel=ctx):
         p = rec["payload"]
         aid = p["agent_id"]
         topic = C.ACTIVITY_TAG_TOPIC.get(p.get("activity_type"))
@@ -624,7 +629,7 @@ def emit_tags(state: dict, round_no: int, ctx: Ctx) -> list[EventSpec]:
     adopted = {nid: n for nid, n in st.norms().items() if n.get("status") == "adopted"}
     for nid in sorted(adopted):
         rule_ref = adopted[nid].get("rule_ref", "")
-        for rec in st.events_this_round(round_no, "ACTIVITY_STARTED"):
+        for rec in st.events_this_round(round_no, "ACTIVITY_STARTED", kernel=ctx):
             p = rec["payload"]
             if _violates(rule_ref, p, t):
                 events.append(EventSpec("NORM_VIOLATED", {

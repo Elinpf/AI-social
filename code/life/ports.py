@@ -164,3 +164,11 @@ class KernelPort(Protocol):
     def current_round(self) -> int: ...
 
     def derive_time(self, round_no: int) -> TimeCoord: ...
+
+    def round_events(self, round_no: int, types: tuple | None = None) -> list[dict]:
+        """某回合的事件记录（`seq` 升序、顺序不变；只读，不得原地改元素）。
+
+        `types=None` ⇒ 该回合全部；`types=(t1,...)` ⇒ 仅这些 type。内核走派生累加器
+        （T312/T295），life 不再全扫 `event_index`。签名与 `KernelAdapter.round_events` 一致。
+        """
+        ...
