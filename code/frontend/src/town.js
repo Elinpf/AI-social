@@ -124,9 +124,11 @@
 
       this.groundLayer = new PIXI.Container();
       this.placeLayer = new PIXI.Container();
+      this.landmarkLayer = new PIXI.Container();   // 地标（T124）：place 之上、agent 之下（保持 ground<place<agent 相对序）
       this.agentLayer = new PIXI.Container();
       this.worldLayer.addChild(this.groundLayer);
       this.worldLayer.addChild(this.placeLayer);
+      this.worldLayer.addChild(this.landmarkLayer);
       this.worldLayer.addChild(this.agentLayer);
       try { this.agentLayer.sortableChildren = true; } catch (e) { /* mock */ }
 
@@ -214,6 +216,7 @@
       this._buildTerrain();
       this._buildDecorations();
       this._buildPlaces();
+      this._buildLandmarks();
       this._buildAtmosphere();
       // T116：URL `?view=landscape|default|info` 直接进对应信息分层（供景观截图/欣赏）
       try {
@@ -240,11 +243,12 @@
       const anc = meta.anchor || [sz[0] / 2, sz[1] - 8];
       const c = new P.Container();
       c.x = node.x; c.y = node.y;
-      // ① 接地软影（资产不烘影，渲染层统一施加）
+      // ① 接地软影 + 方向投影（提质量：光左上前 → 影投右下；资产不烘影，渲染层统一施加）
       const sh = new P.Graphics();
-      const hw = sz[0] * 0.34, hh = sz[0] * 0.11;
-      fillEllipse(sh, 0, -4, hw, hh, 0x0e1a10, 0.14);
-      fillEllipse(sh, 0, -4, hw * 0.66, hh * 0.66, 0x0e1a10, 0.16);
+      const hw = sz[0] * 0.36, hh = sz[0] * 0.13;
+      fillEllipse(sh, hw * 0.36, 0, hw, hh, 0x0e1a10, 0.13);          // 方向投影（右下）
+      fillEllipse(sh, hw * 0.20, -2, hw * 0.72, hh * 0.72, 0x0e1a10, 0.16);
+      fillEllipse(sh, 0, -4, hw * 0.5, hh * 0.5, 0x0e1a10, 0.22);      // 接地核心（更实）
       c.addChild(sh);
       const sp = new P.Sprite(tex);
       sp.anchor.set(anc[0] / sz[0], anc[1] / sz[1]);
@@ -327,6 +331,34 @@
 
     // ================================================================= 地形
     _px2t(v) { return Math.floor(v / TILE); }
+
+    // 草地三阶 tone ramp（T124）：优先用资产库 tile.grass_{dark,mid,light}（真 3 阶，32×32）；
+    // 无库时回退 tileset 帧（中=271 / 暗=962 / 亮=745）。
+    _grassTex(tier) {
+      const IDS = ["tile.grass_dark", "tile.grass_mid", "tile.grass_light"];
+      if (this._useLib) { const t = this._libTex(IDS[tier] || IDS[1]); if (t) return t; }
+      const F = [W.TILES.grass[2], W.TILES.grass[0], W.TILES.grassLight[0]];
+      return W.slice(this.tilesetBase, F[tier] || F[1]);
+    }
+
+    // 地面"有机斑块"（T124）：低频 value-noise(2 尺度) + Bayer 边界抖动 → 非矩形、过渡自然；
+    // 替代原来 8×8 方块 hash（方块感来自"选格"而非 tile 资产）。返回 0/1/2 = 暗/中/亮。
+    _grassTier(tx, ty) {
+      const vn = (x, y, s, sc) => {
+        const fx = x / sc, fy = y / sc;
+        const x0 = Math.floor(fx), y0 = Math.floor(fy);
+        const dx = fx - x0, dy = fy - y0;
+        const c00 = W.hash2(x0, y0, s), c10 = W.hash2(x0 + 1, y0, s);
+        const c01 = W.hash2(x0, y0 + 1, s), c11 = W.hash2(x0 + 1, y0 + 1, s);
+        const sx = dx * dx * (3 - 2 * dx), sy = dy * dy * (3 - 2 * dy);
+        const a = c00 + (c10 - c00) * sx, b = c01 + (c11 - c01) * sx;
+        return a + (b - a) * sy;
+      };
+      const BAY = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
+      const bay = (BAY[ty & 3][tx & 3] + 0.5) / 16 - 0.5;     // -0.5..0.5 边界抖动
+      const n = 0.62 * vn(tx, ty, 9, 14) + 0.38 * vn(tx + 7, ty + 3, 4, 4) + 0.14 * bay;
+      return n > 0.60 ? 2 : (n < 0.42 ? 0 : 1);
+    }
 
     // 道路 / 广场 / 水面 / 农田 的 tile 掩码
     _makeMask() {
@@ -425,11 +457,8 @@
       for (let ty = 0; ty < this._rows; ty++) {
         for (let tx = 0; tx < this._cols; tx++) {
           if (road[ty][tx]) continue;                       // 路面/广场由 features 层画
-          const blob = W.hash2(tx >> 3, ty >> 3, 3);        // 8x8 tile 的大色斑（更柔）
-          let idx = gset[0];                                // 271 为主
-          if (blob > 0.82) idx = gset[1];                   // 226（略深）
-          else if (blob < 0.20) idx = gset[2];              // 962
-          const sp = new P.Sprite(W.slice(this.tilesetBase, idx));
+          const tier = this._grassTier(tx, ty);             // 有机斑块（value-noise + Bayer；非 8×8 方块）
+          const sp = new P.Sprite(this._grassTex(tier));
           sp.x = tx * TILE; sp.y = ty * TILE;
           grass.addChild(sp);
         }
@@ -793,6 +822,44 @@
       { const g = new P.Graphics(); fillRect(g, 188, 700, 58, 16, 0x8a5a2f);
         for (let i = 0; i < 4; i++) fillRect(g, 192 + i * 15, 700, 3, 16, 0x6f4a26);
         fillRect(g, 188, 714, 58, 3, 0x5a3a1e); deco.addChild(g); }
+
+      // ===== ② 密度与构图（T124）：把已有的"连成街"，不新增建筑 =====
+      const crateAt = (x, y) => {
+        const g = new P.Graphics();
+        fillEllipse(g, x, y, 8, 3, 0x000000, 0.25);
+        fillRound(g, x - 7, y - 12, 14, 12, 2, 0x9c6b34);
+        fillRect(g, x - 7, y - 12, 14, 3, 0xba8348);
+        fillRect(g, x - 1, y - 12, 2, 12, 0x7a4f26);
+        deco.addChild(g);
+      };
+      const signAt = (x, y) => {
+        const g = new P.Graphics();
+        fillEllipse(g, x, y, 6, 2, 0x000000, 0.25);
+        fillRect(g, x - 1, y - 16, 2, 16, 0x6a4a26);
+        fillRound(g, x - 8, y - 24, 16, 9, 2, 0x8a6636);
+        fillRect(g, x - 6, y - 21, 12, 2, 0xd8c48a);
+        deco.addChild(g);
+      };
+      // 沿【所有】道路：每 4 tile 一处连接件（灯/花坛/木箱交替，放在非路侧）——制造"街"
+      for (let ty = 1; ty < this._rows - 1; ty++) {
+        for (let tx = 1; tx < this._cols - 1; tx++) {
+          if (!isRoad(tx, ty) || this._plazaMask[ty][tx]) continue;
+          if ((tx + ty) % 4 !== 0) continue;
+          let px, py, ok = false;
+          if (!isRoad(tx, ty - 1)) { px = tx * TILE + TILE / 2; py = ty * TILE + 2; ok = true; }
+          else if (!isRoad(tx + 1, ty)) { px = tx * TILE + TILE - 2; py = ty * TILE + TILE / 2; ok = true; }
+          else if (!isRoad(tx, ty + 1)) { px = tx * TILE + TILE / 2; py = ty * TILE + TILE - 2; ok = true; }
+          if (!ok) continue;
+          const k = (tx + ty) % 3;
+          if (k === 0) lampAt(px, py); else if (k === 1) flowerBed(px, py); else crateAt(px, py);
+        }
+      }
+      // 建筑门口"落点"：招牌 + 花坛（让每栋有门脸，而非草坪孤岛）
+      this.places.forEach((p) => {
+        const n = this.nodeById[p.place_id]; if (!n) return;
+        signAt(n.x + 22, n.y + 28);
+        flowerBed(n.x - 24, n.y + 30);
+      });
     }
 
     _buildPlaces() {
@@ -823,6 +890,28 @@
         });
       });
       this._buildGlows();
+    }
+
+    // 地标（T124）：构图焦点（钟塔/喷泉/拱桥/风车）。走 landmarkLayer，**不进 placeLayer**（保 placeLayer=17）。
+    _buildLandmarks() {
+      const P = global.PIXI;
+      const LM = [
+        ["landmark.clocktower", 650, 372],   // 中轴北端·对景焦点（town_hall 旁）
+        ["landmark.fountain", 705, 636],     // 中央广场地标
+        ["landmark.arch_bridge", 300, 636],  // 主街跨河石拱
+        ["landmark.windmill", 250, 300],     // 西北郊·远景
+      ];
+      LM.forEach((it) => {
+        const t = this._libTex(it[0]); if (!t) return;
+        const c = new P.Container(); c.x = it[1]; c.y = it[2];
+        const sh = new P.Graphics();
+        fillEllipse(sh, 0, -2, 26, 8, 0x0e1a10, 0.16);
+        fillEllipse(sh, 0, -2, 16, 5, 0x0e1a10, 0.18);
+        c.addChild(sh);
+        const sp = new P.Sprite(t); sp.anchor.set(0.5, 60 / 64);
+        c.addChild(sp);
+        this.landmarkLayer.addChild(c);
+      });
     }
 
     // ================================================================= 角色
@@ -990,7 +1079,7 @@
       this._lightMode = mode || "day";
       const { width, height } = this.world;
       if (this._overlay && typeof this._overlay.clear === "function") this._overlay.clear();
-      const P = { day: [0xffd9a0, 0.05], dusk: [0xff9a4a, 0.16], night: [0x101d3c, 0.52] }[this._lightMode] || [0x000000, 0];
+      const P = { day: [0xffd9a0, 0.09], dusk: [0xff9a4a, 0.18], night: [0x101d3c, 0.52] }[this._lightMode] || [0x000000, 0];
       fillRect(this._overlay, 0, 0, width, height, P[0], P[1]);
       const ga = this._lightMode === "night" ? 0.95 : (this._lightMode === "dusk" ? 0.45 : 0.0);
       this._glowLayer.alpha = ga;
