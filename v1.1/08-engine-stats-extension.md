@@ -326,6 +326,23 @@ class Event:
 
 > **G7/兼容**：`EXCHANGE_SETTLED` 为**新增类型**（旧日志不出现）、`channel` 为**可选字段**（被容忍）——**G7 不受影响**；与既有 66 类不冲突（只增不改，X1/X4）。**引擎实现**（`EVENT_TYPES`/`apply_event` 折叠器/两个 hook/意图）由 econ/kernel 实现阶段落地，本节只登记 schema。
 
+**S. v2 双时钟唤醒事件（`WAKE` / `IDLE`；应 T263/T265，用户 2026-10-12 批准「乙+ 双时钟」，已登记）**
+
+> 背景：用户批准「乙+ 双时钟」——**世界结算节拍 = round 不变**（84 回合/周、每回合结算全保留）；**新增「个体决策节拍」= 事件驱动唤醒**（未到期不决策、事件可唤醒、未唤醒者安静）。**`round` 仍为必带字段**（降为结算/显示标尺），**`seq` 仍全局全序唯一事实序（红线不变）**。W1–W10 唤醒集是 `(state, log, round)` 的**纯函数**、可离线复算 → **可审计**。
+
+| type | phase | payload 关键字段 | 说明 |
+|---|---|---|---|
+| `WAKE` | 0 | `agent_id, round, reason∈{W1..W10}, source_event_seq, all_reasons?[]` | 唤醒记录（**每被唤醒 Agent 一条**，`actor=agent_id`），供「唤醒率 / 原因分布」统计与消融。`reason` **复用 §3.2 的 W1–W10**（单一真源 = 08 §3.2）；**一轮多因取优先级最高者**为主 `reason`、其余入可选 `all_reasons[]`；`source_event_seq` 指向触发源（W1 到期→`SCHEDULE_PLANNED`/反思事件；W2→`MSG_*`；W4→`MARKET_TRADE/OFFER_*`；W5→`LOAN_*`；W6→`RELATION_ENCOUNTER/PLACE_*`；定时兜底可 `null`） |
+| `IDLE` | 0/6 | `round, total_agents, woken, idle, by_reason{W1..W10: count}` | **每回合一条全局聚合**（未唤醒汇总），`actor=SYSTEM`。**逐 agent 的 idle 集由 `roster − woken_set` 确定性推导**，不逐 agent 落事件（控体积、防刷屏） |
+
+- **不新增 `DUE`**（T263 裁定）：到期触发**统一经 `WAKE` 承载**（`reason∈{W1,W7,W9}` + `source_event_seq`）；`SCHEDULE_PLANNED.planned_tick` / 反思阈值 `θ_reflect` **作为源保持不变**，`WAKE` 只记「被唤醒 + 因何」，不复制到期值。
+- **不另立 `SLEEP`**：与 `IDLE` 同义，**统一用 `IDLE`**（避免"同概念两词"）。
+- **`PERCEPTION_INDEX`（可选，暂不登记）**：增量感知一致性审计锚点；若 T264 增量索引确需落事件再单开（待定）。
+- **config 开关（可消融；进 `engine_version` 指纹；§5.8 家族）**：`wake.enabled`（**默认 `false` = 行为不变**；置 `true` 启用事件驱动唤醒）+ `wake.triggers.{W1..W10}`（逐因开关，`W6` 默认 `true` 可关，供消融）+ `perception.incremental`（T264，默认/切换待定）。
+- **红线**：`seq` 全局全序不变；`round` 仍必带；**全量日志仍必须可审计**（D1 只放开"逐位可复现"，**未**放开"可审计"）。
+- **影响**：行为会变（DECIDE 门控）→ `state_hash`/canonical 变 → **与 T236 重冻联动**（由 sim-system-architect / obs 统筹）。
+- **G7/兼容**：`WAKE`/`IDLE` 为**新增类型**（旧日志不出现），G7 不受影响；`visible_events` 收敛归 **T264（kernel-dev 独占）**，与本事件登记对齐 §3.5 单一来源口径。
+
 **S. v2 睡眠 / 记忆整合遗忘 / 人格漂移事件（E-LIFE / E-MEM / E-LIFE-PERSONA，应 T224，已登记）**
 
 > 口径：按用户 09:53 拍板的 **Fork B**——本族事件服务「**可审计**」（全量日志 + 种子化随机 + sha + 生成命令），**不要求「逐位重放一致」**；故 `retention_permille` 等可为**确定性规则/近似量**，无需为逐位一致做定点妥协。
@@ -437,7 +454,20 @@ class Event:
 - **观测影响（T248 实测，obs 侧已止血）**：未守卫时泄漏量见 `v2/evidence/t248-agent-id-semantics.md`（如 `mastery` min 25→29、`n_need_updates` 3399→3310）；obs `life.py::need_metrics` 与 `census.py` E7 已复用 `contracts.actors` 过滤。
 - **生产侧**：本次**不动**（哨兵账户是 v2 市场/系统账户设计的既有产物）；如未来为 world 主体单列字段，须回写本节。
 
-> **术语/归属附记（同族）**：存在**两个**「确定性后果真值」模块 `obs/truth.py`（`264c07f`）与 `obs/truth_from_consequences.py`（`969335f`）——**建议合并为一**（避免"同一东西两处定义"）；归 **obs-stats-dev**（T254 后接）。
+> **「确定性后果真值」口径（T257 裁定，08 权威；替代原「建议合并」附记）**：
+> 存在**两个**实现 `obs/truth.py`(`264c07f`) 与 `obs/truth_from_consequences.py`(`969335f`)，口径分歧（3/3 输入）。现裁定：
+> 1. **单一真源** = **`obs/truth_from_consequences.py`**（`obs/truth.py` 废弃并入）；验收=合并机制下输出一致（**口径变更处按本表修正输出**，非"跨口径逐字节不变"）。
+> 2. **词汇唯一权威** = `life/constants.py::JUDGMENT_OPTIONS`。**注意**：`respect`(high/low) 与 `rel_respect`(formed/not_formed) 是**不同维度、不得归一**；`rel_trust` 属 **formed 族**（**非** high/low）——`truth.py` 的 `rel_trust→high/low` 错，按此纠正。
+> 3. **维度→真值口径**（窗口 `(r, r+W]`，`W=12` 默认、参数化；全确定性、无 LLM/时钟）：
+>    | dimension | 选项 | 真值口径 |
+>    |---|---|---|
+>    | `rel_affinity` / `rel_familiarity` / `rel_trust` / `rel_respect` | `formed`/`not_formed` | 窗口内存在 `RELATION_CHANGE{dim}.after ≥ θ_dim` ⇒ `formed`；**有事件但均 < θ ⇒ `not_formed`**；**无事件 ⇒ `undecidable`（剔除、按维计数）**。`θ_dim` 默认 = **`ε=20`**（06/07 弱边阈），可配【待标定】 |
+>    | `stance` | `accept`/`reject` | 窗口内 `OFFER_ACCEPTED{by=A, creator=B}` ⇒ `accept`；`OFFER_REJECTED{…}` ⇒ `reject`；均无 ⇒ `undecidable` |
+>    | `respect` | `high`/`low` | 窗口内 `RELATION_CHANGE{dim=respect}.after ≥ θ_respect` ⇒ `high`，否则 `low`；无事件 ⇒ 剔除 |
+>    | `affection` | `high`/`low` | **无对应关系维 ⇒ 剔除** |
+>    | `weekly_focus` / `importance` | … | **无干净确定性后果 ⇒ 剔除** |
+> 4. **关键裁定**：① `formed` 判据 = **状态量达阈（`after ≥ θ`）**、**非 `Δ>0`**（Δ=1 不应算"形成"）；② `stance` 真值 = **行为性 `OFFER_*`**、**非关系净符号**（关系净符号是间接后果）；③ 词表收敛见第 2 条。
+> 5. 归 **obs-stats-dev** 实现/合并。**同族一并留意**：`visible_events` 存在 `engine/perceive` 与 `life/visibility` 双实现（口径同族，须收敛为单一来源）。
 
 > **对齐提示（供 persona-life-designer / emergence-observer-designer）**：上表 `dim`、`activity_type`、`place`、`tag` 的**取值枚举**由你们在 06/07 分册定义；本文件只固定**结构、必带字段与语义**。我会在看到 06/07 后按需在 §8 补一张「枚举取值对齐表」。
 
@@ -606,6 +636,12 @@ visibility_class ∈ { global, place_local, members, private, participants_only,
 - **版本入 `engine_version`**（比照 TOPOLOGY，00 AR-D2 / 08 §5.6）：`PERCEPTION_SCOPE` 表落 config，纳入引擎版本指纹，保证可复现。
 - **`location(agent, t)`**：由 `PLACE_MOVE / PLACE_ARRIVED` 折叠的占用时间线（初始 = `residence`），纯函数。
 - **`visible_events(agent, log, T, cfg)`** = 直接可见（按上表谓词）∪ 记忆链（`MEMORY_WRITE.source_event_seq` / `MEMORY_RETRIEVE` / `MEMORY_REFLECT` 闭包）∪ `LLM_JUDGMENT.parties`（S11）。判定与函数签名见 03 报告 §3；**无 LLM 参与**。
+
+- **口径唯一 · `visible_events` 单一来源（硬规则，应 T254 §6.2 / T257 / T263）**：**`visible_events` 只允许一份实现，语义唯一、不得复制**。现状为**多份**（`engine/perceive.py::visible_events`、`life/visibility.py::visible_events`、`orchestration.KernelAdapter.perceive` 内联）——**必须收敛为单一来源**：
+  - **权威算法** = 本节 §3.5 的谓词（读 canonical `PERCEPTION_SCOPE`，不各自维护 white-list）；
+  - **参考实现** = `engine/perceive.py::visible_events`（直接读 canonical `config/perception_scope.json`）；
+  - **收敛落点**（共享模块 or 委托）由 **kernel-dev** 定（受分层约束：`life` 不 import `engine`，故通常需抽到中立层）；**未收敛前，其它实现须与本参考实现语义一致**（不得各自演化）；
+  - **禁止**：两处并存且语义不同（"同概念两处定义"）。
 
 **Leader 已裁定 T26-D1–D4（落定，不再列待讨论）**：
 - **D1**：公开板可见范围 = **全员存活**（单小镇闭合；长窗再细化）→ `MSG_PUBLIC.visibility_class = global`，判定 `alive(agent, e.round)`。
@@ -918,6 +954,7 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
   - **同族开关**：`social.enabled`（v2 社交发声档，T115）同属这一族——`false` 时整条 v2 社交发声通道在**生成侧短路**（不发 `INTENT.SOCIAL`、不物化 `GROUP_CREATED` → `MSG_*`/`GROUP_CREATED` 全为 0、无 `LLM_CALL(purpose=dialogue)`），**同样只控制「是否产生」、不删事件契约、不触发 fail-loud**。`economy.enabled`（T58）/`lifecycle.enabled` 同族。
   - **消融口径**：显式关闭必须与「静默失效」可区分——前者不 fail-loud 且发审计 flag，后者必须 fail-loud。这是本族开关的统一纪律。
   - **`exchange.enabled`（v2 交换原语档，T126/T129）同属这一族**：`policy.exchange.enabled`（runtime `config.exchange.enabled` 优先），**默认 `true`（行为不变）**。**语义 = 控制「agent↔agent 成交」原语**（**世界市场 `MARKET` 保留**，不受本开关影响）。`OFF` 时 life 不产生 `INTENT.ECON.TRADE/OFFER/ORDER_PLACE/ORDER_CANCEL`、engine 不挂 `apply_exchange/apply_contracts` → `EXCHANGE_SETTLED=0`、agent-as-seller 的 `MARKET_TRADE=0`、`CONTRACT_CREATED=0`（**Agent 间交易 = 0；世界市场成交仍在**）；**不删事件契约、不改守恒、不 fail-loud**，发审计 `DROPPED{reason:"exchange_disabled", flag:"exchange_disabled"}`（**「开关生效」唯一查法 = 查该 `DROPPED`**）。与 `economy.enabled` 的嵌套语义 = **AND**（`economy=false` 则 exchange 无意义）。
+  - **`wake.enabled` / `wake.triggers.*`（v2 双时钟档，T263/T265）同属这一族**：`wake.enabled` **默认 `false`（行为不变）**；置 `true` 启用「个体决策节拍 = 事件驱动唤醒」。`wake.triggers.{W1..W10}` 为**逐因开关**（`W6` 默认 `true` 可关，供消融）；**世界结算节拍（round）不受本开关影响、始终不变**。**只控制「是否启用唤醒门控」、不删事件契约、不改守恒、不 fail-loud**；`engine_version` 指纹随本块变化（属预期）。
 
 ---
 
@@ -1021,6 +1058,7 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
 | **配置口径登记** | 一等开关 `policy.production.enabled`（默认 true、只控「是否产生」）+ 三态 fail-loud 协同（显式关闭不 fail-loud/静默失效必 FAIL）+ `social.enabled` 同族 | §5.8 |
 | **新增事件（v2 交换，T126/T129）** | `EXCHANGE_SETTLED`（4.1，多腿双边原子交换，零和）+ `MARKET_TRADE.channel∈{orderbook}`（允许 seller∈Agent）+ 一等字段 `counterparty` + 意图 `ORDER_CANCEL` + 统计口径（`distinct_sellers_excl_world`/agent↔agent 占比） | §1.2 R |
 | **配置口径登记（v2 交换）** | `policy.exchange.enabled`（默认 true，同开关族；OFF→Agent 间交易归零 + `DROPPED{flag=exchange_disabled}`，不 fail-loud） | §5.8 |
+| **新增事件（v2 双时钟，T263/T265）** | `WAKE`（phase 0，每被唤醒 Agent 一条）+ `IDLE`（每回合一条全局聚合）；**无 `DUE`**（到期经 `WAKE` 承载）；config `wake.enabled`(默认 false)/`wake.triggers.*` | §1.2 S + §5.8 |
 | **新增事件（v2 世界导演+事件制造机，T238）** | `WORLD_DIRECTIVE` / `WORLD_GROUP_EVENT`（kind 14 值，≠`GROUP_*`）/ `WORLD_DIRECTIVE_REJECTED` / `FORGE_FIRED`（审计-only）；新增一等 actor `"DIRECTOR"`；三条保底落成字段（`directed` / `mechanism_id`+`dose`+`dose_curve` / `effective_from_round≥issued_round`）；**每字段标「装配点」** | §1.2 T |
 | **字段主体口径（T248）** | `agent_id`（及 `actor`/`subject`）**可含非 Agent 主体**（`MARKET`/`BANK`/`WORLD`/`TAX_POOL`）——**登记为已知例外**；消费方须用单一真源 `contracts.actors` 守卫 | §1.2 U |
 | **新增事件（v2 睡眠/记忆/人格，T224）** | `SLEEP_STARTED/SLEEP_COMPLETED`、`MEMORY_CONSOLIDATE/MEMORY_FORGET`、`PERSONA_DRIFT`（`PERSONA_FINGERPRINT` 为快照非事件）+ 统计 `metrics.life.memory/persona` | §1.2 S |
