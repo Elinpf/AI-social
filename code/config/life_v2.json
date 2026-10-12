@@ -1,0 +1,32 @@
+{
+  "_comment": "T224 第一批：睡眠离线窗 / 遗忘三级 / 人格抗漂移 参数（T205 §1/§3）。**默认关闭**（enabled=false）——默认关不等于没影响：本文件已纳入 engine_version 指纹。比例为 permille 整数（1.0=1000）。纳入指纹的复现输入常数。",
+  "schema_version": "1.0",
+  "sleep": {
+    "enabled": false,
+    "slot": "night",
+    "planned_ticks": 3
+  },
+  "forgetting": {
+    "enabled": false,
+    "h0_slots": 14,
+    "s_base_permille": 1000,
+    "w_access": 500,
+    "w_importance": 300,
+    "w_emo": 400,
+    "w_consolidated": 500,
+    "s_min_permille": 1000,
+    "s_max_permille": 6000,
+    "theta_keep_importance": 7,
+    "theta_keep_access": 3,
+    "theta_keep_emo": 6,
+    "theta_demote_permille": 600,
+    "theta_forget_permille": 300,
+    "consolidate_min": 2
+  },
+  "persona_drift": {
+    "alpha_permille": 20,
+    "delta_max": 1,
+    "drift_max_permille": 150,
+    "drift_dim_max_permille": 200
+  }
+}
