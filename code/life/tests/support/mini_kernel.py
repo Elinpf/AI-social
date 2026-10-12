@@ -370,10 +370,16 @@ class MiniKernel(KernelPort):
                              phase=35, actor=agent_id)
             return IntentResult(ok=True, event_seqs=(seq,))
         if op == "retrieve":
-            seq = self._emit("MEMORY_RETRIEVE", {"agent_id": agent_id, "query_id": p["query_id"],
-                                                 "top_k": p["top_k"], "selected_mem_ids": p["selected_mem_ids"],
-                                                 "scores": p["scores"], "weights": p["weights"],
-                                                 "tie_order": p["tie_order"]}, phase=2, actor=agent_id)
+            pay = {"agent_id": agent_id, "query_id": p["query_id"],
+                   "top_k": p["top_k"], "selected_mem_ids": p["selected_mem_ids"],
+                   "scores": p["scores"], "weights": p["weights"],
+                   "tie_order": p["tie_order"]}
+            # T228：透传降级标记（与真内核 orchestration 装配点口径一致；
+            # 不得静默丢弃 additive 字段）
+            for k in ("vec_available", "retrieval_mode"):
+                if k in p:
+                    pay[k] = p[k]
+            seq = self._emit("MEMORY_RETRIEVE", pay, phase=2, actor=agent_id)
             return IntentResult(ok=True, event_seqs=(seq,))
         if op == "reflect":
             seq = self._emit("MEMORY_REFLECT", {"agent_id": agent_id,
@@ -390,14 +396,18 @@ class MiniKernel(KernelPort):
         if op == "sleep_end":
             seq = self._emit("SLEEP_COMPLETED", {"agent_id": agent_id, "day": p.get("day"),
                                                  "slot": p.get("slot"),
-                                                 "actual_ticks": p.get("actual_ticks", 3)},
+                                                 "actual_ticks": p.get("actual_ticks", 3),
+                                                 "pf0": p.get("pf0"), "pf_t": p.get("pf_t"),
+                                                 "drift_permille": p.get("drift_permille")},
                              phase=35, actor=agent_id)
             return IntentResult(ok=True, event_seqs=(seq,))
         if op == "forget":
             seq = self._emit("MEMORY_FORGET", {"agent_id": agent_id, "mem_id": p["mem_id"],
                                                "level": p["level"],
                                                "retention_permille": p["retention_permille"],
-                                               "reason": p.get("reason")},
+                                               "reason": p.get("reason"),
+                                               "protected": bool(p.get("protected")),
+                                               "protection_reason": p.get("protection_reason")},
                              phase=35, actor=agent_id)
             return IntentResult(ok=True, event_seqs=(seq,))
         if op == "consolidate":

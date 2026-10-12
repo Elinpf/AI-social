@@ -97,6 +97,8 @@ def run_sleep_window(
         out["events"].append({"type": "MEMORY_FORGET", "payload": {
             "agent_id": agent_id, "mem_id": a["mem_id"], "level": a["level"],
             "retention_permille": a["retention_permille"], "reason": a["reason"],
+            "protected": bool(a.get("protected")),
+            "protection_reason": a.get("protection_reason"),
             "day": day, "slot": sl}})
 
     # 3) 人格漂移折叠（可选）：锚定 + 有界更新 + 度量
@@ -104,18 +106,22 @@ def run_sleep_window(
     if anchor is not None and p_state is not None:
         pp = dict(p_state)
         p0v = dict(p0) if p0 is not None else dict(p_state)
+        changes = []
         for ev in (drift_events or []):
             before = int(pp.get(ev["dim"], 0))
             pp[ev["dim"]] = PD.bounded_update(pp, anchor, ev["dim"], int(ev.get("delta", 0)), pparams)
+            changes.append((ev, before, pp[ev["dim"]]))
+        pf0 = PD.persona_fingerprint(anchor)
+        pft = PD.dynamic_fingerprint(agent_id, pp)
+        drift = PD.drift_permille(pp, p0v)
+        for ev, before, after in changes:
             out["events"].append({"type": "PERSONA_DRIFT", "payload": {
-                "agent_id": agent_id, "dim": ev["dim"], "before": before,
-                "after": pp[ev["dim"]],
+                "agent_id": agent_id, "dim": ev["dim"], "before": before, "after": after,
                 "anchor": int(PD._anchor_dims(anchor)[ev["dim"]]),
-                "cause_mem_id": ev.get("cause_mem_id"), "day": day, "slot": sl}})
+                "cause_mem_id": ev.get("cause_mem_id"), "day": day, "slot": sl,
+                "pf0": pf0, "pf_t": pft, "drift_permille": drift}})
         out["persona"] = {
-            "pf0": PD.persona_fingerprint(anchor),
-            "pf_t": PD.dynamic_fingerprint(agent_id, pp),
-            "drift_permille": PD.drift_permille(pp, p0v),
+            "pf0": pf0, "pf_t": pft, "drift_permille": drift,
             "drift_dims_permille": PD.drift_dims_permille(pp, anchor),
             "within_bounds": PD.within_bounds(pp, p0v, anchor, pparams),
         }

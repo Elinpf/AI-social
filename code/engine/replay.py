@@ -351,6 +351,61 @@ def _apply_memory_retrieve(state, rec, p):
             ref["access_count"] = int(ref.get("access_count", 0)) + 1
 
 
+# ---- T233 / 08 §1.2 S：睡眠 / 记忆整合遗忘 / 人格漂移 --------------------------
+# Fork B 口径：按「可审计」折叠（纯确定性、无墙钟/浮点/环境）。指针/审计类
+# （SLEEP_*/PERSONA_DRIFT）为 identity fold，不引入状态突变；记忆整合/遗忘折叠进
+# `memory_index`/`agents[*].memories`（两者本就不入 state_hash，见 state.to_dict）。
+
+@register("MEMORY_FORGET")
+def _apply_memory_forget(state, rec, p):
+    mid = p.get("mem_id")
+    ref = state.memory_index.get(mid)
+    if ref is not None and p.get("level") == "drop":
+        state.memory_index.pop(mid, None)
+        a = state.ensure_agent(p["agent_id"])
+        a["memories"] = [m for m in a.get("memories", []) if m.get("mem_id") != mid]
+    elif ref is not None:
+        ref["forgotten_level"] = p.get("level")
+
+
+@register("MEMORY_CONSOLIDATE")
+def _apply_memory_consolidate(state, rec, p):
+    a = state.ensure_agent(p["agent_id"])
+    src = set(p.get("source_mem_ids") or [])
+    for m in a.get("memories", []):
+        if m.get("mem_id") in src:
+            m["consolidated"] = True
+    pid = p.get("produced_mem_id")
+    if pid and pid not in state.memory_index:
+        agent_id = p["agent_id"]
+        ref = {"mem_id": pid, "kind": "semantic",
+               "body_ref": f"side://mem/{agent_id}/{pid}.txt",
+               "embed_ref": f"side://mem/{agent_id}/{pid}.vec",
+               "importance": int(p.get("importance", 6)), "day": p.get("day"),
+               "slot": p.get("slot"), "subject": p.get("subject"),
+               "source_event_seq": None, "last_access": rec["round"], "access_count": 0}
+        a.setdefault("memories", []).append(ref)
+        state.memory_index[pid] = ref
+
+
+@register("SLEEP_STARTED")
+def _apply_sleep_started(state, rec, p):
+    # 审计/指针事件：identity fold（观测层只读日志取用；不改状态）
+    return None
+
+
+@register("SLEEP_COMPLETED")
+def _apply_sleep_completed(state, rec, p):
+    # 审计事件：identity fold（payload 含 pf0/pf_t/drift_permille 供 obs 只读）
+    return None
+
+
+@register("PERSONA_DRIFT")
+def _apply_persona_drift(state, rec, p):
+    # 审计事件：identity fold（单事件单维；表达层向量由 life 侧维护）
+    return None
+
+
 @register("OBSERVATION")
 def _apply_observation(state, rec, p):
     observer = p["observer"]

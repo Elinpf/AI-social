@@ -40,6 +40,16 @@ DEFAULTS: dict[str, int | bool] = {
 #: 受保护（只降级、永不 merge/drop）的记忆类型
 PROTECTED_KINDS = ("semantic", "reflection")
 
+#: 保护名单规则（**单源**：obs 由事件 `protected` 标记 count，不复刻本表；
+#: 若需引用规则本身，以此常量为准）。阈值由 params 注入（默认见 DEFAULTS）。
+PROTECTION_RULES = (
+    "kind in PROTECTED_KINDS('semantic','reflection')",
+    "importance >= theta_keep_importance(7)",
+    "access_count >= theta_keep_access(3)",
+    "abs(emo) >= theta_keep_emo(6)",
+    "referenced_by_reflection == true",
+)
+
 
 def load_params(path: str | Path | None = None) -> dict[str, Any]:
     """从 `config/life_v2.json` 读 `forgetting` 段；缺失/缺文件 → 用 DEFAULTS。
@@ -91,19 +101,24 @@ def retention_permille(dt_slots: int, s_permille: int, h0_slots: int) -> int:
     return int(half - (half * frac // 1000 // 2))
 
 
+def protection_reason(mem: dict, params: dict) -> str | None:
+    """命中保护名单的原因（单源）；未命中 → None。"""
+    if mem.get("kind") in PROTECTED_KINDS:
+        return f"kind:{mem.get('kind')}"
+    if int(mem.get("importance", 0)) >= int(params["theta_keep_importance"]):
+        return "importance"
+    if int(mem.get("access_count", 0)) >= int(params["theta_keep_access"]):
+        return "access"
+    if abs(int(mem.get("emo", 0))) >= int(params["theta_keep_emo"]):
+        return "emotion"
+    if mem.get("referenced_by_reflection"):
+        return "reflection_ref"
+    return None
+
+
 def is_protected(mem: dict, params: dict) -> bool:
     """保护名单（T205 §3.2）：任一命中即受保护 → **只降级、永不 merge/drop**。"""
-    if mem.get("kind") in PROTECTED_KINDS:
-        return True
-    if int(mem.get("importance", 0)) >= int(params["theta_keep_importance"]):
-        return True
-    if int(mem.get("access_count", 0)) >= int(params["theta_keep_access"]):
-        return True
-    if abs(int(mem.get("emo", 0))) >= int(params["theta_keep_emo"]):
-        return True
-    if mem.get("referenced_by_reflection"):
-        return True
-    return False
+    return protection_reason(mem, params) is not None
 
 
 def classify(mem: dict, round_no: int, params: dict, *, has_sibling: bool) -> dict:
@@ -130,7 +145,9 @@ def classify(mem: dict, round_no: int, params: dict, *, has_sibling: bool) -> di
             level = "demote"
             reason = "faded_demote"
     return {"mem_id": mem.get("mem_id"), "level": level, "retention_permille": r,
-            "protected": protected, "reason": reason}
+            "protected": protected,
+            "protection_reason": protection_reason(mem, params) if protected else None,
+            "reason": reason}
 
 
 def plan_forgetting(memories: Iterable[dict], round_no: int, params: dict) -> list[dict]:
