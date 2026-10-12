@@ -1076,24 +1076,55 @@
       });
     }
 
+    // T270「动得生硬」修复（**仅运动渲染逻辑；不动逻辑 tick / 世界时刻 / 拓扑**）：
+    // ① dt 归一化（替固定 k=0.18，掉帧不再变慢）；② 速度上限 + 加速度上限 → 起步不再一帧突跳（实测原为单帧 37px）；
+    // ③ 目标切换时给每角色一个 0..4 帧的**渲染起步延迟**（错峰，破"19 人同帧齐步"）；④ 步态推进率 ∝ 实际速度。
     tick() {
-      const k = 0.18;
+      const now = (typeof performance !== "undefined" ? performance.now() : Date.now());
+      let dt = (now - (this._tprev || now)) / 1000;
+      this._tprev = now;
+      if (!(dt > 0) || dt > 0.1) dt = 1 / 60;      // 首帧 / 切后台长帧兜底
       this._frame++;
       const t = this._frame;
+      const TAU = 0.10;      // 时间常数（≈原 k=0.18@60fps 的手感）
+      const VMAX = 520;      // px/s 速度上限 → 消"起步突变"
+      const AMAX = 2400;     // px/s² 加速度上限 → 起步有 ease-in
       Object.keys(this.agents).forEach((id) => {
         const rec = this.agents[id];
-        const dx = rec.target.x - rec.container.x, dy = rec.target.y - rec.container.y;
-        const moving = Math.abs(dx) > 0.7 || Math.abs(dy) > 0.7;
-        rec.container.x += dx * k;
-        rec.container.y += dy * k;
+        const dxT = rec.target.x - rec.container.x, dyT = rec.target.y - rec.container.y;
+        const moving = Math.abs(dxT) > 0.7 || Math.abs(dyT) > 0.7;
+        // 目标切换 → 按角色相位给 0..4 帧起步延迟（错峰；**只错渲染相位**）
+        if (rec._lx !== rec.target.x || rec._ly !== rec.target.y) {
+          rec._lx = rec.target.x; rec._ly = rec.target.y;
+          rec._delayFrames = Math.floor((rec._ph / 6.2831853) * 5);
+        }
+        if (rec._delayFrames > 0) { rec._delayFrames--; rec._vx = rec._vy = 0; }
+        else if (moving) {
+          let vx = dxT / TAU, vy = dyT / TAU;
+          const sp = Math.hypot(vx, vy);
+          if (sp > VMAX) { vx *= VMAX / sp; vy *= VMAX / sp; }
+          rec._vx = rec._vx || 0; rec._vy = rec._vy || 0;
+          const dvx = vx - rec._vx, dvy = vy - rec._vy, dv = Math.hypot(dvx, dvy), dmax = AMAX * dt;
+          if (dv > dmax && dv > 1e-6) { rec._vx += dvx * dmax / dv; rec._vy += dvy * dmax / dv; }
+          else { rec._vx = vx; rec._vy = vy; }
+          rec.container.x += rec._vx * dt;
+          rec.container.y += rec._vy * dt;
+          if (Math.abs(rec.target.x - rec.container.x) < 0.5 && Math.abs(rec.target.y - rec.container.y) < 0.5) {
+            rec.container.x = rec.target.x; rec.container.y = rec.target.y; rec._vx = rec._vy = 0;
+          }
+        } else { rec._vx = rec._vy = 0; }
+        const speed = Math.hypot(rec._vx || 0, rec._vy || 0);
+        const walking = speed > 6;
         if (rec.sprite) {
           const alive = !rec._statusRef || rec._statusRef.v !== "dead";
-          if (alive && rec.frames) {                 // 3 帧行走动画（不镜像，避免朝向错乱）
-            if (moving) { rec._fr = (rec._fr + 0.16) % 3; rec.sprite.texture = rec.frames[Math.floor(rec._fr)]; }
-            else if (rec._fr !== 0) { rec._fr = 0; rec.sprite.texture = rec.frames[0]; }
+          if (alive && rec.frames) {                 // 行走动画（不镜像，避免朝向错乱）
+            if (walking) {
+              rec._fr = (rec._fr + (0.9 + speed / 120) * dt * 9) % rec.frames.length;   // 步频 ∝ 实际速度
+              rec.sprite.texture = rec.frames[Math.floor(rec._fr) % rec.frames.length];
+            } else if (rec._fr !== 0) { rec._fr = 0; rec.sprite.texture = rec.frames[0]; }
             if (rec.outline) rec.outline.texture = rec.sprite.texture;   // 描边跟随帧
           }
-          rec.sprite.y = 20 - (moving ? Math.abs(Math.sin((t + rec._ph) * 0.22)) * 2.5 : 0);
+          rec.sprite.y = 20 - (walking ? Math.abs(Math.sin((t + rec._ph) * 0.22)) * 2.5 : 0);
         }
         if (rec.glow) { rec.glow.x = rec.container.x; rec.glow.y = rec.container.y; }
       });
