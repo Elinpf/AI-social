@@ -22,7 +22,7 @@ from . import relations as R
 from .llm import LLMClient, get_llm_client
 from .memory import AssociativeMemory, EmbeddingModel, HashEmbeddingModel, SideStore
 from .persona import Persona
-from .policy import social_enabled, exchange_enabled
+from .policy import social_enabled, exchange_enabled, m2b_judge_mode, m2b_importance_mode
 from .ports import (
     INTENT_ECON_OFFER,
     INTENT_GOAL, INTENT_MEMORY, INTENT_MOVE, INTENT_OBSERVE, INTENT_PLAN, INTENT_RELATION,
@@ -211,8 +211,12 @@ class LifeLayerAgent:
         (LLM_JUDGMENT) so the resulting plan stays replay-stable, yet differs between
         mock and a real LLM (T57: LLM output drives structure)."""
         from .planner import FOCUS_OPTIONS
-        branch = rng_branch(self.agent_id, "weekly_focus", "self", wv.time.week, FOCUS_OPTIONS)
-        envelope = {"options": list(FOCUS_OPTIONS)}
+        mode = m2b_judge_mode()
+        # M2b 判别式：候选含逃生项（单一真源 JUDGMENT_OPTIONS）；关闭时用旧 FOCUS_OPTIONS（逐项一致）
+        options = list(C.JUDGMENT_OPTIONS["weekly_focus"]) if mode == "discriminative" \
+            else list(FOCUS_OPTIONS)
+        branch = rng_branch(self.agent_id, "weekly_focus", "self", wv.time.week, options)
+        envelope = {"options": options}
         jid = f"JF-{self.agent_id}-{wv.time.week}"
         try:
             payload, emitted = self.soft.judge(
@@ -221,12 +225,12 @@ class LifeLayerAgent:
                 context={"goal": self._current_goal(), "needs": dict(self.needs),
                          "memories": self.memory.summary_for_prompt(
                              list(self.memory.nodes)[-8:], 300)},
-                round_no=wv.round)
+                round_no=wv.round, mode=mode)
         except Exception:
             return "balance"
         if not emitted:
             self._submit_audit("LLM_JUDGMENT", payload, phase=2)
-        return str(payload["decision"])
+        return str(payload.get("resolved", payload["decision"]))
 
     def _weekly_slots(self, wv, focus: str | None = None) -> list[dict]:
         """Weekly plan. Social/economy slots may carry a `template_id` (T49) chosen by
@@ -362,6 +366,7 @@ class LifeLayerAgent:
 
     def _maybe_soft_judge(self, wv) -> int:
         n = 0
+        mode = m2b_judge_mode()
         for (to, dim), after in list(self._rel_cache.items()):
             if dim not in ("affinity", "trust", "respect", "familiarity"):
                 continue
@@ -370,16 +375,20 @@ class LifeLayerAgent:
                 continue
             self._judged.add((to, dim, level))
             envelope = R.soft_judgment_envelope(dim, 0, after)
+            if mode == "discriminative":  # M2b: 候选含逃生项（单一真源）
+                envelope = {**envelope, "options": list(C.JUDGMENT_OPTIONS[f"rel_{dim}"])}
             branch = rng_branch(self.agent_id, dim, to, wv.round, envelope["options"])
             jid = f"J-{self.agent_id}-{to}-{dim}-{level}-{wv.round}"
             payload, emitted = self.soft.judge(
                 judgment_id=jid, dimension=f"rel_{dim}", question_ref="rel_relation_quality",
                 envelope=envelope, rng_branch=branch, parties=[self.agent_id, to],
-                context={"dim": dim, "to": to, "after": after}, round_no=wv.round)
+                context={"dim": dim, "to": to, "after": after}, round_no=wv.round, mode=mode)
             if not emitted:
                 self._submit_audit("LLM_JUDGMENT", payload, phase=2)
-            # numeric consequence from the FROZEN label (deterministic, D-12)
-            for d, dv in R.delta_from_frozen_label(payload["decision"]).items():
+            # numeric consequence from the FROZEN label (deterministic, D-12);
+            # M2b 逃生项命中时用确定性兜底值 resolved（decision 保留模型原话）
+            for d, dv in R.delta_from_frozen_label(
+                    payload.get("resolved", payload["decision"])).items():
                 before = int(self._rel_cache.get((to, d), 0))
                 lo, hi = C.RELATION_RANGE[d]
                 self.kernel.submit_intent(self.agent_id, Intent(INTENT_RELATION, self.agent_id, {
@@ -397,6 +406,7 @@ class LifeLayerAgent:
         week = wv.time.week
         peers = sorted({to for (to, _dim) in self._rel_cache})[:4]
         n = 0
+        mode = m2b_judge_mode()
         for to in peers:
             key = (to, week)
             if key in self._appraised:
@@ -405,13 +415,15 @@ class LifeLayerAgent:
             for dim, opts in (("stance", ["accept", "reject"]),
                               ("respect", ["high", "low"]),
                               ("affection", ["high", "low"])):
+                if mode == "discriminative":  # M2b: 候选含逃生项（单一真源）
+                    opts = list(C.JUDGMENT_OPTIONS[dim])
                 branch = rng_branch(self.agent_id, dim, to, wv.round, opts)
                 envelope = {"options": list(opts)}
                 jid = f"J-{self.agent_id}-{to}-{dim}-w{week}"
                 payload, emitted = self.soft.judge(
                     judgment_id=jid, dimension=dim, question_ref=f"social_{dim}",
                     envelope=envelope, rng_branch=branch, parties=[self.agent_id, to],
-                    context={"dim": dim, "to": to}, round_no=wv.round)
+                    context={"dim": dim, "to": to}, round_no=wv.round, mode=mode)
                 if not emitted:
                     self._submit_audit("LLM_JUDGMENT", payload, phase=2)
                 n += 1
@@ -558,9 +570,27 @@ class LifeLayerAgent:
         low = text.lower()
         if not any(k in low for k in ("派对", "救助", "去世", "争吵", "相遇", "party", "help", "died")):
             return 2
+        if m2b_importance_mode() == "discriminative":
+            return self._importance_discriminative(text, round_no)
         out = self.llm.call("importance", text,
                             meta={"agent_id": self.agent_id, "round": round_no}).text
         try:
             return clamp(int(out.strip().split()[0]), 1, 10)
+        except Exception:
+            return 2
+
+    def _importance_discriminative(self, text: str, round_no: int) -> int:
+        """M2b：importance 走受限选择（候选 {1..10}+逃生项，单一真源）；关闭时不走此路。"""
+        options = list(C.JUDGMENT_OPTIONS["importance"])
+        branch = rng_branch(self.agent_id, "importance", "self", round_no, options)
+        jid = f"IMP-{self.agent_id}-{round_no}-{sha256_hex(text)[:8]}"
+        try:
+            payload, emitted = self.soft.judge(
+                judgment_id=jid, dimension="importance", question_ref="importance",
+                envelope={"options": options}, rng_branch=branch, parties=[self.agent_id],
+                context={"text": text[:200]}, round_no=round_no, mode="discriminative")
+            if not emitted:
+                self._submit_audit("LLM_JUDGMENT", payload, phase=2)
+            return clamp(int(payload.get("resolved", payload["decision"])), 1, 10)
         except Exception:
             return 2

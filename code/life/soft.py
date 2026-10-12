@@ -104,11 +104,13 @@ class SoftLayer:
         method = "discriminative"
         resolved = raw
         fallback_note = None
-        # (1) 逃生项 -> 确定性兜底（供下游消费；日志保留 raw 以便 escape_rate 聚合）
+        # (1) 逃生项 -> 确定性兜底（供下游消费；`decision` 保留模型原话=undecidable，
+        #     以与 freeze 落盘一致，并使 obs `escape_rate` 可从日志聚合）
         if raw == C.ESCAPE_OPTION and dimension in C.ESCAPE_FALLBACK:
             resolved = C.ESCAPE_FALLBACK[dimension]
             fallback_note = "escape_option"
         # (2) margin 回退（分支 B；默认 none/θ=0 → 永不触发）
+        adopted = raw
         fb, theta = policy.m2b_fallback(), policy.m2b_margin_theta()
         if fb == "margin" and margin is not None and float(margin) < float(theta):
             try:
@@ -116,13 +118,13 @@ class SoftLayer:
                                  question_ref=question_ref, envelope=envelope, context=context,
                                  rng_branch=rng_branch, parties=list(parties),
                                  created_round=round_no, round=round_no, phase=phase)
-                resolved, method, fallback_note = j2.decision, "generative", "margin_low"
+                adopted, resolved, method, fallback_note = j2.decision, j2.decision, "generative", "margin_low"
             except Exception:
                 pass
-        payload = {"judgment_id": judgment_id, "decision": resolved, "model": j.model,
-                   "context_digest": j.context_digest, "frozen": True, "dimension": dimension,
-                   "question_ref": question_ref, "envelope": envelope, "rng_branch": rng_branch,
-                   "parties": list(parties), "method": method, "model_decision": raw}
+        payload = {"judgment_id": judgment_id, "decision": adopted, "resolved": resolved,
+                   "model": j.model, "context_digest": j.context_digest, "frozen": True,
+                   "dimension": dimension, "question_ref": question_ref, "envelope": envelope,
+                   "rng_branch": rng_branch, "parties": list(parties), "method": method}
         if margin is not None:
             payload["margin"] = margin
         if fallback_note:
@@ -165,3 +167,4 @@ def rng_branch(agent_id: str, dimension: str, other: str, round_no: int,
     """Deterministic RNG branch (D-8): LLM does NOT roll the dice (00 §5.4)."""
     d = draw(0, f"judge:{agent_id}:{dimension}:{other}", round_no, 0, 1)[0]
     return options[d % len(options)]
+
