@@ -584,6 +584,13 @@ visibility_class ∈ { global, place_local, members, private, participants_only,
 | `participants_only` | `agent ∈ (participants ∪ {actor})` | `TRANSFER`、`MARKET_TRADE` |
 | `subject_only` | `agent ∈ {actor} ∪ subject` | 特定主观事件 |
 
+> **T247 前置 · 可见性漏登记（2026-10-12，已补登记）**：`SKILL_PRACTICE / SKILL_LEVEL_UP / SKILL_OUTPUT` 此前**未在 `PERCEPTION_SCOPE` 登记** → 落 `default_visibility_class = place_local`，判据 `payload.place == 自身位置`；而 `SKILL_LEVEL_UP`/`SKILL_OUTPUT` **payload 无 `place`** → **自我事件被挡（agent 看不到自己的技能提升/产出）**。**定性：漏登记可见性 config 项**（非实现 bug；`08` 事件表与 config 表未对齐）。按**语义**补登记（自己的产出/成长自己可见，与 `GOAL_*`/`MEMORY_*` 同族）：
+> - `SKILL_PRACTICE` = **`place_local`**（payload 含 `place`；同场所可见其练习）
+> - `SKILL_LEVEL_UP` = **`subject_only`**（自己的成长）
+> - `SKILL_OUTPUT` = **`subject_only`**（自己的产出物）
+>
+> **行为影响（重要）**：`SKILL_*` 均**不在** life `_SALIENT_EVENTS`（`life/agent.py`）→ 补登记后 `visible_events(agent)` 会含之，但 `_observe` **不物化记忆、不调 LLM** → **当前不改行为、不增 token**（T236 无需为此重冻；**但**若未来把 `SKILL_*` 加入 `_SALIENT_EVENTS`，须重估）。真源 `config/perception_scope.json` 按本表补齐（该 config 变更属**预期**，会进 `engine_version` 指纹）。
+
 - **版本入 `engine_version`**（比照 TOPOLOGY，00 AR-D2 / 08 §5.6）：`PERCEPTION_SCOPE` 表落 config，纳入引擎版本指纹，保证可复现。
 - **`location(agent, t)`**：由 `PLACE_MOVE / PLACE_ARRIVED` 折叠的占用时间线（初始 = `residence`），纯函数。
 - **`visible_events(agent, log, T, cfg)`** = 直接可见（按上表谓词）∪ 记忆链（`MEMORY_WRITE.source_event_seq` / `MEMORY_RETRIEVE` / `MEMORY_REFLECT` 闭包）∪ `LLM_JUDGMENT.parties`（S11）。判定与函数签名见 03 报告 §3；**无 LLM 参与**。
