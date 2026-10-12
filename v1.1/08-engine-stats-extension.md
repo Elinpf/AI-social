@@ -428,6 +428,17 @@ class Event:
 
 > **通信事件复用 v1**：`MSG_PUBLIC / MSG_DM / MSG_GROUP` 不新增，但新增可选字段 `refs[]`（引用 msg_id）与 `tag_hints[]`（供 `TAG_EMITTED` 关联，实为内容层）。传播边由 `OBSERVATION.target_event_seq` 与 msg `refs` 共同构建（§4.3）。
 
+**U. 字段主体口径：`agent_id`（及 `actor`/`subject`）可含「非 Agent 主体」（应 T248，已登记为已知例外）**
+
+> **已知例外（Leader 2026-10-12 裁定：登记，不改名）**：`payload.agent_id` **不保证是真实 Agent**——它语义为「**本事件主体的账户标识**」，**可含世界侧哨兵**（`MARKET`/`BANK`/`WORLD`/`TAX_POOL`）。实测来源：econ 系统账户折叠（如 `STATE_CHANGE{agent_id:"MARKET"}`、`NEED_UPDATE{agent_id:"MARKET"}`）。与 `actor`（T241）**同族、在另一字段上**——统一按「主体字段可为非 Agent」处理。
+
+- **消费方硬约束**：凡把 `agent_id`（及 `actor`/`subject`/`observer`）**当作某个 Agent**（计入 agent 级指标 / 渲染为角色 / 建索引）前，**必须用单一真源 `contracts.actors` 守卫**：`is_agent_actor(x)` / `agent_or_none(x)`（`NON_AGENT_ACTORS = {SYSTEM, OBSERVER, DIRECTOR, WORLD, MARKET, BANK, TAX_POOL}`）。**各消费方一律引用本模块，勿各自复制白名单**（同名不同义风险）。
+- **不改事件语义的理由**：改名（另立 `subject_id`/world 字段）代价大、动 08 全套；故本轮**登记为已知例外**（口径清晰 + 消费方守卫），**非"两种都不做"**。
+- **观测影响（T248 实测，obs 侧已止血）**：未守卫时泄漏量见 `v2/evidence/t248-agent-id-semantics.md`（如 `mastery` min 25→29、`n_need_updates` 3399→3310）；obs `life.py::need_metrics` 与 `census.py` E7 已复用 `contracts.actors` 过滤。
+- **生产侧**：本次**不动**（哨兵账户是 v2 市场/系统账户设计的既有产物）；如未来为 world 主体单列字段，须回写本节。
+
+> **术语/归属附记（同族）**：存在**两个**「确定性后果真值」模块 `obs/truth.py`（`264c07f`）与 `obs/truth_from_consequences.py`（`969335f`）——**建议合并为一**（避免"同一东西两处定义"）；归 **obs-stats-dev**（T254 后接）。
+
 > **对齐提示（供 persona-life-designer / emergence-observer-designer）**：上表 `dim`、`activity_type`、`place`、`tag` 的**取值枚举**由你们在 06/07 分册定义；本文件只固定**结构、必带字段与语义**。我会在看到 06/07 后按需在 §8 补一张「枚举取值对齐表」。
 
 ---
@@ -1011,6 +1022,7 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
 | **新增事件（v2 交换，T126/T129）** | `EXCHANGE_SETTLED`（4.1，多腿双边原子交换，零和）+ `MARKET_TRADE.channel∈{orderbook}`（允许 seller∈Agent）+ 一等字段 `counterparty` + 意图 `ORDER_CANCEL` + 统计口径（`distinct_sellers_excl_world`/agent↔agent 占比） | §1.2 R |
 | **配置口径登记（v2 交换）** | `policy.exchange.enabled`（默认 true，同开关族；OFF→Agent 间交易归零 + `DROPPED{flag=exchange_disabled}`，不 fail-loud） | §5.8 |
 | **新增事件（v2 世界导演+事件制造机，T238）** | `WORLD_DIRECTIVE` / `WORLD_GROUP_EVENT`（kind 14 值，≠`GROUP_*`）/ `WORLD_DIRECTIVE_REJECTED` / `FORGE_FIRED`（审计-only）；新增一等 actor `"DIRECTOR"`；三条保底落成字段（`directed` / `mechanism_id`+`dose`+`dose_curve` / `effective_from_round≥issued_round`）；**每字段标「装配点」** | §1.2 T |
+| **字段主体口径（T248）** | `agent_id`（及 `actor`/`subject`）**可含非 Agent 主体**（`MARKET`/`BANK`/`WORLD`/`TAX_POOL`）——**登记为已知例外**；消费方须用单一真源 `contracts.actors` 守卫 | §1.2 U |
 | **新增事件（v2 睡眠/记忆/人格，T224）** | `SLEEP_STARTED/SLEEP_COMPLETED`、`MEMORY_CONSOLIDATE/MEMORY_FORGET`、`PERSONA_DRIFT`（`PERSONA_FINGERPRINT` 为快照非事件）+ 统计 `metrics.life.memory/persona` | §1.2 S |
 
 > **合计**：新增事件 **11** 类（商品 4 + 契约 4 + 投票 1 + 社会 2）；字段扩展 **3** 事件；不变量 **2** 条；字段语义登记 **1** 项（商品族 `qty` milli-unit 口径）。**均只增不改**，与既有 66 类不冲突；G7 对既有日志仍通过（新增类型旧日志不出现、可选字段被容忍）。**引擎实现**（`engine/events.py` EVENT_TYPES + `replay.apply_event` 折叠器 + `apply_production()/apply_contracts()` hook）由 v2 实现阶段（econ-dev T91 等）落地，本任务只出 schema。
