@@ -47,6 +47,8 @@ python3 "$REPO/tools/t271/nightly.py" collect
 ```
 - 分类规则（**完成判据以【日志实测回合】为准，心跳 round 只作「死在哪一刻」**）：`RUN_END` 或 **日志末条 round ≥ target-1 且 rc∈{0,None}** → **SUCCESS**；进程存活 → **RUNNING**；`rc∈{137,143}` 或负 → **INTERRUPTED（被信号终止=外因中断，非批内错误）**；回合已到但 `rc≠0`（引擎自检失败）→ **FAILED**；其他非 0 → **FAILED**；未达目标 → **INTERRUPTED**。
   > ⚠️ **不要用 `heartbeat.tsv` 末行 round 判完成**：10min 心跳间隔内批可能已跑完（末行是 `EXIT`）→ 读到滞后 round 会误判未达标（T274 实测踩过：四批实际 `round=83/rc=0`，却被心跳的 71 误判为 `INTERRUPTED`）。
+  > 反向验证脚本（**改判据必跑**）：`bash tools/t271/verify_collect.sh` → A) 心跳滞后但实际成功→**SUCCESS**；B) 真中断(kill, rc=137)→**INTERRUPTED**；C) `meta.ended_at`/`engine_version_fingerprint` 由 runner 退出时回填。
+  > 收尾：早报**只列含 `meta.json` 的真 run 目录**；mock 演示用**独立 run_root**，不与真实夜跑混淆。
 - 早报（`<run_root>/morning-report-<date>.md`）：**总览 + 逐批**（sha / `engine_version` 指纹 / 开关 / 回合进度 / 事件数 / 峰值 RSS / 起止 / 产物路径 / 续跑模式），并附**盘前/盘后 `df -h` `df -i`**。机器可读：`summary.json`。
 
 ## 4. 失败可续（⚠️ 诚实口径）
