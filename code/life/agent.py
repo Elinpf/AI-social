@@ -162,6 +162,28 @@ class LifeLayerAgent:
         self.memory._unreflected_importance = sum(
             n.importance for n in self.memory.nodes.values()
             if n.kind == "observation" and not n.reflected)
+        # T244 睡眠/人格前向态（原样重建）—— 否则 cut 落在 night 边界时，续跑会**重跑**该日
+        # 睡眠窗（`_slept_days` 空）并丢失已累积的人格漂移（`_persona_state`）。
+        slept: set = set()
+        persona_after: dict = {}
+        for rec in records:
+            p = rec.get("payload") or {}
+            if p.get("agent_id") != self.agent_id:
+                continue
+            t = rec.get("type")
+            if t in ("SLEEP_STARTED", "SLEEP_COMPLETED") and p.get("day") is not None:
+                slept.add(int(p["day"]))
+            elif t == "PERSONA_DRIFT" and p.get("dim"):
+                persona_after[p["dim"]] = p.get("after")
+        self._slept_days = slept
+        if slept or persona_after:
+            anchor = {"personality_big5": self.persona.personality_big5}
+            self._persona_p0 = PD.init_state(anchor)
+            st = PD.init_state(anchor)
+            for k, v in persona_after.items():
+                if v is not None:
+                    st[k] = int(v)
+            self._persona_state = st
         # observed: engine-authoritative OBSERVATION set ∪ this agent's MEMORY_WRITE sources
         obs = set(a.get("observed_event_seqs", []))
         for rec in records:
@@ -192,7 +214,15 @@ class LifeLayerAgent:
         accepted: set = set()
         judged: set = set()
         appraised: set = set()
-        comm = None
+        comm_round = None   # _comm_slot 按"是否**尝试**过对话"定（被拒的尝试不留 MSG_*）
+        _slot_names = C.TIME_CONFIG["SLOTS_PER_DAY"]
+        _rps = C.TIME_CONFIG["ROUNDS_PER_SLOT"]
+        _dow = C.TIME_CONFIG.get("DAYS_PER_WEEK", 7)
+
+        def _slot_of(rr: int) -> str:
+            per_day = len(_slot_names) * _rps
+            return f"day{(rr // per_day) % _dow}-{_slot_names[(rr % per_day) // _rps]}"
+
         rel: dict = {}
         for rec in records:
             t = rec.get("type")
@@ -204,10 +234,15 @@ class LifeLayerAgent:
                 goals_weeks.add(r // W)
             elif t in ("MSG_DM", "MSG_PUBLIC", "MSG_GROUP"):
                 who = p.get("from") or p.get("author") or rec.get("actor")
-                if who == self.agent_id and p.get("day") is not None and p.get("slot"):
-                    sid = f"day{int(p['day']) % C.TIME_CONFIG['DAYS_PER_WEEK']}-{p['slot']}"
-                    if comm is None or r >= comm[0]:
-                        comm = (r, sid)
+                if who == self.agent_id:
+                    if comm_round is None or r >= comm_round:
+                        comm_round = r
+            elif t == "INTENT_REJECTED":
+                # `_communicate` 在**尝试**时就置 `_comm_slot`（即使 SOCIAL 被拒、无 MSG_*）⇒
+                # 被拒的对话尝试也必须算，否则续跑会**重复尝试**同一 slot（T298 cut=75）。
+                if p.get("agent_id") == self.agent_id and p.get("intent_class") == "INTENT.SOCIAL":
+                    if comm_round is None or r >= comm_round:
+                        comm_round = r
             elif t == "NARRATIVE":
                 br = p.get("body_ref") or ""
                 if f"narrative/{self.agent_id}/" in br:
@@ -241,7 +276,7 @@ class LifeLayerAgent:
         self._accepted = accepted
         self._judged = judged
         self._appraised = appraised
-        self._comm_slot = comm[1] if comm else None
+        self._comm_slot = _slot_of(comm_round) if comm_round is not None else None
         self._rel_cache = rel
 
     # ---- public entry ------------------------------------------------------
