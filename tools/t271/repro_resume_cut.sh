@@ -9,10 +9,23 @@ REPO="${T271_REPO:-/root/.jiuwenswarm/agent/workspace/work/尝试/social-experim
 PY=/opt/openjiuwen/workswarm-venv/bin/python
 SHA="${T271_REPRO_SHA:-$(git -C "$REPO" rev-parse HEAD)}"
 CUT="${1:-75}"; ROUNDS=150; SEED=9; N=2; FLUSH=5
-# T313-②：输出/副本根可覆盖（默认不变）⇒ 守护 / release / 他人各用各的目录、互不覆盖
+# T313-②：输出/副本根可覆盖（默认不变）；T316：副本根带【sha 标记】，**不再无声复用**
 CO="${T271_REPRO_COPY:-/tmp/t271-repro}"          # 只读副本根（从 SHA 建，避免活树漂移）
 CO_ROOT="$(dirname "$CO")"; CO_BATCH="$(basename "$CO")"; CO_BATCH="${CO_BATCH#t271-}"
-[ -d "$CO/code" ] || T271_COPY_ROOT="$CO_ROOT" bash "$BIN/make_batch_copy.sh" "$CO_BATCH" "$SHA" >/dev/null 2>&1
+SHORT="$(git -C "$REPO" rev-parse --short "$SHA" 2>/dev/null || echo "$SHA")"
+MARKER="$CO/.src_sha"
+need_build=0
+if [ ! -d "$CO/code" ]; then
+  need_build=1
+elif [ ! -f "$MARKER" ]; then
+  echo "[repro] WARN: 副本 $CO 无 sha 标记 -> 重建（不静默复用未知副本）"; need_build=1
+elif [ "$(cat "$MARKER" 2>/dev/null)" != "$SHORT" ]; then
+  echo "[repro] WARN: 副本 $CO 标记=$(cat "$MARKER" 2>/dev/null) != 期望 $SHORT -> 重建（不静默复用陈旧副本）"; need_build=1
+fi
+if [ "$need_build" = "1" ]; then
+  T271_COPY_ROOT="$CO_ROOT" bash "$BIN/make_batch_copy.sh" "$CO_BATCH" "$SHA" >/dev/null 2>&1
+  echo "$SHORT" > "$MARKER"
+fi
 [ -d "$CO/code" ] || { echo "副本缺失：$CO/code"; exit 2; }
 P="${T271_REPRO_ROOT:-/root/t271/runs/repro}"      # 输出根（可覆盖；默认不变）
 S="$P/side"; safe_rmrf "$P"; mkdir -p "$S"
