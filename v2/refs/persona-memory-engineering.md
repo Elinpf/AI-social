@@ -264,7 +264,7 @@ score = w_rec·recency + w_imp·importance + w_rel·relevance
 | **PM-9** | 记忆固化/日结 | EM→SM 固化、S 强化、日结快照 | 固化算子 + 日结格式 | 固化可复算；被引用记忆遗忘率下降 | PM-6/8 |
 | **PM-10** | 情绪与习惯 | `mood` 维度、`top_phrase`、延迟、受控不一致 | 规则规范 + prompt 段 | 指标落目标带；不增 LLM 调用（P0 项） | 现有 needs/relation |
 | **PM-11** | 拟人度量 | §4.2 A 指标 + 量表模板 | 指标口径 + 量表 | 指标可复算；量表可用于验收 | PM-3/5/10；观测层 |
-| **PM-12** | 事件表扩展（建议） | `SLEEP_*`/`MEMORY_FORGET`/`MEMORY_CONSOLIDATE`/`PERSONA_DRIFT` | 事件 schema 提议 | **事件需可审计**（schema 完整、payload 完备、可从日志抽取/复算）；**逐位重放口径待 Fork B 定案**（用户："可靠回溯不是必须的，首要是有趣"） | 内核 owner（`sim-engine-stats-architect`）登记 `08` 后评审 |
+| **PM-12** | 事件表扩展（建议） | `SLEEP_*`/`MEMORY_FORGET`/`MEMORY_CONSOLIDATE`/`PERSONA_DRIFT` | 事件 schema 提议 | **事件需可审计**（schema 完整、payload 完备、可从**全量日志**抽取）；**随机须种子化**；产物记 **sha + 生成命令**；**不再要求逐位重放一致**（Fork B 已定案，见 §8 注记） | 内核 owner（`sim-engine-stats-architect`）登记 `08` 后评审 |
 
 **依赖图**：PM-1→PM-2→PM-3；PM-4→{PM-5,PM-6,PM-8}；PM-6/8→PM-7→PM-9；PM-10→PM-11。PM-12 横切需内核评审。
 
@@ -302,6 +302,8 @@ score = w_rec·recency + w_imp·importance + w_rel·relevance
 | 事件表 | 建议新增上述事件类型（需内核 owner 评审重放分派） | 横切 |
 
 > **口径收紧（Leader 2026-10-12 批示）**：`SLEEP_*` / `MEMORY_FORGET` / `MEMORY_CONSOLIDATE` / `PERSONA_DRIFT` 的登记口径**按「事件需要可审计」**（schema 完整、payload 完备、可从日志抽取与复算），**暂不按「必须逐位重放」**写——后者代价显著更大，且用户已明确"可靠回溯不是必须的，首要是有趣"，**Fork B 待拍板**。最终口径待 Fork B 定案后再收敛；登记本身需先交 `sim-engine-stats-architect`（`08` 事件 schema 权威）。**当前不实现。**
+
+> **✅ 口径定案（2026-10-12 用户拍板，Fork B = 放开逐位可复现）**：**不再以"逐位重放一致"作为验收口径**。但**全量日志仍落盘、随机仍种子化、每份产物仍须记 sha + 生成命令**。故本文所有"逐位一致/golden 逐位比对"表述**收敛为**：「可从全量日志重算 + 结果记 sha + 生成命令可复现」；**§5.1/§5.3 的判定改为"可审计 + 种子化 + 产物绑定"，不再要求 replay 逐位相等**。事件登记仍先交 `sim-engine-stats-architect`（`08` 权威）。
 
 ---
 
