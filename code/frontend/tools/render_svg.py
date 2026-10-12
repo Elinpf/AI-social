@@ -30,6 +30,10 @@ import sys
 from pathlib import Path
 
 CODE_DIR = Path(__file__).resolve().parents[2]
+if str(CODE_DIR) not in sys.path:
+    sys.path.insert(0, str(CODE_DIR))
+# actor 守卫单一真源（T241）：非 Agent actor（SYSTEM/OBSERVER/DIRECTOR/哨兵）不当角色渲染。
+from contracts.actors import agent_or_none  # noqa: E402
 
 # ---- 类别配色 / 中文名（与 src/sprites.js CATEGORY_STYLE 对齐）----
 CATEGORY_STYLE = {
@@ -89,11 +93,13 @@ def fold_until(records: list[dict], target_round: int) -> dict:
         elif t == "AGENT_REVIVED":
             bump(p["agent_id"])["status"] = "alive"
         elif t == "STATE_CHANGE":
-            a = bump(p.get("agent_id") or ev.get("actor") or "")
-            if isinstance(p.get("to"), str):
-                a["status"] = p["to"]
-            if p.get("status"):
-                a["status"] = p["status"]
+            aid = p.get("agent_id") or agent_or_none(ev.get("actor"))
+            if aid:
+                a = bump(aid)
+                if isinstance(p.get("to"), str):
+                    a["status"] = p["to"]
+                if p.get("status"):
+                    a["status"] = p["status"]
         elif t == "TIME_MARK":
             last_time = p
         # 货币

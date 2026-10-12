@@ -4,6 +4,11 @@
 (function (global) {
   "use strict";
 
+  // actor 守卫（T241）：单一真源的 JS 镜像 = contracts/actors.py::NON_AGENT_ACTORS。
+  // 非 Agent actor（SYSTEM/OBSERVER/DIRECTOR/世界侧哨兵）不得被当作某个 Agent 渲染为角色。
+  const NON_AGENT_ACTORS = new Set(["SYSTEM", "OBSERVER", "DIRECTOR", "WORLD", "MARKET", "BANK", "TAX_POOL"]);
+  const agentActor = (a) => (typeof a === "string" && a && !NON_AGENT_ACTORS.has(a)) ? a : null;
+
   // 事件类型 → 展示元信息（图标/配色/是否进事件流）
   const EVENT_META = {
     WORLD_INIT:        { icon: "🌍", color: "#8b98ab", stream: true },
@@ -165,10 +170,12 @@
         case "AGENT_DIED": { bump(p.agent_id).status = "dead"; bump(p.agent_id).activity = null; break; }
         case "AGENT_REVIVED": bump(p.agent_id).status = "alive"; break;
         case "STATE_CHANGE": {
-          const id = p.agent_id || ev.actor;
-          const a = bump(id);
-          if (p.to && typeof p.to === "string") a.status = p.to;
-          if (p.status) a.status = p.status;
+          const id = p.agent_id || agentActor(ev.actor);
+          if (id) {
+            const a = bump(id);
+            if (p.to && typeof p.to === "string") a.status = p.to;
+            if (p.status) a.status = p.status;
+          }
           break;
         }
         case "TURN_SEAL":
@@ -224,7 +231,7 @@
       for (const ev of evs) {
         const p = ev.payload || {};
         if (ev.type === "MSG_PUBLIC" || ev.type === "MSG_DM" || ev.type === "MSG_GROUP") {
-          const id = p.from || p.agent_id || ev.actor;
+          const id = p.from || p.agent_id || agentActor(ev.actor);
           const text = p.text || p.content || p.message || p.msg || "";
           if (out[id]) out[id].bubble = truncate(text, 60);
         } else if (ev.type === "ACTIVITY_STARTED") {
@@ -288,7 +295,7 @@
   // 事件的可读描述（审计事件流）
   function describe(ev) {
     const p = ev.payload || {};
-    const who = p.agent_id || p.from || ev.actor || "";
+    const who = p.agent_id || p.from || agentActor(ev.actor) || "";
     switch (ev.type) {
       case "AGENT_BORN": return `${who} 出生于 ${p.home_place || "?"}`;
       case "INIT_ENDOW": return `${who} 初始注入 ${p.amount} mu`;
@@ -307,7 +314,7 @@
       case "INTENT_REJECTED": return `${who} 意图被拒（${p.reason || p.intent_class || ""}）`;
       default: {
         const keys = Object.keys(p).slice(0, 4);
-        return keys.length ? `${who} ${JSON.stringify(pick(p, keys))}` : `${ev.actor || ""}`;
+        return keys.length ? `${who} ${JSON.stringify(pick(p, keys))}` : `${agentActor(ev.actor) || ""}`;
       }
     }
   }
@@ -378,7 +385,7 @@
     const pl = ctx.place || ((x) => x || "");
     const p = ev.payload || {};
     const T = ev.type;
-    const who = nm(p.agent_id || p.from || ev.actor || "");
+    const who = nm(p.agent_id || p.from || agentActor(ev.actor) || "");
     const S = styleOf(T);
     let text;
     switch (T) {
@@ -466,7 +473,7 @@
       .replace(/（\s*[，,、]\s*/g, "（").replace(/[，,、]\s*）/g, "）").replace(/（\s*）/g, "")
       .replace(/\s*（\s*）/g, "").replace(/[ \t]{2,}/g, " ").trim();
     if (!text) text = (who ? who + " " : "") + (T || "事件");
-    return { text, style: S, level: S.level || "detail", family: S.family || "SYS", causal: causalOf(ev), seq: ev.seq, round: ev.round, actor: p.agent_id || p.from || ev.actor };
+    return { text, style: S, level: S.level || "detail", family: S.family || "SYS", causal: causalOf(ev), seq: ev.seq, round: ev.round, actor: p.agent_id || p.from || agentActor(ev.actor) };
   }
 
   global.HITTReplay = { Replay, meta, describe, activityLabel, wallClock, wallClockText, EVENT_META, humanize, styleOf, causalOf, reasonCn };

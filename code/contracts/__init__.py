@@ -24,6 +24,7 @@ from .models import (
     JudgmentRequest, AuditPayload,
 )
 from .hooks import Ctx, Delta, HookFn
+from .actors import NON_AGENT_ACTORS, is_agent_actor, agent_or_none
 
 __all__ = [
     "KernelError", "HashChainBroken", "UnknownEventType", "RoundRollback", "IllegalJudgment",
@@ -32,4 +33,5 @@ __all__ = [
     "TimeCoord", "EventView", "MemoryRef", "WorldView", "Intent", "IntentResult",
     "JudgmentRequest", "AuditPayload",
     "Ctx", "Delta", "HookFn",
+    "NON_AGENT_ACTORS", "is_agent_actor", "agent_or_none",
 ]

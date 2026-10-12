@@ -5,10 +5,17 @@
 
 from __future__ import annotations
 
+# 非 Agent actor（世界/系统/观测/导演/哨兵）—— 不得被当成某个 Agent 串计入 agent 级指标。
+# 口径唯一真源 = contracts.actors（T241 收敛，消除 obs/frontend 各自复制白名单的同名不同义风险）。
+from contracts.actors import NON_AGENT_ACTORS as _NON_AGENT_ACTORS, agent_or_none
+
 
 def _agent_of(rec) -> str | None:
     p = rec.get("payload") or {}
-    return p.get("agent_id") or rec.get("actor")
+    aid = p.get("agent_id")
+    if aid:
+        return aid
+    return agent_or_none(rec.get("actor"))
 
 
 def _alive_count(records) -> int:
