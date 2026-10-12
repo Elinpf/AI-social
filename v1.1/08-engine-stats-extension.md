@@ -454,6 +454,19 @@ class Event:
 - **观测影响（T248 实测，obs 侧已止血）**：未守卫时泄漏量见 `v2/evidence/t248-agent-id-semantics.md`（如 `mastery` min 25→29、`n_need_updates` 3399→3310）；obs `life.py::need_metrics` 与 `census.py` E7 已复用 `contracts.actors` 过滤。
 - **生产侧**：本次**不动**（哨兵账户是 v2 市场/系统账户设计的既有产物）；如未来为 world 主体单列字段，须回写本节。
 
+**V. v2 服务交付事件（`SERVICE_DELIVERED`；应 T278，已登记）**
+
+| type | phase | payload 关键字段 | 折叠器行为 |
+|---|---|---|---|
+| `SERVICE_DELIVERED`（**新增**） | 4.1 | `agent_id, good_id("service"), qty, place, counterparty?, round` | **inventory-neutral**：不改 `state.inventory`（noop 记账 + 计数 `services_delivered`） |
+
+- **语义**：**服务即时交付**（非库存持有）——交付即消耗，不落库存。
+- **守恒口径**：`SERVICE_DELIVERED` **不进**商品库存式 `ΣPRODUCE = ΣCONSUME + Σ库存 + Σ溢出 + Σ折旧耗损`；**`service` 不再发 `PRODUCE`**（改发本事件）→ **另计 `Σ SERVICE_DELIVERED`（服务流量）**。已并入 §6 不变量 (13) 注记。
+- **可见性（裁定 = 动态，与 `OFFER_CREATED` 同型）**：`counterparty` 存在 → **`participants_only`**（当事人 = 交付方 `agent_id` + 受方 `counterparty`；防"服务网络"被全局窥探）；`counterparty` 缺省（自服务）→ **`subject_only`**。**实现要求**：`participants_only` 谓词须纳入一等当事人字段 **`counterparty`**（T129 已把 `counterparty` 列为一等字段）——由 kernel-dev 在 `contracts/visibility.py` 落实（**类 + 动态覆盖**）。
+- **开关（可消融；§5.8 家族；进 `engine_version` 指纹）**：`policy.service_delivered.enabled`（**默认 `true`、行为不变**）；`OFF` → 不产事件 + `DROPPED{reason:"service_disabled", flag:"service_disabled"}`、**不 fail-loud**；与 `economy.enabled` 为 **AND**。
+- **G7/兼容**：新增类型（旧日志不出现），G7 不受影响；`events.py::EVENT_TYPES` + `replay.apply_event` 折叠器归 **kernel-dev**；econ 产出侧（`socialize` 改发本事件）+ 开关 + 测试归 **econ-dev**。
+- **同批可见性裁定（T277 `ORDER_PLACED`）**：**`place_local`**（防抢跑；**非** `global`）；已加 `perception_scope.json` 条目（事件 schema 待 T277 登记）。
+
 > **「确定性后果真值」口径（T257 裁定，08 权威；替代原「建议合并」附记）**：
 > 存在**两个**实现 `obs/truth.py`(`264c07f`) 与 `obs/truth_from_consequences.py`(`969335f`)，口径分歧（3/3 输入）。现裁定：
 > 1. **单一真源** = **`obs/truth_from_consequences.py`**（`obs/truth.py` 废弃并入）；验收=合并机制下输出一致（**口径变更处按本表修正输出**，非"跨口径逐字节不变"）。
@@ -965,6 +978,7 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
   - **消融口径**：显式关闭必须与「静默失效」可区分——前者不 fail-loud 且发审计 flag，后者必须 fail-loud。这是本族开关的统一纪律。
   - **`exchange.enabled`（v2 交换原语档，T126/T129）同属这一族**：`policy.exchange.enabled`（runtime `config.exchange.enabled` 优先），**默认 `true`（行为不变）**。**语义 = 控制「agent↔agent 成交」原语**（**世界市场 `MARKET` 保留**，不受本开关影响）。`OFF` 时 life 不产生 `INTENT.ECON.TRADE/OFFER/ORDER_PLACE/ORDER_CANCEL`、engine 不挂 `apply_exchange/apply_contracts` → `EXCHANGE_SETTLED=0`、agent-as-seller 的 `MARKET_TRADE=0`、`CONTRACT_CREATED=0`（**Agent 间交易 = 0；世界市场成交仍在**）；**不删事件契约、不改守恒、不 fail-loud**，发审计 `DROPPED{reason:"exchange_disabled", flag:"exchange_disabled"}`（**「开关生效」唯一查法 = 查该 `DROPPED`**）。与 `economy.enabled` 的嵌套语义 = **AND**（`economy=false` 则 exchange 无意义）。
   - **`wake.enabled` / `wake.triggers.*`（v2 双时钟档，T263/T265）同属这一族**：`wake.enabled` **默认 `false`（行为不变）**；置 `true` 启用「个体决策节拍 = 事件驱动唤醒」。`wake.triggers.{W1..W10}` 为**逐因开关**（`W6` 默认 `true` 可关，供消融）；**世界结算节拍（round）不受本开关影响、始终不变**。**只控制「是否启用唤醒门控」、不删事件契约、不改守恒、不 fail-loud**；`engine_version` 指纹随本块变化（属预期）。
+  - **`service_delivered.enabled`（v2 服务交付档，T278）同属这一族**：`policy.service_delivered.enabled`，**默认 `true`（行为不变）**。**只控制「是否产生」**服务交付事件：`OFF` → 不产 `SERVICE_DELIVERED` + `DROPPED{reason:"service_disabled", flag:"service_disabled"}`；**不删事件契约、不改守恒、不 fail-loud**；与 `economy.enabled` 嵌套 = **AND**。
 
 ---
 
@@ -991,6 +1005,7 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
 (11) 统计无 LLM 判定：§4.10 的 llm_judged_metric_count == 0
 (12) M(t) ≥ 0（v2 硬约束，应 `v2/01` §2.3/§6.2）：货币总量恒不为负；**代谢销毁时若 `Σcash < burn`，只销毁可得部分**（`burn × Σcash/burn` 的上限即 `Σcash`），**绝不允许总量为负**（修复 canonical「销毁无地板」bug）。
 (13) 商品守恒（v2）：`ΣPRODUCE = ΣCONSUME + Σ库存 + Σ溢出 + Σ折旧耗损`（不成立 → 全回合回滚 + `ECONOMY_INVARIANT_VIOLATION`）。
+     · **服务例外（T278）**：`service` **不入**上述库存式（`service` 不再发 `PRODUCE`）；服务交付另计 **`Σ SERVICE_DELIVERED`（服务流量，inventory-neutral）**。
 ```
 
 **生活层新增不变量（应 06-life-layer §8.3，已并入；编号 L1–L8 沿用 06）**：

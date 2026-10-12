@@ -9,9 +9,9 @@
     "place_local": ["e.place == location(agent, round)"],
     "members": ["group_members(group_id, round)", "payload.members", "actor"],
     "private": ["payload.from", "payload.to", "payload.to[]", "payload.agent_id", "payload.observer", "actor"],
-    "participants_only": ["payload.participants", "payload.from", "payload.to", "actor"],
+    "participants_only": ["payload.participants", "payload.from", "payload.to", "payload.counterparty", "actor"],
     "subject_only": ["payload.agent_id", "payload.observer", "payload.from", "actor"],
-    "_dynamic": {"OFFER_CREATED": "to==[] -> global ; 否则 -> private (T137)"},
+    "_dynamic": {"OFFER_CREATED": "to==[] -> global ; 否则 -> private (T137)", "SERVICE_DELIVERED": "counterparty 存在 -> participants_only ; 缺省(自服务) -> subject_only (T278)"},
     "_known_gaps": []
   },
   "scope": {
@@ -98,6 +98,9 @@
     "PENALTY_APPLIED": "subject_only",
     "REVIVE_FEE_PAID": "subject_only",
     "WAKE": "subject_only",
-    "INTENT_REJECTED": "subject_only"
+    "INTENT_REJECTED": "subject_only",
+
+    "SERVICE_DELIVERED": "participants_only",
+    "ORDER_PLACED": "place_local"
   }
 }
