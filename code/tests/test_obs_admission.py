@@ -2,7 +2,25 @@
 
 import json
 
-from obs.admission import admission_report, flag_rate, latency_p50, legal_rate, token_totals
+from obs.admission import (
+    admission_report, flag_rate, judge_method_rates, latency_p50, legal_rate, token_totals,
+)
+
+
+def test_judge_method_rates_and_inert():
+    recs = [
+        {"type": "LLM_JUDGMENT", "payload": {"dimension": "stance", "decision": "accept", "method": "discriminative"}},
+        {"type": "LLM_JUDGMENT", "payload": {"dimension": "stance", "decision": "undecidable", "method": "rule"}},
+        {"type": "LLM_JUDGMENT", "payload": {"dimension": "stance", "decision": "reject", "method": "discriminative"}},
+        {"type": "LLM_JUDGMENT", "payload": {"dimension": "mentor_relation", "decision": "high", "method": "discriminative"}},
+        {"type": "OTHER", "payload": {"dimension": "stance"}},  # 非 LLM_JUDGMENT，忽略
+    ]
+    r = judge_method_rates(recs)
+    assert r["stance"]["n"] == 3
+    assert r["stance"]["escape_rate"] == round(1 / 3, 6)      # 1 undecidable
+    assert r["stance"]["fallback_rate"] == round(1 / 3, 6)    # 1 非 discriminative
+    assert r["stance"]["inert"] is False
+    assert r["mentor_relation"]["inert"] is True              # 登记但无调用点 → 单列
 
 
 def test_flag_rate():

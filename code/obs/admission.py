@@ -8,11 +8,50 @@
 from __future__ import annotations
 
 import argparse
+import collections
 import json
 from pathlib import Path
 
+# 登记但**无调用点**的维（life `MENTOR_DIMENSION_WIRED=False`）—— 单列、不进 mainline（T222）
+INERT_DIMS = frozenset({"mentor_relation"})
+
 __all__ = ["load_pairs_jsonl", "legal_rate", "token_totals", "latency_p50",
-           "admission_report", "flag_rate"]
+           "admission_report", "flag_rate", "judge_method_rates", "INERT_DIMS"]
+
+
+def judge_method_rates(records, inert_dims=INERT_DIMS) -> dict:
+    """逐维 `escape_rate` / `fallback_rate`（从 `LLM_JUDGMENT{decision,method}` 算，**不新增事件**）。
+
+    - `escape_rate(dim)   = #(decision=="undecidable") / n`
+    - `fallback_rate(dim) = #(method != "discriminative") / n`（含 escape/margin/旧生成式/规则）
+    语义：**偏高 = 候选枚举漏了东西 → 回去补枚举**（不是调阈值）。
+    输出每维含 `inert`（inert 维单列、不进 mainline）。纯函数、只读、确定性。
+    """
+    per = collections.defaultdict(lambda: {"n": 0, "undecidable": 0, "fallback": 0})
+    for r in records:
+        if r.get("type") != "LLM_JUDGMENT":
+            continue
+        p = r.get("payload") or {}
+        dim = p.get("dimension")
+        if dim is None:
+            continue
+        d = per[dim]
+        d["n"] += 1
+        if p.get("decision") == "undecidable":
+            d["undecidable"] += 1
+        if p.get("method") not in (None, "discriminative"):
+            d["fallback"] += 1
+    out = {}
+    for dim in sorted(per):
+        d = per[dim]
+        n = d["n"]
+        out[dim] = {
+            "n": n,
+            "escape_rate": round(d["undecidable"] / n, 6) if n else 0.0,
+            "fallback_rate": round(d["fallback"] / n, 6) if n else 0.0,
+            "inert": dim in inert_dims,
+        }
+    return out
 
 
 def flag_rate(records, field):
