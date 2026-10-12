@@ -221,21 +221,20 @@ class LifeLayerAgent:
                     accepted.add(oid)
             elif t == "RELATION_CHANGE" and p.get("from") == self.agent_id:
                 rel[(p.get("to"), p.get("dim"))] = p.get("after")
-            elif t == "LLM_JUDGMENT" and self.agent_id in (p.get("parties") or []):
-                # 软判定/社会评价的去重集（否则续跑首回合会重新判：多出 LLM_CALL/JUDGMENT）
+            elif t == "LLM_JUDGMENT" and (p.get("judgment_id") or "").startswith("J-"):
+                # 去重集按 **jid 归属人**（`J-<owner>-<to>-<dim>-...`）计，而非"parties 含我"——
+                # 否则会把**对方**的判定误记到我名下（实测：`J-P003-P001-affinity-weak-11`
+                # 曾被错加进 P001 的 `_judged`，导致 P001 在 round22 漏判）。
                 dim = p.get("dimension") or ""
-                jid = p.get("judgment_id") or ""
-                others = [x for x in (p.get("parties") or []) if x != self.agent_id]
-                if not others:
+                toks = (p.get("judgment_id") or "").split("-")
+                if len(toks) < 5 or toks[1] != self.agent_id:
                     continue
-                if dim.startswith("rel_"):
-                    toks = jid.split("-")
-                    if len(toks) > 4:
-                        judged.add((others[0], dim[4:], toks[4]))
+                if dim.startswith("rel_") and len(toks) >= 6:
+                    judged.add((toks[2], dim[4:], toks[4]))
                 elif dim in ("stance", "respect", "affection"):
-                    tail = jid.rsplit("w", 1)[-1]
-                    if tail.isdigit():
-                        appraised.add((others[0], int(tail)))
+                    tail = toks[4]
+                    if tail[:1] == "w" and tail[1:].isdigit():
+                        appraised.add((toks[2], int(tail[1:])))
         self._planned_weeks = planned
         self._goals_set_weeks = goals_weeks
         self._narrated_weeks = narrated
