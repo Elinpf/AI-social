@@ -247,22 +247,22 @@
     "WORLD_DIRECTIVE": {
       "assembly_point": "engine/hooks/world_director.py::apply_world_director（PHASE4_CHAIN 首项）",
       "producer": "WD-Core 决策器→内核合规校验器(R1–R6)封装",
-      "notes": "默认 config/world_director.json enabled=false（保底(b)消融→0事件）；启用后产",
-      "default_state": "off",
+      "notes": "T255：默认 enabled=true（用户 #4/#5 要『世界导演真产生宏观群体事件』）；改回 false 即保底(b)消融→0事件",
+      "default_state": "on",
       "switch": "config/world_director.json::enabled"
     },
     "WORLD_GROUP_EVENT": {
       "assembly_point": "engine/hooks/world_director.py::apply_world_director",
       "producer": "EF-Core/Opp/Incident→内核据 DIRECTIVE+RNG 封装",
-      "notes": "kind 用 T216 §2.1 的 14 枚举子集；≠GROUP_*",
-      "default_state": "off",
+      "notes": "kind 用 T216 §2.1 的 14 枚举子集；≠GROUP_*；T255 默认随父闸 on",
+      "default_state": "on",
       "switch": "config/world_director.json::enabled"
     },
     "WORLD_DIRECTIVE_REJECTED": {
       "assembly_point": "engine/hooks/world_director.py::apply_world_director",
       "producer": "WD-Core 合规校验器",
-      "notes": "仅违 R1–R6（reason∈…，severity=reject）或 scope<K（severity=warn）时出现；正常 run=0",
-      "default_state": "off",
+      "notes": "仅违 R1–R6（reason∈…，severity=reject）或 scope<K（severity=warn）时出现；正常 run=0；T255 默认随父闸 on（仍正常 run=0）",
+      "default_state": "on",
       "switch": "config/world_director.json::enabled"
     },
     "FORGE_FIRED": {
