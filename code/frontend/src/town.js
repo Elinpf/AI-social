@@ -673,6 +673,18 @@
       const road = this._roadMask, water = this._waterMask, soil = this._soilMask, plaza = this._plazaMask;
       const deco = this._decorLayer;
       const nodes = Object.values(this.nodeById);
+      // T269「没层次」主杠杆（顶视图）：细节密度随距离衰减 + 尺度衰减 + 远端空气透视 tint
+      // t=0 最远(北/上)，t=1 最近(南/下)。位置 y 即"世界深度"。
+      const DEPTH_H = this._rows * TILE;
+      const depthAt = (y) => Math.max(0, Math.min(1, y / DEPTH_H));
+      const depthScale = (t) => 0.88 + 0.14 * t;                 // 远端略小、近端略大
+      const coolTint = (t) => {                                  // 远端去饱和偏冷（白→冷灰蓝）
+        const i = Math.max(0, Math.min(1, 0.34 * (1 - t)));
+        const r = Math.round(255 - (255 - 200) * i);
+        const g = Math.round(255 - (255 - 212) * i);
+        const b = Math.round(255 - (255 - 236) * i);
+        return (r << 16) | (g << 8) | b;
+      };
       const clearOf = (x, y, rad) => nodes.every((n) => {
         const dx = n.x - x, dy = n.y - y;
         return dx * dx + dy * dy > rad * rad;
@@ -718,10 +730,15 @@
           else if (r < 0.17) { rect = W.SPR.plant; scale = 1.05; }
           else if (r < 0.19) { rect = W.SPR.rock; scale = 0.95; }
           if (!rect) continue;
+          // T269：远端去细节 —— 小件（花/草/石/灌木）在远带按确定哈希稀疏化；只留成片树丛的大件绿意
+          const dt = depthAt(cy);
+          const big = (rect === W.SPR.treeCluster || rect === W.SPR.conifer);
+          if (dt < 0.34 && !big && W.hash2(tx, ty, 321) > 0.35) continue;
           const sp = new P.Sprite(W.spriteTex(this.tilesetBase, rect));
           sp.anchor.set(0.5, 1);
           sp.x = cx; sp.y = cy + TILE / 2;
-          sp.scale.set(scale);
+          sp.scale.set(scale * depthScale(dt));                       // T269：尺度随距离衰减
+          if (dt < 0.9) sp.tint = coolTint(dt);                       // T269：远端空气透视（去饱和偏冷）
           deco.addChild(sp);
           // T269「像贴图」：接地 AO/接触影（每株装饰都"踩"在地上，不飘）——统一光向左上前→影偏右下
           const ao = new P.Graphics();
@@ -735,8 +752,11 @@
           if (road[ty][tx] || water[ty][tx] || soil[ty][tx] || plaza[ty][tx]) continue;
           const r = W.hash2(tx, ty, 211);
           if (r > 0.07) continue;                       // T116：降密度（0.16→0.07），保留质感、去"彩色噪点"
-          const cx = tx * TILE + 4 + W.hash2(tx, ty, 213) * (TILE - 10);
-          const cy = ty * TILE + 4 + W.hash2(tx, ty, 217) * (TILE - 10);
+          const scx = tx * TILE + 4 + W.hash2(tx, ty, 213) * (TILE - 10);
+          const scy = ty * TILE + 4 + W.hash2(tx, ty, 217) * (TILE - 10);
+          // T269：远端地表碎点进一步稀疏（去细节），近端保留
+          if (depthAt(scy) < 0.34 && W.hash2(tx, ty, 323) > 0.4) continue;
+          const cx = scx, cy = scy;
           const t = W.hash2(tx, ty, 219);
           const g = new P.Graphics();
           if (t < 0.45) { fillRect(g, cx, cy, 4, 3, 0x7c8188); }                       // 小石（低饱和，非彩噪）
@@ -896,6 +916,10 @@
         if (!sp) sp = W.makePlaceSprite(P, p, node);                 // 回退：旧程序化
         const py = Math.max(112, Math.min(this.world.height - 26, node.y));
         sp.y = py; sp.zIndex = py;
+        // T269：建筑尺度随距离衰减（远端略小 → 顶视图"远"的信号之一）
+        const t = Math.max(0, Math.min(1, py / this.world.height));
+        const ds = 0.94 + 0.08 * t;
+        if (sp.scale && sp.scale.set) sp.scale.set(ds);
         this.placeLayer.addChild(sp);
         if (sp.__label) this._placeLabels.push(sp.__label);   // T116：建筑名（景观模式可隐藏）
       });
