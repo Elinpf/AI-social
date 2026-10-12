@@ -5,14 +5,14 @@
 > 目标（用户 #10）：*"产生的数据，能够作为训练下一个、参数量较小的模型使用，或者微调的样本"*
 > 参照（米哈游路径，T207）：**SFT→RLHF→DPO→OPD + 三层 Hybrid Reward（rule/scalar/rubric）+ 多教师蒸馏 → 一个学生模型承载所有 NPC 人设**
 > 对齐红线（Leader 2026-10-12）：**证据绑版本（sha+命令）· 口径唯一不复制 · 不确定标【未验证】· 不得造数 · 不得为好看而动世界语义**
-> 证据约定：**【事实(代码)】**=可追溯到 `code/` 文件；**【事实(run)】**=取自真实 run `v2/evidence/run_t136_real_llm_canon_n20.jsonl`（N=20 canonical，130,296 事件）；**【待确认】**=已直连 `freeze-layer-dev` 核对；**【未验证】**=工程假设。
+> 证据约定：**【事实(代码)】**=可追溯到 `code/` 文件；**【事实(run)】**=取自真实 run `v2/evidence/run_t136_real_llm_canon_n20.jsonl`（N=20 canonical，130,296 事件）；**【已核实】**=已由 `freeze-layer-dev` 逐条确认（2026-10-12）；**【未验证】**=工程假设。
 > 约束：**大文件/数据集不入库**（本文只给 schema + 小抽样）。
 
 ---
 
 ## 0. 结论速览（**先说限制，再谈形态**）
 
-1. **最硬的限制（必须放在最前）**：**LLM_CALL 只落 `prompt_hash`、不落 prompt 正文；`freeze_cache/responses` 只落输出 `text`、也不落 prompt 正文** → **"有 output、无 input"** → **无法直接从 LLM 调用记录构造 `input→output` 训练对**。**【事实(代码)】【待确认】**
+1. **最硬的限制（必须放在最前）**：**LLM_CALL 只落 `prompt_hash`、不落 prompt 正文；`freeze_cache/responses` 只落输出 `text`、也不落 prompt 正文** → **"有 output、无 input"** → **无法直接从 LLM 调用记录构造 `input→output` 训练对**。**【已核实】freeze-layer-dev 2026-10-12 逐条确认：prompt 正文本就不落盘、也不在别处落盘。**
 2. **第二个限制**：**`LLM_JUDGMENT` 有 `decision`，但没有任何"真值/正确答案"**（只有 `envelope` 的阈值/选项）→ **不能做监督式 SFT**，只能做"与规则一致性"或需另造偏好的 RM。**【事实(代码)】**
 3. **好消息**：**训练信号其实藏在"世界事件 + side storage 正文"里**，而不在 LLM 调用记录里——**对话正文（`MSG_*`）、记忆正文（`MEMORY_WRITE`→side）、反思正文（`MEMORY_REFLECT`→side）、叙事正文（`NARRATIVE`→side）**都带**可回溯的事件锚点**，且**无侵入可导出**。**【事实(run)】**
 4. **最短路径**：**先用"对话/反思/记忆"三类**（有 input 有 output）做 **SFT 数据集导出**；**本机无 GPU → 现阶段只能导出 + 校验，训练做不了**。**【未验证：本机算力】**
@@ -180,9 +180,14 @@ train_ready(dataset) =
 
 ---
 
-## 7. 协作与待确认
+## 7. 协作与已核实（**freeze-layer-dev 2026-10-12 逐条确认**）
 
-- **已直连 `freeze-layer-dev` 核实记录格式**（LLM_CALL 是否落 prompt 正文 / responses 是否含 input / judgment 是否有真值 / body_ref 解析入口）——**结论待其回复后回填**。本文相关结论暂标 **【事实(代码)】/【待确认】**。
+- **【已核实】** D2 `LLM_CALL`：无 prompt 正文、无输出正文（T222 加了可选 `confidence/margin`，仍无正文）。
+- **【已核实】** D10 `responses/<key>.json`：**有 output、无 input**（新增 `logprobs`）。
+- **【已核实】** D3 `LLM_JUDGMENT`：有 `decision`，**无任何真值/正确答案字段**（`envelope` 仅 before/after/threshold/options/rng_branch）→ 只能做「与规则阈值一致性」。
+- **【已核实】** `body_ref` 有现成 reader：`code/life/memory.py::SideStore.read_body(ref)->str` / `read_embed(ref)->list[float]`；`side://mem/<agent>/<mem>.txt`、叙事 `side://narrative/<agent>/<nid>.txt`。
+- **【已核实】** `context_ref` 恒为 null → **上下文正文不落盘**（只进 `context_digest`/`prompt_hash`）。
+- **解锁开关**：`T227`（freeze-layer-dev 主责）将补「**prompt 正文可选落盘**」（默认关、按 purpose 抽样、脱敏硬门），落地后可解锁**蒸馏/SFT 的 input 侧**。
 - **需 `freeze-layer-dev` 评估**：为解锁 SFT/蒸馏，**新增落 `prompt` 正文**的代价与脱敏方案。
 - **需 Leader 定**：是否允许"为训练而记录 prompt 正文"（涉及存储/隐私）。
 
@@ -190,7 +195,14 @@ train_ready(dataset) =
 
 ## 8. 未验证 / 待确认
 
-- **【待确认】** LLM_CALL/responses 是否真的完全不落 prompt 正文（已问 `freeze-layer-dev`）。
+- **【已核实】** LLM_CALL/responses **确实完全不落 prompt 正文**（freeze-layer-dev 确认）。
+- **【事实·重要】** **side 正文（`.txt`）未随 run 保留**：现有 canonical run 只留事件 `.jsonl`（含 `body_ref` 指针），盘上无 `side/` 目录 → **S2/S3/S4 依赖的正文当前不可导**（需重跑且保留 side，或先落 T227 的 prompt 正文）。
+- **【事实·实测】** **S1（对话）可从现有日志直接导出**：在 `run_t136_real_llm_canon_n20.jsonl` 上实测得 **232 条**（过滤 `mock::` 后）；样例见下（示例 4 条）：
+  ```json
+  {"kind":"MSG_DM","from":"P004","to":"P013","place":"library","slot":"morning","tag_hints":["mentorship"],"utterance":"秀娘笑眯眯地递过一块刚出炉的桂花糕：“来，尝尝看，做点心啊，最要紧的是心里装着吃的人，你多试几次就摸着门道了。”","source_event_seq":81,"round":0}
+  {"kind":"MSG_PUBLIC","from":null,"to":null,"slot":"morning","tag_hints":["skill_practice"],"utterance":"（刨花卷着木香落下）慢点，再慢点。","source_event_seq":61,"round":0}
+  ```
+  → **S1 走通"无 GPU 也能导出"，且与 §3 质量门兼容**（带 `source_event_seq`、可过滤 mock）。
 - **【未验证】** 本机算力规格（是否无 GPU）。
 - **【未验证】** §5 各阈值（N_min/多样性/一致性）为经验初值，需实测标定。
 - **【未验证】** S1/S2/S3/S4 的**真实可用样本量与质量**（本文只抽样核对结构，未全量统计质量）。
