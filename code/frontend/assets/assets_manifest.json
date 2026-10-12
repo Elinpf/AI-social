@@ -1157,7 +1157,7 @@
         32,
         60
       ],
-      "sha256": "cac5b80358bf0f0743acf76193809b07bf593349d79fd2b664ce51f867ed9a96"
+      "sha256": "b7bd7ec287b7b47e8c19dad2ee9d94698413e65f0cce862e2b10fb8c349e587b"
     },
     {
       "id": "landmark.arch_bridge",
@@ -1171,7 +1171,7 @@
         32,
         60
       ],
-      "sha256": "36a48a9a9629230f90954fc36618d2dec16165468c02d71689757757a6043ab4"
+      "sha256": "bc0323742171f2edb9fccf3b32bd514518e784573d05586095ad4a59f4734bcf"
     },
     {
       "id": "landmark.fountain",
@@ -1185,7 +1185,7 @@
         32,
         60
       ],
-      "sha256": "7ebe01eafc34af6d3b119cc735033655c8f8f0ada7fc836defd917d7751475e9"
+      "sha256": "1c50a45692fabaa2534f6369e4d2353189a426f6691f31fca841cd58b15ff4e2"
     },
     {
       "id": "landmark.windmill",
@@ -1199,7 +1199,7 @@
         32,
         60
       ],
-      "sha256": "4867cd2c112695c6388db2dce4c73cfe5f4546107028884e30097dafc9623660"
+      "sha256": "bc75af5ad529c7c06808d2c13cb655833993ba083557f2596ed761d327eb73a3"
     },
     {
       "id": "icon.mint",
