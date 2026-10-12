@@ -1113,7 +1113,7 @@
       // 既不是平滑渐变（不符合像素），也不是硬环（丢光感）：4 档 alpha，档间用 Bayer 棋盘抖动过渡。
       const CELL = 2;
       const BAYER = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
-      const TIER = [0.55, 0.32, 0.16, 0.08];
+      const TIER = [0.62, 0.36, 0.18, 0.09];
       const dth = (cx, cy, xx, yy) => {
         const bx = (((cx + xx) / CELL) | 0) & 3, by = (((cy + yy) / CELL) | 0) & 3;
         return (BAYER[by][bx] + 0.5) / 16;
@@ -1129,15 +1129,15 @@
               fillRect(g, cx + xx, cy + yy, CELL, CELL, color, a * mul);
             }
         };
-        // 地面光斑（同 dither 手法、压扁）
-        for (let yy = -r; yy < r; yy += CELL)
-          for (let xx = -r * 2.4; xx < r * 2.4; xx += CELL) {
-            const d = Math.sqrt((xx / (r * 2.4)) ** 2 + (yy / (r * 1.05)) ** 2); if (d > 1) continue;
+        // 地面暖光池（T124③：夜光"铺地"，同 dither 手法、压扁放大）
+        for (let yy = -r * 1.3; yy < r * 1.3; yy += CELL)
+          for (let xx = -r * 3.0; xx < r * 3.0; xx += CELL) {
+            const d = Math.sqrt((xx / (r * 3.0)) ** 2 + (yy / (r * 1.3)) ** 2); if (d > 1) continue;
             const idx = d * TIER.length, i = Math.min(3, Math.floor(idx)), f = idx - i;
             const a = (f > dth(x, y + r, xx, yy)) ? TIER[Math.min(3, i + 1)] : TIER[i];
-            fillRect(g, x + xx, y + r + yy, CELL, CELL, color, a * 0.7);
+            fillRect(g, x + xx, y + r + yy, CELL, CELL, color, a * 0.95);
           }
-        band(x, y, r * 2.0, 1);        // 光晕主体（dither 环带）
+        band(x, y, r * 2.4, 1);        // 光晕主体（dither 环带，放大）
         G.addChild(g);
       };
       this.placeLayer.children.forEach((c) => {
