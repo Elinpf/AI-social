@@ -8,6 +8,7 @@ root_packages =
     narrative
     orchestration
     frontend
+    devtools
 
 # ── 规则 1：contracts 是纯类型/协议包，零业务依赖（B1）──
 [importlinter:contract:contracts-pure]
@@ -141,3 +142,25 @@ ignore_imports =
     frontend.tools.* -> engine.*
     frontend.tools.* -> orchestration.*
     frontend.tools.* -> life.*
+
+[importlinter:contract:devtools-only-read]
+name = devtools 只读：可依赖 obs/contracts，不得 import life/freeze/narrative/orchestration/frontend
+type = forbidden
+source_modules =
+    devtools
+forbidden_modules =
+    engine
+    life
+    freeze
+    narrative
+    orchestration
+    frontend
+# 只约束 devtools **自身的直接 import**；不沿 obs 的依赖链追溯
+# （obs 的只读边界由其自身契约保证：obs -> engine 的读取已在 obs 契约中白名单）。
+allow_indirect_imports = true
+# 例外（Leader 裁定 + 一个纯函数放行）：devtools 是**研发/作者侧工具**，只读复用 `obs.*`。
+#  `engine.time.derive_time` 是**纯函数、无状态**，且 `obs.report`/`obs.econ` 已同样只读依赖它；
+#  放行是为**避免重复实现"周/日/时段"口径**（口径唯一不复制）。
+#  engine 的 state/arbiter/ledger/replay/hooks 等写路径对 devtools 仍**禁止**（直接 import 会红）。
+ignore_imports =
+    devtools.chronicle -> engine.time
