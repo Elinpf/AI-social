@@ -1,0 +1,1 @@
+提交信息未反映实际内容：本提交裹带了 persona-life-designer 的 5 个 staged 文件（code/engine/events.py、code/engine/replay.py、code/life/forgetting.py、code/life/sleep_window.py、code/life/tests/support/mini_kernel.py）。内容归属应为 T233（S 字段对齐 + 5 类新事件折叠），非 commit message 所写的 T212。【Leader 注记 2026-10-12】为避免重写共享历史，以此 notes 归因，不 reset。
