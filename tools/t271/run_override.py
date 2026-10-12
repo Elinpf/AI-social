@@ -2,13 +2,23 @@
 """T292 override 模式跑批 —— 把消融开关作为【runtime config-dict 覆盖】传给 run_e2e，
 副本配置文件【不动】⇒ engine_version 指纹不变 ⇒ cache_key 不变 ⇒ 共享 freeze_cache 可命中。
 
-只支持【引擎级】配置键（default_config() 里的：world_director / policy / economy / time_config / genesis）。
-⚠️ life_v2(sleep/forgetting/persona_drift) 由 life 层【直接读盘】消费，此途径【不覆盖】它 —— 需 file 模式或 life 层 hook。
+覆盖走【通用 dot-path】（**非白名单**）：`--override a.b.c=val` ⇒ cfg["a"]["b"]["c"]=val
+（`setdefault` 自动建嵌套）⇒ **引擎级键与 `life_v2` 都可覆盖**：
+
+- 引擎级（在 `default_config()` 里）：`world_director` / `policy` / `economy` / `time_config` / `genesis` …；
+- **`life_v2`（T297b hook 消费 `cfg["life_v2"]`）可覆盖键集**：
+    - `life_v2.sleep.{enabled, slot, planned_ticks}`
+    - `life_v2.forgetting.*`（其 `config/life_v2.json` 文件内键集）
+    - `life_v2.persona_drift.{alpha_permille, delta_max, drift_max_permille, drift_dim_max_permille}`
+  ⇒ life 侧对**未知键 fail-loud（`ValueError`）**，不静默忽略。
+  ⇒ life **仍读盘 `config/life_v2.json` 作 baseline**，在其上**内存深合并** `cfg["life_v2"]`；
+     不传 override ⇒ 纯读盘、**默认不变**；文件不动 ⇒ **指纹不变**。
 
 用法（在 copy/<code> 为 cwd 下由 host_batch 调起）：
   run_override.py --seed 42 --agents 20 --rounds 84 --out OUT --side-root SIDE \
       --flush-every 12 [--resume-from P --target-round N] \
-      --override world_director.enabled=false --override policy.wake.enabled=true
+      --override world_director.enabled=false --override policy.wake.enabled=true \
+      --override life_v2.sleep.enabled=false
 """
 from __future__ import annotations
 import argparse, json, os, sys
