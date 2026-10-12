@@ -102,7 +102,7 @@ class Event:
 | type | phase | payload 关键字段 | 说明 |
 |---|---|---|---|
 | `MEMORY_WRITE` | 3.5 | `mem_id, agent_id, kind("observation"|"plan"|"reflection"|"chat"), importance(int 0..10), day, slot, subject(可选), body_ref, embed_ref, source_event_seq` | 记忆写入（append-only）。`body_ref`/`embed_ref` 指向侧存储（§5.4） |
-| `MEMORY_RETRIEVE` | 2 | `agent_id, query_id, top_k, selected_mem_ids[], scores[], weights{recency,importance,relevance}, tie_order` | 检索命中（**决策结果落日志**，重放不再算嵌入，C4） |
+| `MEMORY_RETRIEVE` | 2 | `agent_id, query_id, top_k, selected_mem_ids[], scores[], weights{recency,importance,relevance}, tie_order` + **可选诊断字段**：`vec_available:bool`、`retrieval_mode∈{vector,lexical,recomputed}` | 检索命中（**决策结果落日志**，重放不再算嵌入，C4）。**T228**：side `.vec` 可关时检索降级须**显式可见**（不静默）——`vec_available`=本次是否用上向量，`retrieval_mode`=诊断/降级模式（可选） |
 | `MEMORY_REFLECT` | 3.5 | `agent_id, triggered_by_mem_ids[], importance_sum, produced_mem_id` | 反思触发（累积重要性超阈）与产物 |
 
 **F. 传播与观测（M6/M8，涌现核心）**

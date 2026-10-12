@@ -76,8 +76,13 @@
 | 5 | `MEMORY_FORGET` | event | `life/sleep_window.py` + `08 §1.2 S` | **未接线(产事件未注册)** | 同 #4 | persona(T224)/kernel | 同 #4 |
 | 6 | `PERSONA_DRIFT` | event | `life/sleep_window.py` + `08 §1.2 S` | **未接线(产事件未注册)** | 同 #4 | persona(T224)/kernel | 同 #4 |
 | 7 | `PERSONA_FINGERPRINT` | snapshot（非事件） | `08 §1.2 S`（快照） | **未接线(仅声明)** | `grep -rn 'PERSONA_FINGERPRINT' code/ --include=*.py \| grep -vE 'tests/\|scripts/'` → 空 | persona(T224) | 产出快照入 `metrics`/侧存储 |
+| 8 | **`NARRATIVE`(正文/body)** | **pointer** | `08 §1.2 I` + `life/agent.py`(发事件) + `narrative/` | **未接线(仅声明)** | `writer_probe`（搜"正文写入方"）：`open(…narrative…,'w')` / `narrative….write(` / `write_*narrative` → **无命中** | narrative-designer 侧 | **事件已发（`body_ref=side://narrative/…`），但正文无写入方** → side 保留也导不出（**非归档问题，是从未写过**） |
+| 9 | **`SKILL_OUTPUT`(正文/产物)** | **pointer** | `08 §1.2 J` + `life/settlement.py`(发事件) | **未接线(仅声明)** | `writer_probe`：`open(…skill…,'w')` / `skill….write(` / `write_*skill` / `output_ref…write` → **无命中** | life 侧 | **事件已发（`output_ref=side://skill/…`），但正文/产物无写入方** → 技能正文导不出 |
 
-> **结论（首批）**：**7 条全部"未接线"**，其中 3 条（`MEMORY_CONSOLIDATE`/`MEMORY_FORGET`/`PERSONA_DRIFT`）已"有生产侧产事件但未注册"，属**半接线**——**一旦 persona 完成 `EVENT_TYPES` 注册 + 落账接线，脚本会自动判为「已接线」**，本表随之更新。
+> **新增类型 `pointer`（指针类）**：区分「**事件是否发射**」与「**它指向的正文/body 是否有写入方**」——后者的缺，**即使 side 保留也导不出**（T229 的 S4 导不出，根因正是"从未写过"）。判定用 `writer_probe` 正则搜「正文写入方」是否存在（无 → `未接线(仅声明)`）。
+> `NARRATIVE`/`SKILL_OUTPUT` 的**事件**其实**有发射点**（`life/agent.py` / `life/settlement.py`），但**指针悬空**——这正是"以为有正文"与"从未写正文"的分界。
+
+> **结论（首批 + T226 addendum）**：**9 条全部"未接线"**，其中 3 条（`MEMORY_CONSOLIDATE`/`MEMORY_FORGET`/`PERSONA_DRIFT`）已"有生产侧产事件但未注册"，属**半接线**；2 条（`NARRATIVE`/`SKILL_OUTPUT`）为**指针悬空**（事件已发、正文无写入方）。**一旦完成注册/接线，脚本会自动判为「已接线」**，本表随之更新。
 > **凡"已核实活着"的条目**：脚本判为 `已接线` 并给出 `hits`（真实调用点）——**该结论同样记录在案**（首批无）。
 
 ---

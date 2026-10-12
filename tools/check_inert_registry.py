@@ -97,6 +97,18 @@ def classify(entry: dict, code_dir: Path, exclude_parts: set[str]) -> dict:
             status = "未接线(仅声明)"
         else:
             status = "待核(已注册未产/未折叠)"
+    elif kind == "pointer":
+        # 「指针」类：事件可能已发射，但**指向的正文/body 是否有写入方**才是关键。
+        # 用 writer_probe 正则（在 code/ 排除 tests/scripts）判定"正文写入方是否存在"。
+        probes = entry.get("writer_probe", [])
+        code_texts = []
+        for f in _py_files(code_dir, exclude_parts):
+            try:
+                code_texts.append(f.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+        found = any(re.search(p, t) for p in probes for t in code_texts)
+        status = "已接线(有正文写入方)" if found else "未接线(仅声明)"
     else:
         status = "已接线" if used_beyond_decl else "未接线(仅声明)"
     alive = status.startswith("已接线")
