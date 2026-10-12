@@ -4,6 +4,8 @@
 > **新门 = `a1617d7`**：`tools/t271/semantic_log_sha.py` —— 世界语义投影 sha256：**只排除** `LLM_CALL.payload.{cached,tokens_in,tokens_out,cost_units}`，**保留** `cache_key/prompt_hash/meta_digest/engine_version/provider/purpose/model/priority/tier/thinking/degraded` 与 **`TURN_SEAL.state_hash`**；对规范化事件**重算哈希链**。
 > 目的：逐条列【原口径 / 新口径结论 / 是否独立核 / 在哪个 sha·指纹·cut 下成立 / 是否已失效】+ 命令与读数，**可独立复算**。（本文取代 `v2/evidence/T299-ledger-restatement.md`。）
 
+> **更新（2026-10-13 01:54）**：`7f16c80`（life-layer-dev，T298：`restore()` 补 `_comm_slot` 与 T244 前向态，**修 "cut=75 起 round76 分叉"**）落地后 —— **T276/T288 的"世界语义一致"不再受 cut 限制**（`cut=75` 与 `cut=89` 现均 PASS）。⇒ 下表 T276/T288 的"仅 cut=89 成立 / cut=75 失效"应读作 **`<7f16c80` 的历史边界**；**`≥7f16c80` 起任意 cut 成立**。门的"该红还红"现由 `REVERSE`（注入最小语义扰动→必红）证明（真缺陷已消失）。
+
 ## 判据速览
 - **新门**：`python3 tools/t271/semantic_log_sha.py <log>`（打印世界语义投影 sha256）；
 - **探针**：`T271_VR_GATE=1 T271_VR_REVERSE=1 T271_VR_CUT=89 bash tools/t271/verify_native_resume.sh`（cut=89 无真分歧→PASS；cut=75 真分歧→FAIL=真阳性）；
