@@ -12,7 +12,16 @@ import json
 from pathlib import Path
 
 __all__ = ["load_pairs_jsonl", "legal_rate", "token_totals", "latency_p50",
-           "admission_report"]
+           "admission_report", "flag_rate"]
+
+
+def flag_rate(records, field):
+    """布尔旗标占比（如 `escaped` / `fallback_used`）；该字段缺失不计入；无样本 → None。
+
+    用于 `escape_rate` / `fallback_rate` 的**唯一口径**（M2b 验收，见 `v2/refs/m2b-acceptance.md`）。
+    """
+    xs = [r.get(field) for r in records if r.get(field) is not None]
+    return round(sum(1 for x in xs if x) / len(xs), 6) if xs else None
 
 
 def load_pairs_jsonl(path) -> list:

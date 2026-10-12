@@ -2,7 +2,13 @@
 
 import json
 
-from obs.admission import admission_report, latency_p50, legal_rate, token_totals
+from obs.admission import admission_report, flag_rate, latency_p50, legal_rate, token_totals
+
+
+def test_flag_rate():
+    recs = [{"escaped": True}, {"escaped": False}, {"escaped": True}, {}]
+    assert flag_rate(recs, "escaped") == round(2 / 3, 6)  # {} 缺字段不计入
+    assert flag_rate([], "escaped") is None
 
 
 def _recs():
