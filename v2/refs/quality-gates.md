@@ -290,4 +290,29 @@
 
 ---
 
-*（策略 v1 + T220 §10 + T237 §11 + T242 §12 — sandbox-test-lead；含 RV1–RV9 + RV-DISK + RV-STAMP + T237/T242 反向验证实录；口径真源 `code/obs/*`；与 delivery-reviewer T218 对齐中。）*
+## 13. T241 actor 类型守卫：反向验证的「**证明旧代码会错**」样板（kernel-dev）
+
+> **元规则补一条**（§9 是「证明弄坏会红」，本条是它的**兄弟**）：
+> **"证明新代码对"是弱证据；"证明旧代码错"是强证据** —— 后者说明**这个修复确实解决了一个真实存在的问题**，而不是防御性的美观。
+> 判定：凡"补守卫 / 堵回退路径"类改动，验收**必须**含一条「**旧代码在什么输入下会出错**」的实测，且**双向**（新代码拦住了坏输入 **且** 好输入仍照常）。
+
+**背景（同名不同义）**：`actor` 字段在多数消费方意味着「Agent id」，但 v2 起可为非 Agent 一等 actor（`SYSTEM`/`OBSERVER`/`DIRECTOR`，+世界哨兵）。存在 `agent_id or actor` 回退路径 **会把 `DIRECTOR` 当 Agent 串** → 某天某个指标里把 DIRECTOR 当成一个人。
+
+**修复**：单一真源 `code/contracts/actors.py`（`NON_AGENT_ACTORS` + `is_agent_actor`/`agent_or_none`），四处收敛：`obs/life.py`（删本地白名单改引用真源）· `frontend/src/replay.js`（6 处 `ev.actor` 回退加 `agentActor` 守卫；`frontend.src` 不能 import Python contracts，故为**白名单 JS 镜像**——诚实标注的例外）· `frontend/tools/render_svg.py:92`（STATE_CHANGE）· `contracts/models.py` 注释。sha `151de17`。
+
+**反向验证（实际命令与输出）**：
+
+| # | 构造 | 命令 | 实测结果 |
+|---|---|---|---|
+| ① **旧代码会错**（强证据） | 造 `STATE_CHANGE actor="DIRECTOR"/"SYSTEM"/"OBSERVER"`（无 payload.agent_id）喂旧 `replay.js` | `node` 实跑旧版 | 旧版**造出假角色快照键** `"SYSTEM"`/`"DIRECTOR"`（把系统 actor 当成了人）→ 证明**存在**真实问题 |
+| ② 新代码拦住（同一输入） | 同上喂新版 | `node` 实跑新版 | snapshot keys 仅真 Agent；`humanize.actor` 对 DIRECTOR/SYSTEM/OBSERVER 为 `null` ✓ |
+| ③ **双向·好输入仍照常** | 同一日志含真 `P001` | 同上 | `P001` 状态照常折叠、`humanize.actor="P001"` ✓ |
+| ④ obs 侧（指标口径） | WD-on 日志（真实产物）：171 条 `actor=非 Agent 且无 payload.agent_id` | `obs.life._agent_of` 逐条 | **泄漏 0**；真 Agent 指标（activity_engagement 等）照常 ✓ |
+| ⑤ 静态导出工具 | `render_svg.fold_until` 喂 SYSTEM/DIRECTOR/OBSERVER/P001 的 STATE_CHANGE | 断言 | fold 出的 agent 集合 == `{P001}`，非 Agent 全被挡 ✓ |
+
+> **同型分清「真同型」与「看起来像但安全」**（避免扩大化）：`engine/perceive.py` / `life/visibility.py` / `orchestration/integration.py` 用 `actor == agent_id`（与真实 id 比较，DIRECTOR 不会相等）→ **安全，不改**；`life/agent.py::_describe_event` 把 `ev.actor` 当**显示文本**（展示非指标）→ **低危，不改**。
+> **相邻缝不擅自动手**：`payload.agent_id = "MARKET"`（`NEED_UPDATE` 等）是**同一语义裂缝的另一条缝**，且**正在污染** `obs.need_metrics` 聚合 —— 因属**跨模块语义**（改它要动事件语义/可能动 08），**交 Leader 裁决立项 T248**，未擅自改。
+
+---
+
+*（策略 v1 + T220 §10 + T237 §11 + T242 §12 + T241 §13 — sandbox-test-lead（§10–§12）· kernel-dev（§13）；含 RV1–RV9 + RV-DISK + RV-STAMP + T237/T242/T241 反向验证实录；口径真源 `code/obs/*`；与 delivery-reviewer T218 对齐中。）*
