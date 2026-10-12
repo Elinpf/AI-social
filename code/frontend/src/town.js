@@ -775,7 +775,7 @@
       const isRoad = (tx, ty) => (tx >= 0 && ty >= 0 && tx < this._cols && ty < this._rows) && road[ty][tx];
       const lampAt = (x, y) => {
         const g = new P.Graphics();
-        fillEllipse(g, x, y, 6, 3, 0x000000, 0.3);
+        fillEllipse(g, x + 2, y + 1, 6, 3, 0x0e1a10, 0.28);   // T269像贴图：统一暖黑接地影+右下偏移
         fillRect(g, x - 1, y - 26, 3, 26, 0x4a4a52);
         fillRect(g, x - 4, y - 32, 9, 7, 0x2f2f36);
         fillCircle(g, x + 0.5, y - 29, 3, 0xffe08a);
@@ -785,7 +785,7 @@
       };
       const benchAt = (x, y) => {
         const g = new P.Graphics();
-        fillEllipse(g, x, y, 9, 3, 0x000000, 0.28);
+        fillEllipse(g, x + 2, y + 1, 9, 3, 0x0e1a10, 0.26);   // T269像贴图：统一暖黑接地影+右下偏移
         fillRect(g, x - 9, y - 8, 18, 3, 0x8a5a2f);
         fillRect(g, x - 9, y - 13, 18, 3, 0x8a5a2f);
         fillRect(g, x - 8, y - 6, 2, 6, 0x5f3d1f); fillRect(g, x + 6, y - 6, 2, 6, 0x5f3d1f);
@@ -844,7 +844,7 @@
       // 生活小品散点：填空地、去挤（水井/长椅/栅栏，确定性摆放）
       const wellAt = (x, y) => {
         const g = new P.Graphics();
-        fillEllipse(g, x, y, 11, 4, 0x000000, 0.28);
+        fillEllipse(g, x + 2, y + 1, 11, 4, 0x0e1a10, 0.26);  // T269像贴图：统一暖黑接地影+右下偏移
         fillRound(g, x - 9, y - 15, 18, 15, 3, 0x8a8f96);
         fillRect(g, x - 9, y - 15, 18, 3, 0xb8bdb4);
         fillRect(g, x - 6, y - 22, 12, 8, 0x6f747a);
@@ -871,7 +871,7 @@
       // ===== ② 密度与构图（T124）：把已有的"连成街"，不新增建筑 =====
       const crateAt = (x, y) => {
         const g = new P.Graphics();
-        fillEllipse(g, x, y, 8, 3, 0x000000, 0.25);
+        fillEllipse(g, x + 2, y + 1, 8, 3, 0x0e1a10, 0.24);   // T269像贴图：统一暖黑接地影+右下偏移
         fillRound(g, x - 7, y - 12, 14, 12, 2, 0x9c6b34);
         fillRect(g, x - 7, y - 12, 14, 3, 0xba8348);
         fillRect(g, x - 1, y - 12, 2, 12, 0x7a4f26);
@@ -879,7 +879,7 @@
       };
       const signAt = (x, y) => {
         const g = new P.Graphics();
-        fillEllipse(g, x, y, 6, 2, 0x000000, 0.25);
+        fillEllipse(g, x + 2, y + 1, 6, 2, 0x0e1a10, 0.24);   // T269像贴图：统一暖黑接地影+右下偏移
         fillRect(g, x - 1, y - 16, 2, 16, 0x6a4a26);
         fillRound(g, x - 8, y - 24, 16, 9, 2, 0x8a6636);
         fillRect(g, x - 6, y - 21, 12, 2, 0xd8c48a);
@@ -954,8 +954,8 @@
         const t = this._libTex(it[0]); if (!t) return;
         const c = new P.Container(); c.x = it[1]; c.y = it[2];
         const sh = new P.Graphics();
-        fillEllipse(sh, 0, -2, 26, 8, 0x0e1a10, 0.16);
-        fillEllipse(sh, 0, -2, 16, 5, 0x0e1a10, 0.18);
+        fillEllipse(sh, 2, -1, 26, 8, 0x0e1a10, 0.16);   // T269像贴图：地标同向影（右下）
+        fillEllipse(sh, 1, -2, 16, 5, 0x0e1a10, 0.18);
         c.addChild(sh);
         const sp = new P.Sprite(t); sp.anchor.set(0.5, 60 / 64);
         c.addChild(sp);
