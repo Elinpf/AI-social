@@ -116,11 +116,14 @@
       const fxg = qs.get("fxg");
       if (fxg) {
         state.fxHold = true;
-        let pos = null;
-        if (fxg === "conflict") { const ids = Object.keys(town.inst.agents); pos = agentXY(ids[0]); }
-        else if (fxg === "norm") pos = placeXY("plaza");
-        else pos = placeXY("market");
-        if (pos) worldFx(fxg, pos.x, pos.y);
+        const ids = Object.keys(town.inst.agents);
+        if (fxg === "dm") { const a = agentXY(ids[0]), b = agentXY(ids[1] || ids[0]); if (a && b) worldFx("dm", a.x, a.y, b.x, b.y); }
+        else {
+          const pos = (fxg === "trade") ? placeXY("market")
+            : (fxg === "norm" || fxg === "seed") ? placeXY("plaza")
+            : (agentXY(ids[0]) || placeXY("plaza"));
+          if (pos) worldFx(fxg, pos.x, pos.y);
+        }
       }
 
       // 单帧模式：快照后停掉持续渲染，置就绪标志供截图脚本等待
@@ -323,6 +326,9 @@
     GROUP_CREATED: { icon: "👥", pri: 3 },
     SEED_EVENT: { icon: "🌱", pri: 4 },
     CONFLICT_STARTED: { icon: "⚔️", pri: 4 },
+    GOAL_ACHIEVED: { icon: "🏆", pri: 4 },
+    SKILL_LEVEL_UP: { icon: "⭐", pri: 3 },
+    MSG_DM: { icon: "💬", pri: 2 },
   };
   let toastTimer = null;
   function handleKeyEvents(rp, rd) {
@@ -362,6 +368,11 @@
       if (e.type === "MARKET_TRADE") { highlightPlace("market"); const m = placeXY("market"); if (m) worldFx("trade", m.x, m.y); }
       else if (e.type === "CONFLICT_STARTED" || e.type === "CONFLICT_RESOLVED") { const a = agentXY(aid); if (a) worldFx("conflict", a.x, a.y); else { highlightAgent(aid); } }
       else if (e.type === "NORM_ADOPTED" || e.type === "NORM_PROPOSED") { const pl = placeXY("plaza"); if (pl) worldFx("norm", pl.x, pl.y); highlightPlace("town_hall"); }
+      else if (e.type === "SEED_EVENT") { const pl = placeXY("plaza"); if (pl) worldFx("seed", pl.x, pl.y); }
+      else if (e.type === "GOAL_ACHIEVED") { const a = agentXY(aid); if (a) worldFx("celebrate", a.x, a.y); }
+      else if (e.type === "GROUP_CREATED") { const a = agentXY(aid); if (a) worldFx("group", a.x, a.y); }
+      else if (e.type === "SKILL_LEVEL_UP") { const a = agentXY(aid); if (a) worldFx("skill", a.x, a.y); }
+      else if (e.type === "MSG_DM") { const f = agentXY(p.from); const t = agentXY(p.to); if (f && t) worldFx("dm", f.x, f.y, t.x, t.y); }
       else if (aid) highlightAgent(aid);
     });
   }
@@ -420,7 +431,7 @@
   function placeXY(pid) { const n = town.inst && town.inst.nodeById && town.inst.nodeById[pid]; return n ? { x: n.x, y: n.y } : null; }
   function agentXY(id) { const r = town.inst && town.inst.agents && town.inst.agents[id]; return r ? { x: r.container.x, y: r.container.y } : null; }
   // 峰值图形（still/`?fxhold=1` 下保持不动，便于可复现取证；否则短促放大淡出）
-  function worldFx(kind, x, y) {
+  function worldFx(kind, x, y, x2, y2) {
     if (!state.fx || !fxLayer || !window.PIXI || x == null) return;
     const g = new PIXI.Graphics();
     let label = "";
@@ -436,6 +447,28 @@
       g.lineStyle(4, 0xf0c14a, 1); g.drawCircle(0, 0, 28);
       g.lineStyle(2, 0xf0c14a, 0.7); g.drawCircle(0, 0, 42);
       label = "📜 采纳";
+    } else if (kind === "seed") {                             // 种子事件：绿环 + 芽
+      g.lineStyle(4, 0x6fcf6b, 1); g.drawCircle(0, 0, 26);
+      g.beginFill(0x6fcf6b, 1); g.drawEllipse(0, -30, 8, 5); g.endFill();
+      label = "🌱 种子";
+    } else if (kind === "celebrate") {                        // 目标达成：金环 + 星
+      g.lineStyle(4, 0xffd76a, 1); g.drawCircle(0, 0, 28);
+      g.beginFill(0xfff2a0, 1); g.drawPolygon([0, -46, 5, -38, 14, -38, 7, -32, 10, -23, 0, -28, -10, -23, -7, -32, -14, -38, -5, -38]); g.endFill();
+      label = "🏆 达成";
+    } else if (kind === "group") {                            // 组队：青绿环 + 两点
+      g.lineStyle(4, 0x66e0c0, 1); g.drawCircle(0, 0, 26);
+      g.beginFill(0x66e0c0, 1); g.drawCircle(-9, -30, 5); g.drawCircle(9, -30, 5); g.endFill();
+      label = "👥 组队";
+    } else if (kind === "skill") {                            // 技能升级：蓝环 + 星
+      g.lineStyle(4, 0x5cc8ff, 1); g.drawCircle(0, 0, 24);
+      g.beginFill(0xbfe6ff, 1); g.drawCircle(0, -30, 5); g.endFill();
+      label = "⭐ 升级";
+    } else if (kind === "dm") {                               // 私聊：两点连线 + 气泡
+      if (x2 != null) {
+        g.lineStyle(3, 0x5cc8ff, 0.9); g.moveTo(0, 0); g.lineTo(x2 - x, y2 - y);
+        g.beginFill(0x5cc8ff, 1); g.drawCircle(0, 0, 4); g.drawCircle(x2 - x, y2 - y, 4); g.endFill();
+      } else { g.lineStyle(3, 0x5cc8ff, 1); g.drawCircle(0, 0, 18); }
+      label = "💬 私聊";
     } else { g.lineStyle(4, 0x5cc8ff, 1); g.drawCircle(0, 0, 24); }
     g.x = x; g.y = y; fxLayer.addChild(g);
     let tx = null;
