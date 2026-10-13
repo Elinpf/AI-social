@@ -26,3 +26,13 @@ systemd-run --unit=hitt-dashboard --collect --property=Restart=always --property
 
 ## 变更文件
 `code/frontend/tools/serve.py`（`/__runinfo`、waiting 语义、白名单 realpath 非 strict）、`src/main.js`（终态/等待/追平 状态机）、`tools/serve_ctl.sh`（新建）、`dashboard.html`（重生成）。
+
+## 机器重启后 / 进程挂掉后，如何拉起（任何成员 10 秒恢复）
+> transient 单元**不跨机器重启存活**（有意：不装持久平台配置）。机器重启后**手工一条命令**即可：
+```
+bash code/frontend/tools/serve_ctl.sh start     # systemd transient + Restart=always（保活）
+# 无 systemd 环境：bash code/frontend/tools/serve_ctl.sh start-nohup
+```
+- **自检（三件套）**：`bash code/frontend/tools/serve_ctl.sh status` → `running:` / `HITT_LIVE_ROOTS:` / `dashboard.html -> 200`。
+- 端口 8848；白名单根 `/root/t271/runs`；**本地开发服务，不对外暴露**。
+- 若用户要"机器重启也自动起"，再由 Leader 指示安装**持久 user unit**（属平台级配置，需先报批）。

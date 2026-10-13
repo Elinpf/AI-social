@@ -33,7 +33,11 @@ case "${1:-status}" in
     sleep 2; systemctl is-active "$UNIT"; status_check ;;
   restart) systemctl restart "$UNIT"; sleep 2; systemctl is-active "$UNIT"; status_check ;;
   stop)    systemctl stop "$UNIT"; say "stopped $UNIT" ;;
-  status)  systemctl is-active "$UNIT"; status_check ;;
+  status)
+    echo "unit:            $UNIT"
+    echo "running:         $(systemctl is-active "$UNIT" 2>/dev/null)"
+    echo "HITT_LIVE_ROOTS: $ROOTS"
+    status_check ;;
   log)     journalctl -u "$UNIT" -n 50 --no-pager ;;
   start-nohup)
     say "nohup fallback（无 systemd）: port=$PORT roots=$ROOTS"

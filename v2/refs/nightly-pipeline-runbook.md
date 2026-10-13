@@ -107,3 +107,8 @@ python3 "$REPO/tools/t271/nightly.py" disk                   # 随时看 df -h /
 - **【未验证】** 探测级日志 TTL=7 天的标定。
 - **边界**：`nightly.py` 默认 `RUN_ROOT=/root/t271/runs/nightly`、`COPY_ROOT=/tmp`、`REPO=<social-experiment>`；用 env `T271_RUN_ROOT`/`T271_COPY_ROOT`/`T271_REPO` 覆盖。
 - **红线**：不改 `code/{engine,life,freeze,config}`；跑批在 `/tmp` 副本；密钥只走 `EnvironmentFile`。
+
+## 9. 看板/回放服务（本地开发，一条命令恢复）
+- 机器重启或进程挂掉后：`bash code/frontend/tools/serve_ctl.sh start`（systemd **transient** + `Restart=always` 保活；无 systemd 用 `start-nohup`）。
+- 自检：`bash code/frontend/tools/serve_ctl.sh status` → **running / 端口 200 / `HITT_LIVE_ROOTS`**。
+- 端口 **8848**；实时跟随白名单根 **`/root/t271/runs`**；**本地开发服务，不对外暴露**。（T348）
