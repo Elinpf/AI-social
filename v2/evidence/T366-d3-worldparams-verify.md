@@ -40,7 +40,7 @@
 ## ④ 声明合规
 
 - **默认剂量未改**：`code/config/world_director.json` 仍 `dose_curve:"conservative"`（仅新增 `propagate.enabled=true`）✓；"默认剂量下影响稀疏"已如实写明 ✓。
-- **`make verify`**：见下（另找空档跑，不与 T366/art 并行）。
+- **`make verify`**：**全绿**（`CI GATE: PASS`）；**守卫报「世界层与前端跑中均未变，门结果可信」**（HEAD=`27ef396`，仅记录）。在空档跑（非 T366/art 运行期）。
 
 ## 结论
 
