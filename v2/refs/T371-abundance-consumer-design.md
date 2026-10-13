@@ -19,11 +19,12 @@
   （**不可**用 `wpb.get(place) or wpb.get("global")` —— 若 `place` key 存在而值恰为 `0`，`or` 会误落 global。）
 - **不做 good 维度**（A 层 `resource_factor` 是**场所**因子；good 维度留待 `market_scarcity_bp` 的消费者）。
 - ⚠️ **双计（既有语义、非本任务引入）**：实时发射同时落 `WORLD_DIRECTIVE` + `WORLD_GROUP_EVENT`（同 `directive_id`），`world_params` 对同一指令**累加两次** ⇒ **`factor_bp` ≈ 单指令 amp 的 2×**。阈值/解读按 **2×** 记；是否视作真缺陷由 kernel 另开单（属 `world_params`/engine 域）。
+  > ⚠️ **同名不同义标注**：此 **"2×" = `world_params` 同 `directive_id` 双发累加两次**（`T372` 修），**≠ `LLM_CALL` 的"2×"**（后者为调用计量口径：**条数 = 实际调用 + 缓存命中，命中也各记一条**，已结案）。两处"2×"**不可并成一条**。
 - ⚠️ **abundance 当前只落 `"global"`**（`calendar.abundance` 未配 `place`）；per-place 需 kernel 扩配置（其域）。
 
 ### 1.2 施加方式（整数、可复算）
 ```
-factor_bp = wpb.get(place) or wpb.get("global") or 0
+factor_bp = int(wpb.get(place)) if place in wpb else (int(wpb.get("global")) if "global" in wpb else 0)
 res_adj   = clamp( res_base_jittered * (10000 + factor_bp) // 10000 , res_min, res_max )
 ```
 - **`dose=0 ⇒ factor_bp=0 ⇒ (10000)/10000 ⇒ 恒等** ✓（保底：剂量恒等）。
