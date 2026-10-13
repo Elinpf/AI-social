@@ -954,6 +954,9 @@ def build_world(seed: int, config: dict | None = None, *, n: int | None = None,
     try:
         import life.visibility as _LV
         _LV.register_index(engine.ledger.records, adapter.visibility_query)
+        # T330：再按 `state.event_index`（dict）身份注册 —— `settlement.write_memories` 传的是该 dict，
+        # 修复"每回合新建 list ⇒ id 不命中 ⇒ 100% 全扫回退"。
+        _LV.register_index(engine.state.event_index, adapter.visibility_query)
     except Exception:
         pass
     # T247（用 T253 seam）：把 life 的 SKILL_OUTPUT 正文 writer 注册为「emit 后监听」观察者。
@@ -1089,6 +1092,7 @@ def run_e2e(seed: int = 42, rounds: int = 84, n: int = 3, config: dict | None = 
         try:
             import life.visibility as _LV
             _LV.unregister_index(world["engine"].ledger.records)
+            _LV.unregister_index(world["engine"].state.event_index)  # T330
         except Exception:
             pass
         # T232：自动创建的 side 目录**无论如何**释放（异常/中断也走到这里）

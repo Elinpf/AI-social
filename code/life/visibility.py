@@ -34,13 +34,18 @@ def location_of(records: list, agent_id: str, upto_round: int,
     return _loc(records, agent_id, upto_round, initial)
 
 
-def visible_events(records: list, agent_id: str, upto_round: int,
+def visible_events(records, agent_id: str, upto_round: int,
                    window_rounds: int | None = None, *, location: str | None = None) -> list:
-    """Return the events `agent_id` can directly perceive（单一真源；有索引则走索引）。"""
+    """Return the events `agent_id` can directly perceive（单一真源；有索引则走索引）。
+
+    T330：`records` 可为 **list**（账本）或 **dict**（`state.event_index`，`{seq: rec}`）；
+    索引 provider 按**传入对象的 `id`** 命中（故调用方须传**稳定对象**，勿每次新建 list）。
+    """
     fn = _INDEXES.get(id(records))
     if fn is not None:
         return fn(agent_id, upto_round, window_rounds=window_rounds, location=location)
-    return _ve(records, agent_id, upto_round,
+    recs = list(records.values()) if isinstance(records, dict) else records
+    return _ve(recs, agent_id, upto_round,
                scope_table=C.PERCEPTION_SCOPE, default_cls=C.DEFAULT_VISIBILITY,
                window_rounds=window_rounds, location=location,
                place_local_actor_fallback=C.PLACE_LOCAL_ACTOR_FALLBACK)

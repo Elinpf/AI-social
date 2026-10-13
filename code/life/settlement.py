@@ -576,7 +576,8 @@ def write_memories(state: dict, round_no: int, ctx: Ctx) -> list[EventSpec]:
     from .visibility import visible_events
     t = _time(ctx, round_no)
     st = LifeState(state)
-    records = list(st.s.get("event_index", {}).values())
+    # T330：传**稳定的 `event_index` dict**（勿每次 list() 新建对象）⇒ 命中 T264 索引 provider，避免全扫回退
+    records = st.s.get("event_index", {})
     events: list[EventSpec] = []
     for aid in st.agent_ids():
         observed = set(st.agents()[aid].get("observed_event_seqs", []))
