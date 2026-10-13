@@ -85,3 +85,17 @@ def test_judge_linkage_e2e_and_negative():
     print(f"        -> LLM_JUDGMENT jid={jid} parties={parties}")
     print(f"        -> resident {resident} 轨迹命中 judge_link ✓（成本归属仍为 null）")
     print(f"[NEGATIVE] 非 party 居民 {outsider} 反查该 judge 调用 -> 无命中 ✓（防假绿）")
+
+
+def test_unattributed_llm_call_is_not_attributed_to_anyone():
+    """反向负例（T307-③）：**无 `agent_id` 且无 `judgment_id`** 的 `LLM_CALL` **不得**归属任何居民。
+
+    若某消费方把"缺省"当成某居民（"假装是某人"）⇒ 本断言必红。
+    """
+    recs = [
+        {"seq": 0, "type": "LLM_CALL", "payload": {"purpose": "plan"}},            # 无任何归属键
+        {"seq": 1, "type": "LLM_JUDGMENT", "payload": {"judgment_id": "JX", "parties": ["P001"]}},
+    ]
+    for resident in ("P001", "P002", "P003"):
+        assert trace_llm_calls_for_agent(recs, resident) == [], \
+            f"无归属键的 LLM_CALL 被错误归属到 {resident}（假绿）"
