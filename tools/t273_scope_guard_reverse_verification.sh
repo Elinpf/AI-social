@@ -29,10 +29,10 @@ git checkout -q -B t273-scratch
 echo "== 环境：分支 t273-scratch；hooksPath=$TMPH（临时，不改 .git/hooks）=="
 
 echo
-echo "== T1 · 裹带场景（add -A 同时扫入 新鲜文件 + 20 分钟前的陈旧文件）-> 期望：红/拦截 =="
+echo "== T1 · 裹带场景（add -A 同时扫入 新鲜文件 + 3 小时前的陈旧文件）-> 期望：红/拦截 =="
 printf 'mine\n' > tools/_t273_mine.txt
 printf 'foreign\n' > tools/_t273_foreign.txt
-touch -d '20 min ago' tools/_t273_foreign.txt
+touch -d '3 hours ago' tools/_t273_foreign.txt   # T342：判据改为"年龄离群"，需与最新改动差 >30min ⇒ 用 3h
 git add -A
 b1=$(git rev-list --count HEAD)
 OUT1="$($GC commit -m 'T273 incident test' 2>&1)"; rc1=$?
@@ -57,7 +57,7 @@ echo ">>> T2 exit=$rc2 ; commits $b2 -> $a2 （应 +1，即正常提交成功）
 echo
 echo "== T3 · 裹带场景 + 显式确认令牌 -> 期望：绿/放行（确认后放行，非永久白名单）=="
 printf 'foreign2\n' > tools/_t273_foreign.txt
-touch -d '20 min ago' tools/_t273_foreign.txt
+touch -d '3 hours ago' tools/_t273_foreign.txt   # T342：年龄离群判据
 printf 'mine3\n' > tools/_t273_mine.txt
 touch tools/_t273_mine.txt
 # 为不触碰他人 WIP，T3 用定向暂存（同样构成「新鲜+陈旧混批」信号）
