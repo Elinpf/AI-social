@@ -36,7 +36,7 @@
 | 4 | `T326→T332(273015c)→T333(实现)` | `PERSONA_DRIFT` 候选判据（代码级单一真源）+ 一等可消融键 `persona_drift.criterion∈{strict,natural}`（默认 `natural`） | **是**（新键 `persona_drift.criterion` 落 `life_v2.json`） | ⭐ **【行为变】+【指纹变】** | ⭐ 实测 `PERSONA_DRIFT` **0→240**（默认 `natural` 真实生效）⇒ 行为面变；指纹源=**`life_v2.json::persona_drift.criterion`**（**非** `emotion_lexicon.json`，该形态已被 `273015c` 推翻、文件不存在） |
 | 5 | `T330`（端口化；被验 `fc412a8`） | 结算可见端口化 | 否 | **【无行为变（等价）】**（`T331b` 非作者复验） | seq 180/180 等、反向必红 |
 | 6 | `T325` | mock 反思文本含情感词（门禁） | 否 | **【无行为变（装置）】** | — |
-| 6b | `c6857f9`（T278） | `SERVICE_DELIVERED` 最小切片（服务即时交付档，**`policy.service_delivered.enabled` 默认 `true`**） | **是**（新键；默认 on） | **【仅日志增行（族替换）】**（设计声明 inventory-neutral 等价；**语义等价未由本轮隔离实测**） | ⭐ 实测 `PRODUCE` 317→167（−150）、`SERVICE_DELIVERED` 0→**149**（≈族替换、净 −1）——`PRODUCE{service}` 改由 `SERVICE_DELIVERED` 交付 |
+| 6b | `c6857f9`（T278） | `SERVICE_DELIVERED` 最小切片（服务即时交付档，**`policy.service_delivered.enabled` 默认 `true`**） | **是**（新键；默认 on） | **【仅日志增行（族替换）】**（设计声明 inventory-neutral 等价；**语义等价未由本轮隔离实测**） | ⭐ 逐件核实：`PRODUCE{service}` **149→0** + `SERVICE_DELIVERED{service}` **0→149**（**族替换，可隔离**）；`PRODUCE{art}` **28→27**（−1，**机制漂移**）；`food`/`material` 70→70 不变。⇒ **−149 可隔离／−1 机制** |
 | 7 | `a14d2f4`（T312，已完成） | 读路径增量聚合（逐条等价） | 否 | **【无行为变】** | 读路径等价 |
 | 8 | `T328③`（`8fb2263`） | `recent_income` 按 agent 标量累加器（去窗口逐回合遍历） | 否 | **【无行为变】** | `T345`/`9374c3a` 非作者核：三配置逐条等价、`state_hash` 跨版本逐位不变 |
 | 9 | `T319`(`2c28880`)/`T322`(`e0a7acd`)/`T288`/`T295`/`T294`/`T43`/`T103` 等 | 引擎登记 / restore / 读路径等价 / 测试 / 装置 | 否或新键 | **【无行为变（等价/测试/装置）】** | 见各自说明 |
@@ -82,7 +82,7 @@
 | **T298** | `MEMORY_WRITE` | +16 | 同上 |
 | **T326→T333**（判据放宽，默认 `natural`） | `PERSONA_DRIFT` | **+240** | 候选召回↑ ⇒ 人格漂移真跑发生 |
 | **T326→T333** | `PERSONA_DRIFT_CANDIDATE` | **+527** | 判据可达 ⇒ identity 审计事件出现（新族） |
-| **T278**（服务即时交付，默认 on） | `PRODUCE` −150 / `SERVICE_DELIVERED` +149 | **≈−1** | `PRODUCE{service}` 改由 `SERVICE_DELIVERED` 交付（族替换） |
+| **T278**（服务即时交付，默认 on） | `PRODUCE` −150 / `SERVICE_DELIVERED` +149 | **−149 可隔离（族替换）／−1 机制（`art`）** | 逐件核实：`PRODUCE{service}` **149→0** 且 `SERVICE_DELIVERED{service}` **0→149**（**族替换、可隔离**）；`PRODUCE{art}` **28→27**（−1，**机制漂移**）；`food`/`material` 各 70→70 不变 |
 
 **B. 机制归因（指纹变 ⇒ cache 全 miss ⇒ 新 LLM 答案 ⇒ 分布漂移；未做单变量隔离）**
 - `OBSERVATION` +40、`METABOLISM` −19、`OFFER_CREATED`/`OFFER_EXPIRED` −17/−17、`INTEREST_CHARGED` −8、`EXCHANGE_SETTLED` +5、`LLM_CALL` +3、`INTENT_REJECTED` +2、`AGENT_DIED` +1、`CONSUME`/`LOAN_ISSUED`/`DROPPED`/`MSG_DM`/`STATE_CHANGE`/`AGENT_REVIVED`/`INIT_ENDOW`/`REVIVE_FEE_PAID` 各 −1~−5。
@@ -125,5 +125,5 @@
 ## 10. 下一轮待办（已同意，非本轮）
 - **`flush` 间隔改 1–2**（+ 配套 runbook 一行：判"有无批在跑"用 `systemctl is-active 't271-*'` / `pgrep -f "orchestration run"`，**不看日志新旧**）。
 - **`flush=1 vs 12` 小规模对照**（n=6/12 回合）：比 `state_hash`（证"落盘节奏不动语义"）+ 尽量验"从 flush 前缀续跑"仍成立。
-- ⭐ **`T278` 消融**（用户判据「同 sha 内只变一个开关」的最小应用）：小规模跑 `service_delivered.enabled=false` **vs** `true`，比 `state_hash`——**判定 §3 第 6b 行"语义等价"是否成立**（**等价/不等价都报**）。
+- ⭐ **`T278` 消融**（用户判据「同 sha 内只变一个开关」的最小应用）：小规模跑 `service_delivered.enabled=false` **vs** `true`，比 `state_hash`——**判定 §3 第 6b 行"语义等价"是否成立**（**等价/不等价都报**）。⇒ **事件级族替换已由 `T349` 独立核实**（`PRODUCE{service}` 149→0 ↔ `SERVICE_DELIVERED{service}` 0→149、material/food 不变）⇒ **消融可降级但别取消**：唯一未答 = **下游是否会因类型改名而消费不同**。
 - **非作者核 `T349`**（sandbox-test-lead）：独立复算 §6b 逐族 delta + 验算术闭合 + 反向验证。
