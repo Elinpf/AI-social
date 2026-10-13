@@ -1,9 +1,13 @@
 {
   "manifest_for": "T343 前端看板 v1（基线 / 指标 / 证据索引 三区）",
   "author": "obs-stats-dev（观测与基线工程师）",
-  "generated_at": "2026-10-13T09:58+08:00",
-  "tree_head_at_generation": "2f1361a",
-  "authority_levels": ["权威", "参考", "已作废"],
+  "generated_at": "2026-10-13T12:07+08:00",
+  "tree_head_at_generation": "7dbcac6",
+  "authority_levels": [
+    "权威",
+    "参考",
+    "已作废"
+  ],
   "global_notes": [
     "★ 时效总提醒：当前黄金基线/met_ics 建立在 feature_set=v2-T236 的树上；但 `T298`(8d4c8b9) 是【行为变】⇒ 主树已不复现旧基线，`T300`(本轮重冻) 落定后本清单的『基线区』整体随之更新。重型展示请以 T300 产物为准。",
     "口径三要素：每条给『来源文件 + sha256(前16) + 生成时间』；sha 未跟踪或未入库者不入'可展示'。",
@@ -13,13 +17,13 @@
     {
       "name": "golden_baseline.json :: n20_week_seed42",
       "source_file": "code/obs/golden_baseline.json",
-      "sha256_16": "58d4e7d7c13a61cc",
-      "generated_ts": "2026-10-13 09:37",
-      "kpi": "n_events=301384",
-      "caliber": "N=20×84, seed=42, feature_set=v2-T236, time_model=atomic；冻结自 run_t236_canon_n20_llm.jsonl",
-      "authority": "参考",
-      "freshness": "即将过期（主树因 T298 行为变已不复现；T300 重冻取代）",
-      "note": "历史沿革：n20 事件量 128,564 → 301,384（T236 重冻）。含 type_counts 逐族计数 + require_zero/required_nonzero。"
+      "sha256_16": "(T300后:见文件)",
+      "generated_ts": "2026-10-13 12:00",
+      "kpi": "n_events=292963",
+      "caliber": "N=20×84, seed=42, feature_set=v2-T300, time_model=atomic；冻结自 /root/t271/runs/t300/run.jsonl",
+      "authority": "权威",
+      "freshness": "现行（T300 重冻，2026-10-13 10:22–11:52）",
+      "note": "final_state_hash=sha256:ab38d431…；provenance{world_layer_sha=8fb2263, run_tree_sha=9374c3a, baseline_code_sha=fbf9c33, fingerprint=869c1953…}。含 T298 行为变(MEMORY_FORGET −9,176)+T333(PERSONA_DRIFT +240/+527)+T278(SERVICE_DELIVERED +149)。"
     },
     {
       "name": "golden_baseline.json :: n10_week_seed42 / n3_week_seed42",
@@ -33,12 +37,12 @@
     {
       "name": "metrics_baseline_p1.json",
       "source_file": "v2/evidence/metrics_baseline_p1.json",
-      "sha256_16": "f3873f33aef0ef8c",
-      "generated_ts": "2026-10-12 21:30",
-      "caliber": "N=20×84, feature_set=v2-T236；冻结自 run_t236_canon_n20_llm.jsonl（log_sha256:13f8d668…）",
-      "authority": "参考",
-      "freshness": "即将过期（T300 重冻取代）",
-      "note": "含 econ_loop(M_final/V/Y_mu/gini…)+social_key(频道计数/互惠/n_groups)。note 字段记：wake 默认 false ⇒ 行为≈pre-wake，指纹已变。"
+      "sha256_16": "(T300后:见文件)",
+      "generated_ts": "2026-10-13 12:00",
+      "caliber": "N=20×84, feature_set=v2-T300, time_model=atomic；冻结自 /root/t271/runs/t300/run.jsonl",
+      "authority": "权威",
+      "freshness": "现行（T300 重冻）",
+      "note": "含 econ_loop/social_key + final_state_hash + provenance(两 sha + obs 代码 sha + 指纹)。"
     },
     {
       "name": "archive/golden_baseline_pre_t236.json",
@@ -61,6 +65,13 @@
       "source_file": "v2/evidence/archive/golden_baseline_pre_t104.json",
       "authority": "已作废",
       "freshness": "已过期（更早历史归档）"
+    },
+    {
+      "name": "archive/golden_baseline_pre_t300.json + archive/metrics_baseline_p1_pre_t300.json",
+      "source_file": "v2/evidence/archive/*pre_t300*",
+      "generated_ts": "2026-10-13 12:00",
+      "authority": "已作废",
+      "freshness": "已过期（T300 重冻前历史归档，留档不删）"
     }
   ],
   "metrics": [
@@ -111,23 +122,126 @@
     }
   ],
   "evidence_index": [
-    {"name": "T300 H2 字节一致测试（基线 time_model 元数据）", "source_file": "v2/evidence/t300-byte-consistency.txt", "sha256_16": "4312e29e182f192b", "generated_ts": "2026-10-13 09:45", "authority": "权威", "display": "可展示（方法学）", "note": "ADDED/REMOVED/CHANGED + 两次调用字节相等 + 与 pre-prep diff 只现 +time_model。"},
-    {"name": "T236 重冻说明", "source_file": "v2/evidence/t236-refreeze.md", "sha256_16": "affa85a3eb88112d", "generated_ts": "2026-10-12 21:40", "authority": "参考", "display": "可展示（历史沿革）"},
-    {"name": "N=50 / M4 探针", "source_file": "v2/evidence/n50-m4-probe.md", "sha256_16": "2542a405036b7035", "generated_ts": "2026-10-12 14:42", "authority": "权威", "display": "可展示", "note": "定位『卡在哪』：CPU 为主、IO≈0.7s；内存随支配增长。"},
-    {"name": "T326 真 LLM 情感反思探针", "source_file": "v2/evidence/T326-real-llm-emotional-reflection-probe.md", "sha256_16": "673c4163d4299aaf", "generated_ts": "2026-10-13 03:16", "authority": "权威", "display": "可展示", "note": "判据太窄：63 条 reflection 命中 0/63。"},
-    {"name": "T333 情感判据（口径）", "source_file": "v2/evidence/T333-emotion-criterion.md", "sha256_16": "1c890109998a9d36", "generated_ts": "2026-10-13 09:08", "authority": "权威", "display": "可展示"},
-    {"name": "T341 判据实现非作者复核", "source_file": "v2/evidence/T341-emotion-criterion-impl-review.md", "sha256_16": "dca3df61835c9e48", "generated_ts": "2026-10-13 09:33", "authority": "权威", "display": "可展示", "note": "绑 b48920c；strict 逐条等价旧实现 76/76 差异 0；生产同函数复算 0/63 与 18/63；反向必红。"},
-    {"name": "T337 判据单一真源（消双口径）", "source_file": "v2/evidence/T337-emotion-probe-single-source.md", "sha256_16": "230f1120ce0f5b1f", "generated_ts": "2026-10-13 09:22", "authority": "权威", "display": "可展示"},
-    {"name": "T330 结算可见端口化", "source_file": "v2/evidence/T330-settlement-visible-port.md", "sha256_16": "0e0b6b9787841e06", "generated_ts": "2026-10-13 05:37", "authority": "权威", "display": "可展示"},
-    {"name": "T331b 端口化等价复验", "source_file": "v2/evidence/t331b-settlement-port-review.md", "sha256_16": "4da480485599bd6b", "generated_ts": "2026-10-13 09:30", "authority": "权威", "display": "可展示", "note": "seq 180/180 等；结论【无行为变（等价）】。"},
-    {"name": "T292 原生 resume 分歧验证", "source_file": "v2/evidence/T292-native-resume-verify.json", "sha256_16": "1ac253c13db2046f", "generated_ts": "2026-10-12 22:16", "authority": "参考", "display": "内部件", "note": "显示自动保存差异。"},
-    {"name": "T292 override 模式验证", "source_file": "v2/evidence/T292-override-mode.json", "sha256_16": "8b34f386821f71a4", "generated_ts": "2026-10-12 22:25", "authority": "参考", "display": "内部件"},
-    {"name": "T343 四组对照（前端批1）", "source_file": "v2/evidence/T343-fourgroups.md", "sha256_16": "dac2afb2a0528f4a", "generated_ts": "2026-10-13 09:54", "authority": "参考", "display": "可展示（前端产出）"},
-    {"name": "源日志 run_t236_canon_n20_llm.jsonl", "source_file": "v2/evidence/run_t236_canon_n20_llm.jsonl", "sha256_16": "13f8d668887d1b31", "generated_ts": "2026-10-12 20:15", "authority": "权威", "display": "内部件（130MB+；看板勿内联，按需），可作基线溯源锚"},
-    {"name": "大批侧目录/压缩日志（run_*.jsonl.gz, side_*）", "source_file": "v2/evidence/(侧证实物)", "authority": "参考", "display": "内部件（不展示）", "note": "复现用中间件；体积大、口径多代，看板不内联。"}
+    {
+      "name": "T300 H2 字节一致测试（基线 time_model 元数据）",
+      "source_file": "v2/evidence/t300-byte-consistency.txt",
+      "sha256_16": "4312e29e182f192b",
+      "generated_ts": "2026-10-13 09:45",
+      "authority": "权威",
+      "display": "可展示（方法学）",
+      "note": "ADDED/REMOVED/CHANGED + 两次调用字节相等 + 与 pre-prep diff 只现 +time_model。"
+    },
+    {
+      "name": "T236 重冻说明",
+      "source_file": "v2/evidence/t236-refreeze.md",
+      "sha256_16": "affa85a3eb88112d",
+      "generated_ts": "2026-10-12 21:40",
+      "authority": "参考",
+      "display": "可展示（历史沿革）"
+    },
+    {
+      "name": "N=50 / M4 探针",
+      "source_file": "v2/evidence/n50-m4-probe.md",
+      "sha256_16": "2542a405036b7035",
+      "generated_ts": "2026-10-12 14:42",
+      "authority": "权威",
+      "display": "可展示",
+      "note": "定位『卡在哪』：CPU 为主、IO≈0.7s；内存随支配增长。"
+    },
+    {
+      "name": "T326 真 LLM 情感反思探针",
+      "source_file": "v2/evidence/T326-real-llm-emotional-reflection-probe.md",
+      "sha256_16": "673c4163d4299aaf",
+      "generated_ts": "2026-10-13 03:16",
+      "authority": "权威",
+      "display": "可展示",
+      "note": "判据太窄：63 条 reflection 命中 0/63。"
+    },
+    {
+      "name": "T333 情感判据（口径）",
+      "source_file": "v2/evidence/T333-emotion-criterion.md",
+      "sha256_16": "1c890109998a9d36",
+      "generated_ts": "2026-10-13 09:08",
+      "authority": "权威",
+      "display": "可展示"
+    },
+    {
+      "name": "T341 判据实现非作者复核",
+      "source_file": "v2/evidence/T341-emotion-criterion-impl-review.md",
+      "sha256_16": "dca3df61835c9e48",
+      "generated_ts": "2026-10-13 09:33",
+      "authority": "权威",
+      "display": "可展示",
+      "note": "绑 b48920c；strict 逐条等价旧实现 76/76 差异 0；生产同函数复算 0/63 与 18/63；反向必红。"
+    },
+    {
+      "name": "T337 判据单一真源（消双口径）",
+      "source_file": "v2/evidence/T337-emotion-probe-single-source.md",
+      "sha256_16": "230f1120ce0f5b1f",
+      "generated_ts": "2026-10-13 09:22",
+      "authority": "权威",
+      "display": "可展示"
+    },
+    {
+      "name": "T330 结算可见端口化",
+      "source_file": "v2/evidence/T330-settlement-visible-port.md",
+      "sha256_16": "0e0b6b9787841e06",
+      "generated_ts": "2026-10-13 05:37",
+      "authority": "权威",
+      "display": "可展示"
+    },
+    {
+      "name": "T331b 端口化等价复验",
+      "source_file": "v2/evidence/t331b-settlement-port-review.md",
+      "sha256_16": "4da480485599bd6b",
+      "generated_ts": "2026-10-13 09:30",
+      "authority": "权威",
+      "display": "可展示",
+      "note": "seq 180/180 等；结论【无行为变（等价）】。"
+    },
+    {
+      "name": "T292 原生 resume 分歧验证",
+      "source_file": "v2/evidence/T292-native-resume-verify.json",
+      "sha256_16": "1ac253c13db2046f",
+      "generated_ts": "2026-10-12 22:16",
+      "authority": "参考",
+      "display": "内部件",
+      "note": "显示自动保存差异。"
+    },
+    {
+      "name": "T292 override 模式验证",
+      "source_file": "v2/evidence/T292-override-mode.json",
+      "sha256_16": "8b34f386821f71a4",
+      "generated_ts": "2026-10-12 22:25",
+      "authority": "参考",
+      "display": "内部件"
+    },
+    {
+      "name": "T343 四组对照（前端批1）",
+      "source_file": "v2/evidence/T343-fourgroups.md",
+      "sha256_16": "dac2afb2a0528f4a",
+      "generated_ts": "2026-10-13 09:54",
+      "authority": "参考",
+      "display": "可展示（前端产出）"
+    },
+    {
+      "name": "源日志 run_t236_canon_n20_llm.jsonl",
+      "source_file": "v2/evidence/run_t236_canon_n20_llm.jsonl",
+      "sha256_16": "13f8d668887d1b31",
+      "generated_ts": "2026-10-12 20:15",
+      "authority": "权威",
+      "display": "内部件（130MB+；看板勿内联，按需），可作基线溯源锚"
+    },
+    {
+      "name": "大批侧目录/压缩日志（run_*.jsonl.gz, side_*）",
+      "source_file": "v2/evidence/(侧证实物)",
+      "authority": "参考",
+      "display": "内部件（不展示）",
+      "note": "复现用中间件；体积大、口径多代，看板不内联。"
+    }
   ],
   "placeholders": [
-    "T300 重冻后：golden_baseline.json(n20) + metrics_baseline_p1.json 将更新为 feature_set=v2-T300、time_model=atomic、新 sha；archive/*_pre_t300.json 将加入（标已过期）。",
-    "分界线 B 后（期②/③）：time_model 将另立值 ⇒ 新增一套曲线；本期看板先按 atomic 一套 + 占位。"
+    "分界线 B 后（期②/③）：time_model 将另立值 ⇒ 新增一套曲线；本期先按 atomic 一套。",
+    "T300 已完成：见 T300-refreeze.md + metrics_baseline_p1.json + golden_baseline.json。"
   ]
 }
