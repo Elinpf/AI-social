@@ -502,11 +502,15 @@ class LLMClient:
         # T361：调用主体归属 —— 从 `meta["agent_id"]` 提升为一等 payload 字段（T360 登记口径）。
         # 非居民调用由调用侧显式传 SYSTEM/DIRECTOR/OBSERVER，或省略（= 未归属 UNATTRIBUTED）。
         agent_id: Optional[str] = None
+        judgment_id: Optional[str] = None
         if meta:
             extra["meta_digest"] = digest(meta)
             v = meta.get("agent_id")
             if v:
                 agent_id = str(v)
+            j = meta.get("judgment_id")
+            if j:
+                judgment_id = str(j)  # T360 补登记 G-lg-1：轨迹可见 linkage（可多主）
         if thinking is not None:
             extra["thinking"] = bool(thinking)
         payload = llm_call_payload(
@@ -525,6 +529,7 @@ class LLMClient:
             provider=getattr(self.provider, "name", ""),
             phase=phase,
             agent_id=agent_id,
+            judgment_id=judgment_id,
             extra=extra,
         )
         event = self.event_log.append("LLM_CALL", payload, round=round, phase=phase)

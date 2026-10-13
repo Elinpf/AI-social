@@ -71,3 +71,24 @@ def test_replay_reparses_payload_without_agent_id():
         assert "agent_id" not in rec["payload"]
         # 消费方守卫式读取不应抛错
         assert rec["payload"].get("agent_id") is None
+
+
+def test_judge_llm_call_carries_judgment_id_linkage():
+    """T360 补登记 G-lg-1：judge 的 LLM_CALL 带 `judgment_id`（轨迹可见、可多主）；`agent_id` 缺省。"""
+    with tempfile.TemporaryDirectory() as tmp:
+        c = _client(tmp)
+        c.judge(judgment_id="J-r7", dimension="mentor_relation", question_ref="q",
+                envelope={"options": ["formed", "not_formed"]},
+                context={"a": "P001", "b": "P002"}, parties=["P001", "P002"])
+        p = c.event_log.of_type("LLM_CALL")[-1]["payload"]
+        assert p["purpose"] == "judge"
+        assert p["judgment_id"] == "J-r7"
+        assert "agent_id" not in p, "judge 成本归属缺省（多主体、不伪装成某居民）"
+
+
+def test_payload_helper_optional_judgment_id():
+    base = dict(purpose="judge", model="m", engine_version="ev", prompt_hash="ph",
+                cache_key="k", tier="T2", priority="normal", degraded=False, cached=False,
+                tokens_in=1, tokens_out=1, cost_units=3, provider="mock")
+    assert "judgment_id" not in llm_call_payload(**base)
+    assert llm_call_payload(**base, judgment_id="J9")["judgment_id"] == "J9"

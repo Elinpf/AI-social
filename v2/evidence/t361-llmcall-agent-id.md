@@ -9,9 +9,9 @@
 
 | 文件 | 改动 |
 |---|---|
-| `code/freeze/events.py::llm_call_payload` | 新增**可选** `agent_id`；**仅在给出时写入**该键（缺省不写 ⇒ 旧日志兼容）。 |
-| `code/freeze/llm_client.py::_emit_call` | 从 `meta["agent_id"]` **提升**为一等 payload 字段；无则**不写**（= `UNATTRIBUTED`）。 |
-| `code/tests/test_t361_llmcall_agent_id.py` | 新增 5 测试（提升/缺省/非居民/helper 可选/旧日志读回）。 |
+| `code/freeze/events.py::llm_call_payload` | 新增**可选** `agent_id` **与** `judgment_id`；**仅在给出时写入**该键（缺省不写 ⇒ 旧日志兼容）。 |
+| `code/freeze/llm_client.py::_emit_call` | 从 `meta` **提升** `agent_id`（主体归属）**与** `judgment_id`（轨迹 linkage，G-lg-1）为一等 payload 字段；无则**不写**。 |
+| `code/tests/test_t361_llmcall_agent_id.py` | 新增 7 测试（提升/缺省/非居民/helper 可选/旧日志读回/judge linkage）。 |
 
 **未改**：`actor`（仍 `SYSTEM`）、事件类型、fold 语义、判定/事件顺序、**life 侧**（`life` 的 4 处 `.call(...)` **已**带 `meta={"agent_id":...}`，**无需改**）⇒ **本项无跨域改动**。
 
@@ -63,3 +63,38 @@
 - `python3 -m pytest -q tests/test_t361_llmcall_agent_id.py` → **5 passed**。
 - `make verify` → 见提交/频道（同刻只跑一个；`T340` 门报"可信"）。
 - **本单不自标 `completed`**（等 `T355` 清日志/哈希读数）。
+
+---
+
+## 6. 补登记 G-lg-1（judge 轨迹 linkage）+ 裁定落实
+
+**T360 补登记**（`§1.2 G-lg-1`，提交 `4d57826`）分两条、不可混：
+- **① 成本归属（单主）**：`LLM_CALL.agent_id` 缺省 = `UNATTRIBUTED` —— judge 多主体，**不伪装成某居民**；
+- **② 轨迹可见（可多主）**：`LLM_CALL` 增可选 **`judgment_id`**（复用「三事件分列」既有 linkage）。
+  「居民 `R` 的调用轨迹」= `{LLM_CALL: agent_id==R}` ∪ `{LLM_CALL: judgment_id ∈ {LLM_JUDGMENT: R ∈ parties}}`。
+  **单一真源在 `LLM_JUDGMENT.parties`**，`LLM_CALL` 不自存 `parties`。
+
+**实现**：`freeze.judge()` 的 `meta` 已带 `judgment_id` ⇒ `_emit_call` 单点提升为 `LLM_CALL.judgment_id`（**无需 life 传参、无跨域**）。测试 `test_judge_llm_call_carries_judgment_id_linkage` 覆盖。
+
+### 6.1 `judge` 33/60 未归属 —— 是**正确缺省，不是漏项**
+
+> ⚠️ **写清**：抽样中 `judge` **33/60** 的 `LLM_CALL` **`agent_id` 缺省**（= `UNATTRIBUTED`），
+> **原因 = `judge` 涉多 `parties[]`、单归属语义不明**，按口径**不臆造、不归属**。
+> **这不是漏做**；勿把 55% 覆盖率误读成缺陷。其**轨迹可见性**经 `judgment_id` linkage 覆盖（②）。
+
+### 6.2 提交窗口自证（Leader 要求）：T350 读的是**副本**，非主树
+
+自查（`ps` + run 目录 `meta.json`）：
+```
+workdir = /tmp/t271-probe50/code          # 读的是 /tmp 副本
+sha     = 10428f247de6a92ba853884f6040fe1944998ee0
+worktree= null
+```
+⇒ T350（12:40 起跑）读 **`/tmp/t271-probe50/code` @ `10428f24`**（**主树映射 0**）；
+我的提交 `e1ac81d`（13:35/主树）**不在该副本内**，且跑步进程启动即 import ⇒ **对 T350 零影响**。
+⚠️ 但如实记：**该批起跑时 Leader 漏发预告**（Leader 已认领并补广播）——此"运气对"非"流程对"。
+
+### 6.3 `make verify` 状态
+
+**暂缓**：T350（N=50×12 真 LLM）至 13:37 仍在跑（计时测量期 + 世界层批）⇒ 按机制②**不跑** verify。
+待 T350 结束、Leader 广播解冻后运行并回填结果。**本单不自标 `completed`**。

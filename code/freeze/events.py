@@ -129,6 +129,7 @@ def llm_call_payload(
     provider: str,
     phase: int = 2,
     agent_id: Optional[str] = None,
+    judgment_id: Optional[str] = None,
     extra: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """``LLM_CALL`` 载荷——成本审计（分列，不改账）。
@@ -137,6 +138,11 @@ def llm_call_payload(
     取值 ∈ ``AgentId ∪ {SYSTEM, DIRECTOR, OBSERVER}``；**缺省（不写该键）= 未归属
     ``UNATTRIBUTED``**（旧日志兼容、不强制迁移）。消费方须先经 `is_agent_actor()` 守卫，
     非 Agent 主体不得伪装成居民。**不改 `actor`**（审计桥的"发射者"仍为 `SYSTEM`）。
+
+    ``judgment_id``（T360 补登记 G-lg-1）：**轨迹可见 linkage**（可多主），**可选**；
+    与「三事件分列」既有 linkage 同源——某居民 `R` 的调用轨迹
+    = `{LLM_CALL: agent_id==R}` ∪ `{LLM_CALL: judgment_id ∈ {LLM_JUDGMENT: R ∈ parties}}`。
+    多主体天然覆盖，**单一真源在 `LLM_JUDGMENT.parties`**，`LLM_CALL` 不自存 `parties`。
     """
     payload: Dict[str, Any] = {
         "purpose": purpose,
@@ -153,9 +159,11 @@ def llm_call_payload(
         "tokens_out": int(tokens_out),
         "cost_units": int(cost_units),
     }
-    # 仅在明确给出时写入（缺省即"未归属"，不伪装成某居民；旧日志无该键亦合法）。
+    # 仅在明确给出时写入（缺省即"未归属/无 linkage"，不伪装成某居民；旧日志无该键亦合法）。
     if agent_id is not None:
         payload["agent_id"] = agent_id
+    if judgment_id is not None:
+        payload["judgment_id"] = judgment_id
     if extra:
         payload.update(extra)
     return payload
