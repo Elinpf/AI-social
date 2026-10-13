@@ -133,6 +133,20 @@ class Event:
 |---|---|---|---|
 | `LLM_CALL`（v1，扩字段） | 2 | v1 字段 + `purpose("plan"|"dialogue"|"reflect"|"decide_t2"|"describe")` | 成本与内容来源审计；**不改账** |
 
+> **G-lg · `LLM_CALL` 加【调用主体归属】字段 `agent_id`（应 T359/T360，已登记，只增不改）**：`LLM_CALL` 增**可选**一等字段 `agent_id` = **本次调用的「归属主体」标识**（回答「这次 AI 调用属于谁」——解 T359「现在无法按居民归因」的用户核心诉求）。
+> - **取值枚举（可判定）**：`AgentId`（真实居民）∪ `{SYSTEM, DIRECTOR, OBSERVER}`（系统 / 世界导演 / 观察者发起的调用）∪ **缺省（不写字段）= 未归属 `UNATTRIBUTED`**。值域与 `contracts.actors.NON_AGENT_ACTORS` 对齐；**消费方一律用 `contracts.actors.is_agent_actor(x)` 守卫**再计入「居民级」统计/轨迹（与 §1.2 U / T248 一致）——**非 Agent 主体不得伪装成居民**（亦与 T241 一致）。
+> - **值从调用侧传入（通路已现成）**：life 的居民调用已带 `meta={"agent_id": ...}`（`life/agent.py` 的 plan / reflect / dialogue / importance 等）；freeze emitter（`freeze/llm_client.py::_emit_call`）**须将其提升为 payload 一等字段**。⚠️ 现状：`meta` 仅被折成 `meta_digest`、`agent_id` 被丢弃 —— **这正是「无法按居民归因」的根因**。非居民调用（世界导演 / OBSERVER / 系统）由调用侧显式传 `SYSTEM`/`DIRECTOR`/`OBSERVER`，或省略（未归属）。
+> - **不改 `actor`**：`actor` 保持 `SYSTEM`（审计桥 `audit_sink → spec(..., "SYSTEM", ...)` 既有语义 = 「事件发射者」；T241 actor 守卫依赖它）。归属**另由本 payload 字段承载**：不改 `actor`、不新增事件类型、不改 fold 语义。
+> - **旧日志兼容**：字段**可选**；旧日志无该字段 = 未归属，可读、**不强制迁移**。
+> - **落点（实现另开 `T361`，owner = freeze，因 emitter 在 freeze）**：`freeze/events.py::llm_call_payload`（增可选 `agent_id` 参数）+ `freeze/llm_client.py::_emit_call`（从 `meta` 提升字段）。本任务**只登记、不动码**。
+>
+> **⚠️ 哈希 / 指纹 / 重冻影响声明（T360 必答）**：
+> - **`state_hash`：不变。** `LLM_CALL` 在 `replay._NOOP_TYPES`（identity fold）⇒ 不改 `WorldState`；`state_hash(state)` 与 `TURN_SEAL.state_hash` 均不受影响 ⇒ **世界行为不变**。
+> - **日志哈希链：变。** `ledger.compute_event_hash` 覆盖**整条记录（含 payload）** ⇒ 新增 `agent_id` 字段 ⇒ 该条事件 `hash` 变、其后所有 `prev_hash`/`hash` 变 ⇒ **日志字节变**。故本变更归入 **【行为不变 / 仅日志字段增（哈希链变）】**。
+> - **`engine_version` 指纹：不变。** 本登记**不新增任何 config 键**（`agent_id` 是**事件字段**、非配置）⇒ `FINGERPRINT_FILES` 聚合指纹不变。**注意**：这与「新增默认 off 开关 ⇒ 指纹变」（§5.8 旧通则）**不同类**——那条针对 **config 键**，本条只动**事件 payload**。
+> - **⇒ 仍需重冻**：日志字节变 ⇒ golden / metrics 须在新 epoch 重生成。**归入 `T355` 同一 epoch**（那一轮反正要重冻）⇒ **零额外重冻成本**。
+> - **T299 语义一致门口径**：`agent_id` 是**语义字段**（非 freeze 缓存计量字段）⇒ **不得**加入 T299 的「纯计量白名单」；**跨 epoch 对照须显式标注「唯一差异 = 指纹行及其派生 + `LLM_CALL.agent_id` 新增字段」**。
+
 **H. 意图拒绝审计（新增，应 00-architecture §4.2 / AR-C1 回补）**
 
 | type | phase | payload 关键字段 | 说明 |
@@ -1214,6 +1228,7 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
 | **新增事件（v2 世界导演+事件制造机，T238）** | `WORLD_DIRECTIVE` / `WORLD_GROUP_EVENT`（kind 14 值，≠`GROUP_*`）/ `WORLD_DIRECTIVE_REJECTED` / `FORGE_FIRED`（审计-only）；新增一等 actor `"DIRECTOR"`；三条保底落成字段（`directed` / `mechanism_id`+`dose`+`dose_curve` / `effective_from_round≥issued_round`）；**每字段标「装配点」** | §1.2 T |
 | **字段主体口径（T248）** | `agent_id`（及 `actor`/`subject`）**可含非 Agent 主体**（`MARKET`/`BANK`/`WORLD`/`TAX_POOL`）——**登记为已知例外**；消费方须用单一真源 `contracts.actors` 守卫 | §1.2 U |
 | **新增事件（v2 睡眠/记忆/人格，T224）** | `SLEEP_STARTED/SLEEP_COMPLETED`、`MEMORY_CONSOLIDATE/MEMORY_FORGET`、`PERSONA_DRIFT`（`PERSONA_FINGERPRINT` 为快照非事件）+ 统计 `metrics.life.memory/persona` | §1.2 S |
+| **字段扩展（`LLM_CALL`，T359/T360）** | `LLM_CALL` 增**可选**一等字段 `agent_id`（调用归属主体；∈ `AgentId ∪ {SYSTEM, DIRECTOR, OBSERVER}`，缺省 = 未归属）；**不改 `actor`**；**行为不变（identity fold，`state_hash` 不变）/ 仅日志字段增（哈希链变）** ⇒ 需重冻，**归入 `T355` epoch** | §1.2 G |
 
 > **合计**：新增事件 **11** 类（商品 4 + 契约 4 + 投票 1 + 社会 2）；字段扩展 **3** 事件；不变量 **2** 条；字段语义登记 **1** 项（商品族 `qty` milli-unit 口径）。**均只增不改**，与既有 66 类不冲突；G7 对既有日志仍通过（新增类型旧日志不出现、可选字段被容忍）。**引擎实现**（`engine/events.py` EVENT_TYPES + `replay.apply_event` 折叠器 + `apply_production()/apply_contracts()` hook）由 v2 实现阶段（econ-dev T91 等）落地，本任务只出 schema。
 
