@@ -61,12 +61,9 @@ def _live_roots() -> list[Path]:
     return [Path(p).resolve() for p in raw.split(":") if p.strip()]
 
 
-def _allowed_live(p: Path) -> bool:
-    """realpath 规范化后再判是否落在白名单根内（防 `..` / 符号链接穿越）。"""
-    try:
-        rp = Path(p).resolve(strict=True)
-    except Exception:
-        return False
+def _allowed_live(p) -> bool:
+    """realpath（非 strict，允文件尚未出现）规范化后判是否落在白名单根内（防 `..` / 符号链接穿越）。"""
+    rp = Path(os.path.realpath(str(p)))
     for root in _live_roots():
         try:
             rp.relative_to(root)
@@ -77,10 +74,13 @@ def _allowed_live(p: Path) -> bool:
 
 
 def tail_read(path: str, off: int | None, tail_mb: int = 4) -> dict:
-    """只读增量尾部。off=None ⇒ 从末尾回退 tail_mb MB 并对齐到完整行边界。绝不返回半行。"""
+    """只读增量尾部。off=None ⇒ 从末尾回退 tail_mb MB 并对齐到完整行边界。绝不返回半行。
+    文件尚不存在（批未起跑/尚未落盘）⇒ 返回 waiting=True（不是错误，避免误报"越权"）。"""
     p = Path(path)
     if not _allowed_live(p):
         return {"error": "path not allowed (whitelist: HITT_LIVE_ROOTS)"}
+    if not p.exists():
+        return {"text": "", "off": 0, "size": 0, "eof": False, "truncated": False, "waiting": True}
     try:
         size = p.stat().st_size
     except Exception as e:

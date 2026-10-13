@@ -228,42 +228,47 @@
   // 首轮为**尾部窗口**（末尾 N MB，行对齐）——界面标注，别误读成"从头回放"。
   function setLiveStatus(s) { const e = el("live-status"); if (e) e.textContent = s; }
   function inferBatch(path) {
-    const m = String(path).match(/nightly\/([A-D])\//) || String(path).match(/\/([A-D])\/run\.jsonl/);
+    const s = String(path);
+    const m = s.match(/nightly\/([A-Za-z0-9]+)\//) || s.match(/\/runs\/([A-Za-z0-9_-]+)\//);
     return m ? m[1] : "—";
   }
   function startLiveTail() {
     const path = state.live;
-    const POLL = 1500, MIN_BUILD = 4000;   // 轮询间隔 / 重建节流（跟夜间增长量级：~几十 KB/s）
-    let off = null, all = [], lastSize = -1, stable = 0, lastBuild = 0, stopped = false;
+    const POLL = 1500, MIN_BUILD = 3000;   // 轮询间隔 / 重建节流（首次有数据立即重建）
+    let off = null, all = [], lastSize = -1, idle = 0, built = false, lastBuild = 0;
     if (el("live-batch")) el("live-batch").textContent = "批次 " + inferBatch(path);
     setLiveStatus("连接中…");
     const poll = async () => {
-      if (stopped) return;
       let j = null;
       try {
         const u = `/__tail?path=${encodeURIComponent(path)}&tailmb=${state.liveTailMb}` + (off == null ? "" : `&off=${off}`);
         j = await (await fetch(u, { cache: "no-store" })).json();
       } catch (e) { setLiveStatus("读取失败：" + (e && e.message)); liveTimer = setTimeout(poll, POLL); return; }
       if (j.error) { setLiveStatus("读取失败：" + j.error); liveTimer = setTimeout(poll, POLL); return; }
+      if (j.waiting) { setLiveStatus("等待新数据（文件未出现）"); liveTimer = setTimeout(poll, POLL); return; }
       const grew = j.size !== lastSize;
       const recs = j.text ? D.parseJSONL(j.text) : [];
       if (recs.length) all = all.concat(recs);
       off = j.off;
       const now = performance.now();
-      if (recs.length && now - lastBuild >= MIN_BUILD) {
+      if (recs.length && (!built || now - lastBuild >= MIN_BUILD)) {   // 首次立即重建；其后节流
         state.replay = new R.Replay(all);
-        lastBuild = now;
+        built = true; lastBuild = now;
         el("round-slider").max = String(state.replay.maxRound);
         if (state.following) { state.round = state.replay.maxRound; renderRound(false); }
       }
       const maxR = state.replay ? state.replay.maxRound : "—";
       el("live-round").textContent = `round ${maxR} · ${all.length} 事件`;
-      stable = grew ? 0 : stable + 1;
+      idle = (recs.length || grew) ? 0 : idle + 1;
       lastSize = j.size;
-      const done = j.eof && stable >= 3;      // 连续 3 次无增长 ⇒ 显式"已结束"，停止轮询（状态可达）
+      const idleSec = Math.round(idle * POLL / 1000);
       const win = j.truncated ? "尾部窗口·" : "";
-      setLiveStatus(win + (done ? "无增长（疑似已结束）" : (recs.length || grew ? "跟随中" : "等待新数据")));
-      if (done) { stopped = true; return; }
+      // ⚠️ 跑批在两次 flush 之间"已追平(eof)"是**正常**，不能当"已结束"；只在**长时间**无增长才提示可能结束（且不停轮询）。
+      let st;
+      if (recs.length || grew) st = "跟随中";
+      else if (idleSec < 300) st = "已追平（等待新数据）";
+      else st = "长时间无增长（可能已结束）";
+      setLiveStatus(win + st);
       liveTimer = setTimeout(poll, POLL);
     };
     poll();
