@@ -145,6 +145,7 @@ class Event:
 > - **轨迹可见（可多主）**：`LLM_CALL` 增**可选**字段 **`judgment_id`**（**复用「三事件分列」既有 linkage** —— 成本 `LLM_CALL` / 判定 `LLM_JUDGMENT` / 后果事件本即以 `judgment_id` 关联，见 §1.2 I，**非新概念**）⇒ 「某居民 `R` 的 AI 调用轨迹」= `{LLM_CALL : agent_id == R}` ∪ **派生连接** `{LLM_CALL : judgment_id ∈ { LLM_JUDGMENT : R ∈ parties }}`。**多主体天然覆盖**（一场双主体判定同现于双方轨迹）；**单一真源仍在 `LLM_JUDGMENT.parties`**，`LLM_CALL` **不自存 `parties`**（**避免同概念两处实现**）。
 > - **来源现成、无需跨域**：`freeze.judge()` 的 `meta` 已带 `judgment_id` ⇒ **freeze 侧单点即可发射** `LLM_CALL.judgment_id`，**无需 life 改动**。
 > - **`narrate`**：系统级，暂归 `UNATTRIBUTED`（如需可日后按 `narrative_id` 连接，本登记**不强制**）。**世界导演**发起的调用 → `agent_id = "DIRECTOR"`（§1.2 T 既有 actor 口径）。
+> - ⚠️ **口径写死（Leader 13:39 裁定）**：`judge` 的**成本归属恒为 `null`**（`agent_id` 缺省）⇒ **任何「按居民聚合成本 / 调用数」的统计，一律不得把 judge 摊到居民头上**；`judgment_id` **只用于可见性 / 追溯（"看得见"），严禁反推成本**。两条查询口径**不得互相污染**。
 > - **影响**：与 `agent_id` **同档** —— 【行为不变 / 仅日志字段增（哈希链变）】，`engine_version` 指纹不变，**需重冻、归入 `T355` epoch**。
 >
 > **⚠️ 哈希 / 指纹 / 重冻影响声明（T360 必答）**：
