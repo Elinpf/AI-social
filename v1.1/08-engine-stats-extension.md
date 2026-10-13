@@ -125,6 +125,8 @@ class Event:
 > **R5 · `OBSERVATION` 语义澄清（应 03-pov-visibility-check §R5 / NT-C3，已登记）**：`OBSERVATION` = **显著感知样本（salience 门控子集）**，**不是「Agent 所见一切」的可见性全集**。「角色视角（POV）」的可见性判据以**确定性推导的 `visible_events(agent)`** 为准（由 `PLACE_MOVE/ARRIVED` 占用时间线 + `PERCEPTION_SCOPE` 配置表 + 事件 `place` 确定性重算），`OBSERVATION` 降级为**显著度/注意力证据**。**不改变 `OBSERVATION` 现有 schema 与传播口径**（不碰 T9 §2.2 传播图）。
 > **R4 · `MSG_*` 的 `refs[]` 约束（应 §R4，已登记）**：**转发 / 转述类**消息**必须**携带 `refs[]`（指向被转述的 `msg_id` 或事实 `event_seq`）；无法确定来源者 `refs=[]` → POV 渲染标 `spec=true`、表述为「听说（未经核实）」，**不进入「亲历」集**（`heard_events`，见 §3.5）。
 
+> **P5 · `MSG_*` 加【可选】线程字段（应 T339/D11 期③，已登记，只增不改）**：`MSG_PUBLIC`/`MSG_DM`/`MSG_GROUP` 增**可选** `thread_id`（对话线程）与 `reply_to`（回应目标 `msg_id`）；**不新增事件类型**；供期③「对话延续/跨回合谈判」按 `μt` 排序与先后判定（`reply.start_μt ≥ original.end_μt`，见 §5.10）。默认不填 = 现状（无线程）。
+
 **G. LLM 成本/内容审计（沿用 v1 `LLM_CALL`，扩 `purpose`）**
 
 | type | phase | payload 关键字段 | 说明 |
