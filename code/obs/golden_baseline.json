@@ -24,6 +24,7 @@
     "seed": 42,
     "source": "frozen from a verified-good run log",
     "time_mark_expected": 7,
+    "time_model": "atomic",
     "type_counts": {
       "ACTIVITY_COMPLETED": 270,
       "ACTIVITY_STARTED": 280,
@@ -100,6 +101,7 @@
     "seed": 42,
     "source": "frozen from a verified-good run log",
     "time_mark_expected": 7,
+    "time_model": "atomic",
     "type_counts": {
       "ACTIVITY_COMPLETED": 540,
       "ACTIVITY_STARTED": 560,
@@ -194,6 +196,7 @@
     "seed": 42,
     "source": "frozen from a verified-good run log",
     "time_mark_expected": 7,
+    "time_model": "atomic",
     "type_counts": {
       "ACTIVITY_COMPLETED": 63,
       "ACTIVITY_STARTED": 63,

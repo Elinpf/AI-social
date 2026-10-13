@@ -1,0 +1,63 @@
+T300 · 加固 H2 —— golden 基线 `time_model` 元数据的「字节一致测试」证据
+=====================================================================
+
+目的（Leader 07:35 加固 #5）：
+  给 golden 基线加 `time_model` 字段 / 给既有条目补 `atomic` 会 **改变 JSON 结构** ⇒
+  必须证明 **除新增字段外，数值逐字节不变**；并把 **命令 + diff 结果** 一起入库。
+
+改动（纯 additive，见同提交的 `code/obs/golden.py` + `code/obs/golden_baseline.json`）：
+  - `log_meta()` 读 `WORLD_INIT.payload.time_model`（T287 期① 起引擎总写；off=`atomic`；更早日志无戳 ⇒ None）。
+  - `compute_baseline()` 产出 `"time_model"`（缺戳归并 `atomic`）。
+  - 既有 n3/n10/n20 条目标 `"time_model": "atomic"`（= 分界线 A 前）。
+
+命令 1（与「未加字段的 pre-prep 存档」比：证明 diff 只现新增字段）
+----------------------------------------------------------------------
+  # pre-prep 存档 = /tmp/golden_baseline_before_prep.json（改动前 golden_baseline.json）
+  python3 - <<'PY'
+  import json, sys, difflib
+  sys.path.insert(0, ".")
+  from obs.golden import compute_baseline
+  recs=[json.loads(l) for l in open("../v2/evidence/run_t236_canon_n20_llm.jsonl", encoding="utf-8")]
+  new=compute_baseline(recs,"n20_week_seed42",feature_set="v2-T236")
+  old=json.load(open("/tmp/golden_baseline_before_prep.json"))["n20_week_seed42"]
+  print("ADDED", sorted(set(new)-set(old)), "REMOVED", sorted(set(old)-set(new)),
+        "CHANGED", sorted(k for k in set(new)&set(old) if new[k]!=old[k]))
+  # unified diff...
+  PY
+
+结果 1：
+  ADDED ['time_model'] REMOVED [] CHANGED []
+  --- stored(pre-prep)
+  +++ recomputed
+  @@ -18,6 +18,7 @@
+     "seed": 42,
+     "source": "frozen from a verified-good run log",
+     "time_mark_expected": 7,
+  +  "time_model": "atomic",
+     "type_counts": {
+       "ACTIVITY_COMPLETED": 540,
+
+⇒ **只新增 `time_model`；其余字段（含整张 `type_counts`）逐字节不变。**
+
+命令 2（确定性红线：同一份日志两次调用字节相等）
+--------------------------------------------------
+  python3 /tmp/t300_bytecheck.py ../v2/evidence/run_t236_canon_n20_llm.jsonl n20_week_seed42 v2-T236
+
+结果 2（脚本 `/tmp/t300_bytecheck.py` 输出）：
+  BID n20_week_seed42 feature_set v2-T236
+  ADDED  keys: []           # 与「已含 time_model 的当前 golden」比 → 完全一致
+  REMOVED keys: []
+  CHANGED keys: []
+  BYTE_EQUAL_TWO_CALLS: True
+  H2_RESULT: PASS
+
+请求侧日志（对照 run 源）：`v2/evidence/run_t236_canon_n20_llm.jsonl`
+  sha256:13f8d668887d1b3176af354472fbb040ac0881902075c631218e8a6b1861fb6e （同 `metrics_baseline_p1.json::log_sha256`）
+
+单元测试（确定性 + 归并口径）
+------------------------------
+  python3 -m pytest tests/test_obs_golden_time_model.py -q     # 4 passed
+  python3 -m pytest tests/test_obs_*.py -q                     # 140 passed
+  test 覆盖：有戳保留戳值 / 无戳归并 atomic / 两次调用字节相等 / 既有基线均带 time_model。
+
+结论：H2 **PASS**。新增 `time_model` 为纯元数据，**不改任何既有数值**。

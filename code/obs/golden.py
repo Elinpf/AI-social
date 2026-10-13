@@ -52,6 +52,7 @@ def log_meta(records) -> dict:
     n_agents = 0
     seed = None
     engine_version = None
+    time_model = None
     rounds = set()
     for r in records:
         t = r["type"]
@@ -59,6 +60,9 @@ def log_meta(records) -> dict:
             p = r.get("payload") or {}
             seed = p.get("seed")
             engine_version = p.get("engine_version")
+            # T287 期① 起，WORLD_INIT 总带 `time_model`（off=`atomic`）。
+            # 更早（分界线 A 前）的日志无此戳 ⇒ None，由消费方按 `atomic` 归并。
+            time_model = p.get("time_model")
         elif t == "AGENT_BORN":
             n_agents += 1
         rounds.add(int(r["round"]))
@@ -67,6 +71,7 @@ def log_meta(records) -> dict:
         "n_agents": n_agents,
         "rounds": (max(rounds) + 1) if rounds else 0,
         "engine_version": engine_version,
+        "time_model": time_model,
     }
 
 
@@ -96,6 +101,9 @@ def compute_baseline(records, baseline_id: str, *, time_cfg: dict | None = None,
         "n_agents": meta["n_agents"],
         "rounds": meta["rounds"],
         "engine_version": meta["engine_version"],
+        # 时间模型口径（T339 §4 / 08 §5.10）：跨 sha 自描述，**必须落进元数据**——
+        # 分界线只写文档不够，否则将来仍会把两套曲线画在一起。缺戳（旧日志）⇒ `atomic`。
+        "time_model": meta["time_model"] or "atomic",
         "feature_set": feature_set,
         "n_events": sum(counts.values()),
         "type_counts": counts,
