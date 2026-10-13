@@ -37,7 +37,7 @@ class GuardedKernel:
     real functions returning None, which would shadow `__getattr__`.
     """
 
-    ALLOWED = ("perceive", "submit_intent", "current_round", "derive_time")
+    ALLOWED = ("perceive", "submit_intent", "current_round", "derive_time", "world_params")
 
     def __init__(self, inner) -> None:
         object.__setattr__(self, "_inner", inner)
@@ -53,6 +53,9 @@ class GuardedKernel:
 
     def derive_time(self, round_no):
         return object.__getattribute__(self, "_inner").derive_time(round_no)
+
+    def world_params(self, round_no):   # T364：life 经端口读世界层参数（门禁须认此端口）
+        return object.__getattribute__(self, "_inner").world_params(round_no)
 
     def __getattr__(self, name: str):
         raise AssertionError(f"life layer touched non-port kernel attribute: {name!r}")

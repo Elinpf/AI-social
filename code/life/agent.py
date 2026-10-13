@@ -122,6 +122,12 @@ class LifeLayerAgent:
         self._persona_p0: dict | None = None
         self._slept_days: set[int] = set()
         self._drift_streak: dict[str, int] = {}  # T244: 逐维"连续被反思信号"计数（分抖动/真漂移）
+        # T364：`world_params`（D3 口径②）消费计数 + 最近一次读数（**证据用**：证明消费点被读）
+        # 纯观测：仅本对象内存计数，**不进 state_hash、不发事件、不进序列化/restore**。
+        self._wp_reads: int = 0          # ① 端口读次数（证明"端口通了"）
+        self._wp_nonempty: int = 0       # ② 参数非空次数（关 ⇒ 必须=0）
+        self._wp_changed_choice: int = 0  # ③ 实际改变活动选择次数（"真影响行为"的直接证据）
+        self._wp_last: dict | None = None
 
     # ---- T288 / T276: 从账本单一真源恢复「只前向累积」的内部态 ---------------
     def restore(self, state, records) -> None:
@@ -305,6 +311,7 @@ class LifeLayerAgent:
         rep = StepReport(round=wv.round)
         self._llm_permit = self._llm_ok(wv)               # T221c: M4 本回合 LLM 许可
         self.memory.sync_from_refs(wv.memory_refs)
+        self._read_world_params(wv)     # T364：每回合读一次 WorldParams（消费点被读的计数证据）
         self._update_needs(wv)
         self._observe(wv, rep)
         retrieved_ids, _ = self._retrieve(wv)
@@ -528,12 +535,45 @@ class LifeLayerAgent:
             return (atype, place)
         return base
 
+    def _read_world_params(self, wv) -> None:
+        """T364 / D3 口径②：经**端口**读 `WorldParams`（不直读盘）；仅本回合缓存 + 计数。
+
+        形状（与 `engine/world_params.py` / `KernelAdapter.world_params(round)` 对齐）：
+        `{"activity_weight": {place:int}, "resource_factor_bp": {..}, "market_scarcity_bp": {..}, "active": [..]}`。
+        端口缺失（如 mini 内核）⇒ 不读、行为不变。
+        """
+        fn = getattr(self.kernel, "world_params", None)
+        if not callable(fn):
+            return
+        try:
+            self._wp_last = fn(wv.round)
+        except Exception:
+            self._wp_last = None
+            return
+        self._wp_reads += 1
+        wp = self._wp_last or {}
+        if (wp.get("activity_weight") or wp.get("resource_factor_bp")
+                or wp.get("market_scarcity_bp") or wp.get("active")):
+            self._wp_nonempty += 1
+
     def _activity_for(self, wv) -> tuple[str, str]:
         slot_id = f"day{wv.time.day_of_week}-{wv.time.slot}"
         entry = self._plan_slots.get(slot_id)
         if entry:
-            return entry["activity_type"], entry["place"]
-        return self._base_activity(wv.time.day_type, wv.time.slot)
+            atype, place = entry["activity_type"], entry["place"]
+        else:
+            atype, place = self._base_activity(wv.time.day_type, wv.time.slot)
+        # T364 / D3 口径②：消费 `world_params.activity_weight`（只对未来 [start,end)、dose/空 恒等）：
+        # 本 slot 内**倾向高权重 place**（如节日 hall），但**仅当该 place 对当前活动合法** ⇒ 有界。
+        wp = getattr(self, "_wp_last", None) or {}
+        aw = wp.get("activity_weight") or {}
+        cands = [p for p, w in aw.items() if int(w) > 0 and self._valid(atype, p, wv.time.slot)]
+        if cands:
+            chosen = min(cands, key=lambda p: (-int(aw[p]), p))
+            if chosen != place:
+                self._wp_changed_choice += 1   # ③ 实际改变了选择（纯观测计数）
+                place = chosen
+        return atype, place
 
     # 4. act ---------------------------------------------------------------
     def _act(self, wv) -> str | None:

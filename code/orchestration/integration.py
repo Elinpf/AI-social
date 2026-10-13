@@ -700,6 +700,11 @@ class KernelAdapter:
         return False
 
     # ---- T312：跨层只读「按回合取事件」端口（life 经 KernelPort 调用，life 不 import engine）----
+    def world_params(self, round_no: int) -> dict:
+        """T353：`WorldParams` 世界层参数（可重建派生视图；只读）。life/econ 经端口消费。"""
+        from engine.world_params import world_params as _wp
+        return _wp(self.engine.ledger.records, round_no, self.engine.config)
+
     def round_events(self, round_no: int, types: tuple | None = None) -> list:
         """某回合的事件记录（**seq 升序、顺序不变**）。
 

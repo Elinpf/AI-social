@@ -25,8 +25,17 @@ def load_perception_scope(config_dir=None) -> dict:
     return {"version": ver, "default_visibility_class": default_cls, "scope": scope}
 
 
-def _load_time_flags() -> dict:
-    """T354：`config/time.json` 开关（ongoing 默认 true）。"""
+def _load_time_flags(config: dict | None = None) -> dict:
+    """T354：`config/time.json` 开关（ongoing 默认 true）。
+
+    T355 修复：**优先读传入的运行时 config**（`config["time"]["ongoing"]["enabled"]`），
+    缺省回退文件 —— 否则经 config 覆盖的消融在 inline/mini 路径会被**静默丢弃**。
+    """
+    if isinstance(config, dict):
+        t = config.get("time") or {}
+        og = t.get("ongoing") or {}
+        if "enabled" in og:
+            return {"ongoing_enabled": bool(og["enabled"])}
     from . import version
     try:
         return version.load_time_flags()
@@ -121,5 +130,5 @@ def perceive(state, agent_id: str, records: list, config: dict | None = None) ->
         "memory_refs": memory_refs(records, agent_id, state.round),
         # T354 期②：进行中活动（纯派生；off ⇒ None）
         "current_activity": current_activity(records, agent_id, state.round)
-        if _load_time_flags().get("ongoing_enabled", True) else None,
+        if _load_time_flags(config).get("ongoing_enabled", True) else None,
     }

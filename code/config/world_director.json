@@ -2,6 +2,7 @@
   "_comment": "世界 AI 导演 v1（WD）配置：独立总开关 + 每机制开关 + 剂量曲线（conservative/moderate/aggressive）。全部整数（概率=万分比 bp；规模/时长=整数）。纳入 engine_version 指纹。T255：默认 enabled=true（用户 #4/#5 要『世界导演真的产生宏观群体事件』）；保底(b) 消融仍成立——改回 false 即 0 事件。",
   "version": "1.0",
   "enabled": true,
+  "propagate": {"enabled": true},
   "dose_curve": "conservative",
   "K_warn": 3,
   "mechanisms": {

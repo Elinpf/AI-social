@@ -176,3 +176,12 @@ class KernelPort(Protocol):
         （T312/T295），life 不再全扫 `event_index`。签名与 `KernelAdapter.round_events` 一致。
         """
         ...
+
+    def world_params(self, round_no: int) -> dict:
+        """T353/T364：`WorldParams` 世界层参数（可重建派生视图；只读）。
+
+        `{"activity_weight":{place:int}, "resource_factor_bp":{..}, "market_scarcity_bp":{..},
+        "active":[directive_ref,...]}`；`propagate.enabled=False` ⇒ 四键均空。签名与
+        `KernelAdapter.world_params` 一致。
+        """
+        ...
