@@ -98,3 +98,30 @@ worktree= null
 
 **暂缓**：T350（N=50×12 真 LLM）至 13:37 仍在跑（计时测量期 + 世界层批）⇒ 按机制②**不跑** verify。
 待 T350 结束、Leader 广播解冻后运行并回填结果。**本单不自标 `completed`**。
+
+---
+
+## 7. 端到端自证：judge 链路真落到居民（+ 负例）
+
+> 硬要求（Leader，经 sim-arch 转达）：**"推过去了 ≠ 真被消费"** ⇒ 抽一条**真链路** + 一条**负例**（防假绿）。
+> 测试：`code/tests/test_t361_judge_linkage_e2e.py`（mock，seed=7/N=3/12 回合）。
+
+**真链路**（实跑输出）：
+```
+[CHAIN] LLM_CALL seq=9  purpose=judge  agent_id=None  judgment_id=JF-P001-0
+        -> LLM_JUDGMENT jid=JF-P001-0  parties=['P001']
+        -> resident P001 轨迹命中 judge_link ✓（成本归属仍为 null）
+[NEGATIVE] 非 party 居民 P002 反查该 judge 调用 -> 无命中 ✓（防假绿）
+```
+
+轨迹查询口径（**仅可见性/追溯，非成本**）：
+```
+trace(R) = {LLM_CALL: agent_id==R}
+         ∪ {LLM_CALL: judgment_id ∈ {LLM_JUDGMENT: R ∈ parties}}
+```
+
+**两条查询口径不互相污染**（Leader 13:39 冻结 `43b725b`）：
+- **成本归属**：judge 的 `LLM_CALL.agent_id` **恒为 `null`**（本测试断言）；**按居民聚合成本/调用数不得摊 judge**；
+- **可见性**：`judgment_id` **只用于追溯**，**不得反推成本**。
+
+⇒ **"推过去了（字段写了）"与"真被消费（能按居民反查到）"均自证**；负例证明**反查不到时为红**。
