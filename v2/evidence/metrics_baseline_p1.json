@@ -1,9 +1,10 @@
 {
-  "frozen_from": "/root/t271/runs/t300/run.jsonl",
-  "log_sha256": "sha256:33b7651f2b11d5eaf5720dbd0560cc2ea2a468d37f7319d972b2d7fafd808a08",
-  "feature_set": "v2-T300",
+  "frozen_from": "/root/t271/runs/t355/run.jsonl",
+  "log_sha256": "sha256:bee77237e7c2fa3a41ae7613d2ef3e4bf989c1b4f57b831fc29edc714dec3c36",
+  "feature_set": "v2-T355",
   "time_model": "atomic",
-  "final_state_hash": "sha256:ab38d431d951eb34fddc611792d56823d3c618f4fadf5f1c578adbc4bd2c23ba",
+  "world_model": "effective",
+  "final_state_hash": "sha256:b7cab88ed3f54bda4a75ae14e8f6aaca2e7c88a788daf23ecf4995efb551ac2c",
   "final_round": 83,
   "tolerance_ratio": 0.8,
   "econ_loop": {
@@ -35,14 +36,15 @@
     "n_votes": 0
   },
   "provenance": {
-    "run_tree_sha": "9374c3a",
-    "world_layer_sha": "8fb2263",
-    "baseline_code_sha": "fbf9c33",
+    "run_tree_sha": "1d3af8c",
+    "world_layer_sha": "1d3af8c",
+    "baseline_code_sha": "be9441b",
+    "engine_version_fingerprint": "sha256:a871e36c44acbda9ac4aadeebe829a821219b2fec22642ea2b372f6ec88f3b1c",
     "provider": "openai_compat",
     "n_agents": 20,
     "rounds": 84,
     "seed": 42,
-    "engine_version_fingerprint": "sha256:869c195348f073021c3f5d3271930687750fda7998b3c8a7a79825344f7f0ddf"
+    "flush_every": 2
   },
-  "note": "T300 重冻（世界层 8fb2263 / HEAD 9374c3a / obs 代码 fbf9c33）。time_model=atomic；含 T298 行为变 + T287/T323/T333 指纹变（四档变更清单见 t300-refreeze.md）。"
+  "note": "T355 第四轮重冻（读主树 1d3af8c / 计算代码 be9441b）。time_model=atomic；world_model=effective（**推定**：无日志戳，按 T352 口径② 默认开；待引擎落戳后复核）。含 T353(D3口径②)+T354(D11期②) 行为变 + 指纹变。⚠️ 已知偏差：世界层强度 2× 口径（T372 双计未修）。⚠️ provenance：本基线仅在含 T372 缺陷的树上可复现。"
 }
