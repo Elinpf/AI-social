@@ -25,3 +25,8 @@
 `v2/evidence/T375-batch-status.png`（批次 t355 · 完成（rc=0））。
 ## 边界
 "可被看到"已具备；**"主动报结束"仍归 owner 机制（`T374`）**，本页不替代它。
+
+## 与 T374（`END` 标记）对齐（21:43）
+- `serve.py::run_info` **优先读 `<run_dir>/END`**（T374 派生汇总，含 `rc/tree/sha/rounds_last/events/final_state_hash`）→ `end_source="END"`；**不再自造真源**。
+- 缺 `END`（如判前旧批 / `SIGKILL` 未写出）→ 兜底 `host.log` 的 `batch exited rc=N` → 再兜底 `meta.ended_at`。
+- 实测：`t355`（无 END）→ `state=done, rc=0`（host.log 兜底）；`t374_ok`（有 END）→ `state=done, rc=0, end_source=END, tree/sha/rounds_last/events` 齐全。

@@ -143,7 +143,19 @@ def run_info(run_path: str) -> dict:
                     pass
         except Exception:
             pass
-    # T348/T375 三态真源：host.log 的 `[runner] batch exited rc=N`（优先既有真源）+ meta.ended_at
+    # T374 `END` 标记（最权威，派生汇总、不改既有源）→ 优先读；其余兜底。
+    endf = d / "END"
+    if endf.exists():
+        try:
+            e = json.loads(endf.read_text(encoding="utf-8"))
+            for k in ("rc", "started_at", "ended_at", "rounds_last", "events", "final_state_hash", "tree", "sha"):
+                if e.get(k) is not None:
+                    info[k] = e[k]
+            info["ended"] = True
+            info["end_source"] = "END"
+        except Exception:
+            pass
+    # 三态真源：host.log 的 `[runner] batch exited rc=N`（既有真源，兜底）+ meta.ended_at
     hl = d / "host.log"
     if hl.exists():
         try:
