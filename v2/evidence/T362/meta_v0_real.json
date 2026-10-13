@@ -1,0 +1,11 @@
+{
+  "version_tag": "v0_real",
+  "seed": 7,
+  "n": 8,
+  "rounds": 24,
+  "wake_off": false,
+  "copy_sha": "1ffd7eb",
+  "provider": "openai_compat",
+  "prompt_sha": "88ddbb92e20029e4",
+  "head_sha": "1ffd7eb"
+}
