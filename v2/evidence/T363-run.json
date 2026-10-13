@@ -1,0 +1,140 @@
+{
+  "seed": 7,
+  "n": 8,
+  "rounds": 84,
+  "on_off_delta": {
+    "LLM_CALL": -2,
+    "LLM_JUDGMENT": 5,
+    "MEMORY_FORGET": 16,
+    "MEMORY_WRITE": 71,
+    "OBSERVATION": 71,
+    "PERSONA_DRIFT": 2,
+    "PERSONA_DRIFT_CANDIDATE": 6,
+    "RELATION_CHANGE": 13
+  },
+  "on_len": 50384,
+  "off_len": 50202,
+  "state_hash": {
+    "on": "sha256:de9c0525f1c356361c5bb3615c3c3cebcc2e680a1c29141b23e3896df49e1adf",
+    "off": "sha256:5f6a5679ab03554c4dd48997e32e7ea0cc579759126d882ed8dafa110192c6f8",
+    "neu": "sha256:5f6a5679ab03554c4dd48997e32e7ea0cc579759126d882ed8dafa110192c6f8"
+  },
+  "off_eq_neutralized": true,
+  "consumed": true,
+  "liveness": {
+    "P001": {
+      "runs": [
+        85
+      ],
+      "max_run": 85,
+      "permanent_in_progress": true,
+      "moves": 54,
+      "activities": 28,
+      "zero_move": false,
+      "zero_activity": false,
+      "ever_in_progress": true
+    },
+    "P002": {
+      "runs": [
+        85
+      ],
+      "max_run": 85,
+      "permanent_in_progress": true,
+      "moves": 56,
+      "activities": 28,
+      "zero_move": false,
+      "zero_activity": false,
+      "ever_in_progress": true
+    },
+    "P003": {
+      "runs": [
+        85
+      ],
+      "max_run": 85,
+      "permanent_in_progress": true,
+      "moves": 46,
+      "activities": 28,
+      "zero_move": false,
+      "zero_activity": false,
+      "ever_in_progress": true
+    },
+    "P004": {
+      "runs": [
+        85
+      ],
+      "max_run": 85,
+      "permanent_in_progress": true,
+      "moves": 54,
+      "activities": 28,
+      "zero_move": false,
+      "zero_activity": false,
+      "ever_in_progress": true
+    },
+    "P005": {
+      "runs": [
+        85
+      ],
+      "max_run": 85,
+      "permanent_in_progress": true,
+      "moves": 50,
+      "activities": 28,
+      "zero_move": false,
+      "zero_activity": false,
+      "ever_in_progress": true
+    },
+    "P006": {
+      "runs": [
+        85
+      ],
+      "max_run": 85,
+      "permanent_in_progress": true,
+      "moves": 50,
+      "activities": 28,
+      "zero_move": false,
+      "zero_activity": false,
+      "ever_in_progress": true
+    },
+    "P007": {
+      "runs": [
+        85
+      ],
+      "max_run": 85,
+      "permanent_in_progress": true,
+      "moves": 54,
+      "activities": 28,
+      "zero_move": false,
+      "zero_activity": false,
+      "ever_in_progress": true
+    },
+    "P008": {
+      "runs": [
+        85
+      ],
+      "max_run": 85,
+      "permanent_in_progress": true,
+      "moves": 50,
+      "activities": 28,
+      "zero_move": false,
+      "zero_activity": false,
+      "ever_in_progress": true
+    }
+  },
+  "stalled_agents": [],
+  "permanent_in_progress_agents": [
+    "P001",
+    "P002",
+    "P003",
+    "P004",
+    "P005",
+    "P006",
+    "P007",
+    "P008"
+  ],
+  "author_evidence_verdict": "未补",
+  "activity_interrupted": 0,
+  "ongoing_tag_residue": [],
+  "verdict": [
+    "②gate：无『不再行动』个体 ⇒ gate 未触发（pass）；但『永久进行中』普遍存在['P001', 'P002', 'P003', 'P004', 'P005', 'P006', 'P007', 'P008'] —— 见风险说明",
+    "③：作者证据【未补】（未补/不合规须分列，整改动作不同）"
+  ]
+}
