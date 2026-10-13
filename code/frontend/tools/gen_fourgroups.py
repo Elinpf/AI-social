@@ -11,7 +11,7 @@
 用法：python3 code/frontend/tools/gen_fourgroups.py
 """
 from __future__ import annotations
-import json, subprocess, sys
+import hashlib, json, subprocess, sys
 from pathlib import Path
 
 FRONTEND = Path(__file__).resolve().parents[1]
@@ -60,28 +60,47 @@ def load_json(p: Path):
     return json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
 
 
+def file_sha16(p: Path) -> str:
+    """数据源文件自身的 sha256 前 16 位（回答"数从哪个文件的哪个版本来"）。"""
+    try:
+        return hashlib.sha256(p.read_bytes()).hexdigest()[:16]
+    except Exception:
+        return "—"
+
+
 def main() -> int:
     t292 = load_json(EV / "t292_shared_results.json")
     t310 = load_json(EV / "t310_results.json")
     sha = head_sha()
-    html = _render(D1, t292, t310, sha)
+    file_shas = {
+        "report": file_sha16(EV / "nightly-20261012-morning-report.md"),
+        "t310": file_sha16(EV / "t310_results.json"),
+        "t292": file_sha16(EV / "t292_shared_results.json"),
+    }
+    html = _render(D1, t292, t310, sha, file_shas)
     out = FRONTEND / "fourgroups.html"
     out.write_text(html, encoding="utf-8")
-    print(f"wrote {out}  sha={sha}  D2_groups={sorted(t292.keys())}  D3(t310)={sorted(t310.keys())}")
+    print(f"wrote {out}  head={sha}  file_shas={file_shas}")
     return 0
 
 
-def _render(D1, t292, t310, sha) -> str:
+def _render(D1, t292, t310, sha, file_shas) -> str:
     payload = {
         "d1": D1,
         "d2": {
-            "label": "口径② · 10-13 00:38 共享 cache 干净复跑",
-            "source": "v2/evidence/t292_shared_results.json",
-            "groups": t292,
-            "t310_source": "v2/evidence/t310_results.json",
-            "t310": t310,
+            "label": "口径② · 10-13 干净复跑（分进程，权威=t310）",
+            "source": "v2/evidence/t310_results.json",
+            "groups": t310,
+            "aux_source": "v2/evidence/t292_shared_results.json",
+            "aux": t292,
+            "notes": [
+                "口径② = 【分进程】复跑；t310 = 权威（该口径的正确仪器），t292 = 参考（被 T310 取代）。",
+                "C 仅 t292 有（t292 那次 C 未被真正关掉 ⇒ C≡A，机制缺口已修 T297b）；t310 无 C。",
+                "t310 与 t292 的 A/B 绝对值不可直接比：树 63c200a ≠ 8680737，A 301,332→292,141 的差是【树前进】(T298 行为变)，非装置；两处 B−A 都 = −2（这才是稳健结论）。别把绝对值变小当性能/装置收益。",
+            ],
         },
         "sha": sha,
+        "file_shas": file_shas,
     }
     return HTML_TMPL.replace("/*__DATA__*/", json.dumps(payload, ensure_ascii=False))
 
@@ -153,7 +172,10 @@ function render(){
    ? "当前口径：" + DATA.d1.label + "（" + DATA.d1.runtime + "）"
    : "当前口径：" + DATA.d2.label;
  document.getElementById("foot").innerHTML =
-   "数据源：<code>"+esc(CAL==="d1"?DATA.d1.source:DATA.d2.source)+"</code> · 证据 sha <b>"+esc(DATA.sha)+"</b> · 只读证据、不改世界层 · 结论不超出早报/证据";
+   (CAL==="d1"
+     ? "数据源：<code>"+esc(DATA.d1.source)+"</code> · <b>源文件 sha256(前16) "+esc(DATA.file_shas.report)+"</b>"
+     : "数据源(权威)：<code>"+esc(DATA.d2.source)+"</code> · <b>源文件 sha256(前16) "+esc(DATA.file_shas.t310)+"</b>；参考：<code>"+esc(DATA.d2.aux_source)+"</code> sha256(前16) "+esc(DATA.file_shas.t292))
+   + " · 页面生成时 HEAD <b>"+esc(DATA.sha)+"</b>（≠数据源版本）· 只读证据、不改世界层 · 结论不超出早报/证据";
  if(CAL==="d1") renderD1(); else renderD2();
 }
 function renderD1(){
@@ -176,18 +198,19 @@ function renderD1(){
  document.getElementById("notes").innerHTML = DATA.d1.notes.map(t=>"· "+esc(t)).join("<br/>");
 }
 function renderD2(){
- const g=DATA.d2.groups, A=g.A, keys=Object.keys(A.type_counts||{});
- const order=["A","B","C","D"].filter(k=>g[k]);
+ const g=DATA.d2.groups, aux=DATA.d2.aux||{}, A=g.A, keys=Object.keys(A.type_counts||{});
+ const order=["A","B","D"].filter(k=>g[k]);            // 主表=t310（分进程·权威）；t310 无 C
  const rows=order.map(k=>{const x=g[k];
    return `<tr><td><b>${k}</b> <span class="tag">${esc(Object.keys(x.override||{}).join(",")||"-")}</span></td>
    <td class="num">${fmt(x.events)}</td><td class="num">${fmt(x.llm_calls)}</td><td class="num">${fmt(x.cached)}</td>
    <td class="num">${x.secs!=null?(x.secs/60).toFixed(1)+"m":"—"}</td>
    <td class="mono">${esc((x.fingerprint||"").replace("sha256:","").slice(0,8))}</td>
-   <td class="mono">${esc((x.state_hash||"").replace("sha256:","").slice(0,8))}</td></tr>`;}).join("");
+   <td class="mono">${esc((x.state_hash||"").replace("sha256:","").slice(0,8))}</td></tr>`;}).join("")
+  + `<tr><td><b>C</b> <span class="tag warn">T310 未覆盖</span></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="mono">—</td><td class="mono">—</td></tr>`;
  document.getElementById("tblwrap").innerHTML =
   `<table><thead><tr><th>组 / 开关</th><th>事件数</th><th>LLM_CALL</th><th>cached</th><th>耗时</th><th>指纹</th><th>state_hash</th></tr></thead><tbody>${rows}</tbody></table>
-   <div class="note">⚠️ <b>C 零结果</b>：这次 <code>life_v2 sleep/forgetting=false</code> <b>没被真正关掉</b>（事件≈A）⇒ 机制缺口已修 <code>T297b</code>。此外<b>本口径未记录峰值 RSS</b>（JSON 无该字段）。</div>`;
- document.getElementById("diffhead").textContent = "事件类型差异（相对 A，按类型）· 口径②";
+   <div class="note">权威 = <code>${esc(DATA.d2.source)}</code>（口径②=分进程）。<b>C 未被 T310 覆盖</b>，故不填（<b>不拿 t292 的 C 去补</b>）。<b>本口径未记录峰值 RSS</b>（JSON 无该字段）。</div>`;
+ document.getElementById("diffhead").textContent = "事件类型差异（相对 A，按类型）· 口径②（t310）";
  const diffs=[];
  for(const k of order){ if(k==="A")continue; const x=g[k]; const arr=[];
    for(const t of keys){const a=A.type_counts[t]||0,b=x.type_counts[t]||0; if(b!==a) arr.push([t,a,b]);}
@@ -199,16 +222,17 @@ function renderD2(){
  }
  document.getElementById("diffs").innerHTML = diffs.join("");
  document.getElementById("concl").innerHTML =
-  `<div class="concl"><b>B 关世界导演</b>：WORLD_DIRECTIVE/GROUP 1→0（84 回合只介入 1 次）⇒ 旁白型。</div>
-   <div class="concl"><b>C 关三族</b>：<span class="bad">零结果</span>——本次未真正生效（事件≈A）；机制缺口已修 T297b。</div>
-   <div class="concl"><b>D 开双时钟</b>：WAKE 出现（${fmt((g.D.type_counts||{}).WAKE)}）；IDLE ${fmt((g.D.type_counts||{}).IDLE)}。</div>`;
- // t310 备注（同口径另一次复跑，不与主表混）
- const t=DATA.d2.t310, tk=Object.keys(t);
- const t310note = tk.length ? `<div class="note">同口径<b>另一次复跑</b>（<code>${esc(DATA.d2.t310_source)}</code>，不与上表混）：`+
-   tk.map(k=>`${k} ${fmt(t[k].events)}`).join(" · ")+` —— 各次事件数又不同（无 C），<b>印证跨批噪声</b>（与早报结论②一致）。</div>`:"";
+  `<div class="concl"><b>B 关世界导演</b>：WORLD_DIRECTIVE/GROUP 1→0（84 回合只介入 1 次）⇒ 旁白型；<b>B−A = −2</b>。</div>
+   <div class="concl"><b>D 开双时钟</b>：WAKE 出现（${fmt((g.D.type_counts||{}).WAKE)}）；IDLE ${fmt((g.D.type_counts||{}).IDLE)}。</div>
+   <div class="concl"><b>C</b>：<span class="warn">T310 未覆盖</span>（见备注）。</div>`;
+ // 备注：t292 = 参考（已被 T310 取代），标注不删
+ const auxk=Object.keys(aux);
+ const auxnote = auxk.length ? `<div class="note">参考/备注（<code>${esc(DATA.d2.aux_source)}</code>，<b>已被 T310 取代</b>；标注不删）：`+
+   auxk.map(k=>`${k} ${fmt(aux[k].events)}`).join(" · ")+`。历史事实：<b>t292 那次 C 未被真正关掉</b>（C≡A）⇒ 机制缺口已修 <code>T297b</code>（这是后来重跑确认的原因）。</div>`:"";
  document.getElementById("conclusions").innerHTML =
-  `<ol><li>共享同一 <code>freeze_cache</code> 的干净复跑：A/B/C 事件几乎相同（C 因未真正关掉而≈A），D 多出 WAKE/IDLE 路径。</li>
-   <li>同口径两次复跑（t292 vs t310）事件数仍不同 ⇒ 真 LLM 跨批噪声，与早报结论②一致。</li></ol>`+t310note;
+  `<ol><li>口径② = <b>分进程</b>复跑；<b>权威 = t310（A/B/D）</b>，<b>B−A = −2</b>（稳健结论）。</li>
+   <li>t292 与 t310 的 A/B 绝对值<b>不可直接比</b>：树 63c200a ≠ 8680737，A 301,332→292,141 的差是<b>树前进（T298 行为变）</b>，非装置——别把绝对值变小当收益。</li></ol>`+
+   `<div class="note">${(DATA.d2.notes||[]).map(esc).join("<br/>")}</div>`+auxnote;
  document.getElementById("notes").innerHTML = "";
 }
 renderSw(); render();
