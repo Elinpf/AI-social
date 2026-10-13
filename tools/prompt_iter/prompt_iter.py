@@ -24,7 +24,7 @@ from pathlib import Path
 
 sys.path.insert(0, os.getcwd())
 
-CODE = Path(__file__).resolve().parents[2] / "code"      # .../code
+CODE = Path(os.environ.get("PROMPT_ITER_CODE") or (Path(__file__).resolve().parents[2] / "code"))
 OUT = Path("/tmp/prompt_iter")
 PROMPT_FILES = ("life/agent.py", "life/soft.py", "life/planner.py")  # 提示词所在世界层文件（只读哈希）
 
