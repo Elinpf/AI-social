@@ -1,0 +1,71 @@
+{
+  "A_off_off": {
+    "agents": 8,
+    "rounds": 24,
+    "ongoing": false,
+    "propagate": false,
+    "events": 8511,
+    "state_hash": "sha256:82d2b95162924bdbfc5c6fc09fc17a106c189ce20a3afd5f569c3f52469d3fde",
+    "ACTIVITY_COMPLETED": 56,
+    "RELATION_CHANGE": 773,
+    "MEMORY_WRITE": 2647,
+    "OBSERVATION": 2592,
+    "WORLD_DIRECTIVE": 0,
+    "WORLD_GROUP_EVENT": 0
+  },
+  "B_off_on": {
+    "agents": 8,
+    "rounds": 24,
+    "ongoing": false,
+    "propagate": true,
+    "events": 8511,
+    "state_hash": "sha256:82d2b95162924bdbfc5c6fc09fc17a106c189ce20a3afd5f569c3f52469d3fde",
+    "ACTIVITY_COMPLETED": 56,
+    "RELATION_CHANGE": 773,
+    "MEMORY_WRITE": 2647,
+    "OBSERVATION": 2592,
+    "WORLD_DIRECTIVE": 0,
+    "WORLD_GROUP_EVENT": 0
+  },
+  "C_on_off": {
+    "agents": 8,
+    "rounds": 24,
+    "ongoing": true,
+    "propagate": false,
+    "events": 8518,
+    "state_hash": "sha256:717b2346f099fcfbbe2d853a4766760c97c07a097409f5feb7623f22bcdecd3a",
+    "ACTIVITY_COMPLETED": 56,
+    "RELATION_CHANGE": 771,
+    "MEMORY_WRITE": 2649,
+    "OBSERVATION": 2594,
+    "WORLD_DIRECTIVE": 0,
+    "WORLD_GROUP_EVENT": 0
+  },
+  "D_on_on": {
+    "agents": 8,
+    "rounds": 24,
+    "ongoing": true,
+    "propagate": true,
+    "events": 8518,
+    "state_hash": "sha256:717b2346f099fcfbbe2d853a4766760c97c07a097409f5feb7623f22bcdecd3a",
+    "ACTIVITY_COMPLETED": 56,
+    "RELATION_CHANGE": 771,
+    "MEMORY_WRITE": 2649,
+    "OBSERVATION": 2594,
+    "WORLD_DIRECTIVE": 0,
+    "WORLD_GROUP_EVENT": 0
+  },
+  "_separability": {
+    "prop_effect_off": 0,
+    "prop_effect_on": 0,
+    "ongo_effect_prop_off": 7,
+    "ongo_effect_prop_on": 7,
+    "interaction_X1": 0
+  },
+  "_power": "低功效：本 mock n=8×24 下 WORLD_DIRECTIVE/WORLD_GROUP_EVENT=0（节点未激发）⇒ propagate 轴未被激发；不能断言'无交互'，只能说'在当前（propagate 未激发）设定下可加、X1=0'。",
+  "_state_hash_eq": {
+    "A==B": true,
+    "C==D": true,
+    "A!=C": true
+  }
+}

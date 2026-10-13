@@ -86,10 +86,20 @@
   **早期"113/回合"是启动期集中的假象**（前 6 回合 `judge`/`importance` 更密）——**正是"不要用前几回合线性外推"的又一例**。
   ⇒ 对"50+ 人口规模决策"：**无此路径带来的调用爆炸**（当前端点/成本口径不变）。
 
-## 6. 2×2 消融矩阵（`time.ongoing` × `world_director.propagate`，含 X1）
-- 设计：**同 sha、同 side、config-dict override**（`run_override`），四格 `A_off_off / B_off_on / C_on_off / D_on_on`；判据 `D−C−B+A0`（可加）或 X1 交互（节日提升"进行中活动"）。
-- ⚠️ **门（leader 写死）**：**不可分离 ⇒ 退回"一期一冻"**（如实上报）。
-- 状态：**待跑**（leader 口令：跑完主批先回报、再起矩阵）。结果将补入本节：`{n_events/关键族/state_hash}` ×4 + 分离性结论 + X1。
+## 6. 2×2 消融矩阵（`time.ongoing` × `world_director.propagate`，含 X1）—— **已跑**
+- 设置：**读主树**（HEAD `7644b68`）、**mock 模式**（不设 `HITT_LLM_PROVIDER` ⇒ 无端点、确定性）、**同 sha + config-dict override（`run_override`）+ 同 side 共享 cache**、`n=8×24`、seed 42。四格：
+  | 格 | ongoing | propagate | events | state_hash | RELATION_CHANGE | MEMORY_WRITE | OBSERVATION | WORLD_DIRECTIVE/GROUP |
+  |---|---|---|---:|---|---:|---:|---:|---:|
+  | A_off_off | off | off | 8511 | `82d2b951…` | 773 | 2647 | 2592 | 0/0 |
+  | B_off_on | off | on | 8511 | `82d2b951…` | 773 | 2647 | 2592 | 0/0 |
+  | C_on_off | on | off | 8518 | `717b2346…` | 771 | 2649 | 2594 | 0/0 |
+  | D_on_on | on | on | 8518 | `717b2346…` | 771 | 2649 | 2594 | 0/0 |
+- **分离性**：`propagate 效应@off = B−A = 0`；`@on = D−C = 0`；`ongoing 效应 = C−A = D−B = +7`；**交互项 `X1 = D−C−B+A = 0`**。
+  `state_hash`：**`A==B`、`C==D`、`A≠C`** ⇒ **可加 / 可分离**（在当前设定下）。
+- ⚠️ **功效声明（必读，不许写成"无交互"）**：本 mock `n=8×24` 下 **`WORLD_DIRECTIVE`/`WORLD_GROUP_EVENT` = 0**（世界导演节点**未激发**）⇒ **`propagate` 轴未被激发** ⇒ 本检验对 `propagate` 是**低功效**的。故结论只能是：**"在当前（`propagate` 未激发）设定下效应可加、`X1=0`"**；**不能**据此断言"两开关在任何设定下都无交互"。
+- ✅ **与 `sandbox-test-lead` 独立结果一致**（他亦得 可加残差 0 / `X1=0` / `A0==B`、`C==D`、`A0≠C`，且他指出 `conservative` 下 `propagate` 未激发 ⇒ 同为低功效）⇒ **互相印证**。
+- **gate（leader 写死）判读**：矩阵显示**可分离**（在激发范围内）⇒ **不触发"退回一期一冻"**；但 **`propagate` 轴未激发的低功效**须随结论一并标注（下一步如需确认 `propagate` 的真实效应量，需**更大/更长规模**或**触发世界导演**的设定）。
+- 机读结果：`v2/evidence/T355-matrix-results.json`。
 
 ## 7. 装置/环境事实（如实披露）
 - 托管 `t271-t355.service`（cgroup `/system.slice/t271-t355.service`，**逃逸** `jiuwenswarm.service`）；`MemoryHigh=6G`/`MemoryMax=8G`；凭证仅 `EnvironmentFile=code/.env.local`。
