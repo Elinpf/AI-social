@@ -269,6 +269,15 @@
       else if (idleSec < 300) st = "已追平（等待新数据）";
       else st = "长时间无增长（可能已结束）";
       setLiveStatus(win + st);
+      // T348：批已结束 ⇒ 终态文案（"可回放"），不是看起来像坏了；停止轮询。
+      let info = null;
+      try { info = await (await fetch(`/__runinfo?path=${encodeURIComponent(path)}`, { cache: "no-store" })).json(); } catch (e) { }
+      if (info && info.ended) {
+        if (el("live-batch") && info.batch) el("live-batch").textContent = "批次 " + info.batch;
+        setLiveStatus("跟随已结束（批已完成" + (info.ended_at ? "，" + info.ended_at : "") + "）· 可回放（尾部窗口 " + all.length + " 事件）");
+        liveTimer = null;
+        return;
+      }
       liveTimer = setTimeout(poll, POLL);
     };
     poll();

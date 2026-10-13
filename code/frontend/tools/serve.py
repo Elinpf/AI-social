@@ -106,6 +106,45 @@ def tail_read(path: str, off: int | None, tail_mb: int = 4) -> dict:
     return {"text": text, "off": real_off, "size": size, "eof": real_off >= size, "truncated": trunc}
 
 
+def run_info(run_path: str) -> dict:
+    """批运行信息（只读）：从同目录 meta.json / heartbeat.tsv 判『是否已结束』。
+    供 `?z=live` 在批结束后显示『跟随已结束（批已完成）· 可回放』，而非看起来像坏了。"""
+    p = Path(run_path)
+    if not _allowed_live(p):
+        return {"error": "path not allowed (whitelist: HITT_LIVE_ROOTS)"}
+    d = p.parent
+    info: dict = {"exists": p.exists(), "ended": False, "size": 0}
+    try:
+        info["size"] = p.stat().st_size if p.exists() else 0
+    except Exception:
+        pass
+    meta = d / "meta.json"
+    if meta.exists():
+        try:
+            m = json.loads(meta.read_text(encoding="utf-8"))
+            for k in ("batch", "started_at", "ended_at", "sha", "world_layer_sha", "time_model", "feature_set"):
+                if m.get(k) is not None:
+                    info[k] = m[k]
+            info["ended"] = bool(m.get("ended_at"))
+        except Exception:
+            pass
+    hb = d / "heartbeat.tsv"
+    if hb.exists():
+        try:
+            last = hb.read_text(encoding="utf-8").strip().splitlines()[-1].split("\t")
+            info["last_hb"] = last
+            if len(last) >= 2 and last[1] == "EXIT":
+                info["ended"] = True
+            if len(last) >= 3:
+                try:
+                    info["last_round"] = int(last[2])
+                except Exception:
+                    pass
+        except Exception:
+            pass
+    return info
+
+
 class Handler(http.server.SimpleHTTPRequestHandler):
     """静态服务 + 只读动态端点 `/__gitstamp` / `/__tail`。**本地开发用，非对外服务。**"""
 
@@ -132,6 +171,10 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             off = int(q["off"][0]) if q.get("off") and q["off"][0] not in ("", "null") else None
             tailmb = int(q["tailmb"][0]) if q.get("tailmb") else 4
             self._json(tail_read(q.get("path", [""])[0], off, tailmb))
+            return
+        if u.path == "/__runinfo":
+            q = parse_qs(u.query)
+            self._json(run_info(q.get("path", [""])[0]))
             return
         super().do_GET()
 
