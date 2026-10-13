@@ -540,6 +540,14 @@ class LifeLayerAgent:
         atype, place = self._activity_for(wv)
         if wv.location == place:
             return None
+        # T354 期②（life 消费，**有界去重门**）：若**本地**已有"同活动进行中"，则不重复发起移动；
+        # 跨地/换活动照常 ⇒ 天然有界（换 slot 目标变即放行），与 travel 时长无关。
+        ca = getattr(wv, "current_activity", None)
+        if ca is not None:
+            cap = ca.get("place") if isinstance(ca, dict) else getattr(ca, "place", None)
+            cat = ca.get("activity_type") if isinstance(ca, dict) else getattr(ca, "activity_type", None)
+            if cap == wv.location and cat == atype:
+                return None
         slot_id = f"day{wv.time.day_of_week}-{wv.time.slot}"
         res = self.kernel.submit_intent(self.agent_id, Intent(
             INTENT_MOVE, self.agent_id, {"to_place": place, "slot_id": slot_id,
