@@ -1039,6 +1039,7 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
   - **`exchange.enabled`（v2 交换原语档，T126/T129）同属这一族**：`policy.exchange.enabled`（runtime `config.exchange.enabled` 优先），**默认 `true`（行为不变）**。**语义 = 控制「agent↔agent 成交」原语**（**世界市场 `MARKET` 保留**，不受本开关影响）。`OFF` 时 life 不产生 `INTENT.ECON.TRADE/OFFER/ORDER_PLACE/ORDER_CANCEL`、engine 不挂 `apply_exchange/apply_contracts` → `EXCHANGE_SETTLED=0`、agent-as-seller 的 `MARKET_TRADE=0`、`CONTRACT_CREATED=0`（**Agent 间交易 = 0；世界市场成交仍在**）；**不删事件契约、不改守恒、不 fail-loud**，发审计 `DROPPED{reason:"exchange_disabled", flag:"exchange_disabled"}`（**「开关生效」唯一查法 = 查该 `DROPPED`**）。与 `economy.enabled` 的嵌套语义 = **AND**（`economy=false` 则 exchange 无意义）。
   - **`wake.enabled` / `wake.triggers.*`（v2 双时钟档，T263/T265）同属这一族**：`wake.enabled` **默认 `false`（行为不变）**；置 `true` 启用「个体决策节拍 = 事件驱动唤醒」。`wake.triggers.{W1..W10}` 为**逐因开关**（`W6` 默认 `true` 可关，供消融）；**世界结算节拍（round）不受本开关影响、始终不变**。**只控制「是否启用唤醒门控」、不删事件契约、不改守恒、不 fail-loud**；`engine_version` 指纹随本块变化（属预期）。
   - **`service_delivered.enabled`（v2 服务交付档，T278）同属这一族**：`policy.service_delivered.enabled`，**默认 `true`（行为不变）**。**只控制「是否产生」**服务交付事件：`OFF` → 不产 `SERVICE_DELIVERED` + `DROPPED{reason:"service_disabled", flag:"service_disabled"}`；**不删事件契约、不改守恒、不 fail-loud**；与 `economy.enabled` 嵌套 = **AND**。
+  - **`world_director.propagate.enabled`（`D3` 口径② 传导档，T352）同属这一族**：**默认 `true`**（用户拍② ⇒ 世界层参数真影响行为）；`OFF` ⇒ 退**纯旁白**（`GROUP_EVENT` 照产、不改行为，**逐字节等价现状**）。**只控制"是否传导"、不删事件契约、不 fail-loud**；每机制传导权重在 `dose` 内（0≡关该机制传导）。落 `world_director.json`（**已在指纹内**）。详见 §5.11。
 
 ### 5.9 账本分段与轻索引口径（应 T281，已定；纯存储层，不改语义）
 
@@ -1077,6 +1078,34 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
 - **`state_hash`**：期①（默认瞬时）**不变**；期②/③ 改行为 → 变 → **T236 联动**。
 - **`U=6` 取值理由（Leader 要求）**：① **分辨率 vs 体积**——`U` 翻倍 ⇒ 同回合可区分的先后段数翻倍、区间字段值域翻倍；过大则"同回合被切太细、多余片段增多"；② **动作粒度**——最小可感时长以**时段（=3 回合）**为量级，`U=6` ⇒ 每回合 6 微时刻，**一次移动(0–3 回合)与一次会话往复都能落整数微时刻**，无需更细；③ **退化**——`U=1` = 现状原子，可调 1–12 供标定；④ **【未验证】**——`U` 对日志体积/排序开销的实测影响须在期①对照里量。
 - **逐回合"切片结算"定界（交 08 定，与 kernel-dev 点 2 对齐）**：若跨回合区间的"本回合切片"是**已记录 `span` + `round` 的纯函数** ⇒ **可由日志推导、无需新事件**；若切片含**独立事实**（无法由区间推出，如真实进度量）⇒ **必须发事件 / 扩 `ACTIVITY_*` 加性字段**（**优先复用、不新增类型**）。判定基准 = **能否由已提交日志重建**（§5.9「可重建派生集合」口径）。
+
+---
+
+### 5.11 世界层参数 → 行为 传导口径（`WorldParams`；应 T347/T352，**用户已拍板 `D3-②`**，已定）
+
+> 用户拍板 **`D3` 选②**：世界层参数（节日/灾害/资源丰度/稀缺…）**真影响居民行为**（非纯旁白）。设计见 `v2/refs/T347-d3-worldparams-to-behavior-design.md`。**本口径登记先行（未登不实现）**。**不新增事件类型。**
+
+- **Q1 · `WorldParams` 派生口径**：`WorldParams(t) = f( 已提交的 `GROUP_EVENT`/`WORLD_DIRECTIVE` 在 `[start,end) ∩ t` 的参数, 静态 config )` —— **纯函数、可离线重算、可由日志确定性重建**；**不入 `state_hash`、不入事件语义**（沿用 §5.9「可重建派生集合」口径）；life 经**只读端口**（如 `round_events`）读。
+- **Q2/Q3 · 复用与可见性（逐条核到现有登记，不新造）**：**不新增事件类型**；`GROUP_EVENT`/`WORLD_DIRECTIVE` schema **复用**（`params`/`dose`/`directed`/`directive_ref` 已有，见 §1.2 T）；可见性 `GROUP_EVENT` = **`global`**（已登记 §3.5）；`WorldParams` 为**层内派生**、**不经 `PERCEPTION_SCOPE`**。
+- **Q4 · 传导映射表（可枚举 + 可判定；方向 / 上下限）**：
+
+  | 机制 `kind` | → `WorldParams` 参数 | 影响的生活/经济变量（life/econ 消费点） | 方向 | 上下限（整数 bp/计数） |
+  |---|---|---|---|---|
+  | `festival` | `activity_weight[place]` / `open_slots` / `social_event_prob` | planner 活动权重、选址、社交意愿 | ↑ | `activity_weight_bp ∈ [0, 20000]`；`open_slots` ⊆ 合法 slot |
+  | `supply_shock` / `disaster` | `resource_milli[good/place]` | 生产层 `resource_factor` → `PRODUCE` 量 | ±（默认 ↓） | 缩放 `∈ [0, 20000] bp`；**只改供给丰度，不写死价格** |
+  | `scarcity` / `tension` / `edict` | `market.scarcity[good]` | 撮合/供给参数 → 抢购/竞价 → `MARKET_TRADE`/`OFFER_*` | ↑ | `scarcity_bp ∈ [0, 10000]`；**不指定对手/胜负** |
+  | `season` | `need_decay_scale[dim]` / 活动 `affordance` | `NEED_UPDATE` 衰减率 / 活动结构 | ± | `scale ∈ [0, 20000] bp` |
+
+  - **可判定**：每项 = `f(kind, 已决议的 dose)` 的**确定性整数映射**；**dose=0 ⇒ 该项恒等（不影响）**。
+  - **上下限硬约束**：越界 → **夹取到限**（不静默产生非法参数）。
+- **Q5 · 新 config 键**：`world_director.propagate.enabled`（总传导开关）+ **每机制 `mechanisms.<m>.dose` 内传导权重**（`activity_weight_bp` / `supply_amp_bp` / `scarcity_bp` / `need_decay_scale_bp`）。**`world_director.json` 已在 `FINGERPRINT_FILES`**。
+- **三条保底（红线，逐条写入登记）**：
+  - **(a) 显式 `directed`**：`GROUP_EVENT`/`WORLD_DIRECTIVE` 带 `directed=true` + `directive_ref` 且**每个 `WorldParams` 项可溯源其 `directive_ref`**；`count(改变宏观情境, 无 directed) == 0`。
+  - **(b) 独立开关 + 剂量**：`world_director.propagate.enabled` + 每机制 `dose`（**0 ≡ 关闭该机制传导**，沿用 `prob_bp>0` 判据）。
+  - **(c) 只对未来**：`WorldParams` **只对 `t ≥ start` 的决策生效**、**不改写已发生事实**（`effective_from_round ≥ issued_round` 已有）。
+- **默认姿态（Leader 2026-10-13 裁定）**：用户拍② ⇒ **`world_director.propagate.enabled` 默认 `true`**（与 `D11` 期② `time.ongoing.enabled` 一致：**用户要的功能默认开**）。⇒ **归因由"同 sha 内 2×2 消融矩阵（`time.ongoing` × `propagate`）+ X1 唯一交互项「节日提升进行中活动」承担**；**若矩阵显示不可分离 ⇒ 退回"一期一冻"**。
+- **⚠️ 指纹 / 重冻影响声明**：新增 config 键 ⇒ **【指纹变】**（`world_director.json` 在指纹内）**+【行为变】**（默认开 ⇒ 传导真影响行为）⇒ **必须重冻**；**归入「与 `D11` 期② 同批落地、只重冻一次」**（收口见 `T355`）。分界线戳一并立：`world_model ∈ {"narrative"(前), "effective"(后)}`（与 `time_model` 同族）。
+- **偶发代价（如实登记）**：**"日后单独回退其一（`time.ongoing` 或 `propagate`）⇒ 需再冻一次"**（不影响"同 sha 消融"语义）。
 
 ---
 
