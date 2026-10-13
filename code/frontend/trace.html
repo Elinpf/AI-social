@@ -44,6 +44,7 @@
 </header>
 <div class="ctl">
  <span>日志：<code id="logname"></code></span>
+ <span class="tag" id="prov" style="border-color:#6b5a1f;color:#d29922"></span>
  <label>居民 <select id="agent"></select></label>
  <label>回合 <input id="r0" type="number" value="0" style="width:64px"> – <input id="r1" type="number" value="48" style="width:64px"></label>
  <button class="btn" id="apply">应用</button>
@@ -64,11 +65,18 @@ const esc = s => String(s==null?"":s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt
 const el = id => document.getElementById(id);
 
 document.getElementById("logname").textContent = LOG;
+// 样本 provenance（口径不混）：明确这是哪一批/epoch，别与新基线 v2-T300 混。
+document.getElementById("prov").textContent = /run_b2/.test(LOG)
+  ? "样本=B2 批（旧 epoch）· 非新基线 v2-T300"
+  : (/t300/.test(LOG) ? "样本=T300 产物" : "样本来源见文件名");
 
 async function boot(){
   // 版本角标（可追溯）
   try { const g = await (await fetch("/__gitstamp",{cache:"no-store"})).json(); el("stamp").textContent = "sha "+g.sha; } catch(e){}
-  el("gaps").innerHTML = "<b>数据缺口（如实标注，不隐藏）：</b>① <b>LLM 调用正文（prompt/response）拿不到</b>——日志仅存哈希（T227 捕获默认关）⇒ 参考图『工具参数→返回』层做不出；② <b>LLM_CALL 无法归到具体居民</b>（actor=SYSTEM、无 agent_id）⇒『模型』行只按回合(全体)显示；③ <b>对话无延续结构</b>（MSG 的 topic/refs 全空）⇒ 只标『无延续结构』。";
+  el("gaps").innerHTML = "<b>数据缺口（如实标注，不隐藏）：</b>" +
+    "① <b>LLM 调用正文（prompt/response）拿不到</b>——日志仅存哈希（<code>T227</code> 捕获默认关）⇒ <b>正文层已预留位置</b>，<b>未开启捕获</b>；<b>等用户点头即可填上（不必重做界面）</b>。" +
+    "② <b>LLM_CALL 无法归到具体居民</b>（actor=SYSTEM、无 agent_id）⇒『模型』行只按回合(全体)显示；<b>按居民归属将在下一个 epoch 可用（T360/T361）</b>。" +
+    "③ <b>对话无延续结构</b>（MSG 的 topic/refs 全空 0/230）⇒ 只标『无延续结构』；<b>修复已在计划（给消息加话题线，属 tick 内时间的第三期）</b>。";
   if (TAB==="conv"){ el("tab-conv").classList.add("active"); el("tab-trace").classList.remove("active"); }
   await loadLog();
 }
