@@ -33,3 +33,26 @@
 
 ## 4. 待填（解冻后）
 - 实现 sha、①–⑥ 实测数值、④ 的 `state_hash` 对、`make verify` 结果、`T372` 修复后的阈值复核注记（若 T372 先落地，则本表口径改 **1×**，并重跑 ⑥）。
+
+---
+
+## 5. 计数在 econ 侧【怎么取】（可执行；不碰 state/事件、不改默认行为）
+
+**落点（实现时加）**：`engine/hooks/production.py` 加一个**模块级探针槽**（默认 `None`，零开销、不入 state、不产事件）：
+```python
+_PROBE = None   # 证据/单测用：None=默认（无行为变化）；签名 probe(event:str, info:dict)
+```
+在消费点内（读 `wpb` / 施加前后）**仅在 `_PROBE is not None` 时**回调：
+- 读时：`_PROBE("read", {"round": r, "place": place})`（**每次计算 `res` 前读 wp 即计**）；
+- 判定非空：`_PROBE("nonempty", {"keys": sorted(wpb.keys())})`（`wpb != {}` 时）；
+- 实际改值（**施加前后不同**）：`_PROBE("applied", {"key": key, "bp": bp, "res_before": a, "res_after": b})`（**仅当 `res_after != res_before`**）。
+> 三档计数 = 证据脚本装 `_PROBE` 后按事件名计数；**默认 `_PROBE=None` ⇒ 与基线零行为差异**（`state_hash` 不变）——这正是"只加探针槽、不改世界"。
+
+**三条断言形式**（进 `tests/test_t371_abundance_consumer.py`）：
+1. **关态**（`world_director.propagate.enabled=false`，或 `active=[]`）：
+   `read > 0 and nonempty == 0 and applied == 0`（**②③ 必为 0**，①可>0=仍读）；
+2. **开态 + 定向 abundance 窗口**（`directed`、`place` 命中、`[start,end)` 内）：
+   `nonempty > 0 and applied > 0`，且逐条 `res_after == clamp(res_before*(10000+bp)//10000, min, max)`、方向与 `bp` 符号一致；
+3. **负例（恒等）**：`dose=0` 或 `bp==0`/key 缺失 ⇒ `applied == 0` 且**逐条** `res_after == res_before`（不靠 delta、逐条比对）。
+
+**不脏树/不越界**：探针槽在 `code/`（解冻后随实现一起落）；本节仅描述，不现在改码。三档计数**不写 state、不产事件、不入 `state_hash`**。
