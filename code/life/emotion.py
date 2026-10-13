@@ -29,13 +29,18 @@ NATURAL_NEG_EXTRA = ("担心", "遗憾", "无奈", "疲惫", "憋屈", "抱歉",
 NATURAL_POS = STRICT_POS + NATURAL_POS_EXTRA
 NATURAL_NEG = STRICT_NEG + NATURAL_NEG_EXTRA
 
-# (b) 结构信号（正则）——动作括号 / 语气让步 / 省略号 / 破折号 / 第一人称评价 / 句末[？！]
-STRUCT_NEG_RE = re.compile(
-    r"（[^）]*）|\([^)]*\)|……|\.{3}|—{2}|--|啊|吧|呢|嘛|罢了|算了|也罢|也是|随它|"
-    r"我觉得|我倒|我想|大概|或许|[？！]"
+# (b) 结构信号（正则）——**分五类**；`natural` 下**单类不算命中**，须**≥2 类共现**
+#     （收紧避免"近乎恒真"；08 § 标【未验证】）
+STRUCT_CATS = (
+    ("action", re.compile(r"（[^）]*）|\([^)]*\)")),
+    ("tone", re.compile(r"啊|吧|呢|嘛|罢了|算了|也罢|也是|随它")),
+    ("ellipsis", re.compile(r"……|\.{3}|—{2}|--")),
+    ("first_person", re.compile(r"我觉得|我倒|我想|大概|或许")),
+    ("punct", re.compile(r"[？！]")),
 )
 # 积极语气（结构兜底里的**正**向；【未验证】）
 STRUCT_POS_RE = re.compile(r"明白了|懂了|有道理|不错|挺好|还行|值了")
+_STRUCT_MIN_CATS = 2   # 结构共现类数阈值（收紧；<2 不构成命中）
 
 
 # `_reflect` 给每条反思追加的**包裹后缀** `（insight k）` 不是内容 ⇒ 判定前剔除，
@@ -59,11 +64,10 @@ def emotion_sign(text: str, *, criterion: str = "natural",
     if any(k in low for k in neg):
         return -1
     if criterion == "natural" and lexicon is None:
-        # (c) 结构信号兜底：积极语气→正；否则结构命中→负；无→0（方向标【未验证】）
-        if STRUCT_POS_RE.search(low):
-            return 1
-        if STRUCT_NEG_RE.search(low):
-            return -1
+        # (c) 结构兜底（收紧）：**≥2 类信号共现**才命中；方向：积极语气→正，否则负；无→0
+        cats = sum(1 for _n, rx in STRUCT_CATS if rx.search(low))
+        if cats >= _STRUCT_MIN_CATS:
+            return 1 if STRUCT_POS_RE.search(low) else -1
     return 0
 
 
