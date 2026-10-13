@@ -1,7 +1,8 @@
 # T346 · 修 `T340` 守卫两处设计缺陷：指纹去 HEAD 输入 + 分段指纹分级结论
 
 - **作者**：sandbox-test-lead（**非作者核对象**：本任务为**修装置**，非"被验对象"；三向反向验证自办）
-- **交付 sha**：`<待提交后回填>`
+- **交付 sha**：**`4ee4eb0`**（`T346 … 修 T340 守卫两设计缺陷`）—— 本报告与两个守卫脚本同提交。
+- **待补**：真 `make verify` 收尾确认（等跑批结束，免污染跑批耗时读数）；三向反向验证已在独立克隆（假门）完成。
 - **改动文件**：`tools/tree_fingerprint.sh`（重写）、`tools/verify_tree_guard.sh`（重写）、新增 `tools/t346_verify_guard_bidirectional.sh`（验证脚本）
 - **不改断言语义**；`Makefile` 契约不变（`verify`→守卫，内部真门仍 `verify-inner`）。
 
