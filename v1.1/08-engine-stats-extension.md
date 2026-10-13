@@ -404,7 +404,7 @@ class Event:
 | `round, phase, actor("DIRECTOR")` | ✅ | v1 外壳；`actor` 为导演来源 |
 | `directed=true` | ✅ | **保底(a)** 恒真；「导演介入」可一次检索 |
 | `mechanism_id` | ✅ | 对应 T216 §2 机制ID（`WM-xx`/`wd.*`）；**保底(b)** 开关挂载点 |
-| `kind` | ✅ | ∈ §2.1 的 WD-x/机制 kind（见 T.2，14 值） |
+| `kind` | ✅ | ∈ §2.1 的 WD-x/机制 kind（见 T.2，15 值） |
 | `scope{level∈global\|place\|group\|agents, place?, group_ref?, agents?[]}` | ✅ | 作用对象；`level=agents` 且规模<K → **告警(非拒绝)**（WD-D1） |
 | `params{}` | ✅ | 情境参数（规模/时长/强度）；**不得含金额/死亡/胜负数值**（R5） |
 | `dose`, `dose_curve∈conservative\|moderate\|aggressive` | ✅ | **保底(b)** 剂量与曲线档（§3.1） |
@@ -423,12 +423,12 @@ class Event:
 | `group_event_id` | ✅ | 全局唯一 |
 | `directive_ref` | ✅ | **溯源到 `WORLD_DIRECTIVE`**（可审计口径核心：每条宏观情境事件都能追到「哪条导演指令」） |
 | `round, phase, actor, place?(null=全局), directed=true` | ✅ | v1 外壳 + **保底(a)** |
-| `kind` | ✅ | **14 值**：`season, festival, opportunity, public_works, supply_shock, scarcity, tension, incident, disaster, epidemic, visitor, edict, agenda, mass_event`（**T216 §2.1 权威**） |
+| `kind` | ✅ | **15 值**：`season, festival, abundance, opportunity, public_works, supply_shock, scarcity, tension, incident, disaster, epidemic, visitor, edict, agenda, mass_event`（**T216 §2.1 权威** + **T365 新增 `abundance`**） |
 | `scope, params` | ✅ | 实际生效的作用域与情境参数（**无金额/死亡/胜负数值**） |
 | `start_round` | ✅ | 生效起点（**≥ 对应 DIRECTIVE 的 `issued_round`**） |
 | `end_round`, `affected_scope_count`, `per_agent_impact_ref` | ⭕ | `per_agent_impact_ref`：**灾难级(`aggressive`)开启时**指向「逐 Agent 影响」可复算侧产物（WD-D4） |
 
-- **命名去歧义（硬约定）**：`WORLD_GROUP_EVENT ≠ GROUP_*`；其 `kind`（14 值，世界/环境）与 `GROUP_CREATED.kind`（`chat/guild/…`，组织）**枚举互不重叠**。
+- **命名去歧义（硬约定）**：`WORLD_GROUP_EVENT ≠ GROUP_*`；其 `kind`（15 值，世界/环境）与 `GROUP_CREATED.kind`（`chat/guild/…`，组织）**枚举互不重叠**。
 - **装配点/产生方**：**EF-Core / EF-Opp / EF-Incident**（T216 机制库）按日历/RNG 触发 → **内核据 `WORLD_DIRECTIVE` + RNG 确定性封装**为事实（**涉及金额/死亡的部分由内核从情境+RNG 推导为独立事件**，与本族**分列**）。
 
 **T.3 `WORLD_DIRECTIVE_REJECTED`**（内核**拒绝 / 审计告警**；phase=3.5/4；`actor="SYSTEM"`）
@@ -464,6 +464,17 @@ class Event:
 > | **(a) 显式介入** | `directed=true`（T.1/T.2） | `count(介入型事件, directed≠true)==0` |
 > | **(b) 可消融** | `mechanism_id` + per-mech `wd.*.enabled` + `dose`/`dose_curve`（T.1/T.4） | 关闭机制 m → 其 `kind` 的 `WORLD_GROUP_EVENT` 归零/显著下降 |
 > | **(c) 不改过去** | `effective_from_round ≥ issued_round`（T.1/T.2） | `∀DIRECTIVE: eff≥issued`；无存活 `WORLD_DIRECTIVE_REJECTED(reason="rewrites_past")` |
+
+**T.5 常驻源（世界日历）与【来源 / 调度】字段（应 T365，已登记，只增不改，不新增事件类型）**
+
+> 用户 14:27 批「世界层持续可见」。设计 `v2/refs/T365-persistent-world-layer-design.md`（`652491f`，narrative-designer）。**做法**：**复用** `WORLD_DIRECTIVE`/`WORLD_GROUP_EVENT` 契约与 `world_params()` 派生视图；**唯一新增 = 一个发射方 `world_calendar`**（`round → 相位` **纯函数**，**只在窗口边界发一条**，不发每回合）。
+>
+> - **加性字段（T365-R1）**：`WORLD_DIRECTIVE`/`WORLD_GROUP_EVENT` 增**可选**：
+>   - `source ∈ {"rng","calendar"}` —— 区分**偶发 RNG**（缺省=旧日志=按 `"rng"` 解释，向后兼容）/ **常驻日历**；**可审计、可分栏统计**（证「持续」来自日历而非碰巧）；
+>   - `schedule : {"mode":"calendar", "cadence":"season|annual|festival|weekend", "profile":"season_tone|abundance_sine|festival_window|…"}` —— 描述**平滑 profile** 与**节奏**（**`cadence` 不含 `daypart`**，见下退让）。
+> - **`kind` 枚举 14→15（T365-R2，Leader 已批）**：**新增 `abundance`**（资源丰度基线；理由=语义正交、归因靠 `kind`）；`festival` **复用**（`window=true` 表常驻窗口）；⚠️ **`daypart` 退让** —— **不作常驻源、不新增 `kind`/profile 支路**（life 已完整「时段→日程/活动」机制：`_base_activity`/`DAY_TYPE_PARAMS`/`planner` 的 `(day_type,slot)→模板`/`SCHEDULE_PLANNED`；世界层新造即**第二真源**，同 `T250` 双 `iou` / `T257` 双 truth 之型）；若要影响时段，**只经既有路径偏置项**（`activity_weight`/`need_decay_scale`）。
+> - **装配点/产生方**：`world_calendar`（内核侧）在**窗口边界**发 `WORLD_DIRECTIVE(directed=true, source="calendar", mechanism_id="wd.calendar.<src>")`；`directed=true`、`effective_from_round ≥ issued_round`、`params` 不含金额/死亡/胜负（R5）—— **三保底不变**。
+> - **影响**：新 config 键 `world_director.calendar.*`（§5.8）⇒ **【指纹变】+【行为变】（默认开）⇒ 需重冻**；**epoch = 独立 epoch（Leader 15:40 裁定）**，详见 §5.11 与 `T355` 关系。
 
 > **G7/兼容**：`WORLD_DIRECTIVE`/`WORLD_GROUP_EVENT`/`WORLD_DIRECTIVE_REJECTED`/`FORGE_FIRED` 均为**新增类型**（旧日志不出现）→ **G7 不受影响**；与既有 66 类不冲突（只增不改，X1/X4）。**引擎实现**（`engine/events.py::EVENT_TYPES` + `replay.apply_event` 折叠器 + WD-Core/EF-* hook）由实现阶段（T239 等）落地，本节只登记 schema。**`inert_registry.json` 已同步登记其「装配点/预期状态」**。
 
@@ -1062,6 +1073,7 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
   - **`wake.enabled` / `wake.triggers.*`（v2 双时钟档，T263/T265）同属这一族**：`wake.enabled` **默认 `false`（行为不变）**；置 `true` 启用「个体决策节拍 = 事件驱动唤醒」。`wake.triggers.{W1..W10}` 为**逐因开关**（`W6` 默认 `true` 可关，供消融）；**世界结算节拍（round）不受本开关影响、始终不变**。**只控制「是否启用唤醒门控」、不删事件契约、不改守恒、不 fail-loud**；`engine_version` 指纹随本块变化（属预期）。
   - **`service_delivered.enabled`（v2 服务交付档，T278）同属这一族**：`policy.service_delivered.enabled`，**默认 `true`（行为不变）**。**只控制「是否产生」**服务交付事件：`OFF` → 不产 `SERVICE_DELIVERED` + `DROPPED{reason:"service_disabled", flag:"service_disabled"}`；**不删事件契约、不改守恒、不 fail-loud**；与 `economy.enabled` 嵌套 = **AND**。
   - **`world_director.propagate.enabled`（`D3` 口径② 传导档，T352）同属这一族**：**默认 `true`**（用户拍② ⇒ 世界层参数真影响行为）；`OFF` ⇒ 退**纯旁白**（`GROUP_EVENT` 照产、不改行为，**逐字节等价现状**）。**只控制"是否传导"、不删事件契约、不 fail-loud**；每机制传导权重在 `dose` 内（0≡关该机制传导）。落 `world_director.json`（**已在指纹内**）。详见 §5.11。
+  - **`world_director.calendar.*`（常驻源档，T365）同属这一族**：`world_director.calendar.{season, festival, abundance, ecology}.{enabled, len_slots|period_slots, fade_slots, strength_bp|amp_bp}`（**`daypart` 不新增键**，退让）；每源剂量 `strength_bp`/`amp_bp`（**0 ≡ 关该源**），总闸沿用 `propagate.enabled`；**默认开**（`ecology` 默认关）。**只控制"是否传导"、不删事件契约、不 fail-loud**。落 `world_director.json`（**已在指纹内** ⇒ **【指纹变】**）。详见 §5.11（T365 扩展）。
 
 ### 5.9 账本分段与轻索引口径（应 T281，已定；纯存储层，不改语义）
 
@@ -1128,6 +1140,11 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
 - **默认姿态（Leader 2026-10-13 裁定）**：用户拍② ⇒ **`world_director.propagate.enabled` 默认 `true`**（与 `D11` 期② `time.ongoing.enabled` 一致：**用户要的功能默认开**）。⇒ **归因由"同 sha 内 2×2 消融矩阵（`time.ongoing` × `propagate`）+ X1 唯一交互项「节日提升进行中活动」承担**；**若矩阵显示不可分离 ⇒ 退回"一期一冻"**。
 - **⚠️ 指纹 / 重冻影响声明**：新增 config 键 ⇒ **【指纹变】**（`world_director.json` 在指纹内）**+【行为变】**（默认开 ⇒ 传导真影响行为）⇒ **必须重冻**；**归入「与 `D11` 期② 同批落地、只重冻一次」**（收口见 `T355`）。分界线戳一并立：`world_model ∈ {"narrative"(前), "effective"(后)}`（与 `time_model` 同族）。
 - **偶发代价（如实登记）**：**"日后单独回退其一（`time.ongoing` 或 `propagate`）⇒ 需再冻一次"**（不影响"同 sha 消融"语义）。
+- **T365 扩展 · 常驻源（世界日历）映射与键（应 T365，已登记）**：
+  - **Q4 补 3 行**（上下限沿用 bp 夹取；`dose=0 ⇒ 恒等`）：`season → need_decay_scale[dim]/affordance`（**既有行**，`§5.11 Q4` 已有）；`festival(window=true) → activity_weight[place]/open_slots`（**既有行**，本处补 `window=true` 常驻语义）；`abundance → resource_milli[good/place]`（**新增行**，`amp_bp∈[0,10000]`，**只改丰度不写价**）。**`daypart` 不列**（退让，见 §1.2 T.5）。
+  - **Q5 新键**：`world_director.calendar.{season, festival, abundance, ecology}.{enabled, len_slots|period_slots, fade_slots, strength_bp|amp_bp}`（**`daypart` 不新增键**）；剂量 **0 ≡ 关该源**；**默认开**（`ecology` 默认关，【未验证】）。总闸沿用 `propagate.enabled`。
+  - **窗口尺度（三层）**：慢 `season`=4 周（一周跑批=**底色/恒定偏移**，证据标 `constant_offset`）/ 中 `festival`=**周末 2 日每周一次**（一周内**必现且有起止**，验收主战场）/ 快=**既有** day_type·slot 机制（**退让、不新造**）；`fade_slots` 过渡带 + `jitter_bp` **仅由 seed 派生、可离线重算**（防 `restore`/续跑分叉，同 `T298` 型）。
+  - **⚠️ 影响声明**：新 config 键（`world_director.json` **在 `FINGERPRINT_FILES`**）⇒ **【指纹变】+【行为变】（默认开）⇒ 必须重冻**。**epoch 归属 = 独立 epoch（Leader 2026-10-13 15:40 裁定）** —— 理由：`T355` 起跑在即，而实现（`T367`：engine + life 偏置 + 前端可见通道声明）**赶不及起跑前** ⇒ 原"并入两前提"的第一条不成立 ⇒ **按规矩不抢工、独立 epoch、如实多冻一次**。（另：`T358` 期②b 亦独立 epoch，二者先后由 Leader 按起跑时机定。）`world_model` **保持 `"effective"`**（不新立分界线）。**归因**须报告「两侧都含常驻源」并用**日历-only 对照**补证「持续≠偶发」。
 
 ---
 
@@ -1237,6 +1254,7 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
 | **字段主体口径（T248）** | `agent_id`（及 `actor`/`subject`）**可含非 Agent 主体**（`MARKET`/`BANK`/`WORLD`/`TAX_POOL`）——**登记为已知例外**；消费方须用单一真源 `contracts.actors` 守卫 | §1.2 U |
 | **新增事件（v2 睡眠/记忆/人格，T224）** | `SLEEP_STARTED/SLEEP_COMPLETED`、`MEMORY_CONSOLIDATE/MEMORY_FORGET`、`PERSONA_DRIFT`（`PERSONA_FINGERPRINT` 为快照非事件）+ 统计 `metrics.life.memory/persona` | §1.2 S |
 | **字段扩展（`LLM_CALL`，T359/T360）** | `LLM_CALL` 增**可选**一等字段 `agent_id`（调用归属主体；∈ `AgentId ∪ {SYSTEM, DIRECTOR, OBSERVER}`，缺省 = 未归属）+ `judgment_id`（judge 类，经 `LLM_JUDGMENT.parties` 派生连接居民轨迹，多主体不留单主）；**不改 `actor`**；**行为不变（identity fold，`state_hash` 不变）/ 仅日志字段增（哈希链变）** ⇒ 需重冻，**归入 `T355` epoch** | §1.2 G |
+| **字段扩展 + kind 14→15（世界层常驻源，T365）** | `WORLD_DIRECTIVE`/`WORLD_GROUP_EVENT` 增**可选** `source ∈ {rng,calendar}`（缺省=rng）+ `schedule{mode,cadence,profile}`；**新增 `kind=abundance`**（14→15）；`festival` 复用（`window=true`）；**`daypart` 退让**（不新增 kind/profile）；新 config 键 `world_director.calendar.*` ⇒ **【指纹变】+【行为变】（默认开）⇒ 需重冻、独立 epoch（Leader 15:40 裁定）** | §1.2 T.5 + §5.8 + §5.11 |
 
 > **合计**：新增事件 **11** 类（商品 4 + 契约 4 + 投票 1 + 社会 2）；字段扩展 **3** 事件；不变量 **2** 条；字段语义登记 **1** 项（商品族 `qty` milli-unit 口径）。**均只增不改**，与既有 66 类不冲突；G7 对既有日志仍通过（新增类型旧日志不出现、可选字段被容忍）。**引擎实现**（`engine/events.py` EVENT_TYPES + `replay.apply_event` 折叠器 + `apply_production()/apply_contracts()` hook）由 v2 实现阶段（econ-dev T91 等）落地，本任务只出 schema。
 
