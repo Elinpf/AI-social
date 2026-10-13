@@ -1,0 +1,36 @@
+{
+  "seed": 7,
+  "n": 8,
+  "rounds": 84,
+  "unit": {
+    "①same_did": {
+      "prefix(2x)": 80,
+      "live(1x)": 40,
+      "prefix_is_2x": true,
+      "live_is_1x": true
+    },
+    "③active_no_dup": [
+      "D-1-f"
+    ],
+    "④two_diff_did": {
+      "live_weight": 70,
+      "expect_70": true,
+      "prefix_140_would_double": 140
+    },
+    "④neg_diff_ref_no_dedup": {
+      "live_weight": 80,
+      "expect_80": true
+    },
+    "compat_single_type": {
+      "directive": 40,
+      "group_event": 40
+    }
+  },
+  "world": {
+    "same_state_hash": false,
+    "same_families": false,
+    "live_len": 56676,
+    "prefix_len": 51433
+  },
+  "four_class": "① 行为变（去重改变 life 收到的 activity_weight ⇒ 行为变）"
+}
