@@ -476,6 +476,20 @@ class Event:
 > - **装配点/产生方**：`world_calendar`（内核侧）在**窗口边界**发 `WORLD_DIRECTIVE(directed=true, source="calendar", mechanism_id="wd.calendar.<src>")`；`directed=true`、`effective_from_round ≥ issued_round`、`params` 不含金额/死亡/胜负（R5）—— **三保底不变**。
 > - **影响**：新 config 键 `world_director.calendar.*`（§5.8）⇒ **【指纹变】+【行为变】（默认开）⇒ 需重冻**；**epoch = 独立 epoch（Leader 15:40 裁定）**，详见 §5.11 与 `T355` 关系。
 
+**T.6 发射形态事实（供夹具 / 消费方对齐；应 Leader 2026-10-13 16:50，已登记）**
+
+> **通则（今日第三次"夹具覆盖面"教训）：夹具必须与「真实发射形态」对齐。** 三例：① 夹具**只发单一事件类型** ⇒ 漏"**双事件同 id**" ⇒ **双计缺陷长期未暴露**；② 夹具**默认 `ref` 相同** ⇒ 与"**真实发射中 `ref` 唯一**"不符；③ 更早的 `str` vs `dict`（形状不对齐）。⇒ 供后续**所有夹具设计直接引用**（**别靠人记**）。
+>
+> **本族真实发射形态（逐条写出的事实）**：
+> 1. **一拍两事件、共用同一 ID**：一次通过校验的指令 `d`，由 `apply_world_director`（`code/engine/hooks/world_director.py`）**同时发两条**——
+>    `WORLD_DIRECTIVE{directive_id = did}` **与** `WORLD_GROUP_EVENT{directive_ref = did}`；
+>    两条**共用** `kind / params / directed=true / …`，其中 `did = "D-{round}-{mechanism_id}"`。
+>    （`WORLD_DIRECTIVE_REJECTED` 仅**拒/告警**时**单发**，不配 `WORLD_GROUP_EVENT`。）
+> 2. **`directive_ref` 在真实发射中【唯一】**（= `did`，按 `(round, mechanism_id)` 唯一）⇒ **消费方的"去重键" = `directive_ref`（即 `directive_id`）**。
+>
+> ⇒ **消费方硬约束（推论）**：任何**同时扫 `WORLD_DIRECTIVE` 与 `WORLD_GROUP_EVENT`** 的派生消费（如 `WorldParams`）**必须按 `ref` 去重**；否则同一 `did` 被两条各计一次 ⇒ **双计**。
+> ⚠️ **现状观察（如实登记，属实现侧口径）**：`engine/world_params.py::world_params` 扫**两类**、且两类**都带 `params`** ⇒ **存在"同 `did` 双计"面**（此前因夹具只发单类型而**未暴露**）。**实现侧须按 `ref` 去重**（`T353`/`T366` 收口负责），此处只登记**事实与约束**。
+
 > **G7/兼容**：`WORLD_DIRECTIVE`/`WORLD_GROUP_EVENT`/`WORLD_DIRECTIVE_REJECTED`/`FORGE_FIRED` 均为**新增类型**（旧日志不出现）→ **G7 不受影响**；与既有 66 类不冲突（只增不改，X1/X4）。**引擎实现**（`engine/events.py::EVENT_TYPES` + `replay.apply_event` 折叠器 + WD-Core/EF-* hook）由实现阶段（T239 等）落地，本节只登记 schema。**`inert_registry.json` 已同步登记其「装配点/预期状态」**。
 
 > **通信事件复用 v1**：`MSG_PUBLIC / MSG_DM / MSG_GROUP` 不新增，但新增可选字段 `refs[]`（引用 msg_id）与 `tag_hints[]`（供 `TAG_EMITTED` 关联，实为内容层）。传播边由 `OBSERVATION.target_event_seq` 与 msg `refs` 共同构建（§4.3）。
@@ -1255,6 +1269,7 @@ E[Calls_round] ≈ N·(a·p_t1 + p2_near) / (SLOTS_PER_WEEK·ROUNDS_PER_SLOT) + 
 | **新增事件（v2 睡眠/记忆/人格，T224）** | `SLEEP_STARTED/SLEEP_COMPLETED`、`MEMORY_CONSOLIDATE/MEMORY_FORGET`、`PERSONA_DRIFT`（`PERSONA_FINGERPRINT` 为快照非事件）+ 统计 `metrics.life.memory/persona` | §1.2 S |
 | **字段扩展（`LLM_CALL`，T359/T360）** | `LLM_CALL` 增**可选**一等字段 `agent_id`（调用归属主体；∈ `AgentId ∪ {SYSTEM, DIRECTOR, OBSERVER}`，缺省 = 未归属）+ `judgment_id`（judge 类，经 `LLM_JUDGMENT.parties` 派生连接居民轨迹，多主体不留单主）；**不改 `actor`**；**行为不变（identity fold，`state_hash` 不变）/ 仅日志字段增（哈希链变）** ⇒ 需重冻，**归入 `T355` epoch** | §1.2 G |
 | **字段扩展 + kind 14→15（世界层常驻源，T365）** | `WORLD_DIRECTIVE`/`WORLD_GROUP_EVENT` 增**可选** `source ∈ {rng,calendar}`（缺省=rng）+ `schedule{mode,cadence,profile}`；**新增 `kind=abundance`**（14→15）；`festival` 复用（`window=true`）；**`daypart` 退让**（不新增 kind/profile）；新 config 键 `world_director.calendar.*` ⇒ **【指纹变】+【行为变】（默认开）⇒ 需重冻、独立 epoch（Leader 15:40 裁定）** | §1.2 T.5 + §5.8 + §5.11 |
+| **发射形态事实 + 夹具通则（世界导演，T238 补，应 Leader 16:50）** | `apply_world_director` **一拍两事件**（`WORLD_DIRECTIVE{directive_id}` + `WORLD_GROUP_EVENT{directive_ref}`，**共用同一 `did`**）；**`directive_ref` 真实发射中唯一** ⇒ 消费方**按 `ref` 去重**（否则双计）；通则=**夹具必须与真实发射形态对齐** | §1.2 T.6 |
 
 > **合计**：新增事件 **11** 类（商品 4 + 契约 4 + 投票 1 + 社会 2）；字段扩展 **3** 事件；不变量 **2** 条；字段语义登记 **1** 项（商品族 `qty` milli-unit 口径）。**均只增不改**，与既有 66 类不冲突；G7 对既有日志仍通过（新增类型旧日志不出现、可选字段被容忍）。**引擎实现**（`engine/events.py` EVENT_TYPES + `replay.apply_event` 折叠器 + `apply_production()/apply_contracts()` hook）由 v2 实现阶段（econ-dev T91 等）落地，本任务只出 schema。
 
