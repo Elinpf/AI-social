@@ -29,6 +29,21 @@
 
 ## 5. 状态标注（显式）
 - **接线**：✅ 完成（唯一实现 + 对账 0 差异）。
+
+## 6. ✅ 最终复算（`T333` 已定档；**实现锚 = `b48920c`**）
+> Leader 09:20 裁定：用户人眼参照 = `2/5 = 40%`；**`natural`（`28.6% ≤ 40%`，方向保守）定档为默认档**；**定档不改码** ⇒ 实现锚 **`b48920c`**（其后仅文档 `8f82af7`）。
+
+```bash
+python3 tools/t271/emotion_probe.py /root/t271/runs/t326_real --criterion strict  --samples 0
+python3 tools/t271/emotion_probe.py /root/t271/runs/t326_real --criterion natural --samples 0
+```
+| criterion | 最终读数 | 证据 |
+|---|---|---|
+| `strict` | **0/63 = 0.0%**（imp≥7 0/42） | 经 `life.emotion.emotion_sign` |
+| `natural`（**默认档**） | **18/63 = 28.6%**（+3/-15；imp≥7 12/42） | 经 `life.emotion.emotion_sign` |
+
+**⚠️ 读数绑定**：**本读数对应实现 `code/life/emotion.py` 锚 = `b48920c`**（`git log -1 -- code/life/emotion.py`）。若后续 `T341`（非作者核 `T333`）改动实现 sha ⇒ **本读数须用新 sha 重跑并重绑**（有 sha 标签，陈旧不被误用）。
+
 - **canonical 数字**：`strict 0/63` 稳定；`natural` **随访 `emotion_sign` 变动**（57→18）⇒ **最终数字须待 `T333` 最终档位定稿后再复算**；届时命令即可：
 ```bash
 python3 tools/t271/emotion_probe.py /root/t271/runs/t326_real --criterion <final> --samples 0
