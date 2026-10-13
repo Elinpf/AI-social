@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""T326 反思节点「含情感词」探针（v2，正确取正文）。
-口径 = `code/life/agent.py:861-864` 的 `_DRIFT_POS/_DRIFT_NEG` 子串表（26 子串）。
-对象 = `MEMORY_WRITE` 事件中 `kind=="reflection"` 的节点；其正文经 `body_ref` 解析：
+"""T326/T337 反思节点「含情感词」探针。
+**判定式唯一实现** = `life.emotion.emotion_sign(text, *, criterion, lexicon)`（T333 单一真源）——
+本探针**不再自写判定**；import 失败即 fail-loud（不保留第二份实现）。
+对象 = `MEMORY_WRITE` 事件中 `kind=="reflection"` 的节点；正文经 `body_ref` 解析：
   `side://src/<digest>.txt` -> <run_dir>/side/src/<digest>.txt （T268 内容寻址）
   `side://mem/<agent>/<mem>.txt` -> <run_dir>/side/mem/<agent>/<mem>.txt
-判定：`(text).lower()` 含任一 POS/NEG 子串 => 含情感词。并**摘录原始样本**供人眼判断。
+并**摘录原始样本**供人眼判断。
 
-用法: emotion_probe.py <run_dir> [--samples N]
+用法: emotion_probe.py <run_dir> [--criterion strict|natural] [--pos-file F --neg-file F] [--samples N]
 """
 import sys, os, json, glob
 
@@ -41,16 +42,13 @@ def _load_terms(path):
 
 
 def _load_emotion_sign():
-    """T333 单一真源：优先 import `life.emotion.emotion_sign`；不可用则回退自带 26 表（显式告警，不静默）。"""
+    """T337：判定式**唯一实现** = `life.emotion.emotion_sign`；不可用则 **fail-loud**（不保留第二份实现）。"""
     code = os.environ.get("T271_CODE",
                           "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code")
     if code and code not in sys.path:
         sys.path.insert(0, code)
-    try:
-        from life.emotion import emotion_sign  # noqa: PLC0415
-        return emotion_sign
-    except Exception:
-        return None
+    from life.emotion import emotion_sign  # noqa: PLC0415  （import 失败即抛出，不静默回退）
+    return emotion_sign
 
 
 def main():
@@ -71,11 +69,9 @@ def main():
     if "--criterion" in sys.argv:
         crit = sys.argv[sys.argv.index("--criterion") + 1]
     lexicon_given = ("--pos-file" in sys.argv) or ("--neg-file" in sys.argv)
-    emo_fn = _load_emotion_sign()
-    if emo_fn is not None:
-        print(f"# 判定: life.emotion.emotion_sign (criterion={crit}, lexicon={'custom' if lexicon_given else 'default'})")
-    else:
-        print("# [WARN] life.emotion.emotion_sign 不可用 -> 回退自带 26 表（仅 strict；显式告警，不静默）")
+    emo_fn = _load_emotion_sign()   # T337：失败即抛（无第二份实现）
+    print(f"# 判定(唯一实现, import 失败即 fail-loud): life.emotion.emotion_sign "
+          f"(criterion={crit}, lexicon={'custom' if lexicon_given else 'default'})")
     log = os.path.join(rd, "run.jsonl")
     if not os.path.exists(log):
         c = sorted(glob.glob(os.path.join(rd, "*.jsonl")))
@@ -101,11 +97,9 @@ def main():
         if txt is None:
             miss += 1; continue
         low = txt.lower()
-        hp = [w for w in POS if w in low]; hn = [w for w in NEG if w in low]
-        if emo_fn is not None:
-            sign = emo_fn(txt, criterion=crit, lexicon=((POS, NEG) if lexicon_given else None))
-        else:
-            sign = 1 if hp else (-1 if hn else 0)
+        hp = [w for w in POS if w in low]; hn = [w for w in NEG if w in low]  # 仅用于展示/自定义词表，**不判**
+        # 判定**唯一实现** = life.emotion.emotion_sign（探针不再自写判定）
+        sign = emo_fn(txt, criterion=crit, lexicon=((POS, NEG) if lexicon_given else None))
         e = sign != 0; imp = int(p.get("importance") or 0)
         tot += 1; emo += e; posn += (sign > 0); negn += (sign < 0)
         if imp >= 7:
@@ -120,7 +114,7 @@ def main():
     print(f"# LLM_CALL provider 计数: {prov}")
     print(f"reflect_write(kind=reflection)={len(refl)}  body可读={tot}  取正文失败={miss}")
     print(f"含情感词(sign!=0; criterion={crit}, lexicon={'custom' if lexicon_given else 'default'}, "
-          f"provider={'life.emotion' if emo_fn else 'fallback26'}): {emo}/{tot} = {emo/max(tot,1):.1%}  (+{posn}/-{negn})")
+          f"impl=life.emotion.emotion_sign): {emo}/{tot} = {emo/max(tot,1):.1%}  (+{posn}/-{negn})")
     print(f"importance>=7 子集: {i7e}/{i7t} = {i7e/max(i7t,1):.1%}")
     print(f"== 原始样本 {len(samples)} 条（供人眼判『有没有情绪』）==")
     for s in samples:
