@@ -25,6 +25,13 @@
 > 实测（本机）：`base`/`override` 指纹**一致**（`sha256:23658bf8…`）、`file` 指纹**不同**（`sha256:7aa8fd3a…`）。
 > ⚠️ **`life_v2` 类开关无法 override**（life 层直接读盘）→ 含 C 的"干净消融"需 life 层 hook（**当前不具备**），否则 C 只能 `file`（改指纹、不共享缓存）。
 
+> ⭐ **开关"消费者路径"登记（T354/T355，2026-10-13）——翻开关前必查"值从哪来"**：
+> - `time.ongoing` 曾有**两条**路径：**`life` 业态（`KernelAdapter`）**读**运行时 config**（`integration.py:273-279`，缺省回退文件）⇒ **可 override**；**standalone `engine/perceive.py::perceive()`（`mini_kernel`/inline）**经 `_load_time_flags()`（`:28-34`）**直读 `config/time.json`** ⇒ 曾**不可 override（命令打印成功、实为静默无效）**。
+> - ✅ **已统一**：`kernel` 已修 `_load_time_flags(config=None)` **优先读传入 cfg**（缺省回退文件）⇒ **两路径现在都尊重 override**。
+> - ⚠️ **方向不对称（历史坑，仍登记）**：旧 inline 路径"override **关断**有效、**从 off 打开**无效"。⇒ **翻开关只认"端到端能翻"判据，禁止拿"打印了 override 行"当证据**；消融矩阵必须在**能翻的业态**上做，否则得到**假 2×2**。
+> - `world_director.propagate`：`engine/world_params.py:15-17` 读 `config["world_director"]["propagate"]["enabled"]` ⇒ **cfg 驱动、可 override**。
+> - **归因口径**：`override` 文件不动 ⇒ **`engine_version` 指纹不变**；但 **`config_digest` 变**（别把 `config_digest` 变当成"指纹变"）。
+
 示例见 `tools/t271/batches.example.tsv`（含今晚 A/B/C/D）。
 
 ## 2. 一键起（复制粘贴）
