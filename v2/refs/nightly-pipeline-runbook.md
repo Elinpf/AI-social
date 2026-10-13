@@ -75,6 +75,11 @@ python3 "$REPO/tools/t271/nightly.py" collect
   > 收尾：早报**只列含 `meta.json` 的真 run 目录**；mock 演示用**独立 run_root**，不与真实夜跑混淆。
 - 早报（`<run_root>/morning-report-<date>.md`）：**总览 + 逐批**（sha / `engine_version` 指纹 / 开关 / 回合进度 / 事件数 / 峰值 RSS / 起止 / 产物路径 / 续跑模式），并附**盘前/盘后 `df -h` `df -i`**。机器可读：`summary.json`。
 
+> 📣 **跑批结束必须主动报（T355 立，2026-10-13）**：**`host.log` 出现 `[runner] batch exited rc=?` 就是"跑完了"这个事件** ——
+> **owner 必须立即 `send_message` 报 leader 并广播占用释放**，**不得等下一次 collect / 别人发现**。
+> 依据：**T355 17:49 就已 `batch exited rc=0`，直到 19:40 才被发现 ⇒ 全员白等 1h50m**。"跑完了"是**必须主动发出的事件**，不是自然会发生的事。
+> （`t271_runner.sh` 退出时已回填 `meta.ended_at` 并打印 `batch exited rc=`；**盯这一行**，别只盯心跳。）
+
 ## 4. 失败可续（⚠️ 诚实口径）
 ```bash
 python3 "$REPO/tools/t271/nightly.py" resume --batches <表> --env-file "$REPO/code/.env.local"
