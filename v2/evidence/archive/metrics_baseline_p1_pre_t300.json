@@ -1,0 +1,35 @@
+{
+  "frozen_from": "v2/evidence/run_t236_canon_n20_llm.jsonl",
+  "log_sha256": "sha256:13f8d668887d1b3176af354472fbb040ac0881902075c631218e8a6b1861fb6e",
+  "feature_set": "v2-T236",
+  "tolerance_ratio": 0.8,
+  "econ_loop": {
+    "M_final": 37433,
+    "M_min": 0,
+    "M_max": 197200,
+    "M_target": 200000,
+    "M_never_negative": true,
+    "V": 0.062727,
+    "Y_mu": 47373,
+    "median_wage_mu": null,
+    "gini_net_worth": 0.768836,
+    "tax_pool_final": 2694,
+    "n_produce": 317,
+    "mint_burn_balance_window": 0.004862,
+    "price_cv_mean": 0.0
+  },
+  "social_key": {
+    "channels": {
+      "DM": 165,
+      "PUBLIC": 59,
+      "GROUP": 8
+    },
+    "comm_directed_edges": 168,
+    "comm_reciprocity": 0.244444,
+    "n_groups": 8,
+    "norm_adopted": 19,
+    "n_contracts": 0,
+    "n_votes": 0
+  },
+  "note": "T236 重冻（HEAD 6a5f14e）。wake.enabled 默认 false ⇒ 行为≈pre-wake；指纹已变（wake 块 + T266 D2/D3 + T264 G1/G2/G3 + life_v2/world_director）。"
+}
