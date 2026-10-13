@@ -18,7 +18,7 @@
 > **T-rng/calendar · 世界层事件加【来源与调度】可选字段（应 T365，只增不改，不新增事件类型）**：
 > `WORLD_DIRECTIVE` / `WORLD_GROUP_EVENT` 增**可选**一等字段：
 > - **`source ∈ {"rng", "calendar"}`**（**必填于新发射方**；区分「偶发 RNG 触发」与「常驻日历触发」⇒ 可审计、可**分栏统计**，证「持续」来自日历而非碰巧）。缺省（旧日志/★仅 RNG）= 按 `"rng"` 解释（向后兼容）。
-> - **`schedule : {"mode":"calendar", "cadence":"season|annual|festival|weekend|daypart", "profile":"season_tone|abundance_sine|festival_window|…"}`**（可选；描述**平滑 profile** 与**节奏**，供派生端求值）。
+> - **`schedule : {"mode":"calendar", "cadence":"season|annual|festival|weekend", "profile":"season_tone|abundance_sine|festival_window|…"}`**（可选；描述**平滑 profile** 与**节奏**，供派生端求值）。**注：`cadence` 不含 `daypart`**（退让，见 §2/§8）。
 >
 > **装配点/产生方**：`world_calendar`（`round → 相位` 的**纯函数**）在**窗口边界**发射 `WORLD_DIRECTIVE(directed=true, mechanism_id="wd.calendar.<src>", source="calendar", schedule=…)`；**只发边界、不发每回合**（事件少）。RNG 侧 `source` 由 WD-Core 置 `"rng"`。
 > **不变量**：`directed=true` 恒真、`effective_from_round ≥ issued_round` 恒真（保底 a/c **不变**）；`params` 仍**不得含金额/死亡/胜负数值**（R5 不变）。
@@ -31,24 +31,24 @@
 
 > **新增 1 项 `abundance`（资源丰度基线）**。理由：**语义正交**——若把丰度塞进既有 `season`/`supply_shock`，会让「按 `kind` 聚合 / 消融 / 归因」变糊；**归因靠 `kind`**。
 > - `festival` **复用**（增 `window=true` 表常驻窗口，非新 kind）。
-> - `daypart`（时段基调）**不新增 kind**，作为 `season` 的 `profile` 变体（且**世界层退让**，见 §8）。
+> - ⚠️ **`daypart` 退让（写死；Leader 14:54 裁定）**：**`daypart` 不作为常驻源、不新增 profile 支路、不新增 kind**。life 侧**已有完整**「时段→日程/活动」机制（`_base_activity(day_type,slot)` / `DAY_TYPE_PARAMS` / `planner` 的 `(day_type,slot)→活动模板`）⇒ 世界层**不得新造第二真源**（同 `T250` 双 `iou`/`T257` 双 truth 之型）。世界层若要影响时段/晨昏，**只经既有路径的偏置项**（`activity_weight` / `need_decay_scale` 一类），见 §8。
 > - ⇒ `WORLD_GROUP_EVENT.kind` **14 → 15**：`season, festival, abundance, opportunity, public_works, supply_shock, scarcity, tension, incident, disaster, epidemic, visitor, edict, agenda, mass_event`。
 
 **落点**：08 §1.2 **T.2 表格 `kind` 行**（14→15）+ 权威注（`v2/refs/world-event-mechanisms.md §2.1` 需同步登记该新增项）+ §4.2 事件表。
 
 ---
 
-## 3. R3 · `WorldParams` 传导映射表扩 4 行（落 08 §5.11 Q4）
+## 3. R3 · `WorldParams` 传导映射表补 3 行（落 08 §5.11 Q4）
 
-> 在 §5.11 **Q4 传导映射表**尾部**追加 4 行**（上下限沿用现有 bp 夹取；`dose=0 ⇒ 该项恒等`）：
+> 在 §5.11 **Q4 传导映射表**补 **3 行**（上下限沿用现有 bp 夹取；`dose=0 ⇒ 该项恒等`）：
 
-| 机制 `kind` | → `WorldParams` 参数 | 影响的生活/经济变量（消费点） | 方向 | 上下限（整数 bp/计数） |
-|---|---|---|---|---|
-| `season`（常驻） | `need_decay_scale[dim]` / 活动 `affordance` | `NEED_UPDATE` 衰减率 / 活动结构 | ± | `scale ∈ [0, 20000] bp`（沿用） |
-| `abundance`（**新 kind**） | `resource_milli[good/place]` | 生产层 `resource_factor` → `PRODUCE` 量 | ±（正弦缓变） | `amp_bp ∈ [0, 10000]`；**只改丰度不写价**（沿用 supply_shock 口径） |
-| `festival`（`window=true`） | `activity_weight[place]` / `open_slots` | planner 活动权重、选址、社交意愿 | ↑ | `activity_weight_bp ∈ [0, 20000]`（沿用） |
-| `daypart`（`season` 的 profile 变体） | `need_decay_scale[dim]` | `NEED_UPDATE` 衰减率 | ± | 同 `season` |
+| 机制 `kind` | → `WorldParams` 参数 | 影响的生活/经济变量（消费点） | 方向 | 上下限（整数 bp/计数） | 备注 |
+|---|---|---|---|---|---|
+| `season` | `need_decay_scale[dim]` / 活动 `affordance` | `NEED_UPDATE` 衰减率 / 活动结构 | ± | `scale ∈ [0, 20000] bp`（沿用） | **既有行**（`§5.11 Q4` 已有） |
+| `festival`（`window=true`） | `activity_weight[place]` / `open_slots` | planner 活动权重、选址、社交意愿 | ↑ | `activity_weight_bp ∈ [0, 20000]`（沿用） | **既有行**（已有；本处仅补 `window=true` 常驻语义） |
+| `abundance`（**新 kind**） | `resource_milli[good/place]` | 生产层 `resource_factor` → `PRODUCE` 量 | ±（正弦缓变） | `amp_bp ∈ [0, 10000]`；**只改丰度不写价**（沿用 `supply_shock` 口径） | **新增行** |
 
+- ⚠️ **`daypart` 不列本表**（**退让**，见 §2/§8）：不新增 `daypart → WorldParams` 映射；时段影响只经**既有** `activity_weight`/`need_decay_scale` 偏置项。
 - **可判定**：每项 = `f(kind, dose, profile(t))` 的**确定性整数映射**；`profile(t)` 定点整数求值（**禁浮点**，见 §7 V1）。
 - **上下限硬约束**：越界 → **夹取到限**（沿用 T352）。
 
@@ -56,7 +56,7 @@
 
 ## 4. R4 · 新 config 键（落 08 §5.8 开关族；`world_director.json`）
 
-> `world_director.calendar.{season, festival, abundance, daypart, ecology}.{...}`：
+> `world_director.calendar.{season, festival, abundance, ecology}.{...}`：
 > - 公共：`enabled`（默认见下）、剂量键。
 > - `season`：`enabled=true`、`len_slots=4*28=112 slot(4 周)`、`fade_slots=6`、`strength_bp`。
 > - `festival`：`enabled=true`、窗口 = **周末 2 日**（`day5–day6`）、`activity_weight_bp`、`jitter_bp`。
@@ -140,8 +140,8 @@
 | 类别 | 变更 | 落点 |
 |---|---|---|
 | **字段扩展（`WORLD_DIRECTIVE`/`WORLD_GROUP_EVENT`，T365）** | 加**可选** `source ∈ {rng,calendar}`（缺省=rng，向后兼容）+ `schedule{mode,cadence,profile}`；**不新增事件类型** | §1.2 T |
-| **`kind` 枚举 14→15（T365）** | 新增 `abundance`；`festival` 复用（`window=true`）；`daypart` = `season` 的 profile 变体（**不新增 kind**） | §1.2 T.2 / §4.2 |
-| **传导映射扩 4 行（T365）** | `season`/`abundance`/`festival`/`daypart → WorldParams`（含方向/上下限/base 夹取） | §5.11 Q4 |
+| **`kind` 枚举 14→15（T365）** | 新增 `abundance`；`festival` 复用（`window=true`）；**`daypart` 退让、不新增 kind / profile** | §1.2 T.2 / §4.2 |
+| **传导映射补齐（T365）** | **补 3 行**：`season`(既有)/`festival`(既有，补 `window=true` 语义)/`abundance`(**新增**)；**`daypart` 不列**（退让） | §5.11 Q4 |
 | **新 config 键（T365）** | `world_director.calendar.*`（`world_director.json` 在指纹内）⇒ **【指纹变】+【行为变】（默认开）⇒ 需重冻**；`world_model` 保持 `"effective"` | §5.8 + §5.11 |
 
 ---
