@@ -3,11 +3,12 @@
 # 与 `pytest -q` / `lint-imports` / obs gate 并列的可跑门禁。
 # 术语合规采用「基线/棘轮」模式：仅当出现基线之外的【新】违规才失败。
 
-.PHONY: help lexicon-gate lexicon-report lexicon-baseline lexicon-dir-stats inert-gate pyclean code-test plugin-test stamp install-hooks gate gate-repo verify resume-fixture-check resume-guard
+.PHONY: help lexicon-gate lexicon-report lexicon-baseline lexicon-dir-stats inert-gate pyclean code-test plugin-test stamp install-hooks gate gate-repo verify verify-inner resume-fixture-check resume-guard
 
 help:
 	@echo "== 仓根 Makefile（在仓库根目录跑）=="
-	@echo "make verify          # ★唯一总门：仓根门禁 + code/ 前端 CI 全跑（全绿=真的全绿）"
+	@echo "make verify          # ★唯一总门（受守卫）：起/收比冻结区指纹，跑中被改即判'结果不可信'"
+	@echo "make verify-inner    # verify 的内部真门（仓根门禁 + 前端 CI）；直接用则无首尾自检"
 	@echo "make gate-repo       # 消歧名 = 下面的 gate（仓根级门禁）"
 	@echo "make gate            # 仓根级门禁：术语棘轮 + inert + code-test + plugin-test（+可选 lint-imports）"
 	@echo "make lexicon-gate    # 术语合规 · 棘轮门禁"
@@ -85,8 +86,12 @@ gate-repo: gate
 
 # ★唯一总门（T280）：仓根门禁 + code/ 前端 CI 全跑。
 #   「make verify 全绿」= 仓根门禁 与 前端 CI 都通过（唯一不会说错的目标）。
-#   前端 CI = code/Makefile 的 `ci`（smoke + 真渲染门禁 + R9 四指标 + D 段），退出码 0/1/3（3=SKIP≠PASS）。
-verify: gate
+#   T340：`verify` 现为**受守卫**版本 —— 起/收记冻结区(code+config)指纹，**跑中被改即判"结果不可信"**（exit 2）。
+#        内部真门 = `verify-inner`（等价旧 verify）。
+verify:
+	@bash tools/verify_tree_guard.sh
+
+verify-inner: gate
 	@echo "[verify] 仓根门禁通过 → 继续前端 CI（在 code/ 跑 make ci）"
 	@$(MAKE) -C code ci
 	@echo "[verify] OK · 仓根门禁 + 前端 CI 均通过（全绿）"
