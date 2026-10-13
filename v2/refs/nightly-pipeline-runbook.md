@@ -79,6 +79,10 @@ python3 "$REPO/tools/t271/nightly.py" collect
 > **owner 必须立即 `send_message` 报 leader 并广播占用释放**，**不得等下一次 collect / 别人发现**。
 > 依据：**T355 17:49 就已 `batch exited rc=0`，直到 19:40 才被发现 ⇒ 全员白等 1h50m**。"跑完了"是**必须主动发出的事件**，不是自然会发生的事。
 > （`t271_runner.sh` 退出时已回填 `meta.ended_at` 并打印 `batch exited rc=`；**盯这一行**，别只盯心跳。）
+> ⚙️ **已机制化（T374，2026-10-13）**：`t271_runner.sh` 在**批体结束后**（含 `rc≠0`、`TERM/INT`）自动写**固定 `END` 标记** `<run_dir>/END`（JSON：`rc`/起止/`rounds_last`/`events`/`final_state_hash`/`tree`/`sha`），并**尽力通知**：固定告警路径 **`/root/t271/alert/last_end.json`**（最新）+ **`/root/t271/alert/ends.log`**（逐条 append）+ journal（前缀 `[END-MARKER]`）。**周期自检一眼看 `alert/last_end.json`**。
+> - **不造第二真源**：`END` 是**汇总**（读 `meta.json`/`heartbeat.tsv`/`run.jsonl` 派生），**不改**三者；`meta.ended_at` 仍由 `finalize_meta.sh` 回填。
+> - ⚠️ **被 `SIGKILL`/断电**：trap 不触发 ⇒ `END` **不写出**（"END 缺失"本身=异常信号；此时以 `heartbeat.tsv` 末行为准）。**只能留痕到 `SIGTERM/INT`**。
+> - ⏱ 写标记**只在结束后**，不进热路径、不影响批体计时。
 
 ## 4. 失败可续（⚠️ 诚实口径）
 ```bash

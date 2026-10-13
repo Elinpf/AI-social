@@ -6,6 +6,13 @@ set -u
 RUN_DIR="${1:?}"; OUT="${2:?}"; HB="${3:?}"; shift 3
 [ "${1:-}" = "--" ] && shift
 
+BIN="$(cd "$(dirname "$0")" && pwd)"
+# T374：跑批结束（含非 0 / 信号）写固定 END 标记 + 尽力通知。幂等；只在结束后调用，不进热路径。
+_end() { bash "$BIN/t271_end_marker.sh" "$RUN_DIR" "${1:-0}" 2>/dev/null || true; }
+trap 'r=$?; _end "$r"; exit "$r"' EXIT
+trap '_end 143; exit 143' TERM
+trap '_end 130; exit 130' INT
+
 PIDFILE="$RUN_DIR/batch.pid"
 HBLOG="$RUN_DIR/heartbeat.tsv"
 CGROUPLOG="$RUN_DIR/cgroup.txt"
@@ -57,4 +64,6 @@ echo "[runner] batch exited rc=$rc"
 if [ -x "$(dirname "$0")/finalize_meta.sh" ]; then
   bash "$(dirname "$0")/finalize_meta.sh" "$RUN_DIR" >/dev/null 2>&1 || true
 fi
+# T374：写结束标记（在 meta 回填之后，END 里读到 ended_at 一致；EXIT trap 幂等兜底）
+_end "$rc"
 exit $rc
