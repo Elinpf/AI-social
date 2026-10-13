@@ -7,6 +7,7 @@
 ## 0. 消费点与施加（事实/设计）
 - 消费点：`engine/hooks/production.py` 生产 tick 内读 `world_params(...)["resource_factor_bp"]`（施加见设计稿：`res_adj=clamp(res*(10000+bp)//10000)`，`dose=0⇒恒等`）。
 - 提供方：`engine/world_params.py::world_params`（**只读**；`propagate.enabled` 总闸、`[start,end)` 未来窗、`directed=true`）。
+- ⚠️ **「2×」同名不同义**：本文件/设计稿的 **2× = `world_params` 同 `directive_id` 双发累加两次**（`T372` 修）；**≠ `LLM_CALL` 的"2×"**（后者=条数含缓存命中、已结案）。两者**不可并成一条**。
 
 ## 1. 需要产出的 6 项（验收要求逐项）
 | # | 指标 | 定义 | 采集 | 期望 |
