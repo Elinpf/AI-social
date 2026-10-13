@@ -47,6 +47,10 @@ def main() -> int:
                          "省略且 URL 无 still=1 时，退化为等 #pixi-host canvas。")
     ap.add_argument("--retry-blank", type=int, default=2,
                     help="遇空白帧自动重试次数（取证容错，不降标准；会打印空白/重试次数，默认 2）。")
+    ap.add_argument("--full-page", action="store_true",
+                    help="截整页（full_page=True），用于长页面（如四组对照）；默认仅视口。")
+    ap.add_argument("--no-blank-check", action="store_true",
+                    help="关闭非空白判据（用于非小镇画布的普通页面：深色/大色块页面会被误判为空白）。")
     args = ap.parse_args()
 
     try:
@@ -136,12 +140,12 @@ def _try_capture(args, still):
                 time.sleep(1.2)
             if errs:
                 return ("fail", "页面报错 pageerror: " + " | ".join(errs[:2]))
-            pg.screenshot(path=args.out)
+            pg.screenshot(path=args.out, full_page=getattr(args, "full_page", False))
         finally:
             b.close()
     # ★ T259「非空白校验」：就绪 ≠ 非空白。防"盲测撞上白帧被判 1 分"。
     frac, col = _largest_color_frac(args.out)
-    if frac >= _BLANK_FRAC:
+    if frac >= _BLANK_FRAC and not getattr(args, "no_blank_check", False):
         return ("blank", f"最大单色占比 {frac:.2%} ≥ {_BLANK_FRAC:.0%}，色≈{col}")
     return ("ok", f"{frac:.2%}")
 
