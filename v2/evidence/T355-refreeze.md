@@ -31,7 +31,8 @@
 | 1 | `T353`（D3 口径②） | 世界层参数**真影响行为**（默认开；`world_director.propagate.enabled` 默认 true） | **是** | **【行为变】+【指纹变】** | 由 §6 矩阵/`T366` 隔离；WIP |
 | 2 | `T354`（D11 期②） | tick 内有时间：`current_activity` 真被 life 消费（默认开；`time.ongoing.enabled` 默认 true） | **是** | **【行为变】+【指纹变】** | `T363`：`on vs off` len 50384/50202、`state_hash` 不同、族级 delta 非空（`MEMORY_WRITE`/`OBSERVATION` +71）⇒ **真被消费** |
 | 3 | `perceive` 修复（`1ffd7eb`） | `_load_time_flags(config=None)` 优先读 cfg 并透传（消除 `mini/inline` 直读盘的方向不对称） | 否 | **【无行为变】**（反向验证判定） | 由 `kernel` 反向验证 + `T345`系；**登记两版本（修复前/后）见前置清单** |
-| 4 | `T361` 等 | 见各单 | 否 | **【无行为变（测试/装置）】** | verify 绿 |
+| 4 | `T361`（`8a7dc16`） | `LLM_CALL` 新增 **`judgment_id`** 字段（身份/审计） | 否（不改 config） | **【仅日志增行（字段增）】** | `payload` 比 `ADDED=['judgment_id']`；**日志哈希链变**，但 `LLM_CALL` 是 identity fold ⇒ **`state_hash` 不变、指纹不变**。⚠️ **该笔曾被误标为「无行为变」，按三轴更正**（留痕）。 |
+| 5 | `T360`/`T361` 外的装置/测试项 | verify/门禁/脚本类 | 否 | **【无行为变（测试/装置）】** | verify 绿 |
 | ⚠️ | **`T372`（双计缺陷，未修）** | `apply_world_director` 双发 `WORLD_DIRECTIVE`+`WORLD_GROUP_EVENT`（同 `directive_id`）⇒ `world_params` 逐条累加 ⇒ **同指令计两次** ⇒ `activity_weight`/`resource_factor_bp`/`market_scarcity_bp` **×2 虚高** | 否（既有缺陷） | **登记为【已知偏差】** | ⭐ **本基线忠实反映当前行为，但世界层强度是 2× 口径**；**别拿绝对值当「正确强度」**；`T372` 修复后世界层强度**减半**（行为变）⇒ 第五次统一重冻 |
 
 > ⚠️ **provenance 声明**：**本基线仅在含 `T372` 缺陷的树上可复现**（该缺陷修复后须重冻）。
