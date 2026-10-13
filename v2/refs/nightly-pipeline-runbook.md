@@ -47,6 +47,13 @@ python3 "$REPO/tools/t271/nightly.py" start \
 > `start` 会**打印脏文件告警**，并把 `source_git_dirty_count` + 冻结区脏文件清单写进每批 `provenance.txt`。
 > **起跑前必须确保冻结区 clean**（不 clean 就 abort 报 leader，不拿脏树当基线）。
 
+> 📣 **起跑预告红线（T350 采纳，2026-10-13）**：任何**在主树起跑**的批/探针，**起跑时必须广播**
+> （含：**起跑时刻、日志路径、预计时长、是否会改树**），并**起跑前 `pgrep -f "orchestration run"` 确认无重活**。
+> 理由：**没有预告时，别人无从判断"我提交前是否有人在读主树"** —— T350 即"任务单只写『错开』、没要求广播"撞上 T338 提交的根因（主因在派单侧）。
+> 补充：**`tree=copy`（`git archive <sha>` 冻结副本）的跑批与主树解耦** —— 主树后续提交**不入副本**
+> （T350 实测：跑批 `cwd=/tmp/t271-<batch>/code`、`/proc/<pid>/maps` 中主树 `code` 映射数=0）⇒ 此时"跑中改主树"**不影响**该批；
+> 但**仍建议预告**并注明是 **copy 口径**。
+
 ## 3. 一键收 + 一页早报
 ```bash
 python3 "$REPO/tools/t271/nightly.py" collect
