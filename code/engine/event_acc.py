@@ -14,11 +14,38 @@ def note_event(state, rec: dict) -> None:
     by.setdefault(rec["type"], []).append(int(rec["seq"]))
     state.seqs_by_type.setdefault(rec["type"], []).append(int(rec["seq"]))
     state.acc_n = getattr(state, "acc_n", 0) + 1
+    _note_income(state, rec)   # T328③：收入标量累加器
+
+
+def _note_income(state, rec: dict) -> None:
+    """按 agent 累加每回合净流入（口径同 `liquidity.recent_income`）。"""
+    t = rec.get("type")
+    if t not in ("TRANSFER", "MARKET_TRADE"):
+        return
+    from .liquidity import _INCOME_TX_TYPES, _EXCLUDE_FLAGS  # 延迟导入（避免环）
+    p = rec.get("payload") or {}
+    if t == "TRANSFER":
+        frm, to, tt = p.get("from"), p.get("to"), p.get("tx_type", "transfer")
+    else:
+        frm, to, tt = p.get("buyer"), p.get("seller"), p.get("tx_type", "trade")
+    if tt not in _INCOME_TX_TYPES:
+        return
+    if frm == to or (set(p.get("flags") or []) & _EXCLUDE_FLAGS):
+        return
+    amt = int(p.get("amount", 0))
+    rd = int(rec["round"])
+    if to:
+        state.income_net.setdefault(to, {}).setdefault(rd, 0)
+        state.income_net[to][rd] += amt
+    if frm:
+        state.income_net.setdefault(frm, {}).setdefault(rd, 0)
+        state.income_net[frm][rd] -= amt
 
 
 def rebuild(state) -> None:
     state.events_by_round.clear()
     state.seqs_by_type.clear()
+    state.income_net.clear()
     state.acc_n = 0
     for rec in state.event_index.values():
         note_event(state, rec)

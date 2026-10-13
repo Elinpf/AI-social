@@ -126,36 +126,20 @@ def recent_default_of(state, aid, round_no, params) -> bool:
 
 # ------------------------------------------------------------------ 收入 / 净值
 def recent_income(state, aid, round_no, params) -> int:
-    """近 `w_income_rounds` 回合的**正**有效净流入合计（口径同 obs/antifraud.ie_eff）。"""
+    """近 `w_income_rounds` 回合的**正**有效净流入合计（口径同 obs/antifraud.ie_eff）。
+
+    T328③：读 `state.income_net`（按 agent 的标量累加器，派生、不入 `state_hash`），
+    与全表扫逐条等价。**filters 与 I_eff 一致**（`_INCOME_TX_TYPES` / `_EXCLUDE_FLAGS`：
+    排除系统项 UBI/铸币/税/费/息/罚/复活费 与已标记作弊流入 wash/cycle/self/mule）；
+    `event_acc._note_income` 复用了同两个常量 —— **改 filters 时两处同步**。
+    """
     window = int(params.get("w_income_rounds", 12))
-    from .event_acc import seqs_of_round  # T295：读路径增量聚合（等价全表扫）
-    per_round = {}
+    from .event_acc import ensure  # T328③：走派生标量累加器（等价全扫）
+    ensure(state)
+    net = state.income_net.get(aid) or {}
     lo = int(round_no) - window
     hi = int(round_no)
-    for rd in range(lo, hi + 1):
-        for seq in seqs_of_round(state, rd):
-            r = state.event_index[seq]
-            t = r.get("type")
-            p = r.get("payload") or {}
-            if t == "TRANSFER":
-                frm, to, tt = p.get("from"), p.get("to"), p.get("tx_type", "transfer")
-            elif t == "MARKET_TRADE":
-                frm, to, tt = p.get("buyer"), p.get("seller"), p.get("tx_type", "trade")
-            else:
-                continue
-            if tt not in _INCOME_TX_TYPES:
-                continue
-            flags = set(p.get("flags") or [])
-            if frm == to or (flags & _EXCLUDE_FLAGS):
-                continue
-            amount = int(p.get("amount", 0))
-            d = per_round.setdefault(rd, 0)
-            if to == aid:
-                d += amount
-            if frm == aid:
-                d -= amount
-            per_round[rd] = d
-    return sum(max(0, v) for v in per_round.values())
+    return sum(max(0, v) for r, v in net.items() if lo <= r <= hi)
 
 
 def net_worth_of(state, aid) -> int:

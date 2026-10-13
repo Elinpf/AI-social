@@ -37,7 +37,7 @@ _ATTR_KEYS = frozenset({
     "money_minted_total", "money_burned_total", "judgments", "pending_intents",
     "audit_violations", "memory_index", "event_index", "observed", "rejected",
     "relations", "encounters", "tags", "norms", "groups", "inventory", "budget_level",
-    "events_by_round", "seqs_by_type", "acc_n", "acc_trusted",
+    "events_by_round", "seqs_by_type", "acc_n", "acc_trusted", "income_net",
 })
 
 
@@ -90,6 +90,8 @@ class WorldState:
     # T295：累加器是否可信 —— 仅 Engine / replay_records 产出的状态为 True；
     # 手工构造/直接注入 event_index 的状态为 False（读取时按全扫等价重建）。
     acc_trusted: bool = False
+    # T328③：按 agent 的收入标量累加器（round -> net 流入），派生、不入 state_hash
+    income_net: dict = field(default_factory=dict)
     observed: dict = field(default_factory=dict)      # agent_id -> [target_event_seq,...]
     rejected: list = field(default_factory=list)      # INTENT_REJECTED 摘要
     # ---- M3 关系 / M7 目标 / 传播（life 折叠，纳入 state_hash）----
