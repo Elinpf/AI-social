@@ -133,6 +133,7 @@ HTML_TMPL = r"""<!DOCTYPE html>
  .tag{display:inline-block;font-size:11px;padding:1px 6px;border-radius:5px;border:1px solid var(--line);color:var(--muted)}
  .ok{color:var(--ok)} .bad{color:var(--bad)} .warn{color:var(--warn)}
  .note{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12.5px;color:#c9d1d9;margin:10px 0}
+ .note.warnbox{border-color:var(--warn);background:#241f10}
  footer{border-top:1px solid var(--line);padding:12px 20px;color:var(--muted);font-size:11.5px}
  code{background:#0b0f14;padding:1px 5px;border-radius:4px}
 </style></head>
@@ -209,7 +210,7 @@ function renderD2(){
   + `<tr><td><b>C</b> <span class="tag warn">T310 未覆盖</span></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="mono">—</td><td class="mono">—</td></tr>`;
  document.getElementById("tblwrap").innerHTML =
   `<table><thead><tr><th>组 / 开关</th><th>事件数</th><th>LLM_CALL</th><th>cached</th><th>耗时</th><th>指纹</th><th>state_hash</th></tr></thead><tbody>${rows}</tbody></table>
-   <div class="note">权威 = <code>${esc(DATA.d2.source)}</code>（口径②=分进程）。<b>C 未被 T310 覆盖</b>，故不填（<b>不拿 t292 的 C 去补</b>）。<b>本口径未记录峰值 RSS</b>（JSON 无该字段）。</div>`;
+   <div class="note warnbox">⚠️ <b>口径纪律（最重要）：t310 与 t292 的 A/B 绝对值不可直接比</b> —— 树 63c200a ≠ 8680737，A 301,332→292,141 的差是<b>树前进（T298 行为变）</b>、<b>非装置/性能收益</b>；<b>两处 B−A 都 = −2</b>（这才是稳健结论）。权威 = <code>t310</code>（分进程）；<b>C 未被 T310 覆盖</b> ⇒ 不填（<b>不拿 t292 的 C 去补</b>）；本口径未记录峰值 RSS。</div>`;
  document.getElementById("diffhead").textContent = "事件类型差异（相对 A，按类型）· 口径②（t310）";
  const diffs=[];
  for(const k of order){ if(k==="A")continue; const x=g[k]; const arr=[];
