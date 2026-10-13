@@ -25,6 +25,15 @@ def load_perception_scope(config_dir=None) -> dict:
     return {"version": ver, "default_visibility_class": default_cls, "scope": scope}
 
 
+def _load_time_flags() -> dict:
+    """T354：`config/time.json` 开关（ongoing 默认 true）。"""
+    from . import version
+    try:
+        return version.load_time_flags()
+    except Exception:
+        return {"ongoing_enabled": True}
+
+
 def location_of(records: list, agent_id: str, upto_round: int) -> str:
     """由 PLACE_MOVE/PLACE_ARRIVED 折叠当前位置，默认 residence。"""
     loc = "residence"
@@ -53,6 +62,27 @@ def visible_events(records: list, agent_id: str, upto_round: int, config: dict |
         "actor": r["actor"], "type": r["type"],
         "payload": r.get("payload", {}), "place": r.get("payload", {}).get("place"),
     } for r in recs]
+
+
+def current_activity(records: list, agent_id: str, upto_round: int) -> dict | None:
+    """T354 期②：该 agent 当前进行中的活动（**纯派生**）。
+
+    = 最近一条 `ACTIVITY_STARTED`（本人发起）之后**无对应 `ACTIVITY_COMPLETED`**；
+    返回 `{"activity_type":..., "place":...}`（无 ⇒ None）。**不新增真相源、不入 state_hash**。
+    """
+    act = None
+    for rec in records:
+        if rec["round"] > upto_round:
+            break
+        t = rec["type"]
+        if t not in ("ACTIVITY_STARTED", "ACTIVITY_COMPLETED"):
+            continue
+        p = rec.get("payload", {})
+        if p.get("agent_id") != agent_id and rec.get("actor") != agent_id:
+            continue
+        act = ({"activity_type": p.get("activity_type"), "place": p.get("place")}
+               if t == "ACTIVITY_STARTED" else None)
+    return act
 
 
 def memory_refs(records: list, agent_id: str, upto_round: int) -> list:
@@ -89,4 +119,7 @@ def perceive(state, agent_id: str, records: list, config: dict | None = None) ->
         "net_worth": state.net_worth(agent_id),
         "visible_events": visible_events(records, agent_id, state.round, config),
         "memory_refs": memory_refs(records, agent_id, state.round),
+        # T354 期②：进行中活动（纯派生；off ⇒ None）
+        "current_activity": current_activity(records, agent_id, state.round)
+        if _load_time_flags().get("ongoing_enabled", True) else None,
     }

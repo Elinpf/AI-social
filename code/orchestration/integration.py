@@ -270,6 +270,14 @@ class KernelAdapter:
             self._plaf = load_visibility_flags().get("place_local_actor_fallback", False)
         except Exception:
             self._plaf = False  # G1：place_local actor 回退（默认 off）
+        try:
+            from engine.version import load_time_flags
+            # T354 期②：优先读**运行时 config**（供同 seed 开/关消融），缺省回退文件值。
+            _tcfg = (self.engine.config.get("time") or {}) if isinstance(self.engine.config, dict) else {}
+            self._ongoing = bool((_tcfg.get("ongoing") or {}).get(
+                "enabled", load_time_flags().get("ongoing_enabled", True)))
+        except Exception:
+            self._ongoing = True
         self._permit_round = None
         self._permits = None  # None=未启用（全许可）；set=本回合允许调 LLM 的 agent
 
@@ -326,12 +334,17 @@ class KernelAdapter:
         permit = True if permits is None else (agent_id in permits)  # M4：默认全许可
         # 注：不暴露 p_ref_mu（Leader 口径：不给 agent 世界定价锚；p_ref 仅用于统计/铸币）；
         #     成交价只由 OFFER_ACCEPTED.terms 决定。
+        ca = None
+        if getattr(self, "_ongoing", True):
+            from engine.perceive import current_activity as _ca  # T354 期②（纯派生）
+            ca = _ca(self.engine.ledger.records, agent_id, r)
         return WorldView(
             agent_id=agent_id, round=r, time=self.derive_time(r),
             status=a.get("status", "alive"), location=loc,
             cash=int(st.cash.get(agent_id, 0)), net_worth=st.net_worth(agent_id),
             visible_events=tuple(visible), memory_refs=memrefs,
             inventory=inv, transferable_goods=tg, llm_permit=permit,
+            current_activity=ca,
         )
 
     # ---- 落账辅助（唯一经 Arbiter；D1：入本回合缓冲，P6 落盘）----

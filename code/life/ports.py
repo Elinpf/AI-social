@@ -129,6 +129,10 @@ class WorldView:
     llm_permit: bool = True
     # optional: unconsumed messages addressed to the agent
     inbox: tuple[EventView, ...] = ()
+    # T354 期②：当前进行中的活动（纯派生：`ACTIVITY_STARTED` 无对应 `COMPLETED`）；
+    # 形如 `{"activity_type":..., "place":...}`，None=无。**不新增真相源、不入 state_hash**；
+    # `time.ongoing.enabled=False` 时恒 None。
+    current_activity: dict | None = None
 
     @property
     def day(self) -> int:

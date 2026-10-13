@@ -100,6 +100,20 @@ def load_visibility_flags(config_dir: str | Path | None = None) -> dict:
     return {"place_local_actor_fallback": bool(obj.get("place_local_actor_fallback", False))}
 
 
+def load_time_flags(config_dir: str | Path | None = None) -> dict:
+    """T354：tick 内时间开关（`config/time.json`；进 engine_version 指纹）。
+
+    `ongoing_enabled` 默认 **true**（Leader 裁定：用户拍板功能不得默认关）。
+    """
+    d = Path(config_dir) if config_dir else CONFIG_DIR
+    obj = _read_json(d / "time.json") or {}
+    og = obj.get("ongoing", {}) or {}
+    iv = obj.get("interval", {}) or {}
+    return {"ongoing_enabled": bool(og.get("enabled", True)),
+            "interval_enabled": bool(iv.get("enabled", False)),
+            "U": int(obj.get("U", 6) or 6)}
+
+
 def assert_log_fingerprint(records: list, config_dir: str | Path | None = None,
                            expected: str | None = None) -> None:
     """重放前断言：日志 `WORLD_INIT.fingerprint` == 期望的 engine_version 指纹。
