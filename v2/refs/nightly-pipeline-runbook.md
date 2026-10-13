@@ -84,6 +84,8 @@ python3 "$REPO/tools/t271/nightly.py" collect
 > - ⚠️ **被 `SIGKILL`/断电**：trap 不触发 ⇒ `END` **不写出**（"END 缺失"本身=异常信号；此时以 `heartbeat.tsv` 末行为准）。**只能留痕到 `SIGTERM/INT`**。
 > - ⏱ 写标记**只在结束后**，不进热路径、不影响批体计时。
 
+> 🔗 **核验单的 `depends_on` 纪律（T374/T376 死锁教训，2026-10-13）**：**核验单的 `depends_on` 只应指向"前置工作"，不得指向"被核对象的完成状态"** —— 否则被核单（作者不自标 completed）与核验单互卡死锁。核验"结论随时可推翻"，不必等被核单先 `completed`。
+
 ## 4. 失败可续（⚠️ 诚实口径）
 ```bash
 python3 "$REPO/tools/t271/nightly.py" resume --batches <表> --env-file "$REPO/code/.env.local"
