@@ -155,6 +155,12 @@ class Event:
 > - **⇒ 仍需重冻**：日志字节变 ⇒ golden / metrics 须在新 epoch 重生成。**归入 `T355` 同一 epoch**（那一轮反正要重冻）⇒ **零额外重冻成本**。
 > - **T299 语义一致门口径**：`agent_id` 是**语义字段**（非 freeze 缓存计量字段）⇒ **不得**加入 T299 的「纯计量白名单」；**跨 epoch 对照须显式标注「唯一差异 = 指纹行及其派生 + `LLM_CALL.agent_id` 新增字段」**。
 
+> **G-cnt · `LLM_CALL` 计数口径（防"同一数字被两个轴解释"复燃；应 Leader 2026-10-13 21:41，已登记）**：
+> `LLM_CALL` 的**事件条数 = 实际 provider 调用（`cached=false`，miss）+ 缓存命中（`cached=true`，hit）** —— **命中分支同样记一条**（`freeze/llm_client.py::_emit_call(cached=True, tokens_in=0, cost_units=0)`）。
+> - ⇒ **`条数 ≥ 实际调用`**（命中不省条数，只省 token/cost）；
+> - ⇒ **"实际调用 / 缓存命中"是按 `cached` 分列的【切片】，不是第二套口径**；
+> - ⇒ **跨 epoch 的 `LLM_CALL` 条数差，须标清轴**：是**条数差**、**实际调用差**、还是**成本差**（三者不同）；**不得混说**（曾出现"调用 2× 待归因"，实为**启动期集中假象**，终值 ≈ `T300` 同级 —— 见 `T355-refreeze.md §5b`）。
+
 **H. 意图拒绝审计（新增，应 00-architecture §4.2 / AR-C1 回补）**
 
 | type | phase | payload 关键字段 | 说明 |
