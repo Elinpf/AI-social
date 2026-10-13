@@ -499,8 +499,14 @@ class LLMClient:
         thinking: Optional[bool] = None,
     ) -> Dict[str, Any]:
         extra: Dict[str, Any] = {}
+        # T361：调用主体归属 —— 从 `meta["agent_id"]` 提升为一等 payload 字段（T360 登记口径）。
+        # 非居民调用由调用侧显式传 SYSTEM/DIRECTOR/OBSERVER，或省略（= 未归属 UNATTRIBUTED）。
+        agent_id: Optional[str] = None
         if meta:
             extra["meta_digest"] = digest(meta)
+            v = meta.get("agent_id")
+            if v:
+                agent_id = str(v)
         if thinking is not None:
             extra["thinking"] = bool(thinking)
         payload = llm_call_payload(
@@ -518,6 +524,7 @@ class LLMClient:
             cost_units=cost_units,
             provider=getattr(self.provider, "name", ""),
             phase=phase,
+            agent_id=agent_id,
             extra=extra,
         )
         event = self.event_log.append("LLM_CALL", payload, round=round, phase=phase)

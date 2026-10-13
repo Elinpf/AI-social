@@ -128,9 +128,16 @@ def llm_call_payload(
     cost_units: int,
     provider: str,
     phase: int = 2,
+    agent_id: Optional[str] = None,
     extra: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
-    """``LLM_CALL`` 载荷——成本审计（分列，不改账）。"""
+    """``LLM_CALL`` 载荷——成本审计（分列，不改账）。
+
+    ``agent_id``（T360 登记 / T361 实现）：**本次调用的归属主体**，**可选**；
+    取值 ∈ ``AgentId ∪ {SYSTEM, DIRECTOR, OBSERVER}``；**缺省（不写该键）= 未归属
+    ``UNATTRIBUTED``**（旧日志兼容、不强制迁移）。消费方须先经 `is_agent_actor()` 守卫，
+    非 Agent 主体不得伪装成居民。**不改 `actor`**（审计桥的"发射者"仍为 `SYSTEM`）。
+    """
     payload: Dict[str, Any] = {
         "purpose": purpose,
         "model": model,
@@ -146,6 +153,9 @@ def llm_call_payload(
         "tokens_out": int(tokens_out),
         "cost_units": int(cost_units),
     }
+    # 仅在明确给出时写入（缺省即"未归属"，不伪装成某居民；旧日志无该键亦合法）。
+    if agent_id is not None:
+        payload["agent_id"] = agent_id
     if extra:
         payload.update(extra)
     return payload
