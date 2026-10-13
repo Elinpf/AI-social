@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>青溪镇 · 居民调用轨迹</title>
+<style>
+ :root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--fg:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--ok:#3fb950;--warn:#d29922;--bad:#f85149;--run:#3fb950;--llm:#58a6ff;--ev:#b07ce8}
+ *{box-sizing:border-box} html,body{height:100%}
+ body{margin:0;background:var(--bg);color:var(--fg);font:13px/1.5 -apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+ header{padding:8px 14px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+ header h1{font-size:14px;margin:0}
+ .tabs button{background:var(--panel);border:1px solid var(--line);color:var(--fg);padding:5px 12px;border-radius:7px;cursor:pointer;margin-right:6px}
+ .tabs button.active{border-color:var(--accent);background:#1d2b3a}
+ .ctl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 14px;border-bottom:1px solid var(--line);background:var(--panel)}
+ select,input{background:#0b0f14;border:1px solid var(--line);color:var(--fg);border-radius:6px;padding:4px 6px;font-size:12px}
+ .btn{background:#1d3b52;border:1px solid var(--accent);color:var(--fg);border-radius:6px;padding:5px 10px;cursor:pointer}
+ main{padding:0;height:calc(100% - 96px);overflow:auto}
+ .banner{margin:10px 14px;border:1px solid var(--warn);background:#241f10;border-radius:8px;padding:8px 10px;font-size:12px;color:#e8d9a8}
+ .banner b{color:var(--warn)}
+ .sec{padding:8px 14px}
+ .lane{margin:6px 0}
+ .lane .lbl{font-size:11.5px;color:var(--muted);margin-bottom:3px}
+ .track{display:flex;gap:1px;height:16px;overflow-x:auto;border:1px solid var(--line);border-radius:5px;padding:1px}
+ .cell{min-width:8px;flex:1 0 8px;background:#1b2028;border-radius:2px;position:relative}
+ .cell.llm{background:var(--llm)} .cell.ev{background:var(--ev)}
+ .cell span{position:absolute;left:50%;transform:translateX(-50%);bottom:18px;font-size:10px;color:var(--muted);display:none}
+ .step{border:1px solid var(--line);border-radius:8px;padding:6px 9px;margin:5px 0;background:var(--panel);cursor:pointer}
+ .step:hover{border-color:var(--accent)}
+ .step .h{display:flex;gap:8px;align-items:center;font-size:12.5px}
+ .tag{font-size:11px;padding:1px 6px;border-radius:5px;border:1px solid var(--line);color:var(--muted)}
+ .tag.llm{color:var(--llm);border-color:#24446b} .tag.ev{color:var(--ev);border-color:#4a356b} .tag.body{color:var(--ok);border-color:#1f6f3a}
+ .step .src{display:none;margin-top:5px;color:var(--muted);font-size:11px;font-family:ui-monospace,Menlo,Consolas,monospace;word-break:break-all}
+ .step.open .src{display:block}
+ .body{font-size:12.5px;color:#dfe7ef;margin-top:3px;white-space:pre-wrap}
+ .msg{border:1px solid var(--line);border-radius:8px;padding:7px 9px;margin:5px 0;background:var(--panel)}
+ .msg .meta{font-size:11px;color:var(--muted)}
+ .noteinl{color:var(--warn);font-size:11.5px}
+ code{background:#0b0f14;padding:1px 5px;border-radius:4px}
+</style></head>
+<body>
+<header>
+ <h1>青溪镇 · 居民调用轨迹</h1>
+ <div class="tabs"><button id="tab-trace" class="active">轨迹</button><button id="tab-conv">对话</button></div>
+ <span class="tag" id="stamp">sha —</span>
+</header>
+<div class="ctl">
+ <span>日志：<code id="logname"></code></span>
+ <label>居民 <select id="agent"></select></label>
+ <label>回合 <input id="r0" type="number" value="0" style="width:64px"> – <input id="r1" type="number" value="48" style="width:64px"></label>
+ <button class="btn" id="apply">应用</button>
+ <span class="muted" id="stat"></span>
+</div>
+<main>
+ <div class="banner" id="gaps"></div>
+ <div id="view"></div>
+</main>
+<script>
+const QS = new URLSearchParams(location.search);
+const LOG = QS.get("log") || "sample/run_b2_n20_week.jsonl";
+const AG = QS.get("agent") || "";
+let R0 = parseInt(QS.get("r0")||"0",10), R1 = parseInt(QS.get("r1")||"48",10);
+let RECS = [], byAgent = {}, agents = [], msgs = [], llm = [];
+let TAB = (QS.get("tab")==="conv" || location.hash==="#conv") ? "conv" : "trace";
+const esc = s => String(s==null?"":s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const el = id => document.getElementById(id);
+
+document.getElementById("logname").textContent = LOG;
+
+async function boot(){
+  // 版本角标（可追溯）
+  try { const g = await (await fetch("/__gitstamp",{cache:"no-store"})).json(); el("stamp").textContent = "sha "+g.sha; } catch(e){}
+  el("gaps").innerHTML = "<b>数据缺口（如实标注，不隐藏）：</b>① <b>LLM 调用正文（prompt/response）拿不到</b>——日志仅存哈希（T227 捕获默认关）⇒ 参考图『工具参数→返回』层做不出；② <b>LLM_CALL 无法归到具体居民</b>（actor=SYSTEM、无 agent_id）⇒『模型』行只按回合(全体)显示；③ <b>对话无延续结构</b>（MSG 的 topic/refs 全空）⇒ 只标『无延续结构』。";
+  if (TAB==="conv"){ el("tab-conv").classList.add("active"); el("tab-trace").classList.remove("active"); }
+  await loadLog();
+}
+
+async function loadLog(){
+  el("stat").textContent = "载入中…";
+  const t0 = performance.now();
+  const txt = await (await fetch(LOG,{cache:"no-store"})).text();
+  const lines = txt.split("\n");
+  const agSet = new Set(); msgs = []; llm = []; byAgent = {};
+  for (const ln of lines){
+    if (!ln) continue;
+    let r; try { r = JSON.parse(ln); } catch(e){ continue; }
+    const t = r.type, p = r.payload || {}, rd = (r.round==null?0:r.round);
+    if (t === "MSG_DM" || t === "MSG_PUBLIC" || t === "MSG_GROUP"){ msgs.push({rd,seq:r.seq,type:t,from:p.from||p.author||r.actor,to:p.to||"",body:p.body||"",place:p.place||"",tag:(p.tag_hints||[]).join(","),topic:p.topic||null,refs:p.refs||[]}); }
+    if (t === "LLM_CALL"){ llm.push({rd,seq:r.seq,purpose:p.purpose,model:p.model,tokens_in:p.tokens_in,tokens_out:p.tokens_out,cached:p.cached,tier:p.tier,thinking:p.thinking,provider:p.provider}); continue; }
+    // 居民事件（只认 P<数字> 居民 id，排除 MARKET/场所等）
+    const aid = p.agent_id || (typeof r.actor==="string" && /^P\d+$/.test(r.actor) ? r.actor : null);
+    if (!aid || !/^P\d+$/.test(aid)) continue;
+    agSet.add(aid);
+    (byAgent[aid] = byAgent[aid] || []).push({rd,seq:r.seq,type:t,p});
+  }
+  agents = [...agSet].sort();
+  RECS = lines.length;
+  el("stat").textContent = `记录 ${RECS.toLocaleString()} · 居民 ${agents.length} · 消息 ${msgs.length} · LLM 调用 ${llm.length} · 载入 ${(performance.now()-t0).toFixed(0)}ms`;
+  const sel = el("agent"); sel.innerHTML = agents.map(a=>`<option ${a===AG?"selected":""}>${a}</option>`).join("");
+  bind(); render();
+}
+function bind(){
+  el("tab-trace").onclick=()=>{TAB="trace";el("tab-trace").classList.add("active");el("tab-conv").classList.remove("active");render();};
+  el("tab-conv").onclick=()=>{TAB="conv";el("tab-conv").classList.add("active");el("tab-trace").classList.remove("active");render();};
+  el("apply").onclick=()=>{R0=parseInt(el("r0").value||"0",10);R1=parseInt(el("r1").value||"0",10);render();};
+  el("agent").onchange=render;
+}
+function render(){ const a=el("agent").value; (TAB==="trace"?renderTrace:renderConv)(a); }
+
+function lane(counts, from, to, cls){
+  let html = '<div class="track">';
+  for (let r=from;r<=to;r++){ const c=counts[r]||0;
+    html += `<div class="cell ${c?cls:''}" title="round ${r} · ${c} 项" style="${c?`opacity:${Math.min(1,0.35+c/Math.max(1,Math.max(...Object.values(counts),1))*0.65)}`:''}"></div>`; }
+  return html + '</div>';
+}
+function renderTrace(a){
+  const from=R0,to=R1;
+  const ev = (byAgent[a]||[]).filter(e=>e.rd>=from&&e.rd<=to);
+  const llmRounds = {}; llm.filter(x=>x.rd>=from&&x.rd<=to).forEach(x=>llmRounds[x.rd]=(llmRounds[x.rd]||0)+1);
+  const evRounds = {}; ev.forEach(e=>evRounds[e.rd]=(evRounds[e.rd]||0)+1);
+  // 逐步列表：把（全体 LLM 调用，按回合）与该居民事件、消息合并，按 rd,seq 排序
+  const steps = [];
+  llm.filter(x=>x.rd>=from&&x.rd<=to).forEach(x=>steps.push({kind:"llm",...x}));
+  ev.forEach(e=>steps.push({kind:"ev",...e}));
+  msgs.filter(m=>(m.from===a||m.to===a)&&m.rd>=from&&m.rd<=to).forEach(m=>steps.push({kind:"msg",...m}));
+  steps.sort((p,q)=>p.rd-q.rd || (p.seq-q.seq));
+  const rows = steps.slice(0,400).map((s,i)=>{
+    if (s.kind==="llm") return stepHtml(i,"llm",`模型调用 · <b>${esc(s.purpose)}</b>`,`round ${s.rd}`, `<span class="tag llm">模型</span><span class="tag">全体·不可归属</span>`,
+       `${s.model||""} · tokens in/out ${s.tokens_in}/${s.tokens_out} · cached ${s.cached} · tier ${s.tier||"-"} · thinking ${s.thinking}`, `seq=${s.seq} type=LLM_CALL`);
+    if (s.kind==="ev"){ const d=evDesc(s); return stepHtml(i,"ev",`${esc(s.type)}`,`round ${s.rd}`, `<span class="tag ev">事件</span>`, d, `seq=${s.seq} type=${s.type}`); }
+    const dir = s.from===a? `→ ${esc(s.to||"(公开)" )}` : `← ${esc(s.from)}`;
+    return stepHtml(i,"body",`消息 ${esc(s.type)} ${dir}`,`round ${s.rd}`,`<span class="tag body">正文</span>`, esc(s.body), `seq=${s.seq} type=${s.type} msg_id=${s.msg_id||""}`);
+  }).join("");
+  el("view").innerHTML = `
+   <div class="sec"><div class="lane"><div class="lbl">模型调用（全体 · 按回合）</div>${lane(llmRounds,from,to,"llm")}</div>
+    <div class="lane"><div class="lbl">行为与事件 · ${esc(a)}（按回合）</div>${lane(evRounds,from,to,"ev")}</div></div>
+   <div class="sec"><b>逐步列表</b> <span class="muted">（${esc(a)}，round ${from}–${to}；共 ${steps.length} 步，显示前 400）· 点行看出处</span>${rows||'<div class="muted">无</div>'}</div>`;
+  document.querySelectorAll(".step").forEach(n=>n.onclick=()=>n.classList.toggle("open"));
+}
+function evDesc(s){ const p=s.p||{};
+  const m={PLACE_MOVE:()=>`去往 ${p.to_place||p.place||"?"}`,PLACE_ARRIVED:()=>`抵达 ${p.place||"?"}`,ACTIVITY_STARTED:()=>`开始「${p.activity_type||"活动"}」@${p.place||"?"}`,ACTIVITY_COMPLETED:()=>`完成活动`,RELATION_CHANGE:()=>`关系变化 ${p.delta!=null?("Δ"+p.delta):""} ${p.other_id?("↔"+p.other_id):""}`,METABOLISM:()=>`代谢`,NEED_UPDATE:()=>`需求更新`,SKILL_PRACTICE:()=>`练习技能 ${p.skill||""}`,SKILL_LEVEL_UP:()=>`技能升级 ${p.skill||""}`,MONEY_MINTED:()=>`铸币`,AGENT_BORN:()=>`诞生`,AGENT_DIED:()=>`死亡`,AGENT_REVIVED:()=>`复活`};
+  return (m[s.type]? m[s.type]() : "") + ` <span class="muted">(${Object.keys(p).slice(0,6).join(", ")})</span>`;
+}
+function stepHtml(i,cls,title,sub,badge,detail,src){
+  return `<div class="step"><div class="h">${badge}<b>${title}</b><span class="tag">${sub}</span></div>${detail?`<div class="body">${detail}</div>`:""}
+   <div class="src">来源：<b>${esc(LOG)}</b> · ${esc(src)} · 行内记录（可复算）；页面 sha 见右上</div></div>`;
+}
+function renderConv(a){
+  const list = msgs.filter(m=>m.from===a||m.to===a).sort((p,q)=>p.rd-q.rd||p.seq-q.seq);
+  const rows = list.slice(0,300).map(m=>{
+    const dir = m.from===a? `发→${esc(m.to||"(公开)")}` : `收←${esc(m.from)}`;
+    return `<div class="msg"><div class="meta">round ${m.rd} · seq ${m.seq} · ${esc(m.type)} · ${dir} · 场所 ${esc(m.place||"-")} · tag ${esc(m.tag||"-")} · msg_id ${esc(m.msg_id||"")}</div>
+      <div class="body">${esc(m.body)}</div>
+      <div class="meta">延续结构：<span class="noteinl">无（topic/refs 为空）</span></div></div>`;
+  }).join("");
+  el("view").innerHTML = `<div class="sec"><b>对话 · ${esc(a)}</b> <span class="muted">（共 ${list.length} 条，显示前 300）</span>
+    <div class="noteinl" style="margin:6px 0">如实标注：消息事件**无话题线字段**（topic/refs 空）⇒ **无法判断是否延续上一轮**，故每条约显『无延续结构』。</div>
+    ${rows||'<div class="muted">该居民无消息</div>'}</div>`;
+}
+boot();
+</script>
+</body></html>
