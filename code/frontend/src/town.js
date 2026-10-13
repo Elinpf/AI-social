@@ -129,6 +129,8 @@
       this.worldLayer.addChild(this.groundLayer);
       this.worldLayer.addChild(this.placeLayer);
       this.worldLayer.addChild(this.landmarkLayer);
+      this.fgLayer = new PIXI.Container();         // T357-A 前景（place/landmark 之上、agent 之下）：近景遮挡剪影+暗角
+      this.worldLayer.addChild(this.fgLayer);
       this.worldLayer.addChild(this.agentLayer);
       try { this.agentLayer.sortableChildren = true; } catch (e) { /* mock */ }
 
@@ -217,6 +219,7 @@
       this._buildDecorations();
       this._buildPlaces();
       this._buildLandmarks();
+      this._buildForeground();     // T357-A：局部高对比结构（前景遮挡剪影 + 近景暗角）
       this._buildAtmosphere();
       // T116：URL `?view=landscape|default|info` 直接进对应信息分层（供景观截图/欣赏）
       try {
@@ -279,6 +282,42 @@
       c.__glows = [[-sz[0] * 0.18, -(sz[1] - anc[1]) * 0.55, 6], [sz[0] * 0.18, -(sz[1] - anc[1]) * 0.55, 6]];
       c.__smoke = [];
       return c;
+    }
+
+    // T357-A：局部高对比结构 —— 近景遮挡剪影（下缘大树冠，跨压建筑）+ 近景/四角暗角（统一调色板 + Bayer 抖动）
+    _buildForeground() {
+      const P = global.PIXI;
+      const G = this.fgLayer; if (!G) return;
+      const Wd = this.world.width, H = this.world.height;
+      // ① 近景/四角暗角（Bayer 抖动，像素感；下缘强、左右下角更强）
+      const BAYER = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
+      const CELL = 3;
+      const vg = new P.Graphics();
+      for (let y = 0; y < H; y += CELL) {
+        for (let x = 0; x < Wd; x += CELL) {
+          const near = Math.max(0, (y / H - 0.50) / 0.50);                 // 只在下半
+          const ex = Math.max(0, 1 - Math.min(x, Wd - x) / (Wd * 0.30));   // 越靠左右越强
+          const a = near * (0.08 + 0.26 * ex);                             // 目标不透明度
+          if (a <= 0.015) continue;
+          const b = (BAYER[((y / CELL) | 0) & 3][((x / CELL) | 0) & 3] + 0.5) / 16;
+          if (b > a) continue;                                             // 抖动阈值
+          fillRect(vg, x, y, CELL, CELL, 0x0a1410, a);
+        }
+      }
+      G.addChild(vg);
+      // ② 近景遮挡剪影：下缘左右大"树冠"，深色、非直边、跨压紧邻建筑
+      const DARK = 0x0c1712;
+      const put = (cx, cy, rect, sc) => {
+        const t = W.spriteTex(this.tilesetBase, rect); if (!t) return;
+        const sp = new P.Sprite(t); sp.anchor.set(0.5, 1); sp.x = cx; sp.y = cy; sp.scale.set(sc); sp.tint = DARK;
+        G.addChild(sp);
+        // 接触影：让剪影"压"在地面上
+        const sh = new P.Graphics(); fillEllipse(sh, cx + 4, cy - 3, 26 * sc, 8 * sc, 0x050b08, 0.30); G.addChild(sh);
+      };
+      put(70, H - 62, W.SPR.treeCluster, 4.2);
+      put(190, H - 96, W.SPR.conifer, 3.4);
+      put(Wd - 80, H - 58, W.SPR.treeCluster, 4.6);
+      put(Wd - 210, H - 92, W.SPR.conifer, 3.2);
     }
 
     // 氛围层：浅蓝冷调 + 细雪光点（确定性摆放）
