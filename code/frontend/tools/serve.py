@@ -24,6 +24,7 @@ import argparse
 import http.server
 import json
 import os
+import re
 import shutil
 import socketserver
 import subprocess
@@ -142,6 +143,27 @@ def run_info(run_path: str) -> dict:
                     pass
         except Exception:
             pass
+    # T348/T375 三态真源：host.log 的 `[runner] batch exited rc=N`（优先既有真源）+ meta.ended_at
+    hl = d / "host.log"
+    if hl.exists():
+        try:
+            rc = None
+            for ln in hl.read_text(encoding="utf-8", errors="replace").splitlines():
+                m = re.search(r"\[runner\]\s*batch exited\s+rc=(-?\d+)", ln)
+                if m:
+                    rc = int(m.group(1))
+            if rc is not None:
+                info["rc"] = rc
+                info["ended"] = True
+        except Exception:
+            pass
+    # 三态：running / done(rc=0) / failed(rc≠0)；无 rc 但有 ended_at ⇒ done（保守）
+    if info.get("rc") is not None:
+        info["state"] = "done" if info["rc"] == 0 else "failed"
+    elif info.get("ended"):
+        info["state"] = "done"
+    else:
+        info["state"] = "running"
     return info
 
 

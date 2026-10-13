@@ -269,14 +269,24 @@
       else if (idleSec < 300) st = "已追平（等待新数据）";
       else st = "长时间无增长（可能已结束）";
       setLiveStatus(win + st);
-      // T348：批已结束 ⇒ 终态文案（"可回放"），不是看起来像坏了；停止轮询。
+      // T348/T375：批状态三态（还在跑 / 完成rc=0 / 挂了rc≠0）——一眼可判，且"挂了"必须显眼。
       let info = null;
       try { info = await (await fetch(`/__runinfo?path=${encodeURIComponent(path)}`, { cache: "no-store" })).json(); } catch (e) { }
-      if (info && info.ended) {
-        if (el("live-batch") && info.batch) el("live-batch").textContent = "批次 " + info.batch;
-        setLiveStatus("跟随已结束（批已完成" + (info.ended_at ? "，" + info.ended_at : "") + "）· 可回放（尾部窗口 " + all.length + " 事件）");
-        liveTimer = null;
-        return;
+      if (info && !info.error) {
+        const LBL = { running: "运行中", done: "完成（rc=0）", failed: "失败（rc≠0）" };
+        const lbl = LBL[info.state] || info.state || "";
+        if (el("live-batch")) el("live-batch").textContent = `批次 ${info.batch || inferBatch(path)} · ${lbl}`;
+        if (info.state === "failed") {
+          setLiveStatus(`⚠ 批失败（rc=${info.rc}）· 见 host.log · 已停止跟随`);
+          liveTimer = null; return;
+        }
+        if (info.state === "done") {
+          setLiveStatus("跟随已结束（批已完成" + (info.ended_at ? "，" + info.ended_at : "") + "）· 可回放（尾部窗口 " + all.length + " 事件）");
+          liveTimer = null; return;
+        }
+      } else if (info && info.ended) {   // 兜底：无 state 但有 ended
+        setLiveStatus("跟随已结束（批已结束）· 可回放");
+        liveTimer = null; return;
       }
       liveTimer = setTimeout(poll, POLL);
     };
