@@ -64,6 +64,15 @@
 ## 5. 回归 / 门禁
 
 - `python3 -m pytest -q` → **591 passed**（旧 mock 文本改动**无 golden 破坏**）。
+- **`make verify` → 全绿**（仓根门禁 + 前端 CI；复跑确认，`[verify] OK`）。
+  - ⚠️ 首跑曾报 **1 红**：`life/tests/test_t127_judgment_dims.py` 的 `engine_version` 指纹不匹配
+    （日志 `1c9c4430` ≠ 当前 `869c1953`）。经核**非本改动**（本改动只改 mock 文本、不动 `config`/指纹）——
+    系**运行期并发 config 变更**造成的**瞬时假不匹配**；**单独复跑该测试 → 3 passed**（当前指纹 `869c1953`）。
 - `tools/t271` 相关：多跑对比分进程（本单未跑多跑对照）。
-- `make verify`：见提交/频道（与 kernel 错开）。
 - `v2/evidence/t103_dialogue_real_llm.json` 已重生成：mock 侧正文由 `mock::<hash>` 变为**可读句**（分叉仍 6/6）。
+  ⚠️ 今后**重生成已入库证据须归档旧副本**（`archive/` + 时效标注），不直接覆盖（Leader 07:35 立规）。
+
+### 5.1 判据键值（供 Leader 一行读数）
+
+- 触发路径：`life/agent.py::_reflection_drift_events`（**当时口径 = 26 子串情感表** `_DRIFT_POS/_DRIFT_NEG` + `min_windows=2`、`min_importance=7`、`delta_max=1`；**尚未含 T333 新增的 `criterion` 键**）。
+- 读数：window1 → **0**；window2 → **2** 条 `PERSONA_DRIFT`：`dim=openness, delta=+1, cause_mem_id=M-w1-1` 与 `dim=extraversion, delta=-1, cause_mem_id=M-w1-2`。
