@@ -78,11 +78,15 @@ class RngStream:
 class Ctx:
     """hook 上下文：只提供确定性随机与只读 config，禁止 I/O / 墙钟。"""
 
-    def __init__(self, global_seed: int, config: dict, round_no: int = 0, phase: int = 0):
+    def __init__(self, global_seed: int, config: dict, round_no: int = 0, phase: int = 0,
+                 kernel=None):
         self.global_seed = int(global_seed)
         self.config = config
         self.round_no = int(round_no)
         self.phase = int(phase)
+        # T338：内核只读端口（组合根注入；缺省 None）。life 经 `ctx.kernel.round_events(...)`
+        # 读取派生累加器，避免"端口拿不到 ⇒ 静默回退全扫"。
+        self.kernel = kernel
 
     def rng(self, stream_id: str, seq: int, n: int) -> list[int]:
         return draw_u64(self.global_seed, stream_id, self.round_no, seq, n)
@@ -97,4 +101,4 @@ class Ctx:
         return RngStream(self.global_seed, stream_id)
 
     def at(self, round_no: int, phase: int) -> "Ctx":
-        return Ctx(self.global_seed, self.config, round_no, phase)
+        return Ctx(self.global_seed, self.config, round_no, phase, kernel=self.kernel)

@@ -28,6 +28,40 @@ from .util import clamp
 PHASE_LIFE = C.PHASE_LIFE
 ENC_DURATION = 3                  # D_enc: co-presence duration that counts as an encounter
 
+# ---- T338：内核只读端口解析 + 不可用可观测（不再静默回退全扫）----
+_PORT_FALLBACK = {"n": 0, "warned": False}
+
+
+def _resolve_round_events_port(k):
+    """从 kernel（或 kernel 上的 `ctx.kernel` 注入端口）解析 `round_events`；无则 None。"""
+    if k is None:
+        return None
+    fn = getattr(k, "round_events", None)
+    if fn is not None:
+        return fn
+    kk = getattr(k, "kernel", None)           # T338：组合根注入（Ctx.kernel = adapter）
+    return getattr(kk, "round_events", None) if kk is not None else None
+
+
+def _note_port_fallback() -> None:
+    """端口不可用 ⇒ 回退全扫：计数 + 首次告警（可反向验证，非静默变慢）。"""
+    _PORT_FALLBACK["n"] += 1
+    if not _PORT_FALLBACK["warned"]:
+        _PORT_FALLBACK["warned"] = True
+        import sys
+        print("[T338][life.settlement] WARN: round_events 端口不可用 ⇒ 回退全表扫 "
+              "(性能退化，非正确性问题)；请检查 ctx.kernel 是否注入。", file=sys.stderr)
+
+
+def port_fallback_count() -> int:
+    """回退次数（供测试/观测）。"""
+    return _PORT_FALLBACK["n"]
+
+
+def reset_port_fallback_count() -> None:
+    _PORT_FALLBACK["n"] = 0
+    _PORT_FALLBACK["warned"] = False
+
 
 class Ctx(Protocol):
     def derive_time(self, round_no: int) -> dict: ...
@@ -75,10 +109,12 @@ class LifeState:
         return self.s.get("norms", {}) or {}
 
     def events_this_round(self, round_no: int, etype: str | None = None, kernel=None) -> list:
-        # T319: 走内核只读端口（派生累加器，去全扫）；无端口（如 mini 测试内核）时回退全扫。
-        fn = getattr(kernel if kernel is not None else self.kernel, "round_events", None)
+        # T319/T338：走内核只读端口（派生累加器，去全扫）；无端口（如 mini 测试内核）时回退全扫。
+        fn = _resolve_round_events_port(kernel if kernel is not None else self.kernel)
         if fn is not None:
             return fn(round_no, (etype,) if etype else None)
+        # T338：**端口不可用时不再静默** —— 计数 + 一次告警（可反向验证）。
+        _note_port_fallback()
         out = []
         for rec in self.s.get("event_index", {}).values():
             if rec.get("round") != round_no:

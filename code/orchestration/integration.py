@@ -950,6 +950,7 @@ def build_world(seed: int, config: dict | None = None, *, n: int | None = None,
                              peers=pids)
               for pid in pids]
     engine.agent_steppers = agents
+    engine.kernel = adapter  # T338：组合根注入内核只读端口（life 经 ctx.kernel.round_events）
     # T264：把「可见性增量索引」注册给 life（L6 记忆写入）——按 id(records) 绑定，避免多世界串扰
     try:
         import life.visibility as _LV

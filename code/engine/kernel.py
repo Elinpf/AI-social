@@ -44,7 +44,8 @@ class Engine:
         assert_exchange_available(config)
         self.state = initial_state(self.seed)
         self.state.acc_trusted = True  # T295：引擎状态 ⇒ 累加器可信（读取走增量聚合）
-        self.ctx = Ctx(self.seed, config, 0, 0)
+        self.kernel = None  # T338：组合根注入的内核只读端口（life 经 ctx.kernel.round_events）
+        self.ctx = Ctx(self.seed, config, 0, 0, kernel=self.kernel)
         # 生活层驱动：每回合在 Phase 2 DECIDE 调用 agent.step()（注入，不 import life）
         self.agent_steppers: list = []
         # T265：本轮唤醒集（{agent_id: {...}}）；wake.enabled=False 时恒为 None（不解算）
@@ -253,6 +254,7 @@ class Engine:
     def run_round(self, round_no: int) -> None:
         self.state.round = round_no
         self.ctx = self.ctx.at(round_no, 0)
+        self.ctx.kernel = self.kernel  # T338：把组合根注入的端口带入本回合 ctx
         self.arbiter.discard()  # 回合起始：清空待提交缓冲区
 
         try:
