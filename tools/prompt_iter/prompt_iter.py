@@ -66,9 +66,15 @@ def cmd_run(a) -> int:
         eng.run_round(r)
     recs = eng.ledger.records
     (d / "run.jsonl").write_text("\n".join(json.dumps(x, ensure_ascii=False) for x in recs), encoding="utf-8")
+    try:
+        head_sha = os.popen("git -C %s rev-parse --short HEAD" % CODE.parent).read().strip()
+    except Exception:
+        head_sha = ""
     meta = {"version_tag": a.tag, "seed": a.seed, "n": a.n, "rounds": a.rounds,
             "wake_off": bool(a.wake_off),
-            "prompt_sha": _prompt_sha(), "head_sha": os.popen("git -C %s rev-parse --short HEAD" % CODE.parent).read().strip()}
+            "copy_sha": os.environ.get("PROMPT_ITER_COPY_SHA", ""),   # 真 LLM 迭代：副本 sha（口径）
+            "provider": os.environ.get("HITT_LLM_PROVIDER", "mock"),
+            "prompt_sha": _prompt_sha(), "head_sha": head_sha}
     (d / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
     calls = [r for r in recs if r["type"] == "LLM_CALL"]
     hit = sum(1 for r in calls if (r.get("payload") or {}).get("cached"))
