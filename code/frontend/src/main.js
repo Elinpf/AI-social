@@ -26,6 +26,8 @@
       state.still = qs.get("still") === "1";       // 单帧模式：只渲一帧后停 ticker/rAF
       state.snapAgents = state.still;
       state.live = qs.get("live") || null;         // LIVE 跟随模式：轮询增量日志
+      state.liveTail = qs.get("tail") === "1";     // T343：走 /__tail 增量尾读（跟随正在增长的日志）
+      state.liveTailMb = parseInt(qs.get("tailmb"), 10) || 4;   // 首轮尾部窗口大小（MB）
       state.following = qs.get("follow") !== "0";   // 默认跟随最新
       state.explicitView = !!qs.get("view");        // URL 显式指定分层时，缩放不自动覆盖
       // 像素锐利：全局最近邻缩放
@@ -72,7 +74,9 @@
       applyCam();
       setView(qs.get("view") || "default");   // 默认 default：建筑名可见、NPC ID 隐藏
 
-      const logUrl = state.live || qs.get("log") || "sample/demo_run.jsonl";
+      // T343：tail 模式的 live 路径是**外部绝对路径**（经 /__tail 读），不能当普通日志 URL 加载（会 404 中断 boot）；
+      // 故首屏先用一个内置样例把 boot 走完，随后 startLiveTail 会立即用尾读结果替换 replay。
+      const logUrl = state.liveTail ? "sample/demo_run.jsonl" : (state.live || qs.get("log") || "sample/demo_run.jsonl");
       const sampleSel = el("sample-select");
       Array.from(sampleSel.options).forEach((o) => { if (o.value === logUrl) sampleSel.value = logUrl; });
       await loadLogFromURL(logUrl);
@@ -197,6 +201,8 @@
   // 轮询增量日志：发现新回合则重建 Replay；跟随开启时平滑推进到最新。
   let liveTimer = null;
   function startLive() {
+    // T343：`?live=<abs>&tail=1` → 走只读增量端点 /__tail（跟随正在增长的日志，**不整文件重下**）。
+    if (state.liveTail) { startLiveTail(); return; }
     const path = state.live;
     const poll = async () => {
       try {
@@ -213,6 +219,52 @@
         }
       } catch (e) { /* 文件可能尚未生成/更新中 */ }
       liveTimer = setTimeout(poll, 600);
+    };
+    poll();
+  }
+
+  // ---- T343 实时跟随（增量尾读）----
+  // 只随增长取字节（/__tail）；**节流**重建 Replay；**显式状态**（跟随中/无增长/已结束/读取失败）；
+  // 首轮为**尾部窗口**（末尾 N MB，行对齐）——界面标注，别误读成"从头回放"。
+  function setLiveStatus(s) { const e = el("live-status"); if (e) e.textContent = s; }
+  function inferBatch(path) {
+    const m = String(path).match(/nightly\/([A-D])\//) || String(path).match(/\/([A-D])\/run\.jsonl/);
+    return m ? m[1] : "—";
+  }
+  function startLiveTail() {
+    const path = state.live;
+    const POLL = 1500, MIN_BUILD = 4000;   // 轮询间隔 / 重建节流（跟夜间增长量级：~几十 KB/s）
+    let off = null, all = [], lastSize = -1, stable = 0, lastBuild = 0, stopped = false;
+    if (el("live-batch")) el("live-batch").textContent = "批次 " + inferBatch(path);
+    setLiveStatus("连接中…");
+    const poll = async () => {
+      if (stopped) return;
+      let j = null;
+      try {
+        const u = `/__tail?path=${encodeURIComponent(path)}&tailmb=${state.liveTailMb}` + (off == null ? "" : `&off=${off}`);
+        j = await (await fetch(u, { cache: "no-store" })).json();
+      } catch (e) { setLiveStatus("读取失败：" + (e && e.message)); liveTimer = setTimeout(poll, POLL); return; }
+      if (j.error) { setLiveStatus("读取失败：" + j.error); liveTimer = setTimeout(poll, POLL); return; }
+      const grew = j.size !== lastSize;
+      const recs = j.text ? D.parseJSONL(j.text) : [];
+      if (recs.length) all = all.concat(recs);
+      off = j.off;
+      const now = performance.now();
+      if (recs.length && now - lastBuild >= MIN_BUILD) {
+        state.replay = new R.Replay(all);
+        lastBuild = now;
+        el("round-slider").max = String(state.replay.maxRound);
+        if (state.following) { state.round = state.replay.maxRound; renderRound(false); }
+      }
+      const maxR = state.replay ? state.replay.maxRound : "—";
+      el("live-round").textContent = `round ${maxR} · ${all.length} 事件`;
+      stable = grew ? 0 : stable + 1;
+      lastSize = j.size;
+      const done = j.eof && stable >= 3;      // 连续 3 次无增长 ⇒ 显式"已结束"，停止轮询（状态可达）
+      const win = j.truncated ? "尾部窗口·" : "";
+      setLiveStatus(win + (done ? "无增长（疑似已结束）" : (recs.length || grew ? "跟随中" : "等待新数据")));
+      if (done) { stopped = true; return; }
+      liveTimer = setTimeout(poll, POLL);
     };
     poll();
   }

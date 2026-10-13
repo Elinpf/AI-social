@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """极简静态服务器（只用标准库），用于本地查看 frontend/。
 
+⚠️ **这是本地开发服务，不是可对外暴露的服务**：动态端点只读、且仅限白名单根内。
 浏览器需通过 http:// 访问（fetch 读 JSON/JSONL 受同源策略限制，file:// 会失败）。
 
 用法（从 `code/` 或任意位置）：
@@ -8,12 +9,21 @@
     python frontend/tools/serve.py --port 9000
     python frontend/tools/serve.py --log /tmp/hitt_run.jsonl
         # 把一份外部日志拷进 sample/ 并以 ?log= 指向它，方便直接验收
+
+端点：
+    GET /__gitstamp                      → 当前 git sha + dirty（只读）
+    GET /__tail?path=<abs>&off=<byte>[&tailmb=N]
+        → 只读**增量尾部**（供"实时跟随"）：path 必须落在白名单根内
+          （env `HITT_LIVE_ROOTS`，冒号分隔，默认 `/root/t271/runs`；realpath 规范化后判断，防穿越）；
+          off 缺省或首轮时按 `tailmb` 从末尾回退 N MB（默认 4MB）并**对齐到完整行边界**；
+          返回 {text, off, size, eof, truncated}（text 只含到最后一个 `\n`）。
 """
 from __future__ import annotations
 
 import argparse
 import http.server
 import json
+import os
 import shutil
 import socketserver
 import subprocess
@@ -46,21 +56,82 @@ def git_stamp() -> dict:
             "frontend_dirty": fe, "repo": REPO.name}
 
 
+def _live_roots() -> list[Path]:
+    raw = os.environ.get("HITT_LIVE_ROOTS", "/root/t271/runs")
+    return [Path(p).resolve() for p in raw.split(":") if p.strip()]
+
+
+def _allowed_live(p: Path) -> bool:
+    """realpath 规范化后再判是否落在白名单根内（防 `..` / 符号链接穿越）。"""
+    try:
+        rp = Path(p).resolve(strict=True)
+    except Exception:
+        return False
+    for root in _live_roots():
+        try:
+            rp.relative_to(root)
+            return True
+        except ValueError:
+            continue
+    return False
+
+
+def tail_read(path: str, off: int | None, tail_mb: int = 4) -> dict:
+    """只读增量尾部。off=None ⇒ 从末尾回退 tail_mb MB 并对齐到完整行边界。绝不返回半行。"""
+    p = Path(path)
+    if not _allowed_live(p):
+        return {"error": "path not allowed (whitelist: HITT_LIVE_ROOTS)"}
+    try:
+        size = p.stat().st_size
+    except Exception as e:
+        return {"error": f"stat failed: {e}"}
+    if off is None:
+        start = max(0, size - max(1, tail_mb) * 1024 * 1024)
+        trunc = start > 0
+    else:
+        start = max(0, min(int(off), size))
+        trunc = False
+    with p.open("rb") as f:
+        f.seek(start)
+        if trunc and start > 0:            # 跳过半个首行
+            f.readline()
+            start = f.tell()
+        buf = f.read()
+    nl = buf.rfind(b"\n")
+    if nl < 0:
+        text, real_off = "", start       # 还没有完整行
+    else:
+        text = buf[:nl + 1].decode("utf-8", errors="replace")
+        real_off = start + nl + 1
+    return {"text": text, "off": real_off, "size": size, "eof": real_off >= size, "truncated": trunc}
+
+
 class Handler(http.server.SimpleHTTPRequestHandler):
-    """静态服务 + 一个只读动态端点 `/__gitstamp`（实时返回 git 版本戳）。"""
+    """静态服务 + 只读动态端点 `/__gitstamp` / `/__tail`。**本地开发用，非对外服务。**"""
 
     def __init__(self, *a, **kw):
         super().__init__(*a, directory=str(FRONTEND), **kw)
 
+    def _json(self, obj: dict):
+        body = json.dumps(obj, ensure_ascii=False).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
     def do_GET(self):   # noqa: N802（http.server 规定的名字）
-        if self.path.split("?", 1)[0] == "/__gitstamp":
-            body = json.dumps(git_stamp(), ensure_ascii=False).encode("utf-8")
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.send_header("Cache-Control", "no-store")
-            self.send_header("Content-Length", str(len(body)))
-            self.end_headers()
-            self.wfile.write(body)
+        from urllib.parse import urlparse, parse_qs
+        u = urlparse(self.path)
+        if u.path == "/__gitstamp":
+            self._json(git_stamp())
+            return
+        if u.path == "/__tail":
+            q = parse_qs(u.query)
+            off = int(q["off"][0]) if q.get("off") and q["off"][0] not in ("", "null") else None
+            tailmb = int(q["tailmb"][0]) if q.get("tailmb") else 4
+            self._json(tail_read(q.get("path", [""])[0], off, tailmb))
             return
         super().do_GET()
 
