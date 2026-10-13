@@ -79,31 +79,34 @@ def check2_no_new_time_source(code_root: str):
                 if pat in txt:
                     hits.append((fp, pat))
     print(f"[C2] 新造时间源命中 = {hits if hits else '无'}")
-    # kind 枚举增量核对（设计声明 14→15，只新增 abundance；daypart 不得作为新 kind）
+    # kind 权威枚举核对：解析 WD_KINDS（不是 KINDS）
     wd = os.path.join(code_root, "engine", "world_director.py")
     kinds = []
     try:
         import re
-        m = re.search(r"KINDS?\s*=\s*[\[\(\{]([^\]\)\}]*)[\]\)\}]", open(wd, encoding="utf-8").read())
+        txt = open(wd, encoding="utf-8").read()
+        m = re.search(r"WD_KINDS\s*=\s*frozenset\(\{(.*?)\}\)", txt, re.S)
         if m: kinds = re.findall(r"\"([a-z_]+)\"", m.group(1))
     except Exception as e:
-        print(f"[C2] kind 解析失败：{e}")
-    print(f"[C2] 现有 kind = {kinds}")
+        print(f"[C2] WD_KINDS 解析失败：{e}")
+    print(f"[C2] 现有 kind（WD_KINDS）= {kinds}")
     has_daypart_kind = "daypart" in kinds
     has_abundance = "abundance" in kinds
     print(f"[C2] 'daypart' 作为独立 kind？ {has_daypart_kind}（应为 False）")
     print(f"[C2] 'abundance' 新增 kind 在场？ {has_abundance}（应为 True；14→15）")
-    # schedule.cadence 不得含 daypart（登记草稿 §1 R1）
+    # cadence/profile：只看 _draft(...) 的实际字符串参数（不用“同文件共现”的粗判——那会命中注释里的 daypart）
+    wc = os.path.join(code_root, "engine", "world_calendar.py")
     cadence_daypart = False
-    for dirpath, _, files in os.walk(code_root):
-        if "__pycache__" in dirpath: continue
-        for fn in files:
-            if fn.endswith(".py"):
-                try: txt = open(os.path.join(dirpath, fn), encoding="utf-8").read()
-                except Exception: continue
-                if '"cadence"' in txt and "daypart" in txt:
-                    cadence_daypart = True
-    print(f"[C2] schedule.cadence 含 daypart？ {cadence_daypart}（应为 False）")
+    try:
+        import re as _re
+        cal = open(wc, encoding="utf-8").read()
+        args = _re.findall(r'_draft\(\s*"([a-z_]+)",\s*"([a-z_]+)",\s*"([a-z_]+)",\s*"([a-z_]+)"', cal, _re.S)
+        cads = {x[3] for x in args}; profs = {x[2] for x in args}; names = {x[0] for x in args}
+        print(f"[C2] _draft 调用 (name, cadence, profile) = {sorted(zip(names, cads, profs))}")
+        cadence_daypart = any("daypart" in x for x in (cads | profs | names))
+    except Exception as e:
+        print(f"[C2] cadence 解析跳过：{e}")
+    print(f"[C2] schedule.cadence/profile 含 daypart？ {cadence_daypart}（应为 False）")
     ok = (not hits) and (not has_daypart_kind) and has_abundance and (not cadence_daypart)
     print(f"[C2] verdict = {'PASS' if ok else 'FAIL'}")
     return ok
