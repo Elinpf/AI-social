@@ -113,9 +113,17 @@
 （完整见 `v2/evidence/metrics_baseline_p1.json`；G6 golden 见 `code/obs/golden_baseline.json` 的 `n20_week_seed42`。）
 
 ## 9. 门禁
-- `python -m obs gate --log /root/t271/runs/t300/run.jsonl --baseline auto` → **GATE PASS**：
+- **`obs gate`（提交后复跑；HEAD=`5b0f761`）→ GATE PASS**：
   `llm_calls_zero`✓ / `llm_judged_metric_count_zero`✓ / `money_conservation`(residual 0)✓ / `schema_conformance`✓ /
   `distribution_regression`（vs 新基线 `v2-T300`，n_events 292,963==292,963，逐族 delta 0）✓ /
-  `metrics_bitwise_equal`✓ / `census_bitwise_equal`✓。
-  （gate 报 `DIRTY`：工作区有未提交改动 ⇒ 结论**仅供参考**，非失败。）
+  `metrics_bitwise_equal`✓（digest `0a2f36af…`）/ `census_bitwise_equal`✓（digest `79e4b2d1…`）。
+  - ⚠️ **树态判读（诚实）**：`dirty_files=4`，**全部是 `code/frontend/**`**（他人未提交改动）——**世界层 CLEAN**（`git status` 中无 `code/{engine,life,freeze,config,obs,contracts,orchestration}`/`config/**`）。⇒ 该 DIRTY **改不到 obs 门禁结论**（门禁只读世界层日志/基线），故本 PASS **对世界层有效**；打戳仍按规矩标 `[DIRTY — 结论仅供参考]`。
+  - 说明：**全仓库级"绝对干净"暂不可得**（前端并发编辑未提交）；如需"字面 CLEAN"的 PASS，**待 `code/frontend/**` 落地后我可再复跑一次**。
+- `make ci`（工作区）→ **CI GATE: PASS**。
 - `pytest tests/test_obs_*.py` → **140 passed**。
+
+## 10. 下一轮待办（已同意，非本轮）
+- **`flush` 间隔改 1–2**（+ 配套 runbook 一行：判"有无批在跑"用 `systemctl is-active 't271-*'` / `pgrep -f "orchestration run"`，**不看日志新旧**）。
+- **`flush=1 vs 12` 小规模对照**（n=6/12 回合）：比 `state_hash`（证"落盘节奏不动语义"）+ 尽量验"从 flush 前缀续跑"仍成立。
+- ⭐ **`T278` 消融**（用户判据「同 sha 内只变一个开关」的最小应用）：小规模跑 `service_delivered.enabled=false` **vs** `true`，比 `state_hash`——**判定 §3 第 6b 行"语义等价"是否成立**（**等价/不等价都报**）。
+- **非作者核 `T349`**（sandbox-test-lead）：独立复算 §6b 逐族 delta + 验算术闭合 + 反向验证。
