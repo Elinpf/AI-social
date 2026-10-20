@@ -1,0 +1,21 @@
+{
+  "batch": "d4p1",
+  "unit": "t271-d4p1",
+  "started_at": "2026-10-20 22:24:34",
+  "ended_at": null,
+  "workdir": "/tmp/t271-d4probe/code",
+  "env_file": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/.env.local",
+  "out": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d4_P1_n16r12/run.jsonl",
+  "heartbeat_file": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d4_P1_n16r12/heartbeat.tsv",
+  "mem_high": "4G",
+  "mem_max": "6G",
+  "cmd": "/opt/openjiuwen/workswarm-venv/bin/python -m orchestration run --life --seed 42 --agents 16 --rounds 12 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d4_P1_n16r12/run.jsonl --side-root /tmp/d4_p1_side2 --flush-every 2",
+  "sha": "3ec85a0",
+  "worktree": null,
+  "switch": "P1",
+  "side_root": null,
+  "flush_every": null,
+  "engine_version_fingerprint": null,
+  "rounds": "12",
+  "agents": "16"
+}

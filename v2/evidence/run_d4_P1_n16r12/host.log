@@ -1,0 +1,2 @@
+[runner] starting: /opt/openjiuwen/workswarm-venv/bin/python -m orchestration run --life --seed 42 --agents 16 --rounds 12 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d4_P1_n16r12/run.jsonl --side-root /tmp/d4_p1_side2 --flush-every 2 (unit=t271-d4p1.service)
+[runner] batch child pid=3292360 cgroup=0::/system.slice/t271-d4p1.service

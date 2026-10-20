@@ -1,0 +1,5 @@
+[life] n_agents=4 rounds=2 events=223 seconds=70.7398 log_bytes=130488
+  unknown_event_types=[]
+  chain_ok=True replay_parity=True first_run_equals_replay=True
+  conservation_ok=True final_state_hash=sha256:3061316826b195b99870fd5ed0f91e1a95c8613a5ee3f489ead93b83658ac733
+  log written: ../v2/evidence/run_baseline_n4r2_20261020T220207/run.jsonl

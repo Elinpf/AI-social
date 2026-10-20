@@ -1,0 +1,17 @@
+=== [T271 preflight] 2026-10-20 22:24:33 ===
+--- self cgroup (必须在 jiuwenswarm.service 内，才需要下面的逃逸) ---
+0::/system.slice/jiuwenswarm.service
+--- systemd-run ---
+/usr/bin/systemd-run
+--- free -h ---
+               total        used        free      shared  buff/cache   available
+Mem:            31Gi        12Gi       2.0Gi        20Mi        17Gi        19Gi
+Swap:          3.8Gi       3.8Gi       200Ki
+--- df -h / ---
+Filesystem                         Size  Used Avail Use% Mounted on
+/dev/mapper/ubuntu--vg-ubuntu--lv  244G  171G   63G  74% /
+--- df -i / ---
+Filesystem                          Inodes    IUsed   IFree IUse% Mounted on
+/dev/mapper/ubuntu--vg-ubuntu--lv 16252928 11486973 4765955   71% /
+--- 内存判据字段：MemAvailable = 19569 MB （看这列；MemFree=2041MB 仅参考，cache 占用的可回收） ---
+[preflight] done
