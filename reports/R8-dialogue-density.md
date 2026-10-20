@@ -1,6 +1,6 @@
 # R8 · 对话往来密度：放宽回复窗口（`reply_window_rounds` 2→4）的单臂诊断
 
-> **版本状态：【两臂实测已入库（独立复核 PASS-WITH-CAVEATS）· 结论限于方向性】** 两臂读数已齐：A0 `run_d2_after_n16_seed42`（`643f13a5`，`code_sha 884f4541`）vs D9 `run_d9_a1_n16r84_seed42`（`abefdf73`，`code_sha 05636bc`），同 `n16r84 seed42`，分母均为 **686 消息 / 206 线程**。§2 读数表与 §7 判定表已填，读数与复算命令的唯一引用源为 **`reports/d9-readings.md`**。**6 条 caveat（C-1…C-6）是其硬边界，读本报告须连同 `d9-readings.md` §6 一起读**：C-3（L-7 计数相同属巧合）、C-5（judge 侧四类 purpose 不吃正文）、C-6（两臂 code_sha 隔 11 个 commit，"唯一变量"只限相对 master 的 diff）三条直接决定结论写法。
+> **版本状态：【两臂实测已入库（独立复核 PASS-WITH-CAVEATS）· 结论限于方向性】** 两臂读数已齐：A0 `run_d2_after_n16_seed42`（`643f13a5`，`code_sha 884f4541`）vs D9 `run_d9_a1_n16r84_seed42`（`abefdf73`，`code_sha 05636bc`），同 `n16r84 seed42`，分母均为 **686 消息 / 206 线程**。§2 读数表与 §7 判定表已填，读数与复算命令的唯一引用源为 **`reports/d9-readings.md`**。**6 条 caveat（C-1…C-6）是其硬边界，读本报告须连同 `d9-readings.md` §6 一起读**：C-3（L-7 计数相同属巧合）、C-5（judge 侧四类 purpose 不吃正文）、C-6（两臂 code_sha 隔 **36** 个 commit = 32 文档/证据 + 3 前端 + 1 变量本身，"唯一变量"只限相对 master 的 diff）三条直接决定结论写法。
 >
 > **版本状态取值规则（定稿时二选一，写在本行）**：
 > - **`实测已入库、机制解释待补（未发布）`** —— 读数已齐但 §2.3 机制解释缺项时的状态：**仍要落本地 commit**（不丢已确证证据），但**不 push**，报告不得对外引用为最终结论。
@@ -375,7 +375,7 @@ pgrep -fa "orchestration[ ]run"    # 期望：空输出（rc=1）
 
 ### 7.1 已证实（可跨臂引用的事实层）
 
-- **唯一变量认定（C-6 限定写法）**：分支 `feat/dialogue-density` **相对 master `371772e`** 仅改 `code/life/dialogue_threads.py:30` 一行，`code/config/` 零改动（`git diff --stat` 双证）。**此项与读数无关，独立成立。** ⚠️ 但两臂 `code_sha`（`884f4541` vs `05636bc`）之间隔 **11 个 commit**，"唯一变量"只成立于"相对 master 的 diff"这一层，不等于"两臂 code_sha 之间只差一个文件"（见 `d9-readings.md` C-6）。
+- **唯一变量认定（C-6 限定写法）**：分支 `feat/dialogue-density` **相对 master `371772e`** 仅改 `code/life/dialogue_threads.py:30` 一行，`code/config/` 零改动（`git diff --stat` 双证）。**此项与读数无关，独立成立。** ⚠️ 但两臂 `code_sha`（`884f4541` vs `05636bc`）之间隔 **36 个 commit**（分类见本节下一条：32 文档/证据 + 3 前端 + 1 变量本身），"唯一变量"只成立于"相对 master 的 diff / 结构性路径等价"这一层，不等于"两臂 code_sha 之间只差一个文件"（见 `d9-readings.md` C-6）。
 
 - **【本轮新增 · 把 C-6 钉死】`884f4541..05636bc` 区间的逐条性质清单（两臂之间到底改了什么）**
   先纠正数量：`git rev-list --count 884f4541..05636bc` = **36 个 commit**（不是 11；`d9-verify` 报告里的"11 个 commit"这一数字不准确，以本节实测为准，其余结论不受影响）。
