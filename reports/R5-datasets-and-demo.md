@@ -108,6 +108,8 @@ cd code && python3 frontend/tools/serve.py            # 浏览器打开 http://1
 | S-7 | `run_d2_after_n16_seed42-spread-643f13a5.png` | 话语/话题扩散 | 同上 | `aab855e4…`（`aab855e4`） |
 | S-8 | `run_d2_after_n16_seed42-600-643f13a5.png` | 600px 窄屏 | 同上 | `fad59476…`（`fad59476`） |
 
+> ⚠️ **上表 A0 四张截图为 `20:24` 生成的旧版**（早于前端标签修正 `6ce44f9`：新标签显示「18 条 / 6 轮」+ 重复标记）。**按新标签重出后需替换**；在替换前，本报告引用这四张图时只用于"改造后有线程化对话"这一存在性说明，**不得据此图判读轮数**——轮数口径见 R2 §「轮数 = `turn_index` 去重」，A0 实测 **max 6 轮**（最长那条 18 条消息 / 6 轮）。
+
 **【事实】** 对应的线程视图数据 `code/frontend/sample/dialogue_run_d2_after_n16_seed42/threads.json` (d6d89bda)，其 `source.run_sha256 = 643f13a5…`、`events_total_in_log = 194,108` ⇒ 图 ↔ 日志对应可核对。
 
 **A1 截图：待交付**（A1 尚未解锁）。
