@@ -85,9 +85,20 @@
     </aside>
 
     <main id="stream">
+      <div id="viewtabs">
+        <button class="vtab on" data-view="chat">💬 对话流</button>
+        <button class="vtab" data-view="rhythm">🕒 节律 · 串门</button>
+        <button class="vtab" data-view="spread">🗣 闲话怎么传开</button>
+        <span id="viewhint" class="muted"></span>
+      </div>
+      <div id="lifeline"></div>
+      <div id="panel-rhythm" class="viewpanel" hidden></div>
+      <div id="panel-spread" class="viewpanel" hidden></div>
+      <div id="chatview">
       <div id="stream-notice"></div>
       <div id="thread-list"></div>
       <div id="empty-box" class="empty" hidden></div>
+      </div>
     </main>
   </div>
 

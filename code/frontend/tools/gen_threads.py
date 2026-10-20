@@ -17,15 +17,19 @@
     旧格式（无 thread_id）→ 每条消息单独成一条 threads（turns=1），并标 legacy=True；
     这是**空态标记**，不是前端猜出来的线程。
 
-用法
+用法（--log 必填，故意不给任何默认内网/作者路径）
     cd code
     python frontend/tools/gen_threads.py \
-        --log /root/t271/runs/<B>/run.jsonl \
-        --meta /root/t271/runs/<B>/meta.json \
-        --out frontend/sample/dialogue_<B>/threads.json
+        --log  <RUN_DIR>/run.jsonl \
+        --meta <RUN_DIR>/meta.json \
+        --out  frontend/sample/dialogue_<BATCH>/threads.json \
+        --label <BATCH>
 
-    # 只要一份最小自检（不写文件）
-    python frontend/tools/gen_threads.py --log frontend/sample/run_p1_final_n20_llm.jsonl --summary
+    # 只打印统计，不落盘
+    python frontend/tools/gen_threads.py --log <RUN_DIR>/run.jsonl --summary
+
+输出里 **不写绝对路径**：`source.run_label` 只带「批次目录名/文件名」，完整路径留在跑批目录自身；
+可追溯靠 `source.run_sha256` + `source.events_total_in_log` + meta 白名单字段（provider/model/seed/代码 sha）。
 
 输出 schema: hitt.dialogue.threads/1
 """
@@ -44,6 +48,7 @@ DEFAULT_PLACES = FRONTEND / "data" / "places.json"
 
 MSG_TYPES = ("MSG_DM", "MSG_PUBLIC", "MSG_GROUP")
 CONTEXT_TYPES = ("RELATION_CHANGE", "NEED_UPDATE", "RELATION_ENCOUNTER", "GROUP_CREATED")
+MOVE_TYPES = ("PLACE_MOVE",)          # 串门/走动：生活节律与「谁在串门」的唯一真源
 
 SCHEMA = "hitt.dialogue.threads/1"
 
@@ -207,9 +212,11 @@ class ContextIndex:
 
 
 def build(log_path: Path, meta_path: Path | None, personas: dict, places: dict,
-          keep_context: bool = True) -> dict:
+          keep_context: bool = True, keep_moves: bool = True,
+          run_label: str | None = None) -> dict:
     events = 0
     msgs: list[dict] = []
+    moves: list[dict] = []
     ctx = ContextIndex()
     order: list[tuple] = []          # (seq, msg_view)
     first_round = None
@@ -230,6 +237,17 @@ def build(log_path: Path, meta_path: Path | None, personas: dict, places: dict,
                 last_round = rnd if last_round is None else max(last_round, rnd)
             if t == "LLM_CALL" and provider is None:
                 provider = (rec.get("payload") or {}).get("provider")
+            if t in MOVE_TYPES:
+                if keep_moves:
+                    pl = rec.get("payload") or {}
+                    moves.append({
+                        "seq": rec.get("seq"), "round": rnd,
+                        "agent": pl.get("agent_id") or rec.get("actor"),
+                        "from": pl.get("from_place"), "to": pl.get("to_place"),
+                        "day": pl.get("day"), "slot": pl.get("slot"),
+                        "travel_ticks": pl.get("travel_ticks"),
+                    })
+                continue
             if t in CONTEXT_TYPES:
                 if keep_context:
                     ctx.feed(rec)
@@ -296,10 +314,94 @@ def build(log_path: Path, meta_path: Path | None, personas: dict, places: dict,
 
     multi = [t for t in threads if t["multi_turn"]]
     deep = [t for t in threads if t["turns"] >= 3]
+
+    # ---- 生活节律：按 day×slot 统计对话与走动（全部来自日志字段，不外推）----
+    rhythm: dict[str, dict] = {}
+
+    def rcell(day, slot):
+        k = f"{day if day is not None else '?'}|{slot or '?'}"
+        if k not in rhythm:
+            rhythm[k] = {"day": day, "slot": slot, "messages": 0, "multi_messages": 0,
+                         "dm": 0, "public": 0, "group": 0, "moves": 0,
+                         "places": {}, "people": {}}
+        return rhythm[k]
+
+    for t in threads:
+        for m in t["messages"]:
+            c = rcell(m.get("day"), m.get("slot"))
+            c["messages"] += 1
+            if t["turns"] > 1:
+                c["multi_messages"] += 1
+            c[m["channel"]] = c.get(m["channel"], 0) + 1
+            if m.get("place"):
+                c["places"][m["place"]] = c["places"].get(m["place"], 0) + 1
+            for p in (m.get("participants") or []):
+                c["people"][p] = c["people"].get(p, 0) + 1
+    for mv in moves:
+        c = rcell(mv.get("day"), mv.get("slot"))
+        c["moves"] += 1
+
+    # ---- 串门：每人每天的场所轨迹（PLACE_MOVE 序列，原样搬运）----
+    trails: dict[str, dict] = {}
+    for mv in moves:
+        a = mv.get("agent")
+        if not a:
+            continue
+        tk = f"{a}|{mv.get('day')}"
+        tr = trails.setdefault(tk, {"agent": a, "day": mv.get("day"), "hops": []})
+        tr["hops"].append({"seq": mv["seq"], "round": mv["round"], "slot": mv.get("slot"),
+                           "from": mv.get("from"), "to": mv.get("to")})
+    travel = sorted(trails.values(), key=lambda x: ((x["day"] if x["day"] is not None else -1), x["agent"]))
+
+    # ---- 闲话怎么传开 ----
+    # (a) 日志真源：msg 的 refs（转述类必填；当前跑批可能全空 → 页面显示空态）
+    by_msg_id: dict[str, dict] = {}
+    for t in threads:
+        for m in t["messages"]:
+            if m.get("msg_id"):
+                by_msg_id.setdefault(m["msg_id"], m)
+    ref_edges = []
+    for t in threads:
+        for m in t["messages"]:
+            for r in (m.get("refs") or []):
+                src = by_msg_id.get(str(r))
+                if src:
+                    ref_edges.append({"from_seq": src.get("seq"), "to_seq": m.get("seq"),
+                                      "ref": r, "by": m.get("from"), "orig_by": src.get("from")})
+    # (b) 派生口径：正文规范化后完全复现（不同说话人）——显式标注为脚本派生，非日志字段
+    def norm(b: str) -> str:
+        return "".join(ch for ch in (b or "") if ch not in " \t\n，。！？、,.!?…—\"'“”‘’（）()《》")
+    buckets: dict[str, list[dict]] = {}
+    for t in threads:
+        for m in t["messages"]:
+            if not m.get("body"):
+                continue
+            nb = norm(m["body"])
+            if len(nb) >= 8:
+                buckets.setdefault(nb, []).append(m)
+    echoes = []
+    for nb, items in buckets.items():
+        if len({i.get("from") for i in items}) < 2:
+            continue
+        items.sort(key=lambda x: x.get("seq") or 0)
+        echoes.append({
+            "norm_len": len(nb), "text": items[0].get("body"),
+            "seqs": [i.get("seq") for i in items],
+            "by": [i.get("from") for i in items],
+            "places": sorted({i.get("place") for i in items if i.get("place")}),
+            "rounds": [i.get("round") for i in items],
+        })
+    echoes.sort(key=lambda x: (-len(x["seqs"]), x["seqs"][0] or 0))
     meta = {}
     if meta_path and Path(meta_path).exists():
         try:
-            meta = load_json(Path(meta_path))
+            raw_meta = load_json(Path(meta_path))
+            # 白名单截取：**不把 meta 原样带进可公开的 threads.json**（原文件可能含机器路径）
+            keep = ("provider", "model", "seed", "n", "rounds", "weeks", "code_sha", "sha",
+                    "commit", "engine_version", "events", "events_total", "llm_cached_ratio",
+                    "batch", "batch_id", "started_at", "finished_at")
+            meta = {k: raw_meta[k] for k in keep if k in raw_meta}
+            meta["_whitelisted"] = "meta.json 只截取白名单字段（完整 meta 留在跑批目录）"
         except Exception as e:  # noqa: BLE001 — 元信息坏了就如实标注，不阻塞
             meta = {"_error": f"meta.json 解析失败: {e}"}
 
@@ -308,7 +410,7 @@ def build(log_path: Path, meta_path: Path | None, personas: dict, places: dict,
         "generated_by": "frontend/tools/gen_threads.py",
         "generator_sha256": sha256_file(Path(__file__)),
         "source": {
-            "run_jsonl": str(log_path),
+            "run_label": run_label or f"{Path(log_path).parent.name}/{Path(log_path).name}",
             "run_sha256": sha256_file(log_path),
             "run_bytes": Path(log_path).stat().st_size,
             "events_total_in_log": events,
@@ -323,7 +425,9 @@ def build(log_path: Path, meta_path: Path | None, personas: dict, places: dict,
             "其余事件丢弃且不参与任何展示字段"
             if keep_context else
             "保留 MSG_*；语境事件被显式关闭（--no-keep-context），展开视图将显示空态"
-        ),
+        ) + ("；另保留 PLACE_MOVE（节律/串门视图真源）" if keep_moves else
+             "；PLACE_MOVE 被 --no-keep-moves 关闭，节律/串门视图将显示空态"),
+        "move_rule": "PLACE_MOVE 原样搬运（agent/from_place/to_place/day/slot/round/seq），不推断路线",
         "field_contract": {
             "thread_id": "D2 新格式 payload 键；旧格式缺失 ⇒ legacy=true 单发线程",
             "turn_index": "线程内序号，0=发起",
@@ -333,12 +437,27 @@ def build(log_path: Path, meta_path: Path | None, personas: dict, places: dict,
         },
         "agents": personas,
         "places": places,
+        "moves": moves,
+        "travel": travel,
+        "rhythm": sorted(rhythm.values(), key=lambda c: ((c["day"] if c["day"] is not None else 1e9),
+                                                         c["slot"] or "")),
+        "spread": {
+            "ref_edges": ref_edges,
+            "echoes": echoes[:60],
+            "echo_note": ("派生口径（非日志字段）：正文去掉标点空白后逐字相同、长度≥8、且说话人不同 → "
+                          "视为一次「同一句话被第二个人说出」；这是脚本判定的复现证据，不是模型推断。"),
+        },
         "stats": {
             "messages": len(msgs),
             "threads": len(threads),
             "multi_turn_threads": len(multi),
             "threads_ge3_turns": len(deep),
             "legacy_threads": sum(1 for t in threads if t["legacy"]),
+            "moves": len(moves),
+            "agents_who_moved": len({m["agent"] for m in moves}),
+            "day_slot_cells": len(rhythm),
+            "ref_edges": len(ref_edges),
+            "echo_groups": len(echoes),
             "threaded_messages": threaded,
             "legacy_messages": legacy,
             "participants": len({p for m in msgs for p in (m.get("participants") or [])}),
@@ -357,7 +476,11 @@ def main() -> int:
     ap.add_argument("--places", default=str(DEFAULT_PLACES))
     ap.add_argument("--no-keep-context", action="store_true",
                     help="**不推荐**：丢弃语境事件（展开视图变空态）")
+    ap.add_argument("--no-keep-moves", action="store_true",
+                    help="**不推荐**：丢弃 PLACE_MOVE（「节律·串门」视图变空态）")
     ap.add_argument("--summary", action="store_true", help="只打印统计，不写文件")
+    ap.add_argument("--label", default=None,
+                    help="批次标签（写进 threads.json 的 source.run_label；缺省用「目录名/文件名」）")
     a = ap.parse_args()
 
     log_path = Path(a.log)
@@ -367,13 +490,15 @@ def main() -> int:
     personas = load_personas(Path(a.personas))
     places = load_places(Path(a.places))
     data = build(log_path, Path(a.meta) if a.meta else None, personas, places,
-                 keep_context=not a.no_keep_context)
+                 keep_context=not a.no_keep_context, keep_moves=not a.no_keep_moves,
+                 run_label=a.label)
 
     st = data["stats"]
     print(f"[gen_threads] events={data['source']['events_total_in_log']} "
           f"messages={st['messages']} threads={st['threads']} "
           f"multi_turn={st['multi_turn_threads']} ge3={st['threads_ge3_turns']} "
-          f"legacy_msgs={st['legacy_messages']}", file=sys.stderr)
+          f"legacy_msgs={st['legacy_messages']} moves={st['moves']} "
+          f"ref_edges={st['ref_edges']} echoes={st['echo_groups']}", file=sys.stderr)
     if st["messages"] == 0:
         print("[gen_threads] 警告：日志里没有任何 MSG_* 事件 → 页面将显示空态", file=sys.stderr)
 

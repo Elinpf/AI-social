@@ -15,7 +15,7 @@
 from __future__ import annotations
 import argparse, sys, time
 
-CHROME = "/root/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome"
+from _chrome import find_chrome   # 探测式，不写死任何机器路径（可用 HITT_CHROME 覆盖）
 EXPECTED_PLACES = 17
 
 
@@ -39,7 +39,7 @@ def main() -> int:
         if not cond: fails += 1
 
     with sync_playwright() as p:
-        b = p.chromium.launch(executable_path=CHROME,
+        b = p.chromium.launch(executable_path=find_chrome(),
                               args=["--no-sandbox", "--use-gl=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist"])
         try:
             pg = b.new_page(viewport={"width": 1400, "height": 900})

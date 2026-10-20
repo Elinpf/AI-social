@@ -75,7 +75,7 @@ HTML = r"""<!DOCTYPE html>
 const M = /*__MANIFEST__*/;
 const SHA = /*__SHA__*/;
 const QS = new URLSearchParams(location.search);
-const LIVE = QS.get("live") || "/root/t271/runs/nightly/D/run.jsonl";
+const LIVE = QS.get("live") || "";   // 必填：?live=<run.jsonl 路径>，不预设任何本机路径
 const ZONES = [["live","🎬 实时世界"],["four","📊 四组对照"],["baseline","🧭 基线"],["metrics","📈 指标"],["evidence","🗂 证据索引"]];
 let ZONE = QS.get("z") || "live";
 function esc(s){return String(s==null?"":s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}

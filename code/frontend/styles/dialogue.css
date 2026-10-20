@@ -238,3 +238,85 @@ body.still .thread, body.still .msg { animation: none !important; }
   #playbar { padding: 6px 8px; }
   #playbar .clock { min-width: 92px; font-size: 11px; }
 }
+
+/* ---------------- 视图切换 / 时间轴 / 节律面板 ---------------- */
+#viewtabs {
+  display: flex; align-items: center; gap: 8px; max-width: 1040px; margin: 0 auto 10px;
+  flex-wrap: wrap;
+}
+.vtab {
+  background: var(--panel-2); border: 1px solid var(--line); color: var(--muted);
+  padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 13px;
+}
+.vtab:hover { border-color: var(--accent); color: var(--fg); }
+.vtab.on { background: rgba(92,200,255,0.16); border-color: rgba(92,200,255,0.55); color: var(--accent); }
+#viewhint { font-size: 11px; color: var(--muted); margin-left: auto; }
+
+/* 一天的时间轴：一行一天，4 个时段格 */
+#lifeline { max-width: 1040px; margin: 0 auto 12px; }
+.dayline {
+  display: flex; align-items: stretch; gap: 6px; margin-bottom: 6px;
+}
+.daylabel {
+  flex: 0 0 76px; font-size: 11px; color: var(--muted); display: flex;
+  align-items: center; gap: 4px;
+}
+.slotcell {
+  flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 9px;
+  padding: 5px 7px; background: rgba(27,35,47,0.5); cursor: pointer;
+  display: flex; flex-direction: column; gap: 2px;
+  transition: border-color .15s, background .15s;
+}
+.slotcell:hover { border-color: var(--accent); }
+.slotcell.hot { background: rgba(92,200,255,0.10); }
+.slotcell .sl { font-size: 10px; color: var(--muted); letter-spacing: .4px; }
+.slotcell .sv { font-size: 12px; color: var(--fg); font-variant-numeric: tabular-nums; }
+.slotcell .sv .mv { color: var(--accent-2); }
+.slotcell .bars { display: flex; gap: 2px; height: 4px; }
+.slotcell .bars i { display: block; height: 100%; border-radius: 2px; }
+.slotcell.active { border-color: var(--accent-2); background: rgba(255,207,92,0.12); }
+
+/* 节律面板 */
+.viewpanel { max-width: 1040px; margin: 0 auto; }
+.pcards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+.pcard {
+  border: 1px solid var(--line); border-radius: 12px; background: var(--panel);
+  padding: 10px 12px;
+}
+.pcard h3 { margin: 0 0 8px; font-size: 13px; color: var(--fg); font-weight: 700; }
+.pcard .sub { font-size: 11px; color: var(--muted); margin-bottom: 8px; line-height: 1.6; }
+.trail { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 4px 0; border-top: 1px dashed var(--line); }
+.trail:first-of-type { border-top: none; }
+.trail .tname { font-size: 12px; color: var(--fg); min-width: 62px; }
+.trail .hop { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); }
+.trail .hop b { color: var(--accent); font-weight: 600; }
+.trail .hop .arr { color: #55606f; }
+.hourbars { display: flex; align-items: flex-end; gap: 3px; height: 60px; margin: 6px 0 2px; }
+.hourbars .hb { flex: 1; background: linear-gradient(180deg, #5cc8ff, #2b6f9a); border-radius: 3px 3px 0 0; min-height: 2px; }
+.hourlabels { display: flex; gap: 3px; }
+.hourlabels span { flex: 1; font-size: 9px; color: #66707d; text-align: center; }
+.echo { border-top: 1px dashed var(--line); padding: 7px 0; font-size: 12px; }
+.echo:first-of-type { border-top: none; }
+.echo .t { color: var(--fg); line-height: 1.5; }
+.echo .m { color: var(--muted); font-size: 11px; margin-top: 3px; }
+.echo .m b { color: var(--accent); font-weight: 600; }
+@media (max-width: 760px) {
+  .daylabel { flex-basis: 58px; }
+  .slotcell { padding: 4px; }
+  .slotcell .sl { font-size: 9px; }
+  .slotcell .sv { font-size: 11px; }
+  .pcards { grid-template-columns: 1fr; }
+}
+
+/* 串门轨迹：整行铺开，箭头链不挤成两行 */
+.pcard.wide { grid-column: 1 / -1; }
+.trail { gap: 8px; align-items: center; }
+.trail .tname { min-width: 84px; display: inline-flex; align-items: center; gap: 4px; }
+.trail .tname .hopn { color: var(--accent-2); font-weight: 600; font-size: 11px; }
+.trail .tday { font-size: 11px; color: var(--muted); min-width: 52px; }
+.trail .flow { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.trail .pl {
+  font-size: 11px; color: var(--fg); background: rgba(92,200,255,0.10);
+  border: 1px solid rgba(92,200,255,0.28); border-radius: 20px; padding: 1px 8px;
+}
+.trail .arr { color: #55606f; font-size: 11px; }

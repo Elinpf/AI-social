@@ -12,13 +12,13 @@
 # 前置：静态服务在跑（cd code && python frontend/tools/serve.py --host 0.0.0.0 --port 8848）
 # 用法：
 #   bash frontend/tools/screenshot.sh [out.png] [logUrl] [round] [WxH] [extraQuery]
-# 默认：/root/hitt_shot.png  sample/demo_run.jsonl  12  1500x980
-# 例（加审计抽屉）：bash frontend/tools/screenshot.sh /root/a.png sample/demo_run.jsonl 12 1500x950 "&audit=1"
+# 默认：./hitt_shot.png（当前目录）  sample/demo_run.jsonl  12  1500x980
+# 例（加审计抽屉）：bash frontend/tools/screenshot.sh ./a.png sample/demo_run.jsonl 12 1500x950 "&audit=1"
 # 拍动画（关 still）：STILL=0 bash frontend/tools/screenshot.sh ...
 # 退出码：0=OK；1=FAIL（超时未就绪/页面报错）；3=SKIP（无 playwright）
 set -uo pipefail
 
-OUT="${1:-/root/hitt_shot.png}"
+OUT="${1:-./hitt_shot.png}"
 LOG="${2:-sample/demo_run.jsonl}"
 ROUND="${3:-12}"
 SIZE="${4:-1500x980}"

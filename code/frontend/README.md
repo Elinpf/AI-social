@@ -449,12 +449,17 @@ python frontend/tools/serve.py            # 已有静态服务，端口 8848
 ```bash
 cd code
 python frontend/tools/gen_threads.py \
-    --log  /root/t271/runs/<BATCH>/run.jsonl \
-    --meta /root/t271/runs/<BATCH>/meta.json \
-    --out  frontend/sample/dialogue_<BATCH>/threads.json
+    --log  "<RUN_DIR>/run.jsonl" \
+    --meta "<RUN_DIR>/meta.json" \
+    --out  frontend/sample/dialogue_<BATCH>/threads.json \
+    --label <BATCH>
 ```
 
-- `--meta` 可省；省了页面「provider」列会显示 `日志未记录（无 meta.json）`，**不会**填默认值。
+- `--log` **必填**（脚本不预设任何本机/内网路径）；`--meta` 可省，省了页面「provider」列显示
+  `日志未记录（无 meta.json）`，**不会**填默认值。
+- `threads.json` 里**不写绝对路径**：`source.run_label` 只有「批次名/文件名」，完整路径留在跑批目录的
+  meta.json；可追溯靠 `source.run_sha256` + `events_total_in_log` + meta 白名单字段（provider/model/seed/代码 sha）。
+- meta.json 只**白名单截取**（provider/model/seed/n/rounds/code_sha/... ），不整份带出，避免把机器路径写进公开仓。
 - `--summary` 只打印统计不落盘，用于先看有没有对话。
 - 输出 schema：`hitt.dialogue.threads/1`（字段含 `source.run_sha256`、`source.events_total_in_log`、
   `stats`、`threads[].messages[].seq`）。
@@ -467,7 +472,8 @@ python frontend/tools/gen_threads.py \
 |---|---|
 | `MSG_DM` / `MSG_PUBLIC` / `MSG_GROUP` | 对话本体 |
 | `RELATION_CHANGE` / `NEED_UPDATE` / `RELATION_ENCOUNTER` / `GROUP_CREATED` | 页面「为什么这么聊」的**因果证据**（展开面板里的每个数值都带 seq） |
-| 丢弃：`MEMORY_*` / `OBSERVATION` / `LLM_CALL` / `METABOLISM` / `PLACE_*` / `TURN_SEAL` … | 与对话展示无关 |
+| `PLACE_MOVE` | 「节律 · 串门」视图的**唯一真源**（谁从哪儿走到哪儿，`from_place→to_place` 原样搬运） |
+| 丢弃：`MEMORY_*` / `OBSERVATION` / `LLM_CALL` / `METABOLISM` / `PLACE_ARRIVED` / `TURN_SEAL` … | 与对话展示无关 |
 
 丢弃的事件**不参与任何展示字段**。`--no-keep-context` 可关掉语境事件，但页面展开面板会变成空态
 （不推荐，等于自己拆掉证据）。
@@ -482,6 +488,9 @@ python frontend/tools/gen_threads.py \
 | 为什么这么聊（可展开） | 生成时语境快照（`payload.ctx`）、关系证据（before→after + cause + seq）、当时需求、在场/群组证据、本条溯源（seq/msg_id/reply_to/turn_index/refs） | `messages[].context` |
 | 筛选 | 只看多轮（一键热键）、按人物、按地点、线程长度 ≥N、正文搜索 | 全部来自数据文件 |
 | 回放 | 播放/暂停/上下一条/跳最新、滑杆、0.5x–4x；按**模拟时间逐条浮现**（同线程 280 ms、跨线程 900 ms ÷ 速度）；空格=播放暂停，←/→=步进，Home/End=首/尾 | `messages[].seq` / `round` |
+| 时间轴（顶部常驻） | 一天一行 × 四个时段格：每格的对话条数、走动次数（🚶）、私聊/公开/群聊比例色条；点任一格 → 跳到该时段的第一条对话 | `rhythm[]`（day/slot） |
+| 节律 · 串门（视图 2） | ①「一天里什么时候在说话」按时段汇总条形；②「谁在串门」每人每天场所轨迹 `住宅→农场→市场`（悬停看 seq/时段）；③「话都发生在哪儿」按 place 计数 | `rhythm[]` / `travel[]` / `messages[].place` |
+| 闲话怎么传开（视图 3） | ①转述链：`msg.refs` 指向谁的 msg_id（真源，空则空态）；②「同一句话被第二个人说出」：去标点空白后逐字相同、长度≥8、说话人不同 —— **显式标注为脚本派生口径**，附 seq 列表 | `spread.ref_edges` / `spread.echoes` |
 
 ### 17.5 空态与「不伪造」纪律
 
@@ -495,14 +504,53 @@ python frontend/tools/gen_threads.py \
 ### 17.6 600px 判读
 
 ```bash
-python frontend/tools/shot.py --url 'http://127.0.0.1:8848/dialogue.html?still=1' \
-    --out /root/dialogue_600.png --width 600 --height 900 --no-blank-check
+python frontend/tools/shot.py --url 'http://127.0.0.1:8848/dialogue.html?still=1&multi=0&min=0' \
+    --out ./dialogue_600.png --width 600 --height 900 --no-blank-check
 ```
 
 600px 下：侧栏折叠为顶部「筛选 ▾」抽屉（点击展开）、线程卡占满宽、气泡 `max-width:88%`、
 语境面板单列、播放条时钟压缩到 92px —— 正文不截断、不横向滚动。
 
-### 17.7 已知边界
+### 17.7 可复算门禁（页面上的字必须真的来自日志）
+
+```bash
+# 前置：静态服务在跑（python frontend/tools/serve.py）
+cd code
+python frontend/tools/verify_dialogue_page.py \
+    --base-url http://127.0.0.1:8848 \
+    --data sample/dialogue_demo/threads.json \
+    --run  sample/run_p1_final_n20_llm.jsonl
+# → PASS / FAIL（非零退出） / SKIP(3, 缺 playwright 或浏览器)
+```
+
+它断言三件事（任一不达即 FAIL）：
+1. **能起**：`window.__RENDER_READY__ === true`，无 `pageerror`；
+2. **数目对得上**：`?still=1&multi=0&min=0` 全量状态下
+   `window.__DIALOGUE__.rendered.length == stats.messages`，且 DOM 里 `.msg[data-seq]` 节点数相同；
+3. **可追溯**：抽 5 条，`seq` 回真源 `run.jsonl` 命中且 `payload.body` 与页面数据**逐字相等**、`msg_id` 一致。
+
+外加两条「反假可用」：`?data=<不存在路径>` 必须报错且**不渲染任何消息**（不回退内置样例）；
+旧格式日志不白屏（`data-format=legacy`）。
+
+> **核验口径**：默认进页面时若数据含多线程，会开「只看多轮」，渲染条数**少于** `stats.messages` 属正常；
+> 比对全量请用 `?multi=0&min=0&still=1`（或点「全部」）。页面右下 `已发生 / 总数` 与
+> `<html data-msg-count>` 始终反映**当前实际渲染条数**。
+
+### 17.8 干净环境自检（无本机路径）
+
+```bash
+# 只拷页面/数据/脚本到 /tmp 副本，env -i 最小环境跑（不联网、不 source 任何 env）
+mkdir -p /tmp/d7clean && cp -r dialogue.html styles src data assets tools sample /tmp/d7clean/
+cd /tmp/d7clean
+env -i PATH=/usr/bin:/bin HOME=/tmp/d7home python3 tools/serve.py --port 8899 &
+env -i PATH=/usr/bin:/bin HOME=/tmp/d7home python3 tools/verify_dialogue_page.py \
+    --base-url http://127.0.0.1:8899 --data sample/dialogue_demo/threads.json
+```
+
+本页/本脚本**不含**任何本机或内网绝对路径：浏览器由 `tools/_chrome.py` 探测（`HITT_CHROME` 可覆盖），
+数据路径一律显式传入，`threads.json` 只记 `run_label` + `run_sha256`。
+
+### 17.9 已知边界
 
 - 页面只吃 `threads.json`（不直接解析 run.jsonl）：解析与聚合口径只保留在 `gen_threads.py` **一处**，
   避免前端/脚本两套口径分叉。拖入 `.jsonl` 会提示先生成。

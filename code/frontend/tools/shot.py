@@ -12,7 +12,7 @@
 
 ## 用法
     python frontend/tools/shot.py --url 'http://127.0.0.1:8848/?log=...&round=45&still=1' \
-        --out /root/shot.png [--width 1500 --height 950] [--timeout 60]
+        --out ./shot.png [--width 1500 --height 950] [--timeout 60]
 
 ## 退出码
     0 = OK（已就绪并出图）
@@ -30,9 +30,14 @@
   **若哪天累计变频繁**（如一夜 >N 次）→ 说明环境变了（软件 GL / 驱动 / 负载），**那时要重新追**（本工具只留痕，不抑制、不告警）。
 """
 from __future__ import annotations
-import argparse, sys, time
+import argparse, os, sys, time
 
-CHROME = "/root/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome"
+try:                                    # 与 gate_render.py 共用同一套探测逻辑
+    from _chrome import find_chrome
+except Exception:                       # noqa: BLE001 — 作为库被 import 时兜底
+    import sys as _sys
+    _sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parent))
+    from _chrome import find_chrome
 
 
 def main() -> int:
@@ -52,6 +57,8 @@ def main() -> int:
     ap.add_argument("--no-blank-check", action="store_true",
                     help="关闭非空白判据（用于非小镇画布的普通页面：深色/大色块页面会被误判为空白）。")
     args = ap.parse_args()
+    if args.chrome:
+        os.environ["HITT_CHROME"] = args.chrome
 
     try:
         from playwright.sync_api import sync_playwright  # noqa: F401（探测依赖是否可用）
@@ -114,7 +121,7 @@ def _try_capture(args, still):
     from playwright.sync_api import sync_playwright
     with sync_playwright() as p:
         b = p.chromium.launch(
-            executable_path=CHROME,
+            executable_path=find_chrome(),
             args=["--no-sandbox", "--use-gl=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist"],
         )
         try:
