@@ -2,7 +2,7 @@
 
 - 输入日志: `v2/evidence/run_d2_before_n16_seed42/run.jsonl`
 - run.jsonl sha256: `sha256:c1f86bf61f62b3a0ce8e17e0c2312791cf0262381cd2120c2a63c9b6258963cf`
-- 脚本 sha256: `sha256:d7e2da17764eeec2f17b271b045bd8bc03153e79dd98f35ac171ec7ac3f97306`
+- 脚本 sha256: `sha256:4049fbf83f2bfde52c7565c28869669de40478a2db7282177e4567c749d1163c`
 - 口径版本: `d5-metrics/1.0` / thread_schema=`legacy`
 - 准入结论: **ADMITTED** / evidence_level=`evidence`
 
@@ -88,7 +88,8 @@
 | `L-9_meta_talk_rate` | 0.0 |
 | `L-10_self_address_error_rate` | 0.0 |
 | `L-11_second_person_rate（分母=dm+group n=139）` | 0.697842 |
-| `L-12_peer_name_address_rate（分母=dm+group n=139）` | 0.0 |
+| `L-12a 对端提及率（分母=dm+group n=139）` | 0.0 |
+| `L-12b 对端称呼率（分母=dm+group n=139，判定用）` | 0.0 |
 | `L-8b_paren_only_id_rate（分母=全MSG n=187；仅旁白内ID）` | 0.0 |
 | `L-8c_body_leak_rate（分母=全MSG n=187；台词本体ID）` | 0.299465 |
 

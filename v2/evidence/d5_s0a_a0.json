@@ -1,0 +1,191 @@
+{
+ "batch_landing": {
+  "batch_landing_sha": "3ec85a0",
+  "code_paths_changed": [
+   "code/config/dialogue_repair.json",
+   "code/life/agent.py",
+   "code/life/dialogue_repair.py",
+   "code/orchestration/integration.py"
+  ],
+  "head": "e300c1fcc6ba66bbb2b64222e4f05c376aeb2b7e",
+  "ok": false,
+  "rule": "跑批期间 code/{life,orchestration,config,engine} 不得有任何提交，否则 meta.code_sha 与实际执行代码可能不一致"
+ },
+ "blocking": [],
+ "head": "e300c1fcc6ba66bbb2b64222e4f05c376aeb2b7e",
+ "nonblocking": [
+  {
+   "path": "tools/d5/run_batch_eval.sh",
+   "status": "M"
+  },
+  {
+   "path": "v2/evidence/d5_v0anchor_lock.md",
+   "status": "M"
+  },
+  {
+   "path": "code/frontend/sample/dialogue_run_d2_after_n16_seed42/",
+   "status": "??"
+  },
+  {
+   "path": "code/frontend/tools/d7_after_pipeline.sh",
+   "status": "??"
+  },
+  {
+   "note": "其它路径，按非阻断记注",
+   "path": "experiments/",
+   "status": "??"
+  },
+  {
+   "path": "tools/d5/arm_open_record.py",
+   "status": "??"
+  },
+  {
+   "path": "tools/d5/build_annotation_packet.py",
+   "status": "??"
+  },
+  {
+   "path": "tools/d5/f4_interrater.py",
+   "status": "??"
+  },
+  {
+   "path": "tools/d5/f4_manual_judge.py",
+   "status": "??"
+  },
+  {
+   "path": "tools/d5/f4_repair_evidence.py",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/D3-noiseband-two-level.md",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/D3-null-pair-t300-t355.md",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/D4-A0-expected-structure-checklist.md",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/D4-mock-calibration-n16.md",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d3_corpus_annotate.py",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d3_noiseband_bootstrap.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d3_noiseband_bootstrap.py",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d3_null_pair.py",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d3_null_pair_result.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d3_pattern_counts.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d3_pattern_samples.md",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d4_metrics.py",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d4_preflight_a0.py",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d5_s0a_a0.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d7_shots/run_d2_after_n16_seed42-600-643f13a5.png",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d7_shots/run_d2_after_n16_seed42-chat-643f13a5.png",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d7_shots/run_d2_after_n16_seed42-rhythm-643f13a5.png",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d7_shots/run_d2_after_n16_seed42-spread-643f13a5.png",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/r6_f4_arm_open/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/r6_f4_baseline_repro/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/run_d2_after_n16_seed42/",
+   "status": "??"
+  },
+  {
+   "path": "v2/refs/D4-prompt-candidates.md",
+   "status": "??"
+  }
+ ],
+ "nonblocking_count": 32,
+ "note": "tools/ 下存在未跟踪 .py：需人工确认其不在 code/life 的 import 链上",
+ "repo": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment",
+ "rule": {
+  "hard_fail_prefixes": [
+   "code/life/",
+   "code/orchestration/",
+   "code/config/",
+   "code/engine/"
+  ],
+  "nonblocking_prefixes": [
+   "code/frontend/",
+   "reports/",
+   "v2/refs/",
+   "v2/evidence/",
+   "tools/",
+   "glossary/"
+  ],
+  "source": "leader 裁决 2026-10-20：A0 起跑的 S0a 放宽为「跑批代码树确定」"
+ },
+ "schema_version": "d5-s0a-clean-tree/1.0",
+ "tools_py_present": [
+  {
+   "path": "tools/d5/arm_open_record.py",
+   "status": "??"
+  },
+  {
+   "path": "tools/d5/build_annotation_packet.py",
+   "status": "??"
+  },
+  {
+   "path": "tools/d5/f4_interrater.py",
+   "status": "??"
+  },
+  {
+   "path": "tools/d5/f4_manual_judge.py",
+   "status": "??"
+  },
+  {
+   "path": "tools/d5/f4_repair_evidence.py",
+   "status": "??"
+  }
+ ],
+ "verdict": "FAIL"
+}

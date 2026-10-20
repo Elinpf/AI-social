@@ -511,11 +511,57 @@ def compute(msgs: List[dict], lexicon: List[str], templates: List[re.Pattern],
                 break
     directed = [m for m in msgs if m["channel"] in ("dm", "group")]
     second = sum(1 for m in directed if re.search(r"[你您]", m["body"]))
+    # L-12 拆两口径（2026-10-20 与 prompt-linguist 对齐后定稿）：
+    #  L-12a 提及：正文出现「对方」名字（DM: to；GROUP: 任一其他 participants；排除说话者自己）
+    #  L-12b 称呼：名字以称呼语形式出现（名字后紧跟 标点/语气词，或名字后为句末）
+    ADDR_TAIL = "，、！？：；—…~～啊呀哦呢哈嘛吧"
+    def peer_names(m):
+        out = []
+        to = m.get("to")
+        if to and str(to) in names:
+            out.append(names[str(to)])
+        for pid in (m.get("participants") or []):
+            pid = str(pid)
+            if pid != str(m["from"]) and pid in names:
+                out.append(names[pid])
+        # 去重、排除说话者自己的名字
+        own = names.get(str(m["from"]))
+        return [x for x in dict.fromkeys(out) if x and x != own]
     peer_hit = 0
-    for m in directed:
-        peer = names.get(str(m["to"]))
-        if peer and peer in m["body"]:
+    addr_hit = 0
+    for m in msgs:
+        if m["channel"] not in ("dm", "group"):
+            continue
+        body = m["body"]
+        pn = peer_names(m)
+        if any(n in body for n in pn):
             peer_hit += 1
+        for n in pn:
+            idx = body.find(n)
+            while idx >= 0:
+                nxt = body[idx + len(n): idx + len(n) + 1]
+                if nxt == "" or nxt in ADDR_TAIL:
+                    addr_hit += 1
+                    break
+                idx = body.find(n, idx + 1)
+            else:
+                continue
+            break
+
+    # L-13 内部 token 泄漏：ctx.topic 原字符串直接出现在正文（模板/token 未人话化）
+    leak_msgs = []
+    for m in msgs:
+        t = m.get("ctx_topic")
+        if t and t in (m.get("body") or ""):
+            leak_msgs.append({"seq": m.get("seq"), "topic": t, "body": (m["body"])[:80]})
+    token_leak = len(leak_msgs)
+    out["L-13_token_leak"] = {
+        "token_leak_rate": rate(token_leak, n_msg),
+        "n": token_leak,
+        "by_topic": dict(sorted(Counter(x["topic"] for x in leak_msgs).items())),
+        "samples": leak_msgs[:5],
+        "rule": "分母 = 全部 MSG；分子 = `ctx.topic` 原字符串（内部 token）直接出现在 body 的消息数。只测「token 未人话化」，不测语义正确性",
+    }
 
     out["L_wording"] = {
         "L-1_len": {"all": dist(lens_all), "excl_paren": dist(lens_x)},
@@ -545,7 +591,14 @@ def compute(msgs: List[dict], lexicon: List[str], templates: List[re.Pattern],
         "L-10_denominator": cand,
         "L-11_second_person_rate_dm_group": rate(second, len(directed)),
         "L-11_note": "only dm+group; MSG_PUBLIC 单列（本行不含）",
-        "L-12_peer_name_address_rate": rate(peer_hit, len(directed)),
+        "L-12_peer_mention_rate": rate(peer_hit, len(directed)),
+        "L-12b_peer_address_rate": rate(addr_hit, len(directed)),
+        "L-12_definitions": {
+            "L-12a_mention": "正文出现对方名字（DM: to；GROUP: 任一其他 participants；排除说话者自己、排除自己名字）",
+            "L-12b_address": "名字以称呼语形式出现：名字后紧跟 [，、！？：；—…~～啊呀哦呢哈嘛吧] 或已到句末",
+            "denominator": "DM+GROUP 消息条数（不含 PUBLIC）",
+            "judgement": "判定用 L-12b（称呼）；L-12a 作描述性提及率",
+        },
         "denominators": {"per_message": n_msg, "dm_group": len(directed), "threads": len(threads)},
     }
 
@@ -942,7 +995,8 @@ def to_markdown(res: Dict[str, Any], log_path: str) -> str:
         ("L-9_meta_talk_rate", L["L-9_meta_talk_rate"]),
         ("L-10_self_address_error_rate", L["L-10_self_address_error_rate"]),
         ("L-11_second_person_rate（分母=dm+group n=%d）" % L["denominators"]["dm_group"], L["L-11_second_person_rate_dm_group"]),
-        ("L-12_peer_name_address_rate（分母=dm+group n=%d）" % L["denominators"]["dm_group"], L["L-12_peer_name_address_rate"]),
+        ("L-12a 对端提及率（分母=dm+group n=%d）" % L["denominators"]["dm_group"], L.get("L-12_peer_mention_rate")),
+        ("L-12b 对端称呼率（分母=dm+group n=%d，判定用）" % L["denominators"]["dm_group"], L.get("L-12b_peer_address_rate")),
         ("L-8b_paren_only_id_rate（分母=全MSG n=%d；仅旁白内ID）" % L["denominators"]["per_message"], L.get("L-8b_paren_only_id_rate")),
         ("L-8c_body_leak_rate（分母=全MSG n=%d；台词本体ID）" % L["denominators"]["per_message"], L.get("L-8c_body_leak_rate")),
     ])
