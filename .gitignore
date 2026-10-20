@@ -25,6 +25,13 @@ code/logs/
 .DS_Store
 *.tmp
 
+# ===== 误建的本地影子目录（2026-10-20 清理）=====
+# 有人用相对路径误建了 ./artifacts/（含 code/ 与 reports/）。它不是团队共享目录
+# （团队共享目录在 .agent_teams/.../team-workspace/artifacts/），且未被忽略 → 一提交就会进公开仓库。
+# 真实产物已归位：对内 → 团队 artifacts/{code,reports}/；对外 → reports/。
+# 根锚定（前导 /），避免误伤其他层级同名目录。
+/artifacts/
+
 # git worktree 分支拷贝（T303）：同一仓的分枝 checkout，不属于主树内容；
 # 不忽略会被 `git add -A` 裹带/污染 status（与 T273 提交范围守卫同族风险）。
 .worktrees/
