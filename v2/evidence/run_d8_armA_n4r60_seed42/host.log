@@ -1,0 +1,13 @@
+[d2] run: python3 -m orchestration run --life --seed 42 --agents 4 --rounds 60 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d8_armA_n4r60_seed42/run.jsonl --flush-every 2
+[life] n_agents=4 rounds=60 events=9976 seconds=624.4647 log_bytes=4770973
+  unknown_event_types=[]
+  chain_ok=True replay_parity=True first_run_equals_replay=True
+  conservation_ok=True final_state_hash=sha256:59cc4b33cc0b4aaa7979814f3afdadf564985936e7e6e7eeb759d46bbabc3cdc
+  log written: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d8_armA_n4r60_seed42/run.jsonl
+[meta] /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d8_armA_n4r60_seed42/meta.json
+[meta] events=9976 llm_calls=272 cached_ratio=0.1581 provider={'openai_compat': 272} model={'DeepSeek-Flash': 272}
+[meta] seed_in_log=42 n_in_log=4 rounds_effective=60
+[meta] OK: 真跑判定通过
+[d2] self-check wc -l=9976 meta.events=9976
+{"engine_log":{"by_provider":{"openai_compat":272},"by_purpose":{"dialogue":{"cached":10,"calls":124,"degraded":0,"thinking":0,"tokens_in":17004,"tokens_out":3640},"importance":{"cached":24,"calls":34,"degraded":0,"thinking":0,"tokens_in":170,"tokens_out":3356},"judge":{"cached":0,"calls":74,"degraded":0,"thinking":74,"tokens_in":9652,"tokens_out":25437},"negotiation":{"cached":9,"calls":13,"degraded":0,"thinking":0,"tokens_in":473,"tokens_out":108},"plan":{"cached":0,"calls":4,"degraded":0,"thinking":0,"tokens_in":357,"tokens_out":169},"reflect":{"cached":0,"calls":23,"degraded":0,"thinking":0,"tokens_in":9501,"tokens_out":868}},"llm_judgment_by_dimension":{"affection":16,"rel_affinity":8,"rel_familiarity":12,"rel_trust":2,"respect":16,"stance":16,"weekly_focus":4},"source":"engine_log(LLM_CALL)","total":{"cached":43,"calls":272,"degraded":0,"thinking":74,"tokens_in":37157,"tokens_out":33578,"tokens_total":70735}},"provider_guard":{"by_provider":{"openai_compat":272},"expected":"openai_compat","ok":true,"policy":"计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。","problems":[]}}
+[d2] OK
