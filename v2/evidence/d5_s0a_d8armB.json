@@ -1,0 +1,186 @@
+{
+ "batch_landing": {
+  "batch_landing_sha": "6602b77",
+  "code_paths_changed": [
+   "code/config/world_awareness.json",
+   "code/config/world_director.json",
+   "code/engine/perceive.py",
+   "code/engine/runner.py",
+   "code/life/agent.py",
+   "code/life/visibility.py",
+   "code/life/world_awareness.py",
+   "code/orchestration/integration.py",
+   "code/orchestration/visibility_index.py"
+  ],
+  "head": "2fc8831c88bec078a0c4848860f0d3ce24d0bd1d",
+  "ok": false,
+  "rule": "跑批期间 code/{life,orchestration,config,engine} 不得有任何提交，否则 meta.code_sha 与实际执行代码可能不一致"
+ },
+ "blocking": [],
+ "head": "2fc8831c88bec078a0c4848860f0d3ce24d0bd1d",
+ "nonblocking": [
+  {
+   "path": "reports/D7-\\346\\274\\224\\347\\244\\272\\351\\241\\265\\351\\235\\242.md",
+   "status": "M"
+  },
+  {
+   "path": "reports/R4-life-texture.md",
+   "status": "M"
+  },
+  {
+   "path": "reports/R5-datasets-and-demo.md",
+   "status": "M"
+  },
+  {
+   "path": "reports/R7-world-event-wiring.md",
+   "status": "M"
+  },
+  {
+   "path": "v2/evidence/d7_shots/run_d2_after_n16_seed42-600-643f13a5.png",
+   "status": "M"
+  },
+  {
+   "path": "v2/evidence/d7_shots/run_d2_after_n16_seed42-chat-643f13a5.png",
+   "status": "M"
+  },
+  {
+   "path": "v2/evidence/d7_shots/run_d2_after_n16_seed42-rhythm-643f13a5.png",
+   "status": "M"
+  },
+  {
+   "path": "v2/evidence/d7_shots/run_d2_after_n16_seed42-spread-643f13a5.png",
+   "status": "M"
+  },
+  {
+   "path": "code/frontend/sample/dialogue_run_d8_armA_n4r60_seed42/",
+   "status": "??"
+  },
+  {
+   "path": "code/frontend/sample/dialogue_run_d8_armB_n4r60_seed42/",
+   "status": "??"
+  },
+  {
+   "path": "tools/f7/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d5_llm_purpose_audit_d8armA.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d5_llm_purpose_audit_d8armA.md",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d5_metrics_d8armA.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d5_metrics_d8armA.md",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d5_s0a_d8armA.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d7_shots/run_d8_armA_n4r60_seed42-600-a17ffcfa.png",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d7_shots/run_d8_armA_n4r60_seed42-chat-a17ffcfa.png",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d7_shots/run_d8_armA_n4r60_seed42-rhythm-a17ffcfa.png",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d7_shots/run_d8_armA_n4r60_seed42-spread-a17ffcfa.png",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d7_shots/run_d8_armB_n4r60_seed42-600-3966309f.png",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d7_shots/run_d8_armB_n4r60_seed42-chat-3966309f.png",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d7_shots/run_d8_armB_n4r60_seed42-rhythm-3966309f.png",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d7_shots/run_d8_armB_n4r60_seed42-spread-3966309f.png",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d8_llmcost_armA_n4r60_seed42.txt",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d8_llmcost_armB_n4r60_seed42.txt",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d8_metrics_armA_n4r60_seed42.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d8_metrics_armB_n4r60_seed42.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/f7_a0.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/f7_compare.md",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/f7_v0anchor.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/run_d8_armA_n4r60_seed42/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/run_d8_armB_n4r60_seed42/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/samples_d8armA/",
+   "status": "??"
+  },
+  {
+   "path": "v2/refs/F7-offscreen-criteria.md",
+   "status": "??"
+  }
+ ],
+ "nonblocking_count": 35,
+ "note": "tools/ 下无未跟踪 .py",
+ "repo": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment",
+ "rule": {
+  "hard_fail_prefixes": [
+   "code/life/",
+   "code/orchestration/",
+   "code/config/",
+   "code/engine/"
+  ],
+  "nonblocking_prefixes": [
+   "code/frontend/",
+   "reports/",
+   "v2/refs/",
+   "v2/evidence/",
+   "tools/",
+   "glossary/"
+  ],
+  "source": "leader 裁决 2026-10-20：A0 起跑的 S0a 放宽为「跑批代码树确定」"
+ },
+ "schema_version": "d5-s0a-clean-tree/1.0",
+ "tools_py_present": [],
+ "verdict": "FAIL"
+}
