@@ -1,0 +1,194 @@
+{
+  "criterion_source": "artifacts/reports/D5-指标定义-定稿v1.0.md + D4-事前登记.md §2.3",
+  "generated_by": "v2/evidence/d4_metrics.py",
+  "runs": {
+    "A0": {
+      "S": {
+        "msgs_per_thread_p50": 2.0,
+        "multi_turn_thread_ratio_pct": 43.69,
+        "n_threads": 206,
+        "reply_pointer_coverage_pct": 69.97,
+        "single_msg_thread_ratio_pct": 49.51,
+        "turns_A_p50": 2.0
+      },
+      "channels": {
+        "dm": 497,
+        "group": 126,
+        "public": 63
+      },
+      "len_excl_paren_p10": 19,
+      "len_excl_paren_p50": 41.0,
+      "len_p10": 27,
+      "len_p50": 54.0,
+      "len_p90": 97,
+      "metrics": {
+        "F_gossip": {
+          "ci95": [
+            2.48,
+            5.32
+          ],
+          "denom": 686,
+          "hit": 25,
+          "rate_pct": 3.64
+        },
+        "F_repair": {
+          "ci95": [
+            0,
+            0.56
+          ],
+          "denom": 686,
+          "hit": 0,
+          "rate_pct": 0.0
+        },
+        "F_time_ref": {
+          "ci95": [
+            4.19,
+            7.68
+          ],
+          "denom": 686,
+          "hit": 39,
+          "rate_pct": 5.69
+        },
+        "K1_backref": {
+          "ci95": [
+            50.53,
+            59.39
+          ],
+          "denom": 480,
+          "hit": 264,
+          "rate_pct": 55.0
+        },
+        "K1_lexical": {
+          "ci95": [
+            72.46,
+            80.03
+          ],
+          "denom": 480,
+          "hit": 367,
+          "rate_pct": 76.46
+        },
+        "K1_same_topic": {
+          "ci95": [
+            99.21,
+            100
+          ],
+          "denom": 480,
+          "hit": 480,
+          "rate_pct": 100.0
+        },
+        "L11": {
+          "ci95": [
+            23.94,
+            30.92
+          ],
+          "denom": 623,
+          "hit": 170,
+          "rate_pct": 27.29
+        },
+        "L12a_mention": {
+          "ci95": [
+            61.67,
+            69.12
+          ],
+          "denom": 623,
+          "hit": 408,
+          "rate_pct": 65.49
+        },
+        "L12b_address": {
+          "ci95": [
+            46.8,
+            54.63
+          ],
+          "denom": 623,
+          "hit": 316,
+          "rate_pct": 50.72
+        },
+        "L13_token_leak": {
+          "ci95": [
+            2.72,
+            5.67
+          ],
+          "denom": 686,
+          "hit": 27,
+          "rate_pct": 3.94
+        },
+        "L2": {
+          "ci95": [
+            78.87,
+            84.62
+          ],
+          "denom": 686,
+          "hit": 562,
+          "rate_pct": 81.92
+        },
+        "L3": {
+          "ci95": [
+            83.21,
+            88.4
+          ],
+          "denom": 686,
+          "hit": 590,
+          "rate_pct": 86.01
+        },
+        "L4": {
+          "ci95": [
+            5.57,
+            9.48
+          ],
+          "denom": 686,
+          "hit": 50,
+          "rate_pct": 7.29
+        },
+        "L5": {
+          "ci95": [
+            0.9,
+            2.85
+          ],
+          "denom": 686,
+          "hit": 11,
+          "rate_pct": 1.6
+        },
+        "L6": {
+          "ci95": [
+            16.33,
+            22.21
+          ],
+          "denom": 686,
+          "hit": 131,
+          "rate_pct": 19.1
+        },
+        "L7": {
+          "ci95": [
+            57.53,
+            64.8
+          ],
+          "denom": 686,
+          "hit": 420,
+          "rate_pct": 61.22
+        },
+        "L8": {
+          "ci95": [
+            0,
+            0.56
+          ],
+          "denom": 686,
+          "hit": 0,
+          "rate_pct": 0.0
+        },
+        "L9": {
+          "ci95": [
+            0.08,
+            1.06
+          ],
+          "denom": 686,
+          "hit": 2,
+          "rate_pct": 0.29
+        }
+      },
+      "n_msgs": 686,
+      "n_threads": 206,
+      "path": "v2/evidence/run_d2_after_n16_seed42/run.jsonl",
+      "thread_schema": "explicit"
+    }
+  }
+}

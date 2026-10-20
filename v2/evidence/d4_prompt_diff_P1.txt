@@ -1,0 +1,22 @@
+--- a/code/life/agent.py (A0 3ec85a0)
++++ b/code/life/agent.py (P1)
+@@ -1001,7 +1001,8 @@
+         others = self._relation_line(partners) or "(独自)"
+         return (self.persona.compressed_profile(self._current_goal())
+                 + f"\n场景：{tid}；对象：{others}。{self._mood_line()}。"
+-                + "\n请用一句话自然地说点什么。")  # D2 不改措辞要求（保持基线原句），措辞优化归 D4
++                + "\n只写你嘴里说出来的话：不要动作、神态或心理描写，不要括号旁白，不要引号，"
++                  "不要用第三人称说你自己。")  # D2 不改措辞要求（保持基线原句），措辞优化归 D4
+ 
+     def _reply_prompt(self, partner: str | None, topic: str, history: list,
+                       cfg: dict | None = None) -> str:
+@@ -1011,7 +1012,8 @@
+         return (self.persona.compressed_profile(self._current_goal())
+                 + f"\n你正在和{who}聊「{topic}」。{self._mood_line()}。"
+                 + f"\n刚才的对话：\n{lines}"
+-                + "\n请接着说一句。")  # D2 只承载「承接上一轮」的结构必要性，不做措辞优化（归 D4）
++                + "\n只写你嘴里说出来的话：不要动作、神态或心理描写，不要括号旁白，不要引号，"
++                  "不要用第三人称说你自己。接着上一句说。")  # D2 只承载「承接上一轮」的结构必要性，不做措辞优化（归 D4）
+ 
+     # ---- economy: negotiation / offer / order-cancel (T133) ----------------
+     def _maybe_negotiate(self, wv) -> None:
