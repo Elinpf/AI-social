@@ -1,0 +1,142 @@
+D4 / A1 措辞臂 · 提示词单变量改动证据（逐字 diff + 变/不变对照 + 零计费自检）
+====================================================================================================
+
+## 0. 基线声明（先读这节，否则后面的 sha 会用错）
+
+【事实 · 基线洁净度】A0 与 D9 父提交在三个「提示词所在文件」上逐字节相同：
+
+  884f4541:code/life/agent.py    sha256 = c1ef4a492b18cb109d5771408af572b5e2faaa58f0cc015f5f863d29c714e352
+  05636bc:code/life/agent.py     sha256 = c1ef4a492b18cb109d5771408af572b5e2faaa58f0cc015f5f863d29c714e352
+  884f4541:code/life/soft.py     sha256 = e53a2b4cc6b113f2…   ==  05636bc 同
+  884f4541:code/life/planner.py  sha256 = 85e4496758d5da32…   ==  05636bc 同
+  git diff --stat 884f4541..05636bc -- code/life/agent.py   → 空
+
+⇒ (1) A0 整包 prompt_sha = e6ec7355789358d8 可直接作 A1 基线，无需重算；
+⇒ (2) _dialogue_prompt / _reply_prompt 的 A0 源码段直接从 05636bc 取即等价；
+⇒ (3) 反向印证 D9 两臂 prompt_sha 相同（D9 只动 code/life/dialogue_threads.py:30）。
+
+  复算:  for c in 884f4541 05636bc; do git show $c:code/life/agent.py | sha256sum; done
+
+## 1. prompt_sha 口径与前后值
+
+口径 = tools/prompt_iter/prompt_iter.py:32 `_prompt_sha()`：sha256 依次 update 相对路径名与文件字节，
+       文件集 = ("life/agent.py", "life/soft.py", "life/planner.py")，工作目录 = code/，取前 16 位 hex。
+
+  prompt_sha(A0) = e6ec7355789358d8   ← 基线（分支 feat/dialogue-density @ 121cec28，文件与 05636bc 逐字节相同）
+  prompt_sha(A1) = 5186aa9a3db55de8   ← 本改动后（工作树）
+  二者不相等 ⇒ 提示词改动确实生效。
+
+  复算 A1: cd code && python3 - <<'PY'
+            import hashlib; from pathlib import Path
+            h=hashlib.sha256()
+            for rel in ('life/agent.py','life/soft.py','life/planner.py'):
+                h.update(rel.encode()); h.update(Path(rel).read_bytes())
+            print(h.hexdigest()[:16])
+            PY
+
+## 2. 改动面：精确行范围（git diff 全文见 §3）
+
+  文件              : code/life/agent.py
+  改动行（A1 行号） : L1058（_dialogue_prompt 末行）、L1069（_reply_prompt 末行）
+  改动性质          : 仅替换两条收尾指令字符串；不增删行、不改缩进、不动任何其它语句
+  git diff --stat   : code/life/agent.py | 4 ++--  (2 insertions, 2 deletions)
+  零改动面          : code/config/ 零改动、code/engine/ 零改动、无新 config 键、无结构改动
+
+## 3. 逐字 diff（git diff code/life/agent.py 原文）
+
+diff --git a/code/life/agent.py b/code/life/agent.py
+index db88c50..3e568bf 100644
+--- a/code/life/agent.py
++++ b/code/life/agent.py
+@@ -1055,7 +1055,7 @@ class LifeLayerAgent:
+         return (self.persona.compressed_profile(self._current_goal())
+                 + f"\n场景：{tid}；对象：{others}。{self._mood_line()}。"
+                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
+-                + "\n请用一句话自然地说点什么。")  # D2 不改措辞要求（保持基线原句），措辞优化归 D4
++                + "\n只写台词本身（一句家常话）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（零 config/结构改动）
+ 
+     def _reply_prompt(self, partner: str | None, topic: str, history: list,
+                       cfg: dict | None = None, rift_line: str | None = None) -> str:
+@@ -1066,7 +1066,7 @@ class LifeLayerAgent:
+                 + f"\n你正在和{who}聊「{topic}」。{self._mood_line()}。"
+                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
+                 + f"\n刚才的对话：\n{lines}"
+-                + "\n请接着说一句。")  # D2 只承载「承接上一轮」的结构必要性，不做措辞优化（归 D4）
++                + "\n只写台词本身（接着刚才的话往下说一句）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（承载「承接上一轮」结构不变）
+ 
+     # ---- economy: negotiation / offer / order-cancel (T133) ----------------
+     def _maybe_negotiate(self, wv) -> None:
+
+## 4. 变 / 不变 反向对照（函数级源码段 sha256 前 16 位）
+
+  方法: ast.parse 取每个 FunctionDef 的源码段（含 def 行）→ sha256[:16]。A0 = 05636bc 的 blob，A1 = 工作树。
+        A0 侧明细落 /tmp/a1_materials/a0_func_sha.json（51 个函数全表）。
+
+  函数                     A0 行范围        A0 sha16          A1 行范围        A1 sha16          变化
+  ----------------------------------------------------------------------------------------------------
+  _dialogue_prompt       L1050-1058    0639e2c16aabbc00  L1050-1058    61f73c1a2ccec7a4  **变**
+  _reply_prompt          L1060-1069    61e3983c6888c2e4  L1060-1069    84979edbdbdf7144  **变**
+  _send_reply            L924-975      3f193f049c4e0cd3  L924-975      3f193f049c4e0cd3  不变
+  _maybe_negotiate       L1072-1106    5dc4f0b9f8e4a971  L1072-1106    5dc4f0b9f8e4a971  不变
+  _plan                  L469-489      894e66e4f8442258  L469-489      894e66e4f8442258  不变
+  _reflect               L653-679      aecc0ee94be42d97  L653-679      aecc0ee94be42d97  不变
+  _score_importance      L1275-1288    172dde8cdbf78f24  L1275-1288    172dde8cdbf78f24  不变
+  _relation_line         L1032-1040    9c00382b82b71cb4  L1032-1040    9c00382b82b71cb4  不变
+  _mood_line             L1042-1048    cbfb857e6386ac4c  L1042-1048    cbfb857e6386ac4c  不变
+
+  发生变化函数（全文件 51 个函数中）: ['_dialogue_prompt', '_reply_prompt']
+  未变化函数数量                : 49 / 51
+  除上述两函数外，是否有任何函数行号移动: 否
+
+  文件级（未变则给出整文件 sha256 前 16 位）:
+    code/life/soft.py                                    A0=e53a2b4cc6b113f2  A1=e53a2b4cc6b113f2  不变
+    code/life/planner.py                                 A0=85e4496758d5da32  A1=85e4496758d5da32  不变
+    code/freeze/llm_client.py（judge/describe 提示词构造所在）    A0=a99927b1703bf6b5  A1=a99927b1703bf6b5  不变
+    code/life/persona.py（compressed_profile）             A0=f64a69b9d21bf59e  A1=f64a69b9d21bf59e  不变
+    code/life/agent.py（整文件）                              A0=c1ef4a492b18cb10  A1=1a4a00642fef264e  **变**
+
+  与 D9 口径的接口（静态旁证，不据此推断措辞效果）：
+    - D9 已实测 judge/importance/negotiation/plan 四类 purpose 提示词两臂逐位相同（合计 2561/3403 = 75.26%），即这四类不吃正文；
+    - 本轮 _plan / _reflect / _score_importance / _maybe_negotiate 的源码段 sha 均未变，模型构造它们的提示词必然逐字不变；
+    - 因此本轮可归因的措辞变化面**只有 dialogue 类**（_dialogue_prompt / _reply_prompt 两条收尾指令）。
+
+## 5. 零网络 / 零计费 的当场证明（不是口头保证）
+
+  $ cd code && python3 /tmp/a1_materials/probe.py        # 探针先 `socket.socket = _boom` 再构造 agent
+  client_type = life.llm.RuleBasedLLM      ← 离线确定性客户端，无 provider
+  client_name = rule-based-v1
+  provider    = None
+  socket_patched = True (True = 网络已封死)
+
+  --- _dialogue_prompt ---
+  …场景：place_teahouse；对象：P007（熟悉度0/好感0）。情绪：平和；最紧的需求：mastery=50。
+  只写台词本身（一句家常话）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。
+
+  --- _reply_prompt ---
+  …你正在和P007聊「今天的天气」。情绪：平和；最紧的需求：mastery=50。
+  刚才的对话：
+  （叹气）唉，又闷又热。
+  热啊。
+  只写台词本身（接着刚才的话往下说一句）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。
+
+  [OK] 两条 A1 收尾指令已装配；旧中性指令已消失；上下文装配完好
+  [OK] llm.call 未被调用（本探针只做字符串装配，未触发任何 LLM 请求）
+
+  三条独立旁证：
+   a) 客户端无 provider（provider=None）且 life/llm.py 无任何网络相关 import/调用：
+      $ cd code && grep -nE "requests|httpx|urllib|openai|socket" life/llm.py   → 空输出
+   b) socket 已被 patch 成抛异常，探针仍跑通 ⇒ 装配路径全程无网络连接。
+   c) 自检前后：pgrep -fa "orchestration[ ]run" → 空（rc=1）；v2/evidence/run_* 目录数 27 未增；
+      最新 run 目录仍为 run_d9_a1_n16r84_seed42（mtime 2026-10-21 04:19），本自检未产生任何 run 目录/日志。
+      ⇒ 本轮无任何 openai_compat 真实调用，零计费。
+
+## 6. 导入 / 语法自检
+
+  $ cd code && python3 -c "import sys; sys.path.insert(0,'.'); import life.agent, orchestration.integration, life.llm; print('import OK')"
+  import OK
+  $ cd code && python3 -m py_compile life/agent.py && echo py_compile OK
+  py_compile OK
+
+## 7. 采集时刻
+
+  2026-10-21 04:32:05（+08:00），分支 feat/wording-a1，切点 = dc9e471（= 审计确认的 121cec28 + 本任务的 docs 收尾 commit）

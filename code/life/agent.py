@@ -1055,7 +1055,7 @@ class LifeLayerAgent:
         return (self.persona.compressed_profile(self._current_goal())
                 + f"\n场景：{tid}；对象：{others}。{self._mood_line()}。"
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
-                + "\n请用一句话自然地说点什么。")  # D2 不改措辞要求（保持基线原句），措辞优化归 D4
+                + "\n只写台词本身（一句家常话）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（零 config/结构改动）
 
     def _reply_prompt(self, partner: str | None, topic: str, history: list,
                       cfg: dict | None = None, rift_line: str | None = None) -> str:
@@ -1066,7 +1066,7 @@ class LifeLayerAgent:
                 + f"\n你正在和{who}聊「{topic}」。{self._mood_line()}。"
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + f"\n刚才的对话：\n{lines}"
-                + "\n请接着说一句。")  # D2 只承载「承接上一轮」的结构必要性，不做措辞优化（归 D4）
+                + "\n只写台词本身（接着刚才的话往下说一句）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（承载「承接上一轮」结构不变）
 
     # ---- economy: negotiation / offer / order-cancel (T133) ----------------
     def _maybe_negotiate(self, wv) -> None:
