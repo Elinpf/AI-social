@@ -1,0 +1,192 @@
+# G-1 两臂起批前置门取证（门 1 + 门 2 四条 + 条件 4）
+
+采集时刻：2026-10-21T06:32–06:33 (+08:00)
+采集人：batch-ops ｜ 运行环境：本机 linux，仓库 `/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`
+性质：**只读取证**，零 LLM 调用、零计费、不产生 run 目录；未修改 `code/life|orchestration|config|engine` 任何文件。
+
+## 0. 臂身份（先钉死，否则后面 sha 会用错）
+
+| 臂 | 代码来源 | sha |
+|---|---|---|
+| 基线臂 B0 | worktree `.worktrees/g1-b0-n16r60`（detached HEAD） | `d9391a3` (d9391a37) |
+| 处理臂 G1 | 主树 `feat/gossip-g1` | `43010927` (43010927883e2f31e133a7f2aaefab1b142a620e)，docs 基点 `8736295c` |
+
+处理臂 sha 与 life-engineer 汇报一致（`git rev-parse --short=8 HEAD` → `43010927`），**未出现不一致**。
+
+worktree 与凭证搬运：
+
+```bash
+git worktree add .worktrees/g1-b0-n16r60 d9391a3      # → Preparing worktree (detached HEAD d9391a3)
+cp -p code/.env.local .worktrees/g1-b0-n16r60/code/.env.local
+sha256sum code/.env.local .worktrees/g1-b0-n16r60/code/.env.local
+# fe48dfca7cfee70d5933b6c46de5541fef9fc09e77b805cd7df3728348dac6f9  code/.env.local
+# fe48dfca7cfee70d5933b6c46de5541fef9fc09e77b805cd7df3728348dac6f9  .worktrees/g1-b0-n16r60/code/.env.local
+```
+
+⇒ `code/.env.local` 被 `code/.gitignore:11` 忽略、未入库，故 worktree 检出后需复制；**两臂使用同一份凭证**（sha256 相同）、权限 600，主树文件为只读来源未改动。此搬运**不构成两臂变量差异**。
+
+## 1. 门 1 · prompt_sha（口径 `tools/prompt_iter/prompt_iter.py:28-37`）
+
+口径：`sha256(rel + bytes)` over `("life/agent.py","life/soft.py","life/planner.py")`，工作目录 `code/`，取前 16 位 hex。
+在两棵树内**实算**（非 git show 推算）：
+
+```bash
+for T in .worktrees/g1-b0-n16r60 .; do
+  ( cd $T/code && PROMPT_ITER_CODE=$PWD python3 -c "import prompt_iter as p; print(p._prompt_sha())" )
+done
+```
+
+实际输出：
+
+```
+=== tree=.worktrees/g1-b0-n16r60  HEAD=d9391a37 ===
+prompt_sha = 5186aa9a3db55de8
+=== tree=.  HEAD=43010927 ===
+prompt_sha = a47d7c7739816104
+```
+
+判定：
+- B0 = **5186aa9a3db55de8** == 期望值（R9 A1 实测值）⇒ **通过**
+- G1 = **a47d7c7739816104** ≠ 5186aa9a3db55de8 ⇒ **通过**
+
+## 2. 门 2 条件 (a) · OFF 态两树渲染 byte-identical
+
+探针：`v2/evidence/g1_render_probe.py`（先 `socket.socket=_boom` 封网；以被测树 `code/` 为 cwd 导入；`peer_names` 用运行期同源 `life.dialogue_threads.build_display_map`；固定输入 agent=P003、partners=[P003,P007]、tid=place_teahouse、topic=今天的天气、history 两条；`G1_PROBE_PEERS` 设为 `sorted(personas)[:16]`）。
+
+```bash
+P16=P001,P002,P003,P004,P005,P006,P007,P008,P009,P010,P011,P012,P013,P014,P015,P016
+( cd .worktrees/g1-b0-n16r60/code && G1_PROBE_PEERS=$P16 python3 <主树>/v2/evidence/g1_render_probe.py --out b0_off.json )
+( cd code && G1_PROBE_PEERS=$P16 python3 ../v2/evidence/g1_render_probe.py --out treat_off.json )
+```
+
+实际输出（三条各 exit=0）：
+
+| 树 / 状态 | `_dialogue_prompt` | `_reply_prompt` |
+|---|---|---|
+| B0（d9391a3）OFF | len=**256** sha256[:16]=**8eb923c168bc686e** | len=**266** sha256[:16]=**779f0c060a328f2d** |
+| G1（4301092）OFF | len=**256** sha256[:16]=**8eb923c168bc686e** | len=**266** sha256[:16]=**779f0c060a328f2d** |
+
+判定：`B0.text == G1.text` 两段均为 **True**（逐字节相同），`diff` 空 ⇒ **通过**
+（附：n4 与 n16 两次探针的 OFF sha 相同，说明 OFF 渲染只由固定输入决定、与 n 无关。）
+
+## 3. 门 2 条件 (b) · ON 态差异只落在 hint 行
+
+```bash
+( cd code && LIFE_PROMPT_GOSSIP_G1=1 G1_PROBE_PEERS=$P16 python3 ../v2/evidence/g1_render_probe.py --out treat_on.json )
+```
+
+实际输出与 unified diff 原文（`n=0`）：
+
+```
+B0/TR OFF  dial 256 8eb923c168bc686e | reply 266 779f0c060a328f2d
+TR ON      dial 348 362ed6f974aff48a | reply 358 d59a71951f28c0ad
+OFF 两树 byte-identical: True
+
+--- _dialogue_prompt @@ -2,0 +3 @@
++镇上还住着：五味、兰姐、周公文、小满、巧儿、方老师、月牙、桂婶、秀娘、老周、老石、金先生、铁头、陈医。可以顺口提一句他们最近的事（谁家…），但不确定就别编，只说你真看见、听见过的事。
+
+--- _reply_prompt @@ -5,0 +6 @@
++镇上还住着：五味、兰姐、周公文、小满、巧儿、方老师、月牙、桂婶、秀娘、老周、老石、金先生、铁头、陈医。可以顺口提一句他们最近的事（谁家…），但不确定就别编，只说你真看见、听见过的事。
+```
+
+`ON.replace(hint_line, "", 1) == OFF`：`_dialogue_prompt` **True**、`_reply_prompt` **True**；字符增量各 **+92**（256→348、266→358），行数各 **+1**。
+
+名单断言（探针 fail-loud，任一为假即 `SystemExit`）：
+
+```json
+{"hint_line_present": true,
+ "hint_names": ["五味","兰姐","周公文","小满","巧儿","方老师","月牙","桂婶","秀娘","老周","老石","金先生","铁头","陈医"],
+ "names_all_in_personas": true, "names_exclude_self": true, "names_exclude_partners": true,
+ "self_name": "阿禾", "partner_names": ["阿林"], "personas_vocab_size": 20,
+ "names_not_in_personas": []}
+```
+
+判定：差异**只有**该 hint 行、位置在收尾指令之前，除该行外**无其他字符变化** ⇒ **通过**
+（反例自检见 `v2/evidence/g1_form_metrics_selftest.md` 与探针 `G1_PROBE_INJECT_FAKE_NAME` 钩子：注入词表外名字时 exit=1 判 FAIL，已证断言非恒真。）
+
+## 4. 门 2 条件 (c) · 静态 diff 边界 + 5 个 hunk 逐条惰性声明
+
+```bash
+git diff --stat d9391a3 43010927 -- code/life code/orchestration code/config code/engine
+git diff d9391a3 43010927 -- code/orchestration | wc -l   # 0
+git diff d9391a3 43010927 -- code/config        | wc -l   # 0
+git diff d9391a3 43010927 -- code/engine        | wc -l   # 0
+```
+
+实际输出：
+
+```
+ code/life/agent.py | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+code/orchestration diff_lines=0
+code/config diff_lines=0
+code/engine diff_lines=0
+```
+
+5 个 hunk（`git diff -U0` 原文行号）与逐条惰性声明：
+
+| # | hunk | 内容 | 惰性声明 |
+|---|---|---|---|
+| 1 | `@@ -15,0 +16 @@` | 新增 `import os` | 惰性：纯 stdlib 导入，无副作用；开关 OFF 时不改变任何输出 |
+| 2 | `@@ -40,0 +42,10 @@` | 新增 `GOSSIP_G1_ENV` 常量 + `gossip_g1_enabled()` | 惰性：默认无 env ⇒ 返回 False；只读 `os.environ`，不写世界态、不发事件 |
+| 3 | `@@ -1031,0 +1043,19 @@` | 新增方法 `_gossip_hint()` | 惰性：`if not gossip_g1_enabled(): return ""` ⇒ OFF 时返回空串，不进入提示词 |
+| 4 | `@@ -1057,0 +1088 @@` | `_dialogue_prompt` 内 `+ self._gossip_hint(partners)` | 惰性：OFF 时 `""`，拼接零字符 ⇒ 与 B0 逐字节相同（已由条件 (a) 实测） |
+| 5 | `@@ -1068,0 +1100 @@` | `_reply_prompt` 内 `+ self._gossip_hint([partner] if partner else [])` | 惰性：同上 |
+
+判定：静态 diff **只在** `code/life/agent.py`，三目录（orchestration/config/engine）**零 diff** ⇒ **通过**
+
+### 4.1 按**函数名寻址**的函数体 sha（避行号移动假阳性）
+
+行号因新增方法整体下移，若按行号区间截取会出大量假阳性，故按 `qualname` 用 AST 截函数体求 sha：
+
+```bash
+python3 v2/evidence/g1_func_sha.py --rev d9391a3:code/life/agent.py  --out f_base.json
+python3 v2/evidence/g1_func_sha.py --rev 43010927:code/life/agent.py --out f_treat.json
+```
+
+实际输出：
+
+```
+n_base 51  n_treat 53
+changed: ['_dialogue_prompt', '_reply_prompt']
+added:   ['gossip_g1_enabled', '_gossip_hint']
+removed: []
+unchanged_count: 49
+  _plan:              b095673c879eed8b -> b095673c879eed8b (defline 469->480)
+  _reflect:           64252a089d72bc71 -> 64252a089d72bc71 (defline 653->664)
+  _score_importance:  18271b23f6ce418f -> 18271b23f6ce418f (defline 1275->1307)
+  _maybe_negotiate:   1ecc9d3345a74411 -> 1ecc9d3345a74411 (defline 1072->1104)
+```
+
+⇒ 除两个 prompt 函数外 49 个函数体 sha **逐位不变**（含 judge/importance/negotiation/plan 四类），行号移动属新增方法所致、**不构成提示词差异**。
+
+## 5. 条件 4 · 运行期变量栏
+
+采集时点本 shell 环境：
+
+```bash
+env | grep LIFE_PROMPT_GOSSIP_G1    # → 空输出（rc=1）
+```
+
+- **B0 批**：环境中**不存在** `LIFE_PROMPT_GOSSIP_G1`（上方空输出为证；B0 树本身也没有该开关代码）。meta 将再次贴一次同样的 `env | grep` 原文。
+- **G1 批**：显式 `LIFE_PROMPT_GOSSIP_G1=1` 启动，meta 贴 `env | grep` 得到的 `LIFE_PROMPT_GOSSIP_G1=1` 原文。
+
+## 6. 必写事实（防误引）
+
+1. 该分支**默认行为不变**：开关默认 OFF，**无 env 时代码是惰性的**，不算「已默认生效」。
+2. hint 名单**无人数上限**，等于 `peers − 自己 − 当前对话对象`：n16 ⇒ **14 人**（+92 字符），n4 ⇒ 2 人（+66 字符）。它覆盖的是**本 run 实例化的全部在场居民**（14 名）。
+3. G-1 候选集（`g_metrics.py` 口径）取**全量 20 人名表 − 发送者 − participants** = **18 人**，故 hint 覆盖率 = **14/18**；差集为未实例化的 **书言 P017 / 弦歌 P018 / 石头 P019 / 阿散 P020**。**不得**表述为「覆盖全部候选」。
+4. 早期「hint 名单 6/18」的说法源自探针 8-peer 输入，**已作废**。
+
+## 7. 门结论
+
+| 门 | 结论 |
+|---|---|
+| 门 1 prompt_sha | **通过**（B0=5186aa9a3db55de8，G1=a47d7c7739816104） |
+| 门 2 (a) OFF 两树 byte-identical | **通过**（256/266，sha 8eb923c1…/779f0c06…） |
+| 门 2 (b) ON 只多 hint 行 | **通过**（各 +92 字符 / +1 行，`ON−hint == OFF` 两段均 True） |
+| 门 2 (c) 静态 diff 边界 + 惰性声明 | **通过**（仅 `code/life/agent.py` +32；三目录 0 行；49/51 函数体 sha 不变） |
+| 条件 4 env 栏 | **通过**（采集时 env 空；B0 空 / G1=1 将逐批贴原文） |
+
+⇒ 允许进入串行起批：B0（d9391a3 树）→ 批间三门 → G1（4301092 + `LIFE_PROMPT_GOSSIP_G1=1`）。
