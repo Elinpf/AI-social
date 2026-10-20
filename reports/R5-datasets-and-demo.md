@@ -13,9 +13,9 @@
 
 | # | 数据集 | 路径 | 生成方式 | 体量 | 状态 |
 |---|---|---|---|---|---|
-| D-1 | **v0-anchor** 语料（旧结构 + 旧提示词；`run_d2_before_n16_seed42`） | 待填（锁 sha 后） | 真 LLM 跑批 | 待填 | 待交付 |
-| D-2 | A0 对照语料（新结构 + 旧提示词） | 待填 | 真 LLM 跑批 | 待填 | 待交付 |
-| D-3 | A1 语料（新结构 + 新提示词） | 待填 | 真 LLM 跑批 | 待填 | 待交付 |
+| D-1 | **v0-anchor** 语料（旧结构 + 原提示词；`run_d2_before_n16_seed42`） | 待填（锁 sha 后） | 真 LLM 跑批 | 待填 | 待交付 |
+| D-2 | **A0** 语料（新结构 + 必要适配提示词） | 待填 | 真 LLM 跑批 | 待填 | 待交付 |
+| D-3 | **A1** 语料（A0 + 措辞层优化） | 待填 | 真 LLM 跑批 | 待填 | 待交付 |
 | D-4 | 评测读数（各臂指标） | `v2/evidence/d5_metrics_*.json` / `.md` | `tools/d5/dialogue_metrics.py` | 每份数 KB–数十 KB | 部分已有（历史批） |
 | D-5 | 线程视图数据（供演示页渲染） | `code/frontend/sample/dialogue_demo/threads.json` (0bfb6288) | `code/frontend/tools/gen_threads.py` | 543 KB，231 条线程（legacy 口径） | 已有（历史批，须换成本轮语料） |
 | D-6 | judge 原始输出（全量） | `judge_raw.jsonl`（不入库，给 sha） | `tools/d5/dialogue_judge.py` | 待填 | 待交付 |

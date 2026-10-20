@@ -48,11 +48,13 @@
 
 | 臂 | 结构 / 提示词 | `code_sha`（臂 commit） | `run.jsonl` sha256（sha8） | `provider` / `model` | `admission.verdict` |
 |---|---|---|---|---|---|
-| v0-anchor | 旧 / 旧 | 待填 | 待填 | 待填 | 待填 |
-| A0 | 新 / 旧 | 待填 | 待填 | 待填 | 待填 |
-| A1 | 新 / 新 | 待填 | 待填 | 待填 | 待填 |
+| v0-anchor | 旧结构 / 原提示词 | 待填 | 待填 | 待填 | 待填 |
+| A0 | 新结构 / 必要适配提示词 | 待填 | 待填 | 待填 | 待填 |
+| A1 | A0 + 措辞层优化 | 待填 | 待填 | 待填 | 待填 |
 
 > 填表纪律：`code_sha` 与 `run.jsonl` sha 一律从该臂 `meta.json` 读取后填入，**不得填 `git rev-parse HEAD` 的当前值**；填表时重新 `sha256sum` 校验一次，防止沿用骨架旧值。
+>
+> **注意**：`prompt_sha(v0-anchor)` 与 `prompt_sha(A0)` **本就不同**（A0 含显示名/称谓注入与 `_reply_prompt` 承接装配等必要适配），差异须能逐项归因；能归因即正常对照，不叫「作废」。
 
 
 **【事实】** 改造只在对话路径上做**受控解冻**（范围与四条前提见 R1 §5），方式是**只追加字段、不新增事件类型**：在 `MSG_DM` / `MSG_PUBLIC` / `MSG_GROUP` 的 payload 上增加线程字段——`thread_id`、`turn_index`、`reply_to`、`participants`、`ctx`（关系/情绪/需求/话题）。
