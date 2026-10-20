@@ -437,7 +437,12 @@ python frontend/tools/serve.py            # 已有静态服务，端口 8848
 #   http://127.0.0.1:8848/dialogue.html                    ← 默认载入 sample/dialogue_demo/threads.json
 #   http://127.0.0.1:8848/dialogue.html?data=sample/xxx/threads.json
 #   http://127.0.0.1:8848/dialogue.html?still=1            ← 静态帧（供 shot.py 截图，不自动回放）
+#   http://127.0.0.1:8848/dialogue.html?thread=TH-P001-0    ← 直接定位某条线程（自动展开语境）
 ```
+
+**可分享 / 可引用的 URL 参数**（报告取证用）：`data`（threads.json 路径）、`thread`（thread_id 或旧格式的
+首条 seq）、`person`/`place`/`min`/`multi`/`q`（筛选）。线程卡右上「🔗 引用」一键复制带上述参数的链接，
+复制出来的链接打开即复现同一屏（含展开的语境面板）。
 
 ### 17.2 从一份跑批目录生成页面数据（换批次一条命令）
 

@@ -94,6 +94,7 @@
     for (var i = 0; i < urls.length; i++) {
       try {
         var d = await fetchJSON(urls[i]);
+        state.dataUrl = urls[i];
         return d;
       } catch (e) {
         errs.push(urls[i] + " → " + e.message);
@@ -125,6 +126,14 @@
     state.flat.sort(function (a, b) { return (a.m.seq || 0) - (b.m.seq || 0); });
     state.cursor = state.flat.length;
 
+    var q = new URLSearchParams(location.search);
+    if (q.get("person")) state.filters.person = q.get("person");
+    if (q.get("place")) state.filters.place = q.get("place");
+    if (q.get("min")) state.filters.minTurns = Number(q.get("min")) || 0;
+    if (q.get("multi") === "1") state.filters.multiOnly = true;
+    if (q.get("multi") === "0") state.filters.multiOnly = false;
+    if (q.get("q")) state.filters.search = q.get("q");
+
     var st = data.stats || {};
     // 旧格式日志：默认关掉「只看多轮」，否则页面是空的（空态提示见 notice）
     if (!st.multi_turn_threads && st.legacy_messages) {
@@ -135,12 +144,45 @@
     }
     renderSource(data);
     renderFilters(data);
+    syncFilterControls();
     renderStats();
     render();
     updatePlayUI();
     state.ready = true;
+    focusThreadFromUrl();
     window.__RENDER_READY__ = true;
     document.documentElement.setAttribute("data-render-ready", "1");
+  }
+
+  function syncFilterControls() {
+    var f = state.filters;
+    document.getElementById("f-person").value = f.person || "";
+    document.getElementById("f-place").value = f.place || "";
+    document.getElementById("f-turns").value = String(f.minTurns || 0);
+    document.getElementById("f-search").value = f.search || "";
+    document.querySelectorAll("#quick .chip").forEach(function (c) {
+      c.classList.toggle("on", (c.getAttribute("data-multi") === "1") === !!f.multiOnly);
+    });
+  }
+
+  function focusThreadFromUrl() {
+    var tid = new URLSearchParams(location.search).get("thread");
+    if (!tid) return;
+    var key = null;
+    state.threads.some(function (t) {
+      if (t.thread_id === tid) { key = threadKey(t); return true; }
+      if (!t.thread_id && t.messages[0] && String(t.messages[0].seq) === tid) { key = threadKey(t); return true; }
+      return false;
+    });
+    if (!key) { toast("URL 指定的线程不在当前数据里：" + tid); return; }
+    state.expanded[key] = true;
+    render();
+    var card = document.querySelector('[data-thread="' + tid + '"]') ||
+               document.querySelector('[data-key="' + key + '"]');
+    if (card) {
+      card.scrollIntoView({ block: "center" });
+      card.classList.add("flash");
+    }
   }
 
   function renderSource(data) {
@@ -314,7 +356,7 @@
   function renderThread(ti) {
     var t = state.threads[ti];
     var key = threadKey(t);
-    var card = el("section", { class: "thread", "data-ti": String(ti) });
+    var card = el("section", { class: "thread", "data-ti": String(ti), "data-key": key });
 
     // ---- head ----
     var avatars = el("div", { class: "avatars" });
@@ -340,6 +382,20 @@
       onclick: function () { state.expanded[key] = !state.expanded[key]; render(); }
     });
     tags.appendChild(ctxBtn);
+    if (t.thread_id) {
+      tags.appendChild(el("button", {
+        class: "ctxbtn", text: "🔗 引用", title: "复制指向该线程的页面链接（可用于报告取证）",
+        onclick: function (e) {
+          e.stopPropagation();
+          var u = new URL(location.href);
+          u.searchParams.set("thread", t.thread_id);
+          u.searchParams.set("still", "1");
+          if (state.dataUrl) u.searchParams.set("data", state.dataUrl);
+          try { navigator.clipboard.writeText(u.toString()); } catch (err) { /* ignore */ }
+          toast("已复制线程链接：" + t.thread_id);
+        }
+      }));
+    }
 
     card.appendChild(el("div", { class: "thread-head" }, [avatars, who, tags]));
     if (t.thread_id) card.setAttribute("data-thread", t.thread_id);
@@ -673,6 +729,7 @@
           var d = JSON.parse(String(r.result));
           if (!d.threads) throw new Error("缺少 threads 字段");
           stopPlay();
+          state.dataUrl = null;      // 本地文件：链接里不写 data 参数
           prepare(d);
           document.getElementById("src-run").textContent = "本地文件: " + f.name;
           toast("已载入 " + f.name + "（" + d.threads.length + " 条线程）");
