@@ -21,7 +21,7 @@
 >
 > **三条硬验判据（可机械核验）**
 > 1. `prompt_sha(v0-anchor) ≠ prompt_sha(A0)`，且差异**逐项落在「消融成分边界表」列出的 D2 提示词改动上**；表外差异 ⇒ 未声明改动 ⇒ 必须降级。
->    - `TODO(成分表)`：正式文件预期 `v2/evidence/d2_ablation_components.md`（文件 / 函数 / 行范围 / 改动意图 / 影响指标）；未到位前暂引 `D4-事前登记.md` (e9689001) 的成分定义。
+>    - 依据：`v2/evidence/d2_ablation_components.md` (f3a29146)，表外差异一律算未声明改动 ⇒ 降级。**该表可能更新**（B4 归属仍在澄清），若作者更新则以更新版为准，不写死旧 sha。
 > 2. `prompt_sha(A1) ≠ prompt_sha(A0)`，且差异行范围**只落在** `_dialogue_prompt` / `_reply_prompt` 区间（逐字 diff 落 `v2/evidence/d4_prompt_diff.txt`）。
 > 3. `code_sha` 三臂**各不相同**（每臂一个 commit），`run.jsonl sha8` 也各不相同。
 >
