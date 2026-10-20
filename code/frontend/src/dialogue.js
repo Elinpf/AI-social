@@ -63,7 +63,7 @@
     data: null,
     threads: [],        // 原始线程（已按时间排序）
     flat: [],           // 扁平化消息（全序），元素 {t: threadIndex, m: msg}
-    filters: { multiOnly: true, person: "", place: "", minTurns: 0, search: "", sort: "time" },
+    filters: { multiOnly: true, person: "", place: "", minTurns: 0, search: "", sort: "time", leak: false },
     speed: 1,
     playing: false,
     cursor: 0,
@@ -153,6 +153,7 @@
     if (q.get("multi") === "0") state.filters.multiOnly = false;
     if (q.get("q")) state.filters.search = q.get("q");
     if (q.get("sort") === "turns" || q.get("sort") === "time") state.filters.sort = q.get("sort");
+    if (q.get("leak") === "1") state.filters.leak = true;
 
     var st = data.stats || {};
     // 多轮线程很少时（<=24），默认「按轮次排序」：让人一眼看到最长的几条，而不是自己筛
@@ -454,6 +455,8 @@
     document.getElementById("f-turns").value = String(f.minTurns || 0);
     document.getElementById("f-search").value = f.search || "";
     document.getElementById("f-sort").value = f.sort || "time";
+    var cl = document.getElementById("chip-leak");
+    if (cl) cl.classList.toggle("on", !!f.leak);
     document.querySelectorAll("#quick .chip").forEach(function (c) {
       c.classList.toggle("on", (c.getAttribute("data-multi") === "1") === !!f.multiOnly);
     });
@@ -566,7 +569,19 @@
     });
   }
 
+  // 派生口径（不是日志字段）：该条消息 payload.ctx.topic 的原字符串出现在正文里 ⇒ 泄漏。
+  function isLeak(m) {
+    var topic = (m.ctx || {}).topic;
+    return !!(topic && m.body && String(m.body).indexOf(String(topic)) >= 0);
+  }
+  function threadLeakCount(t) {
+    var n = 0;
+    (t.messages || []).forEach(function (m) { if (isLeak(m)) n++; });
+    return n;
+  }
+
   function threadPasses(t) {
+    if (state.filters.leak && threadLeakCount(t) === 0) return false;
     var f = state.filters;
     if (f.multiOnly && !(t.turns >= 2)) return false;
     if (f.minTurns && t.turns < f.minTurns) return false;
@@ -644,6 +659,16 @@
 
     var idxs = filteredThreads();
     if (!state.data) return;
+    if (state.filters.leak) {
+      var leakTotal = 0;
+      state.threads.forEach(function (t) { leakTotal += threadLeakCount(t); });
+      notice.appendChild(el("div", {
+        class: "notice",
+        text: "⚠ 已开启「只看 token 泄漏」（派生筛选）：判定 = 该条消息 ctx.topic 的原字符串出现在正文里。"
+            + "本数据集共 " + leakTotal + " / " + ((state.data.stats || {}).messages || 0) + " 条命中。"
+            + "这是脚本判定的措辞问题，不是日志里的标记位。"
+      }));
+    }
     if (state.filters.sort === "turns" && idxs.length > 1) {
       var top = state.threads[idxs[0]];
       notice.appendChild(el("div", {
@@ -731,6 +756,9 @@
     tags.appendChild(el("span", { class: "tag turns", text: t.turns + " 轮" }));
     if (t.multi_turn) tags.appendChild(el("span", { class: "tag multi", text: "多轮" }));
     if (t.legacy) tags.appendChild(el("span", { class: "tag legacy", text: "旧格式·单发" }));
+    if (state.filters.leak) {
+      tags.appendChild(el("span", { class: "tag legacy", text: "泄漏 " + threadLeakCount(t) + " 条" }));
+    }
     var shown = visibleCount(ti);
     if (shown < t.messages.length) tags.appendChild(el("span", { class: "tag live", text: "回放中 " + shown + "/" + t.messages.length }));
     var ctxBtn = el("button", {
@@ -762,6 +790,7 @@
     var firstSpeaker = (t.messages[0] || {}).from || (t.participants || [])[0];
     t.messages.forEach(function (m, mi) {
       if ((m.seq || 0) > cutoff) return;
+      if (state.filters.leak && !isLeak(m)) return;
       var right = t.channel === "dm" && m.from && m.from !== firstSpeaker;
       var bubbleChildren = [];
       var speakerText = (m.turn_index != null ? "第 " + (m.turn_index + 1) + " 轮 · " : "")
@@ -1030,6 +1059,13 @@
     });
     document.getElementById("f-turns").addEventListener("change", function (e) {
       state.filters.minTurns = Number(e.target.value) || 0; render(); renderStats();
+    });
+    var chipLeak = document.getElementById("chip-leak");
+    if (chipLeak) chipLeak.addEventListener("click", function () {
+      state.filters.leak = !state.filters.leak;
+      chipLeak.classList.toggle("on", state.filters.leak);
+      if (state.filters.leak) { document.getElementById("empty-box").hidden = true; }
+      render(); renderStats();
     });
     document.getElementById("f-sort").addEventListener("change", function (e) {
       state.filters.sort = e.target.value; render(); renderStats();
