@@ -264,6 +264,8 @@ class LifeLayerAgent:
         # 破坏 T276「续跑与一次性跑逐字节一致」）。纯读日志、确定性。
         slot_msgs: dict = {}
         thread_replied: dict = {}
+        replied_uids: set = set()   # D2 P2：我曾回复过的消息 msg_uid（防续跑重复回同一条）
+        replied_uids: set = set()   # P2：我回复过的 msg_uid（否则续跑会对同一条再回一次 ⇒ DROPPED{dup}）
         for rec in records:
             t = rec.get("type")
             p = rec.get("payload") or {}
@@ -283,6 +285,12 @@ class LifeLayerAgent:
                     ti_ = p.get("turn_index")
                     if tid_ and ti_ is not None:
                         thread_replied[tid_] = max(thread_replied.get(tid_, -1), int(ti_))
+                    rt_ = p.get("reply_to")
+                    if rt_:
+                        replied_uids.add(rt_)
+                    rt_ = p.get("reply_to")
+                    if rt_:
+                        replied_uids.add(rt_)
             elif t == "INTENT_REJECTED":
                 # `_communicate` 在**尝试**时就置 `_comm_slot`（即使 SOCIAL 被拒、无 MSG_*）⇒
                 # 被拒的对话尝试也必须算，否则续跑会**重复尝试**同一 slot（T298 cut=75）。
@@ -325,6 +333,8 @@ class LifeLayerAgent:
         self._comm_slot = _slot_of(comm_round) if comm_round is not None else None
         self._slot_msgs = dict(slot_msgs)
         self._thread_replied_turn = dict(thread_replied)
+        self._replied_msg_ids = set(replied_uids)
+        self._replied_msg_ids = set(replied_uids)
         self._rel_cache = rel
 
     # ---- public entry ------------------------------------------------------
