@@ -13,6 +13,7 @@ The agent never mutates world state.
 """
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -37,6 +38,16 @@ from .ports import (
 )
 from .soft import get_soft_layer, rng_branch
 from .util import clamp, sha256_hex
+
+# G 系列 A1 臂开关（闲话/第三方提及）：**只影响提示词文本**，默认 OFF。
+# 目的（DESIGN-preregistration.md §7「开关化」）：A0 与 A1 用同一份代码跑，
+# 两臂之间只剩「提示词里有没有这份名单」这一个差异，单变量可证。
+GOSSIP_G1_ENV = "LIFE_PROMPT_GOSSIP_G1"
+
+
+def gossip_g1_enabled() -> bool:
+    """A1 臂开关（env `LIFE_PROMPT_GOSSIP_G1` ∈ {1,true,yes,on}）；默认关。"""
+    return os.environ.get(GOSSIP_G1_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
 
 _SALIENT_EVENTS = {
     "ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "PLACE_ARRIVED",
@@ -1029,6 +1040,25 @@ class LifeLayerAgent:
         self.kernel.submit_intent(self.agent_id, Intent(INTENT_SOCIAL, self.agent_id, payload))
 
     # ---- 提示词装配 --------------------------------------------------------
+    def _gossip_hint(self, exclude: list | None = None) -> str:
+        """G 系列 A1 臂（闲话/第三方提及）：把「可引用的真人名单」喂进提示词。
+
+        单变量约束：开关关闭（默认 OFF）时返回空串，A0 的提示词**逐字节不变**；
+        打开时只在提示词中**插入**这一段，不改任何既有段落、不改任何配置/世界态。
+        名单只取 `code/config/personas.json` 已在用的显示名词表（`_peer_names`，
+        由 `dialogue_threads.build_display_map` 生成）∩ 本 run 的 `peers`，
+        并排除自己与当前对话对象（否则只是"称呼率"的别名，见 DESIGN §2.1 去噪第 1 条）。
+        """
+        if not gossip_g1_enabled():
+            return ""
+        ex = {self.agent_id, *(exclude or [])}
+        names = sorted({self._peer_names[p] for p in self.peers
+                        if p not in ex and self._peer_names.get(p)})
+        if not names:
+            return ""
+        return (f"\n镇上还住着：{'、'.join(names)}。可以顺口提一句他们最近的事（谁家…），"
+                "但不确定就别编，只说你真看见、听见过的事。")
+
     def _relation_line(self, partners: list) -> str:
         bits = []
         for p in partners:
@@ -1055,6 +1085,7 @@ class LifeLayerAgent:
         return (self.persona.compressed_profile(self._current_goal())
                 + f"\n场景：{tid}；对象：{others}。{self._mood_line()}。"
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
+                + self._gossip_hint(partners)  # G系列A1臂：可引用真人名单（默认OFF ⇒ 空串）
                 + "\n只写台词本身（一句家常话）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（零 config/结构改动）
 
     def _reply_prompt(self, partner: str | None, topic: str, history: list,
@@ -1066,6 +1097,7 @@ class LifeLayerAgent:
                 + f"\n你正在和{who}聊「{topic}」。{self._mood_line()}。"
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + f"\n刚才的对话：\n{lines}"
+                + self._gossip_hint([partner] if partner else [])  # G系列A1臂：可引用真人名单（默认OFF ⇒ 空串）
                 + "\n只写台词本身（接着刚才的话往下说一句）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（承载「承接上一轮」结构不变）
 
     # ---- economy: negotiation / offer / order-cancel (T133) ----------------
