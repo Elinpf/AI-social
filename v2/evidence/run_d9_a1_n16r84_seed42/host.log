@@ -1,0 +1,13 @@
+[d2] run: python3 -m orchestration run --life --seed 42 --agents 16 --rounds 84 --out /tmp/d9_a1_run/run.jsonl --flush-every 2 --side-root /tmp/d9_a1_side
+[life] n_agents=16 rounds=84 events=194126 seconds=5216.8343 log_bytes=91343119
+  unknown_event_types=[]
+  chain_ok=True replay_parity=True first_run_equals_replay=True
+  conservation_ok=True final_state_hash=sha256:4f4bc8c575a7714df23921e9a4532181579b7ef4cb797991e1fe132838a24eee
+  log written: /tmp/d9_a1_run/run.jsonl
+[meta] /tmp/d9_a1_run/meta.json
+[meta] events=194126 llm_calls=3403 cached_ratio=0.5081 provider={'openai_compat': 3403} model={'DeepSeek-Flash': 3403}
+[meta] seed_in_log=42 n_in_log=16 rounds_effective=84
+[meta] OK: 真跑判定通过
+[d2] self-check wc -l=194126 meta.events=194126
+{"engine_log":{"by_provider":{"openai_compat":3403},"by_purpose":{"describe":{"cached":0,"calls":16,"degraded":0,"thinking":16,"tokens_in":2929,"tokens_out":6591},"dialogue":{"cached":63,"calls":714,"degraded":0,"thinking":0,"tokens_in":113239,"tokens_out":29344},"importance":{"cached":1597,"calls":1747,"degraded":0,"thinking":0,"tokens_in":2466,"tokens_out":34641},"judge":{"cached":0,"calls":717,"degraded":0,"thinking":717,"tokens_in":95760,"tokens_out":238469},"negotiation":{"cached":65,"calls":81,"degraded":0,"thinking":0,"tokens_in":1911,"tokens_out":617},"plan":{"cached":0,"calls":16,"degraded":0,"thinking":0,"tokens_in":1447,"tokens_out":860},"reflect":{"cached":4,"calls":112,"degraded":0,"thinking":0,"tokens_in":47734,"tokens_out":6640}},"llm_judgment_by_dimension":{"affection":132,"rel_affinity":41,"rel_familiarity":262,"rel_trust":2,"respect":132,"stance":132,"weekly_focus":16},"source":"engine_log(LLM_CALL)","total":{"cached":1729,"calls":3403,"degraded":0,"thinking":733,"tokens_in":265486,"tokens_out":317162,"tokens_total":582648}},"provider_guard":{"by_provider":{"openai_compat":3403},"expected":"openai_compat","ok":true,"policy":"计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。","problems":[]}}
+[d2] OK

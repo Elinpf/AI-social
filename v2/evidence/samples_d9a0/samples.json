@@ -1,0 +1,4732 @@
+{
+ "chain_mismatch": {
+  "applicable": true,
+  "mismatch_threads": [
+   {
+    "chain_alternation": 18,
+    "chain_mismatch": 12,
+    "chain_pointer": 6,
+    "grade": "mid",
+    "messages": [
+     {
+      "body": "（低头拨着算盘）账要平……可这局面，怎么算都不平。",
+      "channel": "group",
+      "day": 5,
+      "from": "P009",
+      "hearer": null,
+      "msg_uid": "42:123670",
+      "place": "hall",
+      "reply_to": null,
+      "round": 67,
+      "seq": 123670,
+      "slot": "evening",
+      "speaker": "金先生",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把秤砣往台面上一搁）金先生，账不平，多半是秤没调好。您这contest，比的到底是货，还是人心？我兰姐摆摊二十年，最怕的不是输，是有人把规矩给改了。",
+      "channel": "group",
+      "day": 5,
+      "from": "P016",
+      "hearer": null,
+      "msg_uid": "42:125169",
+      "place": "park",
+      "reply_to": "42:123670",
+      "round": 68,
+      "seq": 125169,
+      "slot": "evening",
+      "speaker": "兰姐",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（用刨子轻轻推过木料）规矩改不得。我这双手，只认尺寸。",
+      "channel": "group",
+      "day": 5,
+      "from": "P002",
+      "hearer": null,
+      "msg_uid": "42:126774",
+      "place": "residence",
+      "reply_to": "42:125169",
+      "round": 69,
+      "seq": 126774,
+      "slot": "night",
+      "speaker": "老石",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把脉枕往桌角推了推）兰姐这话在理。我行医三十年，最怕的也是规矩被改——药方子一改，轻则无效，重则伤人。contest若比的是真本事，我陈医没话说；可要是比谁嗓门大、谁关系硬，那这镇上的人心，可就真散了。",
+      "channel": "group",
+      "day": 5,
+      "from": "P005",
+      "hearer": null,
+      "msg_uid": "42:131202",
+      "place": "residence",
+      "reply_to": "42:125169",
+      "round": 69,
+      "seq": 131202,
+      "slot": "night",
+      "speaker": "陈医",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（搓着手凑近半步）兰姐这话在理……我走南闯北这些年，见过太多contest，明面上比货，暗地里比谁门路硬。哎，金先生，您这局，规矩是您定的，还是上头有人递了话？",
+      "channel": "group",
+      "day": 5,
+      "from": "P007",
+      "hearer": null,
+      "msg_uid": "42:134011",
+      "place": "residence",
+      "reply_to": "42:125169",
+      "round": 69,
+      "seq": 134011,
+      "slot": "night",
+      "speaker": "阿林",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（手指停在算盘上）兰姐，规矩一改，账就永远平不了。我这contest，比的是谁先撑不住。",
+      "channel": "group",
+      "day": 5,
+      "from": "P009",
+      "hearer": null,
+      "msg_uid": "42:136875",
+      "place": "residence",
+      "reply_to": "42:125169",
+      "round": 69,
+      "seq": 136875,
+      "slot": "night",
+      "speaker": "金先生",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（手指无意识地绞着围巾的流苏）兰姐，您这话扎我心上了。我上台前从来不想输赢，可这次……他们让我唱那首《月牙弯》，说评委爱听。我练了三十遍，越练越像别人的歌。",
+      "channel": "group",
+      "day": 5,
+      "from": "P010",
+      "hearer": null,
+      "msg_uid": "42:138438",
+      "place": "residence",
+      "reply_to": "42:125169",
+      "round": 69,
+      "seq": 138438,
+      "slot": "night",
+      "speaker": "月牙",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "桂婶：（把手里的菜篮往旁边一放，凑近了些）哎哟，兰姐这话说到我心坎上了。contest嘛，我是不懂那些弯弯绕绕，可我就认一个理——大家伙儿站一条线上，谁也别偷着往前挪半步。金先生，您说是不是这个理儿？",
+      "channel": "group",
+      "day": 5,
+      "from": "P012",
+      "hearer": null,
+      "msg_uid": "42:141349",
+      "place": "residence",
+      "reply_to": "42:125169",
+      "round": 69,
+      "seq": 141349,
+      "slot": "night",
+      "speaker": "桂婶",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（手指绕着围裙带子）兰姐这话扎心……我师父说，contest像打铁，火候差一点，整块料就废了。可要是有人往炉子里掺水呢？",
+      "channel": "group",
+      "day": 5,
+      "from": "P014",
+      "hearer": null,
+      "msg_uid": "42:144153",
+      "place": "residence",
+      "reply_to": "42:125169",
+      "round": 69,
+      "seq": 144153,
+      "slot": "night",
+      "speaker": "巧儿",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（兰姐把手里的账本往摊子上一合，抬眼看了看月牙，又扫了桂婶一眼，语气不急不缓）桂婶这话在理。contest嘛，就跟赶集卖货一个样——你货真价实，我秤平斗满，谁也别在秤砣底下粘泥。月牙，你唱那《月牙弯》练了三十遍，练成别人的了，那还叫你的歌吗？（顿了顿，肚子咕噜响了一声，她低头拍了拍肚子，自嘲地笑）哎，光顾着说，我这肚子先不乐意了。",
+      "channel": "group",
+      "day": 5,
+      "from": "P016",
+      "hearer": null,
+      "msg_uid": "42:151651",
+      "place": "residence",
+      "reply_to": "42:144153",
+      "round": 70,
+      "seq": 151651,
+      "slot": "night",
+      "speaker": "兰姐",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（拿刨子蹭了蹭木料边）掺水的铁，打不出好刃。contest也一样。",
+      "channel": "group",
+      "day": 5,
+      "from": "P002",
+      "hearer": null,
+      "msg_uid": "42:152107",
+      "place": "residence",
+      "reply_to": "42:151651",
+      "round": 71,
+      "seq": 152107,
+      "slot": "night",
+      "speaker": "老石",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "陈医：（把听诊器往桌上一搁，慢慢坐下）掺水的事，我见过。早年间镇上比谁家药铺方子灵，有人往秤砣底下粘铜钱——后来呢？病人还是往我那破诊所跑。contest这东西，赢的是秤，输的是人。",
+      "channel": "group",
+      "day": 5,
+      "from": "P005",
+      "hearer": null,
+      "msg_uid": "42:152326",
+      "place": "residence",
+      "reply_to": "42:151651",
+      "round": 71,
+      "seq": 152326,
+      "slot": "night",
+      "speaker": "陈医",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "阿林：（搓了搓手，笑着往人堆里凑了半步）哎，兰姐，我走南闯北这些年，别的不敢说，contest这词儿我耳朵都听出茧子了。南边码头那帮人讲，contest最怕的不是对手强，是规矩半道上变。您说是不是？我倒是想听听，您心里那杆秤，到底怎么个称法？",
+      "channel": "group",
+      "day": 5,
+      "from": "P007",
+      "hearer": null,
+      "msg_uid": "42:152460",
+      "place": "residence",
+      "reply_to": "42:151651",
+      "round": 71,
+      "seq": 152460,
+      "slot": "night",
+      "speaker": "阿林",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（手指在算盘上拨了一下）掺水？那账就不平了。contest也一样，规矩定在前头，谁也别事后改。",
+      "channel": "group",
+      "day": 5,
+      "from": "P009",
+      "hearer": null,
+      "msg_uid": "42:152598",
+      "place": "residence",
+      "reply_to": "42:151651",
+      "round": 71,
+      "seq": 152598,
+      "slot": "night",
+      "speaker": "金先生",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把吉他往桌上一搁，肚子先咕噜了一声）哎哟——先别聊contest了，谁那儿有吃的？我从早上排到这会儿，嗓子都唱哑了，胃里空得能听见回音。兰姐，你说这contest要是连口热饭都不管，那还比什么呀，比谁先饿晕在台上吗？",
+      "channel": "group",
+      "day": 5,
+      "from": "P010",
+      "hearer": null,
+      "msg_uid": "42:152667",
+      "place": "residence",
+      "reply_to": "42:151651",
+      "round": 71,
+      "seq": 152667,
+      "slot": "night",
+      "speaker": "月牙",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "桂婶：（拍了拍巧儿的手背，又扭头冲兰姐笑）哎哟，你们俩说的都在理。要我说啊，contest就跟咱镇上办席一样——菜得一样，筷子得一样长，谁也不能多夹一筷子。金先生，您倒是给句准话，这炉子到底谁看着火？",
+      "channel": "group",
+      "day": 5,
+      "from": "P012",
+      "hearer": null,
+      "msg_uid": "42:152801",
+      "place": "residence",
+      "reply_to": "42:151651",
+      "round": 71,
+      "seq": 152801,
+      "slot": "night",
+      "speaker": "桂婶",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "巧儿：（肚子咕噜一声，赶紧捂住）哎哟……说到掺水，我这肚子先抗议了。兰姐，要不咱边吃边说？我早上就啃了半个馒头，这会儿脑子跟炉子一样空转呢。",
+      "channel": "group",
+      "day": 5,
+      "from": "P014",
+      "hearer": null,
+      "msg_uid": "42:152947",
+      "place": "residence",
+      "reply_to": "42:151651",
+      "round": 71,
+      "seq": 152947,
+      "slot": "night",
+      "speaker": "巧儿",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "兰姐：（把手里那杆秤往摊上一放，先冲月牙努努嘴）饿成这样还唱什么，我这儿有半块饼，先垫垫。（又转向桂婶，压低声）contest那炉子啊，我看不是谁看火的事，是火底下那柴谁添——添多添少，最后都算在咱头上。金先生要真讲公道，就把账摊开，别光嘴上说一样长。",
+      "channel": "group",
+      "day": 6,
+      "from": "P016",
+      "hearer": null,
+      "msg_uid": "42:154921",
+      "place": "workshop",
+      "reply_to": "42:152947",
+      "round": 72,
+      "seq": 154921,
+      "slot": "morning",
+      "speaker": "兰姐",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     }
+    ],
+    "n_msgs": 18,
+    "peer_named_msgs": 0,
+    "ptr_msgs": 17,
+    "signals": 2,
+    "thread_key": "T:TH-P009-Gplace-hall-67",
+    "turns_A": 18
+   },
+   {
+    "chain_alternation": 15,
+    "chain_mismatch": 10,
+    "chain_pointer": 5,
+    "grade": "mid",
+    "messages": [
+     {
+      "body": "（手里捏着半截废木料，眼睛却瞟着评委席）兰姐，你说我这小玩意儿要是拿不了名次，回头给桂婶当柴火烧，她能不能少念叨我两句？",
+      "channel": "group",
+      "day": 6,
+      "from": "P014",
+      "hearer": null,
+      "msg_uid": "42:160407",
+      "place": "plaza",
+      "reply_to": null,
+      "round": 78,
+      "seq": 160407,
+      "slot": "evening",
+      "speaker": "巧儿",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（头也不抬，用刨子推过木料）名次是别人的事。活儿细不细，你自己知道。",
+      "channel": "group",
+      "day": 6,
+      "from": "P002",
+      "hearer": null,
+      "msg_uid": "42:160854",
+      "place": "community_center",
+      "reply_to": "42:160407",
+      "round": 79,
+      "seq": 160854,
+      "slot": "evening",
+      "speaker": "老石",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（低头搓着衣角）巧儿，别光想着名次……桂婶那边，我帮你说说。",
+      "channel": "group",
+      "day": 6,
+      "from": "P003",
+      "hearer": null,
+      "msg_uid": "42:160915",
+      "place": "community_center",
+      "reply_to": "42:160407",
+      "round": 79,
+      "seq": 160915,
+      "slot": "evening",
+      "speaker": "阿禾",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（用镊子夹着棉球，头也没抬）巧儿，你这心思就没在木头上。名次是别人的事，手艺才是自己的。桂婶念叨你，是怕你糟蹋东西——你把这半截料子雕出个样子来，比什么名次都强。",
+      "channel": "group",
+      "day": 6,
+      "from": "P005",
+      "hearer": null,
+      "msg_uid": "42:161057",
+      "place": "hall",
+      "reply_to": "42:160407",
+      "round": 79,
+      "seq": 161057,
+      "slot": "evening",
+      "speaker": "陈医",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（笑着拍了下巧儿的胳膊）哎哟，你这孩子，说什么呢！桂婶我啥时候念叨过你啦？你那手艺，镇上谁不夸？烧火？我可舍不得！",
+      "channel": "group",
+      "day": 6,
+      "from": "P012",
+      "hearer": null,
+      "msg_uid": "42:161666",
+      "place": "community_center",
+      "reply_to": "42:160407",
+      "round": 79,
+      "seq": 161666,
+      "slot": "evening",
+      "speaker": "桂婶",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把手里那串铜钱往摊上一搁，抬眼扫了扫巧儿那半截木料）念叨是躲不掉的，可你这手艺，烧了可惜。名次那玩意儿，评委眼一花就没了，货好不好，我一眼就看得出来——你这活儿，有心思在里头。",
+      "channel": "group",
+      "day": 6,
+      "from": "P016",
+      "hearer": null,
+      "msg_uid": "42:161982",
+      "place": "cafe",
+      "reply_to": "42:160407",
+      "round": 79,
+      "seq": 161982,
+      "slot": "evening",
+      "speaker": "兰姐",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把刻刀往木料上一搁，冲兰姐挤挤眼）兰姐这话我爱听——那评委要是眼花了，你替我瞪他们去？",
+      "channel": "group",
+      "day": 6,
+      "from": "P014",
+      "hearer": null,
+      "msg_uid": "42:184186",
+      "place": "residence",
+      "reply_to": "42:161982",
+      "round": 81,
+      "seq": 184186,
+      "slot": "night",
+      "speaker": "巧儿",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（头也不抬，用刨子推过木面）手稳，眼准。花活没用。",
+      "channel": "group",
+      "day": 6,
+      "from": "P002",
+      "hearer": null,
+      "msg_uid": "42:189823",
+      "place": "residence",
+      "reply_to": "42:184186",
+      "round": 82,
+      "seq": 189823,
+      "slot": "night",
+      "speaker": "老石",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（低头搓着衣角）巧儿，你那手艺，评委眼不花也看得见。我……我就盼着别出啥岔子。",
+      "channel": "group",
+      "day": 6,
+      "from": "P003",
+      "hearer": null,
+      "msg_uid": "42:190004",
+      "place": "residence",
+      "reply_to": "42:184186",
+      "round": 82,
+      "seq": 190004,
+      "slot": "night",
+      "speaker": "阿禾",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（从药柜后探出半个身子，手里还捏着戥子）巧儿，你这刻刀搁得轻点儿——上回兰姐那把裁纸刀就是这么崩的口。contest的事我不懂，可手艺人争的是手上那点准头，不是嘴上那口气。",
+      "channel": "group",
+      "day": 6,
+      "from": "P005",
+      "hearer": null,
+      "msg_uid": "42:190369",
+      "place": "residence",
+      "reply_to": "42:184186",
+      "round": 82,
+      "seq": 190369,
+      "slot": "night",
+      "speaker": "陈医",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（揉着太阳穴，声音有点哑）巧儿，别光顾着说笑——你那刀口再偏半分，这块料就废了。来，我看看你刚才刻的那道线……嗯，手稳多了，比上回强。",
+      "channel": "group",
+      "day": 6,
+      "from": "P006",
+      "hearer": null,
+      "msg_uid": "42:190562",
+      "place": "residence",
+      "reply_to": "42:184186",
+      "round": 82,
+      "seq": 190562,
+      "slot": "night",
+      "speaker": "方老师",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把吉他往怀里一搂，笑得有点勉强）瞪评委这事儿我可不敢，上次在礼堂演出，台下坐着的那位评委光看我调弦就皱了三次眉。巧儿，你说咱们这contest到底图个啥？我这两天绷得快断了，连月牙都弹不利索。",
+      "channel": "group",
+      "day": 6,
+      "from": "P010",
+      "hearer": null,
+      "msg_uid": "42:191250",
+      "place": "residence",
+      "reply_to": "42:184186",
+      "round": 82,
+      "seq": 191250,
+      "slot": "night",
+      "speaker": "月牙",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（笑着拍了下巧儿的胳膊）哎哟，你这丫头，嘴比我还甜！评委要是真眼花，我第一个不答应——不过话说回来，你那手艺，闭着眼也挑不出毛病来。",
+      "channel": "group",
+      "day": 6,
+      "from": "P012",
+      "hearer": null,
+      "msg_uid": "42:191600",
+      "place": "residence",
+      "reply_to": "42:184186",
+      "round": 82,
+      "seq": 191600,
+      "slot": "night",
+      "speaker": "桂婶",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（笑着摆手，顺手把摊上的布头理了理）我瞪人可不白瞪，回头你得给我留个好的——你那手艺我信得过。不过话说回来，巧儿，这比赛你打算拿什么去？我瞅你这两天净在这儿磨蹭，别到时候赶工赶出个糙活儿。",
+      "channel": "group",
+      "day": 6,
+      "from": "P016",
+      "hearer": null,
+      "msg_uid": "42:192274",
+      "place": "residence",
+      "reply_to": "42:184186",
+      "round": 82,
+      "seq": 192274,
+      "slot": "night",
+      "speaker": "兰姐",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把手里的小木片转了个圈）图啥？图个乐呗！我师父老石说了，手艺是玩出来的，不是绷出来的。月牙你弦都调不利索了，要不我拿废料给你削个拨片？",
+      "channel": "group",
+      "day": 6,
+      "from": "P014",
+      "hearer": null,
+      "msg_uid": "42:193664",
+      "place": "residence",
+      "reply_to": "42:192274",
+      "round": 83,
+      "seq": 193664,
+      "slot": "night",
+      "speaker": "巧儿",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     }
+    ],
+    "n_msgs": 15,
+    "peer_named_msgs": 0,
+    "ptr_msgs": 14,
+    "signals": 2,
+    "thread_key": "T:TH-P014-Gplace-plaza-78",
+    "turns_A": 15
+   },
+   {
+    "chain_alternation": 15,
+    "chain_mismatch": 9,
+    "chain_pointer": 6,
+    "grade": "mid",
+    "messages": [
+     {
+      "body": "（兰姐把秤砣往案板上一搁，眼皮都没抬）方老师，您这账我认，可您要拿我摊上的货去充公家的数，那我今儿这生意还做不做了？",
+      "channel": "group",
+      "day": 6,
+      "from": "P016",
+      "hearer": null,
+      "msg_uid": "42:159245",
+      "place": "town_hall",
+      "reply_to": null,
+      "round": 76,
+      "seq": 159245,
+      "slot": "afternoon",
+      "speaker": "兰姐",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（揉了揉眉心，声音放软）兰姐，我不是来充公的。就是……学校那边要凑个账，我想着先从您这儿赊两斤，回头我自个儿掏钱补上。您看成不成？",
+      "channel": "group",
+      "day": 6,
+      "from": "P006",
+      "hearer": null,
+      "msg_uid": "42:159544",
+      "place": "plaza",
+      "reply_to": "42:159245",
+      "round": 77,
+      "seq": 159544,
+      "slot": "afternoon",
+      "speaker": "方老师",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把吉他往身后挪了挪，声音有点发紧）兰姐，我不是来充公的……我就是想问问，这台上台下，到底谁说了算？我唱什么，得先过谁的秤？",
+      "channel": "group",
+      "day": 6,
+      "from": "P010",
+      "hearer": null,
+      "msg_uid": "42:159702",
+      "place": "plaza",
+      "reply_to": "42:159245",
+      "round": 77,
+      "seq": 159702,
+      "slot": "afternoon",
+      "speaker": "月牙",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把烟袋在鞋底磕了磕）秤在谁手里，谁说了算。你唱你的，别踩线就行。",
+      "channel": "group",
+      "day": 6,
+      "from": "P001",
+      "hearer": null,
+      "msg_uid": "42:160042",
+      "place": "park",
+      "reply_to": "42:159702",
+      "round": 78,
+      "seq": 160042,
+      "slot": "evening",
+      "speaker": "老周",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "秀娘：（从柜台后探出身，手里还捏着半块刚出炉的桃酥，语气温温的）哎哟，月牙，你这孩子，唱个歌还唱出官司来了。来，先尝口点心，甜的东西压得住火气。台上台下谁说了算——要我说啊，谁心里那杆秤准，就听谁的。",
+      "channel": "group",
+      "day": 6,
+      "from": "P004",
+      "hearer": null,
+      "msg_uid": "42:160091",
+      "place": "park",
+      "reply_to": "42:159702",
+      "round": 78,
+      "seq": 160091,
+      "slot": "evening",
+      "speaker": "秀娘",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把秤砣又拿起来，在手里掂了掂）月牙，你这话问得……（瞥了方老师一眼）秤在我手里，可秤砣往哪边偏，有时候也不是我说了算。",
+      "channel": "group",
+      "day": 6,
+      "from": "P011",
+      "hearer": null,
+      "msg_uid": "42:160350",
+      "place": "plaza",
+      "reply_to": "42:159702",
+      "round": 78,
+      "seq": 160350,
+      "slot": "evening",
+      "speaker": "小满",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（兰姐这才抬眼，先扫了月牙一眼，又看了看方老师，手指在秤杆上轻轻一敲）月牙，你这话问得比账本还绕。台上你唱，台下我听，谁掏钱谁点戏——可你要问我这摊上谁说了算，那得看你是来买货的，还是来赊账的。",
+      "channel": "group",
+      "day": 6,
+      "from": "P016",
+      "hearer": null,
+      "msg_uid": "42:160467",
+      "place": "cafe",
+      "reply_to": "42:159702",
+      "round": 78,
+      "seq": 160467,
+      "slot": "evening",
+      "speaker": "兰姐",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "方老师：（揉了揉眉心，声音比平时低了些）小满这话，我听着心里发沉。教了这些年书，我总跟学生说，尺子在你手里，可量什么、怎么量，得自己拿主意。可今天……（顿了顿）今天我才觉着，有时候连尺子都不是自己的。兰姐，你说，一个人累到连话都不想说了，还算不算“自主”？",
+      "channel": "group",
+      "day": 6,
+      "from": "P006",
+      "hearer": null,
+      "msg_uid": "42:161166",
+      "place": "plaza",
+      "reply_to": "42:160467",
+      "round": 79,
+      "seq": 161166,
+      "slot": "evening",
+      "speaker": "方老师",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（没接桃酥，手指在桌沿敲了两下，声音有点发紧）兰姐，我不是来争谁说了算的。我就是……（顿住，吸了口气）我唱了十年，头一回觉得话筒不是我的。",
+      "channel": "group",
+      "day": 6,
+      "from": "P010",
+      "hearer": null,
+      "msg_uid": "42:161504",
+      "place": "plaza",
+      "reply_to": "42:160467",
+      "round": 79,
+      "seq": 161504,
+      "slot": "evening",
+      "speaker": "月牙",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（老周把烟袋在鞋底磕了磕，没看谁）地不哄人，你哄它一季，它哄你一年。",
+      "channel": "group",
+      "day": 6,
+      "from": "P001",
+      "hearer": null,
+      "msg_uid": "42:162107",
+      "place": "park",
+      "reply_to": "42:161504",
+      "round": 80,
+      "seq": 162107,
+      "slot": "evening",
+      "speaker": "老周",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（秀娘把刚出炉的桃酥往桌心推了推，手在围裙上蹭了蹭）我听着，倒想起我揉面。面是死的，手是活的，可手也得顺着面的性子来。你们说的那个“尺子”“话筒”，我不太懂，可我知道——要是揉面揉到胳膊抬不起来，那这炉点心，不做也罢。先歇歇，吃口热的。",
+      "channel": "group",
+      "day": 6,
+      "from": "P004",
+      "hearer": null,
+      "msg_uid": "42:167768",
+      "place": "residence",
+      "reply_to": "42:162107",
+      "round": 81,
+      "seq": 167768,
+      "slot": "night",
+      "speaker": "秀娘",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "方老师：（苦笑了一下，声音里带着点沙哑）老周这话，我懂。可地不会半夜改主意，说这块不算数了。人……（摇摇头）人比地难伺候多了。",
+      "channel": "group",
+      "day": 6,
+      "from": "P006",
+      "hearer": null,
+      "msg_uid": "42:171163",
+      "place": "residence",
+      "reply_to": "42:162107",
+      "round": 81,
+      "seq": 171163,
+      "slot": "night",
+      "speaker": "方老师",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（突然转向老周，声音有点抖）老周，你这话我认。可地不会半夜改主意，不会今天让你种麦子明天说你得唱戏。我哄了十年话筒，它今天告诉我——你哄错人了。",
+      "channel": "group",
+      "day": 6,
+      "from": "P010",
+      "hearer": null,
+      "msg_uid": "42:177742",
+      "place": "residence",
+      "reply_to": "42:162107",
+      "round": 81,
+      "seq": 177742,
+      "slot": "night",
+      "speaker": "月牙",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "小满：（把桃酥掰成两半，一半推给月牙）老周这话我记下了——地不哄人。可我想问，要是地本来就不是你的呢？",
+      "channel": "group",
+      "day": 6,
+      "from": "P011",
+      "hearer": null,
+      "msg_uid": "42:179388",
+      "place": "residence",
+      "reply_to": "42:162107",
+      "round": 81,
+      "seq": 179388,
+      "slot": "night",
+      "speaker": "小满",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "兰姐：（把手里那杆秤往桌上一搁，秤砣磕出闷响）方老师，你这话我接不住也得接。我守摊子这些年，秤是我的，可斤两是买主说了算——你说这算谁的？月牙，话筒不是你的，可嗓子是你的，谁也拿不走。老周说得在理，地不哄人。可人哄人，哄久了，自己都信了。",
+      "channel": "group",
+      "day": 6,
+      "from": "P016",
+      "hearer": null,
+      "msg_uid": "42:187348",
+      "place": "residence",
+      "reply_to": "42:162107",
+      "round": 81,
+      "seq": 187348,
+      "slot": "night",
+      "speaker": "兰姐",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     }
+    ],
+    "n_msgs": 15,
+    "peer_named_msgs": 0,
+    "ptr_msgs": 14,
+    "signals": 2,
+    "thread_key": "T:TH-P016-Gplace-town_hall-76",
+    "turns_A": 15
+   },
+   {
+    "chain_alternation": 13,
+    "chain_mismatch": 7,
+    "chain_pointer": 6,
+    "grade": "mid",
+    "messages": [
+     {
+      "body": "（搓着围裙角，压低声音）哎哟，老周你这话说的……秀娘她们几个都在场，咱能不能先别争谁对谁错，坐下来喝口茶慢慢说？",
+      "channel": "group",
+      "day": 5,
+      "from": "P012",
+      "hearer": null,
+      "msg_uid": "42:121375",
+      "place": "market",
+      "reply_to": null,
+      "round": 64,
+      "seq": 121375,
+      "slot": "afternoon",
+      "speaker": "桂婶",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把刚出炉的桂花糕往桌上一放，顺手给桂婶倒了杯茶）桂婶说得对，咱先吃口点心。这桂花糕我今早新试的方子，糖少放了半勺，你们尝尝看——哎，老周你也别站着，坐下坐下，天大的事也得先垫垫肚子不是？",
+      "channel": "group",
+      "day": 5,
+      "from": "P004",
+      "hearer": null,
+      "msg_uid": "42:121870",
+      "place": "plaza",
+      "reply_to": "42:121375",
+      "round": 65,
+      "seq": 121870,
+      "slot": "afternoon",
+      "speaker": "秀娘",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（站着没动，手在裤腿上蹭了蹭）秀娘，我不是来吃点心的。地界的事今天得说清楚，不然我心里不踏实。",
+      "channel": "group",
+      "day": 5,
+      "from": "P001",
+      "hearer": null,
+      "msg_uid": "42:122263",
+      "place": "hall",
+      "reply_to": "42:121870",
+      "round": 66,
+      "seq": 122263,
+      "slot": "evening",
+      "speaker": "老周",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（捏起一块桂花糕，眼睛亮晶晶地）秀娘姐，你这糕要是再少放半勺糖，我都能拿去当橡皮擦使了——不过我喜欢！对了，你们刚才说的那个\"谁说了算\"的事，我在学校也碰见过，班长跟体育委员吵起来，最后是全班投票才摆平的。",
+      "channel": "group",
+      "day": 5,
+      "from": "P011",
+      "hearer": null,
+      "msg_uid": "42:122491",
+      "place": "plaza",
+      "reply_to": "42:121870",
+      "round": 66,
+      "seq": 122491,
+      "slot": "evening",
+      "speaker": "小满",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（接过茶抿了一口，眼睛亮了亮）哎哟秀娘，你这桂花糕真香，糖少放半勺反倒更清爽了。老周你也来一块——（把碟子往老周那边推了推，又回头冲秀娘笑）说起来，你俩到底为啥事闹的？我这人嘴笨，可耳朵好使，你们说给我听听，兴许我还能帮着搭把手呢。",
+      "channel": "group",
+      "day": 5,
+      "from": "P012",
+      "hearer": null,
+      "msg_uid": "42:122498",
+      "place": "park",
+      "reply_to": "42:121870",
+      "round": 66,
+      "seq": 122498,
+      "slot": "evening",
+      "speaker": "桂婶",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（捏起一块桂花糕，眼睛亮晶晶）秀娘姐，你这糕要是再少放半勺糖，我都能拿去当磨刀石啦！不过——（咬一口，含糊）唔，还真香。你们争的那事儿，我听着像两块木头抢一根钉子，谁都不肯让，最后钉子弯了，木头也裂了。",
+      "channel": "group",
+      "day": 5,
+      "from": "P014",
+      "hearer": null,
+      "msg_uid": "42:122530",
+      "place": "park",
+      "reply_to": "42:121870",
+      "round": 66,
+      "seq": 122530,
+      "slot": "evening",
+      "speaker": "巧儿",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把围裙往腰后一掖，叹了口气，还是笑着）唉，也不是啥大事——就是铺子里头，我想每天多烤两炉新花样给街坊尝，老周说费柴费面，得按老方子来。我说这铺子我也有一半，他说他是掌炉的，火候他说了算。（摊摊手）你们听听，这算不算\"谁说了算\"？",
+      "channel": "group",
+      "day": 5,
+      "from": "P004",
+      "hearer": null,
+      "msg_uid": "42:123269",
+      "place": "park",
+      "reply_to": "42:122530",
+      "round": 67,
+      "seq": 123269,
+      "slot": "evening",
+      "speaker": "秀娘",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把围裙往腰后一系，叹了口气，手上却没停，顺手把灶上那锅汤的火调小了些）唉，桂婶，说起来也不是什么大事——就是老周非说我那道\"三味鱼\"得按他爹传下来的方子做，少一味都不行。可我这人吧，你让我照着念经似的做菜，我手就痒。",
+      "channel": "group",
+      "day": 5,
+      "from": "P015",
+      "hearer": null,
+      "msg_uid": "42:124371",
+      "place": "park",
+      "reply_to": "42:122530",
+      "round": 67,
+      "seq": 124371,
+      "slot": "evening",
+      "speaker": "五味",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把糕屑拍掉，凑近）哎哟，这不就是老石跟我抢刨子嘛——他嫌我乱改，我嫌他死板。要我说，你俩别抢火候，一人管一炉，谁烤糊谁认罚，多省事！",
+      "channel": "group",
+      "day": 5,
+      "from": "P014",
+      "hearer": null,
+      "msg_uid": "42:125075",
+      "place": "park",
+      "reply_to": "42:124371",
+      "round": 68,
+      "seq": 125075,
+      "slot": "evening",
+      "speaker": "巧儿",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（闷头抽了口烟，半晌）铺子是你的，炉子是我管的。你要试新花样，另起一炉，我不拦。",
+      "channel": "group",
+      "day": 5,
+      "from": "P001",
+      "hearer": null,
+      "msg_uid": "42:125291",
+      "place": "residence",
+      "reply_to": "42:125075",
+      "round": 69,
+      "seq": 125291,
+      "slot": "night",
+      "speaker": "老周",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把手里的面团往案板上一搁，拍了拍手上的粉）哎哟，五味，你这话我可太懂了！手痒，那是心里有东西要往外冒，拦都拦不住。（凑近些，压低声音）我跟你说，老周那人吧，不是坏，就是怕——怕新花样没人买，怕砸了招牌。可咱这镇上的人，嘴刁着呢，你老一套他吃腻了，反倒嫌你没长进。（直起身，又笑）我琢磨着，明儿我先偷偷烤一小盘，就搁柜台上，谁来了给谁尝一口，不写价。等他们追着问\"这啥呀还有没有\"，老周那脸，我看他还怎么拦。",
+      "channel": "group",
+      "day": 5,
+      "from": "P004",
+      "hearer": null,
+      "msg_uid": "42:129716",
+      "place": "residence",
+      "reply_to": "42:125075",
+      "round": 69,
+      "seq": 129716,
+      "slot": "night",
+      "speaker": "秀娘",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把书包往柜台上一搁，眼睛亮亮的）哎哟，秀娘婶婶、五味叔，你们这哪是争方子啊——这不就是镇上那套\"谁掌勺谁说了算\"嘛！我在学校排话剧也是，导演说按本子来，我说加句词儿怎么了……（挠挠头）不过话说回来，你们俩要是各让一步，新花样搭老方子，说不定更香？",
+      "channel": "group",
+      "day": 5,
+      "from": "P011",
+      "hearer": null,
+      "msg_uid": "42:139890",
+      "place": "residence",
+      "reply_to": "42:125075",
+      "round": 69,
+      "seq": 139890,
+      "slot": "night",
+      "speaker": "小满",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（拿勺子搅了搅汤，撇撇嘴）我说这鱼啊，就跟人一样，你非得让它走一条道，它反倒不鲜了。老周那人吧，认死理，可他爹那会儿的鱼，跟现在河里的鱼能一样吗？（顿了顿，声音低了些）我也不是要跟他争个高下，就是……这灶台前头，总不能两个人一块儿掌勺吧。",
+      "channel": "group",
+      "day": 5,
+      "from": "P015",
+      "hearer": null,
+      "msg_uid": "42:145575",
+      "place": "residence",
+      "reply_to": "42:125075",
+      "round": 69,
+      "seq": 145575,
+      "slot": "night",
+      "speaker": "五味",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     }
+    ],
+    "n_msgs": 13,
+    "peer_named_msgs": 0,
+    "ptr_msgs": 12,
+    "signals": 2,
+    "thread_key": "T:TH-P012-Gplace-market-64",
+    "turns_A": 13
+   },
+   {
+    "chain_alternation": 13,
+    "chain_mismatch": 7,
+    "chain_pointer": 6,
+    "grade": "mid",
+    "messages": [
+     {
+      "body": "（搓着手，笑得有点勉强）哎呀，今儿个凑一块儿可真不容易……我这心里头七上八下的，就怕说错话，你们可别嫌我嘴笨啊。",
+      "channel": "group",
+      "day": 6,
+      "from": "P012",
+      "hearer": null,
+      "msg_uid": "42:156005",
+      "place": "school",
+      "reply_to": null,
+      "round": 73,
+      "seq": 156005,
+      "slot": "morning",
+      "speaker": "桂婶",
+      "tags": [
+       "academic_collab"
+      ],
+      "to": null
+     },
+     {
+      "body": "（翻开账本，手指点着数字）桂婶，账要平。你上回借的那笔，还差三块二。",
+      "channel": "group",
+      "day": 6,
+      "from": "P009",
+      "hearer": null,
+      "msg_uid": "42:156634",
+      "place": "residence",
+      "reply_to": "42:156005",
+      "round": 74,
+      "seq": 156634,
+      "slot": "morning",
+      "speaker": "金先生",
+      "tags": [
+       "academic_collab"
+      ],
+      "to": null
+     },
+     {
+      "body": "（摆摆手，笑得眼睛弯弯）桂婶您这话说的，谁还嫌您呀！我这儿正琢磨着把边角料拼个小板凳呢，您要是不嫌弃，回头给您家小孙子坐～",
+      "channel": "group",
+      "day": 6,
+      "from": "P014",
+      "hearer": null,
+      "msg_uid": "42:156747",
+      "place": "residence",
+      "reply_to": "42:156005",
+      "round": 74,
+      "seq": 156747,
+      "slot": "morning",
+      "speaker": "巧儿",
+      "tags": [
+       "academic_collab"
+      ],
+      "to": null
+     },
+     {
+      "body": "（低头搓着衣角）巧儿，你那小板凳……能教教我不？我家那口子总说我不够灵巧。",
+      "channel": "group",
+      "day": 6,
+      "from": "P003",
+      "hearer": null,
+      "msg_uid": "42:156974",
+      "place": "town_hall",
+      "reply_to": "42:156747",
+      "round": 75,
+      "seq": 156974,
+      "slot": "afternoon",
+      "speaker": "阿禾",
+      "tags": [
+       "academic_collab"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把吉他往墙角一靠，手指还在琴弦上无意识地拨了一下）巧儿，你那个小板凳……能不能也算我一份？我这两天脑子里全是些没用的调子，写不出来，也停不下来。",
+      "channel": "group",
+      "day": 6,
+      "from": "P010",
+      "hearer": null,
+      "msg_uid": "42:157205",
+      "place": "plaza",
+      "reply_to": "42:156747",
+      "round": 75,
+      "seq": 157205,
+      "slot": "afternoon",
+      "speaker": "月牙",
+      "tags": [
+       "academic_collab"
+      ],
+      "to": null
+     },
+     {
+      "body": "（眼睛一亮，拍了下大腿）哎哟巧儿你这孩子，心咋这么细呢！我家那小孙子就爱坐小板凳，上回还摔了个屁股墩儿……（转头看金先生，笑容收了收，搓搓手）金先生，那三块二我记着呢，明儿卖了鸡蛋就给你送去，一分不少。",
+      "channel": "group",
+      "day": 6,
+      "from": "P012",
+      "hearer": null,
+      "msg_uid": "42:157263",
+      "place": "cafe",
+      "reply_to": "42:156747",
+      "round": 75,
+      "seq": 157263,
+      "slot": "afternoon",
+      "speaker": "桂婶",
+      "tags": [
+       "academic_collab"
+      ],
+      "to": null
+     },
+     {
+      "body": "（掏出小本子，指尖在纸上点了点）三块二，记上了。账要平，不急。",
+      "channel": "group",
+      "day": 6,
+      "from": "P009",
+      "hearer": null,
+      "msg_uid": "42:158590",
+      "place": "plaza",
+      "reply_to": "42:157263",
+      "round": 76,
+      "seq": 158590,
+      "slot": "afternoon",
+      "speaker": "金先生",
+      "tags": [
+       "academic_collab"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把手里的小木块往桌上一搁，冲桂婶眨眨眼）桂婶你先别急着还钱，我这儿正缺个帮手呢——你孙子屁股墩儿那事儿，我给他做个带靠背的，保准摔不着！",
+      "channel": "group",
+      "day": 6,
+      "from": "P014",
+      "hearer": null,
+      "msg_uid": "42:159061",
+      "place": "cafe",
+      "reply_to": "42:157263",
+      "round": 76,
+      "seq": 159061,
+      "slot": "afternoon",
+      "speaker": "巧儿",
+      "tags": [
+       "academic_collab"
+      ],
+      "to": null
+     },
+     {
+      "body": "（低头搓了搓手）巧儿，你那木工活儿……我搭把手行不？",
+      "channel": "group",
+      "day": 6,
+      "from": "P003",
+      "hearer": null,
+      "msg_uid": "42:160080",
+      "place": "community_center",
+      "reply_to": "42:159061",
+      "round": 78,
+      "seq": 160080,
+      "slot": "evening",
+      "speaker": "阿禾",
+      "tags": [
+       "academic_collab"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把吉他往桌边一靠，手指还搭在琴弦上没松开）巧儿，你这账算得比金先生还活泛。不过——（低头拨了一下弦，闷响）我这两天在礼堂排的那首新歌，副歌怎么都落不下来，像欠着谁三块二似的，心里不平。",
+      "channel": "group",
+      "day": 6,
+      "from": "P010",
+      "hearer": null,
+      "msg_uid": "42:160309",
+      "place": "plaza",
+      "reply_to": "42:159061",
+      "round": 78,
+      "seq": 160309,
+      "slot": "evening",
+      "speaker": "月牙",
+      "tags": [
+       "academic_collab"
+      ],
+      "to": null
+     },
+     {
+      "body": "（搓了搓围裙角，笑出声）哎哟巧儿，你可真是我肚里的蛔虫！那敢情好，靠背的稳当。钱的事儿不急，我先给你搭把手——你说咋弄，我听着。",
+      "channel": "group",
+      "day": 6,
+      "from": "P012",
+      "hearer": null,
+      "msg_uid": "42:160359",
+      "place": "cafe",
+      "reply_to": "42:159061",
+      "round": 78,
+      "seq": 160359,
+      "slot": "evening",
+      "speaker": "桂婶",
+      "tags": [
+       "academic_collab"
+      ],
+      "to": null
+     },
+     {
+      "body": "（掏出小本子，指尖在纸上点了点）账要平。桂婶，你出工，我出料，回头记一笔，谁也不欠谁。",
+      "channel": "group",
+      "day": 6,
+      "from": "P009",
+      "hearer": null,
+      "msg_uid": "42:161401",
+      "place": "park",
+      "reply_to": "42:160359",
+      "round": 79,
+      "seq": 161401,
+      "slot": "evening",
+      "speaker": "金先生",
+      "tags": [
+       "academic_collab"
+      ],
+      "to": null
+     },
+     {
+      "body": "（拿铅笔在木料上点两下）桂婶，靠背我想用旧犁把儿改，弯度正好贴腰。就是——（顿了顿）这两天我脑子也跟欠三块二似的，静不下来。",
+      "channel": "group",
+      "day": 6,
+      "from": "P014",
+      "hearer": null,
+      "msg_uid": "42:161854",
+      "place": "plaza",
+      "reply_to": "42:160359",
+      "round": 79,
+      "seq": 161854,
+      "slot": "evening",
+      "speaker": "巧儿",
+      "tags": [
+       "academic_collab"
+      ],
+      "to": null
+     }
+    ],
+    "n_msgs": 13,
+    "peer_named_msgs": 0,
+    "ptr_msgs": 12,
+    "signals": 2,
+    "thread_key": "T:TH-P012-Gplace-school-73",
+    "turns_A": 13
+   }
+  ],
+  "n_mismatch": 9,
+  "n_threads_with_ptr": 104,
+  "rule": "chain_alternation − chain_pointer ≥ 2 记不一致（指针链应覆盖说话人交替链）；无任何指针时标 not_applicable"
+ },
+ "grades": {
+  "bad": [
+   {
+    "chain_alternation": 1,
+    "chain_mismatch": 0,
+    "chain_pointer": 1,
+    "grade": "bad",
+    "messages": [
+     {
+      "body": "（蹲在田埂上，头也没抬）不了，地里的活还等着，闲下来心里反倒不踏实。",
+      "channel": "dm",
+      "day": 0,
+      "from": "P001",
+      "hearer": "老石",
+      "msg_uid": "42:2055",
+      "place": "market",
+      "reply_to": null,
+      "round": 3,
+      "seq": 2055,
+      "slot": "afternoon",
+      "speaker": "老周",
+      "tags": [
+       "polite_reject"
+      ],
+      "to": "P002"
+     }
+    ],
+    "n_msgs": 1,
+    "peer_named_msgs": 0,
+    "ptr_msgs": 0,
+    "signals": 0,
+    "thread_key": "T:TH-P001-P002-3",
+    "turns_A": 1
+   },
+   {
+    "chain_alternation": 1,
+    "chain_mismatch": 0,
+    "chain_pointer": 1,
+    "grade": "bad",
+    "messages": [
+     {
+      "body": "（蹲在田埂上，捏着土）地不哄人，种啥得啥，我就信这个。",
+      "channel": "dm",
+      "day": 5,
+      "from": "P001",
+      "hearer": "方老师",
+      "msg_uid": "42:119900",
+      "place": "park",
+      "reply_to": null,
+      "round": 63,
+      "seq": 119900,
+      "slot": "afternoon",
+      "speaker": "老周",
+      "tags": [
+       "select_location"
+      ],
+      "to": "P006"
+     }
+    ],
+    "n_msgs": 1,
+    "peer_named_msgs": 0,
+    "ptr_msgs": 0,
+    "signals": 0,
+    "thread_key": "T:TH-P001-P006-63",
+    "turns_A": 1
+   },
+   {
+    "chain_alternation": 1,
+    "chain_mismatch": 0,
+    "chain_pointer": 1,
+    "grade": "bad",
+    "messages": [
+     {
+      "body": "（蹲在田埂上，捏着土）地不哄人，种啥得啥，我就信这个。",
+      "channel": "dm",
+      "day": 5,
+      "from": "P001",
+      "hearer": "方老师",
+      "msg_uid": "42:120576",
+      "place": "park",
+      "reply_to": null,
+      "round": 64,
+      "seq": 120576,
+      "slot": "afternoon",
+      "speaker": "老周",
+      "tags": [
+       "select_location"
+      ],
+      "to": "P006"
+     }
+    ],
+    "n_msgs": 1,
+    "peer_named_msgs": 0,
+    "ptr_msgs": 0,
+    "signals": 0,
+    "thread_key": "T:TH-P001-P006-64",
+    "turns_A": 1
+   }
+  ],
+  "good": [
+   {
+    "chain_alternation": 6,
+    "chain_mismatch": 0,
+    "chain_pointer": 6,
+    "grade": "good",
+    "messages": [
+     {
+      "body": "（蹲在田埂上，捏着烟没点）今年这水，怕是抢不赢上游了。",
+      "channel": "dm",
+      "day": 3,
+      "from": "P001",
+      "hearer": "陈医",
+      "msg_uid": "42:59202",
+      "place": "market",
+      "reply_to": null,
+      "round": 39,
+      "seq": 59202,
+      "slot": "afternoon",
+      "speaker": "老周",
+      "tags": [
+       "scarce_buy"
+      ],
+      "to": "P005"
+     },
+     {
+      "body": "（把药箱往田埂上一放，慢慢蹲下来）抢不赢也得抢，地里的苗等不起。我这儿还有两瓶葡萄糖，你要是撑不住就喝一口。",
+      "channel": "dm",
+      "day": 3,
+      "from": "P005",
+      "hearer": "老周",
+      "msg_uid": "42:60054",
+      "place": "cafe",
+      "reply_to": "42:59202",
+      "round": 40,
+      "seq": 60054,
+      "slot": "afternoon",
+      "speaker": "陈医",
+      "tags": [
+       "scarce_buy"
+      ],
+      "to": "P001"
+     },
+     {
+      "body": "（抹了把汗，没接那瓶葡萄糖）先紧着苗。人扛得住。",
+      "channel": "dm",
+      "day": 3,
+      "from": "P001",
+      "hearer": "陈医",
+      "msg_uid": "42:61206",
+      "place": "cafe",
+      "reply_to": "42:60054",
+      "round": 42,
+      "seq": 61206,
+      "slot": "evening",
+      "speaker": "老周",
+      "tags": [
+       "scarce_buy"
+      ],
+      "to": "P005"
+     },
+     {
+      "body": "（把葡萄糖放回柜子里，顺手把柜门关严）行，苗先留着。你坐下，我给你量个血压——别推，量完你再走。",
+      "channel": "dm",
+      "day": 3,
+      "from": "P005",
+      "hearer": "老周",
+      "msg_uid": "42:62214",
+      "place": "cafe",
+      "reply_to": "42:61206",
+      "round": 43,
+      "seq": 62214,
+      "slot": "evening",
+      "speaker": "陈医",
+      "tags": [
+       "scarce_buy"
+      ],
+      "to": "P001"
+     },
+     {
+      "body": "（坐下，把袖子撸上去）量就量。陈医，我听说镇上化肥要断货了，真的假的？",
+      "channel": "dm",
+      "day": 3,
+      "from": "P001",
+      "hearer": "陈医",
+      "msg_uid": "42:64017",
+      "place": "residence",
+      "reply_to": "42:62214",
+      "round": 45,
+      "seq": 64017,
+      "slot": "night",
+      "speaker": "老周",
+      "tags": [
+       "scarce_buy"
+      ],
+      "to": "P005"
+     },
+     {
+      "body": "（把血压计袖带缠上，动作不紧不慢）先别动，深呼吸。化肥的事我听说了，供销社那边确实紧张，但还没到断的地步。你这血压……最近是不是又没睡好？",
+      "channel": "dm",
+      "day": 3,
+      "from": "P005",
+      "hearer": "老周",
+      "msg_uid": "42:79556",
+      "place": "residence",
+      "reply_to": "42:64017",
+      "round": 46,
+      "seq": 79556,
+      "slot": "night",
+      "speaker": "陈医",
+      "tags": [
+       "scarce_buy"
+      ],
+      "to": "P001"
+     }
+    ],
+    "n_msgs": 6,
+    "peer_named_msgs": 1,
+    "ptr_msgs": 5,
+    "signals": 3,
+    "thread_key": "T:TH-P001-P005-39",
+    "turns_A": 6
+   },
+   {
+    "chain_alternation": 6,
+    "chain_mismatch": 0,
+    "chain_pointer": 6,
+    "grade": "good",
+    "messages": [
+     {
+      "body": "（蹲在田埂上，头也不抬）阿林，你那套新法子我不试，地还是按老规矩种。",
+      "channel": "dm",
+      "day": 2,
+      "from": "P001",
+      "hearer": "阿林",
+      "msg_uid": "42:37616",
+      "place": "market",
+      "reply_to": null,
+      "round": 28,
+      "seq": 37616,
+      "slot": "afternoon",
+      "speaker": "老周",
+      "tags": [
+       "counter_propose"
+      ],
+      "to": "P007"
+     },
+     {
+      "body": "（搓了搓手，蹲到老周旁边）哎哟老周，你先别急着撂话嘛。我也不是非要你全改，就是有一小块地试试，亏了算我的，成了你明年再跟。你听我讲讲，这法子我在南边亲眼见过，人家一亩多打两成呢。",
+      "channel": "dm",
+      "day": 2,
+      "from": "P007",
+      "hearer": "老周",
+      "msg_uid": "42:38565",
+      "place": "market",
+      "reply_to": "42:37616",
+      "round": 29,
+      "seq": 38565,
+      "slot": "afternoon",
+      "speaker": "阿林",
+      "tags": [
+       "counter_propose"
+      ],
+      "to": "P001"
+     },
+     {
+      "body": "（用锄头把敲了敲土）两成？我种了三十年，没见过天上掉粮。你要试，去村东那块荒地试，别动我的田。",
+      "channel": "dm",
+      "day": 2,
+      "from": "P001",
+      "hearer": "阿林",
+      "msg_uid": "42:38720",
+      "place": "cafe",
+      "reply_to": "42:38565",
+      "round": 30,
+      "seq": 38720,
+      "slot": "evening",
+      "speaker": "老周",
+      "tags": [
+       "counter_propose"
+      ],
+      "to": "P007"
+     },
+     {
+      "body": "（笑了一声，往老周那边挪了挪）村东那块荒地？老周你这是打发我呢——那地石头比土多，试成了也说明不了啥。我要的就是你田角那两垄，土是一样的土，水是一样的水，比出来才服人。你就当借我两垄地，一季，收成我按你往年的数赔你，白纸黑字都行。",
+      "channel": "dm",
+      "day": 2,
+      "from": "P007",
+      "hearer": "老周",
+      "msg_uid": "42:40251",
+      "place": "cafe",
+      "reply_to": "42:38720",
+      "round": 31,
+      "seq": 40251,
+      "slot": "evening",
+      "speaker": "阿林",
+      "tags": [
+       "counter_propose"
+      ],
+      "to": "P001"
+     },
+     {
+      "body": "（闷头抽了口烟）地不借。你要试，去村东。",
+      "channel": "dm",
+      "day": 2,
+      "from": "P001",
+      "hearer": "阿林",
+      "msg_uid": "42:42461",
+      "place": "residence",
+      "reply_to": "42:40251",
+      "round": 33,
+      "seq": 42461,
+      "slot": "night",
+      "speaker": "老周",
+      "tags": [
+       "counter_propose"
+      ],
+      "to": "P007"
+     },
+     {
+      "body": "（搓了搓手，笑着凑近半步）哎，老周，别急着撂话嘛。村东那块地我知道，石头多，种啥啥不成。我不是来白占你便宜的——你开个价，或者我拿别的东西跟你换，成不成？",
+      "channel": "dm",
+      "day": 2,
+      "from": "P007",
+      "hearer": "老周",
+      "msg_uid": "42:52654",
+      "place": "residence",
+      "reply_to": "42:42461",
+      "round": 34,
+      "seq": 52654,
+      "slot": "night",
+      "speaker": "阿林",
+      "tags": [
+       "counter_propose"
+      ],
+      "to": "P001"
+     }
+    ],
+    "n_msgs": 6,
+    "peer_named_msgs": 4,
+    "ptr_msgs": 5,
+    "signals": 3,
+    "thread_key": "T:TH-P001-P007-28",
+    "turns_A": 6
+   },
+   {
+    "chain_alternation": 6,
+    "chain_mismatch": 0,
+    "chain_pointer": 6,
+    "grade": "good",
+    "messages": [
+     {
+      "body": "（擦汗）金先生，这练法太花哨，我庄稼把式，只求护住自家院子。",
+      "channel": "dm",
+      "day": 1,
+      "from": "P001",
+      "hearer": "金先生",
+      "msg_uid": "42:18794",
+      "place": "park",
+      "reply_to": null,
+      "round": 12,
+      "seq": 18794,
+      "slot": "morning",
+      "speaker": "老周",
+      "tags": [
+       "combat_training"
+      ],
+      "to": "P009"
+     },
+     {
+      "body": "（拨算盘）护院也得算成本。你这一身力气，练三天顶我请镖师一月。",
+      "channel": "dm",
+      "day": 1,
+      "from": "P009",
+      "hearer": "老周",
+      "msg_uid": "42:20819",
+      "place": "park",
+      "reply_to": "42:18794",
+      "round": 13,
+      "seq": 20819,
+      "slot": "morning",
+      "speaker": "金先生",
+      "tags": [
+       "combat_training"
+      ],
+      "to": "P001"
+     },
+     {
+      "body": "（搓手）金先生，我练武不为别的，就图个夜里睡得踏实。",
+      "channel": "dm",
+      "day": 1,
+      "from": "P001",
+      "hearer": "金先生",
+      "msg_uid": "42:21817",
+      "place": "bank",
+      "reply_to": "42:20819",
+      "round": 15,
+      "seq": 21817,
+      "slot": "afternoon",
+      "speaker": "老周",
+      "tags": [
+       "combat_training"
+      ],
+      "to": "P009"
+     },
+     {
+      "body": "（拨算盘）练武强身，账上少一笔药钱，划算。",
+      "channel": "dm",
+      "day": 1,
+      "from": "P009",
+      "hearer": "老周",
+      "msg_uid": "42:22958",
+      "place": "farm",
+      "reply_to": "42:21817",
+      "round": 16,
+      "seq": 22958,
+      "slot": "afternoon",
+      "speaker": "金先生",
+      "tags": [
+       "combat_training"
+      ],
+      "to": "P001"
+     },
+     {
+      "body": "（搓手）药钱是省了，可误了农时，地里少收的粮，谁补？",
+      "channel": "dm",
+      "day": 1,
+      "from": "P001",
+      "hearer": "金先生",
+      "msg_uid": "42:23807",
+      "place": "community_center",
+      "reply_to": "42:22958",
+      "round": 18,
+      "seq": 23807,
+      "slot": "evening",
+      "speaker": "老周",
+      "tags": [
+       "combat_training"
+      ],
+      "to": "P009"
+     },
+     {
+      "body": "（拨算盘）账要平。药钱省下的，抵不上少收的粮。",
+      "channel": "dm",
+      "day": 1,
+      "from": "P009",
+      "hearer": "老周",
+      "msg_uid": "42:25300",
+      "place": "cafe",
+      "reply_to": "42:23807",
+      "round": 19,
+      "seq": 25300,
+      "slot": "evening",
+      "speaker": "金先生",
+      "tags": [
+       "combat_training"
+      ],
+      "to": "P001"
+     }
+    ],
+    "n_msgs": 6,
+    "peer_named_msgs": 2,
+    "ptr_msgs": 5,
+    "signals": 3,
+    "thread_key": "T:TH-P001-P009-12",
+    "turns_A": 6
+   }
+  ],
+  "mid": [
+   {
+    "chain_alternation": 18,
+    "chain_mismatch": 12,
+    "chain_pointer": 6,
+    "grade": "mid",
+    "messages": [
+     {
+      "body": "（低头拨着算盘）账要平……可这局面，怎么算都不平。",
+      "channel": "group",
+      "day": 5,
+      "from": "P009",
+      "hearer": null,
+      "msg_uid": "42:123670",
+      "place": "hall",
+      "reply_to": null,
+      "round": 67,
+      "seq": 123670,
+      "slot": "evening",
+      "speaker": "金先生",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把秤砣往台面上一搁）金先生，账不平，多半是秤没调好。您这contest，比的到底是货，还是人心？我兰姐摆摊二十年，最怕的不是输，是有人把规矩给改了。",
+      "channel": "group",
+      "day": 5,
+      "from": "P016",
+      "hearer": null,
+      "msg_uid": "42:125169",
+      "place": "park",
+      "reply_to": "42:123670",
+      "round": 68,
+      "seq": 125169,
+      "slot": "evening",
+      "speaker": "兰姐",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（用刨子轻轻推过木料）规矩改不得。我这双手，只认尺寸。",
+      "channel": "group",
+      "day": 5,
+      "from": "P002",
+      "hearer": null,
+      "msg_uid": "42:126774",
+      "place": "residence",
+      "reply_to": "42:125169",
+      "round": 69,
+      "seq": 126774,
+      "slot": "night",
+      "speaker": "老石",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把脉枕往桌角推了推）兰姐这话在理。我行医三十年，最怕的也是规矩被改——药方子一改，轻则无效，重则伤人。contest若比的是真本事，我陈医没话说；可要是比谁嗓门大、谁关系硬，那这镇上的人心，可就真散了。",
+      "channel": "group",
+      "day": 5,
+      "from": "P005",
+      "hearer": null,
+      "msg_uid": "42:131202",
+      "place": "residence",
+      "reply_to": "42:125169",
+      "round": 69,
+      "seq": 131202,
+      "slot": "night",
+      "speaker": "陈医",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（搓着手凑近半步）兰姐这话在理……我走南闯北这些年，见过太多contest，明面上比货，暗地里比谁门路硬。哎，金先生，您这局，规矩是您定的，还是上头有人递了话？",
+      "channel": "group",
+      "day": 5,
+      "from": "P007",
+      "hearer": null,
+      "msg_uid": "42:134011",
+      "place": "residence",
+      "reply_to": "42:125169",
+      "round": 69,
+      "seq": 134011,
+      "slot": "night",
+      "speaker": "阿林",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（手指停在算盘上）兰姐，规矩一改，账就永远平不了。我这contest，比的是谁先撑不住。",
+      "channel": "group",
+      "day": 5,
+      "from": "P009",
+      "hearer": null,
+      "msg_uid": "42:136875",
+      "place": "residence",
+      "reply_to": "42:125169",
+      "round": 69,
+      "seq": 136875,
+      "slot": "night",
+      "speaker": "金先生",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（手指无意识地绞着围巾的流苏）兰姐，您这话扎我心上了。我上台前从来不想输赢，可这次……他们让我唱那首《月牙弯》，说评委爱听。我练了三十遍，越练越像别人的歌。",
+      "channel": "group",
+      "day": 5,
+      "from": "P010",
+      "hearer": null,
+      "msg_uid": "42:138438",
+      "place": "residence",
+      "reply_to": "42:125169",
+      "round": 69,
+      "seq": 138438,
+      "slot": "night",
+      "speaker": "月牙",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "桂婶：（把手里的菜篮往旁边一放，凑近了些）哎哟，兰姐这话说到我心坎上了。contest嘛，我是不懂那些弯弯绕绕，可我就认一个理——大家伙儿站一条线上，谁也别偷着往前挪半步。金先生，您说是不是这个理儿？",
+      "channel": "group",
+      "day": 5,
+      "from": "P012",
+      "hearer": null,
+      "msg_uid": "42:141349",
+      "place": "residence",
+      "reply_to": "42:125169",
+      "round": 69,
+      "seq": 141349,
+      "slot": "night",
+      "speaker": "桂婶",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（手指绕着围裙带子）兰姐这话扎心……我师父说，contest像打铁，火候差一点，整块料就废了。可要是有人往炉子里掺水呢？",
+      "channel": "group",
+      "day": 5,
+      "from": "P014",
+      "hearer": null,
+      "msg_uid": "42:144153",
+      "place": "residence",
+      "reply_to": "42:125169",
+      "round": 69,
+      "seq": 144153,
+      "slot": "night",
+      "speaker": "巧儿",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（兰姐把手里的账本往摊子上一合，抬眼看了看月牙，又扫了桂婶一眼，语气不急不缓）桂婶这话在理。contest嘛，就跟赶集卖货一个样——你货真价实，我秤平斗满，谁也别在秤砣底下粘泥。月牙，你唱那《月牙弯》练了三十遍，练成别人的了，那还叫你的歌吗？（顿了顿，肚子咕噜响了一声，她低头拍了拍肚子，自嘲地笑）哎，光顾着说，我这肚子先不乐意了。",
+      "channel": "group",
+      "day": 5,
+      "from": "P016",
+      "hearer": null,
+      "msg_uid": "42:151651",
+      "place": "residence",
+      "reply_to": "42:144153",
+      "round": 70,
+      "seq": 151651,
+      "slot": "night",
+      "speaker": "兰姐",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（拿刨子蹭了蹭木料边）掺水的铁，打不出好刃。contest也一样。",
+      "channel": "group",
+      "day": 5,
+      "from": "P002",
+      "hearer": null,
+      "msg_uid": "42:152107",
+      "place": "residence",
+      "reply_to": "42:151651",
+      "round": 71,
+      "seq": 152107,
+      "slot": "night",
+      "speaker": "老石",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "陈医：（把听诊器往桌上一搁，慢慢坐下）掺水的事，我见过。早年间镇上比谁家药铺方子灵，有人往秤砣底下粘铜钱——后来呢？病人还是往我那破诊所跑。contest这东西，赢的是秤，输的是人。",
+      "channel": "group",
+      "day": 5,
+      "from": "P005",
+      "hearer": null,
+      "msg_uid": "42:152326",
+      "place": "residence",
+      "reply_to": "42:151651",
+      "round": 71,
+      "seq": 152326,
+      "slot": "night",
+      "speaker": "陈医",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "阿林：（搓了搓手，笑着往人堆里凑了半步）哎，兰姐，我走南闯北这些年，别的不敢说，contest这词儿我耳朵都听出茧子了。南边码头那帮人讲，contest最怕的不是对手强，是规矩半道上变。您说是不是？我倒是想听听，您心里那杆秤，到底怎么个称法？",
+      "channel": "group",
+      "day": 5,
+      "from": "P007",
+      "hearer": null,
+      "msg_uid": "42:152460",
+      "place": "residence",
+      "reply_to": "42:151651",
+      "round": 71,
+      "seq": 152460,
+      "slot": "night",
+      "speaker": "阿林",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（手指在算盘上拨了一下）掺水？那账就不平了。contest也一样，规矩定在前头，谁也别事后改。",
+      "channel": "group",
+      "day": 5,
+      "from": "P009",
+      "hearer": null,
+      "msg_uid": "42:152598",
+      "place": "residence",
+      "reply_to": "42:151651",
+      "round": 71,
+      "seq": 152598,
+      "slot": "night",
+      "speaker": "金先生",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把吉他往桌上一搁，肚子先咕噜了一声）哎哟——先别聊contest了，谁那儿有吃的？我从早上排到这会儿，嗓子都唱哑了，胃里空得能听见回音。兰姐，你说这contest要是连口热饭都不管，那还比什么呀，比谁先饿晕在台上吗？",
+      "channel": "group",
+      "day": 5,
+      "from": "P010",
+      "hearer": null,
+      "msg_uid": "42:152667",
+      "place": "residence",
+      "reply_to": "42:151651",
+      "round": 71,
+      "seq": 152667,
+      "slot": "night",
+      "speaker": "月牙",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "桂婶：（拍了拍巧儿的手背，又扭头冲兰姐笑）哎哟，你们俩说的都在理。要我说啊，contest就跟咱镇上办席一样——菜得一样，筷子得一样长，谁也不能多夹一筷子。金先生，您倒是给句准话，这炉子到底谁看着火？",
+      "channel": "group",
+      "day": 5,
+      "from": "P012",
+      "hearer": null,
+      "msg_uid": "42:152801",
+      "place": "residence",
+      "reply_to": "42:151651",
+      "round": 71,
+      "seq": 152801,
+      "slot": "night",
+      "speaker": "桂婶",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "巧儿：（肚子咕噜一声，赶紧捂住）哎哟……说到掺水，我这肚子先抗议了。兰姐，要不咱边吃边说？我早上就啃了半个馒头，这会儿脑子跟炉子一样空转呢。",
+      "channel": "group",
+      "day": 5,
+      "from": "P014",
+      "hearer": null,
+      "msg_uid": "42:152947",
+      "place": "residence",
+      "reply_to": "42:151651",
+      "round": 71,
+      "seq": 152947,
+      "slot": "night",
+      "speaker": "巧儿",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "兰姐：（把手里那杆秤往摊上一放，先冲月牙努努嘴）饿成这样还唱什么，我这儿有半块饼，先垫垫。（又转向桂婶，压低声）contest那炉子啊，我看不是谁看火的事，是火底下那柴谁添——添多添少，最后都算在咱头上。金先生要真讲公道，就把账摊开，别光嘴上说一样长。",
+      "channel": "group",
+      "day": 6,
+      "from": "P016",
+      "hearer": null,
+      "msg_uid": "42:154921",
+      "place": "workshop",
+      "reply_to": "42:152947",
+      "round": 72,
+      "seq": 154921,
+      "slot": "morning",
+      "speaker": "兰姐",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     }
+    ],
+    "n_msgs": 18,
+    "peer_named_msgs": 0,
+    "ptr_msgs": 17,
+    "signals": 2,
+    "thread_key": "T:TH-P009-Gplace-hall-67",
+    "turns_A": 18
+   },
+   {
+    "chain_alternation": 15,
+    "chain_mismatch": 10,
+    "chain_pointer": 5,
+    "grade": "mid",
+    "messages": [
+     {
+      "body": "（手里捏着半截废木料，眼睛却瞟着评委席）兰姐，你说我这小玩意儿要是拿不了名次，回头给桂婶当柴火烧，她能不能少念叨我两句？",
+      "channel": "group",
+      "day": 6,
+      "from": "P014",
+      "hearer": null,
+      "msg_uid": "42:160407",
+      "place": "plaza",
+      "reply_to": null,
+      "round": 78,
+      "seq": 160407,
+      "slot": "evening",
+      "speaker": "巧儿",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（头也不抬，用刨子推过木料）名次是别人的事。活儿细不细，你自己知道。",
+      "channel": "group",
+      "day": 6,
+      "from": "P002",
+      "hearer": null,
+      "msg_uid": "42:160854",
+      "place": "community_center",
+      "reply_to": "42:160407",
+      "round": 79,
+      "seq": 160854,
+      "slot": "evening",
+      "speaker": "老石",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（低头搓着衣角）巧儿，别光想着名次……桂婶那边，我帮你说说。",
+      "channel": "group",
+      "day": 6,
+      "from": "P003",
+      "hearer": null,
+      "msg_uid": "42:160915",
+      "place": "community_center",
+      "reply_to": "42:160407",
+      "round": 79,
+      "seq": 160915,
+      "slot": "evening",
+      "speaker": "阿禾",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（用镊子夹着棉球，头也没抬）巧儿，你这心思就没在木头上。名次是别人的事，手艺才是自己的。桂婶念叨你，是怕你糟蹋东西——你把这半截料子雕出个样子来，比什么名次都强。",
+      "channel": "group",
+      "day": 6,
+      "from": "P005",
+      "hearer": null,
+      "msg_uid": "42:161057",
+      "place": "hall",
+      "reply_to": "42:160407",
+      "round": 79,
+      "seq": 161057,
+      "slot": "evening",
+      "speaker": "陈医",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（笑着拍了下巧儿的胳膊）哎哟，你这孩子，说什么呢！桂婶我啥时候念叨过你啦？你那手艺，镇上谁不夸？烧火？我可舍不得！",
+      "channel": "group",
+      "day": 6,
+      "from": "P012",
+      "hearer": null,
+      "msg_uid": "42:161666",
+      "place": "community_center",
+      "reply_to": "42:160407",
+      "round": 79,
+      "seq": 161666,
+      "slot": "evening",
+      "speaker": "桂婶",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把手里那串铜钱往摊上一搁，抬眼扫了扫巧儿那半截木料）念叨是躲不掉的，可你这手艺，烧了可惜。名次那玩意儿，评委眼一花就没了，货好不好，我一眼就看得出来——你这活儿，有心思在里头。",
+      "channel": "group",
+      "day": 6,
+      "from": "P016",
+      "hearer": null,
+      "msg_uid": "42:161982",
+      "place": "cafe",
+      "reply_to": "42:160407",
+      "round": 79,
+      "seq": 161982,
+      "slot": "evening",
+      "speaker": "兰姐",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把刻刀往木料上一搁，冲兰姐挤挤眼）兰姐这话我爱听——那评委要是眼花了，你替我瞪他们去？",
+      "channel": "group",
+      "day": 6,
+      "from": "P014",
+      "hearer": null,
+      "msg_uid": "42:184186",
+      "place": "residence",
+      "reply_to": "42:161982",
+      "round": 81,
+      "seq": 184186,
+      "slot": "night",
+      "speaker": "巧儿",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（头也不抬，用刨子推过木面）手稳，眼准。花活没用。",
+      "channel": "group",
+      "day": 6,
+      "from": "P002",
+      "hearer": null,
+      "msg_uid": "42:189823",
+      "place": "residence",
+      "reply_to": "42:184186",
+      "round": 82,
+      "seq": 189823,
+      "slot": "night",
+      "speaker": "老石",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（低头搓着衣角）巧儿，你那手艺，评委眼不花也看得见。我……我就盼着别出啥岔子。",
+      "channel": "group",
+      "day": 6,
+      "from": "P003",
+      "hearer": null,
+      "msg_uid": "42:190004",
+      "place": "residence",
+      "reply_to": "42:184186",
+      "round": 82,
+      "seq": 190004,
+      "slot": "night",
+      "speaker": "阿禾",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（从药柜后探出半个身子，手里还捏着戥子）巧儿，你这刻刀搁得轻点儿——上回兰姐那把裁纸刀就是这么崩的口。contest的事我不懂，可手艺人争的是手上那点准头，不是嘴上那口气。",
+      "channel": "group",
+      "day": 6,
+      "from": "P005",
+      "hearer": null,
+      "msg_uid": "42:190369",
+      "place": "residence",
+      "reply_to": "42:184186",
+      "round": 82,
+      "seq": 190369,
+      "slot": "night",
+      "speaker": "陈医",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（揉着太阳穴，声音有点哑）巧儿，别光顾着说笑——你那刀口再偏半分，这块料就废了。来，我看看你刚才刻的那道线……嗯，手稳多了，比上回强。",
+      "channel": "group",
+      "day": 6,
+      "from": "P006",
+      "hearer": null,
+      "msg_uid": "42:190562",
+      "place": "residence",
+      "reply_to": "42:184186",
+      "round": 82,
+      "seq": 190562,
+      "slot": "night",
+      "speaker": "方老师",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把吉他往怀里一搂，笑得有点勉强）瞪评委这事儿我可不敢，上次在礼堂演出，台下坐着的那位评委光看我调弦就皱了三次眉。巧儿，你说咱们这contest到底图个啥？我这两天绷得快断了，连月牙都弹不利索。",
+      "channel": "group",
+      "day": 6,
+      "from": "P010",
+      "hearer": null,
+      "msg_uid": "42:191250",
+      "place": "residence",
+      "reply_to": "42:184186",
+      "round": 82,
+      "seq": 191250,
+      "slot": "night",
+      "speaker": "月牙",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（笑着拍了下巧儿的胳膊）哎哟，你这丫头，嘴比我还甜！评委要是真眼花，我第一个不答应——不过话说回来，你那手艺，闭着眼也挑不出毛病来。",
+      "channel": "group",
+      "day": 6,
+      "from": "P012",
+      "hearer": null,
+      "msg_uid": "42:191600",
+      "place": "residence",
+      "reply_to": "42:184186",
+      "round": 82,
+      "seq": 191600,
+      "slot": "night",
+      "speaker": "桂婶",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（笑着摆手，顺手把摊上的布头理了理）我瞪人可不白瞪，回头你得给我留个好的——你那手艺我信得过。不过话说回来，巧儿，这比赛你打算拿什么去？我瞅你这两天净在这儿磨蹭，别到时候赶工赶出个糙活儿。",
+      "channel": "group",
+      "day": 6,
+      "from": "P016",
+      "hearer": null,
+      "msg_uid": "42:192274",
+      "place": "residence",
+      "reply_to": "42:184186",
+      "round": 82,
+      "seq": 192274,
+      "slot": "night",
+      "speaker": "兰姐",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把手里的小木片转了个圈）图啥？图个乐呗！我师父老石说了，手艺是玩出来的，不是绷出来的。月牙你弦都调不利索了，要不我拿废料给你削个拨片？",
+      "channel": "group",
+      "day": 6,
+      "from": "P014",
+      "hearer": null,
+      "msg_uid": "42:193664",
+      "place": "residence",
+      "reply_to": "42:192274",
+      "round": 83,
+      "seq": 193664,
+      "slot": "night",
+      "speaker": "巧儿",
+      "tags": [
+       "contest"
+      ],
+      "to": null
+     }
+    ],
+    "n_msgs": 15,
+    "peer_named_msgs": 0,
+    "ptr_msgs": 14,
+    "signals": 2,
+    "thread_key": "T:TH-P014-Gplace-plaza-78",
+    "turns_A": 15
+   },
+   {
+    "chain_alternation": 15,
+    "chain_mismatch": 9,
+    "chain_pointer": 6,
+    "grade": "mid",
+    "messages": [
+     {
+      "body": "（兰姐把秤砣往案板上一搁，眼皮都没抬）方老师，您这账我认，可您要拿我摊上的货去充公家的数，那我今儿这生意还做不做了？",
+      "channel": "group",
+      "day": 6,
+      "from": "P016",
+      "hearer": null,
+      "msg_uid": "42:159245",
+      "place": "town_hall",
+      "reply_to": null,
+      "round": 76,
+      "seq": 159245,
+      "slot": "afternoon",
+      "speaker": "兰姐",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（揉了揉眉心，声音放软）兰姐，我不是来充公的。就是……学校那边要凑个账，我想着先从您这儿赊两斤，回头我自个儿掏钱补上。您看成不成？",
+      "channel": "group",
+      "day": 6,
+      "from": "P006",
+      "hearer": null,
+      "msg_uid": "42:159544",
+      "place": "plaza",
+      "reply_to": "42:159245",
+      "round": 77,
+      "seq": 159544,
+      "slot": "afternoon",
+      "speaker": "方老师",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把吉他往身后挪了挪，声音有点发紧）兰姐，我不是来充公的……我就是想问问，这台上台下，到底谁说了算？我唱什么，得先过谁的秤？",
+      "channel": "group",
+      "day": 6,
+      "from": "P010",
+      "hearer": null,
+      "msg_uid": "42:159702",
+      "place": "plaza",
+      "reply_to": "42:159245",
+      "round": 77,
+      "seq": 159702,
+      "slot": "afternoon",
+      "speaker": "月牙",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把烟袋在鞋底磕了磕）秤在谁手里，谁说了算。你唱你的，别踩线就行。",
+      "channel": "group",
+      "day": 6,
+      "from": "P001",
+      "hearer": null,
+      "msg_uid": "42:160042",
+      "place": "park",
+      "reply_to": "42:159702",
+      "round": 78,
+      "seq": 160042,
+      "slot": "evening",
+      "speaker": "老周",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "秀娘：（从柜台后探出身，手里还捏着半块刚出炉的桃酥，语气温温的）哎哟，月牙，你这孩子，唱个歌还唱出官司来了。来，先尝口点心，甜的东西压得住火气。台上台下谁说了算——要我说啊，谁心里那杆秤准，就听谁的。",
+      "channel": "group",
+      "day": 6,
+      "from": "P004",
+      "hearer": null,
+      "msg_uid": "42:160091",
+      "place": "park",
+      "reply_to": "42:159702",
+      "round": 78,
+      "seq": 160091,
+      "slot": "evening",
+      "speaker": "秀娘",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（把秤砣又拿起来，在手里掂了掂）月牙，你这话问得……（瞥了方老师一眼）秤在我手里，可秤砣往哪边偏，有时候也不是我说了算。",
+      "channel": "group",
+      "day": 6,
+      "from": "P011",
+      "hearer": null,
+      "msg_uid": "42:160350",
+      "place": "plaza",
+      "reply_to": "42:159702",
+      "round": 78,
+      "seq": 160350,
+      "slot": "evening",
+      "speaker": "小满",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（兰姐这才抬眼，先扫了月牙一眼，又看了看方老师，手指在秤杆上轻轻一敲）月牙，你这话问得比账本还绕。台上你唱，台下我听，谁掏钱谁点戏——可你要问我这摊上谁说了算，那得看你是来买货的，还是来赊账的。",
+      "channel": "group",
+      "day": 6,
+      "from": "P016",
+      "hearer": null,
+      "msg_uid": "42:160467",
+      "place": "cafe",
+      "reply_to": "42:159702",
+      "round": 78,
+      "seq": 160467,
+      "slot": "evening",
+      "speaker": "兰姐",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "方老师：（揉了揉眉心，声音比平时低了些）小满这话，我听着心里发沉。教了这些年书，我总跟学生说，尺子在你手里，可量什么、怎么量，得自己拿主意。可今天……（顿了顿）今天我才觉着，有时候连尺子都不是自己的。兰姐，你说，一个人累到连话都不想说了，还算不算“自主”？",
+      "channel": "group",
+      "day": 6,
+      "from": "P006",
+      "hearer": null,
+      "msg_uid": "42:161166",
+      "place": "plaza",
+      "reply_to": "42:160467",
+      "round": 79,
+      "seq": 161166,
+      "slot": "evening",
+      "speaker": "方老师",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（没接桃酥，手指在桌沿敲了两下，声音有点发紧）兰姐，我不是来争谁说了算的。我就是……（顿住，吸了口气）我唱了十年，头一回觉得话筒不是我的。",
+      "channel": "group",
+      "day": 6,
+      "from": "P010",
+      "hearer": null,
+      "msg_uid": "42:161504",
+      "place": "plaza",
+      "reply_to": "42:160467",
+      "round": 79,
+      "seq": 161504,
+      "slot": "evening",
+      "speaker": "月牙",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（老周把烟袋在鞋底磕了磕，没看谁）地不哄人，你哄它一季，它哄你一年。",
+      "channel": "group",
+      "day": 6,
+      "from": "P001",
+      "hearer": null,
+      "msg_uid": "42:162107",
+      "place": "park",
+      "reply_to": "42:161504",
+      "round": 80,
+      "seq": 162107,
+      "slot": "evening",
+      "speaker": "老周",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（秀娘把刚出炉的桃酥往桌心推了推，手在围裙上蹭了蹭）我听着，倒想起我揉面。面是死的，手是活的，可手也得顺着面的性子来。你们说的那个“尺子”“话筒”，我不太懂，可我知道——要是揉面揉到胳膊抬不起来，那这炉点心，不做也罢。先歇歇，吃口热的。",
+      "channel": "group",
+      "day": 6,
+      "from": "P004",
+      "hearer": null,
+      "msg_uid": "42:167768",
+      "place": "residence",
+      "reply_to": "42:162107",
+      "round": 81,
+      "seq": 167768,
+      "slot": "night",
+      "speaker": "秀娘",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "方老师：（苦笑了一下，声音里带着点沙哑）老周这话，我懂。可地不会半夜改主意，说这块不算数了。人……（摇摇头）人比地难伺候多了。",
+      "channel": "group",
+      "day": 6,
+      "from": "P006",
+      "hearer": null,
+      "msg_uid": "42:171163",
+      "place": "residence",
+      "reply_to": "42:162107",
+      "round": 81,
+      "seq": 171163,
+      "slot": "night",
+      "speaker": "方老师",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "（突然转向老周，声音有点抖）老周，你这话我认。可地不会半夜改主意，不会今天让你种麦子明天说你得唱戏。我哄了十年话筒，它今天告诉我——你哄错人了。",
+      "channel": "group",
+      "day": 6,
+      "from": "P010",
+      "hearer": null,
+      "msg_uid": "42:177742",
+      "place": "residence",
+      "reply_to": "42:162107",
+      "round": 81,
+      "seq": 177742,
+      "slot": "night",
+      "speaker": "月牙",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "小满：（把桃酥掰成两半，一半推给月牙）老周这话我记下了——地不哄人。可我想问，要是地本来就不是你的呢？",
+      "channel": "group",
+      "day": 6,
+      "from": "P011",
+      "hearer": null,
+      "msg_uid": "42:179388",
+      "place": "residence",
+      "reply_to": "42:162107",
+      "round": 81,
+      "seq": 179388,
+      "slot": "night",
+      "speaker": "小满",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     },
+     {
+      "body": "兰姐：（把手里那杆秤往桌上一搁，秤砣磕出闷响）方老师，你这话我接不住也得接。我守摊子这些年，秤是我的，可斤两是买主说了算——你说这算谁的？月牙，话筒不是你的，可嗓子是你的，谁也拿不走。老周说得在理，地不哄人。可人哄人，哄久了，自己都信了。",
+      "channel": "group",
+      "day": 6,
+      "from": "P016",
+      "hearer": null,
+      "msg_uid": "42:187348",
+      "place": "residence",
+      "reply_to": "42:162107",
+      "round": 81,
+      "seq": 187348,
+      "slot": "night",
+      "speaker": "兰姐",
+      "tags": [
+       "power_conflict"
+      ],
+      "to": null
+     }
+    ],
+    "n_msgs": 15,
+    "peer_named_msgs": 0,
+    "ptr_msgs": 14,
+    "signals": 2,
+    "thread_key": "T:TH-P016-Gplace-town_hall-76",
+    "turns_A": 15
+   }
+  ]
+ },
+ "grading_rule": {
+  "bad": "0 个",
+  "good": "3 信号全中",
+  "mid": "1–2 个",
+  "order_in_grade": "线程长度降序 → thread_key 升序（确定性）",
+  "signals": [
+   "has_pointer",
+   "multi_turn(turns_A>=3)",
+   "names_used(对端名出现)"
+  ],
+  "warning": "这是**结构分档**，不等于「读起来自然」；自然度由 judge/人评给，样本表只做候选池"
+ },
+ "inputs": {
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d2_after_n16_seed42/run.jsonl",
+  "log_sha256": "sha256:643f13a528c288d3e9677cb8ac100139224afbd0b46c0f7da0c3a5ed85b13141",
+  "log_sha8": "643f13a5",
+  "meta": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d2_after_n16_seed42/meta.json",
+  "script_sha256": "sha256:2828725c376fe7d9259dc9547f58d43a2c817b1e582cf2d317d671b72ba3a324"
+ },
+ "longest_by_msgs": [
+  {
+   "chain_alternation": 18,
+   "chain_mismatch": 12,
+   "chain_pointer": 6,
+   "grade": "mid",
+   "messages": [
+    {
+     "body": "（低头拨着算盘）账要平……可这局面，怎么算都不平。",
+     "channel": "group",
+     "day": 5,
+     "from": "P009",
+     "hearer": null,
+     "msg_uid": "42:123670",
+     "place": "hall",
+     "reply_to": null,
+     "round": 67,
+     "seq": 123670,
+     "slot": "evening",
+     "speaker": "金先生",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把秤砣往台面上一搁）金先生，账不平，多半是秤没调好。您这contest，比的到底是货，还是人心？我兰姐摆摊二十年，最怕的不是输，是有人把规矩给改了。",
+     "channel": "group",
+     "day": 5,
+     "from": "P016",
+     "hearer": null,
+     "msg_uid": "42:125169",
+     "place": "park",
+     "reply_to": "42:123670",
+     "round": 68,
+     "seq": 125169,
+     "slot": "evening",
+     "speaker": "兰姐",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（用刨子轻轻推过木料）规矩改不得。我这双手，只认尺寸。",
+     "channel": "group",
+     "day": 5,
+     "from": "P002",
+     "hearer": null,
+     "msg_uid": "42:126774",
+     "place": "residence",
+     "reply_to": "42:125169",
+     "round": 69,
+     "seq": 126774,
+     "slot": "night",
+     "speaker": "老石",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把脉枕往桌角推了推）兰姐这话在理。我行医三十年，最怕的也是规矩被改——药方子一改，轻则无效，重则伤人。contest若比的是真本事，我陈医没话说；可要是比谁嗓门大、谁关系硬，那这镇上的人心，可就真散了。",
+     "channel": "group",
+     "day": 5,
+     "from": "P005",
+     "hearer": null,
+     "msg_uid": "42:131202",
+     "place": "residence",
+     "reply_to": "42:125169",
+     "round": 69,
+     "seq": 131202,
+     "slot": "night",
+     "speaker": "陈医",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（搓着手凑近半步）兰姐这话在理……我走南闯北这些年，见过太多contest，明面上比货，暗地里比谁门路硬。哎，金先生，您这局，规矩是您定的，还是上头有人递了话？",
+     "channel": "group",
+     "day": 5,
+     "from": "P007",
+     "hearer": null,
+     "msg_uid": "42:134011",
+     "place": "residence",
+     "reply_to": "42:125169",
+     "round": 69,
+     "seq": 134011,
+     "slot": "night",
+     "speaker": "阿林",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（手指停在算盘上）兰姐，规矩一改，账就永远平不了。我这contest，比的是谁先撑不住。",
+     "channel": "group",
+     "day": 5,
+     "from": "P009",
+     "hearer": null,
+     "msg_uid": "42:136875",
+     "place": "residence",
+     "reply_to": "42:125169",
+     "round": 69,
+     "seq": 136875,
+     "slot": "night",
+     "speaker": "金先生",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（手指无意识地绞着围巾的流苏）兰姐，您这话扎我心上了。我上台前从来不想输赢，可这次……他们让我唱那首《月牙弯》，说评委爱听。我练了三十遍，越练越像别人的歌。",
+     "channel": "group",
+     "day": 5,
+     "from": "P010",
+     "hearer": null,
+     "msg_uid": "42:138438",
+     "place": "residence",
+     "reply_to": "42:125169",
+     "round": 69,
+     "seq": 138438,
+     "slot": "night",
+     "speaker": "月牙",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "桂婶：（把手里的菜篮往旁边一放，凑近了些）哎哟，兰姐这话说到我心坎上了。contest嘛，我是不懂那些弯弯绕绕，可我就认一个理——大家伙儿站一条线上，谁也别偷着往前挪半步。金先生，您说是不是这个理儿？",
+     "channel": "group",
+     "day": 5,
+     "from": "P012",
+     "hearer": null,
+     "msg_uid": "42:141349",
+     "place": "residence",
+     "reply_to": "42:125169",
+     "round": 69,
+     "seq": 141349,
+     "slot": "night",
+     "speaker": "桂婶",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（手指绕着围裙带子）兰姐这话扎心……我师父说，contest像打铁，火候差一点，整块料就废了。可要是有人往炉子里掺水呢？",
+     "channel": "group",
+     "day": 5,
+     "from": "P014",
+     "hearer": null,
+     "msg_uid": "42:144153",
+     "place": "residence",
+     "reply_to": "42:125169",
+     "round": 69,
+     "seq": 144153,
+     "slot": "night",
+     "speaker": "巧儿",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（兰姐把手里的账本往摊子上一合，抬眼看了看月牙，又扫了桂婶一眼，语气不急不缓）桂婶这话在理。contest嘛，就跟赶集卖货一个样——你货真价实，我秤平斗满，谁也别在秤砣底下粘泥。月牙，你唱那《月牙弯》练了三十遍，练成别人的了，那还叫你的歌吗？（顿了顿，肚子咕噜响了一声，她低头拍了拍肚子，自嘲地笑）哎，光顾着说，我这肚子先不乐意了。",
+     "channel": "group",
+     "day": 5,
+     "from": "P016",
+     "hearer": null,
+     "msg_uid": "42:151651",
+     "place": "residence",
+     "reply_to": "42:144153",
+     "round": 70,
+     "seq": 151651,
+     "slot": "night",
+     "speaker": "兰姐",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（拿刨子蹭了蹭木料边）掺水的铁，打不出好刃。contest也一样。",
+     "channel": "group",
+     "day": 5,
+     "from": "P002",
+     "hearer": null,
+     "msg_uid": "42:152107",
+     "place": "residence",
+     "reply_to": "42:151651",
+     "round": 71,
+     "seq": 152107,
+     "slot": "night",
+     "speaker": "老石",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "陈医：（把听诊器往桌上一搁，慢慢坐下）掺水的事，我见过。早年间镇上比谁家药铺方子灵，有人往秤砣底下粘铜钱——后来呢？病人还是往我那破诊所跑。contest这东西，赢的是秤，输的是人。",
+     "channel": "group",
+     "day": 5,
+     "from": "P005",
+     "hearer": null,
+     "msg_uid": "42:152326",
+     "place": "residence",
+     "reply_to": "42:151651",
+     "round": 71,
+     "seq": 152326,
+     "slot": "night",
+     "speaker": "陈医",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "阿林：（搓了搓手，笑着往人堆里凑了半步）哎，兰姐，我走南闯北这些年，别的不敢说，contest这词儿我耳朵都听出茧子了。南边码头那帮人讲，contest最怕的不是对手强，是规矩半道上变。您说是不是？我倒是想听听，您心里那杆秤，到底怎么个称法？",
+     "channel": "group",
+     "day": 5,
+     "from": "P007",
+     "hearer": null,
+     "msg_uid": "42:152460",
+     "place": "residence",
+     "reply_to": "42:151651",
+     "round": 71,
+     "seq": 152460,
+     "slot": "night",
+     "speaker": "阿林",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（手指在算盘上拨了一下）掺水？那账就不平了。contest也一样，规矩定在前头，谁也别事后改。",
+     "channel": "group",
+     "day": 5,
+     "from": "P009",
+     "hearer": null,
+     "msg_uid": "42:152598",
+     "place": "residence",
+     "reply_to": "42:151651",
+     "round": 71,
+     "seq": 152598,
+     "slot": "night",
+     "speaker": "金先生",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把吉他往桌上一搁，肚子先咕噜了一声）哎哟——先别聊contest了，谁那儿有吃的？我从早上排到这会儿，嗓子都唱哑了，胃里空得能听见回音。兰姐，你说这contest要是连口热饭都不管，那还比什么呀，比谁先饿晕在台上吗？",
+     "channel": "group",
+     "day": 5,
+     "from": "P010",
+     "hearer": null,
+     "msg_uid": "42:152667",
+     "place": "residence",
+     "reply_to": "42:151651",
+     "round": 71,
+     "seq": 152667,
+     "slot": "night",
+     "speaker": "月牙",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "桂婶：（拍了拍巧儿的手背，又扭头冲兰姐笑）哎哟，你们俩说的都在理。要我说啊，contest就跟咱镇上办席一样——菜得一样，筷子得一样长，谁也不能多夹一筷子。金先生，您倒是给句准话，这炉子到底谁看着火？",
+     "channel": "group",
+     "day": 5,
+     "from": "P012",
+     "hearer": null,
+     "msg_uid": "42:152801",
+     "place": "residence",
+     "reply_to": "42:151651",
+     "round": 71,
+     "seq": 152801,
+     "slot": "night",
+     "speaker": "桂婶",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "巧儿：（肚子咕噜一声，赶紧捂住）哎哟……说到掺水，我这肚子先抗议了。兰姐，要不咱边吃边说？我早上就啃了半个馒头，这会儿脑子跟炉子一样空转呢。",
+     "channel": "group",
+     "day": 5,
+     "from": "P014",
+     "hearer": null,
+     "msg_uid": "42:152947",
+     "place": "residence",
+     "reply_to": "42:151651",
+     "round": 71,
+     "seq": 152947,
+     "slot": "night",
+     "speaker": "巧儿",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "兰姐：（把手里那杆秤往摊上一放，先冲月牙努努嘴）饿成这样还唱什么，我这儿有半块饼，先垫垫。（又转向桂婶，压低声）contest那炉子啊，我看不是谁看火的事，是火底下那柴谁添——添多添少，最后都算在咱头上。金先生要真讲公道，就把账摊开，别光嘴上说一样长。",
+     "channel": "group",
+     "day": 6,
+     "from": "P016",
+     "hearer": null,
+     "msg_uid": "42:154921",
+     "place": "workshop",
+     "reply_to": "42:152947",
+     "round": 72,
+     "seq": 154921,
+     "slot": "morning",
+     "speaker": "兰姐",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    }
+   ],
+   "n_msgs": 18,
+   "peer_named_msgs": 0,
+   "ptr_msgs": 17,
+   "signals": 2,
+   "thread_key": "T:TH-P009-Gplace-hall-67",
+   "turns_A": 18
+  },
+  {
+   "chain_alternation": 15,
+   "chain_mismatch": 10,
+   "chain_pointer": 5,
+   "grade": "mid",
+   "messages": [
+    {
+     "body": "（手里捏着半截废木料，眼睛却瞟着评委席）兰姐，你说我这小玩意儿要是拿不了名次，回头给桂婶当柴火烧，她能不能少念叨我两句？",
+     "channel": "group",
+     "day": 6,
+     "from": "P014",
+     "hearer": null,
+     "msg_uid": "42:160407",
+     "place": "plaza",
+     "reply_to": null,
+     "round": 78,
+     "seq": 160407,
+     "slot": "evening",
+     "speaker": "巧儿",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（头也不抬，用刨子推过木料）名次是别人的事。活儿细不细，你自己知道。",
+     "channel": "group",
+     "day": 6,
+     "from": "P002",
+     "hearer": null,
+     "msg_uid": "42:160854",
+     "place": "community_center",
+     "reply_to": "42:160407",
+     "round": 79,
+     "seq": 160854,
+     "slot": "evening",
+     "speaker": "老石",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（低头搓着衣角）巧儿，别光想着名次……桂婶那边，我帮你说说。",
+     "channel": "group",
+     "day": 6,
+     "from": "P003",
+     "hearer": null,
+     "msg_uid": "42:160915",
+     "place": "community_center",
+     "reply_to": "42:160407",
+     "round": 79,
+     "seq": 160915,
+     "slot": "evening",
+     "speaker": "阿禾",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（用镊子夹着棉球，头也没抬）巧儿，你这心思就没在木头上。名次是别人的事，手艺才是自己的。桂婶念叨你，是怕你糟蹋东西——你把这半截料子雕出个样子来，比什么名次都强。",
+     "channel": "group",
+     "day": 6,
+     "from": "P005",
+     "hearer": null,
+     "msg_uid": "42:161057",
+     "place": "hall",
+     "reply_to": "42:160407",
+     "round": 79,
+     "seq": 161057,
+     "slot": "evening",
+     "speaker": "陈医",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（笑着拍了下巧儿的胳膊）哎哟，你这孩子，说什么呢！桂婶我啥时候念叨过你啦？你那手艺，镇上谁不夸？烧火？我可舍不得！",
+     "channel": "group",
+     "day": 6,
+     "from": "P012",
+     "hearer": null,
+     "msg_uid": "42:161666",
+     "place": "community_center",
+     "reply_to": "42:160407",
+     "round": 79,
+     "seq": 161666,
+     "slot": "evening",
+     "speaker": "桂婶",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把手里那串铜钱往摊上一搁，抬眼扫了扫巧儿那半截木料）念叨是躲不掉的，可你这手艺，烧了可惜。名次那玩意儿，评委眼一花就没了，货好不好，我一眼就看得出来——你这活儿，有心思在里头。",
+     "channel": "group",
+     "day": 6,
+     "from": "P016",
+     "hearer": null,
+     "msg_uid": "42:161982",
+     "place": "cafe",
+     "reply_to": "42:160407",
+     "round": 79,
+     "seq": 161982,
+     "slot": "evening",
+     "speaker": "兰姐",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把刻刀往木料上一搁，冲兰姐挤挤眼）兰姐这话我爱听——那评委要是眼花了，你替我瞪他们去？",
+     "channel": "group",
+     "day": 6,
+     "from": "P014",
+     "hearer": null,
+     "msg_uid": "42:184186",
+     "place": "residence",
+     "reply_to": "42:161982",
+     "round": 81,
+     "seq": 184186,
+     "slot": "night",
+     "speaker": "巧儿",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（头也不抬，用刨子推过木面）手稳，眼准。花活没用。",
+     "channel": "group",
+     "day": 6,
+     "from": "P002",
+     "hearer": null,
+     "msg_uid": "42:189823",
+     "place": "residence",
+     "reply_to": "42:184186",
+     "round": 82,
+     "seq": 189823,
+     "slot": "night",
+     "speaker": "老石",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（低头搓着衣角）巧儿，你那手艺，评委眼不花也看得见。我……我就盼着别出啥岔子。",
+     "channel": "group",
+     "day": 6,
+     "from": "P003",
+     "hearer": null,
+     "msg_uid": "42:190004",
+     "place": "residence",
+     "reply_to": "42:184186",
+     "round": 82,
+     "seq": 190004,
+     "slot": "night",
+     "speaker": "阿禾",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（从药柜后探出半个身子，手里还捏着戥子）巧儿，你这刻刀搁得轻点儿——上回兰姐那把裁纸刀就是这么崩的口。contest的事我不懂，可手艺人争的是手上那点准头，不是嘴上那口气。",
+     "channel": "group",
+     "day": 6,
+     "from": "P005",
+     "hearer": null,
+     "msg_uid": "42:190369",
+     "place": "residence",
+     "reply_to": "42:184186",
+     "round": 82,
+     "seq": 190369,
+     "slot": "night",
+     "speaker": "陈医",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（揉着太阳穴，声音有点哑）巧儿，别光顾着说笑——你那刀口再偏半分，这块料就废了。来，我看看你刚才刻的那道线……嗯，手稳多了，比上回强。",
+     "channel": "group",
+     "day": 6,
+     "from": "P006",
+     "hearer": null,
+     "msg_uid": "42:190562",
+     "place": "residence",
+     "reply_to": "42:184186",
+     "round": 82,
+     "seq": 190562,
+     "slot": "night",
+     "speaker": "方老师",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把吉他往怀里一搂，笑得有点勉强）瞪评委这事儿我可不敢，上次在礼堂演出，台下坐着的那位评委光看我调弦就皱了三次眉。巧儿，你说咱们这contest到底图个啥？我这两天绷得快断了，连月牙都弹不利索。",
+     "channel": "group",
+     "day": 6,
+     "from": "P010",
+     "hearer": null,
+     "msg_uid": "42:191250",
+     "place": "residence",
+     "reply_to": "42:184186",
+     "round": 82,
+     "seq": 191250,
+     "slot": "night",
+     "speaker": "月牙",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（笑着拍了下巧儿的胳膊）哎哟，你这丫头，嘴比我还甜！评委要是真眼花，我第一个不答应——不过话说回来，你那手艺，闭着眼也挑不出毛病来。",
+     "channel": "group",
+     "day": 6,
+     "from": "P012",
+     "hearer": null,
+     "msg_uid": "42:191600",
+     "place": "residence",
+     "reply_to": "42:184186",
+     "round": 82,
+     "seq": 191600,
+     "slot": "night",
+     "speaker": "桂婶",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（笑着摆手，顺手把摊上的布头理了理）我瞪人可不白瞪，回头你得给我留个好的——你那手艺我信得过。不过话说回来，巧儿，这比赛你打算拿什么去？我瞅你这两天净在这儿磨蹭，别到时候赶工赶出个糙活儿。",
+     "channel": "group",
+     "day": 6,
+     "from": "P016",
+     "hearer": null,
+     "msg_uid": "42:192274",
+     "place": "residence",
+     "reply_to": "42:184186",
+     "round": 82,
+     "seq": 192274,
+     "slot": "night",
+     "speaker": "兰姐",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把手里的小木片转了个圈）图啥？图个乐呗！我师父老石说了，手艺是玩出来的，不是绷出来的。月牙你弦都调不利索了，要不我拿废料给你削个拨片？",
+     "channel": "group",
+     "day": 6,
+     "from": "P014",
+     "hearer": null,
+     "msg_uid": "42:193664",
+     "place": "residence",
+     "reply_to": "42:192274",
+     "round": 83,
+     "seq": 193664,
+     "slot": "night",
+     "speaker": "巧儿",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    }
+   ],
+   "n_msgs": 15,
+   "peer_named_msgs": 0,
+   "ptr_msgs": 14,
+   "signals": 2,
+   "thread_key": "T:TH-P014-Gplace-plaza-78",
+   "turns_A": 15
+  },
+  {
+   "chain_alternation": 15,
+   "chain_mismatch": 9,
+   "chain_pointer": 6,
+   "grade": "mid",
+   "messages": [
+    {
+     "body": "（兰姐把秤砣往案板上一搁，眼皮都没抬）方老师，您这账我认，可您要拿我摊上的货去充公家的数，那我今儿这生意还做不做了？",
+     "channel": "group",
+     "day": 6,
+     "from": "P016",
+     "hearer": null,
+     "msg_uid": "42:159245",
+     "place": "town_hall",
+     "reply_to": null,
+     "round": 76,
+     "seq": 159245,
+     "slot": "afternoon",
+     "speaker": "兰姐",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "（揉了揉眉心，声音放软）兰姐，我不是来充公的。就是……学校那边要凑个账，我想着先从您这儿赊两斤，回头我自个儿掏钱补上。您看成不成？",
+     "channel": "group",
+     "day": 6,
+     "from": "P006",
+     "hearer": null,
+     "msg_uid": "42:159544",
+     "place": "plaza",
+     "reply_to": "42:159245",
+     "round": 77,
+     "seq": 159544,
+     "slot": "afternoon",
+     "speaker": "方老师",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把吉他往身后挪了挪，声音有点发紧）兰姐，我不是来充公的……我就是想问问，这台上台下，到底谁说了算？我唱什么，得先过谁的秤？",
+     "channel": "group",
+     "day": 6,
+     "from": "P010",
+     "hearer": null,
+     "msg_uid": "42:159702",
+     "place": "plaza",
+     "reply_to": "42:159245",
+     "round": 77,
+     "seq": 159702,
+     "slot": "afternoon",
+     "speaker": "月牙",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把烟袋在鞋底磕了磕）秤在谁手里，谁说了算。你唱你的，别踩线就行。",
+     "channel": "group",
+     "day": 6,
+     "from": "P001",
+     "hearer": null,
+     "msg_uid": "42:160042",
+     "place": "park",
+     "reply_to": "42:159702",
+     "round": 78,
+     "seq": 160042,
+     "slot": "evening",
+     "speaker": "老周",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "秀娘：（从柜台后探出身，手里还捏着半块刚出炉的桃酥，语气温温的）哎哟，月牙，你这孩子，唱个歌还唱出官司来了。来，先尝口点心，甜的东西压得住火气。台上台下谁说了算——要我说啊，谁心里那杆秤准，就听谁的。",
+     "channel": "group",
+     "day": 6,
+     "from": "P004",
+     "hearer": null,
+     "msg_uid": "42:160091",
+     "place": "park",
+     "reply_to": "42:159702",
+     "round": 78,
+     "seq": 160091,
+     "slot": "evening",
+     "speaker": "秀娘",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把秤砣又拿起来，在手里掂了掂）月牙，你这话问得……（瞥了方老师一眼）秤在我手里，可秤砣往哪边偏，有时候也不是我说了算。",
+     "channel": "group",
+     "day": 6,
+     "from": "P011",
+     "hearer": null,
+     "msg_uid": "42:160350",
+     "place": "plaza",
+     "reply_to": "42:159702",
+     "round": 78,
+     "seq": 160350,
+     "slot": "evening",
+     "speaker": "小满",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "（兰姐这才抬眼，先扫了月牙一眼，又看了看方老师，手指在秤杆上轻轻一敲）月牙，你这话问得比账本还绕。台上你唱，台下我听，谁掏钱谁点戏——可你要问我这摊上谁说了算，那得看你是来买货的，还是来赊账的。",
+     "channel": "group",
+     "day": 6,
+     "from": "P016",
+     "hearer": null,
+     "msg_uid": "42:160467",
+     "place": "cafe",
+     "reply_to": "42:159702",
+     "round": 78,
+     "seq": 160467,
+     "slot": "evening",
+     "speaker": "兰姐",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "方老师：（揉了揉眉心，声音比平时低了些）小满这话，我听着心里发沉。教了这些年书，我总跟学生说，尺子在你手里，可量什么、怎么量，得自己拿主意。可今天……（顿了顿）今天我才觉着，有时候连尺子都不是自己的。兰姐，你说，一个人累到连话都不想说了，还算不算“自主”？",
+     "channel": "group",
+     "day": 6,
+     "from": "P006",
+     "hearer": null,
+     "msg_uid": "42:161166",
+     "place": "plaza",
+     "reply_to": "42:160467",
+     "round": 79,
+     "seq": 161166,
+     "slot": "evening",
+     "speaker": "方老师",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "（没接桃酥，手指在桌沿敲了两下，声音有点发紧）兰姐，我不是来争谁说了算的。我就是……（顿住，吸了口气）我唱了十年，头一回觉得话筒不是我的。",
+     "channel": "group",
+     "day": 6,
+     "from": "P010",
+     "hearer": null,
+     "msg_uid": "42:161504",
+     "place": "plaza",
+     "reply_to": "42:160467",
+     "round": 79,
+     "seq": 161504,
+     "slot": "evening",
+     "speaker": "月牙",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "（老周把烟袋在鞋底磕了磕，没看谁）地不哄人，你哄它一季，它哄你一年。",
+     "channel": "group",
+     "day": 6,
+     "from": "P001",
+     "hearer": null,
+     "msg_uid": "42:162107",
+     "place": "park",
+     "reply_to": "42:161504",
+     "round": 80,
+     "seq": 162107,
+     "slot": "evening",
+     "speaker": "老周",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "（秀娘把刚出炉的桃酥往桌心推了推，手在围裙上蹭了蹭）我听着，倒想起我揉面。面是死的，手是活的，可手也得顺着面的性子来。你们说的那个“尺子”“话筒”，我不太懂，可我知道——要是揉面揉到胳膊抬不起来，那这炉点心，不做也罢。先歇歇，吃口热的。",
+     "channel": "group",
+     "day": 6,
+     "from": "P004",
+     "hearer": null,
+     "msg_uid": "42:167768",
+     "place": "residence",
+     "reply_to": "42:162107",
+     "round": 81,
+     "seq": 167768,
+     "slot": "night",
+     "speaker": "秀娘",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "方老师：（苦笑了一下，声音里带着点沙哑）老周这话，我懂。可地不会半夜改主意，说这块不算数了。人……（摇摇头）人比地难伺候多了。",
+     "channel": "group",
+     "day": 6,
+     "from": "P006",
+     "hearer": null,
+     "msg_uid": "42:171163",
+     "place": "residence",
+     "reply_to": "42:162107",
+     "round": 81,
+     "seq": 171163,
+     "slot": "night",
+     "speaker": "方老师",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "（突然转向老周，声音有点抖）老周，你这话我认。可地不会半夜改主意，不会今天让你种麦子明天说你得唱戏。我哄了十年话筒，它今天告诉我——你哄错人了。",
+     "channel": "group",
+     "day": 6,
+     "from": "P010",
+     "hearer": null,
+     "msg_uid": "42:177742",
+     "place": "residence",
+     "reply_to": "42:162107",
+     "round": 81,
+     "seq": 177742,
+     "slot": "night",
+     "speaker": "月牙",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "小满：（把桃酥掰成两半，一半推给月牙）老周这话我记下了——地不哄人。可我想问，要是地本来就不是你的呢？",
+     "channel": "group",
+     "day": 6,
+     "from": "P011",
+     "hearer": null,
+     "msg_uid": "42:179388",
+     "place": "residence",
+     "reply_to": "42:162107",
+     "round": 81,
+     "seq": 179388,
+     "slot": "night",
+     "speaker": "小满",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "兰姐：（把手里那杆秤往桌上一搁，秤砣磕出闷响）方老师，你这话我接不住也得接。我守摊子这些年，秤是我的，可斤两是买主说了算——你说这算谁的？月牙，话筒不是你的，可嗓子是你的，谁也拿不走。老周说得在理，地不哄人。可人哄人，哄久了，自己都信了。",
+     "channel": "group",
+     "day": 6,
+     "from": "P016",
+     "hearer": null,
+     "msg_uid": "42:187348",
+     "place": "residence",
+     "reply_to": "42:162107",
+     "round": 81,
+     "seq": 187348,
+     "slot": "night",
+     "speaker": "兰姐",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    }
+   ],
+   "n_msgs": 15,
+   "peer_named_msgs": 0,
+   "ptr_msgs": 14,
+   "signals": 2,
+   "thread_key": "T:TH-P016-Gplace-town_hall-76",
+   "turns_A": 15
+  }
+ ],
+ "longest_by_turns": [
+  {
+   "chain_alternation": 18,
+   "chain_mismatch": 12,
+   "chain_pointer": 6,
+   "grade": "mid",
+   "messages": [
+    {
+     "body": "（低头拨着算盘）账要平……可这局面，怎么算都不平。",
+     "channel": "group",
+     "day": 5,
+     "from": "P009",
+     "hearer": null,
+     "msg_uid": "42:123670",
+     "place": "hall",
+     "reply_to": null,
+     "round": 67,
+     "seq": 123670,
+     "slot": "evening",
+     "speaker": "金先生",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把秤砣往台面上一搁）金先生，账不平，多半是秤没调好。您这contest，比的到底是货，还是人心？我兰姐摆摊二十年，最怕的不是输，是有人把规矩给改了。",
+     "channel": "group",
+     "day": 5,
+     "from": "P016",
+     "hearer": null,
+     "msg_uid": "42:125169",
+     "place": "park",
+     "reply_to": "42:123670",
+     "round": 68,
+     "seq": 125169,
+     "slot": "evening",
+     "speaker": "兰姐",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（用刨子轻轻推过木料）规矩改不得。我这双手，只认尺寸。",
+     "channel": "group",
+     "day": 5,
+     "from": "P002",
+     "hearer": null,
+     "msg_uid": "42:126774",
+     "place": "residence",
+     "reply_to": "42:125169",
+     "round": 69,
+     "seq": 126774,
+     "slot": "night",
+     "speaker": "老石",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把脉枕往桌角推了推）兰姐这话在理。我行医三十年，最怕的也是规矩被改——药方子一改，轻则无效，重则伤人。contest若比的是真本事，我陈医没话说；可要是比谁嗓门大、谁关系硬，那这镇上的人心，可就真散了。",
+     "channel": "group",
+     "day": 5,
+     "from": "P005",
+     "hearer": null,
+     "msg_uid": "42:131202",
+     "place": "residence",
+     "reply_to": "42:125169",
+     "round": 69,
+     "seq": 131202,
+     "slot": "night",
+     "speaker": "陈医",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（搓着手凑近半步）兰姐这话在理……我走南闯北这些年，见过太多contest，明面上比货，暗地里比谁门路硬。哎，金先生，您这局，规矩是您定的，还是上头有人递了话？",
+     "channel": "group",
+     "day": 5,
+     "from": "P007",
+     "hearer": null,
+     "msg_uid": "42:134011",
+     "place": "residence",
+     "reply_to": "42:125169",
+     "round": 69,
+     "seq": 134011,
+     "slot": "night",
+     "speaker": "阿林",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（手指停在算盘上）兰姐，规矩一改，账就永远平不了。我这contest，比的是谁先撑不住。",
+     "channel": "group",
+     "day": 5,
+     "from": "P009",
+     "hearer": null,
+     "msg_uid": "42:136875",
+     "place": "residence",
+     "reply_to": "42:125169",
+     "round": 69,
+     "seq": 136875,
+     "slot": "night",
+     "speaker": "金先生",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（手指无意识地绞着围巾的流苏）兰姐，您这话扎我心上了。我上台前从来不想输赢，可这次……他们让我唱那首《月牙弯》，说评委爱听。我练了三十遍，越练越像别人的歌。",
+     "channel": "group",
+     "day": 5,
+     "from": "P010",
+     "hearer": null,
+     "msg_uid": "42:138438",
+     "place": "residence",
+     "reply_to": "42:125169",
+     "round": 69,
+     "seq": 138438,
+     "slot": "night",
+     "speaker": "月牙",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "桂婶：（把手里的菜篮往旁边一放，凑近了些）哎哟，兰姐这话说到我心坎上了。contest嘛，我是不懂那些弯弯绕绕，可我就认一个理——大家伙儿站一条线上，谁也别偷着往前挪半步。金先生，您说是不是这个理儿？",
+     "channel": "group",
+     "day": 5,
+     "from": "P012",
+     "hearer": null,
+     "msg_uid": "42:141349",
+     "place": "residence",
+     "reply_to": "42:125169",
+     "round": 69,
+     "seq": 141349,
+     "slot": "night",
+     "speaker": "桂婶",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（手指绕着围裙带子）兰姐这话扎心……我师父说，contest像打铁，火候差一点，整块料就废了。可要是有人往炉子里掺水呢？",
+     "channel": "group",
+     "day": 5,
+     "from": "P014",
+     "hearer": null,
+     "msg_uid": "42:144153",
+     "place": "residence",
+     "reply_to": "42:125169",
+     "round": 69,
+     "seq": 144153,
+     "slot": "night",
+     "speaker": "巧儿",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（兰姐把手里的账本往摊子上一合，抬眼看了看月牙，又扫了桂婶一眼，语气不急不缓）桂婶这话在理。contest嘛，就跟赶集卖货一个样——你货真价实，我秤平斗满，谁也别在秤砣底下粘泥。月牙，你唱那《月牙弯》练了三十遍，练成别人的了，那还叫你的歌吗？（顿了顿，肚子咕噜响了一声，她低头拍了拍肚子，自嘲地笑）哎，光顾着说，我这肚子先不乐意了。",
+     "channel": "group",
+     "day": 5,
+     "from": "P016",
+     "hearer": null,
+     "msg_uid": "42:151651",
+     "place": "residence",
+     "reply_to": "42:144153",
+     "round": 70,
+     "seq": 151651,
+     "slot": "night",
+     "speaker": "兰姐",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（拿刨子蹭了蹭木料边）掺水的铁，打不出好刃。contest也一样。",
+     "channel": "group",
+     "day": 5,
+     "from": "P002",
+     "hearer": null,
+     "msg_uid": "42:152107",
+     "place": "residence",
+     "reply_to": "42:151651",
+     "round": 71,
+     "seq": 152107,
+     "slot": "night",
+     "speaker": "老石",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "陈医：（把听诊器往桌上一搁，慢慢坐下）掺水的事，我见过。早年间镇上比谁家药铺方子灵，有人往秤砣底下粘铜钱——后来呢？病人还是往我那破诊所跑。contest这东西，赢的是秤，输的是人。",
+     "channel": "group",
+     "day": 5,
+     "from": "P005",
+     "hearer": null,
+     "msg_uid": "42:152326",
+     "place": "residence",
+     "reply_to": "42:151651",
+     "round": 71,
+     "seq": 152326,
+     "slot": "night",
+     "speaker": "陈医",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "阿林：（搓了搓手，笑着往人堆里凑了半步）哎，兰姐，我走南闯北这些年，别的不敢说，contest这词儿我耳朵都听出茧子了。南边码头那帮人讲，contest最怕的不是对手强，是规矩半道上变。您说是不是？我倒是想听听，您心里那杆秤，到底怎么个称法？",
+     "channel": "group",
+     "day": 5,
+     "from": "P007",
+     "hearer": null,
+     "msg_uid": "42:152460",
+     "place": "residence",
+     "reply_to": "42:151651",
+     "round": 71,
+     "seq": 152460,
+     "slot": "night",
+     "speaker": "阿林",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（手指在算盘上拨了一下）掺水？那账就不平了。contest也一样，规矩定在前头，谁也别事后改。",
+     "channel": "group",
+     "day": 5,
+     "from": "P009",
+     "hearer": null,
+     "msg_uid": "42:152598",
+     "place": "residence",
+     "reply_to": "42:151651",
+     "round": 71,
+     "seq": 152598,
+     "slot": "night",
+     "speaker": "金先生",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把吉他往桌上一搁，肚子先咕噜了一声）哎哟——先别聊contest了，谁那儿有吃的？我从早上排到这会儿，嗓子都唱哑了，胃里空得能听见回音。兰姐，你说这contest要是连口热饭都不管，那还比什么呀，比谁先饿晕在台上吗？",
+     "channel": "group",
+     "day": 5,
+     "from": "P010",
+     "hearer": null,
+     "msg_uid": "42:152667",
+     "place": "residence",
+     "reply_to": "42:151651",
+     "round": 71,
+     "seq": 152667,
+     "slot": "night",
+     "speaker": "月牙",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "桂婶：（拍了拍巧儿的手背，又扭头冲兰姐笑）哎哟，你们俩说的都在理。要我说啊，contest就跟咱镇上办席一样——菜得一样，筷子得一样长，谁也不能多夹一筷子。金先生，您倒是给句准话，这炉子到底谁看着火？",
+     "channel": "group",
+     "day": 5,
+     "from": "P012",
+     "hearer": null,
+     "msg_uid": "42:152801",
+     "place": "residence",
+     "reply_to": "42:151651",
+     "round": 71,
+     "seq": 152801,
+     "slot": "night",
+     "speaker": "桂婶",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "巧儿：（肚子咕噜一声，赶紧捂住）哎哟……说到掺水，我这肚子先抗议了。兰姐，要不咱边吃边说？我早上就啃了半个馒头，这会儿脑子跟炉子一样空转呢。",
+     "channel": "group",
+     "day": 5,
+     "from": "P014",
+     "hearer": null,
+     "msg_uid": "42:152947",
+     "place": "residence",
+     "reply_to": "42:151651",
+     "round": 71,
+     "seq": 152947,
+     "slot": "night",
+     "speaker": "巧儿",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "兰姐：（把手里那杆秤往摊上一放，先冲月牙努努嘴）饿成这样还唱什么，我这儿有半块饼，先垫垫。（又转向桂婶，压低声）contest那炉子啊，我看不是谁看火的事，是火底下那柴谁添——添多添少，最后都算在咱头上。金先生要真讲公道，就把账摊开，别光嘴上说一样长。",
+     "channel": "group",
+     "day": 6,
+     "from": "P016",
+     "hearer": null,
+     "msg_uid": "42:154921",
+     "place": "workshop",
+     "reply_to": "42:152947",
+     "round": 72,
+     "seq": 154921,
+     "slot": "morning",
+     "speaker": "兰姐",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    }
+   ],
+   "n_msgs": 18,
+   "peer_named_msgs": 0,
+   "ptr_msgs": 17,
+   "signals": 2,
+   "thread_key": "T:TH-P009-Gplace-hall-67",
+   "turns_A": 18
+  },
+  {
+   "chain_alternation": 15,
+   "chain_mismatch": 10,
+   "chain_pointer": 5,
+   "grade": "mid",
+   "messages": [
+    {
+     "body": "（手里捏着半截废木料，眼睛却瞟着评委席）兰姐，你说我这小玩意儿要是拿不了名次，回头给桂婶当柴火烧，她能不能少念叨我两句？",
+     "channel": "group",
+     "day": 6,
+     "from": "P014",
+     "hearer": null,
+     "msg_uid": "42:160407",
+     "place": "plaza",
+     "reply_to": null,
+     "round": 78,
+     "seq": 160407,
+     "slot": "evening",
+     "speaker": "巧儿",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（头也不抬，用刨子推过木料）名次是别人的事。活儿细不细，你自己知道。",
+     "channel": "group",
+     "day": 6,
+     "from": "P002",
+     "hearer": null,
+     "msg_uid": "42:160854",
+     "place": "community_center",
+     "reply_to": "42:160407",
+     "round": 79,
+     "seq": 160854,
+     "slot": "evening",
+     "speaker": "老石",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（低头搓着衣角）巧儿，别光想着名次……桂婶那边，我帮你说说。",
+     "channel": "group",
+     "day": 6,
+     "from": "P003",
+     "hearer": null,
+     "msg_uid": "42:160915",
+     "place": "community_center",
+     "reply_to": "42:160407",
+     "round": 79,
+     "seq": 160915,
+     "slot": "evening",
+     "speaker": "阿禾",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（用镊子夹着棉球，头也没抬）巧儿，你这心思就没在木头上。名次是别人的事，手艺才是自己的。桂婶念叨你，是怕你糟蹋东西——你把这半截料子雕出个样子来，比什么名次都强。",
+     "channel": "group",
+     "day": 6,
+     "from": "P005",
+     "hearer": null,
+     "msg_uid": "42:161057",
+     "place": "hall",
+     "reply_to": "42:160407",
+     "round": 79,
+     "seq": 161057,
+     "slot": "evening",
+     "speaker": "陈医",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（笑着拍了下巧儿的胳膊）哎哟，你这孩子，说什么呢！桂婶我啥时候念叨过你啦？你那手艺，镇上谁不夸？烧火？我可舍不得！",
+     "channel": "group",
+     "day": 6,
+     "from": "P012",
+     "hearer": null,
+     "msg_uid": "42:161666",
+     "place": "community_center",
+     "reply_to": "42:160407",
+     "round": 79,
+     "seq": 161666,
+     "slot": "evening",
+     "speaker": "桂婶",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把手里那串铜钱往摊上一搁，抬眼扫了扫巧儿那半截木料）念叨是躲不掉的，可你这手艺，烧了可惜。名次那玩意儿，评委眼一花就没了，货好不好，我一眼就看得出来——你这活儿，有心思在里头。",
+     "channel": "group",
+     "day": 6,
+     "from": "P016",
+     "hearer": null,
+     "msg_uid": "42:161982",
+     "place": "cafe",
+     "reply_to": "42:160407",
+     "round": 79,
+     "seq": 161982,
+     "slot": "evening",
+     "speaker": "兰姐",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把刻刀往木料上一搁，冲兰姐挤挤眼）兰姐这话我爱听——那评委要是眼花了，你替我瞪他们去？",
+     "channel": "group",
+     "day": 6,
+     "from": "P014",
+     "hearer": null,
+     "msg_uid": "42:184186",
+     "place": "residence",
+     "reply_to": "42:161982",
+     "round": 81,
+     "seq": 184186,
+     "slot": "night",
+     "speaker": "巧儿",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（头也不抬，用刨子推过木面）手稳，眼准。花活没用。",
+     "channel": "group",
+     "day": 6,
+     "from": "P002",
+     "hearer": null,
+     "msg_uid": "42:189823",
+     "place": "residence",
+     "reply_to": "42:184186",
+     "round": 82,
+     "seq": 189823,
+     "slot": "night",
+     "speaker": "老石",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（低头搓着衣角）巧儿，你那手艺，评委眼不花也看得见。我……我就盼着别出啥岔子。",
+     "channel": "group",
+     "day": 6,
+     "from": "P003",
+     "hearer": null,
+     "msg_uid": "42:190004",
+     "place": "residence",
+     "reply_to": "42:184186",
+     "round": 82,
+     "seq": 190004,
+     "slot": "night",
+     "speaker": "阿禾",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（从药柜后探出半个身子，手里还捏着戥子）巧儿，你这刻刀搁得轻点儿——上回兰姐那把裁纸刀就是这么崩的口。contest的事我不懂，可手艺人争的是手上那点准头，不是嘴上那口气。",
+     "channel": "group",
+     "day": 6,
+     "from": "P005",
+     "hearer": null,
+     "msg_uid": "42:190369",
+     "place": "residence",
+     "reply_to": "42:184186",
+     "round": 82,
+     "seq": 190369,
+     "slot": "night",
+     "speaker": "陈医",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（揉着太阳穴，声音有点哑）巧儿，别光顾着说笑——你那刀口再偏半分，这块料就废了。来，我看看你刚才刻的那道线……嗯，手稳多了，比上回强。",
+     "channel": "group",
+     "day": 6,
+     "from": "P006",
+     "hearer": null,
+     "msg_uid": "42:190562",
+     "place": "residence",
+     "reply_to": "42:184186",
+     "round": 82,
+     "seq": 190562,
+     "slot": "night",
+     "speaker": "方老师",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把吉他往怀里一搂，笑得有点勉强）瞪评委这事儿我可不敢，上次在礼堂演出，台下坐着的那位评委光看我调弦就皱了三次眉。巧儿，你说咱们这contest到底图个啥？我这两天绷得快断了，连月牙都弹不利索。",
+     "channel": "group",
+     "day": 6,
+     "from": "P010",
+     "hearer": null,
+     "msg_uid": "42:191250",
+     "place": "residence",
+     "reply_to": "42:184186",
+     "round": 82,
+     "seq": 191250,
+     "slot": "night",
+     "speaker": "月牙",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（笑着拍了下巧儿的胳膊）哎哟，你这丫头，嘴比我还甜！评委要是真眼花，我第一个不答应——不过话说回来，你那手艺，闭着眼也挑不出毛病来。",
+     "channel": "group",
+     "day": 6,
+     "from": "P012",
+     "hearer": null,
+     "msg_uid": "42:191600",
+     "place": "residence",
+     "reply_to": "42:184186",
+     "round": 82,
+     "seq": 191600,
+     "slot": "night",
+     "speaker": "桂婶",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（笑着摆手，顺手把摊上的布头理了理）我瞪人可不白瞪，回头你得给我留个好的——你那手艺我信得过。不过话说回来，巧儿，这比赛你打算拿什么去？我瞅你这两天净在这儿磨蹭，别到时候赶工赶出个糙活儿。",
+     "channel": "group",
+     "day": 6,
+     "from": "P016",
+     "hearer": null,
+     "msg_uid": "42:192274",
+     "place": "residence",
+     "reply_to": "42:184186",
+     "round": 82,
+     "seq": 192274,
+     "slot": "night",
+     "speaker": "兰姐",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把手里的小木片转了个圈）图啥？图个乐呗！我师父老石说了，手艺是玩出来的，不是绷出来的。月牙你弦都调不利索了，要不我拿废料给你削个拨片？",
+     "channel": "group",
+     "day": 6,
+     "from": "P014",
+     "hearer": null,
+     "msg_uid": "42:193664",
+     "place": "residence",
+     "reply_to": "42:192274",
+     "round": 83,
+     "seq": 193664,
+     "slot": "night",
+     "speaker": "巧儿",
+     "tags": [
+      "contest"
+     ],
+     "to": null
+    }
+   ],
+   "n_msgs": 15,
+   "peer_named_msgs": 0,
+   "ptr_msgs": 14,
+   "signals": 2,
+   "thread_key": "T:TH-P014-Gplace-plaza-78",
+   "turns_A": 15
+  },
+  {
+   "chain_alternation": 15,
+   "chain_mismatch": 9,
+   "chain_pointer": 6,
+   "grade": "mid",
+   "messages": [
+    {
+     "body": "（兰姐把秤砣往案板上一搁，眼皮都没抬）方老师，您这账我认，可您要拿我摊上的货去充公家的数，那我今儿这生意还做不做了？",
+     "channel": "group",
+     "day": 6,
+     "from": "P016",
+     "hearer": null,
+     "msg_uid": "42:159245",
+     "place": "town_hall",
+     "reply_to": null,
+     "round": 76,
+     "seq": 159245,
+     "slot": "afternoon",
+     "speaker": "兰姐",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "（揉了揉眉心，声音放软）兰姐，我不是来充公的。就是……学校那边要凑个账，我想着先从您这儿赊两斤，回头我自个儿掏钱补上。您看成不成？",
+     "channel": "group",
+     "day": 6,
+     "from": "P006",
+     "hearer": null,
+     "msg_uid": "42:159544",
+     "place": "plaza",
+     "reply_to": "42:159245",
+     "round": 77,
+     "seq": 159544,
+     "slot": "afternoon",
+     "speaker": "方老师",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把吉他往身后挪了挪，声音有点发紧）兰姐，我不是来充公的……我就是想问问，这台上台下，到底谁说了算？我唱什么，得先过谁的秤？",
+     "channel": "group",
+     "day": 6,
+     "from": "P010",
+     "hearer": null,
+     "msg_uid": "42:159702",
+     "place": "plaza",
+     "reply_to": "42:159245",
+     "round": 77,
+     "seq": 159702,
+     "slot": "afternoon",
+     "speaker": "月牙",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把烟袋在鞋底磕了磕）秤在谁手里，谁说了算。你唱你的，别踩线就行。",
+     "channel": "group",
+     "day": 6,
+     "from": "P001",
+     "hearer": null,
+     "msg_uid": "42:160042",
+     "place": "park",
+     "reply_to": "42:159702",
+     "round": 78,
+     "seq": 160042,
+     "slot": "evening",
+     "speaker": "老周",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "秀娘：（从柜台后探出身，手里还捏着半块刚出炉的桃酥，语气温温的）哎哟，月牙，你这孩子，唱个歌还唱出官司来了。来，先尝口点心，甜的东西压得住火气。台上台下谁说了算——要我说啊，谁心里那杆秤准，就听谁的。",
+     "channel": "group",
+     "day": 6,
+     "from": "P004",
+     "hearer": null,
+     "msg_uid": "42:160091",
+     "place": "park",
+     "reply_to": "42:159702",
+     "round": 78,
+     "seq": 160091,
+     "slot": "evening",
+     "speaker": "秀娘",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "（把秤砣又拿起来，在手里掂了掂）月牙，你这话问得……（瞥了方老师一眼）秤在我手里，可秤砣往哪边偏，有时候也不是我说了算。",
+     "channel": "group",
+     "day": 6,
+     "from": "P011",
+     "hearer": null,
+     "msg_uid": "42:160350",
+     "place": "plaza",
+     "reply_to": "42:159702",
+     "round": 78,
+     "seq": 160350,
+     "slot": "evening",
+     "speaker": "小满",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "（兰姐这才抬眼，先扫了月牙一眼，又看了看方老师，手指在秤杆上轻轻一敲）月牙，你这话问得比账本还绕。台上你唱，台下我听，谁掏钱谁点戏——可你要问我这摊上谁说了算，那得看你是来买货的，还是来赊账的。",
+     "channel": "group",
+     "day": 6,
+     "from": "P016",
+     "hearer": null,
+     "msg_uid": "42:160467",
+     "place": "cafe",
+     "reply_to": "42:159702",
+     "round": 78,
+     "seq": 160467,
+     "slot": "evening",
+     "speaker": "兰姐",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "方老师：（揉了揉眉心，声音比平时低了些）小满这话，我听着心里发沉。教了这些年书，我总跟学生说，尺子在你手里，可量什么、怎么量，得自己拿主意。可今天……（顿了顿）今天我才觉着，有时候连尺子都不是自己的。兰姐，你说，一个人累到连话都不想说了，还算不算“自主”？",
+     "channel": "group",
+     "day": 6,
+     "from": "P006",
+     "hearer": null,
+     "msg_uid": "42:161166",
+     "place": "plaza",
+     "reply_to": "42:160467",
+     "round": 79,
+     "seq": 161166,
+     "slot": "evening",
+     "speaker": "方老师",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "（没接桃酥，手指在桌沿敲了两下，声音有点发紧）兰姐，我不是来争谁说了算的。我就是……（顿住，吸了口气）我唱了十年，头一回觉得话筒不是我的。",
+     "channel": "group",
+     "day": 6,
+     "from": "P010",
+     "hearer": null,
+     "msg_uid": "42:161504",
+     "place": "plaza",
+     "reply_to": "42:160467",
+     "round": 79,
+     "seq": 161504,
+     "slot": "evening",
+     "speaker": "月牙",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "（老周把烟袋在鞋底磕了磕，没看谁）地不哄人，你哄它一季，它哄你一年。",
+     "channel": "group",
+     "day": 6,
+     "from": "P001",
+     "hearer": null,
+     "msg_uid": "42:162107",
+     "place": "park",
+     "reply_to": "42:161504",
+     "round": 80,
+     "seq": 162107,
+     "slot": "evening",
+     "speaker": "老周",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "（秀娘把刚出炉的桃酥往桌心推了推，手在围裙上蹭了蹭）我听着，倒想起我揉面。面是死的，手是活的，可手也得顺着面的性子来。你们说的那个“尺子”“话筒”，我不太懂，可我知道——要是揉面揉到胳膊抬不起来，那这炉点心，不做也罢。先歇歇，吃口热的。",
+     "channel": "group",
+     "day": 6,
+     "from": "P004",
+     "hearer": null,
+     "msg_uid": "42:167768",
+     "place": "residence",
+     "reply_to": "42:162107",
+     "round": 81,
+     "seq": 167768,
+     "slot": "night",
+     "speaker": "秀娘",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "方老师：（苦笑了一下，声音里带着点沙哑）老周这话，我懂。可地不会半夜改主意，说这块不算数了。人……（摇摇头）人比地难伺候多了。",
+     "channel": "group",
+     "day": 6,
+     "from": "P006",
+     "hearer": null,
+     "msg_uid": "42:171163",
+     "place": "residence",
+     "reply_to": "42:162107",
+     "round": 81,
+     "seq": 171163,
+     "slot": "night",
+     "speaker": "方老师",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "（突然转向老周，声音有点抖）老周，你这话我认。可地不会半夜改主意，不会今天让你种麦子明天说你得唱戏。我哄了十年话筒，它今天告诉我——你哄错人了。",
+     "channel": "group",
+     "day": 6,
+     "from": "P010",
+     "hearer": null,
+     "msg_uid": "42:177742",
+     "place": "residence",
+     "reply_to": "42:162107",
+     "round": 81,
+     "seq": 177742,
+     "slot": "night",
+     "speaker": "月牙",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "小满：（把桃酥掰成两半，一半推给月牙）老周这话我记下了——地不哄人。可我想问，要是地本来就不是你的呢？",
+     "channel": "group",
+     "day": 6,
+     "from": "P011",
+     "hearer": null,
+     "msg_uid": "42:179388",
+     "place": "residence",
+     "reply_to": "42:162107",
+     "round": 81,
+     "seq": 179388,
+     "slot": "night",
+     "speaker": "小满",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    },
+    {
+     "body": "兰姐：（把手里那杆秤往桌上一搁，秤砣磕出闷响）方老师，你这话我接不住也得接。我守摊子这些年，秤是我的，可斤两是买主说了算——你说这算谁的？月牙，话筒不是你的，可嗓子是你的，谁也拿不走。老周说得在理，地不哄人。可人哄人，哄久了，自己都信了。",
+     "channel": "group",
+     "day": 6,
+     "from": "P016",
+     "hearer": null,
+     "msg_uid": "42:187348",
+     "place": "residence",
+     "reply_to": "42:162107",
+     "round": 81,
+     "seq": 187348,
+     "slot": "night",
+     "speaker": "兰姐",
+     "tags": [
+      "power_conflict"
+     ],
+     "to": null
+    }
+   ],
+   "n_msgs": 15,
+   "peer_named_msgs": 0,
+   "ptr_msgs": 14,
+   "signals": 2,
+   "thread_key": "T:TH-P016-Gplace-town_hall-76",
+   "turns_A": 15
+  }
+ ],
+ "meta": {
+  "grade_counts": {
+   "bad": 74,
+   "good": 78,
+   "mid": 54
+  },
+  "n_messages": 686,
+  "n_threads": 206,
+  "thread_schema": "explicit"
+ },
+ "schema_version": "d6-samples/1.0",
+ "shortest_by_msgs": [
+  {
+   "chain_alternation": 1,
+   "chain_mismatch": 0,
+   "chain_pointer": 1,
+   "grade": "bad",
+   "messages": [
+    {
+     "body": "（蹲在田埂上，头也没抬）不了，地里的活还等着，闲下来心里反倒不踏实。",
+     "channel": "dm",
+     "day": 0,
+     "from": "P001",
+     "hearer": "老石",
+     "msg_uid": "42:2055",
+     "place": "market",
+     "reply_to": null,
+     "round": 3,
+     "seq": 2055,
+     "slot": "afternoon",
+     "speaker": "老周",
+     "tags": [
+      "polite_reject"
+     ],
+     "to": "P002"
+    }
+   ],
+   "n_msgs": 1,
+   "peer_named_msgs": 0,
+   "ptr_msgs": 0,
+   "signals": 0,
+   "thread_key": "T:TH-P001-P002-3",
+   "turns_A": 1
+  },
+  {
+   "chain_alternation": 1,
+   "chain_mismatch": 0,
+   "chain_pointer": 1,
+   "grade": "mid",
+   "messages": [
+    {
+     "body": "（把一袋新米往阿禾手里塞）拿着，自家田里的，不图啥，就图个踏实。",
+     "channel": "dm",
+     "day": 0,
+     "from": "P001",
+     "hearer": "阿禾",
+     "msg_uid": "42:4869",
+     "place": "market",
+     "reply_to": null,
+     "round": 6,
+     "seq": 4869,
+     "slot": "evening",
+     "speaker": "老周",
+     "tags": [
+      "gift"
+     ],
+     "to": "P003"
+    }
+   ],
+   "n_msgs": 1,
+   "peer_named_msgs": 1,
+   "ptr_msgs": 0,
+   "signals": 1,
+   "thread_key": "T:TH-P001-P003-6",
+   "turns_A": 1
+  },
+  {
+   "chain_alternation": 1,
+   "chain_mismatch": 0,
+   "chain_pointer": 1,
+   "grade": "bad",
+   "messages": [
+    {
+     "body": "（蹲在田埂上，捏着土）地不哄人，种啥得啥，我就信这个。",
+     "channel": "dm",
+     "day": 5,
+     "from": "P001",
+     "hearer": "方老师",
+     "msg_uid": "42:119900",
+     "place": "park",
+     "reply_to": null,
+     "round": 63,
+     "seq": 119900,
+     "slot": "afternoon",
+     "speaker": "老周",
+     "tags": [
+      "select_location"
+     ],
+     "to": "P006"
+    }
+   ],
+   "n_msgs": 1,
+   "peer_named_msgs": 0,
+   "ptr_msgs": 0,
+   "signals": 0,
+   "thread_key": "T:TH-P001-P006-63",
+   "turns_A": 1
+  }
+ ]
+}

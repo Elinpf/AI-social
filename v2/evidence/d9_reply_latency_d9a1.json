@@ -1,0 +1,30 @@
+{
+ "by_channel": {
+  "dm": {
+   "1": 231,
+   "2": 136
+  },
+  "group": {
+   "1": 96,
+   "2": 17
+  }
+ },
+ "cross_thread_pointers": 0,
+ "denominator": 480,
+ "latency_eq0": 0,
+ "latency_eq1": 327,
+ "latency_eq2": 153,
+ "latency_ge3": 0,
+ "latency_rounds": {
+  "1": 327,
+  "2": 153
+ },
+ "n_msgs": 686,
+ "note_overwindow_unreplied": "「因超窗未被回复」无法直接判定：日志无「曾被看见但未回」的记录；标未验证",
+ "pointer_field": "payload.reply_to 存的是目标 msg_uid（非 msg_id）",
+ "rate_ge3": 0.0,
+ "replies": 480,
+ "resolved": 480,
+ "source": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d9_a1_n16r84_seed42/run.jsonl",
+ "unresolved_reply_to": 0
+}

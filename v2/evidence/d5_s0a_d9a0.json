@@ -1,0 +1,38 @@
+{
+ "batch_landing": null,
+ "blocking": [],
+ "head": "05636bcde2f1759b1bbc8d9eb74f43ec241be6a9",
+ "nonblocking": [
+  {
+   "path": "reports/R8-dialogue-density.md",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d9_density.py",
+   "status": "??"
+  }
+ ],
+ "nonblocking_count": 2,
+ "note": "tools/ 下无未跟踪 .py",
+ "repo": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment",
+ "rule": {
+  "hard_fail_prefixes": [
+   "code/life/",
+   "code/orchestration/",
+   "code/config/",
+   "code/engine/"
+  ],
+  "nonblocking_prefixes": [
+   "code/frontend/",
+   "reports/",
+   "v2/refs/",
+   "v2/evidence/",
+   "tools/",
+   "glossary/"
+  ],
+  "source": "leader 裁决 2026-10-20：A0 起跑的 S0a 放宽为「跑批代码树确定」"
+ },
+ "schema_version": "d5-s0a-clean-tree/1.0",
+ "tools_py_present": [],
+ "verdict": "PASS"
+}

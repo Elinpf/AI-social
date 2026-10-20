@@ -1,0 +1,320 @@
+{
+ "channel_msg_counts": {
+  "dm": 497,
+  "group": 126,
+  "public": 63
+ },
+ "n_messages": 686,
+ "n_threads": 206,
+ "per_agent_day": {
+  "dist": {
+   "histogram": {
+    "1": 1,
+    "2": 5,
+    "3": 1,
+    "4": 9,
+    "5": 11,
+    "6": 32,
+    "7": 27,
+    "8": 25
+   },
+   "max": 8,
+   "mean": 6.1802,
+   "median": 6,
+   "min": 1,
+   "n": 111,
+   "p10": 4.0,
+   "p50": 6.0,
+   "p90": 8.0,
+   "stdev": 1.6007
+  },
+  "unit": "同一 agent 在同一 day 内发出的 MSG 条数（参考，不受 max_messages_per_slot 直接约束）"
+ },
+ "per_slot": {
+  "cap2_binding_note": "all_units_le_2 = True；若为 True 且 units_at_cap2 占比高，说明 max_messages_per_slot=2 是硬约束",
+  "dist": {
+   "histogram": {
+    "1": 76,
+    "2": 305
+   },
+   "max": 2,
+   "mean": 1.8005,
+   "median": 2,
+   "min": 1,
+   "n": 381,
+   "p10": 1.0,
+   "p50": 2.0,
+   "p90": 2.0,
+   "stdev": 0.3996
+  },
+  "n_units": 381,
+  "unit": "同一 agent 在同一 (day, slot) 内发出的 MSG 条数",
+  "units_at_cap2": 305,
+  "units_eq1": 76,
+  "units_ge3": 0
+ },
+ "reply_coverage": 0.699708,
+ "source": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d2_after_n16_seed42/run.jsonl",
+ "thread_schema": "explicit",
+ "threads": {
+  "definitions": {
+   "n_msgs": "线程内 MSG 条数（说话人交替段数）",
+   "n_rounds": "线程内 turn_index 去重个数（群聊同轮多人并发只计 1 轮）；与 d5 S-1C / D7 一致",
+   "n_speakers": "线程内不同 from 的 agent 数"
+  },
+  "longest_by_msgs": {
+   "channel": "group",
+   "n_msgs": 18,
+   "n_rounds": 6,
+   "n_speakers": 8,
+   "reply_msgs": 17,
+   "speakers": [
+    "P002",
+    "P005",
+    "P007",
+    "P009",
+    "P010",
+    "P012",
+    "P014",
+    "P016"
+   ],
+   "thread_id": "TH-P009-Gplace-hall-67"
+  },
+  "longest_by_rounds": {
+   "channel": "dm",
+   "n_msgs": 6,
+   "n_rounds": 6,
+   "n_speakers": 2,
+   "reply_msgs": 5,
+   "speakers": [
+    "P001",
+    "P005"
+   ],
+   "thread_id": "TH-P001-P005-39"
+  },
+  "mean_msgs_per_thread": 3.3301,
+  "mean_roundtrip": 3.0049,
+  "n_msgs": {
+   "histogram": {
+    "1": 102,
+    "11": 1,
+    "12": 1,
+    "13": 3,
+    "15": 2,
+    "18": 1,
+    "2": 14,
+    "3": 6,
+    "4": 14,
+    "6": 62
+   },
+   "max": 18,
+   "mean": 3.3301,
+   "median": 2.0,
+   "min": 1,
+   "n": 206,
+   "p10": 1.0,
+   "p50": 2.0,
+   "p90": 6.0,
+   "stdev": 3.0605
+  },
+  "n_rounds": {
+   "histogram": {
+    "1": 102,
+    "2": 15,
+    "3": 6,
+    "4": 14,
+    "5": 1,
+    "6": 68
+   },
+   "max": 6,
+   "mean": 3.0049,
+   "median": 2.0,
+   "min": 1,
+   "n": 206,
+   "p10": 1.0,
+   "p50": 2.0,
+   "p90": 6.0,
+   "stdev": 2.2609
+  },
+  "n_speakers": {
+   "histogram": {
+    "1": 102,
+    "2": 95,
+    "5": 2,
+    "6": 5,
+    "8": 2
+   },
+   "max": 8,
+   "mean": 1.6893,
+   "median": 2.0,
+   "min": 1,
+   "n": 206,
+   "p10": 1.0,
+   "p50": 2.0,
+   "p90": 2.0,
+   "stdev": 1.1063
+  },
+  "ratio_ge3_rounds": 0.432039,
+  "ratio_ge3_speakers": 0.043689,
+  "ratio_ge6_rounds": 0.330097,
+  "threads_ge3_rounds": 89,
+  "threads_ge3_speakers": 9,
+  "threads_ge6_rounds": 68,
+  "top10_by_msgs": [
+   {
+    "channel": "group",
+    "n_msgs": 18,
+    "n_rounds": 6,
+    "n_speakers": 8,
+    "reply_msgs": 17,
+    "speakers": [
+     "P002",
+     "P005",
+     "P007",
+     "P009",
+     "P010",
+     "P012",
+     "P014",
+     "P016"
+    ],
+    "thread_id": "TH-P009-Gplace-hall-67"
+   },
+   {
+    "channel": "group",
+    "n_msgs": 15,
+    "n_rounds": 5,
+    "n_speakers": 8,
+    "reply_msgs": 14,
+    "speakers": [
+     "P002",
+     "P003",
+     "P005",
+     "P006",
+     "P010",
+     "P012",
+     "P014",
+     "P016"
+    ],
+    "thread_id": "TH-P014-Gplace-plaza-78"
+   },
+   {
+    "channel": "group",
+    "n_msgs": 15,
+    "n_rounds": 6,
+    "n_speakers": 6,
+    "reply_msgs": 14,
+    "speakers": [
+     "P001",
+     "P004",
+     "P006",
+     "P010",
+     "P011",
+     "P016"
+    ],
+    "thread_id": "TH-P016-Gplace-town_hall-76"
+   },
+   {
+    "channel": "group",
+    "n_msgs": 13,
+    "n_rounds": 6,
+    "n_speakers": 6,
+    "reply_msgs": 12,
+    "speakers": [
+     "P001",
+     "P004",
+     "P011",
+     "P012",
+     "P014",
+     "P015"
+    ],
+    "thread_id": "TH-P012-Gplace-market-64"
+   },
+   {
+    "channel": "group",
+    "n_msgs": 13,
+    "n_rounds": 6,
+    "n_speakers": 5,
+    "reply_msgs": 12,
+    "speakers": [
+     "P003",
+     "P009",
+     "P010",
+     "P012",
+     "P014"
+    ],
+    "thread_id": "TH-P012-Gplace-school-73"
+   },
+   {
+    "channel": "group",
+    "n_msgs": 13,
+    "n_rounds": 6,
+    "n_speakers": 5,
+    "reply_msgs": 12,
+    "speakers": [
+     "P005",
+     "P006",
+     "P012",
+     "P013",
+     "P016"
+    ],
+    "thread_id": "TH-P013-Gplace-library-61"
+   },
+   {
+    "channel": "group",
+    "n_msgs": 12,
+    "n_rounds": 6,
+    "n_speakers": 6,
+    "reply_msgs": 11,
+    "speakers": [
+     "P002",
+     "P004",
+     "P005",
+     "P006",
+     "P012",
+     "P013"
+    ],
+    "thread_id": "TH-P004-Gplace-market-76"
+   },
+   {
+    "channel": "group",
+    "n_msgs": 11,
+    "n_rounds": 6,
+    "n_speakers": 6,
+    "reply_msgs": 10,
+    "speakers": [
+     "P002",
+     "P003",
+     "P005",
+     "P010",
+     "P011",
+     "P015"
+    ],
+    "thread_id": "TH-P015-Gplace-town_hall-64"
+   },
+   {
+    "channel": "dm",
+    "n_msgs": 6,
+    "n_rounds": 6,
+    "n_speakers": 2,
+    "reply_msgs": 5,
+    "speakers": [
+     "P001",
+     "P005"
+    ],
+    "thread_id": "TH-P001-P005-39"
+   },
+   {
+    "channel": "dm",
+    "n_msgs": 6,
+    "n_rounds": 6,
+    "n_speakers": 2,
+    "reply_msgs": 5,
+    "speakers": [
+     "P001",
+     "P007"
+    ],
+    "thread_id": "TH-P001-P007-28"
+   }
+  ]
+ }
+}
