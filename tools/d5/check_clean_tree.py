@@ -36,6 +36,8 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="S0a 代码树干净度判定（放宽口径）")
     ap.add_argument("--repo", default=None, help="仓库路径，默认由脚本位置推断")
     ap.add_argument("--out", default=None, help="输出 JSON 路径")
+    ap.add_argument("--batch-landing-sha", default=None,
+                    help="跑批起跑时的 landing commit；给出则校验 landing..HEAD 在代码路径上无差异（FAIL 级）")
     args = ap.parse_args(argv)
 
     cwd = args.repo or os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -63,7 +65,27 @@ def main(argv=None) -> int:
 
     # 检查非阻断区里是否有 .py（可能影响 import 链）
     py_risk = [r for r in nonblocking if r["path"].endswith(".py") and r["path"].startswith("tools/")]
-    verdict = "FAIL" if blocking else "PASS"
+    # ---- batch landing sha vs HEAD：代码路径必须无差异（FAIL 级）
+    landing = None
+    if args.batch_landing_sha:
+        try:
+            diff_paths = run(["git", "diff", "--name-only",
+                              f"{args.batch_landing_sha}..HEAD",
+                              "--", "code/life", "code/orchestration", "code/config", "code/engine"],
+                             cwd).split()
+        except Exception as e:  # noqa: BLE001
+            diff_paths = []
+            landing = {"error": str(e)}
+        landing = landing or {}
+        landing.update({
+            "batch_landing_sha": args.batch_landing_sha,
+            "head": head,
+            "code_paths_changed": diff_paths,
+            "ok": len(diff_paths) == 0,
+            "rule": "跑批期间 code/{life,orchestration,config,engine} 不得有任何提交，否则 meta.code_sha 与实际执行代码可能不一致",
+        })
+
+    verdict = "FAIL" if (blocking or (landing and not landing.get("ok", True))) else "PASS"
     res: Dict[str, Any] = {
         "schema_version": "d5-s0a-clean-tree/1.0",
         "rule": {
@@ -77,6 +99,7 @@ def main(argv=None) -> int:
         "tools_py_present": py_risk[:20],
         "note": ("tools/ 下存在未跟踪 .py：需人工确认其不在 code/life 的 import 链上"
                  if py_risk else "tools/ 下无未跟踪 .py"),
+        "batch_landing": landing,
         "verdict": verdict,
     }
     out = json.dumps(res, ensure_ascii=False, indent=1, sort_keys=True)
