@@ -73,6 +73,8 @@
 | A0 | 新结构 / **必要适配提示词** | 待填 | 待填（**须 ≠ v0-anchor**，差异须逐项落在成分边界表内） | 待填 | 待填 | 待填 |
 | A1 | A0 + 措辞层优化 | 待填 | 待填（**须 ≠ A0**，diff 仅落在 `_dialogue_prompt`/`_reply_prompt`） | 待填 | 待填 | 待填 |
 
+> **跑批树未被报告提交影响（可复算断言，非口头保证）**：`git diff --stat aeb3243..HEAD -- code/life code/orchestration code/config code/engine` **输出为空**。核对时刻 `2026-10-20 18:03–18:04`，核对时 HEAD = `3de31eb`（此后 HEAD 继续前进不影响本断言的可复算性——按上式重跑即可复核）。**归属**：核验方独立核对（首次），撰写方于 `3de31eb` 处复跑一次结果一致。⇒ **A0 实际执行代码 == landing commit `aeb3243`**。
+
 > 填表纪律：`code_sha` 与 `prompt_sha` 从该臂 `meta.json` 读取；填表时重新 `sha256sum` 校验，不沿用骨架旧值。
 >
 > **判据（三条硬验，别按旧定义校验）**：① `prompt_sha(v0-anchor) ≠ prompt_sha(A0)`，差异须逐项落在「消融成分边界表」的 D2 提示词改动上（**表外差异 ⇒ 未声明改动 ⇒ 降级**）

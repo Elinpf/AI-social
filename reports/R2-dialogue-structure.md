@@ -54,6 +54,8 @@
 | A0 | 新结构 / 必要适配提示词 | 待填 | 待填 | 待填 | 待填 |
 | A1 | A0 + 措辞层优化 | 待填 | 待填 | 待填 | 待填 |
 
+> **跑批树未被报告提交影响（可复算断言，非口头保证）**：`git diff --stat aeb3243..HEAD -- code/life code/orchestration code/config code/engine` **输出为空**。核对时刻 `2026-10-20 18:03–18:04`，核对时 HEAD = `3de31eb`（此后 HEAD 继续前进不影响本断言的可复算性——按上式重跑即可复核）。**归属**：核验方独立核对（首次），撰写方于 `3de31eb` 处复跑一次结果一致。⇒ **A0 实际执行代码 == landing commit `aeb3243`**。
+
 > 填表纪律：`code_sha` 与 `run.jsonl` sha 一律从该臂 `meta.json` 读取后填入，**不得填 `git rev-parse HEAD` 的当前值**；填表时重新 `sha256sum` 校验一次，防止沿用骨架旧值。
 >
 > **注意**：`prompt_sha(v0-anchor)` 与 `prompt_sha(A0)` **本就不同**（A0 含显示名/称谓注入与 `_reply_prompt` 承接装配等必要适配），差异须能逐项归因；能归因即正常对照，不叫「作废」。
