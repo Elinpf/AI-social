@@ -1,19 +1,19 @@
 {
-  "_comment": "世界 AI 导演 v1（WD）配置：独立总开关 + 每机制开关 + 剂量曲线（conservative/moderate/aggressive）。全部整数（概率=万分比 bp；规模/时长=整数）。纳入 engine_version 指纹。T255：默认 enabled=true（用户 #4/#5 要『世界导演真的产生宏观群体事件』）；保底(b) 消融仍成立——改回 false 即 0 事件。",
+  "_comment": "世界 AI 导演 v1（WD）配置：独立总开关 + 每机制开关 + 剂量曲线（conservative/moderate/aggressive）。全部整数（概率=万分比 bp；规模/时长=整数）。纳入 engine_version 指纹。T255：默认 enabled=true（用户 #4/#5 要『世界导演真的产生宏观群体事件』）；保底(b) 消融仍成立——改回 false 即 0 事件。D8-A/B（batch-runner, 2026-10-21）：dose_curve 由 conservative 抬到 aggressive，并打开 8 个 prob_bp>0 机制（刻意抬高剂量，只为让『世界事件进对话』有足够机会发生；两臂此文件逐字相同，开关差异只走 env HITT_WORLD_AWARENESS）。",
   "version": "1.0",
   "enabled": true,
   "propagate": {"enabled": true},
-  "dose_curve": "conservative",
+  "dose_curve": "aggressive",
   "K_warn": 3,
   "mechanisms": {
     "wd.festival":     {"kind": "festival",     "enabled": true,  "dose": {"prob_bp": 100, "capacity": 40, "slots": 3}},
     "wd.edict":        {"kind": "edict",        "enabled": true,  "dose": {"prob_bp": 50,  "slots": 6}},
     "wd.tension":      {"kind": "tension",      "enabled": true,  "dose": {"prob_bp": 80,  "scarcity_bp": 2000, "slots": 6}},
-    "wd.visitor":      {"kind": "visitor",      "enabled": false, "dose": {"prob_bp": 40,  "count": 2, "slots": 6}},
-    "wd.supply_shock": {"kind": "supply_shock", "enabled": false, "dose": {"prob_bp": 40,  "amp_bp": 3000, "weeks": 1}},
-    "wd.disaster":     {"kind": "disaster",     "enabled": false, "dose": {"prob_bp": 10,  "severity": 1, "places": 1}},
-    "wd.epidemic":     {"kind": "epidemic",     "enabled": false, "dose": {"prob_bp": 10,  "reach_bp": 1000}},
-    "wd.public_works": {"kind": "public_works", "enabled": false, "dose": {"prob_bp": 30,  "resources": 10}},
+    "wd.visitor":      {"kind": "visitor",      "enabled": true,  "dose": {"prob_bp": 40,  "count": 2, "slots": 6}},
+    "wd.supply_shock": {"kind": "supply_shock", "enabled": true,  "dose": {"prob_bp": 40,  "amp_bp": 3000, "weeks": 1}},
+    "wd.disaster":     {"kind": "disaster",     "enabled": true,  "dose": {"prob_bp": 10,  "severity": 1, "places": 1}},
+    "wd.epidemic":     {"kind": "epidemic",     "enabled": true,  "dose": {"prob_bp": 10,  "reach_bp": 1000}},
+    "wd.public_works": {"kind": "public_works", "enabled": true,  "dose": {"prob_bp": 30,  "resources": 10}},
     "wd.season":       {"kind": "season",       "enabled": false, "dose": {"len_slots": 21, "drift_bp": 1000}},
     "wd.mass_event":   {"kind": "mass_event",   "enabled": false, "dose": {"prob_bp": 0}}
   }
