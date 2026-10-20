@@ -42,6 +42,19 @@
 
 ## 2. 改造内容
 
+### 2.1 臂身份表（每臂的代码版本，**不写 master HEAD**）
+
+**【事实 · 待填】** 复现某一批数据要用**那一批当时跑的代码**，不是当前主分支。三臂的 `code_sha` 一律取该臂 `meta.json.code_sha`：
+
+| 臂 | 结构 / 提示词 | `code_sha`（臂 commit） | `run.jsonl` sha256（sha8） | `provider` / `model` | `admission.verdict` |
+|---|---|---|---|---|---|
+| v0-anchor | 旧 / 旧 | 待填 | 待填 | 待填 | 待填 |
+| A0 | 新 / 旧 | 待填 | 待填 | 待填 | 待填 |
+| A1 | 新 / 新 | 待填 | 待填 | 待填 | 待填 |
+
+> 填表纪律：`code_sha` 与 `run.jsonl` sha 一律从该臂 `meta.json` 读取后填入，**不得填 `git rev-parse HEAD` 的当前值**；填表时重新 `sha256sum` 校验一次，防止沿用骨架旧值。
+
+
 **【事实】** 改造只在对话路径上做**受控解冻**（范围与四条前提见 R1 §5），方式是**只追加字段、不新增事件类型**：在 `MSG_DM` / `MSG_PUBLIC` / `MSG_GROUP` 的 payload 上增加线程字段——`thread_id`、`turn_index`、`reply_to`、`participants`、`ctx`（关系/情绪/需求/话题）。
 
 **【事实】** `thread_id` 在生成侧保证全局唯一，按渠道区分：
