@@ -63,7 +63,7 @@
     data: null,
     threads: [],        // 原始线程（已按时间排序）
     flat: [],           // 扁平化消息（全序），元素 {t: threadIndex, m: msg}
-    filters: { multiOnly: true, person: "", place: "", minTurns: 0, search: "" },
+    filters: { multiOnly: true, person: "", place: "", minTurns: 0, search: "", sort: "time" },
     speed: 1,
     playing: false,
     cursor: 0,
@@ -152,8 +152,13 @@
     if (q.get("multi") === "1") state.filters.multiOnly = true;
     if (q.get("multi") === "0") state.filters.multiOnly = false;
     if (q.get("q")) state.filters.search = q.get("q");
+    if (q.get("sort") === "turns" || q.get("sort") === "time") state.filters.sort = q.get("sort");
 
     var st = data.stats || {};
+    // 多轮线程很少时（<=24），默认「按轮次排序」：让人一眼看到最长的几条，而不是自己筛
+    var multN = (data.stats || {}).multi_turn_threads || 0;
+    if (!q.get("sort") && multN > 0 && multN <= 24) state.filters.sort = "turns";
+
     // 旧格式日志：默认关掉「只看多轮」，否则页面是空的（空态提示见 notice）
     if (!st.multi_turn_threads && st.legacy_messages) {
       state.filters.multiOnly = false;
@@ -448,6 +453,7 @@
     document.getElementById("f-place").value = f.place || "";
     document.getElementById("f-turns").value = String(f.minTurns || 0);
     document.getElementById("f-search").value = f.search || "";
+    document.getElementById("f-sort").value = f.sort || "time";
     document.querySelectorAll("#quick .chip").forEach(function (c) {
       c.classList.toggle("on", (c.getAttribute("data-multi") === "1") === !!f.multiOnly);
     });
@@ -600,6 +606,16 @@
       if (state.cursor < state.flat.length && visibleCount(i) === 0) return;
       out.push(i);
     });
+    if (state.filters.sort === "turns") {
+      out.sort(function (x, y) {
+        var a = state.threads[x], b = state.threads[y];
+        if (b.turns !== a.turns) return b.turns - a.turns;              // 轮次多的在前
+        var ar = a.start_round == null ? 1e9 : a.start_round;
+        var br = b.start_round == null ? 1e9 : b.start_round;
+        if (ar !== br) return ar - br;
+        return ((a.messages[0] || {}).seq || 0) - ((b.messages[0] || {}).seq || 0);
+      });
+    }
     return out;
   }
 
@@ -628,6 +644,14 @@
 
     var idxs = filteredThreads();
     if (!state.data) return;
+    if (state.filters.sort === "turns" && idxs.length > 1) {
+      var top = state.threads[idxs[0]];
+      notice.appendChild(el("div", {
+        class: "notice", style: "border-color:rgba(92,200,255,0.4);background:rgba(92,200,255,0.08);color:#b9e6ff",
+        text: "已按「轮次」排序：先看最长的线程（当前最长 " + top.turns + " 轮，"
+            + (top.participants || []).map(agentShort).join(" ⇄ ") + "）。想看时间顺序请在左侧「排序」切换。"
+      }));
+    }
     if (!idxs.length) {
       showEmpty(
         state.threads.length ? "当前筛选下没有线程。" : "该日志里没有任何对话事件（MSG_DM / MSG_PUBLIC / MSG_GROUP）。",
@@ -1006,6 +1030,9 @@
     });
     document.getElementById("f-turns").addEventListener("change", function (e) {
       state.filters.minTurns = Number(e.target.value) || 0; render(); renderStats();
+    });
+    document.getElementById("f-sort").addEventListener("change", function (e) {
+      state.filters.sort = e.target.value; render(); renderStats();
     });
     document.getElementById("f-search").addEventListener("input", function (e) {
       state.filters.search = e.target.value.trim(); render(); renderStats();
