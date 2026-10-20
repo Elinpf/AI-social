@@ -558,9 +558,12 @@ print('rounds',r,'seals',len(seals),'range',seals[0],seals[-1],'OK' if seals==li
 | 数据集 | run_label | 日志 sha256 | 事件 / 消息 | 格式 | 说明 |
 |---|---|---|---|---|---|
 | `sample/dialogue_v0anchor_n16_seed42/threads.json` | `run_d2_before_n16_seed42-c1f86bf6` | `c1f86bf61f62b3a0ce8e17e0c2312791cf0262381cd2120c2a63c9b6258963cf` | 186,972 / 187 | 旧格式（无 thread_id） | **v0-anchor 真 LLM 跑批**（n=16 × 84 回合 × seed=42，provider `openai_compat`，meta 已对齐：seed/code_sha=`dc93c9d…`） |
+| `sample/dialogue_run_d2_after_n16_seed42/threads.json` | `run_d2_after_n16_seed42-643f13a5` | `643f13a528c288d3e9677cb8ac100139224afbd0b46c0f7da0c3a5ed85b13141` | 194,108 / 686 | **`explicit`（多轮线程 104，最长 18 轮）** | **D2 线程化改造后**（n=16 × 84 × seed=42，`TURN_SEAL` 84 条覆盖 0..83，meta 已对齐） |
 | `sample/dialogue_demo/threads.json` | `run_p1_final_n20_llm-fb832372` | `fb832372af235736b78e539ab676feff08c3e94e79ffcdbe0dc4b5d88b13a2fc` | 128,564 / 231 | 旧格式 | 历史真 LLM 日志（n=20 × 84），无 meta.json → 页面 provider 列取自日志 `LLM_CALL.provider` |
 
-打开方式：`http://127.0.0.1:8848/dialogue.html?data=sample/dialogue_v0anchor_n16_seed42/threads.json`
+打开方式：
+- 改造前：`http://127.0.0.1:8848/dialogue.html?data=sample/dialogue_v0anchor_n16_seed42/threads.json`
+- 改造后：`http://127.0.0.1:8848/dialogue.html?data=sample/dialogue_run_d2_after_n16_seed42/threads.json`
 
 > 这两份都是**真实跑批的派生数据**（不是手写样例）。D2 线程化改造落地后，会新增一份带
 > `thread_id/turn_index/reply_to/ctx` 的数据集，页面「只看多轮」才会有结果。
