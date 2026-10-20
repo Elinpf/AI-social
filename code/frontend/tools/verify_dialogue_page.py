@@ -62,9 +62,24 @@ def find_body_in_run(run_path: Path, targets: set[int]) -> dict[int, dict]:
     return out
 
 
+def normalize_base(url: str) -> str:
+    """把 `http://h/dialogue.html?x=1` 规范成 `http://h`（避免拼成 dialogue.html/dialogue.html）。"""
+    from urllib.parse import urlsplit, urlunsplit
+    parts = urlsplit(url.strip())
+    path = parts.path or ""
+    if path.endswith(".html"):
+        path = path.rsplit("/", 1)[0]
+    elif path.endswith("/"):
+        path = path[:-1]
+    return urlunsplit((parts.scheme or "http", parts.netloc, path, "", "")).rstrip("/")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--base-url", default="http://127.0.0.1:8848")
+    ap.add_argument("--base-url", default="http://127.0.0.1:8848",
+                    help="站点根（传成 .../dialogue.html 也能自动规范化）")
+    ap.add_argument("--ready-timeout", type=float, default=15000,
+                    help="等待 __RENDER_READY__ 的毫秒数（默认 15s，失败即 fail-fast，不干等）")
     ap.add_argument("--data", default="sample/dialogue_demo/threads.json",
                     help="相对 code/frontend 的 threads.json 路径（页面 ?data= 用）")
     ap.add_argument("--run", default=None, help="真源 run.jsonl（给了就做第 3 级逐字追溯）")
@@ -75,12 +90,12 @@ def main() -> int:
     try:
         from playwright.sync_api import sync_playwright
     except Exception as e:  # noqa: BLE001
-        print("SKIP: 未安装 playwright（依赖缺失）:", e)
+        print("SKIP（未执行，不算通过）: 未安装 playwright（依赖缺失）:", e)
         return 3
     try:
         from _chrome import find_chrome
     except Exception:  # noqa: BLE001
-        print("SKIP: 缺少 tools/_chrome.py")
+        print("SKIP（未执行，不算通过）: 缺少 tools/_chrome.py")
         return 3
     if a.chrome:
         import os
@@ -95,7 +110,10 @@ def main() -> int:
         if not cond:
             fails.append(msg)
 
-    url = f"{a.base_url}/dialogue.html?still=1&multi=0&min=0&data={a.data}"
+    base = normalize_base(a.base_url)
+    if base != a.base_url.rstrip("/"):
+        print(f"  note- --base-url 已规范化：{a.base_url} → {base}")
+    url = f"{base}/dialogue.html?still=1&multi=0&min=0&data={a.data}"
     print(f"[1/3] 打开 {url}")
     with sync_playwright() as p:
         b = p.chromium.launch(executable_path=find_chrome(), args=["--no-sandbox"])
@@ -103,8 +121,22 @@ def main() -> int:
             pg = b.new_page(viewport={"width": 1280, "height": 900})
             errs: list[str] = []
             pg.on("pageerror", lambda e: errs.append(str(e)))
-            pg.goto(url, wait_until="load", timeout=60000)
-            pg.wait_for_function("() => window.__RENDER_READY__ === true", timeout=60000)
+            resp = pg.goto(url, wait_until="load", timeout=30000)
+            ok(resp is not None and resp.status < 400,
+               f"页面 HTTP 可访问（status={getattr(resp, 'status', 'n/a')}）")
+            if resp is None or resp.status >= 400:
+                return 1        # 404/500 立即失败，不干等 ready 超时
+            try:
+                pg.wait_for_function("() => window.__RENDER_READY__ === true",
+                                     timeout=int(a.ready_timeout))
+            except Exception:  # noqa: BLE001 — fail fast，并打印实际 URL/标题，别让人干等
+                title = ""
+                try:
+                    title = pg.title()
+                except Exception:  # noqa: BLE001
+                    pass
+                ok(False, f"页面未就绪（{a.ready_timeout:.0f}ms 超时）：url={url} title={title!r}")
+                return 1
             pg.wait_for_timeout(300)
             ok(not errs, f"页面无 JS 异常（pageerror={errs}）")
             st = pg.evaluate("() => window.__DIALOGUE__ || null")
@@ -139,7 +171,7 @@ def main() -> int:
                            f"seq #{r['seq']} msg_id 一致（{m.get('msg_id')}）")
 
             # ---- 反假可用 A：坏路径不得静默回退 ----
-            bad = pg.goto(f"{a.base_url}/dialogue.html?still=1&data=sample/__nope__/threads.json",
+            bad = pg.goto(f"{base}/dialogue.html?still=1&data=sample/__nope__/threads.json",
                           wait_until="load", timeout=60000)
             pg.wait_for_timeout(600)
             bad_count = pg.eval_on_selector_all("#thread-list .msg[data-seq]", "e => e.length")
@@ -148,9 +180,10 @@ def main() -> int:
             ok(empty_visible, "坏路径显示明确错误/空态（不是静默回退缓存）")
 
             # ---- 反假可用 B：旧格式日志不白屏 ----
-            grid = pg.goto(f"{a.base_url}/dialogue.html?still=1&multi=0&min=0&data={a.data}",
+            grid = pg.goto(f"{base}/dialogue.html?still=1&multi=0&min=0&data={a.data}",
                            wait_until="load", timeout=60000)
-            pg.wait_for_function("() => window.__RENDER_READY__ === true", timeout=60000)
+            pg.wait_for_function("() => window.__RENDER_READY__ === true",
+                                 timeout=int(a.ready_timeout))
             fmt = pg.evaluate("() => document.documentElement.getAttribute('data-format')")
             ok(fmt in ("legacy", "threaded"), f"data-format 可判读（{fmt}）")
             ok(grid is not None, "旧/新格式页面均正常加载（无白屏）")
