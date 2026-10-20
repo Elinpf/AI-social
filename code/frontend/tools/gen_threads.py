@@ -415,8 +415,12 @@ def build(log_path: Path, meta_path: Path | None, personas: dict, places: dict,
         except Exception as e:  # noqa: BLE001 — 元信息坏了就如实标注，不阻塞
             meta = {"_error": f"meta.json 解析失败: {e}"}
 
+    thread_schema = ("explicit" if threaded and not legacy
+                     else "legacy" if legacy and not threaded
+                     else "mixed" if threaded and legacy else "none")
     return {
         "schema": SCHEMA,
+        "thread_schema": thread_schema,
         "generated_by": "frontend/tools/gen_threads.py",
         "generator_sha256": sha256_file(Path(__file__)),
         "source": {

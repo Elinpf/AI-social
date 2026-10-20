@@ -486,6 +486,15 @@
     q("src-seed").textContent = fmtNum(meta.seed);
     q("src-events").textContent = fmtNum(s.events_total_in_log);
     q("src-msgs").textContent = fmtNum((data.stats || {}).messages);
+    var sch = data.thread_schema || null;
+    if (!sch) {
+      var st0 = data.stats || {};
+      sch = (st0.threaded_messages && st0.legacy_messages) ? "mixed"
+          : st0.threaded_messages ? "explicit" : (st0.legacy_messages ? "legacy" : "none");
+    }
+    q("src-schema").textContent = ({ explicit: "explicit（多轮线程）", legacy: "legacy（旧格式单发）",
+                                     mixed: "mixed（新旧混合）", none: "none（无对话）" })[sch] || sch;
+    q("src-schema").title = "thread_schema：" + sch + "（决定『只看多轮』是否会有结果）";
     var note = q("src-note");
     if (meta.provider || s.llm_provider_in_log) {
       note.textContent = "· meta 已对齐";
@@ -661,6 +670,7 @@
       && !((state.data && state.data.stats) || {}).threaded_messages ? "legacy" : "threaded");
     window.__DIALOGUE__ = {
       schema: (state.data && state.data.schema) || null,
+      threadSchema: (state.data && state.data.thread_schema) || null,
       source: (state.data && state.data.source) || null,
       stats: (state.data && state.data.stats) || null,
       filters: JSON.parse(JSON.stringify(state.filters)),
