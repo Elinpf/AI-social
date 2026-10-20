@@ -99,7 +99,7 @@
 
 **【未完成】** 等 D2 两臂锁 sha。表头已固定，禁止事后加列：
 
-| 指标 | v0（legacy） | A0/A1（explicit） | 分母 | band_source | 判定 |
+| 指标 | v0-anchor（legacy） | A0 / A1（explicit） | 分母 | band_source | 判定 |
 |---|---|---|---|---|---|
 | 单条线程占比 | 91.51%（n=212） | 待填 | 待填 | 待估（per-thread） | 仅描述 |
 | 多轮线程占比（turns_A ≥ 3） | 0.00%（n=212） | 待填 | 待填 | `rule-of-three(3/n)` | 仅描述 |
