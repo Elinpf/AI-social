@@ -376,6 +376,32 @@ pgrep -fa "orchestration[ ]run"    # 期望：空输出（rc=1）
 ### 7.1 已证实（可跨臂引用的事实层）
 
 - **唯一变量认定（C-6 限定写法）**：分支 `feat/dialogue-density` **相对 master `371772e`** 仅改 `code/life/dialogue_threads.py:30` 一行，`code/config/` 零改动（`git diff --stat` 双证）。**此项与读数无关，独立成立。** ⚠️ 但两臂 `code_sha`（`884f4541` vs `05636bc`）之间隔 **11 个 commit**，"唯一变量"只成立于"相对 master 的 diff"这一层，不等于"两臂 code_sha 之间只差一个文件"（见 `d9-readings.md` C-6）。
+
+- **【本轮新增 · 把 C-6 钉死】`884f4541..05636bc` 区间的逐条性质清单（两臂之间到底改了什么）**
+  先纠正数量：`git rev-list --count 884f4541..05636bc` = **36 个 commit**（不是 11；`d9-verify` 报告里的"11 个 commit"这一数字不准确，以本节实测为准，其余结论不受影响）。
+  按"是否触及结构性路径"分类（结构性路径 = `code/life/`、`code/engine/`、`code/config/`、`code/orchestration/`、`code/contracts/`）：
+
+  | 类别 | commit 数 | 具体 commit | 是否触及结构性路径 |
+  |---|---|---|---|
+  | **仅文档/证据/指标脚本** | **32** | `fdb541d 9ced3de 92b3602 7b6846d ce1aa6c 5f7752d e1a58d8 0bd7bd4 2090287 dff515d cbae53e 297fee4 b21042b d710a44 b9a883d 75344f7 01265e2 60d9d47 f791dc2 34fa484 09a22b5 3b7afe6 2fc8831 e9ce0cf b70357a 125d955 60ecd51 588dcd9 2773784 f713e68 0f15e00 371772e` | **否**（`reports/`、`v2/`、`tools/`、`experiments/`） |
+  | **仅前端** | **3** | `6ce44f9`（线程头 N 条/M 轮 + turn_index 重复标记）、`362ace7`（`code/frontend/tools/dialogue_compare.py` 对照表）、`ed08e0a`（世界事件筛选 + `gen_threads.py`/`threads.json`） | **否**（全在 `code/frontend/`，只影响渲染/对照，不进跑批路径） |
+  | **触及结构性路径** | **1** | `05636bc`（**即本轮变量本身**）：`code/life/dialogue_threads.py:30` `reply_window_rounds` 2→4 | **是，但只这一行** |
+
+  ```bash
+  git rev-list --count 884f4541..05636bc                      # 36
+  git log --oneline 884f4541..05636bc -- code/ | cat          # 仅 4 条：05636bc + ed08e0a + 362ace7 + 6ce44f9
+  git diff 884f4541..05636bc -- code/life/ | cat              # 只有 reply_window_rounds 一行 +/-（配额/轮数常量未动）
+  for d in code/engine code/config code/orchestration code/contracts; do \
+      printf "%-22s %s\n" "$d" "$(git diff 884f4541..05636bc -- $d | wc -l)"; done   # 四目录均 0 行
+  git show 884f4541:code/life/dialogue_threads.py | grep -n "max_messages_per_slot\|max_turns\|reply_window_rounds"
+  # 27: max_turns 6   28: max_turns_per_round 2   29: max_messages_per_slot 2   30: reply_window_rounds 2
+  grep -n "max_messages_per_slot\|max_turns\|reply_window_rounds" code/life/dialogue_threads.py
+  # 27/28/29 三行与 A0 逐字相同；只有 30 行 2→4
+  ```
+
+  **结论（按判据取强支）**：36 个 commit 里 **35 个不触及任何结构性路径**，唯一触及的那个就是变量本身，且**只动 `reply_window_rounds` 一行**；`max_messages_per_slot=2`、`max_turns=6`、`max_turns_per_round=2`、`code/engine`（调度/时间模型）、`code/config`（配额/参数）、`code/orchestration`（内层窗注入点）两臂**逐字相同**。
+  ⇒ 可加强为：**两臂的对话结构代码等价（结构性四目录零 diff + 配额常量逐字相同），因此结构层十项读数逐项相同可归因于 `reply_window_rounds` 在本配置下没有作用对象**（叠加 §2.3 的恒等式解释：外层感知窗 2 已把候选集截断）。**不必**降级为"归因存在混杂"。
+  ⚠️ 限制仍然保留：前端 3 个 commit（只影响渲染/对照脚本）与 32 个文档/证据 commit 说明"两臂之间不是只有一个文件在变"，只是**变化不落在结构性路径**上；引用本条时不要简写成"两臂只差一个文件"。
 - **结构层十项读数两臂逐项相同 ⇒「已证实无差异」**：`686 消息 / 206 线程 / 顶格 305 of 381 / ≥3 轮 89 / ≥6 轮 68 / ≥3 发言者 9 / 延迟 327-153-480 / ≥3 回合 0 / 平均往返 3.0049 / 条数分布`（§2.2 全表，分母 206 线程 + 480 配对 + 381 单位）。按 §3.2 判据，**无差异是存在性事实，不依赖分母大小**；表述限定在本配置（感知窗 2）/ 本规模（n16r84 seed42）/ 本 seed 内，并配 §2.3 的机制解释。
 - **发出量封顶在 `max_messages_per_slot=2`**：381 个 `(agent,day,slot)` 单位中 305 个顶格 2 条（80.05%）、**0 个 ≥3**（两臂相同）——这是"密度天花板不在回复窗"的**计数型事实**。
 - **正文层不是同一批**：两臂正文仅 35/686 同位相同、唯一正文交集 34 条、`dialogue` 提示词逐位相同仅 248/714（34.7%）⇒ 结构相同不能读成"跑重了"（`d9-readings.md` §7 可复算）。
@@ -412,11 +438,11 @@ pgrep -fa "orchestration[ ]run"    # 期望：空输出（rc=1）
 | 4b | **A0 可作行为基线的依据：`884f454..371772e` 的 `code/` 差异仅限 `code/frontend/`（7 条目 / 源码 5 个），`code/life/`、`code/orchestration/`、`code/config/`、`code/engine/` 零命中** | 事实（代码漂移审计） | 两个 commit：`884f4541b80e5343119b51bf94054b2f54dd4559`（A0 `code_sha`）与 `371772e1dfe6cb078777b6ffcbe20e116791a03e`（master HEAD） | TODO（源码随提交变动） | TODO（源码随提交变动） | `git diff --stat 884f4541..371772e -- code/`；`git diff --stat 884f4541..371772e -- code/life/ code/orchestration/ code/config/ code/engine/`（空输出） |
 | 5 | 两臂读数（结构层十项逐项相同 + 措辞层方向性变化）：A0 `686/206/305-of-381/89/68/9/327-153-480/≥3=0`；D9 同；L-2 0.819242→0.810496、L-3 0.860058→0.846939、L-5 0.018950→0.021866（反向）、L-6 0.099125→0.090379、L-7 335/686 两侧相同但 jaccard 0.5581 | 读数 | `v2/evidence/d5_metrics_d9a0.{json,md}` + `d5_metrics_d9a1.{json,md}` + `d9_density_d9a0/d9a1.json` + `d9_reply_latency_a0/d9a1.json`；唯一引用源 `reports/d9-readings.md` | A0 `d5_metrics` = `a2b55e21831a65ae…`；D9 `d5_metrics` = `54ada834d81527ba…`；D9 密度 = `92ad7a51a86215fb…`；D9 延迟 = `e11b79fe087fcf9e…` | `a2b55e21` / `54ada834` / `92ad7a51` / `e11b79fe` | `python3 tools/d5/dialogue_metrics.py --log <run.jsonl> --meta <meta.json> --out-json …`；`d9_density.py`；`d9_reply_latency.py`（命令见 `d9-readings.md` §1） |
 | 5b | **D9 臂身份与验真**：`code_sha=code_sha_end=05636bc`、n16 r84 seed42、`provider={openai_compat:3403}`、`cached 1729`、`degraded 0`、`fallback_detected=false`、events 194126、`duration_sec 5239`；`obs llm-cost` RC=0、`provider_guard.ok=true` | 事实（run 元数据 + 验真） | `v2/evidence/run_d9_a1_n16r84_seed42/meta.json`（`f9ba950a`）+ `llmcost.json`（`ecfe861d`）；`run.jsonl` **不入库**（`.gitignore:8`），sha256 `abefdf73ca239cda…f427`（91,343,119 B） | `meta.json` = `f9ba950acbcc653d91ec2e5d8b2237895916e96d5385c17daf0b558ce539c3d4`；`llmcost.json` = `ecfe861dc5a5a2a2…` | `f9ba950a` / `ecfe861d` | `sha256sum v2/evidence/run_d9_a1_n16r84_seed42/{meta.json,llmcost.json}`；`cd code && python3 -m obs llm-cost --log ../v2/evidence/run_d9_a1_n16r84_seed42/run.jsonl --require-provider openai_compat` |
-| 6 | 【占位，待 `d9-shots-push` 回填】D9 四视图真实截图（chat/rhythm/spread/600），来源 run 目录 = `v2/evidence/run_d9_a1_n16r84_seed42/`（日志 `abefdf73…`）；A0 既有 `d7_shots/` 四图**仅作对照**，两批不同源 | 事实（证据） | `v2/evidence/d9_shots/<view>-abefdf73.png`（待产出） | 【待回填】 | 【待回填】 | 渲染 `run_d9_a1_n16r84_seed42/run.jsonl` + `code/frontend/tools/shot.py`（命令见 `d9-readings.md` §11） |
+| 6 | **D9 四视图真实截图**（chat 1400×900 / rhythm 1300×1050 / spread 1300×900 / 600 600×900），来源 run 目录 = `v2/evidence/run_d9_a1_n16r84_seed42/`（日志 `abefdf73…`，91,343,119 B）；A0 既有 `d7_shots/` 四图**仅作对照**，两批不同源、不得互称 | 事实（证据） | D9 真拍：`v2/evidence/d9_shots/run_d9_a1_n16r84_seed42-{chat,rhythm,spread,600}-abefdf73.png`；A0 对照：`v2/evidence/d7_shots/run_d2_after_n16_seed42-{chat,rhythm,spread,600}-643f13a5.png`；索引 `v2/evidence/d9_shots/README.md` | D9：chat `dd9a77dbb6ca1fb50b87642d8ac26a040f500b0ccb1202b8b4abb58924bfc99f`；rhythm `06ce63dc99a60287a9da2c27226e6b4959c6709fe9f06b7d333ce7c6533cfaee`；spread `eccfd3aacd09aa29404dd455e7ef9851b272d49ed4a5306da24fdecf9b554d3d`；600 `32b0ac5f796a6f3e831843dd1377191525f1d244dfd5b7c116ec4305bf9f7c58` | `dd9a77db` / `06ce63dc` / `eccfd3aa` / `32b0ac5f`（A0 对照 `15d02ab2` / `baf2d9fc` / `eae35979` / `45bf561c`） | 派生：`python3 code/frontend/tools/gen_threads.py --log v2/evidence/run_d9_a1_n16r84_seed42/run.jsonl --meta …/meta.json --out code/frontend/sample/dialogue_run_d9_a1_n16r84_seed42/threads.json --require-complete --label run_d9_a1_n16r84_seed42-abefdf73`（threads sha256 `301b1fd3ac8784e6b980a85a3d4ffe008d181dd78c8536dee8a56b19dc658ef4`）；渲染：`cd code && bash frontend/tools/dialogue_shots.sh http://127.0.0.1:<port> sample/dialogue_run_d9_a1_n16r84_seed42/threads.json "" "" ../v2/evidence/d9_shots`（四视图一次出齐；`render_rc=0`，`blank_retries` 0/2×4） |
 | 7 | W4 `msg_id` 撞号：686 条 MSG 仅 216 个不同 `msg_id`，71 个值撞号涉及 541 条（79%） | 事实（缺陷） | `reports/R7-world-event-wiring.md §7.1(1)`；`code/orchestration/integration.py`（`:825/:840/:864`）与契约 `code/life/ports.py:78-82` | TODO（源码随提交变动） | TODO（源码随提交变动） | 按 `R7 §7.1(1)` 复算 `msg_id` 去重计数 |
 | 8 | W5 静默降级 MockProvider | 事实（缺陷） | `code/orchestration/integration.py:894-945`；`reports/R7-world-event-wiring.md §7.1(2)` | TODO（源码随提交变动） | TODO（源码随提交变动） | `grep -n "MockProvider\|RuleBasedLLM" code/orchestration/integration.py` |
 | 9 | F-2b / F-3 / F-4 的 R4 对照口径与不可比判定 | 事实（口径） | `reports/R4-life-texture.md §2 / §4`；`v2/evidence/d6_compare_a0.md`（`544a4523`） | 【待填：重算】 | `544a4523` | 见 R4 §6 证据索引 |
-| 10 | `reports/d9-readings.md` 本身作为两臂读数的唯一引用源（含 C-1…C-6 caveat 与逐条复算命令） | 读数（引用源） | `reports/d9-readings.md`（**已入库**） | `45b98a6e23759ec3…`（本版定稿时刻；文档后续编辑会变，引用以文件内 §1/§2 命令为准） | `45b98a6e` | `sha256sum reports/d9-readings.md` |
+| 10 | `reports/d9-readings.md` 本身作为两臂读数的唯一引用源（含 C-1…C-6 caveat 与逐条复算命令） | 读数（引用源） | `reports/d9-readings.md`（**已入库**） | `366449b8ca847d9c…`（本版定稿时刻；文档后续编辑会变，引用以文件内 §1/§2 命令为准） | `366449b8` | `sha256sum reports/d9-readings.md` |
 | 10b | 本轮往返密度读数器 `d9_density.py` 为只读度量脚本（零 LLM / 零网络 / 无跑批逻辑，复用 `tools/d5/dialogue_metrics.py` 的 `extract_messages`/`group_threads`）；**三种调用方式 rc 全 0、`--out-json` 产物 sha 与修复前逐字节一致** | 事实（脚本身份） | `v2/evidence/d9_density.py` | `78a32e66803b8dc869faf247e666ce1b1237a6077528f21fbd0de85727c0cdc3` | `78a32e66` | `sha256sum v2/evidence/d9_density.py`；`python3 v2/evidence/d9_density.py --log … --out-json /tmp/x.json`（rc=0）；`grep -nE "requests|openai|subprocess|orchestration" v2/evidence/d9_density.py`（空） |
 | 11 | 时序护栏：落 commit 前确认无批在跑（`pgrep -fa "orchestration[ ]run"` 空输出） | 事实（时序） | 定稿时刻 **2026-10-21 04:21（+08:00）**，与 `d9-doc` 的 docs/evidence commit 同一轮次 | — | — | `pgrep -fa "orchestration[ ]run"`（空输出，rc=1） |
 | 12 | **E1** A0 回复延迟分布：480 条回复中 1 回合 **327**、2 回合 **153**、0 回合 0、**≥3 回合 0**（分母 480） | 已证实（指标型事实） | `v2/evidence/d9_reply_latency_a0.json` | `f8c58d9572f59b7aafb7e04ed957a8c582d45032a4edd0569ff3286729bf7b97` | `f8c58d95` | `python3 v2/evidence/d9_reply_latency.py --log v2/evidence/run_d2_after_n16_seed42/run.jsonl --out-json v2/evidence/d9_reply_latency_a0.json` |

@@ -27,7 +27,7 @@ grep -n "reply_window_rounds" code/life/dialogue_threads.py                     
 python3 -c "import json;print(list(json.load(open('code/config/life_v2.json')).keys()))"  # 无 dialogue 段 ⇒ 代码常量即生效值
 ```
 
-> **C-6 限定（必读）**：两臂 `code_sha` 相隔 **11 个 commit**（`884f4541` → `05636bc`）。因此「唯一变量」只成立于 **「相对 master 的 diff 只动一个文件」** 这一层，**不等于**「两臂 `code_sha` 之间只差一个文件」。本轮实测的零漂移只在配置/指纹层：`engine_version = sha256:a871e36c…` 两臂相同、12 项 `config_components` 逐项 sha256 相同（整体 digest `b4421cfc053d6fb6`）；那 11 个 commit 的逐条 diff **未由 d9-verify 复核**（超出其任务范围）。R8 §3.0 的「漂移仅限 `code/frontend/`」属**引用**，不是本轮新证。
+> **C-6 限定（必读）**：两臂 `code_sha` 相隔 **36 个 commit**（`884f4541` → `05636bc`，`git rev-list --count` 实测；`d9-verify` 报告写的"11 个"不准确，以实测为准）。因此「唯一变量」只成立于 **「相对 master 的 diff 只动一个文件」** 这一层，**不等于**「两臂 `code_sha` 之间只差一个文件」。**区间性质已逐条分类（R8 §7.1 新增段）**：32 个 commit 仅文档/证据/指标脚本、3 个仅 `code/frontend/`、**仅 1 个触及结构性路径且就是变量本身**（`code/life/dialogue_threads.py:30` 一行）；`code/engine` / `code/config` / `code/orchestration` / `code/contracts` 在区间内 **0 行 diff**，`max_messages_per_slot=2`、`max_turns=6` 两臂逐字相同，`engine_version = sha256:a871e36c…` 与 12 项 `config_components`（digest `b4421cfc053d6fb6`）也相同。
 
 ### 0.3 D9 批来源对账（原件 → 仓库复制件）
 
@@ -253,7 +253,7 @@ PY
 | **C-3** | L-7 两臂同为 0.488338 是**计数巧合**；触发集合 jaccard **0.5581**、交集 240/335 | **禁止**写「L-7 完全不变 ⇒ 措辞无实质变化」，也禁止写「L-7 相同 ⇒ 疑似复用」 |
 | **C-4** | 措辞幅度小：ΔL-2 −0.87 pp、ΔL-3 −1.31 pp、ΔL-6 −0.87 pp，**L-5 反向 +0.29 pp**；分母均 686 | 只能写「方向性变化」；能否称"改善"需 B2/精确二项带支持，复核方不代判 |
 | **C-5** | **只有** `judge` / `importance` / `negotiation` / `plan` 四类（合计 2561/3403 = 75.26%）提示词两臂**逐位相同**，即这四类不吃正文 ⇒ **由这四类派生的指标**（含 F-7 越界提及、关系变动判定等 judge 侧指标）不能用来衡量措辞变化。**排除面只到这四类**：`describe` / `reflect` / `dialogue` 派生指标理论上可受措辞影响，**不得**一并排除 | 写结论时把排除面钉死在这四类，别写大 |
-| **C-6** | 两臂 `code_sha` 隔 11 个 commit，但 `engine_version`（`a871e36c…`）与 12 项 `config_components`（digest `b4421cfc053d6fb6`）完全相同 | 「唯一变量」只能限定为**相对 master 的 diff**；R8 §3.0 的「漂移仅限 `code/frontend/`」属引用，未由复核方验证 |
+| **C-6** | 两臂 `code_sha` 隔 **36 个 commit**（`884f4541` → `05636bc`；`d9-verify` 报告的"11 个"不准，以实测为准），其中 32 个仅文档/证据、3 个仅前端、1 个即变量本身；结构性四目录零 diff、配额常量逐字相同，`engine_version`（`a871e36c…`）与 12 项 `config_components`（digest `b4421cfc053d6fb6`）完全相同 | 「唯一变量」只能限定为**相对 master 的 diff / 结构等价**；引用 R8 §3.0 的「漂移仅限 `code/frontend/`」时注明属引用，本轮由 R8 §7.1 新增段自行钉住 |
 
 非阻断观察两条：① 耗时两口径——`meta.duration_sec=5239`（整进程墙钟）vs `host.log` `[life] … seconds=5216.8343`（内核自报，差 22.2 s 进程外开销），引用须说明哪一层；② 两臂事件数差 18 而 MSG 条数完全相同 ⇒ 措辞差异波及记忆/叙事写入类事件，不影响结构指标。
 
