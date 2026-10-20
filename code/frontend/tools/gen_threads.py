@@ -53,6 +53,15 @@ MOVE_TYPES = ("PLACE_MOVE",)          # 串门/走动：生活节律与「谁在
 SCHEMA = "hitt.dialogue.threads/1"
 
 
+def _default_stem(log_path: Path) -> str:
+    """批次名：跑批目录里的 run.jsonl 用「目录名」（才看得出是哪一批），其余用文件名。"""
+    stem = Path(log_path).stem
+    parent = Path(log_path).parent.name
+    if stem == "run" and parent:
+        return parent
+    return stem
+
+
 def sha256_file(p: Path) -> str:
     h = hashlib.sha256()
     with open(p, "rb") as f:
@@ -412,7 +421,7 @@ def build(log_path: Path, meta_path: Path | None, personas: dict, places: dict,
         "generator_sha256": sha256_file(Path(__file__)),
         "source": {
             # 默认标签 = 「文件名-sha8」：仓库里存在读数接近的不同日志，只写批次名会混淆
-            "run_label": run_label or f"{Path(log_path).stem}-{sha256_file(log_path)[:8]}",
+            "run_label": run_label or f"{_default_stem(log_path)}-{sha256_file(log_path)[:8]}",
             "run_sha256": sha256_file(log_path),
             "run_bytes": Path(log_path).stat().st_size,
             "events_total_in_log": events,

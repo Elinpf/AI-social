@@ -33,6 +33,19 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 
+def resolve_path(arg: str) -> Path:
+    """把用户给的相对路径解析成实际文件：CWD → code/frontend → 仓库根，按存在性取第一个。
+    这样 `--run ../v2/evidence/x/run.jsonl`、`--run v2/evidence/x/run.jsonl` 都能用。"""
+    p = Path(arg)
+    if p.is_absolute():
+        return p
+    for base in (Path.cwd(), HERE.parent, HERE.parents[2]):
+        cand = (base / arg).resolve()
+        if cand.exists():
+            return cand
+    return (Path.cwd() / arg).resolve()
+
+
 def load_threads(data_path: Path) -> dict:
     with open(data_path, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -101,7 +114,8 @@ def main() -> int:
         import os
         os.environ["HITT_CHROME"] = a.chrome
 
-    data = load_threads(HERE.parent / a.data)
+    data_path = resolve_path(a.data)
+    data = load_threads(data_path)
     expect = int((data.get("stats") or {}).get("messages") or 0)
     fails: list[str] = []
 
@@ -153,7 +167,7 @@ def main() -> int:
 
             # ---- 判据 3：逐字追溯 ----
             if a.run and rendered:
-                run_path = HERE.parent / a.run
+                run_path = resolve_path(a.run)
                 pick = rendered[: a.sample]
                 truth = find_body_in_run(run_path, {r["seq"] for r in pick})
                 by_seq = {}
