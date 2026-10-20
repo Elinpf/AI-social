@@ -88,7 +88,7 @@
 
 **【事实】** 比率 p 在分母 m 下的 95% CI 半宽 ≈ `1.96·√(p(1−p)/m)`；p≈0.5 时 m=100 → ±9.8pp、m=150 → ±8.0pp、m=230 → ±6.5pp。
 
-**【事实】** 噪声带采用**两级口径**（`v2/evidence/D3-noiseband-two-level.md`）：
+**【事实】** 噪声带采用**两级口径**（`v2/evidence/D3-noiseband-two-level.md` (12416374)）：
 - **B1 观测对差**：同 seed、同提示词、同规模的两批真 LLM 实测差（旁白 0.87pp / 裸 ID 0.87pp / 无人称 1.75pp）。**这是一次观测，不是带**，只作**量级参照**，**不作阈值**；
 - **B2 抽样噪声带**：对两批消息级重采样 2000 次（seed 固定），取比率差的 2.5–97.5 分位：**n=230 ±8.7pp；n=170 ±10.6pp；n=100 ±13–14pp；n=68 ±16pp**。**判定阈值用 B2 的同分母上界**。
 - **规模适用**：B2 依赖分母；本轮各臂 n=16×84（≈188 条 `MSG`，扣除群消息后有效分母约 170）⇒ 采 **n=170 档**；跨规模（如更大或更小的批）**不适用**，需重估。若某指标未做规模敏感性检验，一律在局限中说明。
@@ -119,7 +119,7 @@
 
 **边界 1 · 措辞不可逐条复现。**
 世界状态可逐位重放，但重新生成不会得到同一句话。`temperature=0.0` 下，同 seed、同 provider、同提示词、同规模的两批日志，台词逐字节一致率仅 **49/230 = 21.30%**；`strip` 后与归一化后同为 49/230 ⇒ 差异不是空白或标点造成。同位置说话人 230/230 相同、渠道序列 230 位一致 ⇒ 位置对齐有效；同位置 `seq` 相同仅 28/230 ⇒ **禁止按 seq 对齐**。因此：措辞证据只能以"冻结快照 + provider/model/温度 + sha256"形式引用，比较只能做**分布级**，不能逐条配对。
-（来源 `v2/evidence/D3-null-pair-t300-t355.md`，在该文内给出的复算脚本为 `v2/evidence/d3_null_pair.py`）
+（来源 `v2/evidence/D3-null-pair-t300-t355.md` (79d9ea19)，在该文内给出的复算脚本为 `v2/evidence/d3_null_pair.py` (bb983b6e)）
 **两条不得越界的读法**：① 上例两批树并不完全相同（提示词未变），属**"近似"同配置对**，只能当**噪声下界**，不是"零差异应然值"；② **不得**把 21.30% 当作"复现率下限"去要求别人复现到 21%。
 
 **边界 2 · mock 不可测措辞。**
@@ -132,7 +132,7 @@ mock 生成器按输入字符串的哈希从词池取句、**不读语义**。�
 世界层（内核、生活层、冻结层、配置、观测层、契约层、组合根）默认**禁改**；本轮仅对**对话路径**做受控解冻，且必须满足四条前提：① 只追加字段不改既有语义；② 每处改动配回退开关；③ 单变量对照 + 向后兼容不破；④ 交付说明写清"改什么/为何必须/如何回退/影响面"。经济结算、生命周期、世界层数值参数**不在解冻范围**。详见 §5。
 
 **边界 5 · 规模豁免（一次性，不推广）。**
-本轮跑批规模纪律原为 `n ≤ 12`、回合 `≤ 24`。因需观测**跨时段的线程延续**，本轮各对比批次经批准豁免至 **84 回合 = 1 个模拟周**（时间结构：3 回合/时段 × 4 时段/天 × 7 天/周，来源 `code/config/default.json` 与 `code/engine/time.py` 文件头）；批次实际 `n=16`、`seed=42`。豁免理由：24 回合仅覆盖 2 个模拟日，跨时段线程延续几乎不可观测，比率型指标分母也会过小。代价与范围：成本约为常规批 3.5 倍、单批墙钟约 55–90 分钟；**仅适用于本轮对比批次，不推广为通用规模**。
+本轮跑批规模纪律原为 `n ≤ 12`、回合 `≤ 24`。因需观测**跨时段的线程延续**，本轮各对比批次经批准豁免至 **84 回合 = 1 个模拟周**（时间结构：3 回合/时段 × 4 时段/天 × 7 天/周，来源 `code/config/default.json` (a94fba10) 与 `code/engine/time.py` 文件头）；批次实际 `n=16`、`seed=42`。豁免理由：24 回合仅覆盖 2 个模拟日，跨时段线程延续几乎不可观测，比率型指标分母也会过小。代价与范围：成本约为常规批 3.5 倍、单批墙钟约 55–90 分钟；**仅适用于本轮对比批次，不推广为通用规模**。
 
 **边界 6 · 副本结论需标副本 sha。**
 任何在副本树（非主树）上得到的结论，必须标明副本 sha 并注明"落地需复核"。主树与副本的差异哪怕是无关改动，也可能改变上下文从而改变措辞。
@@ -223,18 +223,18 @@ python3 -m obs gate    --log <RUN_DIR>/real_n16.jsonl --baseline auto
 
 ## 7. 证据索引
 
-| # | 结论 | 层级 | 来源（仓库相对路径） | sha256 | 复现命令 |
-|---|---|---|---|---|---|
-| 1 | 六阶段编排、哈希链、回合封印、`replay` 不重跑 hook | 事实 | `code/README.md` §3.1–§3.4 | 见 §7 末"文件 sha 现算说明" | `sed -n '66,92p' code/README.md` |
-| 2 | LLM 只填已定分支、不决定世界随机；输出冻结、重放不重调模型 | 事实 | `code/life/llm.py`（文件头） | 同上 | `head -20 code/life/llm.py` |
+| # | 结论 | 层级 | 来源（仓库相对路径） | sha256 | sha8 | 复现命令 |
+|---|---|---|---|---|---|---|
+| 1 | 六阶段编排、哈希链、回合封印、`replay` 不重跑 hook | 事实 | `code/README.md` §3.1–§3.4 | 见 §7 末"文件 sha 现算说明" | `TODO`（源码随提交变动，见 R1 §7 末说明） | `sed -n '66,92p' code/README.md` |
+| 2 | LLM 只填已定分支、不决定世界随机；输出冻结、重放不重调模型 | 事实 | `code/life/llm.py`（文件头） | 同上 | `TODO`（源码随提交变动，见 R1 §7 末说明） | `head -20 code/life/llm.py` |
 | 3 | 改造前无会话对象：`reply_to`/`thread_id` 未定义，`topic` 恒空，`refs` 恒空 | 事实 | `code/life/agent.py:729-767`、`code/orchestration/integration.py:739-841` | 同上 | `grep -rn "reply_to\|thread_id" code/ \| wc -l`（预期 0） |
-| 4 | 时间结构 3 回合/时段 × 4 时段/天 × 7 天/周 = 84 回合 | 事实 | `code/config/default.json`（`time_config`）、`code/engine/time.py`（文件头） | `a94fba10e6d71ea0b9c12d2513e74fc0be2d3a70ad3d8468863e23e207e6ab8d` | `python3 -c "import json;print(json.load(open('code/config/default.json'))['time_config'])"` |
-| 5 | `temperature=0.0` 下两批同配置日志台词逐字节一致率 21.30%（49/230）；speaker 230/230、seq 28/230 | 读数 | `v2/evidence/D3-null-pair-t300-t355.md` | `79d9ea19f91ea7fb782044e521d586dcd6bfa3fc2894ec8731fe0ef76bd04ba8` | `python3 v2/evidence/d3_null_pair.py` |
-| 6 | 对齐有效性所需的脚本与结果 | 事实 | `v2/evidence/d3_null_pair.py` / `v2/evidence/d3_null_pair_result.json` | `bb983b6ecb94600e46cf02a57e8b206420964f887cd06c2a6b2d3bc7bbcedda4` / `bab6f5645988ff65ea153e0ccc2bb28e5bad6a753415fcbbc1d72a395c2e115b` | 同上文 §6 |
-| 7 | 噪声带两级口径：B1 观测差（0.87–1.75pp）不作阈值；B2 抽样带 n=230 ±8.7pp / n=170 ±10.6pp / n=100 ±13–14pp / n=68 ±16pp | 读数（方法学） | `v2/evidence/D3-noiseband-two-level.md` | `12416374add21ca9feb762de27be2a75e5ef8b53a6ff3e29b86d9fa9533d8f6b` | `python3 v2/evidence/d3_noiseband_bootstrap.py --denom 68 100 170 230` |
-| 8 | 噪声带重采样实现 | 事实 | `v2/evidence/d3_noiseband_bootstrap.py` | `d878ac643716f437c57cc12753fd667bb49c2dd3d9dbda4bc72121a84d822986` | 同上 |
-| 9 | 改造前措辞模式计数（旁白化 63.91%、裸 ID 34.35% 等） | 读数（历史批，N=20×84） | `v2/evidence/d3_pattern_counts.json` | `d6ee0db43161ce957d53f3120e529bae61c9c22d412dd807cb1cbadcd469b285` | 见 `v2/evidence/d3_corpus_annotate.py` |
-
+| 4 | 时间结构 3 回合/时段 × 4 时段/天 × 7 天/周 = 84 回合 | 事实 | `code/config/default.json` (a94fba10)（`time_config`）、`code/engine/time.py`（文件头） | `a94fba10e6d71ea0b9c12d2513e74fc0be2d3a70ad3d8468863e23e207e6ab8d` | `a94fba10` | `python3 -c "import json;print(json.load(open('code/config/default.json'))['time_config'])"` |
+| 5 | `temperature=0.0` 下两批同配置日志台词逐字节一致率 21.30%（49/230）；speaker 230/230、seq 28/230 | 读数 | `v2/evidence/D3-null-pair-t300-t355.md` (79d9ea19) | `79d9ea19f91ea7fb782044e521d586dcd6bfa3fc2894ec8731fe0ef76bd04ba8` | `79d9ea19` | `python3 v2/evidence/d3_null_pair.py` (bb983b6e) |
+| 6 | 对齐有效性所需的脚本与结果 | 事实 | `v2/evidence/d3_null_pair.py` (bb983b6e) / `v2/evidence/d3_null_pair_result.json` (bab6f564) | `bb983b6ecb94600e46cf02a57e8b206420964f887cd06c2a6b2d3bc7bbcedda4` / `bab6f5645988ff65ea153e0ccc2bb28e5bad6a753415fcbbc1d72a395c2e115b` | `bb983b6e` | 同上文 §6 |
+| 7 | 噪声带两级口径：B1 观测差（0.87–1.75pp）不作阈值；B2 抽样带 n=230 ±8.7pp / n=170 ±10.6pp / n=100 ±13–14pp / n=68 ±16pp | 读数（方法学） | `v2/evidence/D3-noiseband-two-level.md` (12416374) | `12416374add21ca9feb762de27be2a75e5ef8b53a6ff3e29b86d9fa9533d8f6b` | `12416374` | `python3 v2/evidence/d3_noiseband_bootstrap.py --denom 68 100 170 230` |
+| 8 | 噪声带重采样实现 | 事实 | `v2/evidence/d3_noiseband_bootstrap.py` (d878ac64) | `d878ac643716f437c57cc12753fd667bb49c2dd3d9dbda4bc72121a84d822986` | `d878ac64` | 同上 |
+| 9 | 改造前措辞模式计数（旁白化 63.91%、裸 ID 34.35% 等） | 读数（历史批，N=20×84） | `v2/evidence/d3_pattern_counts.json` (d6ee0db4) | `d6ee0db43161ce957d53f3120e529bae61c9c22d412dd807cb1cbadcd469b285` | `d6ee0db4` | 见 `v2/evidence/d3_corpus_annotate.py` (221dd185) |
+|---|---|---|---|---|---|---|
 > **文件 sha 现算说明**：本表的 sha256 均由 `sha256sum <file>` 现算后填入，不写记忆值。第 1–3 行的代码文件随提交变动，故不逐个登记 sha，改以**仓库 commit `<sha>` + 行号**定位；读者复核时请先 `git checkout <sha>`。
 
 ---

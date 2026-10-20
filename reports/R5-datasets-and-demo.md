@@ -17,9 +17,9 @@
 | D-2 | A0 对照语料（新结构 + 旧提示词） | 待填 | 真 LLM 跑批 | 待填 | 待交付 |
 | D-3 | A1 语料（新结构 + 新提示词） | 待填 | 真 LLM 跑批 | 待填 | 待交付 |
 | D-4 | 评测读数（各臂指标） | `v2/evidence/d5_metrics_*.json` / `.md` | `tools/d5/dialogue_metrics.py` | 每份数 KB–数十 KB | 部分已有（历史批） |
-| D-5 | 线程视图数据（供演示页渲染） | `code/frontend/sample/dialogue_demo/threads.json` | `code/frontend/tools/gen_threads.py` | 543 KB，231 条线程（legacy 口径） | 已有（历史批，须换成本轮语料） |
+| D-5 | 线程视图数据（供演示页渲染） | `code/frontend/sample/dialogue_demo/threads.json` (0bfb6288) | `code/frontend/tools/gen_threads.py` | 543 KB，231 条线程（legacy 口径） | 已有（历史批，须换成本轮语料） |
 | D-6 | judge 原始输出（全量） | `judge_raw.jsonl`（不入库，给 sha） | `tools/d5/dialogue_judge.py` | 待填 | 待交付 |
-| D-7 | judge 抽样版（可核验用） | `v2/evidence/judge_raw_sample_n12x2.jsonl` | 同上（前缀子集） | 每臂 36 条 | 待交付 |
+| D-7 | judge 抽样版（可核验用） | `v2/evidence/judge_raw_sample_n24x2.jsonl` | 同上（前缀子集） | 每臂 24 线程（≤72 条消息） | 待交付 |
 
 **【事实】** D-5 现有文件的头部自带溯源字段，可直接核验它是从哪份日志生成的：`schema=hitt.dialogue.threads/1`、`generated_by=frontend/tools/gen_threads.py`、`generator_sha256=52935ef8…`、`source.run_label=p1_final_n20_llm`、`source.run_sha256=fb832372af235736b78e539ab676feff08c3e94e79ffcdbe0dc4b5d88b13a2fc`、`source.events_total_in_log=128564`、`source.round_range=[0,83]`、`source.llm_provider_in_log=openai_compat`。
 文件 sha256：`0bfb62887757d8900b8de50891ff2cb4202f48c064f35dac8fbbd62cbb8bc2c8`。
@@ -54,7 +54,7 @@
 ```
 （规则来源 R2 §3；两种口径分别标 `thread_schema = explicit` / `legacy`，**不混算**。）
 
-### 2.4 线程视图数据（`threads.json`）
+### 2.4 线程视图数据（`threads.json` (0bfb6288)）
 
 **【事实】** 顶层字段：`schema`、`generated_by`、`generator_sha256`、`source{run_label, run_sha256, run_bytes, events_total_in_log, round_range, llm_provider_in_log, …}`、`prune_rule`（保留哪些事件类型、其余丢弃且不参与统计）、`move_rule`、`field_contract`、`agents`、`places`、`moves`、`travel`、`rhythm`、`spread`、`stats`、`threads`。
 **【事实】** 每条线程字段：`thread_id`（legacy 口径下为 null）、`legacy`、`channel`、`participants`、`place`/`places`、`start_round`/`end_round`、`turns`、`multi_turn`、`messages[]`；每条消息字段：`seq`、`round`、`type`、`channel`、`msg_id`、`from`、`to`、`group_id`、`body`、`body_ref`、`thread_id`。
@@ -118,6 +118,6 @@ cd code && python3 frontend/tools/serve.py        # 浏览器打开 http://127.0
 ## 7. 限制
 
 1. **数据体量差异大**：完整 `run.jsonl` 可达数十 MB 至百 MB 量级，故 `.gitignore` 默认忽略 `*.jsonl`；对外以**sha256 + 生成命令 + 线程视图派生文件**保证可核验，而非直接托管原始日志。
-2. **派生视图有裁剪规则**：`threads.json` 只保留对话与语境事件（`prune_rule` 明写），其余事件丢弃且不参与统计——**不能用它替代原始日志做统计**。
+2. **派生视图有裁剪规则**：`threads.json` (0bfb6288) 只保留对话与语境事件（`prune_rule` 明写），其余事件丢弃且不参与统计——**不能用它替代原始日志做统计**。
 3. **截图是渲染结果，不是证据本身**：证据是日志 + sha；截图只帮助读者快速理解，任何"图上看着很好"的推断都必须回到读数。
 4. **legacy 口径的现有派生数据不能当本轮结果**：D-5 当前文件来自历史批（`p1_final_n20_llm`），本轮须用新语料重新生成。

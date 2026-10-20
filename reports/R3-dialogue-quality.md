@@ -40,7 +40,7 @@
 | L-5 | 模板化开场 | **10.87%**（25/230） | |
 | L-11 邻近 | **公开声道独白**（公开消息里无人称、自言自语） | **98.31%**（58/59，CI 91.0–99.7%） | 59 条公开消息里 58 条是独白 |
 
-（来源 `v2/evidence/d3_pattern_counts.json`，sha256 `d6ee0db43161ce957d53f3120e529bae61c9c22d412dd807cb1cbadcd469b285`）
+（来源 `v2/evidence/d3_pattern_counts.json` (d6ee0db4)，sha256 `d6ee0db43161ce957d53f3120e529bae61c9c22d412dd807cb1cbadcd469b285`）
 
 **【判断】** 旁白化与裸 ID 不是"读起来不够好"，是**结构硬伤**：居民把台词写成舞台指示、管邻居叫 `P009`。而 98.31% 的公开声道独白说明问题不在"话说得不好"，而在**说话的对象与场合根本没进生成上下文**——与 R2 §1 的结构事实是同一件事的两面。
 
@@ -110,7 +110,7 @@
 
 ### 4.3 judge 层（J 系列）
 
-**【未完成】** 待三臂 judge 跑完。必报：抽样规则（线程抽样、每臂 12 条线程、每条首条 + 随机 2 条、每臂 ≤36 条消息、固定回合区间）、重复 2 次的一致性（exact agreement / Cohen's κ / Spearman ρ）、judge 模型与版本串、prompt 模板 sha、原始请求/响应落盘路径。
+**【未完成】** 待三臂 judge 跑完。必报：抽样规则（**以线程为抽样单位、每臂 24 条线程**、每条取首条 + 随机 2 条 ⇒ 每臂 ≤72 条消息、两臂固定同一回合区间；正式调用量 2 臂 × 24 线程 × 2 次重复 = 96 次）、重复 2 次的一致性（exact agreement / Cohen's κ / Spearman ρ）、judge 模型与版本串、prompt 模板 sha、原始请求/响应落盘路径。
 
 **【判断】** judge 只作**旁证**：它与被评系统同源，存在偏好同类风险。报告不会用 judge 分数压过客观读数；两者冲突时**保留冲突记录**，不平均、不择一。
 
@@ -124,12 +124,38 @@
 
 ## 6. 可持续核验性（对外）
 
-**【事实】** judge 原始输出为 `judge_raw.jsonl`，体积大、默认不入库。为让外部读者能核验"判分是否被挑过样本"，公开**抽样版** `v2/evidence/judge_raw_sample_n12x2.jsonl`（每臂 36 条），并满足三条：
+**【事实】** judge 原始输出为 `judge_raw.jsonl`，体积大、默认不入库。为让外部读者能核验"判分是否被挑过样本"，公开**抽样版** `v2/evidence/judge_raw_sample_n24x2.jsonl`（每臂 24 线程），并满足三条：
 1. 抽样文件必须是全量文件**前缀子集**，同一记录**逐字节一致**，不做改写或精简字段；
 2. 报告给出全量 sha256、记录条数、抽样条数、抽样规则（seed）；
 3. **抽样不含任何未出现在全量中的记录**。
 
 （`.gitignore` 已为此加显式负向规则放行抽样版；全量仍不入库。）
+
+### 6.1 每条 judge 记录必须自带"可回溯到日志"的绑定字段
+
+**【事实】** 每条 judge 记录除判分本身外，还写入：`source_log`（来源日志相对路径）、`source_log_sha256`、`source_log_sha8`、`thread_key`、`msg_ids`（该线程被评消息的 id 列表）、`thread_input_sha256`（送评 transcript 的哈希）。
+
+**【判断】** 这让核验方可以走完一条**不依赖我们口述**的路径：
+
+```
+取 source_log（用 source_log_sha256 校验文件没被换）
+ → 按 thread_key / msg_ids 从日志中重放该线程
+ → 重新拼装送评 transcript → 算 sha256
+ → 与 thread_input_sha256 比对
+ → 一致 ⇒ 判分对象就是日志里那段对话，没有被替换或改写
+```
+
+**只写"已记录"没有意义**——必须能让第三方重算出同一个哈希。这也是本报告族"口径漂移"最容易被抓的地方：同目录里有多份文件名相近、读数接近的真实日志，仅凭文件名无法确定引用的是哪一份，所以 R1/README 另有硬规则：引用日志必须写「文件名 + sha8」。
+
+---
+
+## 6.5 读数陷阱（两条，核验方会问）
+
+**【事实】** 陷阱一：**`tokens_out = 0` 的调用 100% 是缓存命中**（同批实测 247/247 均带 `cached=true`）。因此判断"空输出/降级"的正确判据是 **`tokens_out == 0` 且 `cached == false`**；只看 `tokens_out == 0` 会把缓存命中误报成"模型没输出"。
+
+**【事实】** 陷阱二：judge 的输入捕获必须 **`compress=False`**。否则记录会被压成单键结构（如 `{"z": ...}`），外部读者读不到 system/user 原文，"可核验"当场失效——这是真实发生过的可复现性陷阱，不是理论风险。
+
+**【判断】** 两条都不影响结果数字，但都会让**核验链断掉**。本报告族宁可多写两段，也不让读者花时间怀疑我们在隐藏什么。
 
 ---
 
@@ -138,7 +164,7 @@
 1. **措辞不可逐条复现**（21.30% 一致率）：所有措辞结论都是分布级观测，不是"可重跑复现"。
 2. **mock 不能验证措辞**：mock 臂只用于行为面回归与规模预估。
 3. **单 seed、单批次、单一模拟周**：跨配置外推无证据。
-4. **judge 自评偏差 + 样本量小**（每臂 12 线程 / ≤36 条），只能作旁证。
+4. **judge 自评偏差 + 样本量仍小**（每臂 24 线程 / ≤72 条），只能作旁证。
 5. **三臂的规模必须一致**：若任一臂规模不同，该对比降级为"仅描述"，不进摘要。
 6. **"措辞变好"不等于"生活气息"**：后者是另一组指标（R4），两者不可互相代替。
 
@@ -146,9 +172,10 @@
 
 ## 8. 证据索引
 
-| # | 结论 | 层级 | 来源（仓库相对路径） | sha256 | 复现 |
-|---|---|---|---|---|---|
-| 1 | v0 措辞模式计数：旁白 63.91%、裸 ID 34.35%、不对人说 25.73%、模板 10.87%、公开独白 98.31% | 读数（历史批 20×84） | `v2/evidence/d3_pattern_counts.json` | `d6ee0db43161ce957d53f3120e529bae61c9c22d412dd807cb1cbadcd469b285` | `python3 v2/evidence/d3_corpus_annotate.py`（见其文件头参数） |
-| 2 | 同 seed 同提示词两批台词逐字节一致率 21.30%（49/230）；speaker 230/230、seq 28/230 | 读数（方法学） | `v2/evidence/D3-null-pair-t300-t355.md` | `79d9ea19f91ea7fb782044e521d586dcd6bfa3fc2894ec8731fe0ef76bd04ba8` | `python3 v2/evidence/d3_null_pair.py` |
-| 3 | 噪声带两级口径与分档上界（B2 为阈值，B1 仅量级参照） | 读数（方法学） | `v2/evidence/D3-noiseband-two-level.md` | `12416374add21ca9feb762de27be2a75e5ef8b53a6ff3e29b86d9fa9533d8f6b` | `python3 tools/d5/dialogue_noiseband_bootstrap.py --log-a <A> --log-b <B> --denoms 68 100 150 170 188 230` |
-| 4 | mock 生成器不读语义 ⇒ mock 不可测措辞 | 事实 | `code/life/llm.py`（`RuleBasedLLM` 实现） | 随仓库提交（`git log -- code/life/llm.py`） | `grep -n "class RuleBasedLLM" -A20 code/life/llm.py` |
+| # | 结论 | 层级 | 来源（仓库相对路径） | sha256 | sha8 | 复现 |
+|---|---|---|---|---|---|---|
+| 1 | v0 措辞模式计数：旁白 63.91%、裸 ID 34.35%、不对人说 25.73%、模板 10.87%、公开独白 98.31% | 读数（历史批 20×84） | `v2/evidence/d3_pattern_counts.json` (d6ee0db4) | `d6ee0db43161ce957d53f3120e529bae61c9c22d412dd807cb1cbadcd469b285` | `d6ee0db4` | `python3 v2/evidence/d3_corpus_annotate.py` (221dd185)（见其文件头参数） |
+| 2 | 同 seed 同提示词两批台词逐字节一致率 21.30%（49/230）；speaker 230/230、seq 28/230 | 读数（方法学） | `v2/evidence/D3-null-pair-t300-t355.md` (79d9ea19) | `79d9ea19f91ea7fb782044e521d586dcd6bfa3fc2894ec8731fe0ef76bd04ba8` | `79d9ea19` | `python3 v2/evidence/d3_null_pair.py` (bb983b6e) |
+| 3 | 噪声带两级口径与分档上界（B2 为阈值，B1 仅量级参照） | 读数（方法学） | `v2/evidence/D3-noiseband-two-level.md` (12416374) | `12416374add21ca9feb762de27be2a75e5ef8b53a6ff3e29b86d9fa9533d8f6b` | `12416374` | `python3 tools/d5/dialogue_noiseband_bootstrap.py --log-a <A> --log-b <B> --denoms 68 100 150 170 188 230` |
+| 4 | mock 生成器不读语义 ⇒ mock 不可测措辞 | 事实 | `code/life/llm.py`（`RuleBasedLLM` 实现） | 随仓库提交（`git log -- code/life/llm.py`） | TODO | `grep -n "class RuleBasedLLM" -A20 code/life/llm.py` |
+|---|---|---|---|---|---|---|

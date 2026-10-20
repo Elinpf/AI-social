@@ -20,7 +20,7 @@
 | `single_speaker_thread_ratio`（独白线程占比） | **96.70%** | 几乎全是自说自话 |
 | `n_threads` | **212** | 切分口径 `thread_schema = legacy` |
 
-（来源 `v2/evidence/d5_metrics_t300_n20_seed42.json`，sha256 `2901d7b8ca8cedfed6032a4168716167ce5594640a5764f82fdaf4862d1fa6a2`）
+（来源 `v2/evidence/d5_metrics_t300_n20_seed42.json` (2901d7b8)，sha256 `2901d7b8ca8cedfed6032a4168716167ce5594640a5764f82fdaf4862d1fa6a2`）
 
 > ⚠️ **口径必读**：上表四个数是 **`thread_schema = legacy`（切分口径 = 同 `(day, channel, {from,to})` 聚合）**、`n_threads = 212` 下的结果，**不是**改造后新结构同口径算出来的数。跨口径比较无效（原因见 §5.2）。
 
@@ -137,9 +137,10 @@
 
 ## 7. 证据索引
 
-| # | 结论 | 层级 | 来源（仓库相对路径） | sha256 | 复现 |
-|---|---|---|---|---|---|
-| 1 | v0：单条线程 91.51%、多轮线程 0、独白线程 96.70%、`n_threads=212`（`thread_schema=legacy`） | 读数（历史批 20×84） | `v2/evidence/d5_metrics_t300_n20_seed42.json` | `2901d7b8ca8cedfed6032a4168716167ce5594640a5764f82fdaf4862d1fa6a2` | `python3 tools/d5/dialogue_metrics.py --log <RUN>/run.jsonl --meta <RUN>/meta.json --out-json <OUT>.json --out-md <OUT>.md` |
-| 2 | 同批可读版读数表 | 读数 | `v2/evidence/d5_metrics_t300_n20_seed42.md` | `707412d1ca6e9817e376dade2980cc6e5e7b8958e9a58c97ec97058b5f24ac03` | 同上 |
+| # | 结论 | 层级 | 来源（仓库相对路径） | sha256 | sha8 | 复现 |
+|---|---|---|---|---|---|---|
+| 1 | v0：单条线程 91.51%、多轮线程 0、独白线程 96.70%、`n_threads=212`（`thread_schema=legacy`） | 读数（历史批 20×84） | `v2/evidence/d5_metrics_t300_n20_seed42.json` (2901d7b8) | `2901d7b8ca8cedfed6032a4168716167ce5594640a5764f82fdaf4862d1fa6a2` | `2901d7b8` | `python3 tools/d5/dialogue_metrics.py --log <RUN>/run.jsonl --meta <RUN>/meta.json --out-json <OUT>.json --out-md <OUT>.md` |
+| 2 | 同批可读版读数表 | 读数 | `v2/evidence/d5_metrics_t300_n20_seed42.md` (707412d1) | `707412d1ca6e9817e376dade2980cc6e5e7b8958e9a58c97ec97058b5f24ac03` | `707412d1` | 同上 |
 | 3 | 改造前无会话对象、提示词不含对方上一句、每时段最多说一次 | 事实 | `code/life/agent.py:729-767`、`code/orchestration/integration.py:739-841` | 随仓库提交（`git log -- code/life/agent.py`） | `grep -n "_dialogue_prompt" -A6 code/life/agent.py`；`grep -rn "reply_to\|thread_id" code/ \| wc -l`（改造前应为 0） |
-| 4 | 时间结构 3 回合/时段 × 4 时段/天 × 7 天/周 | 事实 | `code/config/default.json`、`code/engine/time.py` | `a94fba10e6d71ea0b9c12d2513e74fc0be2d3a70ad3d8468863e23e207e6ab8d` | `python3 -c "import json;print(json.load(open('code/config/default.json'))['time_config'])"` |
+| 4 | 时间结构 3 回合/时段 × 4 时段/天 × 7 天/周 | 事实 | `code/config/default.json` (a94fba10)、`code/engine/time.py` | `a94fba10e6d71ea0b9c12d2513e74fc0be2d3a70ad3d8468863e23e207e6ab8d` | `a94fba10` | `python3 -c "import json;print(json.load(open('code/config/default.json'))['time_config'])"` |
+|---|---|---|---|---|---|---|
