@@ -56,6 +56,8 @@ def main() -> int:
                     help="截整页（full_page=True），用于长页面（如四组对照）；默认仅视口。")
     ap.add_argument("--no-blank-check", action="store_true",
                     help="关闭非空白判据（用于非小镇画布的普通页面：深色/大色块页面会被误判为空白）。")
+    ap.add_argument("--chrome", default=None,
+                    help="浏览器可执行文件；缺省按 HITT_CHROME / PATH / playwright 缓存顺序探测")
     args = ap.parse_args()
     if args.chrome:
         os.environ["HITT_CHROME"] = args.chrome

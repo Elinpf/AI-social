@@ -172,6 +172,9 @@
     render();
     updatePlayUI();
     state.ready = true;
+    // ?view=rhythm|spread|chat（截图/引用时直接落到指定视图，避免只能靠点）
+    var vq = q.get("view");
+    if (vq && ["chat", "rhythm", "spread"].indexOf(vq) >= 0) setView(vq);
     focusThreadFromUrl();
     window.__RENDER_READY__ = true;
     document.documentElement.setAttribute("data-render-ready", "1");
