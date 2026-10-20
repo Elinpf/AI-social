@@ -1,0 +1,597 @@
+{
+ "chain_mismatch": {
+  "applicable": false,
+  "mismatch_threads": [],
+  "n_mismatch": 0,
+  "n_threads_with_ptr": 0,
+  "rule": "chain_alternation − chain_pointer ≥ 2 记不一致（指针链应覆盖说话人交替链）；无任何指针时标 not_applicable"
+ },
+ "grades": {
+  "bad": [
+   {
+    "chain_alternation": 1,
+    "chain_mismatch": 0,
+    "chain_pointer": 1,
+    "grade": "bad",
+    "messages": [
+     {
+      "body": "秀娘笑眯眯地递过一块刚出炉的桂花糕：“来，尝尝这个，我新调的方子——你要是喜欢，回头我教你做，咱们街坊里就数你手巧。”",
+      "channel": "dm",
+      "day": 0,
+      "from": "P004",
+      "hearer": "老石",
+      "msg_uid": null,
+      "place": "library",
+      "reply_to": null,
+      "round": 0,
+      "seq": 73,
+      "slot": "morning",
+      "speaker": "秀娘",
+      "tags": [
+       "mentorship"
+      ],
+      "to": "P002"
+     },
+     {
+      "body": "秀娘笑盈盈地把刚出炉的桂花糕塞到对方手里：“快尝尝，还热乎着呢，我特意少放了糖，就想着你爱吃这口。”",
+      "channel": "dm",
+      "day": 0,
+      "from": "P004",
+      "hearer": "老石",
+      "msg_uid": null,
+      "place": "community_center",
+      "reply_to": null,
+      "round": 6,
+      "seq": 4662,
+      "slot": "evening",
+      "speaker": "秀娘",
+      "tags": [
+       "gift"
+      ],
+      "to": "P002"
+     }
+    ],
+    "n_msgs": 2,
+    "peer_named_msgs": 0,
+    "ptr_msgs": 0,
+    "signals": 0,
+    "thread_key": "L:0|dm|P002-P004",
+    "turns_A": 1
+   },
+   {
+    "chain_alternation": 2,
+    "chain_mismatch": 1,
+    "chain_pointer": 1,
+    "grade": "bad",
+    "messages": [
+     {
+      "body": "（把秤砣往案板上一搁，抬眼打量你）哟，P005，你这身板练得倒结实，可光有力气不成——来，帮兰姐把这筐货搬上摊，我教你咋看秤星子，比划拳实在。",
+      "channel": "dm",
+      "day": 0,
+      "from": "P016",
+      "hearer": "陈医",
+      "msg_uid": null,
+      "place": "park",
+      "reply_to": null,
+      "round": 0,
+      "seq": 200,
+      "slot": "morning",
+      "speaker": "兰姐",
+      "tags": [
+       "combat_training"
+      ],
+      "to": "P005"
+     },
+     {
+      "body": "（压低声音）P016，你最近总说睡不着……我给你配的那副安神药，是不是没按时吃？",
+      "channel": "dm",
+      "day": 0,
+      "from": "P005",
+      "hearer": "兰姐",
+      "msg_uid": null,
+      "place": "cafe",
+      "reply_to": null,
+      "round": 6,
+      "seq": 4688,
+      "slot": "evening",
+      "speaker": "陈医",
+      "tags": [
+       "whisper"
+      ],
+      "to": "P016"
+     }
+    ],
+    "n_msgs": 2,
+    "peer_named_msgs": 0,
+    "ptr_msgs": 0,
+    "signals": 0,
+    "thread_key": "L:0|dm|P005-P016",
+    "turns_A": 2
+   },
+   {
+    "chain_alternation": 1,
+    "chain_mismatch": 0,
+    "chain_pointer": 1,
+    "grade": "bad",
+    "messages": [
+     {
+      "body": "（整理药柜时自言自语）这些药方子用了大半辈子，可每次看到病人痊愈，还是觉得值得。",
+      "channel": "public",
+      "day": 0,
+      "from": "P005",
+      "hearer": null,
+      "msg_uid": null,
+      "place": null,
+      "reply_to": null,
+      "round": 0,
+      "seq": 84,
+      "slot": "morning",
+      "speaker": "陈医",
+      "tags": [
+       "skill_practice"
+      ],
+      "to": null
+     },
+     {
+      "body": "（整理着药柜，自言自语）这药钱攒了三十年，够是够了……可人这一辈子，光攒钱又图个啥呢。",
+      "channel": "public",
+      "day": 0,
+      "from": "P005",
+      "hearer": null,
+      "msg_uid": null,
+      "place": null,
+      "reply_to": null,
+      "round": 3,
+      "seq": 1939,
+      "slot": "afternoon",
+      "speaker": "陈医",
+      "tags": [
+       "savings"
+      ],
+      "to": null
+     }
+    ],
+    "n_msgs": 2,
+    "peer_named_msgs": 0,
+    "ptr_msgs": 0,
+    "signals": 0,
+    "thread_key": "L:0|public|None-P005",
+    "turns_A": 1
+   }
+  ],
+  "good": [],
+  "mid": []
+ },
+ "grading_rule": {
+  "bad": "0 个",
+  "good": "3 信号全中",
+  "mid": "1–2 个",
+  "order_in_grade": "线程长度降序 → thread_key 升序（确定性）",
+  "signals": [
+   "has_pointer",
+   "multi_turn(turns_A>=3)",
+   "names_used(对端名出现)"
+  ],
+  "warning": "这是**结构分档**，不等于「读起来自然」；自然度由 judge/人评给，样本表只做候选池"
+ },
+ "inputs": {
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d2_before_n16_seed42/run.jsonl",
+  "log_sha256": "sha256:c1f86bf61f62b3a0ce8e17e0c2312791cf0262381cd2120c2a63c9b6258963cf",
+  "log_sha8": "c1f86bf6",
+  "meta": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d2_before_n16_seed42/meta.json",
+  "script_sha256": "sha256:2828725c376fe7d9259dc9547f58d43a2c817b1e582cf2d317d671b72ba3a324"
+ },
+ "longest_by_msgs": [
+  {
+   "chain_alternation": 1,
+   "chain_mismatch": 0,
+   "chain_pointer": 1,
+   "grade": "bad",
+   "messages": [
+    {
+     "body": "秀娘笑眯眯地递过一块刚出炉的桂花糕：“来，尝尝这个，我新调的方子——你要是喜欢，回头我教你做，咱们街坊里就数你手巧。”",
+     "channel": "dm",
+     "day": 0,
+     "from": "P004",
+     "hearer": "老石",
+     "msg_uid": null,
+     "place": "library",
+     "reply_to": null,
+     "round": 0,
+     "seq": 73,
+     "slot": "morning",
+     "speaker": "秀娘",
+     "tags": [
+      "mentorship"
+     ],
+     "to": "P002"
+    },
+    {
+     "body": "秀娘笑盈盈地把刚出炉的桂花糕塞到对方手里：“快尝尝，还热乎着呢，我特意少放了糖，就想着你爱吃这口。”",
+     "channel": "dm",
+     "day": 0,
+     "from": "P004",
+     "hearer": "老石",
+     "msg_uid": null,
+     "place": "community_center",
+     "reply_to": null,
+     "round": 6,
+     "seq": 4662,
+     "slot": "evening",
+     "speaker": "秀娘",
+     "tags": [
+      "gift"
+     ],
+     "to": "P002"
+    }
+   ],
+   "n_msgs": 2,
+   "peer_named_msgs": 0,
+   "ptr_msgs": 0,
+   "signals": 0,
+   "thread_key": "L:0|dm|P002-P004",
+   "turns_A": 1
+  },
+  {
+   "chain_alternation": 2,
+   "chain_mismatch": 1,
+   "chain_pointer": 1,
+   "grade": "bad",
+   "messages": [
+    {
+     "body": "（把秤砣往案板上一搁，抬眼打量你）哟，P005，你这身板练得倒结实，可光有力气不成——来，帮兰姐把这筐货搬上摊，我教你咋看秤星子，比划拳实在。",
+     "channel": "dm",
+     "day": 0,
+     "from": "P016",
+     "hearer": "陈医",
+     "msg_uid": null,
+     "place": "park",
+     "reply_to": null,
+     "round": 0,
+     "seq": 200,
+     "slot": "morning",
+     "speaker": "兰姐",
+     "tags": [
+      "combat_training"
+     ],
+     "to": "P005"
+    },
+    {
+     "body": "（压低声音）P016，你最近总说睡不着……我给你配的那副安神药，是不是没按时吃？",
+     "channel": "dm",
+     "day": 0,
+     "from": "P005",
+     "hearer": "兰姐",
+     "msg_uid": null,
+     "place": "cafe",
+     "reply_to": null,
+     "round": 6,
+     "seq": 4688,
+     "slot": "evening",
+     "speaker": "陈医",
+     "tags": [
+      "whisper"
+     ],
+     "to": "P016"
+    }
+   ],
+   "n_msgs": 2,
+   "peer_named_msgs": 0,
+   "ptr_msgs": 0,
+   "signals": 0,
+   "thread_key": "L:0|dm|P005-P016",
+   "turns_A": 2
+  },
+  {
+   "chain_alternation": 1,
+   "chain_mismatch": 0,
+   "chain_pointer": 1,
+   "grade": "bad",
+   "messages": [
+    {
+     "body": "（整理药柜时自言自语）这些药方子用了大半辈子，可每次看到病人痊愈，还是觉得值得。",
+     "channel": "public",
+     "day": 0,
+     "from": "P005",
+     "hearer": null,
+     "msg_uid": null,
+     "place": null,
+     "reply_to": null,
+     "round": 0,
+     "seq": 84,
+     "slot": "morning",
+     "speaker": "陈医",
+     "tags": [
+      "skill_practice"
+     ],
+     "to": null
+    },
+    {
+     "body": "（整理着药柜，自言自语）这药钱攒了三十年，够是够了……可人这一辈子，光攒钱又图个啥呢。",
+     "channel": "public",
+     "day": 0,
+     "from": "P005",
+     "hearer": null,
+     "msg_uid": null,
+     "place": null,
+     "reply_to": null,
+     "round": 3,
+     "seq": 1939,
+     "slot": "afternoon",
+     "speaker": "陈医",
+     "tags": [
+      "savings"
+     ],
+     "to": null
+    }
+   ],
+   "n_msgs": 2,
+   "peer_named_msgs": 0,
+   "ptr_msgs": 0,
+   "signals": 0,
+   "thread_key": "L:0|public|None-P005",
+   "turns_A": 1
+  }
+ ],
+ "longest_by_turns": [
+  {
+   "chain_alternation": 2,
+   "chain_mismatch": 1,
+   "chain_pointer": 1,
+   "grade": "bad",
+   "messages": [
+    {
+     "body": "（把秤砣往案板上一搁，抬眼打量你）哟，P005，你这身板练得倒结实，可光有力气不成——来，帮兰姐把这筐货搬上摊，我教你咋看秤星子，比划拳实在。",
+     "channel": "dm",
+     "day": 0,
+     "from": "P016",
+     "hearer": "陈医",
+     "msg_uid": null,
+     "place": "park",
+     "reply_to": null,
+     "round": 0,
+     "seq": 200,
+     "slot": "morning",
+     "speaker": "兰姐",
+     "tags": [
+      "combat_training"
+     ],
+     "to": "P005"
+    },
+    {
+     "body": "（压低声音）P016，你最近总说睡不着……我给你配的那副安神药，是不是没按时吃？",
+     "channel": "dm",
+     "day": 0,
+     "from": "P005",
+     "hearer": "兰姐",
+     "msg_uid": null,
+     "place": "cafe",
+     "reply_to": null,
+     "round": 6,
+     "seq": 4688,
+     "slot": "evening",
+     "speaker": "陈医",
+     "tags": [
+      "whisper"
+     ],
+     "to": "P016"
+    }
+   ],
+   "n_msgs": 2,
+   "peer_named_msgs": 0,
+   "ptr_msgs": 0,
+   "signals": 0,
+   "thread_key": "L:0|dm|P005-P016",
+   "turns_A": 2
+  },
+  {
+   "chain_alternation": 2,
+   "chain_mismatch": 1,
+   "chain_pointer": 1,
+   "grade": "bad",
+   "messages": [
+    {
+     "body": "（把铁钳往砧上一搁）都别抢，先听我说完——这堆料我盯了三天，谁家真缺，报个数，我按人头分。",
+     "channel": "dm",
+     "day": 1,
+     "from": "P013",
+     "hearer": "秀娘",
+     "msg_uid": null,
+     "place": "market",
+     "reply_to": null,
+     "round": 15,
+     "seq": 21349,
+     "slot": "afternoon",
+     "speaker": "铁头",
+     "tags": [
+      "scarce_buy"
+     ],
+     "to": "P004"
+    },
+    {
+     "body": "秀娘笑盈盈地把刚出炉的桂花糕递过去：“来，趁热尝尝，我今儿多放了点蜜，甜不甜你可得跟我说实话。”",
+     "channel": "dm",
+     "day": 1,
+     "from": "P004",
+     "hearer": "铁头",
+     "msg_uid": null,
+     "place": "market",
+     "reply_to": null,
+     "round": 18,
+     "seq": 23113,
+     "slot": "evening",
+     "speaker": "秀娘",
+     "tags": [
+      "gift"
+     ],
+     "to": "P013"
+    }
+   ],
+   "n_msgs": 2,
+   "peer_named_msgs": 0,
+   "ptr_msgs": 0,
+   "signals": 0,
+   "thread_key": "L:1|dm|P004-P013",
+   "turns_A": 2
+  },
+  {
+   "chain_alternation": 2,
+   "chain_mismatch": 1,
+   "chain_pointer": 1,
+   "grade": "bad",
+   "messages": [
+    {
+     "body": "（摆出架势，笑嘻嘻地）P006，来嘛来嘛，别手下留情——我倒要看看，我离出镇子还差几拳！",
+     "channel": "dm",
+     "day": 3,
+     "from": "P011",
+     "hearer": "方老师",
+     "msg_uid": null,
+     "place": "park",
+     "reply_to": null,
+     "round": 36,
+     "seq": 55286,
+     "slot": "morning",
+     "speaker": "小满",
+     "tags": [
+      "combat_training"
+     ],
+     "to": "P006"
+    },
+    {
+     "body": "（轻声）P011，你刚才那个问题问得特别好——别怕问错，肯动脑筋的孩子才学得扎实。",
+     "channel": "dm",
+     "day": 3,
+     "from": "P006",
+     "hearer": "小满",
+     "msg_uid": null,
+     "place": "community_center",
+     "reply_to": null,
+     "round": 42,
+     "seq": 59296,
+     "slot": "evening",
+     "speaker": "方老师",
+     "tags": [
+      "whisper"
+     ],
+     "to": "P011"
+    }
+   ],
+   "n_msgs": 2,
+   "peer_named_msgs": 0,
+   "ptr_msgs": 0,
+   "signals": 0,
+   "thread_key": "L:3|dm|P006-P011",
+   "turns_A": 2
+  }
+ ],
+ "meta": {
+  "grade_counts": {
+   "bad": 172,
+   "good": 0,
+   "mid": 0
+  },
+  "n_messages": 187,
+  "n_threads": 172,
+  "thread_schema": "legacy"
+ },
+ "schema_version": "d6-samples/1.0",
+ "shortest_by_msgs": [
+  {
+   "chain_alternation": 1,
+   "chain_mismatch": 0,
+   "chain_pointer": 1,
+   "grade": "bad",
+   "messages": [
+    {
+     "body": "（摆摆手）不了，地里的活还等着我，改天再说吧。",
+     "channel": "dm",
+     "day": 0,
+     "from": "P001",
+     "hearer": "老石",
+     "msg_uid": null,
+     "place": "market",
+     "reply_to": null,
+     "round": 3,
+     "seq": 1899,
+     "slot": "afternoon",
+     "speaker": "老周",
+     "tags": [
+      "polite_reject"
+     ],
+     "to": "P002"
+    }
+   ],
+   "n_msgs": 1,
+   "peer_named_msgs": 0,
+   "ptr_msgs": 0,
+   "signals": 0,
+   "thread_key": "L:0|dm|P001-P002",
+   "turns_A": 1
+  },
+  {
+   "chain_alternation": 1,
+   "chain_mismatch": 0,
+   "chain_pointer": 1,
+   "grade": "bad",
+   "messages": [
+    {
+     "body": "（把一袋新米往你手里塞）拿着，自家地里出的，不图啥。",
+     "channel": "dm",
+     "day": 0,
+     "from": "P001",
+     "hearer": "阿禾",
+     "msg_uid": null,
+     "place": "market",
+     "reply_to": null,
+     "round": 6,
+     "seq": 4611,
+     "slot": "evening",
+     "speaker": "老周",
+     "tags": [
+      "gift"
+     ],
+     "to": "P003"
+    }
+   ],
+   "n_msgs": 1,
+   "peer_named_msgs": 0,
+   "ptr_msgs": 0,
+   "signals": 0,
+   "thread_key": "L:0|dm|P001-P003",
+   "turns_A": 1
+  },
+  {
+   "chain_alternation": 1,
+   "chain_mismatch": 0,
+   "chain_pointer": 1,
+   "grade": "bad",
+   "messages": [
+    {
+     "body": "这木头我挑了三天，纹理顺，给你打个匣子。",
+     "channel": "dm",
+     "day": 0,
+     "from": "P002",
+     "hearer": "阿林",
+     "msg_uid": null,
+     "place": "community_center",
+     "reply_to": null,
+     "round": 6,
+     "seq": 4632,
+     "slot": "evening",
+     "speaker": "老石",
+     "tags": [
+      "gift"
+     ],
+     "to": "P007"
+    }
+   ],
+   "n_msgs": 1,
+   "peer_named_msgs": 0,
+   "ptr_msgs": 0,
+   "signals": 0,
+   "thread_key": "L:0|dm|P002-P007",
+   "turns_A": 1
+  }
+ ]
+}
