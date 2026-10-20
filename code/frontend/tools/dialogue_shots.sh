@@ -23,7 +23,7 @@ BASE="${1:?需要 base_url（如 http://127.0.0.1:8848）}"
 DATA="${2:?需要 threads.json 相对路径（页面 ?data= 用，相对 code/frontend）}"
 WANT_BATCH="${3:-}"
 WANT_SHA8="${4:-}"
-OUTDIR="${5:-./shots}"
+OUTDIR="${5:-../v2/evidence/d7_shots}"   # 默认直接落正式证据目录，避免在 code/ 下留临时目录
 
 # ---- 从 threads.json 取事实（label 与日志字节 sha），不靠人填 ----
 META=$(python3 - "$DATA" <<'PY'

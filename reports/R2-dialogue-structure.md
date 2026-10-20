@@ -11,16 +11,18 @@
 
 **【判断】** 改造前，这个小镇的"对话"在结构上不成立——不是说得不好，而是**没有对话这个东西**：每条消息都是独立单发，消息层没有"会话"对象，生成时看不见对方上一句。改造解决的就是这一层。
 
-**【读数 · v0，legacy 口径】** 改造前（真 LLM，20 agents × 84 回合，共 230 条消息）：
+**【读数 · v0-anchor，legacy 口径】** 改造前（真 LLM，16 agents × 84 回合，187 条消息；日志 `run.jsonl` (c1f86bf6)，`wc -l`=186,972，`max_round=83`）：
 
-| 指标 | 值 | 说明 |
-|---|---|---|
-| `single_msg_thread_ratio`（单条线程占比） | **91.51%** | 绝大多数"线程"只有一条消息 |
-| `multi_turn_thread_ratio`（≥3 轮线程占比） | **0.00%** | 没有一条对话达到 3 个交替轮次 |
-| `single_speaker_thread_ratio`（独白线程占比） | **96.70%** | 几乎全是自说自话 |
-| `n_threads` | **212** | 切分口径 `thread_schema = legacy` |
+| 指标 | 值 | 分母 | 说明 |
+|---|---|---|---|
+| `single_msg_thread_ratio`（单条线程占比） | **91.3%** | 172 线程 | 绝大多数"线程"只有一条消息 |
+| `multi_turn_thread_ratio`（≥3 轮线程占比） | **0.0%** | 172 线程 | 没有一条对话达到 3 个交替轮次 |
+| `single_speaker_thread_ratio`（独白线程占比） | **98.3%** | 172 线程 | 几乎全是自说自话 |
+| S-4 回复指针完整率 | **0.0%** | 15 条非首条消息 | 15 条全为 `ptr_empty` |
+| 最长交替链 max | **2** | 172 线程 | `chain_by_pointer max` = 1 |
+| `n_threads` | **172** | — | 切分口径 `thread_schema = legacy` |
 
-（来源 `v2/evidence/d5_metrics_t300_n20_seed42.json` (2901d7b8)，sha256 `2901d7b8ca8cedfed6032a4168716167ce5594640a5764f82fdaf4862d1fa6a2`）
+（来源 **v0-anchor 锁定批**：`v2/evidence/d5_metrics_v0anchor.json` (e8c8409e) / `.md` (36ad719a)；锁定凭证 `v2/evidence/d5_v0anchor_lock.md` (2940fb8f)；日志 `v2/evidence/run_d2_before_n16_seed42/run.jsonl` (c1f86bf6)）
 
 > ⚠️ **口径必读**：上表四个数是 **`thread_schema = legacy`（切分口径 = 同 `(day, channel, {from,to})` 聚合）**、`n_threads = 212` 下的结果，**不是**改造后新结构同口径算出来的数。跨口径比较无效（原因见 §5.2）。
 
@@ -112,17 +114,25 @@
 
 ### 5.1 改造后的线程形状（描述，不做检验）
 
-**【未完成】** 等 D2 两臂锁 sha。表头已固定，禁止事后加列：
+**【未完成】** v0-anchor 列已填（锁定批），A0/A1 待跑。表头已固定，禁止事后加列：
 
 | 指标 | v0-anchor（legacy） | A0 / A1（explicit） | 分母 | band_source | 判定 |
 |---|---|---|---|---|---|
-| 单条线程占比 | 91.51%（n=212） | 待填 | 待填 | 待估（per-thread） | 仅描述 |
-| 多轮线程占比（turns_A ≥ 3） | 0.00%（n=212） | 待填 | 待填 | `rule-of-three(3/n)` | 仅描述 |
-| 独白线程占比 | 96.70%（n=212） | 待填 | 待填 | 待估（per-thread） | 仅描述 |
-| 线程长度 p50 / p90 / max | 待填 | 待填 | 待填 | — | 描述统计 |
-| `turns_A` p50 / p90 / max | 待填 | 待填 | 待填 | — | 描述统计 |
-| S-1 B 往复对数 | 字段缺失（报 0） | 待填 | 待填 | 待估 | 仅描述 |
-| S-4 指针完整率 | 无该字段 | 待填 | 待填 | 待估 | 仅描述 |
+| 单条线程占比 | **91.3%** | 待填 | 172 | 线程级档（m=170→±?，须取线程级） | 仅描述 |
+| 多轮线程占比（turns_A ≥ 3） | **0.0%** | 待填 | 172 | `rule-of-three(3/n)`（恒 0 退化） | 仅描述 |
+| 独白线程占比 | **98.3%** | 待填 | 172 | 线程级档 | 仅描述 |
+| 线程长度 p50 / p90 / max | **1 / 1 / 2** | 待填 | 172 | — | 描述统计 |
+| `turns_A` p50 / p90 / max | **1 / 1 / 2** | 待填 | 172 | — | 描述统计 |
+| S-1 B 往复对数 | **0（字段缺失，非缺陷）** | 待填 | 172 | 仅后臂有该字段 | 仅描述 |
+| S-4 指针完整率 | **0.0%（15 条全空）** | 待填 | 15 | 分母 <68 ⇒ 无可用带 | 仅描述 |
+
+### 5.1b 两条会被读者误读的结构约束（先讲清）
+
+**【事实 · 结构性下限】** `PUBLIC` 声道**恒为单条、不接话**，而 v0-anchor 中 PUBLIC 占 **48/187 ≈ 26%**。因此改造后 `single_msg_thread_ratio` **最多降到约 26% 附近，不可能接近 0**。正确写法是拆开看：
+> 改造后单条线程占比 **X%**，其中 PUBLIC 单条声道构成约 **26%** 的**结构性下限**；DM/GROUP 侧的单发占比由 **91.3%** 降至 **Y%**。
+**判断**：若不写这条下限，读者会把"还有约四分之一是单发"读成"改造没成功"——那是把声道设计误当成对话质量。
+
+**【事实 · 有界设计】** 往复是**有界**的，不是"越长越好"：硬上限 `max_turns=6`、`max_turns_per_round=2`、`reply_window_rounds=2`、`history_turns=3`。因此指标按「**是否 >0**」「**是否 ≥4**」这类阈值判读，**不按"链越长越自然"**。最长链预期不会爆炸；若某臂最长链异常长，应先查开关是否被改，而不是当成好消息。
 
 ### 5.2 两臂可比性声明（**必读**）
 
@@ -154,8 +164,8 @@
 
 | # | 结论 | 层级 | 来源（仓库相对路径） | sha256 | sha8 | 复现 |
 |---|---|---|---|---|---|---|
-| 1 | v0：单条线程 91.51%、多轮线程 0、独白线程 96.70%、`n_threads=212`（`thread_schema=legacy`） | 读数（历史批 20×84） | `v2/evidence/d5_metrics_t300_n20_seed42.json` (2901d7b8) | `2901d7b8ca8cedfed6032a4168716167ce5594640a5764f82fdaf4862d1fa6a2` | `2901d7b8` | `python3 tools/d5/dialogue_metrics.py --log <RUN>/run.jsonl --meta <RUN>/meta.json --out-json <OUT>.json --out-md <OUT>.md` |
-| 2 | 同批可读版读数表 | 读数 | `v2/evidence/d5_metrics_t300_n20_seed42.md` (707412d1) | `707412d1ca6e9817e376dade2980cc6e5e7b8958e9a58c97ec97058b5f24ac03` | `707412d1` | 同上 |
+| 1 | v0-anchor：单条线程 91.3%、多轮线程 0.0%、独白线程 98.3%、`n_threads=172`（`thread_schema=legacy`）、指针完整率 0.0%（15 条） | 读数（evidence） | `v2/evidence/d5_metrics_v0anchor.json` (e8c8409e) | `e8c8409e6a1205ce906aea1d1081925066f02fd496da78707ced65bb40a88101` | `e8c8409e` | `python3 tools/d5/dialogue_metrics.py --log v2/evidence/run_d2_before_n16_seed42/run.jsonl --meta .../meta.json` |
+| 2 | 同批可读版读数表 + 锁定凭证 | 读数/事实 | `v2/evidence/d5_metrics_v0anchor.md` (36ad719a)、`v2/evidence/d5_v0anchor_lock.md` (2940fb8f) | `36ad719af8c40991cfe5dc0f0b41e9f7939b25768a27056c88b41e43ed9fbab1` / `2940fb8fe110019f259945fa936bfaf099f6044942dbdc8675b06c9b4f4bdaeb` | `36ad719a` / `2940fb8f` | 同上 |
 | 3 | 改造前无会话对象、提示词不含对方上一句、每时段最多说一次 | 事实 | `code/life/agent.py:729-767`、`code/orchestration/integration.py:739-841` | 随仓库提交（`git log -- code/life/agent.py`） | `grep -n "_dialogue_prompt" -A6 code/life/agent.py`；`grep -rn "reply_to\|thread_id" code/ \| wc -l`（改造前应为 0） |
 | 4 | 时间结构 3 回合/时段 × 4 时段/天 × 7 天/周 | 事实 | `code/config/default.json` (a94fba10)、`code/engine/time.py` | `a94fba10e6d71ea0b9c12d2513e74fc0be2d3a70ad3d8468863e23e207e6ab8d` | `a94fba10` | `python3 -c "import json;print(json.load(open('code/config/default.json'))['time_config'])"` |
 |---|---|---|---|---|---|---|
