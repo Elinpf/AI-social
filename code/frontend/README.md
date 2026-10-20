@@ -481,6 +481,10 @@ python frontend/tools/gen_threads.py \
 # 不通过 → "FAIL 完整性断言：… → 不生成（半截跑批）"，rc=3，不会产生任何文件
 ```
 
+**同批目录的选择规则**：一次跑批可能残留多个目录（`ABORTED_*` 前缀、首次崩溃目录、重跑目录）。
+**只认「带 `meta.json` 且 `--require-complete` 断言通过」的那一份**；被断言挡下的目录（半截/续跑/ABORTED）
+一律**不得**用于演示数据集与截图。选目录前先跑一次 `--summary --require-complete` 看它到底完不完整。
+
 判定规则：`meta.json` 必须存在且含 `rounds`；日志里 `TURN_SEAL` 的 round 集合必须**恰好等于** `0..rounds-1`（无缺号、无多余）。
 结果同时写进 `threads.json.completeness`（`turn_seals / rounds_expected / seal_round_min/max / complete`），读者可复核。
 
