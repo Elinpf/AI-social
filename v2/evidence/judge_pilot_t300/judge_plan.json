@@ -1,0 +1,69 @@
+{
+ "inputs": {
+  "log": "/root/t271/runs/t300/run.jsonl",
+  "log_sha256": "sha256:33b7651f2b11d5eaf5720dbd0560cc2ea2a468d37f7319d972b2d7fafd808a08",
+  "log_sha8": "33b7651f"
+ },
+ "protocol": {
+  "dim_zh": {
+   "flow": "往复流畅",
+   "naturalness": "自然度",
+   "persona_fit": "人设贴合",
+   "responsiveness": "回应有效",
+   "specificity": "具体性"
+  },
+  "dims": [
+   "naturalness",
+   "persona_fit",
+   "specificity",
+   "responsiveness",
+   "flow"
+  ],
+  "max_tokens": 700,
+  "model_requested": "DeepSeek-Flash",
+  "n_threads": 2,
+  "pool_multi_msg_threads": 18,
+  "pool_size": 18,
+  "repeat": 2,
+  "round_range": null,
+  "sampling_unit": "thread",
+  "seed": 20261020,
+  "system_prompt": "你是「AI 小镇」对话质量评审员。你会看到一段居民之间的对话线程，按时间顺序排列，标注了说话人。\n只评这段对话本身读起来是否像真人说话，不要评剧情设定、事件是否合理、角色是否做了该做的事。\n\n请对 5 个维度各打一个 **1–7 的整数分**：\n1. naturalness 自然度：像不像熟人之间随口说话。1=机械/书面/翻译腔/像模板；4=能读但明显是生成的；7=几乎像真人对话录音转写。\n2. persona_fit 人设贴合：语气、用词、关心的事是否贴合说话人身份。1=换成谁都能说；4=部分贴合；7=明显只有这个角色会这么说。\n3. specificity 具体性：是否有具体细节、情绪、处境。1=全是空泛客套；4=有一点细节；7=细节可感、有画面。\n4. responsiveness 回应有效：每句是否在接上一句（回答/追问/反驳/共情/接梗），而不是各说各话。1=完全自说自话；4=部分接得上；7=环环相扣。\n5. flow 往复流畅：整体是否像一段连续对话。1=碎片拼接；4=有来回但不连贯；7=一气呵成。\n\n额外要求：\n- `worst_line`：最不自然的一句，**原样摘录且不超过 40 字**（超出请截断到 40 字内，不要改写）。\n- `reason`：扣分主因，**不超过 30 字**。\n- 只输出一行 JSON，不要解释文字、不要 markdown 代码块、不要换行：\n{\"naturalness\":n,\"persona_fit\":n,\"specificity\":n,\"responsiveness\":n,\"flow\":n,\"worst_line\":\"...\",\"reason\":\"...\"}",
+  "system_prompt_sha256": "sha256:547e52c747c313e0552201d5181c8e56cd1011f35686c7ee7e92c4b0bff3f6a6",
+  "temperature": 0.0,
+  "thread_pool_scheme": "multi|all"
+ },
+ "samples": [
+  {
+   "msg_ids": [
+    "D-24-0",
+    "D-30-0"
+   ],
+   "n_msgs": 2,
+   "rounds": [
+    24,
+    30
+   ],
+   "sample_id": "S001",
+   "thread_key": "L:2|MSG_DM|P001-P011",
+   "transcript_sha256": "sha256:38bcc8e5d32b15365ba64d04909d8fd3a3700fc92983677d3fb2485753a7a12d",
+   "user_prompt_sha256": "sha256:da2df442aa115754e6fec2c71786c858a6f0cf580a236998f4e8febd8cdaf573"
+  },
+  {
+   "msg_ids": [
+    "D-51-0",
+    "D-54-0"
+   ],
+   "n_msgs": 2,
+   "rounds": [
+    51,
+    54
+   ],
+   "sample_id": "S002",
+   "thread_key": "L:4|MSG_DM|P007-P011",
+   "transcript_sha256": "sha256:49808a955f69a76824e92298938cf61084242208808da88fd44f0a85c744bcdf",
+   "user_prompt_sha256": "sha256:b2e79d63e971b21549dfcb9af948bdb6153a0ce88cb43ff97ae180428032a6fa"
+  }
+ ],
+ "schema_version": "d5-judge/1.0"
+}

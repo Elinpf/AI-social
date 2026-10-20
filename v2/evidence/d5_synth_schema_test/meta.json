@@ -1,0 +1,24 @@
+{
+ "provider": "openai_compat",
+ "model_requested": "DeepSeek-Flash",
+ "seed": 42,
+ "n": 2,
+ "rounds": 1,
+ "rounds_effective": 1,
+ "rounds_per_slot_effective": "3",
+ "code_sha": "SYNTH-NOT-A-REAL-RUN",
+ "git_dirty_files": [],
+ "events": 7,
+ "msg_counts": {
+  "MSG_DM": 4,
+  "MSG_PUBLIC": 0,
+  "MSG_GROUP": 0
+ },
+ "llm_calls": 1,
+ "degraded_calls": 0,
+ "mock_precalib_msg_count": 4,
+ "batch_status": "synthetic",
+ "started_at": "synthetic",
+ "finished_at": "synthetic",
+ "note": "合成日志，仅用于指标脚本 explicit-schema 自检；不得计入任何读数或报告数据"
+}

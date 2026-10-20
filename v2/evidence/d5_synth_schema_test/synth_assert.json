@@ -1,0 +1,81 @@
+{
+ "all_pass": true,
+ "checks": [
+  {
+   "actual": "explicit",
+   "expected": "explicit",
+   "metric": "thread_schema",
+   "pass": true
+  },
+  {
+   "actual": 1,
+   "expected": 1,
+   "metric": "n_threads",
+   "pass": true
+  },
+  {
+   "actual": 4.0,
+   "expected": 4,
+   "metric": "turns_A",
+   "pass": true
+  },
+  {
+   "actual": 3.0,
+   "expected": 3,
+   "metric": "B_roundtrips",
+   "pass": true
+  },
+  {
+   "actual": 4.0,
+   "expected": 4,
+   "metric": "chain_by_alternation",
+   "pass": true
+  },
+  {
+   "actual": 3,
+   "expected": 3,
+   "metric": "ptr_ok",
+   "pass": true
+  },
+  {
+   "actual": 0,
+   "expected": 0,
+   "metric": "ptr_dangling",
+   "pass": true
+  },
+  {
+   "actual": 0,
+   "expected": 0,
+   "metric": "ptr_cross_thread",
+   "pass": true
+  },
+  {
+   "actual": 1.0,
+   "expected": 1.0,
+   "metric": "reply_pointer_rate",
+   "pass": true
+  },
+  {
+   "actual": 0.666667,
+   "expected": 0.6666666666666666,
+   "metric": "cont_same_topic",
+   "pass": true
+  },
+  {
+   "actual": 0.0,
+   "expected": 0.0,
+   "metric": "single_msg_thread_ratio",
+   "pass": true
+  }
+ ],
+ "inputs": {
+  "meta_json": "v2/evidence/d5_synth_schema_test/meta.json",
+  "metrics_script_sha256": "sha256:34b23a3d934e41de6427e30abcfaf69fb6c16d6c783996bd03221ec7ecaca761",
+  "run_jsonl": "v2/evidence/d5_synth_schema_test/run.jsonl",
+  "run_sha256": "sha256:41649e2b2c48d6af2b86a5aae8fa031e9272d2b1401681858c5ec76fb2287ab6",
+  "run_sha8": "41649e2b"
+ },
+ "purpose": "验证 dialogue_metrics.py 在 explicit schema（thread_id/turn_index/reply_to/ctx）下行为正确",
+ "schema_version": "d5-synth-schema-test/1.0",
+ "warning": "合成日志，不含真实 LLM 调用，不得计入任何读数/报告数据"
+}

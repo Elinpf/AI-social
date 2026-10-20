@@ -1,0 +1,13 @@
+# 事务性 tag（F-1 非功能性闲聊占比）。每行一个 tag；与 payload.tag_hints 精确匹配。
+trade
+buy
+sale
+scarce_buy
+counter_propose
+polite_reject
+select_location
+produce
+work
+pay
+hire
+negotiate
