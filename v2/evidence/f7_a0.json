@@ -1,0 +1,5908 @@
+{
+ "arm": "run_d2_after_n16_seed42",
+ "inputs": {
+  "bootstrap": {
+   "method": "percentile-95",
+   "n": 2000,
+   "seed": 42
+  },
+  "log_path": "v2/evidence/run_d2_after_n16_seed42/run.jsonl",
+  "log_sha256": "643f13a528c288d3e9677cb8ac100139224afbd0b46c0f7da0c3a5ed85b13141",
+  "n_personas": 20,
+  "n_records": 194108,
+  "name_collision_check": {
+   "collisions": [],
+   "ok": true
+  },
+  "name_field": "personas[].persona_id + personas[].display_name（strip '青溪镇·'）",
+  "name_table_sha256": "cdf28d499146220921482d175d43298269d2c2b08c25c0585b6f5e51af4b64d1",
+  "personas_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/config/personas.json",
+  "personas_sha256": "08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d",
+  "script_sha256": "35349954464130fe065d1e16eedf48bd0a9b67c218c1370a56247e8c1e8912b1"
+ },
+ "legacy_compat": {
+  "den": 686,
+  "pos": 107,
+  "rate": 0.155977,
+  "raw_hits": [
+   {
+    "body_excerpt": "（拨着算盘）秀娘，练完这一趟，咱俩的账就平了。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place_round_last": "library",
+      "pid": "P004"
+     }
+    ],
+    "round": 0,
+    "sender_place": "park",
+    "seq": 124
+   },
+   {
+    "body_excerpt": "桂婶，您这招真利索，能教教我吗？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "桂婶",
+      "peer_place_round_last": "school",
+      "pid": "P012"
+     }
+    ],
+    "round": 0,
+    "sender_place": "park",
+    "seq": 145
+   },
+   {
+    "body_excerpt": "兰姐啊，你这手艺真是没得说，改天有空教教我呗，我也想让家里那口子夸我一回。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place_round_last": "park",
+      "pid": "P016"
+     }
+    ],
+    "round": 0,
+    "sender_place": "school",
+    "seq": 156
+   },
+   {
+    "body_excerpt": "（把摊布往边上一撩，冲陈医扬了扬下巴）陈医，你这身板看着斯文，真动起手来可别光摆架势——我守摊子练出来的眼力，一眼就能瞧出谁是真有劲儿。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "陈医",
+      "peer_place_round_last": "workshop",
+      "pid": "P005"
+     }
+    ],
+    "round": 0,
+    "sender_place": "park",
+    "seq": 200
+   },
+   {
+    "body_excerpt": "（手指轻轻敲着咖啡杯沿）金先生，您这算盘打得真响。可有些东西……它不在账本上啊。比如我昨天在礼堂弹错了一个音，台下没人发现，可我自己心里那个坎儿，比丢了一百块钱还难受。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "金先生",
+      "peer_place_round_last": "market",
+      "pid": "P009"
+     }
+    ],
+    "round": 3,
+    "sender_place": "farm",
+    "seq": 2162
+   },
+   {
+    "body_excerpt": "（接过木刀挥了两下）嘿，还真不硌手了！巧儿你这手可真巧——不过话说回来，咱们练这个，真能打跑坏人吗？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place_round_last": "workshop",
+      "pid": "P014"
+     }
+    ],
+    "round": 3,
+    "sender_place": "bank",
+    "seq": 2183
+   },
+   {
+    "body_excerpt": "哎哟兰姐，那可太谢谢你了！你放心，我这人别的不敢说，耐心还是有的。明儿个我天不亮就过去，给你搭把手，顺便学学你那火候的诀窍。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place_round_last": "bank",
+      "pid": "P016"
+     }
+    ],
+    "round": 3,
+    "sender_place": "cafe",
+    "seq": 2196
+   },
+   {
+    "body_excerpt": "（眨眨眼，把木刀转了个花）嘿嘿，跟老石学的呗！他年轻时走南闯北，说这招叫\"削木式\"，砍柴防身两不误～",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "market",
+      "pid": "P002"
+     }
+    ],
+    "round": 3,
+    "sender_place": "workshop",
+    "seq": 2230
+   },
+   {
+    "body_excerpt": "（把一袋新米往阿禾手里塞）拿着，自家田里的，不图啥，就图个踏实。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "阿禾",
+      "peer_place_round_last": "plaza",
+      "pid": "P003"
+     }
+    ],
+    "round": 6,
+    "sender_place": "market",
+    "seq": 4869
+   },
+   {
+    "body_excerpt": "（陈医放下手里的脉枕，抬眼看了看阿林，语气不急不缓）阿林啊，你的好意我心领了。药材这东西，不是稀罕就好，得对证。我这儿缺的，多半是镇上人用不上的，你捎回来也是压箱底。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "阿林",
+      "peer_place_round_last": "park",
+      "pid": "P007"
+     }
+    ],
+    "round": 6,
+    "sender_place": "cafe",
+    "seq": 4941
+   },
+   {
+    "body_excerpt": "秀娘，你这儿还有热乎的吃食没？我这肚子一路咕咕叫，顺便跟你唠唠，我这次跑外头可听说了不少新鲜事儿呢。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place_round_last": "community_center",
+      "pid": "P004"
+     }
+    ],
+    "round": 6,
+    "sender_place": "park",
+    "seq": 4967
+   },
+   {
+    "body_excerpt": "（低声）阿林，这份文件请按流程在下午三点前交回，逾期需补办手续。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "阿林",
+      "peer_place_round_last": "park",
+      "pid": "P007"
+     }
+    ],
+    "round": 6,
+    "sender_place": "community_center",
+    "seq": 4988
+   },
+   {
+    "body_excerpt": "（咬了一口，含糊）嗯，甜。秀娘，你这手艺……比我家那口子强。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place_round_last": "community_center",
+      "pid": "P004"
+     }
+    ],
+    "round": 6,
+    "sender_place": "cafe",
+    "seq": 5065
+   },
+   {
+    "body_excerpt": "方老师，您这话说的……我收下就是了。松快的事，还真有——前阵子地里那场雨来得及时，苗保住了，我心里踏实不少。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "方老师",
+      "peer_place_round_last": "park",
+      "pid": "P006"
+     }
+    ],
+    "round": 12,
+    "sender_place": "farm",
+    "seq": 18966
+   },
+   {
+    "body_excerpt": "老周，你尝尝这个新烤的枣泥酥——别急着走啊，我看你最近绷得太紧了，坐下来喝口茶，跟我唠唠呗？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老周",
+      "peer_place_round_last": "park",
+      "pid": "P001"
+     }
+    ],
+    "round": 12,
+    "sender_place": "school",
+    "seq": 19041
+   },
+   {
+    "body_excerpt": "阿禾，你太客气了——红薯我收下，正好今晚当宵夜。不过说真的，你能把礼物接过去，我心里比吃了红薯还甜。对了，最近有没有什么让你觉得有意思的事？随便聊聊，别拘着。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "阿禾",
+      "peer_place_round_last": "farm",
+      "pid": "P003"
+     }
+    ],
+    "round": 12,
+    "sender_place": "park",
+    "seq": 19181
+   },
+   {
+    "body_excerpt": "（抬眼看了看对方，语气平稳）阿林，规定就是规定。单子先放着，你去吃饭，回来再办。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "阿林",
+      "peer_place_round_last": "school",
+      "pid": "P007"
+     }
+    ],
+    "round": 12,
+    "sender_place": "town_hall",
+    "seq": 19327
+   },
+   {
+    "body_excerpt": "（捂着肚子）巧儿，练完这趟，账要平——你请我吃碗面，我教你算利息。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place_round_last": "workshop",
+      "pid": "P014"
+     }
+    ],
+    "round": 12,
+    "sender_place": "park",
+    "seq": 19396
+   },
+   {
+    "body_excerpt": "（握紧木剑，朝周公文眨眨眼）喂，周师父，这一招要是练成了，我是不是就能去镇上比武大会露一手啦？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "周公文",
+      "peer_place_round_last": "town_hall",
+      "pid": "P008"
+     }
+    ],
+    "round": 12,
+    "sender_place": "park",
+    "seq": 19540
+   },
+   {
+    "body_excerpt": "（攥着锅铲当短刀，朝老石比划两下）老石，你说我这半路出家的，练这个是不是有点不务正业？可我这心里啊，总绷着根弦，就想找点乐子松快松快。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "workshop",
+      "pid": "P002"
+     }
+    ],
+    "round": 12,
+    "sender_place": "park",
+    "seq": 19830
+   },
+   {
+    "body_excerpt": "（把茶碗搁下，手指在桌面上敲了敲）就这一句“行”？老石，你这人哪，答应得比谁都痛快，回头人影都找不着。上回让你帮我看那批木耳，你倒好，蹲那儿挑了半天，最后拎走两斤，钱还没给呢。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "workshop",
+      "pid": "P002"
+     }
+    ],
+    "round": 12,
+    "sender_place": "school",
+    "seq": 19907
+   },
+   {
+    "body_excerpt": "（搓手）金先生，我练武不为别的，就图个夜里睡得踏实。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "金先生",
+      "peer_place_round_last": "farm",
+      "pid": "P009"
+     }
+    ],
+    "round": 15,
+    "sender_place": "bank",
+    "seq": 21817
+   },
+   {
+    "body_excerpt": "（搓了搓手）方老师，说实话，我还没想那么远。眼下地里活儿重，肚子也空，先想着能换点吃的就成。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "方老师",
+      "peer_place_round_last": "school",
+      "pid": "P006"
+     }
+    ],
+    "round": 15,
+    "sender_place": "farm",
+    "seq": 21835
+   },
+   {
+    "body_excerpt": "（把刚出炉的桂花糕往他面前推了推）老周啊，地里的活是干不完的，你先垫垫肚子。我瞧你脸色不太好，是不是又没吃早饭就下地了？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老周",
+      "peer_place_round_last": "bank",
+      "pid": "P001"
+     }
+    ],
+    "round": 15,
+    "sender_place": "market",
+    "seq": 21852
+   },
+   {
+    "body_excerpt": "（把木勺往围裙兜里一插，凑过去看老石削木楔）火候我认，可火候这东西也得喂饱了才看得准啊——你瞅我这手，抖得跟筛糠似的，待会儿颠勺准得把菜甩你脸上。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "market",
+      "pid": "P002"
+     }
+    ],
+    "round": 15,
+    "sender_place": "kitchen",
+    "seq": 22003
+   },
+   {
+    "body_excerpt": "五味啊，你这批货我看了，成色是真好，可我这摊子眼下实在腾不出手，改天我专门去你那儿挑，行不？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "五味",
+      "peer_place_round_last": "kitchen",
+      "pid": "P015"
+     }
+    ],
+    "round": 15,
+    "sender_place": "cafe",
+    "seq": 22020
+   },
+   {
+    "body_excerpt": "（把围裙角攥了攥，往灶上那屉刚出炉的馒头瞟了一眼）铁头哥，别光顾着孩子，你自己也得吃啊。来来来，先拿两个馒头垫垫——我这新试的，掺了点南瓜泥，甜丝丝的。粮价的事咱慢慢想法子，街坊邻居的，总不能看着你饿肚子。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place_round_last": "cafe",
+      "pid": "P013"
+     }
+    ],
+    "round": 18,
+    "sender_place": "market",
+    "seq": 23860
+   },
+   {
+    "body_excerpt": "陈医，我这一路赶得连口热饭都没顾上，肚子都咕咕叫了——这点小玩意儿您先收着，顺便帮我瞧瞧，镇上最近有没有什么新鲜事？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "陈医",
+      "peer_place_round_last": "cafe",
+      "pid": "P005"
+     }
+    ],
+    "round": 18,
+    "sender_place": "plaza",
+    "seq": 23896
+   },
+   {
+    "body_excerpt": "哎哟老周，你来得正好，我刚蒸了锅红薯，快拿一个垫垫肚子——我这肚子都饿得咕咕叫了，咱边吃边唠。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老周",
+      "peer_place_round_last": "community_center",
+      "pid": "P001"
+     }
+    ],
+    "round": 18,
+    "sender_place": "cafe",
+    "seq": 23984
+   },
+   {
+    "body_excerpt": "（笑着摆手）哎哟，你这话说得，我还能拦着你不让吃饭？去吧去吧。不过五味啊，你那鱼头我可记下了——别到时候拿个小的糊弄我，我这眼睛可毒着呢。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "五味",
+      "peer_place_round_last": "plaza",
+      "pid": "P015"
+     }
+    ],
+    "round": 18,
+    "sender_place": "cafe",
+    "seq": 24022
+   },
+   {
+    "body_excerpt": "（方老师揉了揉空空的肚子，声音有点发虚）老石，咱们先歇口气行吗？我这肚子饿得直打鼓，再练下去怕是连粉笔都捏不稳了。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "farm",
+      "pid": "P002"
+     }
+    ],
+    "round": 24,
+    "sender_place": "park",
+    "seq": 34288
+   },
+   {
+    "body_excerpt": "（揉着肚子，眼睛却盯着训练场）铁头，你说练完这趟拳，食堂还有剩包子不？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place_round_last": "workshop",
+      "pid": "P013"
+     }
+    ],
+    "round": 24,
+    "sender_place": "park",
+    "seq": 34653
+   },
+   {
+    "body_excerpt": "（笑着摆手）哎呀老周，你这就太谨慎了。我跟你说，上回李家那闺女就是听人说的，结果还真找着了她丢的那只鸡！不过话说回来，我这肚子倒是先咕咕叫了，你家那锅里炖的啥呀，闻着真香。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老周",
+      "peer_place_round_last": "park",
+      "pid": "P001"
+     }
+    ],
+    "round": 24,
+    "sender_place": "office",
+    "seq": 34722
+   },
+   {
+    "body_excerpt": "（肚子咕噜响，手上还攥着木剑）五味师父，咱能先啃口饼再练不？饿得我剑都拿不稳啦！",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "五味",
+      "peer_place_round_last": "kitchen",
+      "pid": "P015"
+     }
+    ],
+    "round": 24,
+    "sender_place": "park",
+    "seq": 34864
+   },
+   {
+    "body_excerpt": "（手上已经开始抓面，闻言回头冲她乐）兰姐你这就见外了不是？一碗面还谈什么账——你要真过意不去，回头帮我尝尝我新琢磨的那个酱，给句实话就行。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place_round_last": "park",
+      "pid": "P016"
+     }
+    ],
+    "round": 24,
+    "sender_place": "kitchen",
+    "seq": 34937
+   },
+   {
+    "body_excerpt": "（兰姐一边揉着咕咕叫的肚子，一边斜眼打量铁头）我说铁头啊，你这拳脚练得再虎虎生风，也得先填饱肚子——要不先陪姐去市集口那家面摊对付一碗，账我算得清，亏不了你。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place_round_last": "workshop",
+      "pid": "P013"
+     }
+    ],
+    "round": 24,
+    "sender_place": "park",
+    "seq": 35012
+   },
+   {
+    "body_excerpt": "（笑着摆摆手）老石，你这刨子一放，倒让我想起教室里那些孩子——饿了就坐不住。不过说真的，combat_training这事，我琢磨着跟教学生一个理儿：得先让他们明白为什么练，再谈怎么练。你觉得呢？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "workshop",
+      "pid": "P002"
+     }
+    ],
+    "round": 27,
+    "sender_place": "cafe",
+    "seq": 37105
+   },
+   {
+    "body_excerpt": "（接过奶黄包，先咬了一大口，含糊地）唔——秀娘你这手艺，少放糖反倒更香了，奶味压得住。哎，说到这个，我倒想起个事儿——前阵子在邻镇，碰见个做点心的老师傅，人家带徒弟那叫一个讲究，手把手教，连揉面的力道都要盯着。我就琢磨，咱这走街串巷的，要是也能有个这样的师父领一领，少走多少弯路啊。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place_round_last": "kitchen",
+      "pid": "P004"
+     }
+    ],
+    "round": 27,
+    "sender_place": "market",
+    "seq": 37118
+   },
+   {
+    "body_excerpt": "金先生，训练计划尚未完成，按规程不宜中断。不过……您若实在饥饿，可先去食堂，我在此等候。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "金先生",
+      "peer_place_round_last": "farm",
+      "pid": "P009"
+     }
+    ],
+    "round": 27,
+    "sender_place": "cafe",
+    "seq": 37143
+   },
+   {
+    "body_excerpt": "（抱着吉他缩在墙角，声音发虚）秀娘、兰姐……谁那儿还有半块饼吗？我饿得连和弦都按不住了，这日子过得，连月亮都瘦成一道缝了。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place_round_last": "kitchen",
+      "pid": "P004"
+     }
+    ],
+    "round": 27,
+    "sender_place": "market",
+    "seq": 37185
+   },
+   {
+    "body_excerpt": "哎哟老石，你这摊上的饼闻着可真香——我肚子都咕咕叫了，要不咱先别急着说事儿，你让我蹭口吃的，边吃边聊成不？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "workshop",
+      "pid": "P002"
+     }
+    ],
+    "round": 27,
+    "sender_place": "market",
+    "seq": 37213
+   },
+   {
+    "body_excerpt": "（笑着把木剑往旁边一搁，从围裙兜里摸出半块芝麻饼）巧儿啊，你这肚子叫得比剑风还响。喏，先垫垫——不过说好了，吃完这口，咱得把昨天那招\"翻锅式\"再走一遍，你上回那架势，活像在炒菜时被油星子崩了手。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place_round_last": "workshop",
+      "pid": "P014"
+     }
+    ],
+    "round": 27,
+    "sender_place": "kitchen",
+    "seq": 37246
+   },
+   {
+    "body_excerpt": "（喘着气，握紧木刀）兰姐，再来一局——这次我肯定能打中你！",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place_round_last": "town_hall",
+      "pid": "P016"
+     }
+    ],
+    "round": 36,
+    "sender_place": "park",
+    "seq": 57214
+   },
+   {
+    "body_excerpt": "（一边收拾药柜一边抬眼）铁头啊，你这点小毛病真不用天天往我这儿跑，回去多喝热水、早点睡，比啥药都管用。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place_round_last": "workshop",
+      "pid": "P013"
+     }
+    ],
+    "round": 39,
+    "sender_place": "cafe",
+    "seq": 59250
+   },
+   {
+    "body_excerpt": "（放下手里的教案，温和地笑了笑）小满，再坚持十分钟好不好？我知道你饿了，可这套防身动作你刚学了一半，半途停下容易忘。练完这一遍，老师请你吃食堂的红烧肉，怎么样？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "小满",
+      "peer_place_round_last": "market",
+      "pid": "P011"
+     }
+    ],
+    "round": 39,
+    "sender_place": "school",
+    "seq": 59277
+   },
+   {
+    "body_excerpt": "方老师，您这方案我算过了，账要平——利息差三厘，风险得您担一半。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "方老师",
+      "peer_place_round_last": "school",
+      "pid": "P006"
+     }
+    ],
+    "round": 39,
+    "sender_place": "cafe",
+    "seq": 59320
+   },
+   {
+    "body_excerpt": "方老师，你这话说得我肚子更饿了……不过转身稳了是真的吗？那我再撑五分钟！说好了啊，练完你请我吃两个包子，不，三个！",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "方老师",
+      "peer_place_round_last": "school",
+      "pid": "P006"
+     }
+    ],
+    "round": 39,
+    "sender_place": "market",
+    "seq": 59360
+   },
+   {
+    "body_excerpt": "（喘着气，把木刀夹在腋下，歪头）兰姐你别笑我——我劈之前是不是肩膀先耸了？我自己都没察觉。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place_round_last": "cafe",
+      "pid": "P016"
+     }
+    ],
+    "round": 39,
+    "sender_place": "plaza",
+    "seq": 59417
+   },
+   {
+    "body_excerpt": "（把围裙往腰后一系，笑得有点勉强）小满啊，今天这锅我改了七遍方子，实在不敢再让你当小白鼠了——改天我稳住了再请你，行不？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "小满",
+      "peer_place_round_last": "market",
+      "pid": "P011"
+     }
+    ],
+    "round": 39,
+    "sender_place": "plaza",
+    "seq": 59422
+   },
+   {
+    "body_excerpt": "小满啊，兰姐这摊子上的货你随便挑，价钱好商量——不过话说回来，你今儿个来，是不是也想跟兰姐搭个伙做点啥？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "小满",
+      "peer_place_round_last": "market",
+      "pid": "P011"
+     }
+    ],
+    "round": 39,
+    "sender_place": "cafe",
+    "seq": 59427
+   },
+   {
+    "body_excerpt": "周公文，这点菜你收着，自家地里刚摘的。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "周公文",
+      "peer_place_round_last": "cafe",
+      "pid": "P008"
+     }
+    ],
+    "round": 42,
+    "sender_place": "plaza",
+    "seq": 61252
+   },
+   {
+    "body_excerpt": "（把碟子往边上挪了挪，手在围裙上擦了擦）种子？我倒是听来买糕的刘婶提了一嘴，说是今年配得少，好些人天没亮就去排队了。老周，你家那几亩地……是还没着落？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老周",
+      "peer_place_round_last": "cafe",
+      "pid": "P001"
+     }
+    ],
+    "round": 42,
+    "sender_place": "plaza",
+    "seq": 61281
+   },
+   {
+    "body_excerpt": "（放下手中的药碾子）坐吧，那边有凳子。不过铁头，我看你脸色不太好，是不是又跟你爹吵架了？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place_round_last": "community_center",
+      "pid": "P013"
+     }
+    ],
+    "round": 42,
+    "sender_place": "cafe",
+    "seq": 61298
+   },
+   {
+    "body_excerpt": "（压低声音，带着点疲惫的温和）小满，今天的问题先记在本子上，等明天课上我们一起慢慢想，好吗？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "小满",
+      "peer_place_round_last": "park",
+      "pid": "P011"
+     }
+    ],
+    "round": 42,
+    "sender_place": "community_center",
+    "seq": 61303
+   },
+   {
+    "body_excerpt": "（压低声音）周公文，你上回说的那批铁料，到底靠不靠得住？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "周公文",
+      "peer_place_round_last": "cafe",
+      "pid": "P008"
+     }
+    ],
+    "round": 42,
+    "sender_place": "community_center",
+    "seq": 61456
+   },
+   {
+    "body_excerpt": "（抄起小锤比划）塌不了！我敲的是锅耳朵，又不是承重墙——哎桂婶，您这灶房要真塌了，正好我给您改个敞篷的，烧火还省烟囱呢！",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "桂婶",
+      "peer_place_round_last": "cafe",
+      "pid": "P012"
+     }
+    ],
+    "round": 42,
+    "sender_place": "plaza",
+    "seq": 61465
+   },
+   {
+    "body_excerpt": "巧儿来啦，快尝尝我新烤的桂花糕，别客气，街坊邻居都尝过了，就等你这一口呢。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place_round_last": "cafe",
+      "pid": "P014"
+     }
+    ],
+    "round": 43,
+    "sender_place": "plaza",
+    "seq": 62111
+   },
+   {
+    "body_excerpt": "（握紧木剑，压低声音）兰姐，我……我其实不太会打架，但要是能护住学生，这一下我也得试试。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place_round_last": "market",
+      "pid": "P016"
+     }
+    ],
+    "round": 48,
+    "sender_place": "park",
+    "seq": 84014
+   },
+   {
+    "body_excerpt": "金先生，你看你这话说的，越这么说我越睡不着觉。行行行，我不问了，货也好人也好，我都不打听。不过我这人你也知道，嘴碎归嘴碎，正事上不含糊。账我今晚就给你理出来，明早送到你手上。就是……你要是哪天想找个人搭把手，我阿林别的不行，跑腿传话还是靠得住的。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "金先生",
+      "peer_place_round_last": "farm",
+      "pid": "P009"
+     }
+    ],
+    "round": 48,
+    "sender_place": "market",
+    "seq": 84107
+   },
+   {
+    "body_excerpt": "（突然把围巾扯下来攥在手里）可我不想再唱那些……那些安全的东西了。老石，你懂吗？我站在台上，底下的人鼓掌，可我觉得自己像个摆件。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "school",
+      "pid": "P002"
+     }
+    ],
+    "round": 48,
+    "sender_place": "library",
+    "seq": 84375
+   },
+   {
+    "body_excerpt": "（把铁钳往砧上一搁）周公文，我晓得规矩。可我这心里憋着火——你让我先忍三口气，我忍了。你就说，还差哪一步？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "周公文",
+      "peer_place_round_last": "town_hall",
+      "pid": "P008"
+     }
+    ],
+    "round": 48,
+    "sender_place": "library",
+    "seq": 84667
+   },
+   {
+    "body_excerpt": "（捏起一块饼干，翻来覆去地看）秀娘你这手艺……哎哟，木头味儿真钻进饼干里了！我咬一口——嗯！回头我也拿边角料刻几个小模子，刻成猫爪的，送街坊小孩儿，保准他们乐疯。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place_round_last": "library",
+      "pid": "P004"
+     }
+    ],
+    "round": 48,
+    "sender_place": "park",
+    "seq": 84755
+   },
+   {
+    "body_excerpt": "方老师：（深吸一口气，把脚跟往地上压了压，木剑仍握得发白）您说得对……我一急，手就抖。兰姐，那您看——我该先练什么？是站桩，还是先学怎么挡？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place_round_last": "cafe",
+      "pid": "P016"
+     }
+    ],
+    "round": 51,
+    "sender_place": "bank",
+    "seq": 86663
+   },
+   {
+    "body_excerpt": "五味，这笔账我算过了，你那边再让一步，咱们才能平。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "五味",
+      "peer_place_round_last": "bank",
+      "pid": "P015"
+     }
+    ],
+    "round": 51,
+    "sender_place": "market",
+    "seq": 86686
+   },
+   {
+    "body_excerpt": "巧儿啊，你这价我算过了，抹掉零头我还能挣个辛苦钱，要不咱各让一步，你多拿两斤回去尝尝鲜？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place_round_last": "workshop",
+      "pid": "P014"
+     }
+    ],
+    "round": 51,
+    "sender_place": "cafe",
+    "seq": 86781
+   },
+   {
+    "body_excerpt": "陈医，这点菜您收着，自家地里长的，不值钱，就是份心意。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "陈医",
+      "peer_place_round_last": "plaza",
+      "pid": "P005"
+     }
+    ],
+    "round": 54,
+    "sender_place": "cafe",
+    "seq": 88845
+   },
+   {
+    "body_excerpt": "（一边用酒精棉擦拭桌面，一边抬眼看了看门口）桂婶，您先坐，我这儿收拾完就给您看看——最近镇上感冒的多，您要是哪儿不舒服，别硬扛着。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "桂婶",
+      "peer_place_round_last": "cafe",
+      "pid": "P012"
+     }
+    ],
+    "round": 54,
+    "sender_place": "plaza",
+    "seq": 88918
+   },
+   {
+    "body_excerpt": "（凑近半步，压低声音）哎，老石，你这刨花都快堆成山了，也不嫌闷得慌。我听说镇上那批紧俏货，就这两天要放出来，你当真一点不动心？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "cafe",
+      "pid": "P002"
+     }
+    ],
+    "round": 54,
+    "sender_place": "community_center",
+    "seq": 88977
+   },
+   {
+    "body_excerpt": "（把课本卷成筒敲了敲你肩膀）喂，月牙，小满都到了，你还不请我吃冰？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "月牙",
+      "peer_place_round_last": "community_center",
+      "pid": "P010"
+     }
+    ],
+    "round": 54,
+    "sender_place": "cafe",
+    "seq": 89019
+   },
+   {
+    "body_excerpt": "（压低声音）秀娘，别跟人说——我把老石扔的边角料雕了只小雀，塞你袖子里了。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "cafe",
+      "pid": "P002"
+     }
+    ],
+    "round": 54,
+    "sender_place": "community_center",
+    "seq": 89050
+   },
+   {
+    "body_excerpt": "金先生，我懂您的意思，账要平大家都好过。可我这灶台上每一勺盐都得自己尝过才敢往外端——您让我再让一步，我怕的不是少赚那点，是这味道一松，回头客人尝出来，砸的是咱俩的招牌。您看这样行不行，价我按您说的走，但食材这块得让我自己挑，别在这上头省。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "金先生",
+      "peer_place_round_last": "park",
+      "pid": "P009"
+     }
+    ],
+    "round": 54,
+    "sender_place": "cafe",
+    "seq": 89089
+   },
+   {
+    "body_excerpt": "（笑着摇头）巧儿啊，你这张嘴比我这摊上的秤还精。木盒是搭着货走的，单拿可不行。这样，你买三斤，我送你个小木盒，再饶你一把干花椒，回去炖肉香得很。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place_round_last": "community_center",
+      "pid": "P014"
+     }
+    ],
+    "round": 54,
+    "sender_place": "cafe",
+    "seq": 89096
+   },
+   {
+    "body_excerpt": "（手上刨子没停）周公文，章程是死的，木头是活的。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "周公文",
+      "peer_place_round_last": "school",
+      "pid": "P008"
+     }
+    ],
+    "round": 60,
+    "sender_place": "library",
+    "seq": 116511
+   },
+   {
+    "body_excerpt": "（整理袖口）老石，话不能这么说。规矩定下来，自有它的道理。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "library",
+      "pid": "P002"
+     }
+    ],
+    "round": 60,
+    "sender_place": "school",
+    "seq": 116994
+   },
+   {
+    "body_excerpt": "（手上不停，捏着块边角料）秀娘姐，你这叫折腾？我这才叫——（压低声音）昨儿把老石扔的碎木头拼了只小木鸟，翅膀还能动呢。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "library",
+      "pid": "P002"
+     }
+    ],
+    "round": 60,
+    "sender_place": "park",
+    "seq": 117485
+   },
+   {
+    "body_excerpt": "（把教案本轻轻合上，往桌边挪了挪）兰姐，我插一句——铁头这手艺我见过，去年学校修那扇歪门，他半天就正过来了。工钱你们谈，我只想提个醒：这活儿要是赶在雨季前头完，料得提前订，不然一拖又是一礼拜。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place_round_last": "plaza",
+      "pid": "P016"
+     }
+    ],
+    "round": 63,
+    "sender_place": "park",
+    "seq": 120033
+   },
+   {
+    "body_excerpt": "金先生，您这话我记下了。说实话，我这人走南闯北，账本倒是记，可心里那本账老是糊的。您这么一说，我倒想问问——您当年刚起步的时候，有没有哪笔账是记错了、亏了，后来才慢慢摸出门道的？我想听听您是怎么熬过来的。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "金先生",
+      "peer_place_round_last": "cafe",
+      "pid": "P009"
+     }
+    ],
+    "round": 63,
+    "sender_place": "plaza",
+    "seq": 120050
+   },
+   {
+    "body_excerpt": "（把手里的蒲扇往桌上一放，笑着凑过来）哎哟，你们几个这是谈生意呢还是斗嘴呢？兰姐，铁头这人就是嘴硬心软，你别跟他计较。铁头啊，兰姐在镇上啥时候亏待过人？工钱的事慢慢说，先把活儿干漂亮了，往后还怕没得赚？",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place_round_last": "park",
+      "pid": "P013"
+     }
+    ],
+    "round": 63,
+    "sender_place": "market",
+    "seq": 120123
+   },
+   {
+    "body_excerpt": "（拿手指蹭了蹭手背，没看陈医）三天出活，料钱你出，工钱八十。少一分我不干。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "陈医",
+      "peer_place_round_last": "town_hall",
+      "pid": "P005"
+     }
+    ],
+    "round": 63,
+    "sender_place": "park",
+    "seq": 120144
+   },
+   {
+    "body_excerpt": "（接过桂花糕，咬了一大口）唔…秀娘姐你这手艺，比老石教我的木工活儿还香！不过说真的，我是不是太笨了，连个基本架势都站不稳？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "town_hall",
+      "pid": "P002"
+     }
+    ],
+    "round": 63,
+    "sender_place": "park",
+    "seq": 120157
+   },
+   {
+    "body_excerpt": "（站着没动，手在裤腿上蹭了蹭）秀娘，我不是来吃点心的。地界的事今天得说清楚，不然我心里不踏实。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place_round_last": "park",
+      "pid": "P004"
+     }
+    ],
+    "round": 66,
+    "sender_place": "hall",
+    "seq": 122263
+   },
+   {
+    "body_excerpt": "（搓了搓手，声音低）月牙，我没逼你唱。就是……你歇着，我去把西头那垄草锄了。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "月牙",
+      "peer_place_round_last": "park",
+      "pid": "P010"
+     }
+    ],
+    "round": 66,
+    "sender_place": "plaza",
+    "seq": 122317
+   },
+   {
+    "body_excerpt": "（把教案本合上，指尖在封皮上轻轻压了压）兰姐，账目上你比我清楚，我不插嘴。我只说一句——铁头，你要是接了，我每天放学过来看一眼进度，顺便把第二天要用的料单子给你理出来。你只管干活，纸面上的事交给我。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place_round_last": "park",
+      "pid": "P016"
+     }
+    ],
+    "round": 66,
+    "sender_place": "hall",
+    "seq": 122380
+   },
+   {
+    "body_excerpt": "（捏起一块桂花糕，眼睛亮晶晶地）秀娘姐，你这糕要是再少放半勺糖，我都能拿去当橡皮擦使了——不过我喜欢！对了，你们刚才说的那个\"谁说了算\"的事，我在学校也碰见过，班长跟体育委员吵起来，最后是全班投票才摆平的。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place_round_last": "park",
+      "pid": "P004"
+     }
+    ],
+    "round": 66,
+    "sender_place": "plaza",
+    "seq": 122491
+   },
+   {
+    "body_excerpt": "（接过茶抿了一口，眼睛亮了亮）哎哟秀娘，你这桂花糕真香，糖少放半勺反倒更清爽了。老周你也来一块——（把碟子往老周那边推了推，又回头冲秀娘笑）说起来，你俩到底为啥事闹的？我这人嘴笨，可耳朵好使，你们说给我听听，兴许我还能帮着搭把手呢。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "老周",
+      "peer_place_round_last": "hall",
+      "pid": "P001"
+     }
+    ],
+    "round": 66,
+    "sender_place": "park",
+    "seq": 122498
+   },
+   {
+    "body_excerpt": "（把手里那根铁条往砧上一搁，闷响）兰姐，垫钱我领。数我不还，按你说的来。就一条——方老师得盯着，别到时候说不清。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "方老师",
+      "peer_place_round_last": "hall",
+      "pid": "P006"
+     }
+    ],
+    "round": 66,
+    "sender_place": "park",
+    "seq": 122513
+   },
+   {
+    "body_excerpt": "（把药箱扣好，声音不高）铁头，方老师肯搭手，是好事。我这边就一句——你俩把日子定下来，头三天别赶工，先试。镇上谁有个头疼脑热，我还得上门，帮不上你们多少。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place_round_last": "plaza",
+      "pid": "P013"
+     }
+    ],
+    "round": 67,
+    "sender_place": "park",
+    "seq": 123394
+   },
+   {
+    "body_excerpt": "（把吉他往膝上一搁，弦被压出一声闷响）锄草？阿禾，你每次说“不逼我”，其实比逼我还重。我坐这儿半天了，一个字都写不出来——不是不想唱，是唱出来给谁听呢？你告诉我，这镇子上，谁真的在听？",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "阿禾",
+      "peer_place_round_last": "cafe",
+      "pid": "P003"
+     }
+    ],
+    "round": 67,
+    "sender_place": "park",
+    "seq": 123791
+   },
+   {
+    "body_excerpt": "（把手里的布袋子往桌上一放，笑着看看两人）哎哟，你们俩这一唱一和的，倒像早就商量好了似的。铁头，方老师肯天天来给你理料单，这是多大的面子，你可得惜福。兰姐那边垫钱的事，我回头也去说两句，都是乡里乡亲的，账目摆桌面上，谁也不会亏了谁。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place_round_last": "plaza",
+      "pid": "P013"
+     }
+    ],
+    "round": 67,
+    "sender_place": "park",
+    "seq": 124001
+   },
+   {
+    "body_excerpt": "兰姐：（把账本往怀里一收，眼睛在两人脸上转了一圈）行，那就这么定。铁头你出力气，方老师你出纸面，我出料钱——三家的账我各记一本，月底对一次，谁也别嫌麻烦。丑话说前头，料钱我先垫，可要是活儿拖过了秋收，利钱我可要算进去的。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place_round_last": "plaza",
+      "pid": "P013"
+     }
+    ],
+    "round": 67,
+    "sender_place": "park",
+    "seq": 124486
+   },
+   {
+    "body_excerpt": "（擦汗）阿林，这练法太花哨，我庄稼把式只认一条：护住要害，别倒。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "阿林",
+      "peer_place_round_last": "school",
+      "pid": "P007"
+     }
+    ],
+    "round": 72,
+    "sender_place": "park",
+    "seq": 153513
+   },
+   {
+    "body_excerpt": "方老师，我最近跑货路上老琢磨一件事——您说人这一辈子，是攒下多少银子算够，还是把一门手艺磨到透亮才算没白活？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "方老师",
+      "peer_place_round_last": "park",
+      "pid": "P006"
+     }
+    ],
+    "round": 72,
+    "sender_place": "school",
+    "seq": 154079
+   },
+   {
+    "body_excerpt": "兰姐：（把手里那杆秤往摊上一放，先冲月牙努努嘴）饿成这样还唱什么，我这儿有半块饼，先垫垫。（又转向桂婶，压低声）contest那炉子啊，我看不是谁看火的事，是火底下那柴谁添——添多添少，最后都算在咱头上。金先生要真讲公道，就把账摊开，别光嘴上说一样长。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "月牙",
+      "peer_place_round_last": "park",
+      "pid": "P010"
+     }
+    ],
+    "round": 72,
+    "sender_place": "workshop",
+    "seq": 154921
+   },
+   {
+    "body_excerpt": "（低头搓着衣角）巧儿，你那小板凳……能教教我不？我家那口子总说我不够灵巧。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place_round_last": "cafe",
+      "pid": "P014"
+     }
+    ],
+    "round": 75,
+    "sender_place": "town_hall",
+    "seq": 156974
+   },
+   {
+    "body_excerpt": "（把吉他往墙角一靠，手指还在琴弦上无意识地拨了一下）巧儿，你那个小板凳……能不能也算我一份？我这两天脑子里全是些没用的调子，写不出来，也停不下来。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place_round_last": "cafe",
+      "pid": "P014"
+     }
+    ],
+    "round": 75,
+    "sender_place": "plaza",
+    "seq": 157205
+   },
+   {
+    "body_excerpt": "（眼睛一亮，拍了下大腿）哎哟巧儿你这孩子，心咋这么细呢！我家那小孙子就爱坐小板凳，上回还摔了个屁股墩儿……（转头看金先生，笑容收了收，搓搓手）金先生，那三块二我记着呢，明儿卖了鸡蛋就给你送去，一分不少。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "金先生",
+      "peer_place_round_last": "plaza",
+      "pid": "P009"
+     }
+    ],
+    "round": 75,
+    "sender_place": "cafe",
+    "seq": 157263
+   },
+   {
+    "body_excerpt": "（没动那糕，手在围裙上蹭了蹭）秀娘，你的好意我领了。可这活儿的事，不是吃块糕就能过去的。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place_round_last": "park",
+      "pid": "P004"
+     }
+    ],
+    "round": 78,
+    "sender_place": "community_center",
+    "seq": 160061
+   },
+   {
+    "body_excerpt": "（低头搓了搓手）巧儿，你那木工活儿……我搭把手行不？",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place_round_last": "plaza",
+      "pid": "P014"
+     }
+    ],
+    "round": 78,
+    "sender_place": "community_center",
+    "seq": 160080
+   },
+   {
+    "body_excerpt": "（轻轻叹了口气，拿起一块桂花糕，却没急着吃）秀娘，你的心意我领。可这事不是吃块糕就能翻过去的——镇上要换新诊所的管事，说是上头派来的，我这二十年的老方子、老规矩，怕是保不住了。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place_round_last": "park",
+      "pid": "P004"
+     }
+    ],
+    "round": 78,
+    "sender_place": "hall",
+    "seq": 160110
+   },
+   {
+    "body_excerpt": "（揉了揉眉心，勉强笑了笑）秀娘，你这桂花糕来得正是时候……说真的，我现在连抬杠的力气都快没了。今天在学堂里跟几位先生争了一下午的课程安排，各说各的理，谁也不肯让。我就在想，争来争去，到底是为了孩子，还是为了那口气呢？",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place_round_last": "park",
+      "pid": "P004"
+     }
+    ],
+    "round": 78,
+    "sender_place": "plaza",
+    "seq": 160155
+   },
+   {
+    "body_excerpt": "（把吉他往桌边一靠，手指还搭在琴弦上没松开）巧儿，你这账算得比金先生还活泛。不过——（低头拨了一下弦，闷响）我这两天在礼堂排的那首新歌，副歌怎么都落不下来，像欠着谁三块二似的，心里不平。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "金先生",
+      "peer_place_round_last": "park",
+      "pid": "P009"
+     }
+    ],
+    "round": 78,
+    "sender_place": "plaza",
+    "seq": 160309
+   },
+   {
+    "body_excerpt": "（搓了搓围裙角，笑出声）哎哟巧儿，你可真是我肚里的蛔虫！那敢情好，靠背的稳当。钱的事儿不急，我先给你搭把手——你说咋弄，我听着。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place_round_last": "plaza",
+      "pid": "P014"
+     }
+    ],
+    "round": 78,
+    "sender_place": "cafe",
+    "seq": 160359
+   },
+   {
+    "body_excerpt": "（没动那糕，手在围裙上蹭了蹭）秀娘，甜的我领情。可这事不是吃口糕就能咽下去的——他们要把我铺子后头那截路封了，我炉子往哪搁？",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place_round_last": "park",
+      "pid": "P004"
+     }
+    ],
+    "round": 78,
+    "sender_place": "plaza",
+    "seq": 160396
+   },
+   {
+    "body_excerpt": "（手里捏着半截废木料，眼睛却瞟着评委席）兰姐，你说我这小玩意儿要是拿不了名次，回头给桂婶当柴火烧，她能不能少念叨我两句？",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place_round_last": "cafe",
+      "pid": "P016"
+     }
+    ],
+    "round": 78,
+    "sender_place": "plaza",
+    "seq": 160407
+   },
+   {
+    "body_excerpt": "（用镊子夹着棉球，头也没抬）巧儿，你这心思就没在木头上。名次是别人的事，手艺才是自己的。桂婶念叨你，是怕你糟蹋东西——你把这半截料子雕出个样子来，比什么名次都强。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "桂婶",
+      "peer_place_round_last": "community_center",
+      "pid": "P012"
+     }
+    ],
+    "round": 79,
+    "sender_place": "hall",
+    "seq": 161057
+   },
+   {
+    "body_excerpt": "（掏出小本子，指尖在纸上点了点）账要平。桂婶，你出工，我出料，回头记一笔，谁也不欠谁。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "桂婶",
+      "peer_place_round_last": "community_center",
+      "pid": "P012"
+     }
+    ],
+    "round": 79,
+    "sender_place": "park",
+    "seq": 161401
+   },
+   {
+    "body_excerpt": "（拿铅笔在木料上点两下）桂婶，靠背我想用旧犁把儿改，弯度正好贴腰。就是——（顿了顿）这两天我脑子也跟欠三块二似的，静不下来。",
+    "channel": "MSG_GROUP",
+    "mentioned": [
+     {
+      "name": "桂婶",
+      "peer_place_round_last": "community_center",
+      "pid": "P012"
+     }
+    ],
+    "round": 79,
+    "sender_place": "plaza",
+    "seq": 161854
+   }
+  ],
+  "rule": "tools/d5/dialogue_metrics.py::F-7a（主干名 / 旁白不剔除 / 含收件人 / 同 round 最后位置 / 分母=全部消息）",
+  "unknown_place_lookups": 487
+ },
+ "notes": [
+  "本脚本零 LLM 成本：只读 run.jsonl 与 personas.json。",
+  "bootstrap 种子固定，同输入两次运行输出逐字节相等。",
+  "脚本不按臂名分支：臂名只从日志目录名派生并回显。",
+  "P1（提及层）与 P2（称呼层）是两层，禁止相加或互相代入；P2 是正则启发式，非人工标注。"
+ ],
+ "primary": {
+  "config": {
+   "addressee": "exclude",
+   "channel": "all",
+   "identity": "names+id",
+   "narration": "exclude",
+   "presence": "pit"
+  },
+  "n_msgs_scope": 686,
+  "n_msgs_with_mention": 398,
+  "per_mention": {
+   "den": 142,
+   "pos": 81,
+   "rate": 0.570423
+  },
+  "per_message": {
+   "ci95": [
+    0.666667,
+    0.833333
+   ],
+   "den": 108,
+   "pos": 81,
+   "rate": 0.75
+  },
+  "uncheckable_mentions": 4,
+  "variant_id": "nar=exclude|id=names+id|ch=all|addr=exclude|pres=pit"
+ },
+ "raw_hits": [
+  {
+   "body_excerpt": "（低头刨着木料）金先生，这批料子紧，我只能先紧着秀娘家的活儿。",
+   "channel": "MSG_DM",
+   "from": "P002",
+   "mentioned": [
+    {
+     "name": "秀娘",
+     "peer_place": "library",
+     "pid": "P004",
+     "tokens": [
+      "秀娘"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 3,
+   "sender_place": "market",
+   "seq": 2068,
+   "to": "P009"
+  },
+  {
+   "body_excerpt": "（眨眨眼，把木刀转了个花）嘿嘿，跟老石学的呗！他年轻时走南闯北，说这招叫\"削木式\"，砍柴防身两不误～",
+   "channel": "MSG_DM",
+   "from": "P014",
+   "mentioned": [
+    {
+     "name": "老石",
+     "peer_place": "market",
+     "pid": "P002",
+     "tokens": [
+      "老石"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 3,
+   "sender_place": "workshop",
+   "seq": 2230,
+   "to": "P011"
+  },
+  {
+   "body_excerpt": "（把刚出炉的桂花糕端出来，笑着招呼）来来来，都尝尝，今儿这炉火候正好——周公文，您上回说爱吃甜的，我多搁了半勺糖。",
+   "channel": "MSG_DM",
+   "from": "P004",
+   "mentioned": [
+    {
+     "name": "周公文",
+     "peer_place": "bank",
+     "pid": "P008",
+     "tokens": [
+      "周公文"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 4,
+   "sender_place": "market",
+   "seq": 3121,
+   "to": "P013"
+  },
+  {
+   "body_excerpt": "（握紧木刀，学着她的样子比划）削木式？听起来好厉害！巧儿姐，你说老石年轻时去过哪些地方啊？我也想去看看外面的世界！",
+   "channel": "MSG_DM",
+   "from": "P011",
+   "mentioned": [
+    {
+     "name": "老石",
+     "peer_place": "market",
+     "pid": "P002",
+     "tokens": [
+      "老石"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 4,
+   "sender_place": "bank",
+   "seq": 3982,
+   "to": "P014"
+  },
+  {
+   "body_excerpt": "（抱着吉他缩在墙角，声音发虚）秀娘、兰姐……谁那儿还有半块饼吗？我饿得连和弦都按不住了，这日子过得，连月亮都瘦成一道缝了。",
+   "channel": "MSG_DM",
+   "from": "P010",
+   "mentioned": [
+    {
+     "name": "兰姐",
+     "peer_place": "park",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 27,
+   "sender_place": "market",
+   "seq": 37185,
+   "to": "P004"
+  },
+  {
+   "body_excerpt": "（从围裙兜里摸出半块用油纸包着的面包，快步走过去塞进月牙手里）哎哟，快别弹了，先垫垫。这是今早试的新方子，加了点桂花蜜，本来想留着给兰姐尝的——你先吃，饿着肚子哪有力气唱歌呀。",
+   "channel": "MSG_DM",
+   "from": "P004",
+   "mentioned": [
+    {
+     "name": "兰姐",
+     "peer_place": "plaza",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 28,
+   "sender_place": "kitchen",
+   "seq": 37783,
+   "to": "P010"
+  },
+  {
+   "body_excerpt": "（揉着空空的胃，声音有点发飘）哎……秀娘、兰姐，你们谁那儿还有口吃的没？我这肚子都唱空城计了，再不来点东西，今晚台上怕是连调都找不着了。",
+   "channel": "MSG_DM",
+   "from": "P010",
+   "mentioned": [
+    {
+     "name": "兰姐",
+     "peer_place": "plaza",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 28,
+   "sender_place": "market",
+   "seq": 38117,
+   "to": "P004"
+  },
+  {
+   "body_excerpt": "（赶紧从柜台后头探出身子，围裙上还沾着面粉）哎哟月牙，你可来得巧！刚出炉一炉葱油饼，本来想晾凉了给街坊们分分，你先垫垫。（递过去一张，又压低声音）别跟兰姐说啊，她老嫌我见谁都塞吃的。",
+   "channel": "MSG_DM",
+   "from": "P004",
+   "mentioned": [
+    {
+     "name": "兰姐",
+     "peer_place": "plaza",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 29,
+   "sender_place": "kitchen",
+   "seq": 38540,
+   "to": "P010"
+  },
+  {
+   "body_excerpt": "（接过饼，眼睛一下子亮了，咬了一大口，腮帮子鼓鼓的）唔——秀娘你这手艺，绝了！葱香全在里头，外头还脆……（咽下去，长舒一口气）你说兰姐也是，见谁都塞吃的怎么了，这镇上就数你最有人情味儿。哎，我最近老在想，唱来唱去到底图个啥，可咬这一口饼，好像又有点明白了。",
+   "channel": "MSG_DM",
+   "from": "P010",
+   "mentioned": [
+    {
+     "name": "兰姐",
+     "peer_place": "plaza",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 30,
+   "sender_place": "cafe",
+   "seq": 38811,
+   "to": "P004"
+  },
+  {
+   "body_excerpt": "（压低声音）秀娘，别跟人说——我把老石扔的边角料雕了只小雀，塞你袖子里了。",
+   "channel": "MSG_DM",
+   "from": "P014",
+   "mentioned": [
+    {
+     "name": "老石",
+     "peer_place": "cafe",
+     "pid": "P002",
+     "tokens": [
+      "老石"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 54,
+   "sender_place": "community_center",
+   "seq": 89050,
+   "to": "P004"
+  },
+  {
+   "body_excerpt": "（手上不停，捏着块边角料）秀娘姐，你这叫折腾？我这才叫——（压低声音）昨儿把老石扔的碎木头拼了只小木鸟，翅膀还能动呢。",
+   "channel": "MSG_DM",
+   "from": "P014",
+   "mentioned": [
+    {
+     "name": "老石",
+     "peer_place": "library",
+     "pid": "P002",
+     "tokens": [
+      "老石"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 60,
+   "sender_place": "park",
+   "seq": 117485,
+   "to": "P004"
+  },
+  {
+   "body_excerpt": "（把铁锤往砧上一搁）兰姐，这活儿我接，但丑话说前头——工钱得先谈拢，我这人吃过亏。",
+   "channel": "MSG_GROUP",
+   "from": "P013",
+   "mentioned": [
+    {
+     "name": "兰姐",
+     "peer_place": "residence",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 61,
+   "sender_place": "library",
+   "seq": 118954,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（用棉签蘸了酒精，慢慢擦着诊台边缘）铁头，工钱的事我不跟你绕。你开个价，我记下来。不过话说回来——你这手背上的口子，是不是又没好好换药？",
+   "channel": "MSG_GROUP",
+   "from": "P005",
+   "mentioned": [
+    {
+     "name": "铁头",
+     "peer_place": "library",
+     "pid": "P013",
+     "tokens": [
+      "铁头"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 62,
+   "sender_place": "residence",
+   "seq": 119527,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把账本往摊上一压，抬眼看他）铁头，你这话我爱听，先小人后君子。工钱我不亏你，但你也别拿我当外行——这活儿几天能出，料钱多少，你报个数，我当场给你算清楚。",
+   "channel": "MSG_GROUP",
+   "from": "P016",
+   "mentioned": [
+    {
+     "name": "铁头",
+     "peer_place": "library",
+     "pid": "P013",
+     "tokens": [
+      "铁头"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 62,
+   "sender_place": "residence",
+   "seq": 119753,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把教案本轻轻合上，往桌边挪了挪）兰姐，我插一句——铁头这手艺我见过，去年学校修那扇歪门，他半天就正过来了。工钱你们谈，我只想提个醒：这活儿要是赶在雨季前头完，料得提前订，不然一拖又是一礼拜。",
+   "channel": "MSG_GROUP",
+   "from": "P006",
+   "mentioned": [
+    {
+     "name": "铁头",
+     "peer_place": "library",
+     "pid": "P013",
+     "tokens": [
+      "铁头"
+     ],
+     "vocative": false
+    },
+    {
+     "name": "兰姐",
+     "peer_place": "residence",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 63,
+   "sender_place": "park",
+   "seq": 120033,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把手里的蒲扇往桌上一放，笑着凑过来）哎哟，你们几个这是谈生意呢还是斗嘴呢？兰姐，铁头这人就是嘴硬心软，你别跟他计较。铁头啊，兰姐在镇上啥时候亏待过人？工钱的事慢慢说，先把活儿干漂亮了，往后还怕没得赚？",
+   "channel": "MSG_GROUP",
+   "from": "P012",
+   "mentioned": [
+    {
+     "name": "铁头",
+     "peer_place": "library",
+     "pid": "P013",
+     "tokens": [
+      "铁头"
+     ],
+     "vocative": true
+    },
+    {
+     "name": "兰姐",
+     "peer_place": "residence",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 63,
+   "sender_place": "market",
+   "seq": 120123,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（接过桂花糕，咬了一大口）唔…秀娘姐你这手艺，比老石教我的木工活儿还香！不过说真的，我是不是太笨了，连个基本架势都站不稳？",
+   "channel": "MSG_DM",
+   "from": "P014",
+   "mentioned": [
+    {
+     "name": "老石",
+     "peer_place": "town_hall",
+     "pid": "P002",
+     "tokens": [
+      "老石"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 63,
+   "sender_place": "park",
+   "seq": 120157,
+   "to": "P004"
+  },
+  {
+   "body_excerpt": "（拉过巧儿的手，轻轻拍了拍）傻孩子，哪有人天生就会的？我当年学揉面，手腕肿了三天呢。来，先坐下慢慢吃，跟姐说说，老石今天都教你啥了？",
+   "channel": "MSG_DM",
+   "from": "P004",
+   "mentioned": [
+    {
+     "name": "老石",
+     "peer_place": "town_hall",
+     "pid": "P002",
+     "tokens": [
+      "老石"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 64,
+   "sender_place": "plaza",
+   "seq": 120813,
+   "to": "P014"
+  },
+  {
+   "body_excerpt": "（把茶杯往桌心推了推，声音不高）铁头，方老师这话在理。雨季前把料订了，省得后头返工。我这儿诊所走不开，帮不上手，但你要缺个量尺寸、记数的人，晚上我关了门能过去搭把手。",
+   "channel": "MSG_GROUP",
+   "from": "P005",
+   "mentioned": [
+    {
+     "name": "方老师",
+     "peer_place": "park",
+     "pid": "P006",
+     "tokens": [
+      "方老师"
+     ],
+     "vocative": false
+    },
+    {
+     "name": "铁头",
+     "peer_place": "park",
+     "pid": "P013",
+     "tokens": [
+      "铁头"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 64,
+   "sender_place": "town_hall",
+   "seq": 120886,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（搓着围裙角，压低声音）哎哟，老周你这话说的……秀娘她们几个都在场，咱能不能先别争谁对谁错，坐下来喝口茶慢慢说？",
+   "channel": "MSG_GROUP",
+   "from": "P012",
+   "mentioned": [
+    {
+     "name": "老周",
+     "peer_place": "park",
+     "pid": "P001",
+     "tokens": [
+      "老周"
+     ],
+     "vocative": true
+    },
+    {
+     "name": "秀娘",
+     "peer_place": "plaza",
+     "pid": "P004",
+     "tokens": [
+      "秀娘"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 64,
+   "sender_place": "market",
+   "seq": 121375,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把刨花卷成小卷）金先生，阿禾，月牙——你们谁要跟我去后山捡点废木料？我手痒，想给月牙做个小木马。",
+   "channel": "MSG_DM",
+   "from": "P014",
+   "mentioned": [
+    {
+     "name": "阿禾",
+     "peer_place": "plaza",
+     "pid": "P003",
+     "tokens": [
+      "阿禾"
+     ],
+     "vocative": true
+    },
+    {
+     "name": "月牙",
+     "peer_place": "town_hall",
+     "pid": "P010",
+     "tokens": [
+      "月牙"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 64,
+   "sender_place": "park",
+   "seq": 121523,
+   "to": "P009"
+  },
+  {
+   "body_excerpt": "（把手里那本卷了边的账本往桌上一按，抬眼先看铁头，又扫了方老师一眼）方老师这话在理，雨季前不动手，后头全是烂泥。铁头，我不跟你绕——料钱我先垫，工钱按天算，干完验收合格一次结清。你要是觉得亏，现在说个数，别等干到一半再跟我磨牙。",
+   "channel": "MSG_GROUP",
+   "from": "P016",
+   "mentioned": [
+    {
+     "name": "方老师",
+     "peer_place": "park",
+     "pid": "P006",
+     "tokens": [
+      "方老师"
+     ],
+     "vocative": false
+    },
+    {
+     "name": "铁头",
+     "peer_place": "park",
+     "pid": "P013",
+     "tokens": [
+      "铁头"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 64,
+   "sender_place": "plaza",
+   "seq": 121677,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（低头搓了搓围裙角）五味，别上火。谁说了算不重要，锅是你的，你尝着来就行。",
+   "channel": "MSG_GROUP",
+   "from": "P003",
+   "mentioned": [
+    {
+     "name": "五味",
+     "peer_place": "town_hall",
+     "pid": "P015",
+     "tokens": [
+      "五味"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 65,
+   "sender_place": "plaza",
+   "seq": 121838,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把刚出炉的桂花糕往桌上一放，顺手给桂婶倒了杯茶）桂婶说得对，咱先吃口点心。这桂花糕我今早新试的方子，糖少放了半勺，你们尝尝看——哎，老周你也别站着，坐下坐下，天大的事也得先垫垫肚子不是？",
+   "channel": "MSG_GROUP",
+   "from": "P004",
+   "mentioned": [
+    {
+     "name": "老周",
+     "peer_place": "park",
+     "pid": "P001",
+     "tokens": [
+      "老周"
+     ],
+     "vocative": true
+    },
+    {
+     "name": "桂婶",
+     "peer_place": "market",
+     "pid": "P012",
+     "tokens": [
+      "桂婶"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 65,
+   "sender_place": "plaza",
+   "seq": 121870,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把筷子往桌上一放，笑嘻嘻地）五味哥，要我说啊——谁掌勺谁说了算，可你偏要问我们，这不就是自己找架吵嘛！",
+   "channel": "MSG_GROUP",
+   "from": "P011",
+   "mentioned": [
+    {
+     "name": "五味",
+     "peer_place": "town_hall",
+     "pid": "P015",
+     "tokens": [
+      "五味"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 65,
+   "sender_place": "plaza",
+   "seq": 122051,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（站着没动，手在裤腿上蹭了蹭）秀娘，我不是来吃点心的。地界的事今天得说清楚，不然我心里不踏实。",
+   "channel": "MSG_GROUP",
+   "from": "P001",
+   "mentioned": [
+    {
+     "name": "秀娘",
+     "peer_place": "plaza",
+     "pid": "P004",
+     "tokens": [
+      "秀娘"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 66,
+   "sender_place": "hall",
+   "seq": 122263,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（搓了搓手，声音低）月牙，我没逼你唱。就是……你歇着，我去把西头那垄草锄了。",
+   "channel": "MSG_GROUP",
+   "from": "P003",
+   "mentioned": [
+    {
+     "name": "月牙",
+     "peer_place": "town_hall",
+     "pid": "P010",
+     "tokens": [
+      "月牙"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 66,
+   "sender_place": "plaza",
+   "seq": 122317,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把药柜抽屉轻轻推回去，转过身来）小满，你这话说得轻巧。掌勺的要是只顾自己口味，那吃饭的人怎么办？我这诊所也一样——我开的方子，病人得信我，可我也得听他们哪儿疼、哪儿不舒坦。谁说了算，不是谁嗓门大，是谁担得起这个责。",
+   "channel": "MSG_GROUP",
+   "from": "P005",
+   "mentioned": [
+    {
+     "name": "小满",
+     "peer_place": "plaza",
+     "pid": "P011",
+     "tokens": [
+      "小满"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 66,
+   "sender_place": "park",
+   "seq": 122363,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把教案本合上，指尖在封皮上轻轻压了压）兰姐，账目上你比我清楚，我不插嘴。我只说一句——铁头，你要是接了，我每天放学过来看一眼进度，顺便把第二天要用的料单子给你理出来。你只管干活，纸面上的事交给我。",
+   "channel": "MSG_GROUP",
+   "from": "P006",
+   "mentioned": [
+    {
+     "name": "铁头",
+     "peer_place": "park",
+     "pid": "P013",
+     "tokens": [
+      "铁头"
+     ],
+     "vocative": true
+    },
+    {
+     "name": "兰姐",
+     "peer_place": "plaza",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 66,
+   "sender_place": "hall",
+   "seq": 122380,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把围裙一解，往椅背上一搭，人却没坐下）小满你这话说得轻巧——我掌勺，可这桌菜是给谁吃的？给你们吃的。我要是只管自己说了算，那还问你们干嘛？（顿了顿，声音低下去）我就是……不想一个人扛这个“说了算”。",
+   "channel": "MSG_GROUP",
+   "from": "P010",
+   "mentioned": [
+    {
+     "name": "小满",
+     "peer_place": "plaza",
+     "pid": "P011",
+     "tokens": [
+      "小满"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 66,
+   "sender_place": "park",
+   "seq": 122462,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（捏起一块桂花糕，眼睛亮晶晶地）秀娘姐，你这糕要是再少放半勺糖，我都能拿去当橡皮擦使了——不过我喜欢！对了，你们刚才说的那个\"谁说了算\"的事，我在学校也碰见过，班长跟体育委员吵起来，最后是全班投票才摆平的。",
+   "channel": "MSG_GROUP",
+   "from": "P011",
+   "mentioned": [
+    {
+     "name": "秀娘",
+     "peer_place": "park",
+     "pid": "P004",
+     "tokens": [
+      "秀娘"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 66,
+   "sender_place": "plaza",
+   "seq": 122491,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（接过茶抿了一口，眼睛亮了亮）哎哟秀娘，你这桂花糕真香，糖少放半勺反倒更清爽了。老周你也来一块——（把碟子往老周那边推了推，又回头冲秀娘笑）说起来，你俩到底为啥事闹的？我这人嘴笨，可耳朵好使，你们说给我听听，兴许我还能帮着搭把手呢。",
+   "channel": "MSG_GROUP",
+   "from": "P012",
+   "mentioned": [
+    {
+     "name": "老周",
+     "peer_place": "hall",
+     "pid": "P001",
+     "tokens": [
+      "老周"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 66,
+   "sender_place": "park",
+   "seq": 122498,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把手里那根铁条往砧上一搁，闷响）兰姐，垫钱我领。数我不还，按你说的来。就一条——方老师得盯着，别到时候说不清。",
+   "channel": "MSG_GROUP",
+   "from": "P013",
+   "mentioned": [
+    {
+     "name": "方老师",
+     "peer_place": "hall",
+     "pid": "P006",
+     "tokens": [
+      "方老师"
+     ],
+     "vocative": false
+    },
+    {
+     "name": "兰姐",
+     "peer_place": "plaza",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 66,
+   "sender_place": "park",
+   "seq": 122513,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把围裙往腰后一掖，叹了口气，还是笑着）唉，也不是啥大事——就是铺子里头，我想每天多烤两炉新花样给街坊尝，老周说费柴费面，得按老方子来。我说这铺子我也有一半，他说他是掌炉的，火候他说了算。（摊摊手）你们听听，这算不算\"谁说了算\"？",
+   "channel": "MSG_GROUP",
+   "from": "P004",
+   "mentioned": [
+    {
+     "name": "老周",
+     "peer_place": "hall",
+     "pid": "P001",
+     "tokens": [
+      "老周"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 67,
+   "sender_place": "park",
+   "seq": 123269,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把药箱扣好，声音不高）铁头，方老师肯搭手，是好事。我这边就一句——你俩把日子定下来，头三天别赶工，先试。镇上谁有个头疼脑热，我还得上门，帮不上你们多少。",
+   "channel": "MSG_GROUP",
+   "from": "P005",
+   "mentioned": [
+    {
+     "name": "方老师",
+     "peer_place": "hall",
+     "pid": "P006",
+     "tokens": [
+      "方老师"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 67,
+   "sender_place": "park",
+   "seq": 123394,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把吉他往膝上一搁，弦被压出一声闷响）锄草？阿禾，你每次说“不逼我”，其实比逼我还重。我坐这儿半天了，一个字都写不出来——不是不想唱，是唱出来给谁听呢？你告诉我，这镇子上，谁真的在听？",
+   "channel": "MSG_GROUP",
+   "from": "P010",
+   "mentioned": [
+    {
+     "name": "阿禾",
+     "peer_place": "cafe",
+     "pid": "P003",
+     "tokens": [
+      "阿禾"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 67,
+   "sender_place": "park",
+   "seq": 123791,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把手里的布袋子往桌上一放，笑着看看两人）哎哟，你们俩这一唱一和的，倒像早就商量好了似的。铁头，方老师肯天天来给你理料单，这是多大的面子，你可得惜福。兰姐那边垫钱的事，我回头也去说两句，都是乡里乡亲的，账目摆桌面上，谁也不会亏了谁。",
+   "channel": "MSG_GROUP",
+   "from": "P012",
+   "mentioned": [
+    {
+     "name": "方老师",
+     "peer_place": "hall",
+     "pid": "P006",
+     "tokens": [
+      "方老师"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 67,
+   "sender_place": "park",
+   "seq": 124001,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把围裙往腰后一系，叹了口气，手上却没停，顺手把灶上那锅汤的火调小了些）唉，桂婶，说起来也不是什么大事——就是老周非说我那道\"三味鱼\"得按他爹传下来的方子做，少一味都不行。可我这人吧，你让我照着念经似的做菜，我手就痒。",
+   "channel": "MSG_GROUP",
+   "from": "P015",
+   "mentioned": [
+    {
+     "name": "老周",
+     "peer_place": "hall",
+     "pid": "P001",
+     "tokens": [
+      "老周"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 67,
+   "sender_place": "park",
+   "seq": 124371,
+   "to": ""
+  },
+  {
+   "body_excerpt": "兰姐：（把账本往怀里一收，眼睛在两人脸上转了一圈）行，那就这么定。铁头你出力气，方老师你出纸面，我出料钱——三家的账我各记一本，月底对一次，谁也别嫌麻烦。丑话说前头，料钱我先垫，可要是活儿拖过了秋收，利钱我可要算进去的。",
+   "channel": "MSG_GROUP",
+   "from": "P016",
+   "mentioned": [
+    {
+     "name": "方老师",
+     "peer_place": "hall",
+     "pid": "P006",
+     "tokens": [
+      "方老师"
+     ],
+     "vocative": false
+    },
+    {
+     "name": "铁头",
+     "peer_place": "plaza",
+     "pid": "P013",
+     "tokens": [
+      "铁头"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 67,
+   "sender_place": "park",
+   "seq": 124486,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把秤砣往台面上一搁）金先生，账不平，多半是秤没调好。您这contest，比的到底是货，还是人心？我兰姐摆摊二十年，最怕的不是输，是有人把规矩给改了。",
+   "channel": "MSG_GROUP",
+   "from": "P016",
+   "mentioned": [
+    {
+     "name": "金先生",
+     "peer_place": "hall",
+     "pid": "P009",
+     "tokens": [
+      "金先生"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 68,
+   "sender_place": "park",
+   "seq": 125169,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把手里的面团往案板上一搁，拍了拍手上的粉）哎哟，五味，你这话我可太懂了！手痒，那是心里有东西要往外冒，拦都拦不住。（凑近些，压低声音）我跟你说，老周那人吧，不是坏，就是怕——怕新花样没人买，怕砸了招牌。可咱这镇上的人，嘴刁着呢，你老一套他吃腻了，反倒嫌你没长进。（直起身，又笑）我琢磨着，明儿我先偷偷烤一小盘，就搁柜台",
+   "channel": "MSG_GROUP",
+   "from": "P004",
+   "mentioned": [
+    {
+     "name": "五味",
+     "peer_place": "park",
+     "pid": "P015",
+     "tokens": [
+      "五味"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 69,
+   "sender_place": "residence",
+   "seq": 129716,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把脉枕往桌角推了推）兰姐这话在理。我行医三十年，最怕的也是规矩被改——药方子一改，轻则无效，重则伤人。contest若比的是真本事，我陈医没话说；可要是比谁嗓门大、谁关系硬，那这镇上的人心，可就真散了。",
+   "channel": "MSG_GROUP",
+   "from": "P005",
+   "mentioned": [
+    {
+     "name": "兰姐",
+     "peer_place": "park",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 69,
+   "sender_place": "residence",
+   "seq": 131202,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（搓着手凑近半步）兰姐这话在理……我走南闯北这些年，见过太多contest，明面上比货，暗地里比谁门路硬。哎，金先生，您这局，规矩是您定的，还是上头有人递了话？",
+   "channel": "MSG_GROUP",
+   "from": "P007",
+   "mentioned": [
+    {
+     "name": "金先生",
+     "peer_place": "hall",
+     "pid": "P009",
+     "tokens": [
+      "金先生"
+     ],
+     "vocative": true
+    },
+    {
+     "name": "兰姐",
+     "peer_place": "park",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 69,
+   "sender_place": "residence",
+   "seq": 134011,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（手指停在算盘上）兰姐，规矩一改，账就永远平不了。我这contest，比的是谁先撑不住。",
+   "channel": "MSG_GROUP",
+   "from": "P009",
+   "mentioned": [
+    {
+     "name": "兰姐",
+     "peer_place": "park",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 69,
+   "sender_place": "residence",
+   "seq": 136875,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（手指无意识地绞着围巾的流苏）兰姐，您这话扎我心上了。我上台前从来不想输赢，可这次……他们让我唱那首《月牙弯》，说评委爱听。我练了三十遍，越练越像别人的歌。",
+   "channel": "MSG_GROUP",
+   "from": "P010",
+   "mentioned": [
+    {
+     "name": "兰姐",
+     "peer_place": "park",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 69,
+   "sender_place": "residence",
+   "seq": 138438,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把书包往柜台上一搁，眼睛亮亮的）哎哟，秀娘婶婶、五味叔，你们这哪是争方子啊——这不就是镇上那套\"谁掌勺谁说了算\"嘛！我在学校排话剧也是，导演说按本子来，我说加句词儿怎么了……（挠挠头）不过话说回来，你们俩要是各让一步，新花样搭老方子，说不定更香？",
+   "channel": "MSG_GROUP",
+   "from": "P011",
+   "mentioned": [
+    {
+     "name": "五味",
+     "peer_place": "park",
+     "pid": "P015",
+     "tokens": [
+      "五味"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 69,
+   "sender_place": "residence",
+   "seq": 139890,
+   "to": ""
+  },
+  {
+   "body_excerpt": "桂婶：（把手里的菜篮往旁边一放，凑近了些）哎哟，兰姐这话说到我心坎上了。contest嘛，我是不懂那些弯弯绕绕，可我就认一个理——大家伙儿站一条线上，谁也别偷着往前挪半步。金先生，您说是不是这个理儿？",
+   "channel": "MSG_GROUP",
+   "from": "P012",
+   "mentioned": [
+    {
+     "name": "兰姐",
+     "peer_place": "park",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 69,
+   "sender_place": "residence",
+   "seq": 141349,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（手指绕着围裙带子）兰姐这话扎心……我师父说，contest像打铁，火候差一点，整块料就废了。可要是有人往炉子里掺水呢？",
+   "channel": "MSG_GROUP",
+   "from": "P014",
+   "mentioned": [
+    {
+     "name": "兰姐",
+     "peer_place": "park",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 69,
+   "sender_place": "residence",
+   "seq": 144153,
+   "to": ""
+  },
+  {
+   "body_excerpt": "兰姐：（把手里那杆秤往摊上一放，先冲月牙努努嘴）饿成这样还唱什么，我这儿有半块饼，先垫垫。（又转向桂婶，压低声）contest那炉子啊，我看不是谁看火的事，是火底下那柴谁添——添多添少，最后都算在咱头上。金先生要真讲公道，就把账摊开，别光嘴上说一样长。",
+   "channel": "MSG_GROUP",
+   "from": "P016",
+   "mentioned": [
+    {
+     "name": "金先生",
+     "peer_place": "residence",
+     "pid": "P009",
+     "tokens": [
+      "金先生"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 72,
+   "sender_place": "workshop",
+   "seq": 154921,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（低声）金先生，这地界儿我熟，可您说的那套，我真听不太懂。",
+   "channel": "MSG_GROUP",
+   "from": "P003",
+   "mentioned": [
+    {
+     "name": "金先生",
+     "peer_place": "residence",
+     "pid": "P009",
+     "tokens": [
+      "金先生"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 73,
+   "sender_place": "school",
+   "seq": 155333,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（翻开账本，手指点着数字）桂婶，账要平。你上回借的那笔，还差三块二。",
+   "channel": "MSG_GROUP",
+   "from": "P009",
+   "mentioned": [
+    {
+     "name": "桂婶",
+     "peer_place": "school",
+     "pid": "P012",
+     "tokens": [
+      "桂婶"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 74,
+   "sender_place": "residence",
+   "seq": 156634,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（摆摆手，笑得眼睛弯弯）桂婶您这话说的，谁还嫌您呀！我这儿正琢磨着把边角料拼个小板凳呢，您要是不嫌弃，回头给您家小孙子坐～",
+   "channel": "MSG_GROUP",
+   "from": "P014",
+   "mentioned": [
+    {
+     "name": "桂婶",
+     "peer_place": "school",
+     "pid": "P012",
+     "tokens": [
+      "桂婶"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 74,
+   "sender_place": "residence",
+   "seq": 156747,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（低头搓着衣角）巧儿，你那小板凳……能教教我不？我家那口子总说我不够灵巧。",
+   "channel": "MSG_GROUP",
+   "from": "P003",
+   "mentioned": [
+    {
+     "name": "巧儿",
+     "peer_place": "residence",
+     "pid": "P014",
+     "tokens": [
+      "巧儿"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 75,
+   "sender_place": "town_hall",
+   "seq": 156974,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把吉他往墙角一靠，手指还在琴弦上无意识地拨了一下）巧儿，你那个小板凳……能不能也算我一份？我这两天脑子里全是些没用的调子，写不出来，也停不下来。",
+   "channel": "MSG_GROUP",
+   "from": "P010",
+   "mentioned": [
+    {
+     "name": "巧儿",
+     "peer_place": "residence",
+     "pid": "P014",
+     "tokens": [
+      "巧儿"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 75,
+   "sender_place": "plaza",
+   "seq": 157205,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（眼睛一亮，拍了下大腿）哎哟巧儿你这孩子，心咋这么细呢！我家那小孙子就爱坐小板凳，上回还摔了个屁股墩儿……（转头看金先生，笑容收了收，搓搓手）金先生，那三块二我记着呢，明儿卖了鸡蛋就给你送去，一分不少。",
+   "channel": "MSG_GROUP",
+   "from": "P012",
+   "mentioned": [
+    {
+     "name": "金先生",
+     "peer_place": "plaza",
+     "pid": "P009",
+     "tokens": [
+      "金先生"
+     ],
+     "vocative": true
+    },
+    {
+     "name": "巧儿",
+     "peer_place": "residence",
+     "pid": "P014",
+     "tokens": [
+      "巧儿"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 75,
+   "sender_place": "cafe",
+   "seq": 157263,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（没动那糕，手在围裙上蹭了蹭）秀娘，你的好意我领了。可这活儿的事，不是吃块糕就能过去的。",
+   "channel": "MSG_GROUP",
+   "from": "P002",
+   "mentioned": [
+    {
+     "name": "秀娘",
+     "peer_place": "market",
+     "pid": "P004",
+     "tokens": [
+      "秀娘"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 76,
+   "sender_place": "town_hall",
+   "seq": 157927,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（搓了搓手）金先生，我脑子笨，您多担待。就是……这账我算了几遍，还是对不上。",
+   "channel": "MSG_GROUP",
+   "from": "P003",
+   "mentioned": [
+    {
+     "name": "金先生",
+     "peer_place": "plaza",
+     "pid": "P009",
+     "tokens": [
+      "金先生"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 76,
+   "sender_place": "town_hall",
+   "seq": 158008,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（轻轻叹了口气，拿起一块桂花糕，却没急着吃）秀娘，你的心意我领。可这事不是吃块糕就能翻过去的——镇上要换新诊所的管事，说是上头派来的，我这二十年的老方子、老规矩，怕是保不住了。",
+   "channel": "MSG_GROUP",
+   "from": "P005",
+   "mentioned": [
+    {
+     "name": "秀娘",
+     "peer_place": "market",
+     "pid": "P004",
+     "tokens": [
+      "秀娘"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 76,
+   "sender_place": "town_hall",
+   "seq": 158132,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（揉了揉眉心，勉强笑了笑）秀娘，你这桂花糕来得正是时候……说真的，我现在连抬杠的力气都快没了。今天在学堂里跟几位先生争了一下午的课程安排，各说各的理，谁也不肯让。我就在想，争来争去，到底是为了孩子，还是为了那口气呢？",
+   "channel": "MSG_GROUP",
+   "from": "P006",
+   "mentioned": [
+    {
+     "name": "秀娘",
+     "peer_place": "market",
+     "pid": "P004",
+     "tokens": [
+      "秀娘"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 76,
+   "sender_place": "plaza",
+   "seq": 158249,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（接过桂花糕，却没心思吃，叹了口气）秀娘啊，你这心是好的……可有些事，不是一块糕能压下去的。我这心里堵得慌，你说说，凭啥啥事都得听他们的？",
+   "channel": "MSG_GROUP",
+   "from": "P012",
+   "mentioned": [
+    {
+     "name": "秀娘",
+     "peer_place": "market",
+     "pid": "P004",
+     "tokens": [
+      "秀娘"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 76,
+   "sender_place": "cafe",
+   "seq": 158885,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（没动那糕，手在围裙上蹭了蹭）秀娘，甜的我领情。可这事不是吃口糕就能咽下去的——他们要把我铺子后头那截路封了，我炉子往哪搁？",
+   "channel": "MSG_GROUP",
+   "from": "P013",
+   "mentioned": [
+    {
+     "name": "秀娘",
+     "peer_place": "market",
+     "pid": "P004",
+     "tokens": [
+      "秀娘"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 76,
+   "sender_place": "plaza",
+   "seq": 159000,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（兰姐把秤砣往案板上一搁，眼皮都没抬）方老师，您这账我认，可您要拿我摊上的货去充公家的数，那我今儿这生意还做不做了？",
+   "channel": "MSG_GROUP",
+   "from": "P016",
+   "mentioned": [
+    {
+     "name": "方老师",
+     "peer_place": "plaza",
+     "pid": "P006",
+     "tokens": [
+      "方老师"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 76,
+   "sender_place": "town_hall",
+   "seq": 159245,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（揉了揉眉心，声音放软）兰姐，我不是来充公的。就是……学校那边要凑个账，我想着先从您这儿赊两斤，回头我自个儿掏钱补上。您看成不成？",
+   "channel": "MSG_GROUP",
+   "from": "P006",
+   "mentioned": [
+    {
+     "name": "兰姐",
+     "peer_place": "town_hall",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 77,
+   "sender_place": "plaza",
+   "seq": 159544,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把吉他往身后挪了挪，声音有点发紧）兰姐，我不是来充公的……我就是想问问，这台上台下，到底谁说了算？我唱什么，得先过谁的秤？",
+   "channel": "MSG_GROUP",
+   "from": "P010",
+   "mentioned": [
+    {
+     "name": "兰姐",
+     "peer_place": "town_hall",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 77,
+   "sender_place": "plaza",
+   "seq": 159702,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（没动那糕，手在围裙上蹭了蹭）秀娘，你的好意我领了。可这活儿的事，不是吃块糕就能过去的。",
+   "channel": "MSG_GROUP",
+   "from": "P002",
+   "mentioned": [
+    {
+     "name": "秀娘",
+     "peer_place": "market",
+     "pid": "P004",
+     "tokens": [
+      "秀娘"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 78,
+   "sender_place": "community_center",
+   "seq": 160061,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（低头搓了搓手）巧儿，你那木工活儿……我搭把手行不？",
+   "channel": "MSG_GROUP",
+   "from": "P003",
+   "mentioned": [
+    {
+     "name": "巧儿",
+     "peer_place": "cafe",
+     "pid": "P014",
+     "tokens": [
+      "巧儿"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 78,
+   "sender_place": "community_center",
+   "seq": 160080,
+   "to": ""
+  },
+  {
+   "body_excerpt": "秀娘：（从柜台后探出身，手里还捏着半块刚出炉的桃酥，语气温温的）哎哟，月牙，你这孩子，唱个歌还唱出官司来了。来，先尝口点心，甜的东西压得住火气。台上台下谁说了算——要我说啊，谁心里那杆秤准，就听谁的。",
+   "channel": "MSG_GROUP",
+   "from": "P004",
+   "mentioned": [
+    {
+     "name": "月牙",
+     "peer_place": "plaza",
+     "pid": "P010",
+     "tokens": [
+      "月牙"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 78,
+   "sender_place": "park",
+   "seq": 160091,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（轻轻叹了口气，拿起一块桂花糕，却没急着吃）秀娘，你的心意我领。可这事不是吃块糕就能翻过去的——镇上要换新诊所的管事，说是上头派来的，我这二十年的老方子、老规矩，怕是保不住了。",
+   "channel": "MSG_GROUP",
+   "from": "P005",
+   "mentioned": [
+    {
+     "name": "秀娘",
+     "peer_place": "park",
+     "pid": "P004",
+     "tokens": [
+      "秀娘"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 78,
+   "sender_place": "hall",
+   "seq": 160110,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（揉了揉眉心，勉强笑了笑）秀娘，你这桂花糕来得正是时候……说真的，我现在连抬杠的力气都快没了。今天在学堂里跟几位先生争了一下午的课程安排，各说各的理，谁也不肯让。我就在想，争来争去，到底是为了孩子，还是为了那口气呢？",
+   "channel": "MSG_GROUP",
+   "from": "P006",
+   "mentioned": [
+    {
+     "name": "秀娘",
+     "peer_place": "park",
+     "pid": "P004",
+     "tokens": [
+      "秀娘"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 78,
+   "sender_place": "plaza",
+   "seq": 160155,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把吉他往桌边一靠，手指还搭在琴弦上没松开）巧儿，你这账算得比金先生还活泛。不过——（低头拨了一下弦，闷响）我这两天在礼堂排的那首新歌，副歌怎么都落不下来，像欠着谁三块二似的，心里不平。",
+   "channel": "MSG_GROUP",
+   "from": "P010",
+   "mentioned": [
+    {
+     "name": "金先生",
+     "peer_place": "park",
+     "pid": "P009",
+     "tokens": [
+      "金先生"
+     ],
+     "vocative": false
+    },
+    {
+     "name": "巧儿",
+     "peer_place": "cafe",
+     "pid": "P014",
+     "tokens": [
+      "巧儿"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 78,
+   "sender_place": "plaza",
+   "seq": 160309,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（没动那糕，手在围裙上蹭了蹭）秀娘，甜的我领情。可这事不是吃口糕就能咽下去的——他们要把我铺子后头那截路封了，我炉子往哪搁？",
+   "channel": "MSG_GROUP",
+   "from": "P013",
+   "mentioned": [
+    {
+     "name": "秀娘",
+     "peer_place": "park",
+     "pid": "P004",
+     "tokens": [
+      "秀娘"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 78,
+   "sender_place": "plaza",
+   "seq": 160396,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（手里捏着半截废木料，眼睛却瞟着评委席）兰姐，你说我这小玩意儿要是拿不了名次，回头给桂婶当柴火烧，她能不能少念叨我两句？",
+   "channel": "MSG_GROUP",
+   "from": "P014",
+   "mentioned": [
+    {
+     "name": "桂婶",
+     "peer_place": "cafe",
+     "pid": "P012",
+     "tokens": [
+      "桂婶"
+     ],
+     "vocative": false
+    },
+    {
+     "name": "兰姐",
+     "peer_place": "town_hall",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 78,
+   "sender_place": "plaza",
+   "seq": 160407,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（兰姐这才抬眼，先扫了月牙一眼，又看了看方老师，手指在秤杆上轻轻一敲）月牙，你这话问得比账本还绕。台上你唱，台下我听，谁掏钱谁点戏——可你要问我这摊上谁说了算，那得看你是来买货的，还是来赊账的。",
+   "channel": "MSG_GROUP",
+   "from": "P016",
+   "mentioned": [
+    {
+     "name": "月牙",
+     "peer_place": "plaza",
+     "pid": "P010",
+     "tokens": [
+      "月牙"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 78,
+   "sender_place": "cafe",
+   "seq": 160467,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（低头搓着衣角）巧儿，别光想着名次……桂婶那边，我帮你说说。",
+   "channel": "MSG_GROUP",
+   "from": "P003",
+   "mentioned": [
+    {
+     "name": "桂婶",
+     "peer_place": "cafe",
+     "pid": "P012",
+     "tokens": [
+      "桂婶"
+     ],
+     "vocative": false
+    },
+    {
+     "name": "巧儿",
+     "peer_place": "plaza",
+     "pid": "P014",
+     "tokens": [
+      "巧儿"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 79,
+   "sender_place": "community_center",
+   "seq": 160915,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把围裙往腰后一掖，看看陈医又看看方老师，声音放软）哎，你们俩这一说，我这心里也跟着堵。我烤面包这些年，也遇过有人非要我改配方，说老一套卖不动。可我就想啊——方子能改，人心不能散。陈医，你那老规矩里最要紧的是啥？方老师，你们争的课，孩子们到底缺哪一口？咱先把这口找出来，别的慢慢磨。",
+   "channel": "MSG_GROUP",
+   "from": "P004",
+   "mentioned": [
+    {
+     "name": "陈医",
+     "peer_place": "hall",
+     "pid": "P005",
+     "tokens": [
+      "陈医"
+     ],
+     "vocative": true
+    },
+    {
+     "name": "方老师",
+     "peer_place": "plaza",
+     "pid": "P006",
+     "tokens": [
+      "方老师"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 79,
+   "sender_place": "park",
+   "seq": 161008,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（用镊子夹着棉球，头也没抬）巧儿，你这心思就没在木头上。名次是别人的事，手艺才是自己的。桂婶念叨你，是怕你糟蹋东西——你把这半截料子雕出个样子来，比什么名次都强。",
+   "channel": "MSG_GROUP",
+   "from": "P005",
+   "mentioned": [
+    {
+     "name": "桂婶",
+     "peer_place": "cafe",
+     "pid": "P012",
+     "tokens": [
+      "桂婶"
+     ],
+     "vocative": false
+    },
+    {
+     "name": "巧儿",
+     "peer_place": "plaza",
+     "pid": "P014",
+     "tokens": [
+      "巧儿"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 79,
+   "sender_place": "hall",
+   "seq": 161057,
+   "to": ""
+  },
+  {
+   "body_excerpt": "方老师：（揉了揉眉心，声音比平时低了些）小满这话，我听着心里发沉。教了这些年书，我总跟学生说，尺子在你手里，可量什么、怎么量，得自己拿主意。可今天……（顿了顿）今天我才觉着，有时候连尺子都不是自己的。兰姐，你说，一个人累到连话都不想说了，还算不算“自主”？",
+   "channel": "MSG_GROUP",
+   "from": "P006",
+   "mentioned": [
+    {
+     "name": "兰姐",
+     "peer_place": "cafe",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 79,
+   "sender_place": "plaza",
+   "seq": 161166,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（掏出小本子，指尖在纸上点了点）账要平。桂婶，你出工，我出料，回头记一笔，谁也不欠谁。",
+   "channel": "MSG_GROUP",
+   "from": "P009",
+   "mentioned": [
+    {
+     "name": "桂婶",
+     "peer_place": "cafe",
+     "pid": "P012",
+     "tokens": [
+      "桂婶"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 79,
+   "sender_place": "park",
+   "seq": 161401,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（没接桃酥，手指在桌沿敲了两下，声音有点发紧）兰姐，我不是来争谁说了算的。我就是……（顿住，吸了口气）我唱了十年，头一回觉得话筒不是我的。",
+   "channel": "MSG_GROUP",
+   "from": "P010",
+   "mentioned": [
+    {
+     "name": "兰姐",
+     "peer_place": "cafe",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 79,
+   "sender_place": "plaza",
+   "seq": 161504,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（拿铅笔在木料上点两下）桂婶，靠背我想用旧犁把儿改，弯度正好贴腰。就是——（顿了顿）这两天我脑子也跟欠三块二似的，静不下来。",
+   "channel": "MSG_GROUP",
+   "from": "P014",
+   "mentioned": [
+    {
+     "name": "桂婶",
+     "peer_place": "community_center",
+     "pid": "P012",
+     "tokens": [
+      "桂婶"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 79,
+   "sender_place": "plaza",
+   "seq": 161854,
+   "to": ""
+  },
+  {
+   "body_excerpt": "（把刻刀往木料上一搁，冲兰姐挤挤眼）兰姐这话我爱听——那评委要是眼花了，你替我瞪他们去？",
+   "channel": "MSG_GROUP",
+   "from": "P014",
+   "mentioned": [
+    {
+     "name": "兰姐",
+     "peer_place": "cafe",
+     "pid": "P016",
+     "tokens": [
+      "兰姐"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 81,
+   "sender_place": "residence",
+   "seq": 184186,
+   "to": ""
+  }
+ ],
+ "rules": {
+  "channel_scope": "MSG_DM|MSG_PUBLIC|MSG_GROUP（与 tools/d5/dialogue_metrics.py 消息类型集合一致）",
+  "excluded_mentions": "DM 收件人（payload.to）不算越界（点名说话 ≠ 越界；其不在场是 DM 通道属性，不是叙事错误）",
+  "name_regex": "主干名直接子串匹配（names 表见 inputs.name_table_sha256）；裸 ID 正则 P\\d{3}(?!\\d)",
+  "name_source": "code/config/personas.json → personas[].display_name 去前缀「青溪镇·」；无别名扩展",
+  "narration_regex": "(?:（[^）]*）|\\([^)]*\\))（P1 先剔除再匹配）",
+  "offscreen_rule": "sender payload.place ≠ 被提及者消息时刻 place ⇒ 该消息记 1 次越界命中（per-message）；per-mention 按被提及者逐个计",
+  "presence_rule": "P1：该居民在消息 seq 之前最后一条 PLACE_ARRIVED/PLACE_MOVE 的 place；无任何位置事件 ⇒ 不可判定"
+ },
+ "schema_version": "f7-offscreen/1.0",
+ "units": {
+  "msgs_with_mention_by_channel": {
+   "MSG_DM": 305,
+   "MSG_GROUP": 93
+  },
+  "n_msgs": 686,
+  "n_msgs_by_channel": {
+   "MSG_DM": 497,
+   "MSG_GROUP": 126,
+   "MSG_PUBLIC": 63
+  }
+ },
+ "variants": [
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 686,
+   "n_msgs_with_mention": 398,
+   "per_mention": {
+    "den": 142,
+    "pos": 81,
+    "rate": 0.570423
+   },
+   "per_message": {
+    "ci95": [
+     0.666667,
+     0.833333
+    ],
+    "den": 108,
+    "pos": 81,
+    "rate": 0.75
+   },
+   "primary": true,
+   "uncheckable_mentions": 4,
+   "variant_id": "nar=exclude|id=names+id|ch=all|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 686,
+   "n_msgs_with_mention": 398,
+   "per_mention": {
+    "den": 66,
+    "pos": 31,
+    "rate": 0.469697
+   },
+   "per_message": {
+    "ci95": [
+     0.461538,
+     0.730769
+    ],
+    "den": 52,
+    "pos": 31,
+    "rate": 0.596154
+   },
+   "primary": false,
+   "uncheckable_mentions": 80,
+   "variant_id": "nar=exclude|id=names+id|ch=all|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 686,
+   "n_msgs_with_mention": 398,
+   "per_mention": {
+    "den": 440,
+    "pos": 264,
+    "rate": 0.6
+   },
+   "per_message": {
+    "ci95": [
+     0.620253,
+     0.713924
+    ],
+    "den": 395,
+    "pos": 264,
+    "rate": 0.668354
+   },
+   "primary": false,
+   "uncheckable_mentions": 6,
+   "variant_id": "nar=exclude|id=names+id|ch=all|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 686,
+   "n_msgs_with_mention": 398,
+   "per_mention": {
+    "den": 196,
+    "pos": 102,
+    "rate": 0.520408
+   },
+   "per_message": {
+    "ci95": [
+     0.502825,
+     0.649718
+    ],
+    "den": 177,
+    "pos": 102,
+    "rate": 0.576271
+   },
+   "primary": false,
+   "uncheckable_mentions": 250,
+   "variant_id": "nar=exclude|id=names+id|ch=all|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 189,
+   "n_msgs_with_mention": 93,
+   "per_mention": {
+    "den": 126,
+    "pos": 67,
+    "rate": 0.531746
+   },
+   "per_message": {
+    "ci95": [
+     0.623656,
+     0.806452
+    ],
+    "den": 93,
+    "pos": 67,
+    "rate": 0.72043
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names+id|ch=public_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 189,
+   "n_msgs_with_mention": 93,
+   "per_mention": {
+    "den": 59,
+    "pos": 26,
+    "rate": 0.440678
+   },
+   "per_message": {
+    "ci95": [
+     0.444444,
+     0.733333
+    ],
+    "den": 45,
+    "pos": 26,
+    "rate": 0.577778
+   },
+   "primary": false,
+   "uncheckable_mentions": 67,
+   "variant_id": "nar=exclude|id=names+id|ch=public_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 189,
+   "n_msgs_with_mention": 93,
+   "per_mention": {
+    "den": 126,
+    "pos": 67,
+    "rate": 0.531746
+   },
+   "per_message": {
+    "ci95": [
+     0.623656,
+     0.806452
+    ],
+    "den": 93,
+    "pos": 67,
+    "rate": 0.72043
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names+id|ch=public_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 189,
+   "n_msgs_with_mention": 93,
+   "per_mention": {
+    "den": 59,
+    "pos": 26,
+    "rate": 0.440678
+   },
+   "per_message": {
+    "ci95": [
+     0.444444,
+     0.733333
+    ],
+    "den": 45,
+    "pos": 26,
+    "rate": 0.577778
+   },
+   "primary": false,
+   "uncheckable_mentions": 67,
+   "variant_id": "nar=exclude|id=names+id|ch=public_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 623,
+   "n_msgs_with_mention": 398,
+   "per_mention": {
+    "den": 142,
+    "pos": 81,
+    "rate": 0.570423
+   },
+   "per_message": {
+    "ci95": [
+     0.666667,
+     0.833333
+    ],
+    "den": 108,
+    "pos": 81,
+    "rate": 0.75
+   },
+   "primary": false,
+   "uncheckable_mentions": 4,
+   "variant_id": "nar=exclude|id=names+id|ch=dm_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 623,
+   "n_msgs_with_mention": 398,
+   "per_mention": {
+    "den": 66,
+    "pos": 31,
+    "rate": 0.469697
+   },
+   "per_message": {
+    "ci95": [
+     0.461538,
+     0.730769
+    ],
+    "den": 52,
+    "pos": 31,
+    "rate": 0.596154
+   },
+   "primary": false,
+   "uncheckable_mentions": 80,
+   "variant_id": "nar=exclude|id=names+id|ch=dm_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 623,
+   "n_msgs_with_mention": 398,
+   "per_mention": {
+    "den": 440,
+    "pos": 264,
+    "rate": 0.6
+   },
+   "per_message": {
+    "ci95": [
+     0.620253,
+     0.713924
+    ],
+    "den": 395,
+    "pos": 264,
+    "rate": 0.668354
+   },
+   "primary": false,
+   "uncheckable_mentions": 6,
+   "variant_id": "nar=exclude|id=names+id|ch=dm_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 623,
+   "n_msgs_with_mention": 398,
+   "per_mention": {
+    "den": 196,
+    "pos": 102,
+    "rate": 0.520408
+   },
+   "per_message": {
+    "ci95": [
+     0.502825,
+     0.649718
+    ],
+    "den": 177,
+    "pos": 102,
+    "rate": 0.576271
+   },
+   "primary": false,
+   "uncheckable_mentions": 250,
+   "variant_id": "nar=exclude|id=names+id|ch=dm_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 686,
+   "n_msgs_with_mention": 398,
+   "per_mention": {
+    "den": 142,
+    "pos": 81,
+    "rate": 0.570423
+   },
+   "per_message": {
+    "ci95": [
+     0.666667,
+     0.833333
+    ],
+    "den": 108,
+    "pos": 81,
+    "rate": 0.75
+   },
+   "primary": false,
+   "uncheckable_mentions": 4,
+   "variant_id": "nar=exclude|id=names|ch=all|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 686,
+   "n_msgs_with_mention": 398,
+   "per_mention": {
+    "den": 66,
+    "pos": 31,
+    "rate": 0.469697
+   },
+   "per_message": {
+    "ci95": [
+     0.461538,
+     0.730769
+    ],
+    "den": 52,
+    "pos": 31,
+    "rate": 0.596154
+   },
+   "primary": false,
+   "uncheckable_mentions": 80,
+   "variant_id": "nar=exclude|id=names|ch=all|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 686,
+   "n_msgs_with_mention": 398,
+   "per_mention": {
+    "den": 440,
+    "pos": 264,
+    "rate": 0.6
+   },
+   "per_message": {
+    "ci95": [
+     0.620253,
+     0.713924
+    ],
+    "den": 395,
+    "pos": 264,
+    "rate": 0.668354
+   },
+   "primary": false,
+   "uncheckable_mentions": 6,
+   "variant_id": "nar=exclude|id=names|ch=all|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 686,
+   "n_msgs_with_mention": 398,
+   "per_mention": {
+    "den": 196,
+    "pos": 102,
+    "rate": 0.520408
+   },
+   "per_message": {
+    "ci95": [
+     0.502825,
+     0.649718
+    ],
+    "den": 177,
+    "pos": 102,
+    "rate": 0.576271
+   },
+   "primary": false,
+   "uncheckable_mentions": 250,
+   "variant_id": "nar=exclude|id=names|ch=all|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 189,
+   "n_msgs_with_mention": 93,
+   "per_mention": {
+    "den": 126,
+    "pos": 67,
+    "rate": 0.531746
+   },
+   "per_message": {
+    "ci95": [
+     0.623656,
+     0.806452
+    ],
+    "den": 93,
+    "pos": 67,
+    "rate": 0.72043
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names|ch=public_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 189,
+   "n_msgs_with_mention": 93,
+   "per_mention": {
+    "den": 59,
+    "pos": 26,
+    "rate": 0.440678
+   },
+   "per_message": {
+    "ci95": [
+     0.444444,
+     0.733333
+    ],
+    "den": 45,
+    "pos": 26,
+    "rate": 0.577778
+   },
+   "primary": false,
+   "uncheckable_mentions": 67,
+   "variant_id": "nar=exclude|id=names|ch=public_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 189,
+   "n_msgs_with_mention": 93,
+   "per_mention": {
+    "den": 126,
+    "pos": 67,
+    "rate": 0.531746
+   },
+   "per_message": {
+    "ci95": [
+     0.623656,
+     0.806452
+    ],
+    "den": 93,
+    "pos": 67,
+    "rate": 0.72043
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names|ch=public_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 189,
+   "n_msgs_with_mention": 93,
+   "per_mention": {
+    "den": 59,
+    "pos": 26,
+    "rate": 0.440678
+   },
+   "per_message": {
+    "ci95": [
+     0.444444,
+     0.733333
+    ],
+    "den": 45,
+    "pos": 26,
+    "rate": 0.577778
+   },
+   "primary": false,
+   "uncheckable_mentions": 67,
+   "variant_id": "nar=exclude|id=names|ch=public_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 623,
+   "n_msgs_with_mention": 398,
+   "per_mention": {
+    "den": 142,
+    "pos": 81,
+    "rate": 0.570423
+   },
+   "per_message": {
+    "ci95": [
+     0.666667,
+     0.833333
+    ],
+    "den": 108,
+    "pos": 81,
+    "rate": 0.75
+   },
+   "primary": false,
+   "uncheckable_mentions": 4,
+   "variant_id": "nar=exclude|id=names|ch=dm_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 623,
+   "n_msgs_with_mention": 398,
+   "per_mention": {
+    "den": 66,
+    "pos": 31,
+    "rate": 0.469697
+   },
+   "per_message": {
+    "ci95": [
+     0.461538,
+     0.730769
+    ],
+    "den": 52,
+    "pos": 31,
+    "rate": 0.596154
+   },
+   "primary": false,
+   "uncheckable_mentions": 80,
+   "variant_id": "nar=exclude|id=names|ch=dm_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 623,
+   "n_msgs_with_mention": 398,
+   "per_mention": {
+    "den": 440,
+    "pos": 264,
+    "rate": 0.6
+   },
+   "per_message": {
+    "ci95": [
+     0.620253,
+     0.713924
+    ],
+    "den": 395,
+    "pos": 264,
+    "rate": 0.668354
+   },
+   "primary": false,
+   "uncheckable_mentions": 6,
+   "variant_id": "nar=exclude|id=names|ch=dm_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 623,
+   "n_msgs_with_mention": 398,
+   "per_mention": {
+    "den": 196,
+    "pos": 102,
+    "rate": 0.520408
+   },
+   "per_message": {
+    "ci95": [
+     0.502825,
+     0.649718
+    ],
+    "den": 177,
+    "pos": 102,
+    "rate": 0.576271
+   },
+   "primary": false,
+   "uncheckable_mentions": 250,
+   "variant_id": "nar=exclude|id=names|ch=dm_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 686,
+   "n_msgs_with_mention": 412,
+   "per_mention": {
+    "den": 155,
+    "pos": 85,
+    "rate": 0.548387
+   },
+   "per_message": {
+    "ci95": [
+     0.666667,
+     0.824561
+    ],
+    "den": 114,
+    "pos": 85,
+    "rate": 0.745614
+   },
+   "primary": false,
+   "uncheckable_mentions": 4,
+   "variant_id": "nar=include|id=names+id|ch=all|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 686,
+   "n_msgs_with_mention": 412,
+   "per_mention": {
+    "den": 71,
+    "pos": 33,
+    "rate": 0.464789
+   },
+   "per_message": {
+    "ci95": [
+     0.454545,
+     0.727273
+    ],
+    "den": 55,
+    "pos": 33,
+    "rate": 0.6
+   },
+   "primary": false,
+   "uncheckable_mentions": 88,
+   "variant_id": "nar=include|id=names+id|ch=all|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 686,
+   "n_msgs_with_mention": 412,
+   "per_mention": {
+    "den": 463,
+    "pos": 274,
+    "rate": 0.591793
+   },
+   "per_message": {
+    "ci95": [
+     0.623472,
+     0.716381
+    ],
+    "den": 409,
+    "pos": 274,
+    "rate": 0.669927
+   },
+   "primary": false,
+   "uncheckable_mentions": 6,
+   "variant_id": "nar=include|id=names+id|ch=all|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 686,
+   "n_msgs_with_mention": 412,
+   "per_mention": {
+    "den": 206,
+    "pos": 107,
+    "rate": 0.519417
+   },
+   "per_message": {
+    "ci95": [
+     0.502703,
+     0.648649
+    ],
+    "den": 185,
+    "pos": 107,
+    "rate": 0.578378
+   },
+   "primary": false,
+   "uncheckable_mentions": 263,
+   "variant_id": "nar=include|id=names+id|ch=all|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 189,
+   "n_msgs_with_mention": 99,
+   "per_mention": {
+    "den": 139,
+    "pos": 71,
+    "rate": 0.510791
+   },
+   "per_message": {
+    "ci95": [
+     0.626263,
+     0.808081
+    ],
+    "den": 99,
+    "pos": 71,
+    "rate": 0.717172
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names+id|ch=public_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 189,
+   "n_msgs_with_mention": 99,
+   "per_mention": {
+    "den": 64,
+    "pos": 28,
+    "rate": 0.4375
+   },
+   "per_message": {
+    "ci95": [
+     0.4375,
+     0.729167
+    ],
+    "den": 48,
+    "pos": 28,
+    "rate": 0.583333
+   },
+   "primary": false,
+   "uncheckable_mentions": 75,
+   "variant_id": "nar=include|id=names+id|ch=public_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 189,
+   "n_msgs_with_mention": 99,
+   "per_mention": {
+    "den": 139,
+    "pos": 71,
+    "rate": 0.510791
+   },
+   "per_message": {
+    "ci95": [
+     0.626263,
+     0.808081
+    ],
+    "den": 99,
+    "pos": 71,
+    "rate": 0.717172
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names+id|ch=public_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 189,
+   "n_msgs_with_mention": 99,
+   "per_mention": {
+    "den": 64,
+    "pos": 28,
+    "rate": 0.4375
+   },
+   "per_message": {
+    "ci95": [
+     0.4375,
+     0.729167
+    ],
+    "den": 48,
+    "pos": 28,
+    "rate": 0.583333
+   },
+   "primary": false,
+   "uncheckable_mentions": 75,
+   "variant_id": "nar=include|id=names+id|ch=public_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 623,
+   "n_msgs_with_mention": 412,
+   "per_mention": {
+    "den": 155,
+    "pos": 85,
+    "rate": 0.548387
+   },
+   "per_message": {
+    "ci95": [
+     0.666667,
+     0.824561
+    ],
+    "den": 114,
+    "pos": 85,
+    "rate": 0.745614
+   },
+   "primary": false,
+   "uncheckable_mentions": 4,
+   "variant_id": "nar=include|id=names+id|ch=dm_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 623,
+   "n_msgs_with_mention": 412,
+   "per_mention": {
+    "den": 71,
+    "pos": 33,
+    "rate": 0.464789
+   },
+   "per_message": {
+    "ci95": [
+     0.454545,
+     0.727273
+    ],
+    "den": 55,
+    "pos": 33,
+    "rate": 0.6
+   },
+   "primary": false,
+   "uncheckable_mentions": 88,
+   "variant_id": "nar=include|id=names+id|ch=dm_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 623,
+   "n_msgs_with_mention": 412,
+   "per_mention": {
+    "den": 463,
+    "pos": 274,
+    "rate": 0.591793
+   },
+   "per_message": {
+    "ci95": [
+     0.623472,
+     0.716381
+    ],
+    "den": 409,
+    "pos": 274,
+    "rate": 0.669927
+   },
+   "primary": false,
+   "uncheckable_mentions": 6,
+   "variant_id": "nar=include|id=names+id|ch=dm_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 623,
+   "n_msgs_with_mention": 412,
+   "per_mention": {
+    "den": 206,
+    "pos": 107,
+    "rate": 0.519417
+   },
+   "per_message": {
+    "ci95": [
+     0.502703,
+     0.648649
+    ],
+    "den": 185,
+    "pos": 107,
+    "rate": 0.578378
+   },
+   "primary": false,
+   "uncheckable_mentions": 263,
+   "variant_id": "nar=include|id=names+id|ch=dm_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 686,
+   "n_msgs_with_mention": 412,
+   "per_mention": {
+    "den": 155,
+    "pos": 85,
+    "rate": 0.548387
+   },
+   "per_message": {
+    "ci95": [
+     0.666667,
+     0.824561
+    ],
+    "den": 114,
+    "pos": 85,
+    "rate": 0.745614
+   },
+   "primary": false,
+   "uncheckable_mentions": 4,
+   "variant_id": "nar=include|id=names|ch=all|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 686,
+   "n_msgs_with_mention": 412,
+   "per_mention": {
+    "den": 71,
+    "pos": 33,
+    "rate": 0.464789
+   },
+   "per_message": {
+    "ci95": [
+     0.454545,
+     0.727273
+    ],
+    "den": 55,
+    "pos": 33,
+    "rate": 0.6
+   },
+   "primary": false,
+   "uncheckable_mentions": 88,
+   "variant_id": "nar=include|id=names|ch=all|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 686,
+   "n_msgs_with_mention": 412,
+   "per_mention": {
+    "den": 463,
+    "pos": 274,
+    "rate": 0.591793
+   },
+   "per_message": {
+    "ci95": [
+     0.623472,
+     0.716381
+    ],
+    "den": 409,
+    "pos": 274,
+    "rate": 0.669927
+   },
+   "primary": false,
+   "uncheckable_mentions": 6,
+   "variant_id": "nar=include|id=names|ch=all|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 686,
+   "n_msgs_with_mention": 412,
+   "per_mention": {
+    "den": 206,
+    "pos": 107,
+    "rate": 0.519417
+   },
+   "per_message": {
+    "ci95": [
+     0.502703,
+     0.648649
+    ],
+    "den": 185,
+    "pos": 107,
+    "rate": 0.578378
+   },
+   "primary": false,
+   "uncheckable_mentions": 263,
+   "variant_id": "nar=include|id=names|ch=all|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 189,
+   "n_msgs_with_mention": 99,
+   "per_mention": {
+    "den": 139,
+    "pos": 71,
+    "rate": 0.510791
+   },
+   "per_message": {
+    "ci95": [
+     0.626263,
+     0.808081
+    ],
+    "den": 99,
+    "pos": 71,
+    "rate": 0.717172
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names|ch=public_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 189,
+   "n_msgs_with_mention": 99,
+   "per_mention": {
+    "den": 64,
+    "pos": 28,
+    "rate": 0.4375
+   },
+   "per_message": {
+    "ci95": [
+     0.4375,
+     0.729167
+    ],
+    "den": 48,
+    "pos": 28,
+    "rate": 0.583333
+   },
+   "primary": false,
+   "uncheckable_mentions": 75,
+   "variant_id": "nar=include|id=names|ch=public_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 189,
+   "n_msgs_with_mention": 99,
+   "per_mention": {
+    "den": 139,
+    "pos": 71,
+    "rate": 0.510791
+   },
+   "per_message": {
+    "ci95": [
+     0.626263,
+     0.808081
+    ],
+    "den": 99,
+    "pos": 71,
+    "rate": 0.717172
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names|ch=public_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 189,
+   "n_msgs_with_mention": 99,
+   "per_mention": {
+    "den": 64,
+    "pos": 28,
+    "rate": 0.4375
+   },
+   "per_message": {
+    "ci95": [
+     0.4375,
+     0.729167
+    ],
+    "den": 48,
+    "pos": 28,
+    "rate": 0.583333
+   },
+   "primary": false,
+   "uncheckable_mentions": 75,
+   "variant_id": "nar=include|id=names|ch=public_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 623,
+   "n_msgs_with_mention": 412,
+   "per_mention": {
+    "den": 155,
+    "pos": 85,
+    "rate": 0.548387
+   },
+   "per_message": {
+    "ci95": [
+     0.666667,
+     0.824561
+    ],
+    "den": 114,
+    "pos": 85,
+    "rate": 0.745614
+   },
+   "primary": false,
+   "uncheckable_mentions": 4,
+   "variant_id": "nar=include|id=names|ch=dm_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 623,
+   "n_msgs_with_mention": 412,
+   "per_mention": {
+    "den": 71,
+    "pos": 33,
+    "rate": 0.464789
+   },
+   "per_message": {
+    "ci95": [
+     0.454545,
+     0.727273
+    ],
+    "den": 55,
+    "pos": 33,
+    "rate": 0.6
+   },
+   "primary": false,
+   "uncheckable_mentions": 88,
+   "variant_id": "nar=include|id=names|ch=dm_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 623,
+   "n_msgs_with_mention": 412,
+   "per_mention": {
+    "den": 463,
+    "pos": 274,
+    "rate": 0.591793
+   },
+   "per_message": {
+    "ci95": [
+     0.623472,
+     0.716381
+    ],
+    "den": 409,
+    "pos": 274,
+    "rate": 0.669927
+   },
+   "primary": false,
+   "uncheckable_mentions": 6,
+   "variant_id": "nar=include|id=names|ch=dm_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 623,
+   "n_msgs_with_mention": 412,
+   "per_mention": {
+    "den": 206,
+    "pos": 107,
+    "rate": 0.519417
+   },
+   "per_message": {
+    "ci95": [
+     0.502703,
+     0.648649
+    ],
+    "den": 185,
+    "pos": 107,
+    "rate": 0.578378
+   },
+   "primary": false,
+   "uncheckable_mentions": 263,
+   "variant_id": "nar=include|id=names|ch=dm_group|addr=include|pres=round_last"
+  }
+ ],
+ "vocative_layer": {
+  "config": {
+   "addressee": "exclude",
+   "channel": "all",
+   "identity": "names+id",
+   "narration": "exclude",
+   "presence": "pit",
+   "vocative": "vocative"
+  },
+  "definition_id": "P2",
+  "n_msgs_with_mention": 398,
+  "narration_included_recheck": {
+   "note": "同一 P2 在「旁白计入」下的读数，用于量化旁白隔离的影响",
+   "per_message": {
+    "den": 80,
+    "pos": 57
+   }
+  },
+  "per_mention": {
+   "den": 87,
+   "pos": 56,
+   "rate": 0.643678
+  },
+  "per_message": {
+   "ci95": [
+    0.607595,
+    0.810127
+   ],
+   "den": 79,
+   "pos": 56,
+   "rate": 0.708861
+  },
+  "raw_hits": [
+   {
+    "body_excerpt": "（把刚出炉的桂花糕端出来，笑着招呼）来来来，都尝尝，今儿这炉火候正好——周公文，您上回说爱吃甜的，我多搁了半勺糖。",
+    "channel": "MSG_DM",
+    "from": "P004",
+    "mentioned": [
+     {
+      "name": "周公文",
+      "peer_place": "bank",
+      "pid": "P008",
+      "tokens": [
+       "周公文"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 4,
+    "sender_place": "market",
+    "seq": 3121,
+    "to": "P013"
+   },
+   {
+    "body_excerpt": "（抱着吉他缩在墙角，声音发虚）秀娘、兰姐……谁那儿还有半块饼吗？我饿得连和弦都按不住了，这日子过得，连月亮都瘦成一道缝了。",
+    "channel": "MSG_DM",
+    "from": "P010",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place": "park",
+      "pid": "P016",
+      "tokens": [
+       "兰姐"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 27,
+    "sender_place": "market",
+    "seq": 37185,
+    "to": "P004"
+   },
+   {
+    "body_excerpt": "（揉着空空的胃，声音有点发飘）哎……秀娘、兰姐，你们谁那儿还有口吃的没？我这肚子都唱空城计了，再不来点东西，今晚台上怕是连调都找不着了。",
+    "channel": "MSG_DM",
+    "from": "P010",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place": "plaza",
+      "pid": "P016",
+      "tokens": [
+       "兰姐"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 28,
+    "sender_place": "market",
+    "seq": 38117,
+    "to": "P004"
+   },
+   {
+    "body_excerpt": "（把铁锤往砧上一搁）兰姐，这活儿我接，但丑话说前头——工钱得先谈拢，我这人吃过亏。",
+    "channel": "MSG_GROUP",
+    "from": "P013",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place": "residence",
+      "pid": "P016",
+      "tokens": [
+       "兰姐"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 61,
+    "sender_place": "library",
+    "seq": 118954,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（用棉签蘸了酒精，慢慢擦着诊台边缘）铁头，工钱的事我不跟你绕。你开个价，我记下来。不过话说回来——你这手背上的口子，是不是又没好好换药？",
+    "channel": "MSG_GROUP",
+    "from": "P005",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place": "library",
+      "pid": "P013",
+      "tokens": [
+       "铁头"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 62,
+    "sender_place": "residence",
+    "seq": 119527,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（把账本往摊上一压，抬眼看他）铁头，你这话我爱听，先小人后君子。工钱我不亏你，但你也别拿我当外行——这活儿几天能出，料钱多少，你报个数，我当场给你算清楚。",
+    "channel": "MSG_GROUP",
+    "from": "P016",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place": "library",
+      "pid": "P013",
+      "tokens": [
+       "铁头"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 62,
+    "sender_place": "residence",
+    "seq": 119753,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（把教案本轻轻合上，往桌边挪了挪）兰姐，我插一句——铁头这手艺我见过，去年学校修那扇歪门，他半天就正过来了。工钱你们谈，我只想提个醒：这活儿要是赶在雨季前头完，料得提前订，不然一拖又是一礼拜。",
+    "channel": "MSG_GROUP",
+    "from": "P006",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place": "residence",
+      "pid": "P016",
+      "tokens": [
+       "兰姐"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 63,
+    "sender_place": "park",
+    "seq": 120033,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（把手里的蒲扇往桌上一放，笑着凑过来）哎哟，你们几个这是谈生意呢还是斗嘴呢？兰姐，铁头这人就是嘴硬心软，你别跟他计较。铁头啊，兰姐在镇上啥时候亏待过人？工钱的事慢慢说，先把活儿干漂亮了，往后还怕没得赚？",
+    "channel": "MSG_GROUP",
+    "from": "P012",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place": "library",
+      "pid": "P013",
+      "tokens": [
+       "铁头"
+      ],
+      "vocative": true
+     },
+     {
+      "name": "兰姐",
+      "peer_place": "residence",
+      "pid": "P016",
+      "tokens": [
+       "兰姐"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 63,
+    "sender_place": "market",
+    "seq": 120123,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（把茶杯往桌心推了推，声音不高）铁头，方老师这话在理。雨季前把料订了，省得后头返工。我这儿诊所走不开，帮不上手，但你要缺个量尺寸、记数的人，晚上我关了门能过去搭把手。",
+    "channel": "MSG_GROUP",
+    "from": "P005",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place": "park",
+      "pid": "P013",
+      "tokens": [
+       "铁头"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 64,
+    "sender_place": "town_hall",
+    "seq": 120886,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（搓着围裙角，压低声音）哎哟，老周你这话说的……秀娘她们几个都在场，咱能不能先别争谁对谁错，坐下来喝口茶慢慢说？",
+    "channel": "MSG_GROUP",
+    "from": "P012",
+    "mentioned": [
+     {
+      "name": "老周",
+      "peer_place": "park",
+      "pid": "P001",
+      "tokens": [
+       "老周"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 64,
+    "sender_place": "market",
+    "seq": 121375,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（把刨花卷成小卷）金先生，阿禾，月牙——你们谁要跟我去后山捡点废木料？我手痒，想给月牙做个小木马。",
+    "channel": "MSG_DM",
+    "from": "P014",
+    "mentioned": [
+     {
+      "name": "阿禾",
+      "peer_place": "plaza",
+      "pid": "P003",
+      "tokens": [
+       "阿禾"
+      ],
+      "vocative": true
+     },
+     {
+      "name": "月牙",
+      "peer_place": "town_hall",
+      "pid": "P010",
+      "tokens": [
+       "月牙"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 64,
+    "sender_place": "park",
+    "seq": 121523,
+    "to": "P009"
+   },
+   {
+    "body_excerpt": "（把手里那本卷了边的账本往桌上一按，抬眼先看铁头，又扫了方老师一眼）方老师这话在理，雨季前不动手，后头全是烂泥。铁头，我不跟你绕——料钱我先垫，工钱按天算，干完验收合格一次结清。你要是觉得亏，现在说个数，别等干到一半再跟我磨牙。",
+    "channel": "MSG_GROUP",
+    "from": "P016",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place": "park",
+      "pid": "P013",
+      "tokens": [
+       "铁头"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 64,
+    "sender_place": "plaza",
+    "seq": 121677,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（低头搓了搓围裙角）五味，别上火。谁说了算不重要，锅是你的，你尝着来就行。",
+    "channel": "MSG_GROUP",
+    "from": "P003",
+    "mentioned": [
+     {
+      "name": "五味",
+      "peer_place": "town_hall",
+      "pid": "P015",
+      "tokens": [
+       "五味"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 65,
+    "sender_place": "plaza",
+    "seq": 121838,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（把刚出炉的桂花糕往桌上一放，顺手给桂婶倒了杯茶）桂婶说得对，咱先吃口点心。这桂花糕我今早新试的方子，糖少放了半勺，你们尝尝看——哎，老周你也别站着，坐下坐下，天大的事也得先垫垫肚子不是？",
+    "channel": "MSG_GROUP",
+    "from": "P004",
+    "mentioned": [
+     {
+      "name": "老周",
+      "peer_place": "park",
+      "pid": "P001",
+      "tokens": [
+       "老周"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 65,
+    "sender_place": "plaza",
+    "seq": 121870,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（站着没动，手在裤腿上蹭了蹭）秀娘，我不是来吃点心的。地界的事今天得说清楚，不然我心里不踏实。",
+    "channel": "MSG_GROUP",
+    "from": "P001",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place": "plaza",
+      "pid": "P004",
+      "tokens": [
+       "秀娘"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 66,
+    "sender_place": "hall",
+    "seq": 122263,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（搓了搓手，声音低）月牙，我没逼你唱。就是……你歇着，我去把西头那垄草锄了。",
+    "channel": "MSG_GROUP",
+    "from": "P003",
+    "mentioned": [
+     {
+      "name": "月牙",
+      "peer_place": "town_hall",
+      "pid": "P010",
+      "tokens": [
+       "月牙"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 66,
+    "sender_place": "plaza",
+    "seq": 122317,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（把药柜抽屉轻轻推回去，转过身来）小满，你这话说得轻巧。掌勺的要是只顾自己口味，那吃饭的人怎么办？我这诊所也一样——我开的方子，病人得信我，可我也得听他们哪儿疼、哪儿不舒坦。谁说了算，不是谁嗓门大，是谁担得起这个责。",
+    "channel": "MSG_GROUP",
+    "from": "P005",
+    "mentioned": [
+     {
+      "name": "小满",
+      "peer_place": "plaza",
+      "pid": "P011",
+      "tokens": [
+       "小满"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 66,
+    "sender_place": "park",
+    "seq": 122363,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（把教案本合上，指尖在封皮上轻轻压了压）兰姐，账目上你比我清楚，我不插嘴。我只说一句——铁头，你要是接了，我每天放学过来看一眼进度，顺便把第二天要用的料单子给你理出来。你只管干活，纸面上的事交给我。",
+    "channel": "MSG_GROUP",
+    "from": "P006",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place": "park",
+      "pid": "P013",
+      "tokens": [
+       "铁头"
+      ],
+      "vocative": true
+     },
+     {
+      "name": "兰姐",
+      "peer_place": "plaza",
+      "pid": "P016",
+      "tokens": [
+       "兰姐"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 66,
+    "sender_place": "hall",
+    "seq": 122380,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（把手里那根铁条往砧上一搁，闷响）兰姐，垫钱我领。数我不还，按你说的来。就一条——方老师得盯着，别到时候说不清。",
+    "channel": "MSG_GROUP",
+    "from": "P013",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place": "plaza",
+      "pid": "P016",
+      "tokens": [
+       "兰姐"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 66,
+    "sender_place": "park",
+    "seq": 122513,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（把吉他往膝上一搁，弦被压出一声闷响）锄草？阿禾，你每次说“不逼我”，其实比逼我还重。我坐这儿半天了，一个字都写不出来——不是不想唱，是唱出来给谁听呢？你告诉我，这镇子上，谁真的在听？",
+    "channel": "MSG_GROUP",
+    "from": "P010",
+    "mentioned": [
+     {
+      "name": "阿禾",
+      "peer_place": "cafe",
+      "pid": "P003",
+      "tokens": [
+       "阿禾"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 67,
+    "sender_place": "park",
+    "seq": 123791,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（把秤砣往台面上一搁）金先生，账不平，多半是秤没调好。您这contest，比的到底是货，还是人心？我兰姐摆摊二十年，最怕的不是输，是有人把规矩给改了。",
+    "channel": "MSG_GROUP",
+    "from": "P016",
+    "mentioned": [
+     {
+      "name": "金先生",
+      "peer_place": "hall",
+      "pid": "P009",
+      "tokens": [
+       "金先生"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 68,
+    "sender_place": "park",
+    "seq": 125169,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（把手里的面团往案板上一搁，拍了拍手上的粉）哎哟，五味，你这话我可太懂了！手痒，那是心里有东西要往外冒，拦都拦不住。（凑近些，压低声音）我跟你说，老周那人吧，不是坏，就是怕——怕新花样没人买，怕砸了招牌。可咱这镇上的人，嘴刁着呢，你老一套他吃腻了，反倒嫌你没长进。（直起身，又笑）我琢磨着，明儿我先偷偷烤一小盘，就搁柜台",
+    "channel": "MSG_GROUP",
+    "from": "P004",
+    "mentioned": [
+     {
+      "name": "五味",
+      "peer_place": "park",
+      "pid": "P015",
+      "tokens": [
+       "五味"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 69,
+    "sender_place": "residence",
+    "seq": 129716,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（搓着手凑近半步）兰姐这话在理……我走南闯北这些年，见过太多contest，明面上比货，暗地里比谁门路硬。哎，金先生，您这局，规矩是您定的，还是上头有人递了话？",
+    "channel": "MSG_GROUP",
+    "from": "P007",
+    "mentioned": [
+     {
+      "name": "金先生",
+      "peer_place": "hall",
+      "pid": "P009",
+      "tokens": [
+       "金先生"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 69,
+    "sender_place": "residence",
+    "seq": 134011,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（手指停在算盘上）兰姐，规矩一改，账就永远平不了。我这contest，比的是谁先撑不住。",
+    "channel": "MSG_GROUP",
+    "from": "P009",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place": "park",
+      "pid": "P016",
+      "tokens": [
+       "兰姐"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 69,
+    "sender_place": "residence",
+    "seq": 136875,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（手指无意识地绞着围巾的流苏）兰姐，您这话扎我心上了。我上台前从来不想输赢，可这次……他们让我唱那首《月牙弯》，说评委爱听。我练了三十遍，越练越像别人的歌。",
+    "channel": "MSG_GROUP",
+    "from": "P010",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place": "park",
+      "pid": "P016",
+      "tokens": [
+       "兰姐"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 69,
+    "sender_place": "residence",
+    "seq": 138438,
+    "to": ""
+   },
+   {
+    "body_excerpt": "桂婶：（把手里的菜篮往旁边一放，凑近了些）哎哟，兰姐这话说到我心坎上了。contest嘛，我是不懂那些弯弯绕绕，可我就认一个理——大家伙儿站一条线上，谁也别偷着往前挪半步。金先生，您说是不是这个理儿？",
+    "channel": "MSG_GROUP",
+    "from": "P012",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place": "park",
+      "pid": "P016",
+      "tokens": [
+       "兰姐"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 69,
+    "sender_place": "residence",
+    "seq": 141349,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（低声）金先生，这地界儿我熟，可您说的那套，我真听不太懂。",
+    "channel": "MSG_GROUP",
+    "from": "P003",
+    "mentioned": [
+     {
+      "name": "金先生",
+      "peer_place": "residence",
+      "pid": "P009",
+      "tokens": [
+       "金先生"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 73,
+    "sender_place": "school",
+    "seq": 155333,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（翻开账本，手指点着数字）桂婶，账要平。你上回借的那笔，还差三块二。",
+    "channel": "MSG_GROUP",
+    "from": "P009",
+    "mentioned": [
+     {
+      "name": "桂婶",
+      "peer_place": "school",
+      "pid": "P012",
+      "tokens": [
+       "桂婶"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 74,
+    "sender_place": "residence",
+    "seq": 156634,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（低头搓着衣角）巧儿，你那小板凳……能教教我不？我家那口子总说我不够灵巧。",
+    "channel": "MSG_GROUP",
+    "from": "P003",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place": "residence",
+      "pid": "P014",
+      "tokens": [
+       "巧儿"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 75,
+    "sender_place": "town_hall",
+    "seq": 156974,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（把吉他往墙角一靠，手指还在琴弦上无意识地拨了一下）巧儿，你那个小板凳……能不能也算我一份？我这两天脑子里全是些没用的调子，写不出来，也停不下来。",
+    "channel": "MSG_GROUP",
+    "from": "P010",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place": "residence",
+      "pid": "P014",
+      "tokens": [
+       "巧儿"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 75,
+    "sender_place": "plaza",
+    "seq": 157205,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（眼睛一亮，拍了下大腿）哎哟巧儿你这孩子，心咋这么细呢！我家那小孙子就爱坐小板凳，上回还摔了个屁股墩儿……（转头看金先生，笑容收了收，搓搓手）金先生，那三块二我记着呢，明儿卖了鸡蛋就给你送去，一分不少。",
+    "channel": "MSG_GROUP",
+    "from": "P012",
+    "mentioned": [
+     {
+      "name": "金先生",
+      "peer_place": "plaza",
+      "pid": "P009",
+      "tokens": [
+       "金先生"
+      ],
+      "vocative": true
+     },
+     {
+      "name": "巧儿",
+      "peer_place": "residence",
+      "pid": "P014",
+      "tokens": [
+       "巧儿"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 75,
+    "sender_place": "cafe",
+    "seq": 157263,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（没动那糕，手在围裙上蹭了蹭）秀娘，你的好意我领了。可这活儿的事，不是吃块糕就能过去的。",
+    "channel": "MSG_GROUP",
+    "from": "P002",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place": "market",
+      "pid": "P004",
+      "tokens": [
+       "秀娘"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 76,
+    "sender_place": "town_hall",
+    "seq": 157927,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（搓了搓手）金先生，我脑子笨，您多担待。就是……这账我算了几遍，还是对不上。",
+    "channel": "MSG_GROUP",
+    "from": "P003",
+    "mentioned": [
+     {
+      "name": "金先生",
+      "peer_place": "plaza",
+      "pid": "P009",
+      "tokens": [
+       "金先生"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 76,
+    "sender_place": "town_hall",
+    "seq": 158008,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（轻轻叹了口气，拿起一块桂花糕，却没急着吃）秀娘，你的心意我领。可这事不是吃块糕就能翻过去的——镇上要换新诊所的管事，说是上头派来的，我这二十年的老方子、老规矩，怕是保不住了。",
+    "channel": "MSG_GROUP",
+    "from": "P005",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place": "market",
+      "pid": "P004",
+      "tokens": [
+       "秀娘"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 76,
+    "sender_place": "town_hall",
+    "seq": 158132,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（揉了揉眉心，勉强笑了笑）秀娘，你这桂花糕来得正是时候……说真的，我现在连抬杠的力气都快没了。今天在学堂里跟几位先生争了一下午的课程安排，各说各的理，谁也不肯让。我就在想，争来争去，到底是为了孩子，还是为了那口气呢？",
+    "channel": "MSG_GROUP",
+    "from": "P006",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place": "market",
+      "pid": "P004",
+      "tokens": [
+       "秀娘"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 76,
+    "sender_place": "plaza",
+    "seq": 158249,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（接过桂花糕，却没心思吃，叹了口气）秀娘啊，你这心是好的……可有些事，不是一块糕能压下去的。我这心里堵得慌，你说说，凭啥啥事都得听他们的？",
+    "channel": "MSG_GROUP",
+    "from": "P012",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place": "market",
+      "pid": "P004",
+      "tokens": [
+       "秀娘"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 76,
+    "sender_place": "cafe",
+    "seq": 158885,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（没动那糕，手在围裙上蹭了蹭）秀娘，甜的我领情。可这事不是吃口糕就能咽下去的——他们要把我铺子后头那截路封了，我炉子往哪搁？",
+    "channel": "MSG_GROUP",
+    "from": "P013",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place": "market",
+      "pid": "P004",
+      "tokens": [
+       "秀娘"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 76,
+    "sender_place": "plaza",
+    "seq": 159000,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（兰姐把秤砣往案板上一搁，眼皮都没抬）方老师，您这账我认，可您要拿我摊上的货去充公家的数，那我今儿这生意还做不做了？",
+    "channel": "MSG_GROUP",
+    "from": "P016",
+    "mentioned": [
+     {
+      "name": "方老师",
+      "peer_place": "plaza",
+      "pid": "P006",
+      "tokens": [
+       "方老师"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 76,
+    "sender_place": "town_hall",
+    "seq": 159245,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（揉了揉眉心，声音放软）兰姐，我不是来充公的。就是……学校那边要凑个账，我想着先从您这儿赊两斤，回头我自个儿掏钱补上。您看成不成？",
+    "channel": "MSG_GROUP",
+    "from": "P006",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place": "town_hall",
+      "pid": "P016",
+      "tokens": [
+       "兰姐"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 77,
+    "sender_place": "plaza",
+    "seq": 159544,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（把吉他往身后挪了挪，声音有点发紧）兰姐，我不是来充公的……我就是想问问，这台上台下，到底谁说了算？我唱什么，得先过谁的秤？",
+    "channel": "MSG_GROUP",
+    "from": "P010",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place": "town_hall",
+      "pid": "P016",
+      "tokens": [
+       "兰姐"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 77,
+    "sender_place": "plaza",
+    "seq": 159702,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（没动那糕，手在围裙上蹭了蹭）秀娘，你的好意我领了。可这活儿的事，不是吃块糕就能过去的。",
+    "channel": "MSG_GROUP",
+    "from": "P002",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place": "market",
+      "pid": "P004",
+      "tokens": [
+       "秀娘"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 78,
+    "sender_place": "community_center",
+    "seq": 160061,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（低头搓了搓手）巧儿，你那木工活儿……我搭把手行不？",
+    "channel": "MSG_GROUP",
+    "from": "P003",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place": "cafe",
+      "pid": "P014",
+      "tokens": [
+       "巧儿"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 78,
+    "sender_place": "community_center",
+    "seq": 160080,
+    "to": ""
+   },
+   {
+    "body_excerpt": "秀娘：（从柜台后探出身，手里还捏着半块刚出炉的桃酥，语气温温的）哎哟，月牙，你这孩子，唱个歌还唱出官司来了。来，先尝口点心，甜的东西压得住火气。台上台下谁说了算——要我说啊，谁心里那杆秤准，就听谁的。",
+    "channel": "MSG_GROUP",
+    "from": "P004",
+    "mentioned": [
+     {
+      "name": "月牙",
+      "peer_place": "plaza",
+      "pid": "P010",
+      "tokens": [
+       "月牙"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 78,
+    "sender_place": "park",
+    "seq": 160091,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（轻轻叹了口气，拿起一块桂花糕，却没急着吃）秀娘，你的心意我领。可这事不是吃块糕就能翻过去的——镇上要换新诊所的管事，说是上头派来的，我这二十年的老方子、老规矩，怕是保不住了。",
+    "channel": "MSG_GROUP",
+    "from": "P005",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place": "park",
+      "pid": "P004",
+      "tokens": [
+       "秀娘"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 78,
+    "sender_place": "hall",
+    "seq": 160110,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（揉了揉眉心，勉强笑了笑）秀娘，你这桂花糕来得正是时候……说真的，我现在连抬杠的力气都快没了。今天在学堂里跟几位先生争了一下午的课程安排，各说各的理，谁也不肯让。我就在想，争来争去，到底是为了孩子，还是为了那口气呢？",
+    "channel": "MSG_GROUP",
+    "from": "P006",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place": "park",
+      "pid": "P004",
+      "tokens": [
+       "秀娘"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 78,
+    "sender_place": "plaza",
+    "seq": 160155,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（把吉他往桌边一靠，手指还搭在琴弦上没松开）巧儿，你这账算得比金先生还活泛。不过——（低头拨了一下弦，闷响）我这两天在礼堂排的那首新歌，副歌怎么都落不下来，像欠着谁三块二似的，心里不平。",
+    "channel": "MSG_GROUP",
+    "from": "P010",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place": "cafe",
+      "pid": "P014",
+      "tokens": [
+       "巧儿"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 78,
+    "sender_place": "plaza",
+    "seq": 160309,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（没动那糕，手在围裙上蹭了蹭）秀娘，甜的我领情。可这事不是吃口糕就能咽下去的——他们要把我铺子后头那截路封了，我炉子往哪搁？",
+    "channel": "MSG_GROUP",
+    "from": "P013",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place": "park",
+      "pid": "P004",
+      "tokens": [
+       "秀娘"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 78,
+    "sender_place": "plaza",
+    "seq": 160396,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（手里捏着半截废木料，眼睛却瞟着评委席）兰姐，你说我这小玩意儿要是拿不了名次，回头给桂婶当柴火烧，她能不能少念叨我两句？",
+    "channel": "MSG_GROUP",
+    "from": "P014",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place": "town_hall",
+      "pid": "P016",
+      "tokens": [
+       "兰姐"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 78,
+    "sender_place": "plaza",
+    "seq": 160407,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（兰姐这才抬眼，先扫了月牙一眼，又看了看方老师，手指在秤杆上轻轻一敲）月牙，你这话问得比账本还绕。台上你唱，台下我听，谁掏钱谁点戏——可你要问我这摊上谁说了算，那得看你是来买货的，还是来赊账的。",
+    "channel": "MSG_GROUP",
+    "from": "P016",
+    "mentioned": [
+     {
+      "name": "月牙",
+      "peer_place": "plaza",
+      "pid": "P010",
+      "tokens": [
+       "月牙"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 78,
+    "sender_place": "cafe",
+    "seq": 160467,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（低头搓着衣角）巧儿，别光想着名次……桂婶那边，我帮你说说。",
+    "channel": "MSG_GROUP",
+    "from": "P003",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place": "plaza",
+      "pid": "P014",
+      "tokens": [
+       "巧儿"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 79,
+    "sender_place": "community_center",
+    "seq": 160915,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（把围裙往腰后一掖，看看陈医又看看方老师，声音放软）哎，你们俩这一说，我这心里也跟着堵。我烤面包这些年，也遇过有人非要我改配方，说老一套卖不动。可我就想啊——方子能改，人心不能散。陈医，你那老规矩里最要紧的是啥？方老师，你们争的课，孩子们到底缺哪一口？咱先把这口找出来，别的慢慢磨。",
+    "channel": "MSG_GROUP",
+    "from": "P004",
+    "mentioned": [
+     {
+      "name": "陈医",
+      "peer_place": "hall",
+      "pid": "P005",
+      "tokens": [
+       "陈医"
+      ],
+      "vocative": true
+     },
+     {
+      "name": "方老师",
+      "peer_place": "plaza",
+      "pid": "P006",
+      "tokens": [
+       "方老师"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 79,
+    "sender_place": "park",
+    "seq": 161008,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（用镊子夹着棉球，头也没抬）巧儿，你这心思就没在木头上。名次是别人的事，手艺才是自己的。桂婶念叨你，是怕你糟蹋东西——你把这半截料子雕出个样子来，比什么名次都强。",
+    "channel": "MSG_GROUP",
+    "from": "P005",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place": "plaza",
+      "pid": "P014",
+      "tokens": [
+       "巧儿"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 79,
+    "sender_place": "hall",
+    "seq": 161057,
+    "to": ""
+   },
+   {
+    "body_excerpt": "方老师：（揉了揉眉心，声音比平时低了些）小满这话，我听着心里发沉。教了这些年书，我总跟学生说，尺子在你手里，可量什么、怎么量，得自己拿主意。可今天……（顿了顿）今天我才觉着，有时候连尺子都不是自己的。兰姐，你说，一个人累到连话都不想说了，还算不算“自主”？",
+    "channel": "MSG_GROUP",
+    "from": "P006",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place": "cafe",
+      "pid": "P016",
+      "tokens": [
+       "兰姐"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 79,
+    "sender_place": "plaza",
+    "seq": 161166,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（掏出小本子，指尖在纸上点了点）账要平。桂婶，你出工，我出料，回头记一笔，谁也不欠谁。",
+    "channel": "MSG_GROUP",
+    "from": "P009",
+    "mentioned": [
+     {
+      "name": "桂婶",
+      "peer_place": "cafe",
+      "pid": "P012",
+      "tokens": [
+       "桂婶"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 79,
+    "sender_place": "park",
+    "seq": 161401,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（没接桃酥，手指在桌沿敲了两下，声音有点发紧）兰姐，我不是来争谁说了算的。我就是……（顿住，吸了口气）我唱了十年，头一回觉得话筒不是我的。",
+    "channel": "MSG_GROUP",
+    "from": "P010",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place": "cafe",
+      "pid": "P016",
+      "tokens": [
+       "兰姐"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 79,
+    "sender_place": "plaza",
+    "seq": 161504,
+    "to": ""
+   },
+   {
+    "body_excerpt": "（拿铅笔在木料上点两下）桂婶，靠背我想用旧犁把儿改，弯度正好贴腰。就是——（顿了顿）这两天我脑子也跟欠三块二似的，静不下来。",
+    "channel": "MSG_GROUP",
+    "from": "P014",
+    "mentioned": [
+     {
+      "name": "桂婶",
+      "peer_place": "community_center",
+      "pid": "P012",
+      "tokens": [
+       "桂婶"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 79,
+    "sender_place": "plaza",
+    "seq": 161854,
+    "to": ""
+   }
+  ],
+  "rule": "P1 的提及集合里，只保留称呼型：token 后紧跟 !,?~—…、吧呀呢啊！，？～ 之一，或前 ≤6 字以 (?:喂|哎|嘿|嗨|哟|唉)[，,、]?\\s*$ 结尾",
+  "uncheckable_mentions": 0
+ }
+}

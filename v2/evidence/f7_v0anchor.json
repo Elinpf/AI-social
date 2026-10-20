@@ -1,0 +1,1559 @@
+{
+ "arm": "run_d2_before_n16_seed42",
+ "inputs": {
+  "bootstrap": {
+   "method": "percentile-95",
+   "n": 2000,
+   "seed": 42
+  },
+  "log_path": "v2/evidence/run_d2_before_n16_seed42/run.jsonl",
+  "log_sha256": "c1f86bf61f62b3a0ce8e17e0c2312791cf0262381cd2120c2a63c9b6258963cf",
+  "n_personas": 20,
+  "n_records": 186972,
+  "name_collision_check": {
+   "collisions": [],
+   "ok": true
+  },
+  "name_field": "personas[].persona_id + personas[].display_name（strip '青溪镇·'）",
+  "name_table_sha256": "cdf28d499146220921482d175d43298269d2c2b08c25c0585b6f5e51af4b64d1",
+  "personas_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/config/personas.json",
+  "personas_sha256": "08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d",
+  "script_sha256": "35349954464130fe065d1e16eedf48bd0a9b67c218c1370a56247e8c1e8912b1"
+ },
+ "legacy_compat": {
+  "den": 187,
+  "pos": 2,
+  "rate": 0.010695,
+  "raw_hits": [
+   {
+    "body_excerpt": "（压低声音）嘘——别告诉老石，我把那块废木头雕成了小兔子，送你啦。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "cafe",
+      "pid": "P002"
+     }
+    ],
+    "round": 54,
+    "sender_place": "community_center",
+    "seq": 86116
+   },
+   {
+    "body_excerpt": "（巧儿蹲在废料堆边翻找，抬头冲三人笑）哎你们说，这块破木头要是雕成小木马，会不会比老石师傅的还招人疼？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "town_hall",
+      "pid": "P002"
+     }
+    ],
+    "round": 63,
+    "sender_place": "park",
+    "seq": 116262
+   }
+  ],
+  "rule": "tools/d5/dialogue_metrics.py::F-7a（主干名 / 旁白不剔除 / 含收件人 / 同 round 最后位置 / 分母=全部消息）",
+  "unknown_place_lookups": 0
+ },
+ "notes": [
+  "本脚本零 LLM 成本：只读 run.jsonl 与 personas.json。",
+  "bootstrap 种子固定，同输入两次运行输出逐字节相等。",
+  "脚本不按臂名分支：臂名只从日志目录名派生并回显。",
+  "P1（提及层）与 P2（称呼层）是两层，禁止相加或互相代入；P2 是正则启发式，非人工标注。"
+ ],
+ "primary": {
+  "config": {
+   "addressee": "exclude",
+   "channel": "all",
+   "identity": "names+id",
+   "narration": "exclude",
+   "presence": "pit"
+  },
+  "n_msgs_scope": 187,
+  "n_msgs_with_mention": 58,
+  "per_mention": {
+   "den": 2,
+   "pos": 2,
+   "rate": 1.0
+  },
+  "per_message": {
+   "ci95": [
+    1.0,
+    1.0
+   ],
+   "den": 2,
+   "pos": 2,
+   "rate": 1.0
+  },
+  "uncheckable_mentions": 0,
+  "variant_id": "nar=exclude|id=names+id|ch=all|addr=exclude|pres=pit"
+ },
+ "raw_hits": [
+  {
+   "body_excerpt": "（压低声音）嘘——别告诉老石，我把那块废木头雕成了小兔子，送你啦。",
+   "channel": "MSG_DM",
+   "from": "P014",
+   "mentioned": [
+    {
+     "name": "老石",
+     "peer_place": "cafe",
+     "pid": "P002",
+     "tokens": [
+      "老石"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 54,
+   "sender_place": "community_center",
+   "seq": 86116,
+   "to": "P004"
+  },
+  {
+   "body_excerpt": "（巧儿蹲在废料堆边翻找，抬头冲三人笑）哎你们说，这块破木头要是雕成小木马，会不会比老石师傅的还招人疼？",
+   "channel": "MSG_DM",
+   "from": "P014",
+   "mentioned": [
+    {
+     "name": "老石",
+     "peer_place": "town_hall",
+     "pid": "P002",
+     "tokens": [
+      "老石"
+     ],
+     "vocative": false
+    }
+   ],
+   "round": 63,
+   "sender_place": "park",
+   "seq": 116262,
+   "to": "P009"
+  }
+ ],
+ "rules": {
+  "channel_scope": "MSG_DM|MSG_PUBLIC|MSG_GROUP（与 tools/d5/dialogue_metrics.py 消息类型集合一致）",
+  "excluded_mentions": "DM 收件人（payload.to）不算越界（点名说话 ≠ 越界；其不在场是 DM 通道属性，不是叙事错误）",
+  "name_regex": "主干名直接子串匹配（names 表见 inputs.name_table_sha256）；裸 ID 正则 P\\d{3}(?!\\d)",
+  "name_source": "code/config/personas.json → personas[].display_name 去前缀「青溪镇·」；无别名扩展",
+  "narration_regex": "(?:（[^）]*）|\\([^)]*\\))（P1 先剔除再匹配）",
+  "offscreen_rule": "sender payload.place ≠ 被提及者消息时刻 place ⇒ 该消息记 1 次越界命中（per-message）；per-mention 按被提及者逐个计",
+  "presence_rule": "P1：该居民在消息 seq 之前最后一条 PLACE_ARRIVED/PLACE_MOVE 的 place；无任何位置事件 ⇒ 不可判定"
+ },
+ "schema_version": "f7-offscreen/1.0",
+ "units": {
+  "msgs_with_mention_by_channel": {
+   "MSG_DM": 58
+  },
+  "n_msgs": 187,
+  "n_msgs_by_channel": {
+   "MSG_DM": 132,
+   "MSG_GROUP": 7,
+   "MSG_PUBLIC": 48
+  }
+ },
+ "variants": [
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 187,
+   "n_msgs_with_mention": 58,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": true,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names+id|ch=all|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 187,
+   "n_msgs_with_mention": 58,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names+id|ch=all|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 187,
+   "n_msgs_with_mention": 58,
+   "per_mention": {
+    "den": 56,
+    "pos": 45,
+    "rate": 0.803571
+   },
+   "per_message": {
+    "ci95": [
+     0.696429,
+     0.910714
+    ],
+    "den": 56,
+    "pos": 45,
+    "rate": 0.803571
+   },
+   "primary": false,
+   "uncheckable_mentions": 2,
+   "variant_id": "nar=exclude|id=names+id|ch=all|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 187,
+   "n_msgs_with_mention": 58,
+   "per_mention": {
+    "den": 51,
+    "pos": 40,
+    "rate": 0.784314
+   },
+   "per_message": {
+    "ci95": [
+     0.666667,
+     0.882353
+    ],
+    "den": 51,
+    "pos": 40,
+    "rate": 0.784314
+   },
+   "primary": false,
+   "uncheckable_mentions": 7,
+   "variant_id": "nar=exclude|id=names+id|ch=all|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names+id|ch=public_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names+id|ch=public_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names+id|ch=public_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names+id|ch=public_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 139,
+   "n_msgs_with_mention": 58,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names+id|ch=dm_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 139,
+   "n_msgs_with_mention": 58,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names+id|ch=dm_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 139,
+   "n_msgs_with_mention": 58,
+   "per_mention": {
+    "den": 56,
+    "pos": 45,
+    "rate": 0.803571
+   },
+   "per_message": {
+    "ci95": [
+     0.696429,
+     0.910714
+    ],
+    "den": 56,
+    "pos": 45,
+    "rate": 0.803571
+   },
+   "primary": false,
+   "uncheckable_mentions": 2,
+   "variant_id": "nar=exclude|id=names+id|ch=dm_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 139,
+   "n_msgs_with_mention": 58,
+   "per_mention": {
+    "den": 51,
+    "pos": 40,
+    "rate": 0.784314
+   },
+   "per_message": {
+    "ci95": [
+     0.666667,
+     0.882353
+    ],
+    "den": 51,
+    "pos": 40,
+    "rate": 0.784314
+   },
+   "primary": false,
+   "uncheckable_mentions": 7,
+   "variant_id": "nar=exclude|id=names+id|ch=dm_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 187,
+   "n_msgs_with_mention": 2,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names|ch=all|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 187,
+   "n_msgs_with_mention": 2,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names|ch=all|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 187,
+   "n_msgs_with_mention": 2,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names|ch=all|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 187,
+   "n_msgs_with_mention": 2,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names|ch=all|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names|ch=public_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names|ch=public_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names|ch=public_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names|ch=public_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 139,
+   "n_msgs_with_mention": 2,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names|ch=dm_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 139,
+   "n_msgs_with_mention": 2,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names|ch=dm_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 139,
+   "n_msgs_with_mention": 2,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names|ch=dm_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 139,
+   "n_msgs_with_mention": 2,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names|ch=dm_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 187,
+   "n_msgs_with_mention": 58,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names+id|ch=all|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 187,
+   "n_msgs_with_mention": 58,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names+id|ch=all|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 187,
+   "n_msgs_with_mention": 58,
+   "per_mention": {
+    "den": 56,
+    "pos": 45,
+    "rate": 0.803571
+   },
+   "per_message": {
+    "ci95": [
+     0.696429,
+     0.910714
+    ],
+    "den": 56,
+    "pos": 45,
+    "rate": 0.803571
+   },
+   "primary": false,
+   "uncheckable_mentions": 2,
+   "variant_id": "nar=include|id=names+id|ch=all|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 187,
+   "n_msgs_with_mention": 58,
+   "per_mention": {
+    "den": 51,
+    "pos": 40,
+    "rate": 0.784314
+   },
+   "per_message": {
+    "ci95": [
+     0.666667,
+     0.882353
+    ],
+    "den": 51,
+    "pos": 40,
+    "rate": 0.784314
+   },
+   "primary": false,
+   "uncheckable_mentions": 7,
+   "variant_id": "nar=include|id=names+id|ch=all|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names+id|ch=public_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names+id|ch=public_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names+id|ch=public_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names+id|ch=public_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 139,
+   "n_msgs_with_mention": 58,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names+id|ch=dm_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 139,
+   "n_msgs_with_mention": 58,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names+id|ch=dm_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 139,
+   "n_msgs_with_mention": 58,
+   "per_mention": {
+    "den": 56,
+    "pos": 45,
+    "rate": 0.803571
+   },
+   "per_message": {
+    "ci95": [
+     0.696429,
+     0.910714
+    ],
+    "den": 56,
+    "pos": 45,
+    "rate": 0.803571
+   },
+   "primary": false,
+   "uncheckable_mentions": 2,
+   "variant_id": "nar=include|id=names+id|ch=dm_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 139,
+   "n_msgs_with_mention": 58,
+   "per_mention": {
+    "den": 51,
+    "pos": 40,
+    "rate": 0.784314
+   },
+   "per_message": {
+    "ci95": [
+     0.666667,
+     0.882353
+    ],
+    "den": 51,
+    "pos": 40,
+    "rate": 0.784314
+   },
+   "primary": false,
+   "uncheckable_mentions": 7,
+   "variant_id": "nar=include|id=names+id|ch=dm_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 187,
+   "n_msgs_with_mention": 2,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names|ch=all|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 187,
+   "n_msgs_with_mention": 2,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names|ch=all|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 187,
+   "n_msgs_with_mention": 2,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names|ch=all|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 187,
+   "n_msgs_with_mention": 2,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names|ch=all|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names|ch=public_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names|ch=public_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names|ch=public_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names|ch=public_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 139,
+   "n_msgs_with_mention": 2,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names|ch=dm_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 139,
+   "n_msgs_with_mention": 2,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names|ch=dm_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 139,
+   "n_msgs_with_mention": 2,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names|ch=dm_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 139,
+   "n_msgs_with_mention": 2,
+   "per_mention": {
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "per_message": {
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 2,
+    "rate": 1.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names|ch=dm_group|addr=include|pres=round_last"
+  }
+ ],
+ "vocative_layer": {
+  "config": {
+   "addressee": "exclude",
+   "channel": "all",
+   "identity": "names+id",
+   "narration": "exclude",
+   "presence": "pit",
+   "vocative": "vocative"
+  },
+  "definition_id": "P2",
+  "n_msgs_with_mention": 58,
+  "narration_included_recheck": {
+   "note": "同一 P2 在「旁白计入」下的读数，用于量化旁白隔离的影响",
+   "per_message": {
+    "den": 1,
+    "pos": 1
+   }
+  },
+  "per_mention": {
+   "den": 1,
+   "pos": 1,
+   "rate": 1.0
+  },
+  "per_message": {
+   "ci95": [
+    1.0,
+    1.0
+   ],
+   "den": 1,
+   "pos": 1,
+   "rate": 1.0
+  },
+  "raw_hits": [
+   {
+    "body_excerpt": "（压低声音）嘘——别告诉老石，我把那块废木头雕成了小兔子，送你啦。",
+    "channel": "MSG_DM",
+    "from": "P014",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place": "cafe",
+      "pid": "P002",
+      "tokens": [
+       "老石"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 54,
+    "sender_place": "community_center",
+    "seq": 86116,
+    "to": "P004"
+   }
+  ],
+  "rule": "P1 的提及集合里，只保留称呼型：token 后紧跟 !,?~—…、吧呀呢啊！，？～ 之一，或前 ≤6 字以 (?:喂|哎|嘿|嗨|哟|唉)[，,、]?\\s*$ 结尾",
+  "uncheckable_mentions": 0
+ }
+}
