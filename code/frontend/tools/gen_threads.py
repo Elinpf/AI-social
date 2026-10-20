@@ -411,7 +411,8 @@ def build(log_path: Path, meta_path: Path | None, personas: dict, places: dict,
         "generated_by": "frontend/tools/gen_threads.py",
         "generator_sha256": sha256_file(Path(__file__)),
         "source": {
-            "run_label": run_label or f"{Path(log_path).parent.name}/{Path(log_path).name}",
+            # 默认标签 = 「文件名-sha8」：仓库里存在读数接近的不同日志，只写批次名会混淆
+            "run_label": run_label or f"{Path(log_path).name}-{sha256_file(log_path)[:8]}",
             "run_sha256": sha256_file(log_path),
             "run_bytes": Path(log_path).stat().st_size,
             "events_total_in_log": events,
@@ -489,7 +490,8 @@ def main() -> int:
                     help="**不推荐**：丢弃 PLACE_MOVE（「节律·串门」视图变空态）")
     ap.add_argument("--summary", action="store_true", help="只打印统计，不写文件")
     ap.add_argument("--label", default=None,
-                    help="批次标签（写进 threads.json 的 source.run_label；缺省用「目录名/文件名」）")
+                    help="批次标签（写进 source.run_label；**约定写「日志文件名-sha8」**，"
+                         "如 run_p1_final_n20_llm-fb832372；缺省自动用该形式）")
     a = ap.parse_args()
 
     log_path = Path(a.log)

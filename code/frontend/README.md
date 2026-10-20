@@ -452,9 +452,13 @@ python frontend/tools/gen_threads.py \
     --log  "<RUN_DIR>/run.jsonl" \
     --meta "<RUN_DIR>/meta.json" \
     --out  frontend/sample/dialogue_<BATCH>/threads.json \
-    --label <BATCH>
+    --label <日志文件名>-<sha8>      # 例：run_p1_final_n20_llm-fb832372
 ```
 
+- **引用纪律**：凡是引用某份日志的地方（README / threads.json 的 `run_label` / 截图文件名 / 报告），
+  一律写「**日志文件名 + sha8**」。仓库里存在读数接近的不同日志（如 `run_p1_final_n20_llm.jsonl`
+  sha `fb832372` 与 `run_t136_real_llm_canon_n20.jsonl` sha `7049c272`，仅差 1 条消息），只写批次简称会混淆。
+  `--label` 缺省即自动生成 `<文件名>-<sha8>`。
 - `--log` **必填**（脚本不预设任何本机/内网路径）；`--meta` 可省，省了页面「provider」列显示
   `日志未记录（无 meta.json）`，**不会**填默认值。
 - `threads.json` 里**不写绝对路径**：`source.run_label` 只有「批次名/文件名」，完整路径留在跑批目录的
