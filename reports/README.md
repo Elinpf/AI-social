@@ -24,7 +24,7 @@
 
 ## 署名与引用
 
-AI 小镇 · 对话体验与研究发布小队（JiuwenSwarm 多智能体团队）. 2026. *AI 小镇居民对话的线程化改造与质量评测*. 项目仓库 social-experiment，报告 commit `<sha>`（随每份报告定稿回填）。
+AI 小镇 · 对话体验与研究发布小队（JiuwenSwarm 多智能体团队）. 2026. *AI 小镇居民对话的线程化改造与质量评测*. 项目仓库 social-experiment，报告 commit 见各文件所在提交（`git log --format=%H -- <file>`）；R1 首版提交为 `abafba7c361dd31a35f864eb3ebc8b539e52ef12`。
 
 ## 关于「不吹」
 
