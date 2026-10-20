@@ -1,0 +1,138 @@
+{
+  "criterion_source": "artifacts/recon/round-recon.md §7 🥇（G-1/G-1b）+ v2/evidence/D3-noiseband-two-level.md",
+  "generated_by": "experiments/gossip-third-party/g_metrics.py",
+  "names_sha_note": "names_file=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/config/personas.json; n_names=20",
+  "runs": {
+    "v0anchor": {
+      "F-7a_reconciliation": {
+        "denom": 187,
+        "hit": 2,
+        "note": "按 tools/d5/dialogue_metrics.py::F-7a 规则复算；v0-anchor 期望 2/187=1.07%",
+        "rate_pct": 1.07
+      },
+      "G-1_third_party_mention": {
+        "by_channel": {
+          "dm": {
+            "denom": 132,
+            "hit": 2,
+            "rate_pct": 1.52
+          },
+          "group": {
+            "denom": 7,
+            "hit": 0,
+            "rate_pct": 0.0
+          },
+          "public": {
+            "denom": 48,
+            "hit": 0,
+            "rate_pct": 0.0
+          }
+        },
+        "ci95_pct": [
+          0.29,
+          3.82
+        ],
+        "denom": 187,
+        "hit": 2,
+        "mention_targets": {
+          "老石": 2
+        },
+        "rate_pct": 1.07,
+        "unit": "per-message"
+      },
+      "G-1b_offscreen_mention": {
+        "ci95_pct": [
+          0.29,
+          3.82
+        ],
+        "denom": 187,
+        "hit": 2,
+        "rate_pct": 1.07,
+        "rule": "G-1 命中中，任一提及者同 round 位置 ≠ 本条 place ⇒ 越界；place 空或位置查不到 ⇒ 不计入（宁漏不虚增）",
+        "unit": "per-message",
+        "unknown_place_base": 0,
+        "unknown_place_lookups": 0
+      },
+      "G-2_rumor_chain": {
+        "applicable": false,
+        "denom": null,
+        "hit": null,
+        "rate_pct": null,
+        "rule": "同一 topic 被 ≥3 个不同 agent 提及的簇 / 有非空 topic 的簇；无 topic 字段 ⇒ applicable=false",
+        "unit": "per-topic-cluster"
+      },
+      "_hits": [
+        {
+          "author": "P014",
+          "author_name": "巧儿",
+          "body": "（压低声音）嘘——别告诉老石，我把那块废木头雕成了小兔子，送你啦。",
+          "channel": "dm",
+          "mentions": [
+            "老石"
+          ],
+          "place": "community_center",
+          "round": 54,
+          "seq": 86116
+        },
+        {
+          "author": "P014",
+          "author_name": "巧儿",
+          "body": "（巧儿蹲在废料堆边翻找，抬头冲三人笑）哎你们说，这块破木头要是雕成小木马，会不会比老石师傅的还招人疼？",
+          "channel": "dm",
+          "mentions": [
+            "老石"
+          ],
+          "place": "park",
+          "round": 63,
+          "seq": 116262
+        }
+      ],
+      "_off_hits": [
+        {
+          "body": "（压低声音）嘘——别告诉老石，我把那块废木头雕成了小兔子，送你啦。",
+          "mentions": [
+            "老石"
+          ],
+          "place": "community_center",
+          "round": 54,
+          "seq": 86116
+        },
+        {
+          "body": "（巧儿蹲在废料堆边翻找，抬头冲三人笑）哎你们说，这块破木头要是雕成小木马，会不会比老石师傅的还招人疼？",
+          "mentions": [
+            "老石"
+          ],
+          "place": "park",
+          "round": 63,
+          "seq": 116262
+        }
+      ],
+      "channels": {
+        "dm": 132,
+        "group": 7,
+        "public": 48
+      },
+      "guards": {
+        "L-2_narration_head": {
+          "denom": 187,
+          "hit": 120,
+          "rate_pct": 64.17
+        },
+        "L-3_paren_any": {
+          "denom": 187,
+          "hit": 121,
+          "rate_pct": 64.71
+        },
+        "L-8_naked_id": {
+          "denom": 187,
+          "hit": 56,
+          "rate_pct": 29.95
+        }
+      },
+      "n_msgs": 187,
+      "path": "v2/evidence/run_d2_before_n16_seed42/run.jsonl",
+      "rounds_seen": 84,
+      "thread_schema": "legacy"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+# cmd: python3 experiments/gossip-third-party/g_metrics.py --run v0anchor=v2/evidence/run_d2_before_n16_seed42/run.jsonl --out-json experiments/gossip-third-party/g_metrics_v0anchor.json --out-quotes experiments/gossip-third-party/g_quotes_v0anchor.md
+# started_at: 2026-10-20T18:09:50+08:00
+# git_HEAD: 194623018ba3a2fcd93e27756129c643aaf44ac6
+# input_sha256: c1f86bf61f62b3a0ce8e17e0c2312791cf0262381cd2120c2a63c9b6258963cf
+# script_sha256: f32c20f6efdd7a45cd4b30437f07e780a44e23451a2a3e4d701a78877c71cc57
+--- begin raw stdout ---
+[names] 20 个居民主干名，重名=0
+[ok] json -> experiments/gossip-third-party/g_metrics_v0anchor.json
+[ok] quotes -> experiments/gossip-third-party/g_quotes_v0anchor.md
+== v0anchor  n_msgs=187  schema=legacy  channels={'public': 48, 'dm': 132, 'group': 7}
+   G-1  第三方提及  2/187 = 1.07%  ci=[0.29, 3.82]
+   G-1b 越界提及    2/187 = 1.07%  (place空=0, 位置未知=0)
+   守卫 L-8=29.95%  L-2=64.17%  L-3=64.71%
+   对账 F-7a       2/187 = 1.07%
+   提及对象        {'老石': 2}
+# wall_sec: 0.85
+# finished_at: 2026-10-20T18:09:51+08:00
