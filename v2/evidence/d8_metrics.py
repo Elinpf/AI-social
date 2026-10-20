@@ -33,6 +33,22 @@
   ⑦ 零的性质：结构性 / 未观测到 / 仅窗口外 —— 三列分列，不许合并成一个 0
 
 来源标签：本脚本所有数字均为 [真跑]（输入是真跑日志）；M-0_windowed 相关字段为 [后处理推演]。
+
+修订 R9（2026-10-21，metrics-dev｜任务 t7-m1fix）：修 M-1 两个已定位缺陷，**两列并存、不许合并**
+  D1 窗口归属错（原 `window_hit_msgs()` 内 `break`，即上面口径 ⑥ 的实现）：
+     一条 msg 只归入 issued_round **最早**的覆盖窗口 ⇒ 后发事件的窗口被先发事件抢走。
+     本批实例：visitor `[12,18)` 覆盖 edict `[14,20)` 的 r15/r16，三条 edict 措辞消息被归给 visitor。
+     改法：新增 `m1_scan(attribution)`；`all`（默认）把 msg 归入**全部**覆盖窗口、任一覆盖实体 kind 命中即算，
+           `first` 保留原样口径供对照。被删掉的正是 `window_hit_msgs()` 里那行 `break`。
+  D2 词表缺 visitor（`KIND_WORDS` 只有 tension/edict/festival）：被错归的消息再查 visitor 词表必空 ⇒ 双重归零。
+     改法：**不擅自新造 visitor 词表**（无可靠未登录词依据，且判据卡要求改词表必须换 sha 重跑）；
+           改为显式声明 + 量化：`layer4_M1_lexicon_coverage` 列出 `kinds_without_lexicon` 与
+           `msgs_visitor_only`，并在 `layer4_M1_fixed.tag` 写明「visitor 词表未覆盖 ⇒ 下界」。
+  兼容：原四个 flat 字段 `layer4_M1_num_msgs/_num_entities/_dup_mentions_same_directive/_denom_msgs`
+        **语义不变**（仍是 orig 口径），并新增 `layer4_M1_flat_keys_note` 指明；结论请读 `layer4_M1_fixed`。
+  复现：`python3 v2/evidence/d8_metrics.py --log v2/evidence/run_d8_armB_n4r60_seed42/run.jsonl \
+        --label B --whitelist on --out-json /tmp/b.json` ⇒ `M1_orig=0/64`、`M1_fixed=3/64`、
+        `hit_seqs=[1974,1988,2118]`。
 """
 
 from __future__ import annotations
@@ -82,6 +98,9 @@ def main():
     ap.add_argument("--out-json", default="")
     ap.add_argument("--whitelist", choices=["on", "off", "unknown"], default="unknown",
                     help="该臂 `_SALIENT_EVENTS` 是否已放开 WORLD_*（决定 zero_nature 标签；必须显式传，脚本不猜）")
+    ap.add_argument("--m1-attribution", choices=["first", "all"], default="all",
+                    help="M-1 唯一归属规则：first=R2 原样（每个 msg 只归最早窗口，有缺陷，仅对照）；"
+                         "all=修正（归入全部覆盖窗口，任一覆盖实体 kind 命中即算）。两列读数恒同时输出，本参数只决定哪列进 md 摘要")
     ap.add_argument("--neg-control", action="store_true",
                     help="负对照：把词表替换为不相关词，用于检测词表误报率")
     args = ap.parse_args()
@@ -216,28 +235,92 @@ def main():
         p = r.get("payload") or {}
         return p.get("msg_uid") or f"{r['seq']}"
 
-    def window_hit_msgs() -> list:
-        out = []
+    def covering_entities(rr: int) -> list:
+        """该回合覆盖到的全部世界事件实体（按 issued_round 升序）。"""
+        return [(eid, m) for eid, m in ents_by_issue if m["start"] <= rr < m["end"]]
+
+    def m1_scan(attribution: str):
+        """M-1 扫描。attribution:
+             "first" = R2 原样口径：只归入 issued_round 最早的那个覆盖窗口（有 break）——**有缺陷，仅作对照列**
+             "all"   = 修正口径：一条消息属于**所有**覆盖它的窗口，任一覆盖实体的 kind 词表命中即算命中
+        返回 (win_pairs, hits)。win_pairs=[(rec, eid)]（同一消息可对多个 eid 出现多次）；
+        hits=[(rec, [(eid, kind, word), ...])]，同一消息只出现一次。
+        """
+        win_pairs, hits = [], []
         for r in msgs:
             rr = int(r.get("round", 0))
-            for eid, m in ents_by_issue:
-                if m["start"] <= rr < m["end"]:
-                    out.append((r, eid))
-                    break                      # R2：只归入 issued_round 最早的窗口
-        return out
+            cov = covering_entities(rr)
+            if not cov:
+                continue
+            chosen = cov[:1] if attribution == "first" else cov
+            for eid, _m in chosen:
+                win_pairs.append((r, eid))
+            s = BAN.sub("", body_of(r))        # 剔除括号旁白（G-1 教训）
+            matched = []
+            for eid, m in chosen:
+                kind = m["kind"]
+                for w in words.get(kind, []):
+                    if w in s:
+                        matched.append((eid, kind, w))
+                        break
+            if matched:
+                hits.append((r, matched))
+        return win_pairs, hits
 
-    win_msgs = window_hit_msgs()
-    m1_hits = []
-    for r, eid in win_msgs:
-        kind = entity_meta[eid]["kind"]
-        s = BAN.sub("", body_of(r))            # 剔除括号旁白
-        if any(w in s for w in words.get(kind, [])):
-            m1_hits.append((r, eid))
-    m1_msgs_unique = {msg_key(r) for r, _ in m1_hits}
-    m1_entities = {eid for _, eid in m1_hits}
-    m1_by_entity = Counter(eid for _, eid in m1_hits)
+    def m1_columns(attribution: str) -> dict:
+        win_pairs, hits = m1_scan(attribution)
+        msgs_unique = {msg_key(r) for r, _ in win_pairs}
+        hit_msgs = {msg_key(r) for r, _ in hits}
+        hit_entities = {eid for _, ms in hits for eid, _k, _w in ms}
+        by_entity = Counter(eid for _, ms in hits for eid, _k, _w in ms)
+        return {
+            "attribution": attribution,
+            "denom_msgs": len(msgs_unique),
+            "num_msgs": len(hit_msgs),
+            "num_entities": len(hit_entities),
+            "dup_mentions_same_directive": sum(v - 1 for v in by_entity.values() if v > 1),
+            "hit_seqs": sorted(int(r["seq"]) for r, _ in hits),
+            "by_entity": dict(sorted(by_entity.items())),
+            "hits": [{
+                "seq": r["seq"],
+                "round": r.get("round"),
+                "channel": r.get("type"),
+                "matched": [{"entity": eid, "kind": k, "word": w} for eid, k, w in ms],
+                "body_excerpt": (body_of(r) or "")[:120].replace("\n", " "),
+            } for r, ms in hits],
+        }
+
+    # 两列都算、都保留：orig=脚本原样口径（有缺陷，不可作结论）；fixed=修正 kind 归属口径（visitor 无词表 ⇒ 下界）
+    m1_orig = m1_columns("first")
+    m1_fixed = m1_columns("all")
+
+    # ---- visitor 词表缺口量化（决定 fixed 列是"下界"还是"完整"）----
+    kinds_all = sorted({m["kind"] for m in entity_meta.values()})
+    kinds_no_lex = [k for k in kinds_all if not words.get(k)]
+    cov_stats = {"msgs_covering": 0, "msgs_measurable": 0,
+                 "msgs_visitor_only": 0, "msgs_visitor_overlap": 0}
+    for r in msgs:
+        cov = covering_entities(int(r.get("round", 0)))
+        if not cov:
+            continue
+        cov_stats["msgs_covering"] += 1
+        ks = {m["kind"] for _e, m in cov}
+        lex_kinds = {k for k in ks if words.get(k)}
+        if lex_kinds:
+            cov_stats["msgs_measurable"] += 1
+            if "visitor" in ks:
+                cov_stats["msgs_visitor_overlap"] += 1
+        else:
+            cov_stats["msgs_visitor_only"] += 1
+
+    # 旧 flat 字段（向后兼容）取 orig 口径；结论请读 layer4_M1_fixed
+    _orig_hits = m1_scan("first")[1]
+    m1_msgs_unique = {msg_key(r) for r, _ in _orig_hits}
+    m1_entities = {eid for _, ms in _orig_hits for eid, _k, _w in ms}
+    m1_by_entity = Counter(eid for _, ms in _orig_hits for eid, _k, _w in ms)
     dup_mentions = sum(v - 1 for v in m1_by_entity.values() if v > 1)
-    denom_m1 = len(win_msgs)
+    win_pairs_default = m1_scan(args.m1_attribution)[0]   # 窗口重叠会让 (msg,entity) 对数 > msg 数
+    denom_m1 = m1_fixed["denom_msgs"]
 
     # ---------- ④b 真引用（world_ctx.refs）—— 结构事实，与 M-1 文本代理分列、不得相加 ----------
     # B 臂实现给 MSG payload 追加 `world_ctx`（含 refs/kinds/scarcity/prompted）；
@@ -329,6 +412,35 @@ def main():
         "layer4_M1_num_entities": len(m1_entities),
         "layer4_M1_denom_msgs": denom_m1,
         "layer4_M1_dup_mentions_same_directive": dup_mentions,
+        # ↓↓↓ R9（2026-10-21，metrics-dev 修正 M-1 归属缺陷）：两列并存，禁止合并、禁止只报一列 ↓↓↓
+        "layer4_M1_flat_keys_note": ("上方 layer4_M1_* 四个 flat 字段仍为 **orig（脚本原样口径）** 值，语义未被静默修改；"
+                                    "作结论请用 layer4_M1_fixed"),
+        "layer4_M1_attribution_default": args.m1_attribution,
+        "layer4_M1_win_pairs": {
+            "default_attribution": args.m1_attribution,
+            "pairs": len(win_pairs_default),
+            "msgs": m1_fixed["denom_msgs"],
+            "note": "pairs>msgs 即窗口重叠发生；固定先发窗口（orig）时 pairs==msgs",
+        },
+        "layer4_M1_orig": dict(m1_orig, **{
+            "tag": "口径缺陷，不可作结论",
+            "rule": ("R2 原样：每个 msg 只归入 issued_round 最早的覆盖窗口（首个命中即 break）；"
+                     "窗口重叠时后发事件（如 edict [14,20)）被先发事件（visitor [12,18)）抢走归属"),
+        }),
+        "layer4_M1_fixed": dict(m1_fixed, **{
+            "tag": "visitor 词表未覆盖 ⇒ 下界（真实值 ≥ 本列）",
+            "rule": ("修正：一条 msg 属于全部覆盖它的窗口；任一覆盖实体的 kind 词表命中即算命中；"
+                     "分母仍为窗口内 MSG_* 去重条数（per-message）"),
+        }),
+        "layer4_M1_lexicon_coverage": {
+            "kinds_in_batch": kinds_all,
+            "kinds_with_lexicon": [k for k in kinds_all if words.get(k)],
+            "kinds_without_lexicon": kinds_no_lex,
+            "declaration": ("visitor 类世界事件本批首次启用，冻结词表只覆盖 tension/edict/festival ⇒ "
+                            "凡仅落在 visitor 窗口内、且措辞不含其他 kind 词的 msg 一律漏计；"
+                            "因此 layer4_M1_fixed 是**下界**，不是点估计。此处显式声明，不得默认忽略。"),
+            "stats": cov_stats,
+        },
         "layer4_world_ctx_present_msgs": len(world_ctx_present),
         "layer4_real_ref_msgs": len(real_ref_msgs),
         "layer4_real_ref_entities": len(real_ref_entities),

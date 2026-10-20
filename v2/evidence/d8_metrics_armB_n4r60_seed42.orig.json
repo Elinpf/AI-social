@@ -1,0 +1,136 @@
+{
+  "arm": "B",
+  "log": "v2/evidence/run_d8_armB_n4r60_seed42/run.jsonl",
+  "source_tag": "[真跑]",
+  "N_world": 6,
+  "world_entities": {
+    "D-12-wd.visitor": {
+      "issued_round": 12,
+      "start": 12,
+      "end": 18,
+      "kind": "visitor",
+      "mechanism_id": "wd.visitor"
+    },
+    "D-14-wd.edict": {
+      "issued_round": 14,
+      "start": 14,
+      "end": 20,
+      "kind": "edict",
+      "mechanism_id": "wd.edict"
+    },
+    "D-30-wd.tension": {
+      "issued_round": 30,
+      "start": 30,
+      "end": 36,
+      "kind": "tension",
+      "mechanism_id": "wd.tension"
+    },
+    "D-35-wd.visitor": {
+      "issued_round": 35,
+      "start": 35,
+      "end": 41,
+      "kind": "visitor",
+      "mechanism_id": "wd.visitor"
+    },
+    "D-48-wd.visitor": {
+      "issued_round": 48,
+      "start": 48,
+      "end": 54,
+      "kind": "visitor",
+      "mechanism_id": "wd.visitor"
+    },
+    "D-50-wd.tension": {
+      "issued_round": 50,
+      "start": 50,
+      "end": 56,
+      "kind": "tension",
+      "mechanism_id": "wd.tension"
+    }
+  },
+  "world_seqs": [
+    1824,
+    1825,
+    1948,
+    1949,
+    3627,
+    3628,
+    4877,
+    4878,
+    7427,
+    7428,
+    7616,
+    7617
+  ],
+  "world_records": 12,
+  "world_rejected": 0,
+  "n_born_agents": 4,
+  "n_alive_agents": 4,
+  "n_died_agents": 0,
+  "denom_basis": "born（默认；死亡时序不同不改变分母，两臂可比）",
+  "layer1_occur": 6,
+  "layer2_visible_recomputed": null,
+  "layer3_M0_raw": 48,
+  "layer3_M0_dedup": 24,
+  "layer3_M0_denom": 24,
+  "layer3_M0_denom_alive_end": 24,
+  "layer3_M0_denom_window": 24,
+  "alive_in_window": {
+    "D-12-wd.visitor": 4,
+    "D-14-wd.edict": 4,
+    "D-30-wd.tension": 4,
+    "D-35-wd.visitor": 4,
+    "D-48-wd.visitor": 4,
+    "D-50-wd.tension": 4
+  },
+  "layer3_M0_windowed_dedup": 24,
+  "layer3_M0_windowed_tag": "[后处理推演:日志后处理值,非运行时实测;若时间窗未修,运行时实际值会高于此]",
+  "layer3_M0w_triples": 24,
+  "layer3_M0w_denom": 144,
+  "layer3_M0w_upper_num": 72,
+  "layer3_M0w_upper_bound": 0.5,
+  "layer3_M0w_note": "三元组口径 (agent,directive,round)，上界 1.0 但窗口覆盖 3/6；与 M-0(entity 口径,上界1.0) 不得互相代入",
+  "perception_coverage_rounds": {
+    "D-12-wd.visitor": [
+      3,
+      6
+    ],
+    "D-14-wd.edict": [
+      3,
+      6
+    ],
+    "D-30-wd.tension": [
+      3,
+      6
+    ],
+    "D-35-wd.visitor": [
+      3,
+      6
+    ],
+    "D-48-wd.visitor": [
+      3,
+      6
+    ],
+    "D-50-wd.tension": [
+      3,
+      6
+    ]
+  },
+  "layer3_observation_world_hits": 48,
+  "layer4_M1_num_msgs": 0,
+  "layer4_M1_num_entities": 0,
+  "layer4_M1_denom_msgs": 64,
+  "layer4_M1_dup_mentions_same_directive": 0,
+  "layer4_world_ctx_present_msgs": 31,
+  "layer4_real_ref_msgs": 31,
+  "layer4_real_ref_entities": 6,
+  "layer4_real_ref_rule": "真引用=MSG.payload.world_ctx.refs 命中世界事件实体（结构事实，可复算）；与 M-1 词表代理并列、不得相加、不得互相替代",
+  "layer4_M1_rule": "剔除括号旁白后命中冻结词表；分母=窗口内 MSG_* 条数（per-message，R2 唯一归属）",
+  "layer4_M1_reporting_rule": "分母<30 只报事件数（判据卡）；本批分母 64 亦按'只报事件数、比率仅作参考'处理（leader 抬档）",
+  "L2_narration_rate_proxy": 0.8709677419354839,
+  "L2_denom": 124,
+  "lexicon_sha8": "5365ded1",
+  "neg_control": false,
+  "zero_nature": "非零",
+  "card": "v2/evidence/D8-mention-criteria-card.md",
+  "card_sha16": "4eddf77eccafb46e"
+}
