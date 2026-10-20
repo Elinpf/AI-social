@@ -501,7 +501,26 @@ python frontend/tools/gen_threads.py \
 - 关系/需求/共处证据缺失：对应卡片显示「日志未记录（本条之前没有 … 事件）」。
 - 没有对话事件的日志（空世界）：显示空态并提示换日志，不白屏、不报错。
 
-### 17.6 600px 判读
+### 17.6 为什么 `msg_id` 不能当指针（实测反例，D2 之前的日志）
+
+在 `sample/run_p1_final_n20_llm.jsonl`（128564 事件）里实测：
+
+| 事实 | 读数 |
+|---|---|
+| `MSG_*` 消息条数 | 231 |
+| 不同 `msg_id` 个数 | **87** |
+| 出现次数 >1 的 `msg_id` | **20** 个，覆盖 **164** 条消息 |
+| 最严重的一个 | `D-6-0` 被 **15** 条不同消息复用（同一 round、不同说话人） |
+
+原因：旧格式 `msg_id` 只由「回合 + 序号」拼成（如 `D-6-0`），**不含说话人/接收人**，同回合多人同时发起就会撞。
+后果：
+- 前端若拿 `msg_id` 做 key，会把 15 条消息合成 1 条（本页因此**用全序 `seq` 作唯一键**，见 `gen_threads.py` 注释）；
+- 报告里若用 `msg_id` 引用一条消息，读者无法唯一定位。
+
+因此 D2 的线程字段引入独立 `thread_id` + `reply_to` 是正确的；在此之前的日志，**唯一定位只能用 `seq`**。
+`gen_threads_selftest.py` 的 `[B]` 用例就是把 `D-6-0` 撞车这件事当反例固定下来的门禁（防回归）。
+
+### 17.7 600px 判读
 
 ```bash
 python frontend/tools/shot.py --url 'http://127.0.0.1:8848/dialogue.html?still=1&multi=0&min=0' \
@@ -511,7 +530,7 @@ python frontend/tools/shot.py --url 'http://127.0.0.1:8848/dialogue.html?still=1
 600px 下：侧栏折叠为顶部「筛选 ▾」抽屉（点击展开）、线程卡占满宽、气泡 `max-width:88%`、
 语境面板单列、播放条时钟压缩到 92px —— 正文不截断、不横向滚动。
 
-### 17.7 可复算门禁（页面上的字必须真的来自日志）
+### 17.8 可复算门禁（页面上的字必须真的来自日志）
 
 ```bash
 # 前置：静态服务在跑（python frontend/tools/serve.py）
@@ -536,7 +555,7 @@ python frontend/tools/verify_dialogue_page.py \
 > 比对全量请用 `?multi=0&min=0&still=1`（或点「全部」）。页面右下 `已发生 / 总数` 与
 > `<html data-msg-count>` 始终反映**当前实际渲染条数**。
 
-### 17.8 干净环境自检（无本机路径）
+### 17.9 干净环境自检（无本机路径）
 
 ```bash
 # 只拷页面/数据/脚本到 /tmp 副本，env -i 最小环境跑（不联网、不 source 任何 env）
@@ -550,7 +569,7 @@ env -i PATH=/usr/bin:/bin HOME=/tmp/d7home python3 tools/verify_dialogue_page.py
 本页/本脚本**不含**任何本机或内网绝对路径：浏览器由 `tools/_chrome.py` 探测（`HITT_CHROME` 可覆盖），
 数据路径一律显式传入，`threads.json` 只记 `run_label` + `run_sha256`。
 
-### 17.9 已知边界
+### 17.10 已知边界
 
 - 页面只吃 `threads.json`（不直接解析 run.jsonl）：解析与聚合口径只保留在 `gen_threads.py` **一处**，
   避免前端/脚本两套口径分叉。拖入 `.jsonl` 会提示先生成。
