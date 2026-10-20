@@ -468,6 +468,31 @@ python frontend/tools/gen_threads.py \
 - 输出 schema：`hitt.dialogue.threads/1`（字段含 `source.run_sha256`、`source.events_total_in_log`、
   `stats`、`threads[].messages[].seq`）。
 
+### 17.2b 跑批完整性前置断言（**不通过就不生成**）
+
+半截跑批（中途崩/OOM）做出来的数据集会污染演示页，所以加了一条硬前置：
+
+```bash
+# 推荐：带 --require-complete，断言失败直接退出码 3，不写文件
+python frontend/tools/gen_threads.py \
+    --log "<RUN_DIR>/run.jsonl" --meta "<RUN_DIR>/meta.json" \
+    --out frontend/sample/dialogue_<BATCH>/threads.json --require-complete
+# 通过 → "完整性断言通过：TURN_SEAL 84 条覆盖 round 0..83"
+# 不通过 → "FAIL 完整性断言：… → 不生成（半截跑批）"，rc=3，不会产生任何文件
+```
+
+判定规则：`meta.json` 必须存在且含 `rounds`；日志里 `TURN_SEAL` 的 round 集合必须**恰好等于** `0..rounds-1`（无缺号、无多余）。
+结果同时写进 `threads.json.completeness`（`turn_seals / rounds_expected / seal_round_min/max / complete`），读者可复核。
+
+一行命令自查（不生成文件）：
+
+```bash
+python3 -c "import json,sys; \
+m=json.load(open('<RUN_DIR>/meta.json')); r=m['rounds']; \
+seals=sorted({(x.get('payload') or {}).get('round') for x in map(json.loads,open('<RUN_DIR>/run.jsonl')) if x.get('type')=='TURN_SEAL'}); \
+print('rounds',r,'seals',len(seals),'range',seals[0],seals[-1],'OK' if seals==list(range(r)) else 'INCOMPLETE')"
+```
+
 ### 17.3 裁剪规则（体积受控，但因果证据不许裁）
 
 `gen_threads.py` **只保留**：

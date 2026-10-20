@@ -227,6 +227,7 @@ def build(log_path: Path, meta_path: Path | None, personas: dict, places: dict,
     events = 0
     msgs: list[dict] = []
     moves: list[dict] = []
+    seal_rounds: list[int] = []
     ctx = ContextIndex()
     order: list[tuple] = []          # (seq, msg_view)
     first_round = None
@@ -245,6 +246,10 @@ def build(log_path: Path, meta_path: Path | None, personas: dict, places: dict,
             if rnd is not None:
                 first_round = rnd if first_round is None else min(first_round, rnd)
                 last_round = rnd if last_round is None else max(last_round, rnd)
+            if t == "TURN_SEAL":
+                rr = (rec.get("payload") or {}).get("round", rnd)
+                if isinstance(rr, int):
+                    seal_rounds.append(rr)
             if t == "LLM_CALL" and provider is None:
                 provider = (rec.get("payload") or {}).get("provider")
             if t in MOVE_TYPES:
@@ -415,6 +420,20 @@ def build(log_path: Path, meta_path: Path | None, personas: dict, places: dict,
         except Exception as e:  # noqa: BLE001 — 元信息坏了就如实标注，不阻塞
             meta = {"_error": f"meta.json 解析失败: {e}"}
 
+    rounds_expected = None
+    if meta and isinstance(meta.get("rounds"), int):
+        rounds_expected = meta["rounds"]
+    complete = None
+    if rounds_expected:
+        complete = (sorted(set(seal_rounds)) == list(range(rounds_expected)))
+    completeness = {
+        "turn_seals": len(seal_rounds),
+        "rounds_expected": rounds_expected,
+        "seal_round_min": min(seal_rounds) if seal_rounds else None,
+        "seal_round_max": max(seal_rounds) if seal_rounds else None,
+        "complete": complete,
+        "rule": "TURN_SEAL 覆盖 round 0..rounds-1 且无缺号 ⇒ complete=true；否则视为不完整跑批",
+    }
     thread_schema = ("explicit" if threaded and not legacy
                      else "legacy" if legacy and not threaded
                      else "mixed" if threaded and legacy else "none")
@@ -470,6 +489,7 @@ def build(log_path: Path, meta_path: Path | None, personas: dict, places: dict,
             "echo_note": ("派生口径（非日志字段）：正文去掉标点空白后逐字相同、长度≥8、且说话人不同 → "
                           "视为一次「同一句话被第二个人说出」；这是脚本判定的复现证据，不是模型推断。"),
         },
+        "completeness": completeness,
         "stats": {
             "messages": len(msgs),
             "threads": len(threads),
@@ -502,6 +522,9 @@ def main() -> int:
     ap.add_argument("--no-keep-moves", action="store_true",
                     help="**不推荐**：丢弃 PLACE_MOVE（「节律·串门」视图变空态）")
     ap.add_argument("--summary", action="store_true", help="只打印统计，不写文件")
+    ap.add_argument("--require-complete", action="store_true",
+                    help="跑批完整性前置断言：要求 --meta 存在且 TURN_SEAL 覆盖 round 0..rounds-1；"
+                         "不通过则**不生成**并退出码 3（防止把半截跑批做成演示数据集）")
     ap.add_argument("--label", default=None,
                     help="批次标签（写进 source.run_label；**约定写「日志文件名-sha8」**，"
                          "如 run_p1_final_n20_llm-fb832372；缺省自动用该形式）")
@@ -517,6 +540,20 @@ def main() -> int:
                  keep_context=not a.no_keep_context, keep_moves=not a.no_keep_moves,
                  run_label=a.label,
                  personas_path=Path(a.personas), places_path=Path(a.places))
+
+    if a.require_complete:
+        comp = data.get("completeness") or {}
+        if not a.meta or not Path(a.meta).exists():
+            print("[gen_threads] FAIL 完整性断言：--require-complete 需要 --meta（且文件存在）", file=sys.stderr)
+            return 3
+        if comp.get("complete") is not True:
+            print(f"[gen_threads] FAIL 完整性断言：TURN_SEAL {comp.get('turn_seals')} 条 / "
+                  f"期望 rounds={comp.get('rounds_expected')} / 覆盖 "
+                  f"{comp.get('seal_round_min')}..{comp.get('seal_round_max')} → 不生成（半截跑批）",
+                  file=sys.stderr)
+            return 3
+        print(f"[gen_threads] 完整性断言通过：TURN_SEAL {comp['turn_seals']} 条覆盖 "
+              f"round {comp['seal_round_min']}..{comp['seal_round_max']}", file=sys.stderr)
 
     st = data["stats"]
     print(f"[gen_threads] events={data['source']['events_total_in_log']} "
