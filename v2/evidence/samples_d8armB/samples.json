@@ -1,0 +1,1529 @@
+{
+ "chain_mismatch": {
+  "applicable": true,
+  "mismatch_threads": [],
+  "n_mismatch": 0,
+  "n_threads_with_ptr": 20,
+  "rule": "chain_alternation − chain_pointer ≥ 2 记不一致（指针链应覆盖说话人交替链）；无任何指针时标 not_applicable"
+ },
+ "grades": {
+  "bad": [
+   {
+    "chain_alternation": 1,
+    "chain_mismatch": 0,
+    "chain_pointer": 1,
+    "grade": "bad",
+    "messages": [
+     {
+      "body": "（蹲在田埂上，捏着烟没点）今年这水，怕是不够分。",
+      "channel": "dm",
+      "day": 3,
+      "from": "P001",
+      "hearer": "老石",
+      "msg_uid": "42:5311",
+      "place": "market",
+      "reply_to": null,
+      "round": 40,
+      "seq": 5311,
+      "slot": "afternoon",
+      "speaker": "老周",
+      "tags": [
+       "scarce_buy"
+      ],
+      "to": "P002"
+     }
+    ],
+    "n_msgs": 1,
+    "peer_named_msgs": 0,
+    "ptr_msgs": 0,
+    "signals": 0,
+    "thread_key": "T:TH-P001-P002-40",
+    "turns_A": 1
+   },
+   {
+    "chain_alternation": 1,
+    "chain_mismatch": 0,
+    "chain_pointer": 1,
+    "grade": "bad",
+    "messages": [
+     {
+      "body": "钱还是放自己手里踏实，镇上最近不太平。",
+      "channel": "public",
+      "day": 4,
+      "from": "P001",
+      "hearer": null,
+      "msg_uid": "42:7758",
+      "place": null,
+      "reply_to": null,
+      "round": 52,
+      "seq": 7758,
+      "slot": "afternoon",
+      "speaker": "老周",
+      "tags": [
+       "savings"
+      ],
+      "to": null
+     }
+    ],
+    "n_msgs": 1,
+    "peer_named_msgs": 0,
+    "ptr_msgs": 0,
+    "signals": 0,
+    "thread_key": "T:TH-P001-PUB-52-0",
+    "turns_A": 1
+   },
+   {
+    "chain_alternation": 1,
+    "chain_mismatch": 0,
+    "chain_pointer": 1,
+    "grade": "bad",
+    "messages": [
+     {
+      "body": "（刨着木花）新通告说，下月木料要统购，咱这手艺……怕是要难了。",
+      "channel": "dm",
+      "day": 1,
+      "from": "P002",
+      "hearer": "老周",
+      "msg_uid": "42:1974",
+      "place": "market",
+      "reply_to": null,
+      "round": 15,
+      "seq": 1974,
+      "slot": "afternoon",
+      "speaker": "老石",
+      "tags": [
+       "scarce_buy"
+      ],
+      "to": "P001"
+     }
+    ],
+    "n_msgs": 1,
+    "peer_named_msgs": 0,
+    "ptr_msgs": 0,
+    "signals": 0,
+    "thread_key": "T:TH-P002-P001-15",
+    "turns_A": 1
+   }
+  ],
+  "good": [
+   {
+    "chain_alternation": 6,
+    "chain_mismatch": 0,
+    "chain_pointer": 6,
+    "grade": "good",
+    "messages": [
+     {
+      "body": "（擦汗）阿禾，这练法太花哨，我庄稼把式只认一个稳字。",
+      "channel": "dm",
+      "day": 2,
+      "from": "P001",
+      "hearer": "阿禾",
+      "msg_uid": "42:3192",
+      "place": "park",
+      "reply_to": null,
+      "round": 25,
+      "seq": 3192,
+      "slot": "morning",
+      "speaker": "老周",
+      "tags": [
+       "combat_training"
+      ],
+      "to": "P003"
+     },
+     {
+      "body": "（喘气）老周，稳是稳，可这练法我肚子饿得慌，先歇会儿吧。",
+      "channel": "dm",
+      "day": 2,
+      "from": "P003",
+      "hearer": "老周",
+      "msg_uid": "42:3362",
+      "place": "farm",
+      "reply_to": "42:3192",
+      "round": 27,
+      "seq": 3362,
+      "slot": "afternoon",
+      "speaker": "阿禾",
+      "tags": [
+       "combat_training"
+      ],
+      "to": "P001"
+     },
+     {
+      "body": "（抹了把汗）歇不得，天快黑了。再练一趟，回去我给你煮碗面。",
+      "channel": "dm",
+      "day": 2,
+      "from": "P001",
+      "hearer": "阿禾",
+      "msg_uid": "42:3458",
+      "place": "market",
+      "reply_to": "42:3362",
+      "round": 28,
+      "seq": 3458,
+      "slot": "afternoon",
+      "speaker": "老周",
+      "tags": [
+       "combat_training"
+      ],
+      "to": "P003"
+     },
+     {
+      "body": "（喘着气）行，再练一趟。不过老周，你那面得多下点，我今儿饿得慌。",
+      "channel": "dm",
+      "day": 2,
+      "from": "P003",
+      "hearer": "老周",
+      "msg_uid": "42:3559",
+      "place": "cafe",
+      "reply_to": "42:3458",
+      "round": 30,
+      "seq": 3559,
+      "slot": "evening",
+      "speaker": "阿禾",
+      "tags": [
+       "combat_training"
+      ],
+      "to": "P001"
+     },
+     {
+      "body": "（抹了把汗）面我揉好了，搁灶上醒着呢。练完这趟就下锅。",
+      "channel": "dm",
+      "day": 2,
+      "from": "P001",
+      "hearer": "阿禾",
+      "msg_uid": "42:3689",
+      "place": "cafe",
+      "reply_to": "42:3559",
+      "round": 31,
+      "seq": 3689,
+      "slot": "evening",
+      "speaker": "老周",
+      "tags": [
+       "combat_training"
+      ],
+      "to": "P003"
+     },
+     {
+      "body": "（点头）嗯，练完再吃。老周，这趟练完，我想跟你商量个事。",
+      "channel": "dm",
+      "day": 2,
+      "from": "P003",
+      "hearer": "老周",
+      "msg_uid": "42:4233",
+      "place": "residence",
+      "reply_to": "42:3689",
+      "round": 33,
+      "seq": 4233,
+      "slot": "night",
+      "speaker": "阿禾",
+      "tags": [
+       "combat_training"
+      ],
+      "to": "P001"
+     }
+    ],
+    "n_msgs": 6,
+    "peer_named_msgs": 4,
+    "ptr_msgs": 5,
+    "signals": 3,
+    "thread_key": "T:TH-P001-P003-25",
+    "turns_A": 6
+   },
+   {
+    "chain_alternation": 6,
+    "chain_mismatch": 0,
+    "chain_pointer": 6,
+    "grade": "good",
+    "messages": [
+     {
+      "body": "（把一袋新米往阿禾手里塞）拿着，自家田里的，不图啥，就图个踏实。",
+      "channel": "dm",
+      "day": 0,
+      "from": "P001",
+      "hearer": "阿禾",
+      "msg_uid": "42:629",
+      "place": "market",
+      "reply_to": null,
+      "round": 6,
+      "seq": 629,
+      "slot": "evening",
+      "speaker": "老周",
+      "tags": [
+       "gift"
+      ],
+      "to": "P003"
+     },
+     {
+      "body": "（推了推袋子）老周，这……你家也不宽裕，我拿回去心里不踏实。",
+      "channel": "dm",
+      "day": 0,
+      "from": "P003",
+      "hearer": "老周",
+      "msg_uid": "42:794",
+      "place": "plaza",
+      "reply_to": "42:629",
+      "round": 7,
+      "seq": 794,
+      "slot": "evening",
+      "speaker": "阿禾",
+      "tags": [
+       "gift"
+      ],
+      "to": "P001"
+     },
+     {
+      "body": "（把袋子又推回去）拿着吧，自家地里长的，不值钱。",
+      "channel": "dm",
+      "day": 0,
+      "from": "P001",
+      "hearer": "阿禾",
+      "msg_uid": "42:929",
+      "place": "residence",
+      "reply_to": "42:794",
+      "round": 9,
+      "seq": 929,
+      "slot": "night",
+      "speaker": "老周",
+      "tags": [
+       "gift"
+      ],
+      "to": "P003"
+     },
+     {
+      "body": "（搓了搓手）那……我收下了。回头给你送点新磨的玉米面。",
+      "channel": "dm",
+      "day": 0,
+      "from": "P003",
+      "hearer": "老周",
+      "msg_uid": "42:1393",
+      "place": "residence",
+      "reply_to": "42:929",
+      "round": 10,
+      "seq": 1393,
+      "slot": "night",
+      "speaker": "阿禾",
+      "tags": [
+       "gift"
+      ],
+      "to": "P001"
+     },
+     {
+      "body": "（摆摆手）不用不用，自家地里长的，不值几个钱。",
+      "channel": "dm",
+      "day": 1,
+      "from": "P001",
+      "hearer": "阿禾",
+      "msg_uid": "42:1695",
+      "place": "park",
+      "reply_to": "42:1393",
+      "round": 12,
+      "seq": 1695,
+      "slot": "morning",
+      "speaker": "老周",
+      "tags": [
+       "gift"
+      ],
+      "to": "P003"
+     },
+     {
+      "body": "（搓了搓手）那……我就收下了。你听说没，镇上来了外乡人，也不知道是干啥的。",
+      "channel": "dm",
+      "day": 1,
+      "from": "P003",
+      "hearer": "老周",
+      "msg_uid": "42:1897",
+      "place": "farm",
+      "reply_to": "42:1695",
+      "round": 13,
+      "seq": 1897,
+      "slot": "morning",
+      "speaker": "阿禾",
+      "tags": [
+       "gift"
+      ],
+      "to": "P001"
+     }
+    ],
+    "n_msgs": 6,
+    "peer_named_msgs": 2,
+    "ptr_msgs": 5,
+    "signals": 3,
+    "thread_key": "T:TH-P001-P003-6",
+    "turns_A": 6
+   },
+   {
+    "chain_alternation": 6,
+    "chain_mismatch": 0,
+    "chain_pointer": 6,
+    "grade": "good",
+    "messages": [
+     {
+      "body": "（低头刨木，没看你）秀娘，这块料……你摸摸，顺不顺。",
+      "channel": "dm",
+      "day": 2,
+      "from": "P002",
+      "hearer": "秀娘",
+      "msg_uid": "42:3554",
+      "place": "cafe",
+      "reply_to": null,
+      "round": 30,
+      "seq": 3554,
+      "slot": "evening",
+      "speaker": "老石",
+      "tags": [
+       "whisper"
+      ],
+      "to": "P004"
+     },
+     {
+      "body": "（伸手摸了摸木料，指尖顺着纹路走）哎哟，是顺，跟刚出炉的馒头似的，摸着就舒坦。老石，你这手艺……（顿了顿，压低声音）我这两天心里头也跟这木头似的，看着平，其实里头拧着劲儿。镇上这气氛，你觉出来没有？",
+      "channel": "dm",
+      "day": 2,
+      "from": "P004",
+      "hearer": "老石",
+      "msg_uid": "42:3840",
+      "place": "cafe",
+      "reply_to": "42:3554",
+      "round": 31,
+      "seq": 3840,
+      "slot": "evening",
+      "speaker": "秀娘",
+      "tags": [
+       "whisper"
+      ],
+      "to": "P002"
+     },
+     {
+      "body": "（没抬头，用刨子又走了一道）嗯。木头拧着，得顺着纹来。人拧着，不好说。",
+      "channel": "dm",
+      "day": 2,
+      "from": "P002",
+      "hearer": "秀娘",
+      "msg_uid": "42:4101",
+      "place": "residence",
+      "reply_to": "42:3840",
+      "round": 33,
+      "seq": 4101,
+      "slot": "night",
+      "speaker": "老石",
+      "tags": [
+       "whisper"
+      ],
+      "to": "P004"
+     },
+     {
+      "body": "（把围裙角在手指上绕了一圈，又松开）你说得对，人比木头难顺。我这两天心里就拧着——夜里翻来覆去，老想着铺子里那点事，越想越睡不着。老石，你说，人要是心里搁着话，是不是也得像你这刨子一样，走一道，才顺得下来？",
+      "channel": "dm",
+      "day": 2,
+      "from": "P004",
+      "hearer": "老石",
+      "msg_uid": "42:4747",
+      "place": "residence",
+      "reply_to": "42:4101",
+      "round": 34,
+      "seq": 4747,
+      "slot": "night",
+      "speaker": "秀娘",
+      "tags": [
+       "whisper"
+      ],
+      "to": "P002"
+     },
+     {
+      "body": "（用拇指蹭了蹭刨刃）话搁着，会发霉。",
+      "channel": "dm",
+      "day": 3,
+      "from": "P002",
+      "hearer": "秀娘",
+      "msg_uid": "42:4933",
+      "place": "workshop",
+      "reply_to": "42:4747",
+      "round": 36,
+      "seq": 4933,
+      "slot": "morning",
+      "speaker": "老石",
+      "tags": [
+       "whisper"
+      ],
+      "to": "P004"
+     },
+     {
+      "body": "（把围裙往腰后一系，凑近半步）哎，老石，你这话我听着心里发紧。那个外乡人，昨儿在我铺子门口站了半晌，也不进来，就盯着橱窗里那盘新烤的桂花卷看。我端了杯热茶出去，他倒走了。你说……他是不是有啥难处？",
+      "channel": "dm",
+      "day": 3,
+      "from": "P004",
+      "hearer": "老石",
+      "msg_uid": "42:5129",
+      "place": "farm",
+      "reply_to": "42:4933",
+      "round": 37,
+      "seq": 5129,
+      "slot": "morning",
+      "speaker": "秀娘",
+      "tags": [
+       "whisper"
+      ],
+      "to": "P002"
+     }
+    ],
+    "n_msgs": 6,
+    "peer_named_msgs": 4,
+    "ptr_msgs": 5,
+    "signals": 3,
+    "thread_key": "T:TH-P002-P004-30",
+    "turns_A": 6
+   }
+  ],
+  "mid": [
+   {
+    "chain_alternation": 4,
+    "chain_mismatch": 0,
+    "chain_pointer": 4,
+    "grade": "mid",
+    "messages": [
+     {
+      "body": "（蹲在田埂上，捏着烟没点）今年这水，怕是不够分。",
+      "channel": "dm",
+      "day": 3,
+      "from": "P001",
+      "hearer": "老石",
+      "msg_uid": "42:5194",
+      "place": "market",
+      "reply_to": null,
+      "round": 39,
+      "seq": 5194,
+      "slot": "afternoon",
+      "speaker": "老周",
+      "tags": [
+       "scarce_buy"
+      ],
+      "to": "P002"
+     },
+     {
+      "body": "（用刨子推过木料，没抬头）水不够，就轮着来。我那有块老榆木，能凿个分水槽。",
+      "channel": "dm",
+      "day": 3,
+      "from": "P002",
+      "hearer": "老周",
+      "msg_uid": "42:5353",
+      "place": "market",
+      "reply_to": "42:5194",
+      "round": 40,
+      "seq": 5353,
+      "slot": "afternoon",
+      "speaker": "老石",
+      "tags": [
+       "scarce_buy"
+      ],
+      "to": "P001"
+     },
+     {
+      "body": "（蹲下看刨花）分水槽……行。我那还有半袋水泥，能砌个墩。",
+      "channel": "dm",
+      "day": 3,
+      "from": "P001",
+      "hearer": "老石",
+      "msg_uid": "42:5492",
+      "place": "cafe",
+      "reply_to": "42:5353",
+      "round": 42,
+      "seq": 5492,
+      "slot": "evening",
+      "speaker": "老周",
+      "tags": [
+       "scarce_buy"
+      ],
+      "to": "P002"
+     },
+     {
+      "body": "（用拇指试了试刨刃）嗯。墩不用太高，离地三寸就行。",
+      "channel": "dm",
+      "day": 3,
+      "from": "P002",
+      "hearer": "老周",
+      "msg_uid": "42:5642",
+      "place": "cafe",
+      "reply_to": "42:5492",
+      "round": 43,
+      "seq": 5642,
+      "slot": "evening",
+      "speaker": "老石",
+      "tags": [
+       "scarce_buy"
+      ],
+      "to": "P001"
+     }
+    ],
+    "n_msgs": 4,
+    "peer_named_msgs": 0,
+    "ptr_msgs": 3,
+    "signals": 2,
+    "thread_key": "T:TH-P001-P002-39",
+    "turns_A": 4
+   },
+   {
+    "chain_alternation": 2,
+    "chain_mismatch": 0,
+    "chain_pointer": 2,
+    "grade": "mid",
+    "messages": [
+     {
+      "body": "老周，这点菜你收着，自家地里刚摘的。",
+      "channel": "dm",
+      "day": 4,
+      "from": "P003",
+      "hearer": "老周",
+      "msg_uid": "42:7963",
+      "place": "cafe",
+      "reply_to": null,
+      "round": 54,
+      "seq": 7963,
+      "slot": "evening",
+      "speaker": "阿禾",
+      "tags": [
+       "gift"
+      ],
+      "to": "P001"
+     },
+     {
+      "body": "（摆手）不用不用，我自己地里有。",
+      "channel": "dm",
+      "day": 4,
+      "from": "P001",
+      "hearer": "阿禾",
+      "msg_uid": "42:8071",
+      "place": "cafe",
+      "reply_to": "42:7963",
+      "round": 55,
+      "seq": 8071,
+      "slot": "evening",
+      "speaker": "老周",
+      "tags": [
+       "gift"
+      ],
+      "to": "P003"
+     }
+    ],
+    "n_msgs": 2,
+    "peer_named_msgs": 1,
+    "ptr_msgs": 1,
+    "signals": 2,
+    "thread_key": "T:TH-P003-P001-54",
+    "turns_A": 2
+   },
+   {
+    "chain_alternation": 2,
+    "chain_mismatch": 0,
+    "chain_pointer": 2,
+    "grade": "mid",
+    "messages": [
+     {
+      "body": "（把刚出炉的桂花糕往阿禾手里塞）饿了吧？先垫垫肚子——你上回说想学揉面，我留了块老面，吃完咱就上手。",
+      "channel": "dm",
+      "day": 2,
+      "from": "P004",
+      "hearer": "阿禾",
+      "msg_uid": "42:3120",
+      "place": "library",
+      "reply_to": null,
+      "round": 24,
+      "seq": 3120,
+      "slot": "morning",
+      "speaker": "秀娘",
+      "tags": [
+       "mentorship"
+      ],
+      "to": "P003"
+     },
+     {
+      "body": "（接过糕，咬了一口）秀娘，你这糕真香。学揉面的事，我记着呢，就是怕笨手笨脚糟蹋了你的老面。",
+      "channel": "dm",
+      "day": 2,
+      "from": "P003",
+      "hearer": "秀娘",
+      "msg_uid": "42:3254",
+      "place": "farm",
+      "reply_to": "42:3120",
+      "round": 25,
+      "seq": 3254,
+      "slot": "morning",
+      "speaker": "阿禾",
+      "tags": [
+       "mentorship"
+      ],
+      "to": "P004"
+     }
+    ],
+    "n_msgs": 2,
+    "peer_named_msgs": 2,
+    "ptr_msgs": 1,
+    "signals": 2,
+    "thread_key": "T:TH-P004-P003-24",
+    "turns_A": 2
+   }
+  ]
+ },
+ "grading_rule": {
+  "bad": "0 个",
+  "good": "3 信号全中",
+  "mid": "1–2 个",
+  "order_in_grade": "线程长度降序 → thread_key 升序（确定性）",
+  "signals": [
+   "has_pointer",
+   "multi_turn(turns_A>=3)",
+   "names_used(对端名出现)"
+  ],
+  "warning": "这是**结构分档**，不等于「读起来自然」；自然度由 judge/人评给，样本表只做候选池"
+ },
+ "inputs": {
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d8_armB_n4r60_seed42/run.jsonl",
+  "log_sha256": "sha256:3966309f218b960ea5c84d6732cb1f872d7abfa170715a59c70b708ba041debd",
+  "log_sha8": "3966309f",
+  "meta": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d8_armB_n4r60_seed42/meta.json",
+  "script_sha256": "sha256:2828725c376fe7d9259dc9547f58d43a2c817b1e582cf2d317d671b72ba3a324"
+ },
+ "longest_by_msgs": [
+  {
+   "chain_alternation": 6,
+   "chain_mismatch": 0,
+   "chain_pointer": 6,
+   "grade": "good",
+   "messages": [
+    {
+     "body": "（擦汗）阿禾，这练法太花哨，我庄稼把式只认一个稳字。",
+     "channel": "dm",
+     "day": 2,
+     "from": "P001",
+     "hearer": "阿禾",
+     "msg_uid": "42:3192",
+     "place": "park",
+     "reply_to": null,
+     "round": 25,
+     "seq": 3192,
+     "slot": "morning",
+     "speaker": "老周",
+     "tags": [
+      "combat_training"
+     ],
+     "to": "P003"
+    },
+    {
+     "body": "（喘气）老周，稳是稳，可这练法我肚子饿得慌，先歇会儿吧。",
+     "channel": "dm",
+     "day": 2,
+     "from": "P003",
+     "hearer": "老周",
+     "msg_uid": "42:3362",
+     "place": "farm",
+     "reply_to": "42:3192",
+     "round": 27,
+     "seq": 3362,
+     "slot": "afternoon",
+     "speaker": "阿禾",
+     "tags": [
+      "combat_training"
+     ],
+     "to": "P001"
+    },
+    {
+     "body": "（抹了把汗）歇不得，天快黑了。再练一趟，回去我给你煮碗面。",
+     "channel": "dm",
+     "day": 2,
+     "from": "P001",
+     "hearer": "阿禾",
+     "msg_uid": "42:3458",
+     "place": "market",
+     "reply_to": "42:3362",
+     "round": 28,
+     "seq": 3458,
+     "slot": "afternoon",
+     "speaker": "老周",
+     "tags": [
+      "combat_training"
+     ],
+     "to": "P003"
+    },
+    {
+     "body": "（喘着气）行，再练一趟。不过老周，你那面得多下点，我今儿饿得慌。",
+     "channel": "dm",
+     "day": 2,
+     "from": "P003",
+     "hearer": "老周",
+     "msg_uid": "42:3559",
+     "place": "cafe",
+     "reply_to": "42:3458",
+     "round": 30,
+     "seq": 3559,
+     "slot": "evening",
+     "speaker": "阿禾",
+     "tags": [
+      "combat_training"
+     ],
+     "to": "P001"
+    },
+    {
+     "body": "（抹了把汗）面我揉好了，搁灶上醒着呢。练完这趟就下锅。",
+     "channel": "dm",
+     "day": 2,
+     "from": "P001",
+     "hearer": "阿禾",
+     "msg_uid": "42:3689",
+     "place": "cafe",
+     "reply_to": "42:3559",
+     "round": 31,
+     "seq": 3689,
+     "slot": "evening",
+     "speaker": "老周",
+     "tags": [
+      "combat_training"
+     ],
+     "to": "P003"
+    },
+    {
+     "body": "（点头）嗯，练完再吃。老周，这趟练完，我想跟你商量个事。",
+     "channel": "dm",
+     "day": 2,
+     "from": "P003",
+     "hearer": "老周",
+     "msg_uid": "42:4233",
+     "place": "residence",
+     "reply_to": "42:3689",
+     "round": 33,
+     "seq": 4233,
+     "slot": "night",
+     "speaker": "阿禾",
+     "tags": [
+      "combat_training"
+     ],
+     "to": "P001"
+    }
+   ],
+   "n_msgs": 6,
+   "peer_named_msgs": 4,
+   "ptr_msgs": 5,
+   "signals": 3,
+   "thread_key": "T:TH-P001-P003-25",
+   "turns_A": 6
+  },
+  {
+   "chain_alternation": 6,
+   "chain_mismatch": 0,
+   "chain_pointer": 6,
+   "grade": "good",
+   "messages": [
+    {
+     "body": "（把一袋新米往阿禾手里塞）拿着，自家田里的，不图啥，就图个踏实。",
+     "channel": "dm",
+     "day": 0,
+     "from": "P001",
+     "hearer": "阿禾",
+     "msg_uid": "42:629",
+     "place": "market",
+     "reply_to": null,
+     "round": 6,
+     "seq": 629,
+     "slot": "evening",
+     "speaker": "老周",
+     "tags": [
+      "gift"
+     ],
+     "to": "P003"
+    },
+    {
+     "body": "（推了推袋子）老周，这……你家也不宽裕，我拿回去心里不踏实。",
+     "channel": "dm",
+     "day": 0,
+     "from": "P003",
+     "hearer": "老周",
+     "msg_uid": "42:794",
+     "place": "plaza",
+     "reply_to": "42:629",
+     "round": 7,
+     "seq": 794,
+     "slot": "evening",
+     "speaker": "阿禾",
+     "tags": [
+      "gift"
+     ],
+     "to": "P001"
+    },
+    {
+     "body": "（把袋子又推回去）拿着吧，自家地里长的，不值钱。",
+     "channel": "dm",
+     "day": 0,
+     "from": "P001",
+     "hearer": "阿禾",
+     "msg_uid": "42:929",
+     "place": "residence",
+     "reply_to": "42:794",
+     "round": 9,
+     "seq": 929,
+     "slot": "night",
+     "speaker": "老周",
+     "tags": [
+      "gift"
+     ],
+     "to": "P003"
+    },
+    {
+     "body": "（搓了搓手）那……我收下了。回头给你送点新磨的玉米面。",
+     "channel": "dm",
+     "day": 0,
+     "from": "P003",
+     "hearer": "老周",
+     "msg_uid": "42:1393",
+     "place": "residence",
+     "reply_to": "42:929",
+     "round": 10,
+     "seq": 1393,
+     "slot": "night",
+     "speaker": "阿禾",
+     "tags": [
+      "gift"
+     ],
+     "to": "P001"
+    },
+    {
+     "body": "（摆摆手）不用不用，自家地里长的，不值几个钱。",
+     "channel": "dm",
+     "day": 1,
+     "from": "P001",
+     "hearer": "阿禾",
+     "msg_uid": "42:1695",
+     "place": "park",
+     "reply_to": "42:1393",
+     "round": 12,
+     "seq": 1695,
+     "slot": "morning",
+     "speaker": "老周",
+     "tags": [
+      "gift"
+     ],
+     "to": "P003"
+    },
+    {
+     "body": "（搓了搓手）那……我就收下了。你听说没，镇上来了外乡人，也不知道是干啥的。",
+     "channel": "dm",
+     "day": 1,
+     "from": "P003",
+     "hearer": "老周",
+     "msg_uid": "42:1897",
+     "place": "farm",
+     "reply_to": "42:1695",
+     "round": 13,
+     "seq": 1897,
+     "slot": "morning",
+     "speaker": "阿禾",
+     "tags": [
+      "gift"
+     ],
+     "to": "P001"
+    }
+   ],
+   "n_msgs": 6,
+   "peer_named_msgs": 2,
+   "ptr_msgs": 5,
+   "signals": 3,
+   "thread_key": "T:TH-P001-P003-6",
+   "turns_A": 6
+  },
+  {
+   "chain_alternation": 6,
+   "chain_mismatch": 0,
+   "chain_pointer": 6,
+   "grade": "good",
+   "messages": [
+    {
+     "body": "（低头刨木，没看你）秀娘，这块料……你摸摸，顺不顺。",
+     "channel": "dm",
+     "day": 2,
+     "from": "P002",
+     "hearer": "秀娘",
+     "msg_uid": "42:3554",
+     "place": "cafe",
+     "reply_to": null,
+     "round": 30,
+     "seq": 3554,
+     "slot": "evening",
+     "speaker": "老石",
+     "tags": [
+      "whisper"
+     ],
+     "to": "P004"
+    },
+    {
+     "body": "（伸手摸了摸木料，指尖顺着纹路走）哎哟，是顺，跟刚出炉的馒头似的，摸着就舒坦。老石，你这手艺……（顿了顿，压低声音）我这两天心里头也跟这木头似的，看着平，其实里头拧着劲儿。镇上这气氛，你觉出来没有？",
+     "channel": "dm",
+     "day": 2,
+     "from": "P004",
+     "hearer": "老石",
+     "msg_uid": "42:3840",
+     "place": "cafe",
+     "reply_to": "42:3554",
+     "round": 31,
+     "seq": 3840,
+     "slot": "evening",
+     "speaker": "秀娘",
+     "tags": [
+      "whisper"
+     ],
+     "to": "P002"
+    },
+    {
+     "body": "（没抬头，用刨子又走了一道）嗯。木头拧着，得顺着纹来。人拧着，不好说。",
+     "channel": "dm",
+     "day": 2,
+     "from": "P002",
+     "hearer": "秀娘",
+     "msg_uid": "42:4101",
+     "place": "residence",
+     "reply_to": "42:3840",
+     "round": 33,
+     "seq": 4101,
+     "slot": "night",
+     "speaker": "老石",
+     "tags": [
+      "whisper"
+     ],
+     "to": "P004"
+    },
+    {
+     "body": "（把围裙角在手指上绕了一圈，又松开）你说得对，人比木头难顺。我这两天心里就拧着——夜里翻来覆去，老想着铺子里那点事，越想越睡不着。老石，你说，人要是心里搁着话，是不是也得像你这刨子一样，走一道，才顺得下来？",
+     "channel": "dm",
+     "day": 2,
+     "from": "P004",
+     "hearer": "老石",
+     "msg_uid": "42:4747",
+     "place": "residence",
+     "reply_to": "42:4101",
+     "round": 34,
+     "seq": 4747,
+     "slot": "night",
+     "speaker": "秀娘",
+     "tags": [
+      "whisper"
+     ],
+     "to": "P002"
+    },
+    {
+     "body": "（用拇指蹭了蹭刨刃）话搁着，会发霉。",
+     "channel": "dm",
+     "day": 3,
+     "from": "P002",
+     "hearer": "秀娘",
+     "msg_uid": "42:4933",
+     "place": "workshop",
+     "reply_to": "42:4747",
+     "round": 36,
+     "seq": 4933,
+     "slot": "morning",
+     "speaker": "老石",
+     "tags": [
+      "whisper"
+     ],
+     "to": "P004"
+    },
+    {
+     "body": "（把围裙往腰后一系，凑近半步）哎，老石，你这话我听着心里发紧。那个外乡人，昨儿在我铺子门口站了半晌，也不进来，就盯着橱窗里那盘新烤的桂花卷看。我端了杯热茶出去，他倒走了。你说……他是不是有啥难处？",
+     "channel": "dm",
+     "day": 3,
+     "from": "P004",
+     "hearer": "老石",
+     "msg_uid": "42:5129",
+     "place": "farm",
+     "reply_to": "42:4933",
+     "round": 37,
+     "seq": 5129,
+     "slot": "morning",
+     "speaker": "秀娘",
+     "tags": [
+      "whisper"
+     ],
+     "to": "P002"
+    }
+   ],
+   "n_msgs": 6,
+   "peer_named_msgs": 4,
+   "ptr_msgs": 5,
+   "signals": 3,
+   "thread_key": "T:TH-P002-P004-30",
+   "turns_A": 6
+  }
+ ],
+ "longest_by_turns": [
+  {
+   "chain_alternation": 6,
+   "chain_mismatch": 0,
+   "chain_pointer": 6,
+   "grade": "good",
+   "messages": [
+    {
+     "body": "（擦汗）阿禾，这练法太花哨，我庄稼把式只认一个稳字。",
+     "channel": "dm",
+     "day": 2,
+     "from": "P001",
+     "hearer": "阿禾",
+     "msg_uid": "42:3192",
+     "place": "park",
+     "reply_to": null,
+     "round": 25,
+     "seq": 3192,
+     "slot": "morning",
+     "speaker": "老周",
+     "tags": [
+      "combat_training"
+     ],
+     "to": "P003"
+    },
+    {
+     "body": "（喘气）老周，稳是稳，可这练法我肚子饿得慌，先歇会儿吧。",
+     "channel": "dm",
+     "day": 2,
+     "from": "P003",
+     "hearer": "老周",
+     "msg_uid": "42:3362",
+     "place": "farm",
+     "reply_to": "42:3192",
+     "round": 27,
+     "seq": 3362,
+     "slot": "afternoon",
+     "speaker": "阿禾",
+     "tags": [
+      "combat_training"
+     ],
+     "to": "P001"
+    },
+    {
+     "body": "（抹了把汗）歇不得，天快黑了。再练一趟，回去我给你煮碗面。",
+     "channel": "dm",
+     "day": 2,
+     "from": "P001",
+     "hearer": "阿禾",
+     "msg_uid": "42:3458",
+     "place": "market",
+     "reply_to": "42:3362",
+     "round": 28,
+     "seq": 3458,
+     "slot": "afternoon",
+     "speaker": "老周",
+     "tags": [
+      "combat_training"
+     ],
+     "to": "P003"
+    },
+    {
+     "body": "（喘着气）行，再练一趟。不过老周，你那面得多下点，我今儿饿得慌。",
+     "channel": "dm",
+     "day": 2,
+     "from": "P003",
+     "hearer": "老周",
+     "msg_uid": "42:3559",
+     "place": "cafe",
+     "reply_to": "42:3458",
+     "round": 30,
+     "seq": 3559,
+     "slot": "evening",
+     "speaker": "阿禾",
+     "tags": [
+      "combat_training"
+     ],
+     "to": "P001"
+    },
+    {
+     "body": "（抹了把汗）面我揉好了，搁灶上醒着呢。练完这趟就下锅。",
+     "channel": "dm",
+     "day": 2,
+     "from": "P001",
+     "hearer": "阿禾",
+     "msg_uid": "42:3689",
+     "place": "cafe",
+     "reply_to": "42:3559",
+     "round": 31,
+     "seq": 3689,
+     "slot": "evening",
+     "speaker": "老周",
+     "tags": [
+      "combat_training"
+     ],
+     "to": "P003"
+    },
+    {
+     "body": "（点头）嗯，练完再吃。老周，这趟练完，我想跟你商量个事。",
+     "channel": "dm",
+     "day": 2,
+     "from": "P003",
+     "hearer": "老周",
+     "msg_uid": "42:4233",
+     "place": "residence",
+     "reply_to": "42:3689",
+     "round": 33,
+     "seq": 4233,
+     "slot": "night",
+     "speaker": "阿禾",
+     "tags": [
+      "combat_training"
+     ],
+     "to": "P001"
+    }
+   ],
+   "n_msgs": 6,
+   "peer_named_msgs": 4,
+   "ptr_msgs": 5,
+   "signals": 3,
+   "thread_key": "T:TH-P001-P003-25",
+   "turns_A": 6
+  },
+  {
+   "chain_alternation": 6,
+   "chain_mismatch": 0,
+   "chain_pointer": 6,
+   "grade": "good",
+   "messages": [
+    {
+     "body": "（把一袋新米往阿禾手里塞）拿着，自家田里的，不图啥，就图个踏实。",
+     "channel": "dm",
+     "day": 0,
+     "from": "P001",
+     "hearer": "阿禾",
+     "msg_uid": "42:629",
+     "place": "market",
+     "reply_to": null,
+     "round": 6,
+     "seq": 629,
+     "slot": "evening",
+     "speaker": "老周",
+     "tags": [
+      "gift"
+     ],
+     "to": "P003"
+    },
+    {
+     "body": "（推了推袋子）老周，这……你家也不宽裕，我拿回去心里不踏实。",
+     "channel": "dm",
+     "day": 0,
+     "from": "P003",
+     "hearer": "老周",
+     "msg_uid": "42:794",
+     "place": "plaza",
+     "reply_to": "42:629",
+     "round": 7,
+     "seq": 794,
+     "slot": "evening",
+     "speaker": "阿禾",
+     "tags": [
+      "gift"
+     ],
+     "to": "P001"
+    },
+    {
+     "body": "（把袋子又推回去）拿着吧，自家地里长的，不值钱。",
+     "channel": "dm",
+     "day": 0,
+     "from": "P001",
+     "hearer": "阿禾",
+     "msg_uid": "42:929",
+     "place": "residence",
+     "reply_to": "42:794",
+     "round": 9,
+     "seq": 929,
+     "slot": "night",
+     "speaker": "老周",
+     "tags": [
+      "gift"
+     ],
+     "to": "P003"
+    },
+    {
+     "body": "（搓了搓手）那……我收下了。回头给你送点新磨的玉米面。",
+     "channel": "dm",
+     "day": 0,
+     "from": "P003",
+     "hearer": "老周",
+     "msg_uid": "42:1393",
+     "place": "residence",
+     "reply_to": "42:929",
+     "round": 10,
+     "seq": 1393,
+     "slot": "night",
+     "speaker": "阿禾",
+     "tags": [
+      "gift"
+     ],
+     "to": "P001"
+    },
+    {
+     "body": "（摆摆手）不用不用，自家地里长的，不值几个钱。",
+     "channel": "dm",
+     "day": 1,
+     "from": "P001",
+     "hearer": "阿禾",
+     "msg_uid": "42:1695",
+     "place": "park",
+     "reply_to": "42:1393",
+     "round": 12,
+     "seq": 1695,
+     "slot": "morning",
+     "speaker": "老周",
+     "tags": [
+      "gift"
+     ],
+     "to": "P003"
+    },
+    {
+     "body": "（搓了搓手）那……我就收下了。你听说没，镇上来了外乡人，也不知道是干啥的。",
+     "channel": "dm",
+     "day": 1,
+     "from": "P003",
+     "hearer": "老周",
+     "msg_uid": "42:1897",
+     "place": "farm",
+     "reply_to": "42:1695",
+     "round": 13,
+     "seq": 1897,
+     "slot": "morning",
+     "speaker": "阿禾",
+     "tags": [
+      "gift"
+     ],
+     "to": "P001"
+    }
+   ],
+   "n_msgs": 6,
+   "peer_named_msgs": 2,
+   "ptr_msgs": 5,
+   "signals": 3,
+   "thread_key": "T:TH-P001-P003-6",
+   "turns_A": 6
+  },
+  {
+   "chain_alternation": 6,
+   "chain_mismatch": 0,
+   "chain_pointer": 6,
+   "grade": "good",
+   "messages": [
+    {
+     "body": "（低头刨木，没看你）秀娘，这块料……你摸摸，顺不顺。",
+     "channel": "dm",
+     "day": 2,
+     "from": "P002",
+     "hearer": "秀娘",
+     "msg_uid": "42:3554",
+     "place": "cafe",
+     "reply_to": null,
+     "round": 30,
+     "seq": 3554,
+     "slot": "evening",
+     "speaker": "老石",
+     "tags": [
+      "whisper"
+     ],
+     "to": "P004"
+    },
+    {
+     "body": "（伸手摸了摸木料，指尖顺着纹路走）哎哟，是顺，跟刚出炉的馒头似的，摸着就舒坦。老石，你这手艺……（顿了顿，压低声音）我这两天心里头也跟这木头似的，看着平，其实里头拧着劲儿。镇上这气氛，你觉出来没有？",
+     "channel": "dm",
+     "day": 2,
+     "from": "P004",
+     "hearer": "老石",
+     "msg_uid": "42:3840",
+     "place": "cafe",
+     "reply_to": "42:3554",
+     "round": 31,
+     "seq": 3840,
+     "slot": "evening",
+     "speaker": "秀娘",
+     "tags": [
+      "whisper"
+     ],
+     "to": "P002"
+    },
+    {
+     "body": "（没抬头，用刨子又走了一道）嗯。木头拧着，得顺着纹来。人拧着，不好说。",
+     "channel": "dm",
+     "day": 2,
+     "from": "P002",
+     "hearer": "秀娘",
+     "msg_uid": "42:4101",
+     "place": "residence",
+     "reply_to": "42:3840",
+     "round": 33,
+     "seq": 4101,
+     "slot": "night",
+     "speaker": "老石",
+     "tags": [
+      "whisper"
+     ],
+     "to": "P004"
+    },
+    {
+     "body": "（把围裙角在手指上绕了一圈，又松开）你说得对，人比木头难顺。我这两天心里就拧着——夜里翻来覆去，老想着铺子里那点事，越想越睡不着。老石，你说，人要是心里搁着话，是不是也得像你这刨子一样，走一道，才顺得下来？",
+     "channel": "dm",
+     "day": 2,
+     "from": "P004",
+     "hearer": "老石",
+     "msg_uid": "42:4747",
+     "place": "residence",
+     "reply_to": "42:4101",
+     "round": 34,
+     "seq": 4747,
+     "slot": "night",
+     "speaker": "秀娘",
+     "tags": [
+      "whisper"
+     ],
+     "to": "P002"
+    },
+    {
+     "body": "（用拇指蹭了蹭刨刃）话搁着，会发霉。",
+     "channel": "dm",
+     "day": 3,
+     "from": "P002",
+     "hearer": "秀娘",
+     "msg_uid": "42:4933",
+     "place": "workshop",
+     "reply_to": "42:4747",
+     "round": 36,
+     "seq": 4933,
+     "slot": "morning",
+     "speaker": "老石",
+     "tags": [
+      "whisper"
+     ],
+     "to": "P004"
+    },
+    {
+     "body": "（把围裙往腰后一系，凑近半步）哎，老石，你这话我听着心里发紧。那个外乡人，昨儿在我铺子门口站了半晌，也不进来，就盯着橱窗里那盘新烤的桂花卷看。我端了杯热茶出去，他倒走了。你说……他是不是有啥难处？",
+     "channel": "dm",
+     "day": 3,
+     "from": "P004",
+     "hearer": "老石",
+     "msg_uid": "42:5129",
+     "place": "farm",
+     "reply_to": "42:4933",
+     "round": 37,
+     "seq": 5129,
+     "slot": "morning",
+     "speaker": "秀娘",
+     "tags": [
+      "whisper"
+     ],
+     "to": "P002"
+    }
+   ],
+   "n_msgs": 6,
+   "peer_named_msgs": 4,
+   "ptr_msgs": 5,
+   "signals": 3,
+   "thread_key": "T:TH-P002-P004-30",
+   "turns_A": 6
+  }
+ ],
+ "meta": {
+  "grade_counts": {
+   "bad": 16,
+   "good": 17,
+   "mid": 7
+  },
+  "n_messages": 124,
+  "n_threads": 40,
+  "thread_schema": "explicit"
+ },
+ "schema_version": "d6-samples/1.0",
+ "shortest_by_msgs": [
+  {
+   "chain_alternation": 1,
+   "chain_mismatch": 0,
+   "chain_pointer": 1,
+   "grade": "mid",
+   "messages": [
+    {
+     "body": "（蹲在田埂上，头也没抬）老石，你那事我帮不上，地里的活还等着我呢。",
+     "channel": "dm",
+     "day": 0,
+     "from": "P001",
+     "hearer": "老石",
+     "msg_uid": "42:268",
+     "place": "market",
+     "reply_to": null,
+     "round": 3,
+     "seq": 268,
+     "slot": "afternoon",
+     "speaker": "老周",
+     "tags": [
+      "polite_reject"
+     ],
+     "to": "P002"
+    }
+   ],
+   "n_msgs": 1,
+   "peer_named_msgs": 1,
+   "ptr_msgs": 0,
+   "signals": 1,
+   "thread_key": "T:TH-P001-P002-3",
+   "turns_A": 1
+  },
+  {
+   "chain_alternation": 1,
+   "chain_mismatch": 0,
+   "chain_pointer": 1,
+   "grade": "mid",
+   "messages": [
+    {
+     "body": "（蹲在田埂上，头也不抬）老石，你那事我帮不上，地里的活还等着我呢。",
+     "channel": "dm",
+     "day": 0,
+     "from": "P001",
+     "hearer": "老石",
+     "msg_uid": "42:431",
+     "place": "market",
+     "reply_to": null,
+     "round": 4,
+     "seq": 431,
+     "slot": "afternoon",
+     "speaker": "老周",
+     "tags": [
+      "polite_reject"
+     ],
+     "to": "P002"
+    }
+   ],
+   "n_msgs": 1,
+   "peer_named_msgs": 1,
+   "ptr_msgs": 0,
+   "signals": 1,
+   "thread_key": "T:TH-P001-P002-4",
+   "turns_A": 1
+  },
+  {
+   "chain_alternation": 1,
+   "chain_mismatch": 0,
+   "chain_pointer": 1,
+   "grade": "bad",
+   "messages": [
+    {
+     "body": "（蹲在田埂上，捏着烟没点）今年这水，怕是不够分。",
+     "channel": "dm",
+     "day": 3,
+     "from": "P001",
+     "hearer": "老石",
+     "msg_uid": "42:5311",
+     "place": "market",
+     "reply_to": null,
+     "round": 40,
+     "seq": 5311,
+     "slot": "afternoon",
+     "speaker": "老周",
+     "tags": [
+      "scarce_buy"
+     ],
+     "to": "P002"
+    }
+   ],
+   "n_msgs": 1,
+   "peer_named_msgs": 0,
+   "ptr_msgs": 0,
+   "signals": 0,
+   "thread_key": "T:TH-P001-P002-40",
+   "turns_A": 1
+  }
+ ]
+}
