@@ -1,0 +1,28 @@
+{
+  "script": "v2/evidence/d3_null_pair.py",
+  "runs": {
+    "t300": {
+      "path": "/root/t271/runs/t300/run.jsonl",
+      "sha256": "33b7651f2b11d5eaf5720dbd0560cc2ea2a468d37f7319d972b2d7fafd808a08",
+      "n_msgs": 230
+    },
+    "t355": {
+      "path": "/root/t271/runs/t355/run.jsonl",
+      "sha256": "bee77237e7c2fa3a41ae7613d2ef3e4bf989c1b4f57b831fc29edc714dec3c36",
+      "n_msgs": 230
+    }
+  },
+  "align": "positional (i-th MSG <-> i-th MSG), file order = ledger order",
+  "guard_n_equal": true,
+  "guard_channel_seq_equal": true,
+  "result": {
+    "n_pairs": 230,
+    "same_body_bytes": 49,
+    "same_body_bytes_rate_pct": 21.3,
+    "aux_same_body_strip": 49,
+    "aux_same_body_normalized": 49,
+    "aux_same_speaker": 230,
+    "aux_same_seq": 28,
+    "note": "主口径=逐字节相等；其余为辅助读数，不得替代主口径"
+  }
+}

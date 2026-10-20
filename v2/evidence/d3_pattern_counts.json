@@ -1,0 +1,573 @@
+{
+  "criterion_source": "artifacts/reports/D5-指标定义-定稿v1.0.md",
+  "generated_by": "v2/evidence/d3_corpus_annotate.py",
+  "runs": {
+    "t300": {
+      "S_legacy_threads": {
+        "msgs_per_thread_max": 11,
+        "msgs_per_thread_p50": 1.0,
+        "multi_turn_thread_ratio_pct": 4.94,
+        "n_threads": 162,
+        "note": "turn 判定旧口径含 PUBLIC 单一说话者（from 缺失时以内部占位区分），仅作方向",
+        "single_msg_thread_ratio_pct": 87.65,
+        "thread_schema": "legacy",
+        "turns_A_p50": 1.0,
+        "turns_A_p90": 1
+      },
+      "U10_public_soliloquy": {
+        "ci95_pct": [
+          91.0,
+          99.7
+        ],
+        "denom": 59,
+        "hit": 58,
+        "rate_pct": 98.31
+      },
+      "U1_template_opening": {
+        "ci95_pct": [
+          7.47,
+          15.55
+        ],
+        "denom": 230,
+        "hit": 25,
+        "rate_pct": 10.87
+      },
+      "U2_narration_proxy": {
+        "ci95_pct": [
+          57.52,
+          69.84
+        ],
+        "denom": 230,
+        "hit": 147,
+        "rate_pct": 63.91
+      },
+      "U2b_paren_block_any": {
+        "ci95_pct": [
+          58.41,
+          70.67
+        ],
+        "denom": 230,
+        "hit": 149,
+        "rate_pct": 64.78
+      },
+      "U3_third_person_self": {
+        "ci95_pct": [
+          1.77,
+          6.71
+        ],
+        "denom": 230,
+        "hit": 8,
+        "rate_pct": 3.48
+      },
+      "U4_agent_id_leak": {
+        "ci95_pct": [
+          28.51,
+          40.7
+        ],
+        "denom": 230,
+        "hit": 79,
+        "rate_pct": 34.35
+      },
+      "U5_no_second_person": {
+        "ci95_pct": [
+          19.76,
+          32.77
+        ],
+        "denom": 171,
+        "hit": 44,
+        "rate_pct": 25.73
+      },
+      "U6_clerk_tone": {
+        "ci95_pct": [
+          2.38,
+          7.82
+        ],
+        "denom": 230,
+        "hit": 10,
+        "rate_pct": 4.35
+      },
+      "U7_thread_continuation": {
+        "K1_cont_backref_ci95_pct": [
+          25.0,
+          47.16
+        ],
+        "K1_cont_backref_hit": 24,
+        "K1_cont_backref_rate_pct": 35.29,
+        "K1_cont_composite_R1_rate_pct": 35.29,
+        "K1_cont_lexical_bigram2_rate_pct": 10.29,
+        "K1_cont_lexical_ci95_pct": [
+          17.45,
+          38.01
+        ],
+        "K1_cont_lexical_hit": 18,
+        "K1_cont_lexical_rate_pct": 26.47,
+        "K1_cont_same_topic": null,
+        "denom_in_thread_msgs": 68,
+        "note": "legacy thread_key=(day,channel,pair/group)；topic 字段缺失 ⇒ cont_same_topic=N/A（D5 定稿）"
+      },
+      "U8_dup_exact": {
+        "ci95_pct": [
+          16.51,
+          27.05
+        ],
+        "denom": 230,
+        "hit": 49,
+        "rate_pct": 21.3
+      },
+      "U8b_ngram_shared": {
+        "ci95_pct": [
+          58.41,
+          70.67
+        ],
+        "denom": 230,
+        "hit": 149,
+        "rate_pct": 64.78
+      },
+      "U9_out_of_world": {
+        "ci95_pct": [
+          2.69,
+          8.36
+        ],
+        "denom": 230,
+        "hit": 11,
+        "rate_pct": 4.78
+      },
+      "channels": {
+        "dm": 163,
+        "group": 8,
+        "public": 59
+      },
+      "len_max": 179,
+      "len_p10": 21,
+      "len_p50": 44.0,
+      "len_p90": 71,
+      "n_msgs": 230,
+      "run": "t300"
+    },
+    "t326": {
+      "S_legacy_threads": {
+        "msgs_per_thread_max": 4,
+        "msgs_per_thread_p50": 2.0,
+        "multi_turn_thread_ratio_pct": 10.0,
+        "n_threads": 20,
+        "note": "turn 判定旧口径含 PUBLIC 单一说话者（from 缺失时以内部占位区分），仅作方向",
+        "single_msg_thread_ratio_pct": 45.0,
+        "thread_schema": "legacy",
+        "turns_A_p50": 1.5,
+        "turns_A_p90": 2
+      },
+      "U10_public_soliloquy": {
+        "ci95_pct": [
+          67.56,
+          100.0
+        ],
+        "denom": 8,
+        "hit": 8,
+        "rate_pct": 100.0
+      },
+      "U1_template_opening": {
+        "ci95_pct": [
+          0.0,
+          9.64
+        ],
+        "denom": 36,
+        "hit": 0,
+        "rate_pct": 0.0
+      },
+      "U2_narration_proxy": {
+        "ci95_pct": [
+          53.14,
+          82.0
+        ],
+        "denom": 36,
+        "hit": 25,
+        "rate_pct": 69.44
+      },
+      "U2b_paren_block_any": {
+        "ci95_pct": [
+          53.14,
+          82.0
+        ],
+        "denom": 36,
+        "hit": 25,
+        "rate_pct": 69.44
+      },
+      "U3_third_person_self": {
+        "ci95_pct": [
+          0.0,
+          9.64
+        ],
+        "denom": 36,
+        "hit": 0,
+        "rate_pct": 0.0
+      },
+      "U4_agent_id_leak": {
+        "ci95_pct": [
+          0.0,
+          9.64
+        ],
+        "denom": 36,
+        "hit": 0,
+        "rate_pct": 0.0
+      },
+      "U5_no_second_person": {
+        "ci95_pct": [
+          49.34,
+          82.07
+        ],
+        "denom": 28,
+        "hit": 19,
+        "rate_pct": 67.86
+      },
+      "U6_clerk_tone": {
+        "ci95_pct": [
+          1.54,
+          18.14
+        ],
+        "denom": 36,
+        "hit": 2,
+        "rate_pct": 5.56
+      },
+      "U7_thread_continuation": {
+        "K1_cont_backref_ci95_pct": [
+          0.0,
+          19.36
+        ],
+        "K1_cont_backref_hit": 0,
+        "K1_cont_backref_rate_pct": 0.0,
+        "K1_cont_composite_R1_rate_pct": 0.0,
+        "K1_cont_lexical_bigram2_rate_pct": 0.0,
+        "K1_cont_lexical_ci95_pct": [
+          10.18,
+          49.5
+        ],
+        "K1_cont_lexical_hit": 4,
+        "K1_cont_lexical_rate_pct": 25.0,
+        "K1_cont_same_topic": null,
+        "denom_in_thread_msgs": 16,
+        "note": "legacy thread_key=(day,channel,pair/group)；topic 字段缺失 ⇒ cont_same_topic=N/A（D5 定稿）"
+      },
+      "U8_dup_exact": {
+        "ci95_pct": [
+          42.2,
+          72.86
+        ],
+        "denom": 36,
+        "hit": 21,
+        "rate_pct": 58.33
+      },
+      "U8b_ngram_shared": {
+        "ci95_pct": [
+          56.01,
+          84.15
+        ],
+        "denom": 36,
+        "hit": 26,
+        "rate_pct": 72.22
+      },
+      "U9_out_of_world": {
+        "ci95_pct": [
+          0.0,
+          9.64
+        ],
+        "denom": 36,
+        "hit": 0,
+        "rate_pct": 0.0
+      },
+      "channels": {
+        "dm": 26,
+        "group": 2,
+        "public": 8
+      },
+      "len_max": 35,
+      "len_p10": 15,
+      "len_p50": 21.5,
+      "len_p90": 29,
+      "n_msgs": 36,
+      "run": "t326"
+    },
+    "t350": {
+      "S_legacy_threads": {
+        "msgs_per_thread_max": 27,
+        "msgs_per_thread_p50": 1.0,
+        "multi_turn_thread_ratio_pct": 1.35,
+        "n_threads": 74,
+        "note": "turn 判定旧口径含 PUBLIC 单一说话者（from 缺失时以内部占位区分），仅作方向",
+        "single_msg_thread_ratio_pct": 98.65,
+        "thread_schema": "legacy",
+        "turns_A_p50": 1.0,
+        "turns_A_p90": 1
+      },
+      "U10_public_soliloquy": {
+        "ci95_pct": [
+          87.54,
+          100.0
+        ],
+        "denom": 27,
+        "hit": 27,
+        "rate_pct": 100.0
+      },
+      "U1_template_opening": {
+        "ci95_pct": [
+          4.81,
+          16.23
+        ],
+        "denom": 100,
+        "hit": 9,
+        "rate_pct": 9.0
+      },
+      "U2_narration_proxy": {
+        "ci95_pct": [
+          25.46,
+          43.72
+        ],
+        "denom": 100,
+        "hit": 34,
+        "rate_pct": 34.0
+      },
+      "U2b_paren_block_any": {
+        "ci95_pct": [
+          25.46,
+          43.72
+        ],
+        "denom": 100,
+        "hit": 34,
+        "rate_pct": 34.0
+      },
+      "U3_third_person_self": {
+        "ci95_pct": [
+          0.0,
+          3.7
+        ],
+        "denom": 100,
+        "hit": 0,
+        "rate_pct": 0.0
+      },
+      "U4_agent_id_leak": {
+        "ci95_pct": [
+          7.0,
+          19.81
+        ],
+        "denom": 100,
+        "hit": 12,
+        "rate_pct": 12.0
+      },
+      "U5_no_second_person": {
+        "ci95_pct": [
+          28.05,
+          49.83
+        ],
+        "denom": 73,
+        "hit": 28,
+        "rate_pct": 38.36
+      },
+      "U6_clerk_tone": {
+        "ci95_pct": [
+          0.55,
+          7.0
+        ],
+        "denom": 100,
+        "hit": 2,
+        "rate_pct": 2.0
+      },
+      "U7_thread_continuation": {
+        "K1_cont_backref_ci95_pct": [
+          11.03,
+          42.05
+        ],
+        "K1_cont_backref_hit": 6,
+        "K1_cont_backref_rate_pct": 23.08,
+        "K1_cont_composite_R1_rate_pct": 23.08,
+        "K1_cont_lexical_bigram2_rate_pct": 19.23,
+        "K1_cont_lexical_ci95_pct": [
+          11.03,
+          42.05
+        ],
+        "K1_cont_lexical_hit": 6,
+        "K1_cont_lexical_rate_pct": 23.08,
+        "K1_cont_same_topic": null,
+        "denom_in_thread_msgs": 26,
+        "note": "legacy thread_key=(day,channel,pair/group)；topic 字段缺失 ⇒ cont_same_topic=N/A（D5 定稿）"
+      },
+      "U8_dup_exact": {
+        "ci95_pct": [
+          0.55,
+          7.0
+        ],
+        "denom": 100,
+        "hit": 2,
+        "rate_pct": 2.0
+      },
+      "U8b_ngram_shared": {
+        "ci95_pct": [
+          15.0,
+          31.07
+        ],
+        "denom": 100,
+        "hit": 22,
+        "rate_pct": 22.0
+      },
+      "U9_out_of_world": {
+        "ci95_pct": [
+          0.18,
+          5.45
+        ],
+        "denom": 100,
+        "hit": 1,
+        "rate_pct": 1.0
+      },
+      "channels": {
+        "dm": 73,
+        "public": 27
+      },
+      "len_max": 149,
+      "len_p10": 16,
+      "len_p50": 26.0,
+      "len_p90": 59,
+      "n_msgs": 100,
+      "run": "t350"
+    },
+    "t355": {
+      "S_legacy_threads": {
+        "msgs_per_thread_max": 11,
+        "msgs_per_thread_p50": 1.0,
+        "multi_turn_thread_ratio_pct": 4.94,
+        "n_threads": 162,
+        "note": "turn 判定旧口径含 PUBLIC 单一说话者（from 缺失时以内部占位区分），仅作方向",
+        "single_msg_thread_ratio_pct": 87.65,
+        "thread_schema": "legacy",
+        "turns_A_p50": 1.0,
+        "turns_A_p90": 1
+      },
+      "U10_public_soliloquy": {
+        "ci95_pct": [
+          91.0,
+          99.7
+        ],
+        "denom": 59,
+        "hit": 58,
+        "rate_pct": 98.31
+      },
+      "U1_template_opening": {
+        "ci95_pct": [
+          7.83,
+          16.05
+        ],
+        "denom": 230,
+        "hit": 26,
+        "rate_pct": 11.3
+      },
+      "U2_narration_proxy": {
+        "ci95_pct": [
+          58.41,
+          70.67
+        ],
+        "denom": 230,
+        "hit": 149,
+        "rate_pct": 64.78
+      },
+      "U2b_paren_block_any": {
+        "ci95_pct": [
+          59.3,
+          71.49
+        ],
+        "denom": 230,
+        "hit": 151,
+        "rate_pct": 65.65
+      },
+      "U3_third_person_self": {
+        "ci95_pct": [
+          1.48,
+          6.15
+        ],
+        "denom": 230,
+        "hit": 7,
+        "rate_pct": 3.04
+      },
+      "U4_agent_id_leak": {
+        "ci95_pct": [
+          29.33,
+          41.59
+        ],
+        "denom": 230,
+        "hit": 81,
+        "rate_pct": 35.22
+      },
+      "U5_no_second_person": {
+        "ci95_pct": [
+          18.19,
+          30.9
+        ],
+        "denom": 171,
+        "hit": 41,
+        "rate_pct": 23.98
+      },
+      "U6_clerk_tone": {
+        "ci95_pct": [
+          2.38,
+          7.82
+        ],
+        "denom": 230,
+        "hit": 10,
+        "rate_pct": 4.35
+      },
+      "U7_thread_continuation": {
+        "K1_cont_backref_ci95_pct": [
+          21.17,
+          42.64
+        ],
+        "K1_cont_backref_hit": 21,
+        "K1_cont_backref_rate_pct": 30.88,
+        "K1_cont_composite_R1_rate_pct": 30.88,
+        "K1_cont_lexical_bigram2_rate_pct": 13.24,
+        "K1_cont_lexical_ci95_pct": [
+          16.23,
+          36.44
+        ],
+        "K1_cont_lexical_hit": 17,
+        "K1_cont_lexical_rate_pct": 25.0,
+        "K1_cont_same_topic": null,
+        "denom_in_thread_msgs": 68,
+        "note": "legacy thread_key=(day,channel,pair/group)；topic 字段缺失 ⇒ cont_same_topic=N/A（D5 定稿）"
+      },
+      "U8_dup_exact": {
+        "ci95_pct": [
+          16.12,
+          26.58
+        ],
+        "denom": 230,
+        "hit": 48,
+        "rate_pct": 20.87
+      },
+      "U8b_ngram_shared": {
+        "ci95_pct": [
+          56.64,
+          69.02
+        ],
+        "denom": 230,
+        "hit": 145,
+        "rate_pct": 63.04
+      },
+      "U9_out_of_world": {
+        "ci95_pct": [
+          0.93,
+          4.99
+        ],
+        "denom": 230,
+        "hit": 5,
+        "rate_pct": 2.17
+      },
+      "channels": {
+        "dm": 163,
+        "group": 8,
+        "public": 59
+      },
+      "len_max": 192,
+      "len_p10": 24,
+      "len_p50": 44.0,
+      "len_p90": 69,
+      "n_msgs": 230,
+      "run": "t355"
+    }
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "method": "bootstrap resampling of message-level rates, B=2000, seed=42; band=2.5-97.5 pct of rate_A-rate_B",
+  "pairs": [
+    "t300",
+    "t355"
+  ],
+  "results": {
+    "denom_480": {
+      "K-1 cont_backref (in-thread)": {
+        "abs_p95_pp": 3.75,
+        "band_pp": [
+          -3.75,
+          3.75
+        ],
+        "width_pp": 7.5
+      },
+      "L-11 no_second_person (DM+GROUP)": {
+        "abs_p95_pp": 6.5,
+        "band_pp": [
+          -6.5,
+          6.44
+        ],
+        "width_pp": 12.95
+      },
+      "L-2 narration_proxy": {
+        "abs_p95_pp": 6.25,
+        "band_pp": [
+          -5.83,
+          6.25
+        ],
+        "width_pp": 12.08
+      },
+      "L-7 8gram_shared": {
+        "abs_p95_pp": 6.25,
+        "band_pp": [
+          -5.83,
+          6.25
+        ],
+        "width_pp": 12.08
+      },
+      "L-8 agent_id_leak": {
+        "abs_p95_pp": 5.83,
+        "band_pp": [
+          -5.83,
+          5.83
+        ],
+        "width_pp": 11.67
+      },
+      "U1 template_opening": {
+        "abs_p95_pp": 3.96,
+        "band_pp": [
+          -3.96,
+          3.96
+        ],
+        "width_pp": 7.92
+      }
+    },
+    "denom_623": {
+      "K-1 cont_backref (in-thread)": {
+        "abs_p95_pp": 3.37,
+        "band_pp": [
+          -3.37,
+          3.21
+        ],
+        "width_pp": 6.58
+      },
+      "L-11 no_second_person (DM+GROUP)": {
+        "abs_p95_pp": 5.63,
+        "band_pp": [
+          -5.63,
+          5.48
+        ],
+        "width_pp": 11.12
+      },
+      "L-2 narration_proxy": {
+        "abs_p95_pp": 5.3,
+        "band_pp": [
+          -5.3,
+          5.3
+        ],
+        "width_pp": 10.59
+      },
+      "L-7 8gram_shared": {
+        "abs_p95_pp": 5.14,
+        "band_pp": [
+          -5.14,
+          5.14
+        ],
+        "width_pp": 10.27
+      },
+      "L-8 agent_id_leak": {
+        "abs_p95_pp": 5.46,
+        "band_pp": [
+          -5.14,
+          5.46
+        ],
+        "width_pp": 10.59
+      },
+      "U1 template_opening": {
+        "abs_p95_pp": 3.53,
+        "band_pp": [
+          -3.53,
+          3.53
+        ],
+        "width_pp": 7.06
+      }
+    },
+    "denom_686": {
+      "K-1 cont_backref (in-thread)": {
+        "abs_p95_pp": 3.21,
+        "band_pp": [
+          -3.21,
+          3.21
+        ],
+        "width_pp": 6.41
+      },
+      "L-11 no_second_person (DM+GROUP)": {
+        "abs_p95_pp": 5.8,
+        "band_pp": [
+          -5.46,
+          5.8
+        ],
+        "width_pp": 11.26
+      },
+      "L-2 narration_proxy": {
+        "abs_p95_pp": 5.1,
+        "band_pp": [
+          -5.1,
+          5.1
+        ],
+        "width_pp": 10.2
+      },
+      "L-7 8gram_shared": {
+        "abs_p95_pp": 4.96,
+        "band_pp": [
+          -4.96,
+          4.96
+        ],
+        "width_pp": 9.91
+      },
+      "L-8 agent_id_leak": {
+        "abs_p95_pp": 5.1,
+        "band_pp": [
+          -5.1,
+          4.81
+        ],
+        "width_pp": 9.91
+      },
+      "U1 template_opening": {
+        "abs_p95_pp": 3.35,
+        "band_pp": [
+          -3.21,
+          3.35
+        ],
+        "width_pp": 6.56
+      }
+    }
+  }
+}
