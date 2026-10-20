@@ -1,0 +1,11 @@
+{
+  "_comment": "R6-T2 · F-4「误会与和解」上下文机制开关（life/dialogue_repair.py）。默认 enabled=false ⇒ v0 语义零扰动。本文件**不进** engine/version.py::FINGERPRINT_FILES，因此打开/关闭都不会改变 v0/anchor 旧日志的 engine_version 指纹（这是刻意选择：机制默认关时旧日志必须仍可复现）。消融逃生口：env HITT_DIALOGUE_REPAIR=1|0。",
+  "schema_version": "1.0",
+  "enabled": false,
+  "gripe_context": true,
+  "reply_priority": true,
+  "window_msgs": 8,
+  "max_open": 3,
+  "max_age_rounds": 84,
+  "context_max_age_rounds": 24
+}
