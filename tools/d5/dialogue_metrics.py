@@ -210,6 +210,7 @@ def extract_messages(recs: List[dict]) -> List[dict]:
             "to": p.get("to"),
             "body": body,
             "msg_id": p.get("msg_id"),
+            "msg_uid": p.get("msg_uid"),
             "reply_to": p.get("reply_to"),
             "refs": p.get("refs") or [],
             "thread_id": p.get("thread_id"),
@@ -258,6 +259,15 @@ def compute(msgs: List[dict], lexicon: List[str], templates: List[re.Pattern],
     out: Dict[str, Any] = {}
     threads, schema = group_threads(msgs)
     n_msg = len(msgs)
+    uids = [m.get("msg_uid") for m in msgs if m.get("msg_uid")]
+    ids_ = [m.get("msg_id") for m in msgs if m.get("msg_id")]
+    out["assertions"] = {
+        "msg_uid_unique": (len(set(uids)) == len(uids)) if uids else None,
+        "msg_uid_n": len(uids),
+        "msg_id_unique": (len(set(ids_)) == len(ids_)) if ids_ else None,
+        "msg_id_n": len(ids_),
+        "note": "D2 起指针目标 = msg_uid(<seed>:<seq>)，全局唯一；msg_id 为展示标签（legacy 格式可能重复，不作指针目标）",
+    }
     out["meta"] = {"n_messages": n_msg, "n_threads": len(threads),
                    "thread_schema": schema,
                    "channels": dict(Counter(m["channel"] for m in msgs))}
@@ -293,7 +303,12 @@ def compute(msgs: List[dict], lexicon: List[str], templates: List[re.Pattern],
                 cur = 1
         chain_alt.append(best)
         # 指针链（沿 reply_to 反查本方最长回复深度）
-        by_id = {m["msg_id"]: i for i, m in enumerate(th) if m["msg_id"]}
+        by_id = {}
+        for i, m in enumerate(th):
+            if m.get("msg_uid"):
+                by_id[m["msg_uid"]] = i
+            if m["msg_id"]:
+                by_id.setdefault(m["msg_id"], i)
         depth = [1] * len(th)
         for i, m in enumerate(th):
             tgt, _ = pointer_of(m)
@@ -321,10 +336,17 @@ def compute(msgs: List[dict], lexicon: List[str], templates: List[re.Pattern],
 
     # ---------------- S-4 reply pointer coverage
     ptr_ok = ptr_empty = ptr_cross = ptr_forward = ptr_dangling = denom = 0
-    all_ids = {m["msg_id"] for m in msgs if m["msg_id"]}
+    # 指针目标解析：优先 msg_uid（D2 起为 "<seed>:<seq>"，全局唯一）；legacy 回退 msg_id
+    all_ids = {m.get("msg_uid") or m["msg_id"] for m in msgs if (m.get("msg_uid") or m["msg_id"])}
+    all_ids |= {m["msg_id"] for m in msgs if m["msg_id"]}
     for key in sorted(threads):
         th = threads[key]
-        ids = {m["msg_id"]: i for i, m in enumerate(th) if m["msg_id"]}
+        ids = {}
+        for i, m in enumerate(th):
+            if m.get("msg_uid"):
+                ids[m["msg_uid"]] = i
+            if m["msg_id"]:
+                ids.setdefault(m["msg_id"], i)
         for i, m in enumerate(th):
             is_first = (m["turn_index"] == 0) if m["turn_index"] is not None else (i == 0)
             if is_first:
