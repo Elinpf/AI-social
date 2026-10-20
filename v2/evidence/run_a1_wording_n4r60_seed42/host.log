@@ -1,0 +1,15 @@
+[d2] run: python3 -m orchestration run --life --seed 42 --agents 4 --rounds 60 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_a1_wording_n4r60_seed42/run.jsonl --flush-every 2
+[life] n_agents=4 rounds=60 events=9940 seconds=481.2985 log_bytes=4749329
+  unknown_event_types=[]
+  chain_ok=True replay_parity=True first_run_equals_replay=True
+  conservation_ok=True final_state_hash=sha256:ed5b78abd127a73c773084b53239ef859df61b278637321f443fb92cf358737c
+  log written: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_a1_wording_n4r60_seed42/run.jsonl
+[meta] /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_a1_wording_n4r60_seed42/meta.json
+[meta] events=9940 llm_calls=272 cached_ratio=0.1654 provider={'openai_compat': 272} model={'DeepSeek-Flash': 272}
+[meta] seed_in_log=42 n_in_log=4 rounds_effective=60
+[meta] OK: 真跑判定通过
+[d2] self-check wc -l=9940 meta.events=9940
+{"engine_log":{"by_provider":{"openai_compat":272},"by_purpose":{"dialogue":{"cached":12,"calls":124,"degraded":0,"thinking":0,"tokens_in":20746,"tokens_out":2540},"importance":{"cached":24,"calls":34,"degraded":0,"thinking":0,"tokens_in":170,"tokens_out":3110},"judge":{"cached":0,"calls":74,"degraded":0,"thinking":74,"tokens_in":9652,"tokens_out":24860},"negotiation":{"cached":9,"calls":13,"degraded":0,"thinking":0,"tokens_in":473,"tokens_out":99},"plan":{"cached":0,"calls":4,"degraded":0,"thinking":0,"tokens_in":357,"tokens_out":307},"reflect":{"cached":0,"calls":23,"degraded":0,"thinking":0,"tokens_in":9297,"tokens_out":942}},"llm_judgment_by_dimension":{"affection":16,"rel_affinity":8,"rel_familiarity":12,"rel_trust":2,"respect":16,"stance":16,"weekly_focus":4},"source":"engine_log(LLM_CALL)","total":{"cached":45,"calls":272,"degraded":0,"thinking":74,"tokens_in":40695,"tokens_out":31858,"tokens_total":72553}},"provider_guard":{"by_provider":{"openai_compat":272},"expected":"openai_compat","ok":true,"policy":"计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。","problems":[]}}
+[d2] OK
+RUN_BATCH_RC=0
+child_end=2026-10-21T04:41:59+08:00

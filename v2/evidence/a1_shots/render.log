@@ -1,0 +1,30 @@
+batch=run_a1_wording_n4r60_seed42-ae969198  log_sha256=ae969198feaefd1f69147001e027394d55527bd1a0e460ff654697bdc3b1559b  sha8=ae969198
+→ ../v2/evidence/a1_shots/run_a1_wording_n4r60_seed42-chat-ae969198.png
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+SHOT OK: ../v2/evidence/a1_shots/run_a1_wording_n4r60_seed42-chat-ae969198.png  elapsed=3.64s  mean_brightness=34.2(gray601,0-255,黑<8)  max_color_frac=30.01%  blank_retries=0/2
+  blank_cumulative=7/128 次空白/总取证（T282 观察哨，仅留痕）
+→ ../v2/evidence/a1_shots/run_a1_wording_n4r60_seed42-rhythm-ae969198.png
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+SHOT OK: ../v2/evidence/a1_shots/run_a1_wording_n4r60_seed42-rhythm-ae969198.png  elapsed=1.68s  mean_brightness=32.3(gray601,0-255,黑<8)  max_color_frac=34.49%  blank_retries=0/2
+  blank_cumulative=7/129 次空白/总取证（T282 观察哨，仅留痕）
+→ ../v2/evidence/a1_shots/run_a1_wording_n4r60_seed42-spread-ae969198.png
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+SHOT OK: ../v2/evidence/a1_shots/run_a1_wording_n4r60_seed42-spread-ae969198.png  elapsed=1.65s  mean_brightness=23.2(gray601,0-255,黑<8)  max_color_frac=71.21%  blank_retries=0/2
+  blank_cumulative=7/130 次空白/总取证（T282 观察哨，仅留痕）
+→ ../v2/evidence/a1_shots/run_a1_wording_n4r60_seed42-600-ae969198.png
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+SHOT OK: ../v2/evidence/a1_shots/run_a1_wording_n4r60_seed42-600-ae969198.png  elapsed=1.59s  mean_brightness=39.7(gray601,0-255,黑<8)  max_color_frac=31.32%  blank_retries=0/2
+  blank_cumulative=7/131 次空白/总取证（T282 观察哨，仅留痕）
+OK: ../v2/evidence/a1_shots/run_a1_wording_n4r60_seed42-{chat,rhythm,spread,600}-ae969198.png
