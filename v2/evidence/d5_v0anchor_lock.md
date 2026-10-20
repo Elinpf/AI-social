@@ -37,6 +37,8 @@
 | D2 前树确认（S0b 反向，**已按 codebase-scout 勘察修正路径**） | `git grep -n "thread_id\|msg_uid\|turn_index\|reply_to" -- code/engine code/life code/orchestration @dc93c9d` **为空**（仅 `code/frontend/*` 有同名演示字段，与事件层无关）⇒ 确为 D2 前树。**注意**：判据不能只看 `code/life`——D2 的字段落点在 `code/orchestration/integration.py::_do_social`（MSG_* payload 组装处），只看 life 会在 A0 臂上同样为空、造成误判 |
 | 主树等价性（repro-verifier 补） | `git diff --stat dc93c9d HEAD -- code/life code/orchestration code/config` = **空** ⇒ 当前主树与 before 臂代码等价，A0 复用主树时代码基线干净 |
 
+| 脚本入库 commit | **`b306a40`** |
+
 ## 4. 读数产物
 
 - `v2/evidence/d5_metrics_v0anchor.json` / `.md`（S/K/L/E/F 全指标 + 准入明细 + 全部 sha）
