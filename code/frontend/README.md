@@ -481,6 +481,10 @@ python frontend/tools/gen_threads.py \
 # 不通过 → "FAIL 完整性断言：… → 不生成（半截跑批）"，rc=3，不会产生任何文件
 ```
 
+**触发条件**：本流水线（`tools/d7_after_pipeline.sh` / `gen_threads.py --require-complete`）由
+**数据完整性断言触发，而不是人工许可**——只要 `meta.json` 存在且 `TURN_SEAL` 覆盖 `0..rounds-1`，就可以生成；
+断言不过就停下，不生成、不出图、也不等谁点头。
+
 **同批目录的选择规则**：一次跑批可能残留多个目录（`ABORTED_*` 前缀、首次崩溃目录、重跑目录）。
 **只认「带 `meta.json` 且 `--require-complete` 断言通过」的那一份**；被断言挡下的目录（半截/续跑/ABORTED）
 一律**不得**用于演示数据集与截图。选目录前先跑一次 `--summary --require-complete` 看它到底完不完整。
