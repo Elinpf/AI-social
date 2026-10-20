@@ -1,0 +1,195 @@
+{
+ "schema_version": "f4-evidence/1.0",
+ "generated_at": "2026-10-20T20:04:49.065931+08:00",
+ "layer": "词表层（word-lexicon layer）——与 dialogue_metrics.py 同源同规则",
+ "rule": {
+  "grouping": "mixed_key: thread_id 优先；dm 无序对 / public 当日合流 / group (day,place)",
+  "polarity": "正负词表命中数比较（子串包含，不分词）",
+  "tension": "相邻两句极性异号 或 当前句极性为负",
+  "closed_loop": "张力句之后 8 条内同线程出现修复词，取最近一次命中",
+  "f4b": "lag = 修复句与张力句之间的消息条数（j-i）"
+ },
+ "inputs": {
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d2_before_n16_seed42/run.jsonl",
+  "log_sha256": "c1f86bf61f62b3a0ce8e17e0c2312791cf0262381cd2120c2a63c9b6258963cf",
+  "script": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/f4_repair_evidence.py",
+  "script_sha256": "4e04efdfff49da344758fe02de24f3c831f1153076c459102ab41c6a288c2eb0",
+  "emotion_lexicon": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/emotion_lexicon.txt",
+  "emotion_sha256": "8427245cdf65550c6fb80d10616a01d9054d3d4fe97842b4b81feed7afd4a996",
+  "repair_lexicon": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/repair_lexicon.txt",
+  "repair_sha256": "0528e735909c90c4181539f9ba239298d8070c1a2dc2b2fcd394724c1f440fc9",
+  "metrics_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r6_f4_baseline_repro/v0_metrics.json",
+  "bad_lines": 0,
+  "chain": {
+   "seq_dense": true,
+   "hash_links_ok": true,
+   "n": 186972
+  }
+ },
+ "F-4_tension_repair": {
+  "numerator_repaired": 0,
+  "denominator_tension_events": 5,
+  "ratio": 0.0,
+  "grade": "probe",
+  "grade_rule": "分母<30 只报事件数+分母，标 probe，不做百分比结论"
+ },
+ "F-4b_repair_lag": {
+  "denominator_repaired_events": 0,
+  "mean_lag_msgs": null,
+  "median_lag_msgs": null,
+  "min_lag": null,
+  "max_lag": null,
+  "lag_distribution": {},
+  "note": "无闭环样本 ⇒ 时滞不可计算（null）；不得补 0、不得估"
+ },
+ "channels": {
+  "dm": {
+   "tension_events": 3,
+   "repaired": 0
+  },
+  "public": {
+   "tension_events": 2,
+   "repaired": 0
+  },
+  "group": {
+   "tension_events": 0,
+   "repaired": 0
+  }
+ },
+ "threads_with_tension": 5,
+ "events": [
+  {
+   "thread": "m:0|public|-",
+   "channel": "public",
+   "idx_in_thread": 4,
+   "seq": 189,
+   "msg_uid": null,
+   "msg_id": "P-0-4",
+   "line": 190,
+   "round": 0,
+   "from": "P015",
+   "to": null,
+   "body": "（独自在灶台前，盯着锅里翻滚的汤，自言自语）嗯……这次少放半勺盐，多加一撮糖，说不定能成——反正上次那锅也有人夸，怕什么。",
+   "pol_prev": 0,
+   "pol_cur": -1,
+   "trigger": "当前句为负",
+   "closed": false,
+   "repair_seq": null,
+   "repair_msg_uid": null,
+   "repair_line": null,
+   "repair_words": [],
+   "lag": null,
+   "repair_body": null
+  },
+  {
+   "thread": "m:2|dm|P002-P012",
+   "channel": "dm",
+   "idx_in_thread": 1,
+   "seq": 37604,
+   "msg_uid": null,
+   "msg_id": "D-30-0",
+   "line": 37605,
+   "round": 30,
+   "from": "P012",
+   "to": "P002",
+   "body": "（压低声音）哎，我跟你说啊，P002，你可别往外传——我家那口子昨天又偷偷把腌菜坛子搬后院去了，说是怕我送人送太多，你说这人小气不小气？",
+   "pol_prev": 0,
+   "pol_cur": -1,
+   "trigger": "当前句为负",
+   "closed": false,
+   "repair_seq": null,
+   "repair_msg_uid": null,
+   "repair_line": null,
+   "repair_words": [],
+   "lag": null,
+   "repair_body": null
+  },
+  {
+   "thread": "m:3|dm|P006-P011",
+   "channel": "dm",
+   "idx_in_thread": 1,
+   "seq": 59296,
+   "msg_uid": null,
+   "msg_id": "D-42-0",
+   "line": 59297,
+   "round": 42,
+   "from": "P006",
+   "to": "P011",
+   "body": "（轻声）P011，你刚才那个问题问得特别好——别怕问错，肯动脑筋的孩子才学得扎实。",
+   "pol_prev": 1,
+   "pol_cur": -1,
+   "trigger": "异号",
+   "closed": false,
+   "repair_seq": null,
+   "repair_msg_uid": null,
+   "repair_line": null,
+   "repair_words": [],
+   "lag": null,
+   "repair_body": null
+  },
+  {
+   "thread": "m:4|dm|P013-P014",
+   "channel": "dm",
+   "idx_in_thread": 1,
+   "seq": 86111,
+   "msg_uid": null,
+   "msg_id": "D-54-0",
+   "line": 86112,
+   "round": 54,
+   "from": "P013",
+   "to": "P014",
+   "body": "（把铁锤往砧上一搁）P014，上回那事我忍了三口气才没跟你吵——今天你把话说明白，咱俩这关系还处不处？",
+   "pol_prev": 0,
+   "pol_cur": -1,
+   "trigger": "当前句为负",
+   "closed": false,
+   "repair_seq": null,
+   "repair_msg_uid": null,
+   "repair_line": null,
+   "repair_words": [],
+   "lag": null,
+   "repair_body": null
+  },
+  {
+   "thread": "m:5|public|-",
+   "channel": "public",
+   "idx_in_thread": 3,
+   "seq": 116139,
+   "msg_uid": null,
+   "msg_id": "P-63-1",
+   "line": 116140,
+   "round": 63,
+   "from": "P005",
+   "to": null,
+   "body": "各位，我琢磨着咱们镇上该有个固定的义诊日，谁家有个头疼脑热的也能早点瞧，不用都挤到我这小诊所里来。",
+   "pol_prev": 0,
+   "pol_cur": -1,
+   "trigger": "当前句为负",
+   "closed": false,
+   "repair_seq": null,
+   "repair_msg_uid": null,
+   "repair_line": null,
+   "repair_words": [],
+   "lag": null,
+   "repair_body": null
+  }
+ ],
+ "n_messages": 187,
+ "cross_check": {
+  "checked": true,
+  "metrics_json_sha256": "169e1c2c1749401198a6eb3363da589bf6023ec117b93fc6181a99c0b88e0a99",
+  "ref": {
+   "tension_events": 5,
+   "repaired": 0,
+   "closed_loop_rate": 0.0,
+   "mean_lag_msgs": null
+  },
+  "match": {
+   "tension_events": true,
+   "repaired": true,
+   "closed_loop_rate": true,
+   "mean_lag_msgs": true
+  },
+  "ok": true
+ }
+}

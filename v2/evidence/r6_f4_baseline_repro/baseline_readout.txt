@@ -1,0 +1,7 @@
+v0-anchor (run_d2_before_n16_seed42) 关键读数提取
+F-4 张力事件数(分母) = 5
+F-4 闭环数(分子)     = 0
+F-4 closed_loop_rate = 0.0 <= 分母<30，仅事件数，标 probe
+F-4b mean_lag_msgs   = None (无闭环样本 ⇒ 时滞不可计算)
+F-3 分母/分子        = 6 / 1 rate= 0.166667
+admission            = ADMITTED strict evidence

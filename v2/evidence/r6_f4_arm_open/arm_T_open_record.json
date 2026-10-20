@@ -1,0 +1,111 @@
+{
+ "schema_version": "arm-open-record/1.0",
+ "arm": "T",
+ "recorded_at": "2026-10-20T20:36:57.343716+08:00",
+ "head_sha": "6074502f4062891d05e1057df08243d11c3cb79d",
+ "code_status_short_empty": true,
+ "code_status_short_raw": "",
+ "code_untracked_detail": [],
+ "switch": {
+  "env_name": "HITT_DIALOGUE_REPAIR",
+  "env_is_set": true,
+  "env_value": "1",
+  "config": {
+   "path": "code/config/dialogue_repair.json",
+   "exists": true,
+   "sha256": "f04355716d494f7b1a7236865c1bc3c6d3e13c9b250143a066bc1dd5ea8e9eec",
+   "enabled": false,
+   "raw_keys": [
+    "_comment",
+    "context_max_age_rounds",
+    "enabled",
+    "gripe_context",
+    "max_age_rounds",
+    "max_open",
+    "reply_priority",
+    "schema_version",
+    "window_msgs"
+   ]
+  },
+  "note": "env 不落盘、不进程内留痕，故由本记录充当该臂开关状态凭证"
+ },
+ "full_tree_status_background_only": [
+  "M tools/d5/dialogue_metrics.py",
+  " M tools/d5/run_batch_eval.sh",
+  " M v2/evidence/d5_metrics_v0anchor.json",
+  " M v2/evidence/d5_metrics_v0anchor.md",
+  " M v2/evidence/d5_v0anchor_lock.md",
+  "?? experiments/",
+  "?? tools/d5/arm_open_record.py",
+  "?? tools/d5/build_annotation_packet.py",
+  "?? tools/d5/f4_interrater.py",
+  "?? tools/d5/f4_manual_judge.py",
+  "?? tools/d5/f4_repair_evidence.py",
+  "?? v2/evidence/D3-noiseband-two-level.md",
+  "?? v2/evidence/D3-null-pair-t300-t355.md",
+  "?? v2/evidence/D4-A0-expected-structure-checklist.md",
+  "?? v2/evidence/D4-mock-calibration-n16.md",
+  "?? v2/evidence/d3_corpus_annotate.py",
+  "?? v2/evidence/d3_noiseband_bootstrap.json",
+  "?? v2/evidence/d3_noiseband_bootstrap.py",
+  "?? v2/evidence/d3_null_pair.py",
+  "?? v2/evidence/d3_null_pair_result.json",
+  "?? v2/evidence/d3_pattern_counts.json",
+  "?? v2/evidence/d3_pattern_samples.md",
+  "?? v2/evidence/d4_metrics.py",
+  "?? v2/evidence/d4_metrics_A0.json",
+  "?? v2/evidence/d4_preflight_a0.py",
+  "?? v2/evidence/d5_llm_purpose_audit_a0.json",
+  "?? v2/evidence/d5_llm_purpose_audit_a0.md",
+  "?? v2/evidence/d5_metrics_a0.json",
+  "?? v2/evidence/d5_metrics_a0.md",
+  "?? v2/evidence/d5_s0a_a0.json",
+  "?? v2/evidence/d6_compare_a0.json",
+  "?? v2/evidence/d6_compare_a0.md",
+  "?? v2/evidence/r6_f4_arm_open/",
+  "?? v2/evidence/r6_f4_baseline_repro/",
+  "?? v2/evidence/run_d2_after_n16_seed42/",
+  "?? v2/evidence/run_r6_treat_n16_seed42_ABORTED_2036/",
+  "?? v2/evidence/samples_a0/",
+  "?? v2/refs/D4-prompt-candidates.md"
+ ],
+ "batch_probe": {
+  "verdict": "clear",
+  "items": [
+   {
+    "dir": "v2/evidence/run_d2_after_n16_seed42",
+    "run_jsonl_age_min": 27.8,
+    "has_meta": true,
+    "turn_seal_count": 84,
+    "rounds_effective": 84,
+    "suspected_running": false
+   },
+   {
+    "dir": "v2/evidence/run_d2_before_n16_seed42",
+    "run_jsonl_age_min": 169.3,
+    "has_meta": true,
+    "turn_seal_count": 84,
+    "rounds_effective": 84,
+    "suspected_running": false
+   }
+  ],
+  "running_dirs": []
+ },
+ "metric_tools": {
+  "tools/d5/dialogue_metrics.py": "5fede53838b183eae48bd3c3f922c17499338d2ae74349f8e444119e5580c6fb",
+  "tools/d5/f4_repair_evidence.py": "4e04efdfff49da344758fe02de24f3c831f1153076c459102ab41c6a288c2eb0",
+  "tools/d5/f4_manual_judge.py": "be8cd38af36bb9356bc3bb2bd7104d140c8c260aa36445fe4209391c42d3755f",
+  "tools/d5/f4_interrater.py": "841b7d0903b53abfc1af7e290b116064f574ffd99b072411b607d37661616af8",
+  "tools/d5/build_annotation_packet.py": "d16d314d9a9d0e9fdbe9725cb99739f1bbe292048d47278e0f2b524813e4c4e5",
+  "tools/d5/arm_open_record.py": "c8d6325151030d15ffb9dd12d2e6a480b48270a99d0c97da1348eaf2bfeb20a3",
+  "tools/d5/emotion_lexicon.txt": "8427245cdf65550c6fb80d10616a01d9054d3d4fe97842b4b81feed7afd4a996",
+  "tools/d5/repair_lexicon.txt": "0528e735909c90c4181539f9ba239298d8070c1a2dc2b2fcd394724c1f440fc9",
+  "tools/d5/timeref_lexicon.txt": "9357b4c91aad8584e6d845e311eed289b1f58179ccbfdc3a49588641978b7d5d",
+  "tools/d5/task_tags.txt": "a71c6c963279b28f6f9de3b44317b5c9bbf80498c594c98f9460ed79954aa69e",
+  "tools/d5/template_patterns.txt": "05b29b068123b81702bc029fae5773edecae6848d6788745af6fab4dac589f4e",
+  "tools/d5/backref_lexicon.txt": "6fda89f1d62e22937313152b30826f69af9ce8a5d772c355e6f9130445d77a30"
+ },
+ "metric_tools_pin": {
+  "pinned_to": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r6_f4_arm_open/tools_freeze_pin.json"
+ }
+}

@@ -1,0 +1,11 @@
+# 命令：v0-anchor F-4/F-4b/F-3 基线复现（只读，不涉新批）
+# 执行时刻: 2026-10-20T20:02:50+08:00
+# cwd: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+# HEAD: fcf42bf931fb239867886674f68db822d1a162e2
+
+cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+python3 tools/d5/dialogue_metrics.py \
+  --log v2/evidence/run_d2_before_n16_seed42/run.jsonl \
+  --meta v2/evidence/run_d2_before_n16_seed42/meta.json \
+  --out-json v2/evidence/r6_f4_baseline_repro/v0_metrics.json \
+  --out-md v2/evidence/r6_f4_baseline_repro/v0_metrics.md

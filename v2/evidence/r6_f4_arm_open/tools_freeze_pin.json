@@ -1,0 +1,18 @@
+{
+ "pinned_at": "2026-10-20T20:36:57.343716+08:00",
+ "arm": "T",
+ "tools": {
+  "tools/d5/dialogue_metrics.py": "5fede53838b183eae48bd3c3f922c17499338d2ae74349f8e444119e5580c6fb",
+  "tools/d5/f4_repair_evidence.py": "4e04efdfff49da344758fe02de24f3c831f1153076c459102ab41c6a288c2eb0",
+  "tools/d5/f4_manual_judge.py": "be8cd38af36bb9356bc3bb2bd7104d140c8c260aa36445fe4209391c42d3755f",
+  "tools/d5/f4_interrater.py": "841b7d0903b53abfc1af7e290b116064f574ffd99b072411b607d37661616af8",
+  "tools/d5/build_annotation_packet.py": "d16d314d9a9d0e9fdbe9725cb99739f1bbe292048d47278e0f2b524813e4c4e5",
+  "tools/d5/arm_open_record.py": "c8d6325151030d15ffb9dd12d2e6a480b48270a99d0c97da1348eaf2bfeb20a3",
+  "tools/d5/emotion_lexicon.txt": "8427245cdf65550c6fb80d10616a01d9054d3d4fe97842b4b81feed7afd4a996",
+  "tools/d5/repair_lexicon.txt": "0528e735909c90c4181539f9ba239298d8070c1a2dc2b2fcd394724c1f440fc9",
+  "tools/d5/timeref_lexicon.txt": "9357b4c91aad8584e6d845e311eed289b1f58179ccbfdc3a49588641978b7d5d",
+  "tools/d5/task_tags.txt": "a71c6c963279b28f6f9de3b44317b5c9bbf80498c594c98f9460ed79954aa69e",
+  "tools/d5/template_patterns.txt": "05b29b068123b81702bc029fae5773edecae6848d6788745af6fab4dac589f4e",
+  "tools/d5/backref_lexicon.txt": "6fda89f1d62e22937313152b30826f69af9ce8a5d772c355e6f9130445d77a30"
+ }
+}

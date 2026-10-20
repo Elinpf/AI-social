@@ -1,0 +1,14 @@
+# Arm-T（处理臂）起跑命令（在仓库根执行；批期冻结令生效）
+# 记录时刻: 2026-10-20T20:23 (+08:00)
+cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+HITT_DIALOGUE_REPAIR=1 setsid nohup bash tools/d2/run_batch.sh \
+  --out-dir v2/evidence/run_r6_treat_n16_seed42 \
+  --seed 42 --agents 16 --rounds 84 \
+  --side-root /tmp/r6_treat_side \
+  --flush-every 2 \
+  > /tmp/r6_treat_console.log 2>&1 &
+# 说明：
+#  * HITT_DIALOGUE_REPAIR=1 = 处理臂开关（config 保持提交态 enabled=false 不变）
+#  * setsid nohup：避免 A0 那次的"终端超时/进程组被强杀"教训
+#  * --side-root 两臂各自独立，避免侧态串味
+#  * 结束后由 run_batch.sh 自检：wc -l == meta.events、obs llm-cost --require-provider openai_compat 门禁

@@ -1,0 +1,101 @@
+{
+ "schema_version": "f4-interrater/1.0",
+ "positioning": "标注者可靠性注记，非指标；不改变主口径结论，不用于判断机制好坏",
+ "arm": "v0-anchor (run_d2_before_n16_seed42)",
+ "generated_at": "2026-10-20T20:12:33.116221+08:00",
+ "inputs": {
+  "annotator_1": {
+   "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r6_f4_baseline_repro/judgements_v0.json",
+   "sha256": "1c97db49230ab7b42da322ac51af53dcef7860b0b1f6fa1795c939089c383532",
+   "identity": "batch-evidence-runner（第一标注者；第二标注者 repo-state-surveyor 的独立判读与一致性核对见 f4_interrater_v0.*）"
+  },
+  "annotator_2": {
+   "path": "/root/.jiuwenswarm/.agent_teams/jiuwen_team_cron___1a1592ec631_3a96188ecdd0/team-workspace/artifacts/annotation/verdict_P-A1_second.json",
+   "sha256": "dd650c7a30b25accb260fdb94ecd1c226244a7b8cdb378e6e0ee8f174f57b6f1",
+   "identity": "repo-state-surveyor"
+  },
+  "packet": {
+   "path": "/root/.jiuwenswarm/.agent_teams/jiuwen_team_cron___1a1592ec631_3a96188ecdd0/team-workspace/artifacts/annotation/annotation_packet_events.json",
+   "sha256": "9d7ebfd7b7e653e33938d77fb529c0e69cd79a0c8742db6239d99b02f706a814"
+  },
+  "criteria_rules_extract_sha256": "207a6527a1270db8875a7a0992cce5d019f1343f7b075a2044c59968c6891466",
+  "criteria_source_sha256": "1f2c33167c14d869d995de471fc22d99bd9bd737820c2d6b83be2468ec265bf7"
+ },
+ "integrity": {
+  "packet_sha256_actual": "9d7ebfd7b7e653e33938d77fb529c0e69cd79a0c8742db6239d99b02f706a814",
+  "packet_sha256_declared": "9d7ebfd7b7e653e33938d77fb529c0e69cd79a0c8742db6239d99b02f706a814",
+  "packet_match": true,
+  "criteria_sha256_actual": "207a6527a1270db8875a7a0992cce5d019f1343f7b075a2044c59968c6891466",
+  "criteria_sha256_declared": "207a6527a1270db8875a7a0992cce5d019f1343f7b075a2044c59968c6891466",
+  "criteria_match": true
+ },
+ "n_items": 5,
+ "agree": 5,
+ "disagree": 0,
+ "agreement_detail": [
+  {
+   "item_id": "E01",
+   "seq": 189,
+   "annotator_1": "noise",
+   "annotator_1_label": "非真张力",
+   "annotator_2": "noise",
+   "annotator_2_label": "非真张力",
+   "agree": true,
+   "annotator_1_reason": "T1 不满足：正文自带「（独自在灶台前…自言自语）」，无对话对象（to 为空）；T3 亦不满足：「怕什么」是自我宽慰式反诘，非冲突表达。命中负向词「怕」。",
+   "annotator_2_reason": "T1 不满足：`to` 为空，且正文自述「（独自在灶台前，盯着锅里翻滚的汤，自言自语）」，属 §4「自言自语、内心独白、场景旁白」；命中词亦为反诘式否定——「反正上次那锅也有人夸，怕什么。」，属 §4「反诘/自问自答中的负向词（\"怕什么\"）」。",
+   "annotator_2_noise_type": "自言自语/反诘中的负向词"
+  },
+  {
+   "item_id": "E02",
+   "seq": 37604,
+   "annotator_1": "noise",
+   "annotator_1_label": "非真张力",
+   "annotator_2": "noise",
+   "annotator_2_label": "非真张力",
+   "agree": true,
+   "annotator_1_reason": "T2 不满足：不满对象是「我家那口子」（不在场、非本镇 agent），对在场对象 P002 无任何对抗，实为八卦倾诉；「怕我送人送太多」命中负向词「怕」，且「小气不小气」是对配偶的评价。",
+   "annotator_2_reason": "T1 满足（`to`=P002，正文点名「P002」），但 T2 不满足：不满指向不在场的「我家那口子」——「我家那口子昨天又偷偷把腌菜坛子搬后院去了，说是怕我送人送太多，你说这人小气不小气？」，属 §4「对不在场第三方的吐槽/转述，且对在场对象无对抗」；命中词「怕」是转述他人动机，非对在场对象表达负面情绪（T3 亦不满足）。",
+   "annotator_2_noise_type": "对不在场第三方吐槽（转述他人小气），对在场对象无对抗"
+  },
+  {
+   "item_id": "E03",
+   "seq": 59296,
+   "annotator_1": "noise",
+   "annotator_1_label": "非真张力",
+   "annotator_2": "noise",
+   "annotator_2_label": "非真张力",
+   "agree": true,
+   "annotator_1_reason": "T3 不满足：全句是安抚鼓励（「问得特别好」「肯动脑筋的孩子才学得扎实」），「别怕问错」中的「怕」是劝阻用法；极性 1→-1 的异号来自前一句正向与本句负向词命中，属词表计算产物而非情绪反转。",
+   "annotator_2_reason": "T1 满足（`to`=P011，点名「P011」），但 T3 不满足：整句是宽慰鼓励——「你刚才那个问题问得特别好——别怕问错，肯动脑筋的孩子才学得扎实。」，命中词「怕」出现在「别怕问错」这一否定式劝导里，正是 §4 明列的「安抚、鼓励、劝解语（\"别怕问错\"\"别难过\"）」，不构成指责/对抗/关系受损信号。",
+   "annotator_2_noise_type": "安抚/鼓励语中的负向词"
+  },
+  {
+   "item_id": "E04",
+   "seq": 86111,
+   "annotator_1": "real",
+   "annotator_1_label": "真张力",
+   "annotator_2": "real",
+   "annotator_2_label": "真张力",
+   "agree": true,
+   "annotator_1_reason": "T1 满足：直接点名在场对象 P014。T2 满足：不满指向 P014 本人及其旧事。T3 满足：「上回那事我忍了三口气才没跟你吵」「今天你把话说明白，咱俩这关系还处不处？」为明确的积怨+逼问+关系受损信号，非成语、非反诘、非安抚。",
+   "annotator_2_reason": "T1 满足：`to`=P014 且正文点名「P014，…」；T2 满足：指向在场对象本人及两人之间的事——「上回那事我忍了三口气才没跟你吵」；T3 满足：文本直接给出关系受损与逼问信号——「今天你把话说明白，咱俩这关系还处不处？」，与 §3 T3 列举的「忍了很久」「还处不处」「你把话说清楚」同形；T4：仅据本条及上下文判定，未因「后面有没有修复」反向影响（本条前后 2 条为常规同线程对话，未见修复动作）。",
+   "annotator_2_noise_type": ""
+  },
+  {
+   "item_id": "E05",
+   "seq": 116139,
+   "annotator_1": "noise",
+   "annotator_1_label": "非真张力",
+   "annotator_2": "noise",
+   "annotator_2_label": "非真张力",
+   "agree": true,
+   "annotator_1_reason": "T3 不满足：全句是提「固定义诊日」的公共建议，负面词「疼」来自成语「头疼脑热」，无任何不满或对抗；对 public 场景的居民而言属建设性发言。",
+   "annotator_2_reason": "T1 不满足：`to` 为空，正文以泛称「各位」开头，未点名在场的具体角色，不构成「对在场的另一个角色说的」；T3 亦不满足：命中词「疼」出现在成语「谁家有个头疼脑热的也能早点瞧」中，属 §4「成语/固定搭配（\"头疼脑热\"\"哭笑不得\"）」，整句是公开提案与便民善意（「咱们镇上该有个固定的义诊日」），无负面情绪或关系受损信号。",
+   "annotator_2_noise_type": "成语/固定搭配「头疼脑热」+ 公共提案，无对抗对象"
+  }
+ ],
+ "kappa": 1.0,
+ "kappa_note": "n=5 太小，Cohen's κ 不稳定，只能作参考、不得当作可靠性证据；结论以「一致 5 / 不一致 0 + 分歧明细」为准",
+ "partial_priming_disclosure": "判据 §4「常见噪声形态」的示例与本批判定条目中的若干条同形（判据本身由这些个案起草），因此该部分标注存在部分引导；一致率对这几条不构成独立验证。",
+ "layers_not_changed": "本文件不改变词表口径与人工判读口径的报告值，只说明两位标注者是否互相独立地收敛。"
+}

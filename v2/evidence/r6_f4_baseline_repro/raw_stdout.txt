@@ -1,0 +1,14 @@
+=== started_at: 2026-10-20T20:02:55+08:00
+{
+ "messages": 187,
+ "threads": 172,
+ "thread_schema": "legacy",
+ "v0_reply_pointer_rate": 0.0,
+ "v0_single_msg_thread_ratio": 0.912791,
+ "v0_agent_id_leak_rate": 0.299465,
+ "admission": "ADMITTED",
+ "out_json": "v2/evidence/r6_f4_baseline_repro/v0_metrics.json",
+ "out_md": "v2/evidence/r6_f4_baseline_repro/v0_metrics.md"
+}
+=== rc=0
+=== finished_at: 2026-10-20T20:02:58+08:00

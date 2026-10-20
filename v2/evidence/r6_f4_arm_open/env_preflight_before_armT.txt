@@ -1,0 +1,12 @@
+# 开批前环境可用性验真（对象=旧日志 v0-anchor，NOT 本批凭证）
+# 时刻: 2026-10-20T20:23:45+08:00
+# HEAD: e300c1fcc6ba66bbb2b64222e4f05c376aeb2b7e
+
+$ cd code && python3 -m obs llm-cost --log ../v2/evidence/run_d2_before_n16_seed42/run.jsonl --require-provider openai_compat
+{"total": {"cached": 1698, "calls": 2905, "degraded": 0, "thinking": 733, "tokens_in": 166410, "tokens_out": 297145, "tokens_total": 463555}, "by_provider": {"openai_compat": 2905}, "provider_guard": {"by_provider": {"openai_compat": 2905}, "expected": "openai_compat", "ok": true, "policy": "计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。", "problems": []}}
+rc=0
+
+## 端点可达性（不打印密钥）
+endpoint=http://172.16.3.41:31809/v1
+http_code=200
+models: ['DeepSeek-Flash'] count= 1

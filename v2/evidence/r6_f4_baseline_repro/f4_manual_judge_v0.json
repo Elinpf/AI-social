@@ -1,0 +1,140 @@
+{
+ "schema_version": "f4-manual-judge/1.0",
+ "layer": "人工判读（非自动指标；标注者信息见 annotator 字段）",
+ "arm": "v0-anchor (run_d2_before_n16_seed42)",
+ "generated_at": "2026-10-20T20:12:33.081529+08:00",
+ "prereg": {
+  "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r6_f4_baseline_repro/prereg_f4_manual_judgement.md",
+  "sha256": "1f2c33167c14d869d995de471fc22d99bd9bd737820c2d6b83be2468ec265bf7"
+ },
+ "inputs": {
+  "events_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r6_f4_baseline_repro/f4_events_v0.json",
+  "events_json_sha256": "57e4883e5efe36d117068ee5b757d38f07f9843cdd4c22408a73179172ca21cb",
+  "judgements": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r6_f4_baseline_repro/judgements_v0.json",
+  "judgements_sha256": "1c97db49230ab7b42da322ac51af53dcef7860b0b1f6fa1795c939089c383532",
+  "script": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/f4_manual_judge.py",
+  "script_sha256": "be8cd38af36bb9356bc3bb2bd7104d140c8c260aa36445fe4209391c42d3755f"
+ },
+ "two_layers_side_by_side": {
+  "word_lexicon_layer": {
+   "denominator_tension_events": 5,
+   "numerator_repaired": 0,
+   "note": "跨臂同规则可比；不是真实张力计数；分母<30 只报事件数"
+  },
+  "manual_judgement_layer": {
+   "denominator_real_tension_events": 1,
+   "numerator_real_repaired": 0,
+   "undecidable": 0,
+   "note": "单一标注者判读；不作指标、不换算百分比、不与词表口径相加或互证"
+  }
+ },
+ "counts": {
+  "real": 1,
+  "noise": 4,
+  "undecidable": 0,
+  "total_judged": 5
+ },
+ "noise_types": [
+  "反诘+自言自语",
+  "安抚/鼓励语",
+  "对第三方吐槽/转述",
+  "成语/固定搭配"
+ ],
+ "rows": [
+  {
+   "seq": 189,
+   "line": 190,
+   "thread": "m:0|public|-",
+   "channel": "public",
+   "from": "P015",
+   "to": null,
+   "round": 0,
+   "body": "（独自在灶台前，盯着锅里翻滚的汤，自言自语）嗯……这次少放半勺盐，多加一撮糖，说不定能成——反正上次那锅也有人夸，怕什么。",
+   "lexicon_trigger": "当前句为负",
+   "lexicon_closed": false,
+   "lexicon_repair_words": [],
+   "lexicon_lag": null,
+   "verdict": "noise",
+   "verdict_label": "非真张力（词表噪声）",
+   "reason": "T1 不满足：正文自带「（独自在灶台前…自言自语）」，无对话对象（to 为空）；T3 亦不满足：「怕什么」是自我宽慰式反诘，非冲突表达。命中负向词「怕」。",
+   "noise_type": "反诘+自言自语",
+   "closed_if_real": null
+  },
+  {
+   "seq": 37604,
+   "line": 37605,
+   "thread": "m:2|dm|P002-P012",
+   "channel": "dm",
+   "from": "P012",
+   "to": "P002",
+   "round": 30,
+   "body": "（压低声音）哎，我跟你说啊，P002，你可别往外传——我家那口子昨天又偷偷把腌菜坛子搬后院去了，说是怕我送人送太多，你说这人小气不小气？",
+   "lexicon_trigger": "当前句为负",
+   "lexicon_closed": false,
+   "lexicon_repair_words": [],
+   "lexicon_lag": null,
+   "verdict": "noise",
+   "verdict_label": "非真张力（词表噪声）",
+   "reason": "T2 不满足：不满对象是「我家那口子」（不在场、非本镇 agent），对在场对象 P002 无任何对抗，实为八卦倾诉；「怕我送人送太多」命中负向词「怕」，且「小气不小气」是对配偶的评价。",
+   "noise_type": "对第三方吐槽/转述",
+   "closed_if_real": null
+  },
+  {
+   "seq": 59296,
+   "line": 59297,
+   "thread": "m:3|dm|P006-P011",
+   "channel": "dm",
+   "from": "P006",
+   "to": "P011",
+   "round": 42,
+   "body": "（轻声）P011，你刚才那个问题问得特别好——别怕问错，肯动脑筋的孩子才学得扎实。",
+   "lexicon_trigger": "异号",
+   "lexicon_closed": false,
+   "lexicon_repair_words": [],
+   "lexicon_lag": null,
+   "verdict": "noise",
+   "verdict_label": "非真张力（词表噪声）",
+   "reason": "T3 不满足：全句是安抚鼓励（「问得特别好」「肯动脑筋的孩子才学得扎实」），「别怕问错」中的「怕」是劝阻用法；极性 1→-1 的异号来自前一句正向与本句负向词命中，属词表计算产物而非情绪反转。",
+   "noise_type": "安抚/鼓励语",
+   "closed_if_real": null
+  },
+  {
+   "seq": 86111,
+   "line": 86112,
+   "thread": "m:4|dm|P013-P014",
+   "channel": "dm",
+   "from": "P013",
+   "to": "P014",
+   "round": 54,
+   "body": "（把铁锤往砧上一搁）P014，上回那事我忍了三口气才没跟你吵——今天你把话说明白，咱俩这关系还处不处？",
+   "lexicon_trigger": "当前句为负",
+   "lexicon_closed": false,
+   "lexicon_repair_words": [],
+   "lexicon_lag": null,
+   "verdict": "real",
+   "verdict_label": "真张力",
+   "reason": "T1 满足：直接点名在场对象 P014。T2 满足：不满指向 P014 本人及其旧事。T3 满足：「上回那事我忍了三口气才没跟你吵」「今天你把话说明白，咱俩这关系还处不处？」为明确的积怨+逼问+关系受损信号，非成语、非反诘、非安抚。",
+   "noise_type": null,
+   "closed_if_real": false
+  },
+  {
+   "seq": 116139,
+   "line": 116140,
+   "thread": "m:5|public|-",
+   "channel": "public",
+   "from": "P005",
+   "to": null,
+   "round": 63,
+   "body": "各位，我琢磨着咱们镇上该有个固定的义诊日，谁家有个头疼脑热的也能早点瞧，不用都挤到我这小诊所里来。",
+   "lexicon_trigger": "当前句为负",
+   "lexicon_closed": false,
+   "lexicon_repair_words": [],
+   "lexicon_lag": null,
+   "verdict": "noise",
+   "verdict_label": "非真张力（词表噪声）",
+   "reason": "T3 不满足：全句是提「固定义诊日」的公共建议，负面词「疼」来自成语「头疼脑热」，无任何不满或对抗；对 public 场景的居民而言属建设性发言。",
+   "noise_type": "成语/固定搭配",
+   "closed_if_real": null
+  }
+ ]
+}
