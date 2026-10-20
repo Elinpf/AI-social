@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>青溪镇 · 对话观看台（线程化 + 回放）</title>
+<link rel="stylesheet" href="styles/dialogue.css?v=1" />
+</head>
+<body>
+  <header id="topbar">
+    <div class="brand">
+      <span class="logo">💬</span>
+      <div>
+        <div class="title">青溪镇 · 对话观看台</div>
+        <div class="subtitle">线程化聊天视图 · 按模拟时间回放 · 只读真源日志</div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <a class="btn sm" href="index.html" title="返回像素小镇回放">🏘 小镇回放</a>
+    <button id="btn-filters" class="btn sm" title="展开/收起筛选">筛选 ▾</button>
+    <button id="btn-load" class="btn sm" title="载入 threads.json（由 gen_threads.py 生成）">载入数据</button>
+    <input id="file-input" type="file" accept=".json,.jsonl,text/plain" hidden />
+  </header>
+
+  <div id="sourcebar">
+    <span>数据源</span>
+    <code id="src-run">未载入</code>
+    <span class="sep">·</span>
+    <span>sha</span><code id="src-sha">—</code>
+    <span class="sep">·</span>
+    <span>provider</span><code id="src-provider">—</code>
+    <span class="sep">·</span>
+    <span>seed</span><code id="src-seed">—</code>
+    <span class="sep">·</span>
+    <span>事件</span><code id="src-events">—</code>
+    <span class="sep">·</span>
+    <span>消息</span><code id="src-msgs">—</code>
+    <span id="src-note" class="ok"></span>
+  </div>
+
+  <div id="app">
+    <aside id="sidebar">
+      <div class="fgroup">
+        <div class="flabel">视图</div>
+        <div class="chips" id="quick">
+          <span class="chip hot on" data-multi="1" title="只保留 2 轮及以上的线程">🔥 只看多轮</span>
+          <span class="chip" data-multi="0" title="显示全部线程（含单发）">全部</span>
+        </div>
+      </div>
+      <div class="fgroup">
+        <div class="flabel">按人物</div>
+        <select id="f-person"><option value="">全部居民</option></select>
+      </div>
+      <div class="fgroup">
+        <div class="flabel">按地点</div>
+        <select id="f-place"><option value="">全部地点</option></select>
+      </div>
+      <div class="fgroup">
+        <div class="flabel">线程长度</div>
+        <select id="f-turns">
+          <option value="0">不限</option>
+          <option value="2">≥ 2 轮（多轮）</option>
+          <option value="3">≥ 3 轮</option>
+          <option value="5">≥ 5 轮</option>
+        </select>
+      </div>
+      <div class="fgroup">
+        <div class="flabel">搜索正文</div>
+        <input id="f-search" type="search" placeholder="输入关键词…" />
+      </div>
+      <div id="statbox">
+        <div>线程 <b id="st-threads">0</b> · 多轮 <b id="st-multi">0</b></div>
+        <div>消息 <b id="st-msgs">0</b> · 最长 <b id="st-max">0</b> 轮</div>
+        <div>格式 <b id="st-format">—</b></div>
+      </div>
+      <div class="fgroup">
+        <div class="flabel">回放</div>
+        <div class="chips" id="speed">
+          <span class="chip" data-speed="0.5">0.5x</span>
+          <span class="chip on" data-speed="1">1x</span>
+          <span class="chip" data-speed="2">2x</span>
+          <span class="chip" data-speed="4">4x</span>
+        </div>
+      </div>
+    </aside>
+
+    <main id="stream">
+      <div id="stream-notice"></div>
+      <div id="thread-list"></div>
+      <div id="empty-box" class="empty" hidden></div>
+    </main>
+  </div>
+
+  <div id="playbar">
+    <button id="btn-prev" class="btn sm" title="上一条">⏮</button>
+    <button id="btn-play" class="btn sm primary" title="播放 / 暂停（空格）">▶ 播放</button>
+    <button id="btn-next" class="btn sm" title="下一条">⏭</button>
+    <span id="clock" class="clock">—</span>
+    <input id="scrub" type="range" min="0" max="0" value="0" step="1" />
+    <span id="playcount" class="clock" style="min-width:74px;text-align:right">0 / 0</span>
+    <button id="btn-latest" class="btn sm" title="跳到最新">⤓ 最新</button>
+  </div>
+
+  <div id="toast"></div>
+
+  <script src="src/dialogue.js?v=1"></script>
+</body>
+</html>

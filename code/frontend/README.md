@@ -420,3 +420,86 @@ CI 校准日志 = `sample/run_c_n20.play.jsonl`（C@N=20 真 LLM；实测 activi
 **反向验证**：`IMMERSION_LOG=sample/demo_run.jsonl make ci` → `IMMERSION FAIL(3)` → `CI GATE: FAIL`；默认日志 → `PASS`。
 
 > 人工侧（B 部分）：3 分钟盲测量表（5 人、1–5 分、三题、均≥4 且无人≤2）——见 `v2/evidence/T259-render-richness.md` §3。
+
+---
+
+## 17. 对话观看台 · 线程化聊天视图 + 回放（D7）
+
+> 目标：让人**亲眼看到居民说话**——谁跟谁、几轮、什么时候、在哪儿、为什么这么聊。
+> 页面：`dialogue.html`；数据由 `tools/gen_threads.py` 从**真源 run.jsonl** 派生。
+
+### 17.1 启动（两条命令）
+
+```bash
+cd code
+python frontend/tools/serve.py            # 已有静态服务，端口 8848
+# 打开：
+#   http://127.0.0.1:8848/dialogue.html                    ← 默认载入 sample/dialogue_demo/threads.json
+#   http://127.0.0.1:8848/dialogue.html?data=sample/xxx/threads.json
+#   http://127.0.0.1:8848/dialogue.html?still=1            ← 静态帧（供 shot.py 截图，不自动回放）
+```
+
+### 17.2 从一份跑批目录生成页面数据（换批次一条命令）
+
+```bash
+cd code
+python frontend/tools/gen_threads.py \
+    --log  /root/t271/runs/<BATCH>/run.jsonl \
+    --meta /root/t271/runs/<BATCH>/meta.json \
+    --out  frontend/sample/dialogue_<BATCH>/threads.json
+```
+
+- `--meta` 可省；省了页面「provider」列会显示 `日志未记录（无 meta.json）`，**不会**填默认值。
+- `--summary` 只打印统计不落盘，用于先看有没有对话。
+- 输出 schema：`hitt.dialogue.threads/1`（字段含 `source.run_sha256`、`source.events_total_in_log`、
+  `stats`、`threads[].messages[].seq`）。
+
+### 17.3 裁剪规则（体积受控，但因果证据不许裁）
+
+`gen_threads.py` **只保留**：
+
+| 保留 | 理由 |
+|---|---|
+| `MSG_DM` / `MSG_PUBLIC` / `MSG_GROUP` | 对话本体 |
+| `RELATION_CHANGE` / `NEED_UPDATE` / `RELATION_ENCOUNTER` / `GROUP_CREATED` | 页面「为什么这么聊」的**因果证据**（展开面板里的每个数值都带 seq） |
+| 丢弃：`MEMORY_*` / `OBSERVATION` / `LLM_CALL` / `METABOLISM` / `PLACE_*` / `TURN_SEAL` … | 与对话展示无关 |
+
+丢弃的事件**不参与任何展示字段**。`--no-keep-context` 可关掉语境事件，但页面展开面板会变成空态
+（不推荐，等于自己拆掉证据）。
+
+### 17.4 页面能看到什么
+
+| 区块 | 内容 | 数据来源 |
+|---|---|---|
+| 顶栏数据源条 | run.jsonl 路径、`run_sha256`（前 12 位）、provider、seed、事件数、消息数、meta 是否对齐 | `threads.json.source` |
+| 线程头 | 参与者像素头像/姓名（含角色）、渠道（私聊/公开说/群聊）、地点、模拟时间、`thread_id`、轮次数 | `threads[]` |
+| 消息气泡 | 第 n 轮 · 说话人 · 正文 · `#seq`（点击复制事件定位） | `messages[]` |
+| 为什么这么聊（可展开） | 生成时语境快照（`payload.ctx`）、关系证据（before→after + cause + seq）、当时需求、在场/群组证据、本条溯源（seq/msg_id/reply_to/turn_index/refs） | `messages[].context` |
+| 筛选 | 只看多轮（一键热键）、按人物、按地点、线程长度 ≥N、正文搜索 | 全部来自数据文件 |
+| 回放 | 播放/暂停/上下一条/跳最新、滑杆、0.5x–4x；按**模拟时间逐条浮现**（同线程 280 ms、跨线程 900 ms ÷ 速度）；空格=播放暂停，←/→=步进，Home/End=首/尾 | `messages[].seq` / `round` |
+
+### 17.5 空态与「不伪造」纪律
+
+- **旧格式日志**（D2 改造前，`MSG_*` 里没有 `thread_id`）：每条消息各自成一条**单发线程**，标「旧格式·单发」，
+  页顶给出橙色提示并**自动关掉**「只看多轮」（否则页面是空的）。页面**不推断**线程结构。
+- 线程字段缺失：`turn_index` / `reply_to` / `ctx` 显示为「未记录」，不做补值。
+- 正文缺失（长文本走 `body_ref` 侧存储）：显示 `（正文未写入日志：body_ref=...)`。
+- 关系/需求/共处证据缺失：对应卡片显示「日志未记录（本条之前没有 … 事件）」。
+- 没有对话事件的日志（空世界）：显示空态并提示换日志，不白屏、不报错。
+
+### 17.6 600px 判读
+
+```bash
+python frontend/tools/shot.py --url 'http://127.0.0.1:8848/dialogue.html?still=1' \
+    --out /root/dialogue_600.png --width 600 --height 900 --no-blank-check
+```
+
+600px 下：侧栏折叠为顶部「筛选 ▾」抽屉（点击展开）、线程卡占满宽、气泡 `max-width:88%`、
+语境面板单列、播放条时钟压缩到 92px —— 正文不截断、不横向滚动。
+
+### 17.7 已知边界
+
+- 页面只吃 `threads.json`（不直接解析 run.jsonl）：解析与聚合口径只保留在 `gen_threads.py` **一处**，
+  避免前端/脚本两套口径分叉。拖入 `.jsonl` 会提示先生成。
+- 头像像素立绘按 `agent_id` 哈希选取（纯展示，不影响任何语义字段）。
+- `?still=1` 只是"停在最后一条"的静态帧，不改变任何数据。
