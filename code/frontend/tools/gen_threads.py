@@ -135,6 +135,8 @@ def msg_view(rec: dict) -> dict | None:
         "reply_to": pl.get("reply_to"),
         "participants": participants,
         "ctx": pl.get("ctx"),
+        # ---- D8 世界事件上下文（缺键即该批无 D8 字段；只读搬运，不推断） ----
+        "world_ctx": pl.get("world_ctx"),
         # ---- 时间/地点：日志里已有的键 ----
         "day": pl.get("day"),
         "slot": pl.get("slot"),
@@ -476,6 +478,7 @@ def build(log_path: Path, meta_path: Path | None, personas: dict, places: dict,
             "reply_to": "上一条 msg_id",
             "participants": "[agent_id]",
             "ctx": "{relation,mood,need,topic} 生成时快照，缺键即未记录",
+            "world_ctx": "{v,refs,kinds,scarcity,prompted} D8 世界事件上下文，缺键即该条未带世界上下文",
         },
         "agents": personas,
         "places": places,

@@ -63,7 +63,7 @@
     data: null,
     threads: [],        // 原始线程（已按时间排序）
     flat: [],           // 扁平化消息（全序），元素 {t: threadIndex, m: msg}
-    filters: { multiOnly: true, person: "", place: "", minTurns: 0, search: "", sort: "time", leak: false },
+    filters: { multiOnly: true, person: "", place: "", minTurns: 0, search: "", sort: "time", leak: false, worldOnly: false },
     speed: 1,
     playing: false,
     cursor: 0,
@@ -154,6 +154,7 @@
     if (q.get("q")) state.filters.search = q.get("q");
     if (q.get("sort") === "turns" || q.get("sort") === "time") state.filters.sort = q.get("sort");
     if (q.get("leak") === "1") state.filters.leak = true;
+    if (q.get("world") === "1") state.filters.worldOnly = true;
 
     var st = data.stats || {};
     // 多轮线程很少时（<=24），默认「按轮次排序」：让人一眼看到最长的几条，而不是自己筛
@@ -457,6 +458,8 @@
     document.getElementById("f-sort").value = f.sort || "time";
     var cl = document.getElementById("chip-leak");
     if (cl) cl.classList.toggle("on", !!f.leak);
+    var cw = document.getElementById("chip-world");
+    if (cw) cw.classList.toggle("on", !!f.worldOnly);
     document.querySelectorAll("#quick .chip").forEach(function (c) {
       c.classList.toggle("on", (c.getAttribute("data-multi") === "1") === !!f.multiOnly);
     });
@@ -567,7 +570,15 @@
     Object.keys(places).sort().forEach(function (p) {
       pl.appendChild(el("option", { value: p, text: placeName(p) }));
     });
+
+    // D8：只有数据里真的出现 world_ctx 时才显示「只看世界事件」开关（旧数据集不受影响）
+    var cw = document.getElementById("chip-world");
+    if (cw) cw.hidden = !(data.threads || []).some(threadHasWorld);
   }
+
+  // D8：payload.world_ctx（世界事件上下文）是否存在。只读字段，不改既有视图。
+  function msgHasWorld(m) { return !!(m && m.world_ctx); }
+  function threadHasWorld(t) { return (t.messages || []).some(msgHasWorld); }
 
   // 派生口径（不是日志字段）：该条消息 payload.ctx.topic 的原字符串出现在正文里 ⇒ 泄漏。
   function isLeak(m) {
@@ -582,6 +593,7 @@
 
   function threadPasses(t) {
     if (state.filters.leak && threadLeakCount(t) === 0) return false;
+    if (state.filters.worldOnly && !threadHasWorld(t)) return false;
     var f = state.filters;
     if (f.multiOnly && !(t.turns >= 2)) return false;
     if (f.minTurns && t.turns < f.minTurns) return false;
@@ -823,6 +835,14 @@
           toast("已复制事件定位 " + s + "（msg_id=" + (m.msg_id || "未记录") + "）");
         }
       }));
+      if (msgHasWorld(m)) {
+        var wc = m.world_ctx || {};
+        bubbleChildren.push(el("span", {
+          class: "tag", text: "世界事件",
+          title: "world_ctx：v=" + (wc.v || "?") + " · refs=" + JSON.stringify(wc.refs || [])
+               + " · kinds=" + JSON.stringify(wc.kinds || []) + " · prompted=" + (wc.prompted === true)
+        }));
+      }
       var bubble = el("div", {
         class: "bubble",
         title: "seq #" + m.seq + " · msg_id=" + (m.msg_id || "未记录")
@@ -1104,6 +1124,13 @@
     });
     document.getElementById("f-turns").addEventListener("change", function (e) {
       state.filters.minTurns = Number(e.target.value) || 0; render(); renderStats();
+    });
+    var chipWorld = document.getElementById("chip-world");
+    if (chipWorld) chipWorld.addEventListener("click", function () {
+      state.filters.worldOnly = !state.filters.worldOnly;
+      chipWorld.classList.toggle("on", state.filters.worldOnly);
+      if (state.filters.worldOnly) { document.getElementById("empty-box").hidden = true; }
+      render(); renderStats();
     });
     var chipLeak = document.getElementById("chip-leak");
     if (chipLeak) chipLeak.addEventListener("click", function () {
