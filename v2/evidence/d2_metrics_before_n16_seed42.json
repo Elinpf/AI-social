@@ -34,6 +34,8 @@
   },
   "chain_by_alternation": 1,
   "chain_by_pointer": 0,
+  "chain_by_pointer_dm_only": 0,
+  "chain_by_pointer_note": "指针链深度 = 沿 reply_to 回溯的最大层数；群聊里多人常回同一条，故深度天然小于「消息条数（alternation）」。1:1 DM 上二者应相等，见 chain_by_pointer_dm_only。",
   "chain_diff_detail": {},
   "events_total": 186972,
   "has_thread_fields": false,
