@@ -50,12 +50,14 @@ g = d.get("provider_guard", {})
 print("provider_guard.ok =", g.get("ok"), "| by_provider =", g.get("by_provider"))
 PY
 
-echo "== 2) S0a/S0b（代码树干净度 + landing..HEAD 零漂移）"
+echo "== 2) S0a/S0b（代码树干净度 + landing..HEAD 零漂移；不阻断后续读数，结论单列）"
 if [ -n "$LANDING" ]; then
-  python3 tools/d5/check_clean_tree.py --batch-landing-sha "$LANDING" --out "v2/evidence/d5_s0a_$TAG.json" | tail -20
+  python3 tools/d5/check_clean_tree.py --batch-landing-sha "$LANDING" --out "v2/evidence/d5_s0a_$TAG.json" | tail -8 || S0A_RC=$?
 else
-  python3 tools/d5/check_clean_tree.py --out "v2/evidence/d5_s0a_$TAG.json" | tail -20
+  python3 tools/d5/check_clean_tree.py --out "v2/evidence/d5_s0a_$TAG.json" | tail -8 || S0A_RC=$?
 fi
+S0A_RC=${S0A_RC:-0}
+echo "[info] S0a/S0b 判定记录在 v2/evidence/d5_s0a_$TAG.json（rc=$S0A_RC）；本脚本继续出读数，是否采信由人裁定"
 
 echo "== 3) 指标复算 + 准入"
 python3 tools/d5/dialogue_metrics.py --log "$LOG" --meta "$META" \
@@ -77,4 +79,4 @@ if [ -n "$COMPARE_WITH" ]; then
     --out-json "v2/evidence/d6_compare_$TAG.json" --out-md "v2/evidence/d6_compare_$TAG.md" | tail -6
 fi
 
-echo "== 完成。请人工确认：admission.verdict / band_source / 分母 三列齐全后再引用。"
+echo "== 完成。S0a rc=$S0A_RC；请人工确认：admission.verdict / band_source / 分母 三列齐全后再引用。"
