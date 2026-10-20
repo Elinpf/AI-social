@@ -85,12 +85,47 @@ def _group_members(records: list, upto_round: int) -> dict:
     return groups
 
 
+def world_event_in_window(rec: dict, upto_round: int) -> bool:
+    """D8：世界层事件的 `[start, end)` 生效窗裁剪（**纯函数**，与 `engine/world_params.py` 同口径）。
+
+    背景（D8 诊断）：`WORLD_DIRECTIVE` / `WORLD_GROUP_EVENT` 在 `PERCEPTION_SCOPE` 里是
+    `global` ⇒ 一旦被消费（D8 ① 打开），**过期事件仍永久可见**，会变成"过期事件被反复观察"、
+    污染计数。故在此按事件自带的 `start_round`/`end_round`（DIRECTIVE 用
+    `effective_from_round`/`expires_round`）裁剪。
+
+    **基线惰性**：D8 之前没有任何 life/配置消费 WORLD_* 事件（`_SALIENT_EVENTS` 白名单不含它们），
+    因此本裁剪在 `config/world_awareness.json::enabled=false` 时对**所有既有行为逐项等价**：
+    它只可能从 `visible_events` 里去掉本就没人在读的世界事件记录。
+    缺时间字段（旧日志/外部注入）⇒ 视为在窗内（保守，不改变旧日志可读性）。
+    """
+    p = rec.get("payload", {}) or {}
+    try:
+        start = p.get("start_round", p.get("effective_from_round"))
+        end = p.get("end_round", p.get("expires_round"))
+        if start is not None and int(upto_round) < int(start):
+            return False        # 只对未来：尚未生效
+        if end is not None and int(upto_round) >= int(end):
+            return False        # 已过期：不再可见
+    except (TypeError, ValueError):
+        return True
+    return True
+
+
+WORLD_EVENT_TYPES = ("WORLD_DIRECTIVE", "WORLD_GROUP_EVENT")
+_WORLD_EVENT_TYPES = WORLD_EVENT_TYPES
+
+
 def visible_events(records: list, agent_id: str, upto_round: int, *,
                    scope_table: dict, default_cls: str = "place_local",
                    window_rounds: int | None = None,
                    location: str | None = None,
-                   place_local_actor_fallback: bool = False) -> list:
-    """返回 `agent_id` 在 `upto_round` 可**直接感知**的事件（原始 record，保持账本顺序）。"""
+                   place_local_actor_fallback: bool = False,
+                   world_event_window: bool = False) -> list:
+    """返回 `agent_id` 在 `upto_round` 可**直接感知**的事件（原始 record，保持账本顺序）。
+
+    `world_event_window`（D8，**默认 False = 基线 2090287 行为等价**）：为 True 时按
+    `[start,end)` 裁剪 WORLD_* 事件（见 `world_event_in_window`）。A/B 里与 ①② 同开。
+    """
     loc = location if location is not None else location_of(records, agent_id, upto_round)
     gmembers = _group_members(records, upto_round)
     out = []
@@ -98,6 +133,9 @@ def visible_events(records: list, agent_id: str, upto_round: int, *,
         if rec["round"] > upto_round:
             break
         if window_rounds is not None and rec["round"] < upto_round - window_rounds:
+            continue
+        if world_event_window and rec["type"] in _WORLD_EVENT_TYPES \
+                and not world_event_in_window(rec, upto_round):
             continue
         p = rec.get("payload", {})
         cls = scope_table.get(rec["type"], default_cls)

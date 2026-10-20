@@ -1,0 +1,14 @@
+{
+  "_comment": "D8「世界事件→居民可见→对话提及」上下文机制开关（life/world_awareness.py）。默认 enabled=false ⇒ 与基线 2090287 逐项等价（不改提示词、不写记忆、MSG payload 不多键）。① observe_enabled 与 ② dialogue_enabled 各自独立可切（便于把副作用定位到具体层）。④ world_window_enabled 默认 false（世界事件 [start,end) 时间窗裁剪；修 contracts/visibility 无时间维的缺陷，A/B 时与 ① ② 同开）；③ scarcity_in_prompt 本轮默认 false：让 market_scarcity_bp 只生成一句物价情境（只给情境不给结论，不碰定价/_scarcity_index）。本文件**不进** engine/version.py::FINGERPRINT_FILES，打开/关闭都不改变旧日志的 engine_version 指纹。消融逃生口：env HITT_WORLD_AWARENESS=1|0（总开关）、HITT_WORLD_AWARENESS_OBSERVE=1|0、HITT_WORLD_AWARENESS_DIALOGUE=1|0。",
+  "schema_version": "1.0",
+  "enabled": false,
+  "observe_enabled": true,
+  "dialogue_enabled": true,
+  "scarcity_in_prompt": false,
+  "world_window_enabled": false,
+  "window_rounds": 24,
+  "max_lines": 2,
+  "max_kinds": 3,
+  "scarcity_min_bp": 1000,
+  "importance_min": 4
+}

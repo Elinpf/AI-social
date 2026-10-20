@@ -184,6 +184,9 @@ def _thread_fields(p: dict) -> dict:
     # R6-T2：F-4 上下文机制的自报字段（**只追加**；缺省 None ⇒ 不写键 ⇒ v0 日志逐字节不变）
     if p.get("dialogue_rift") is not None:
         out["dialogue_rift"] = p["dialogue_rift"]
+    # D8：世界事件上下文的自报字段（**只追加**；缺省 None ⇒ 不写键 ⇒ 基线日志逐字节不变）
+    if p.get("world_ctx") is not None:
+        out["world_ctx"] = p["world_ctx"]
     return out
 
 
@@ -303,6 +306,13 @@ class KernelAdapter:
                 "enabled", load_time_flags().get("ongoing_enabled", True)))
         except Exception:
             self._ongoing = True
+        try:
+            # D8：世界事件 [start,end) 时间窗裁剪开关（默认 False = 基线 2090287 行为等价）
+            _wa = (self.engine.config.get("world_awareness") or {}) \
+                if isinstance(self.engine.config, dict) else {}
+            self._world_window = bool(_wa.get("world_window_enabled", False))
+        except Exception:
+            self._world_window = False
         self._permit_round = None
         self._permits = None  # None=未启用（全许可）；set=本回合允许调 LLM 的 agent
 
@@ -320,15 +330,19 @@ class KernelAdapter:
         return self._C.PERCEPTION_SCOPE.get(etype, self._C.DEFAULT_VISIBILITY)
 
     def visibility_query(self, agent_id: str, upto_round: int, *,
-                         window_rounds: int | None = None, location: str | None = None) -> list:
+                         window_rounds: int | None = None, location: str | None = None,
+                         world_event_window: bool | None = None) -> list:
         """T264：经增量索引取可见事件（候选超集 + `contracts.visible` 裁决；逐字节不变）。"""
         if self._vindex is None:
             from .visibility_index import VisibilityIndex
             self._vindex = VisibilityIndex(self._scope_table, self._default_cls)
         self._vindex.sync(self.engine.ledger.records)
+        if world_event_window is None:      # D8：缺省用组合根解析的开关
+            world_event_window = bool(getattr(self, "_world_window", False))
         return self._vindex.visible(agent_id, upto_round,
                                     window_rounds=window_rounds, location=location,
-                                    place_local_actor_fallback=self._plaf)
+                                    place_local_actor_fallback=self._plaf,
+                                    world_event_window=world_event_window)
 
     # ---- IF-1 perceive ----
     def perceive(self, agent_id: str):

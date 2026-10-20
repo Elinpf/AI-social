@@ -15,6 +15,8 @@
 from __future__ import annotations
 
 from contracts.visibility import visible as _visible
+from contracts.visibility import world_event_in_window as _wew
+from contracts.visibility import WORLD_EVENT_TYPES as _WORLD_TYPES
 
 
 class VisibilityIndex:
@@ -136,7 +138,8 @@ class VisibilityIndex:
 
     def visible(self, agent_id: str, upto_round: int, *,
                 window_rounds: int | None = None, location: str | None = None,
-                place_local_actor_fallback: bool = False) -> list:
+                place_local_actor_fallback: bool = False,
+                world_event_window: bool = False) -> list:
         loc = location if location is not None else self._loc_at(agent_id, upto_round)
         gmembers = self._gm_upto(upto_round)
         out = []
@@ -144,6 +147,10 @@ class VisibilityIndex:
             if rec["round"] > upto_round:
                 continue
             if window_rounds is not None and rec["round"] < upto_round - window_rounds:
+                continue
+            # D8：世界事件按 [start,end) 裁剪（默认关 = 基线行为等价）
+            if world_event_window and rec["type"] in _WORLD_TYPES \
+                    and not _wew(rec, upto_round):
                 continue
             if _visible(self._class(rec), agent_id, rec.get("actor", "SYSTEM"),
                         rec.get("payload", {}), loc, gmembers, place_local_actor_fallback):

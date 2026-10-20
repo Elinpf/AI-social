@@ -27,6 +27,7 @@ from . import persona_drift as PD
 from . import emotion as E
 from . import dialogue_threads as DT
 from . import dialogue_repair as DR
+from . import world_awareness as WA
 from . import sleep_window as _sleep
 from .policy import (social_enabled, exchange_enabled, m2b_judge_mode, m2b_importance_mode,
                      narrative_persist_enabled)
@@ -143,6 +144,13 @@ class LifeLayerAgent:
         # **只读台账 + 只给处境**：不写正文、不发事件、不进 state_hash。
         self._rifts: dict = {}              # rift_id -> {with, thread_id, msg_uid, seq, round, ...}
         self._rifts_seen: set = set()       # 已吸收的 MSG 事件 seq（增量、幂等）
+        # D8「世界事件 → 居民可见 → 对话提及」上下文机制（默认关；见 config/world_awareness.json）
+        # **纯上下文 + 纯观测**：不进 state_hash、不新增事件类型、不改世界态。
+        self._wa_ctx: dict = {"lines": [], "refs": [], "kinds": [], "scarcity": False, "text": ""}
+        self._wa_seen: int = 0              # ① 本回合可见世界事件条数（诊断用）
+        self._wa_observed: int = 0          # ② 世界事件被写成记忆/OBSERVATION 的次数
+        self._wa_prompted: int = 0           # ③ 世界处境真的进了提示词的次数
+        self._wa_scarcity_prompted: int = 0  # ④ `market_scarcity_bp` 进提示词的次数
 
     # ---- T288 / T276: 从账本单一真源恢复「只前向累积」的内部态 ---------------
     def restore(self, state, records) -> None:
@@ -360,6 +368,7 @@ class LifeLayerAgent:
         self._llm_permit = self._llm_ok(wv)               # T221c: M4 本回合 LLM 许可
         self.memory.sync_from_refs(wv.memory_refs)
         self._read_world_params(wv)     # T364：每回合读一次 WorldParams（消费点被读的计数证据）
+        self._scan_world(wv)            # D8：世界事件 → 处境快照（默认关 = 空快照、零副作用）
         self._update_needs(wv)
         self._observe(wv, rep)
         retrieved_ids, _ = self._retrieve(wv)
@@ -400,13 +409,19 @@ class LifeLayerAgent:
         except Exception:
             observe_msg = True
         for ev in wv.visible_events:
-            if ev.seq in self._observed_seqs or ev.type not in _SALIENT_EVENTS:
+            if ev.seq in self._observed_seqs:
+                continue
+            is_world = ev.type in WA.WORLD_EVENT_TYPES
+            if ev.type not in _SALIENT_EVENTS and not (is_world and self._wa_observe_on()):
                 continue
             if not observe_msg and ev.type in ("MSG_DM", "MSG_PUBLIC", "MSG_GROUP"):
                 continue  # D2 消融开关：对话措辞不进记忆（默认开；关闭=行为回到旧链路）
             self._observed_seqs.add(ev.seq)
             text = self._describe_event(ev)
             imp = self._score_importance(text, wv.round)
+            if is_world and self._wa_observe_on():
+                # D8：世界事件写记忆时给**确定性重要性下限**（不额外调 LLM；有界 1–10）
+                imp = max(int(imp), int(WA.load_params().get("importance_min", 4)))
             payload = self.memory.prepare_write(
                 kind="observation", text=text, importance=imp, day=wv.day, slot=wv.slot,
                 tick=wv.round, subject=ev.actor if ev.actor != self.agent_id else None,
@@ -416,6 +431,8 @@ class LifeLayerAgent:
                 self._submit(Intent(INTENT_OBSERVE, self.agent_id,
                                     {"target_event_seq": ev.seq, "salience": imp}), rep)
                 rep.observed += 1
+                if is_world and self._wa_observe_on():
+                    self._wa_observed += 1
 
     # 2. retrieve ----------------------------------------------------------
     def _retrieve(self, wv, query: str | None = None) -> tuple[list, dict]:
@@ -610,6 +627,62 @@ class LifeLayerAgent:
         if (wp.get("activity_weight") or wp.get("resource_factor_bp")
                 or wp.get("market_scarcity_bp") or wp.get("active")):
             self._wp_nonempty += 1
+
+    # ---- D8：世界事件 → 居民可见 → 对话提及（默认关） ------------------------
+    def _wa_on(self) -> bool:
+        """D8 总开关（读 config/world_awareness.json + env 逃生口；默认关）。"""
+        return WA.enabled()
+
+    def _wa_observe_on(self) -> bool:
+        """D8 ① 记忆/观测层开关（默认关；与 ② 独立可切）。"""
+        return WA.observe_on()
+
+    def _wa_dialogue_on(self) -> bool:
+        """D8 ② 提示词层开关（默认关；与 ① 独立可切）。"""
+        return WA.dialogue_on()
+
+    def _scan_world(self, wv) -> None:
+        """D8：把**可见的**世界事件折成本回合的处境快照（纯函数、有界、确定性）。
+
+        关闭时立即清空快照并返回 ⇒ 提示词/payload 与基线逐字一致。
+        **不发事件、不改世界态**：只把结果留在 agent-local 缓存里。
+        """
+        params = WA.load_params()
+        if not params.get("enabled"):
+            self._wa_ctx = {"lines": [], "refs": [], "kinds": [], "scarcity": False, "text": ""}
+            return
+        evs = list(getattr(wv, "visible_events", ()) or ())
+        self._wa_seen = sum(1 for e in evs
+                            if getattr(e, "type", None) in WA.WORLD_EVENT_TYPES)
+        self._wa_ctx = WA.prompt_context(evs, int(wv.round),
+                                        world_params=getattr(self, "_wp_last", None) or {},
+                                        params=params)
+
+    def _world_prompt_line(self) -> str:
+        """D8：提示词里的「最近的镇上的事」一句（关闭/无候选 ⇒ 空串，逐字不变）。"""
+        if not self._wa_dialogue_on():
+            return ""
+        text = (self._wa_ctx or {}).get("text") or ""
+        if text:
+            self._wa_prompted += 1
+            if (self._wa_ctx or {}).get("scarcity"):
+                self._wa_scarcity_prompted += 1
+        return text
+
+    def _world_ctx_payload(self) -> dict | None:
+        """D8：MSG payload 的**追加键**（追溯用：本条消息生成时带了哪些世界事件）。
+
+        关闭/无候选 ⇒ `None`（payload 不多一个键）。不进 `state_hash`（同 `dialogue_rift`）。
+        """
+        if not (self._wa_dialogue_on() or self._wa_observe_on()):
+            return None
+        ctx = self._wa_ctx or {}
+        if not ctx.get("refs") and not ctx.get("scarcity"):
+            return None
+        return {"v": "d8/1", "refs": list(ctx.get("refs") or []),
+                "kinds": list(ctx.get("kinds") or []),
+                "scarcity": bool(ctx.get("scarcity")),
+                "prompted": bool(ctx.get("text"))}
 
     def _activity_for(self, wv) -> tuple[str, str]:
         slot_id = f"day{wv.time.day_of_week}-{wv.time.slot}"
@@ -938,7 +1011,8 @@ class LifeLayerAgent:
             rift_line = DR.context_line(self._rifts, partner, int(wv.round),
                                         name=self._name(partner) if partner else None,
                                         params=dr_cfg)
-        prompt = self._reply_prompt(partner, topic, history, cfg, rift_line=rift_line)
+        prompt = self._reply_prompt(partner, topic, history, cfg, rift_line=rift_line,
+                                    world_line=self._world_prompt_line())
         res = self.llm.call("dialogue", prompt,
                             meta={"agent_id": self.agent_id, "round": wv.round,
                                   "thread": tid, "turn": turn})
@@ -960,6 +1034,9 @@ class LifeLayerAgent:
             if f is not None:
                 f["prompted"] = bool(rift_line)
                 payload["dialogue_rift"] = f
+        _wc = self._world_ctx_payload()      # D8：本条消息生成时带到的世界事件（追溯；默认 None）
+        if _wc is not None:
+            payload["world_ctx"] = _wc
         if ev.type == "MSG_DM":
             payload["to"] = partner
         else:
@@ -996,7 +1073,8 @@ class LifeLayerAgent:
         if dr_cfg.get("enabled") and to:
             rift_line = DR.context_line(self._rifts, to, int(wv.round),
                                         name=self._name(to), params=dr_cfg)
-        res = self.llm.call("dialogue", self._dialogue_prompt(tid, parts, cfg, rift_line=rift_line),
+        res = self.llm.call("dialogue", self._dialogue_prompt(tid, parts, cfg, rift_line=rift_line,
+                                                             world_line=self._world_prompt_line()),
                             meta={"agent_id": self.agent_id, "round": wv.round, "template": tid})
         body = (res.text or "").strip()
         if not body:
@@ -1011,6 +1089,9 @@ class LifeLayerAgent:
             if f is not None:
                 f["prompted"] = bool(rift_line)
                 payload["dialogue_rift"] = f
+        _wc = self._world_ctx_payload()      # D8：本条消息生成时带到的世界事件（追溯；默认 None）
+        if _wc is not None:
+            payload["world_ctx"] = _wc
         if cfg.get("enabled", True):
             # D2：线程起点（turn_index=0, reply_to=None）；topic 用模板 id（稳定字符串）
             if scope == "private" and to:
@@ -1048,23 +1129,27 @@ class LifeLayerAgent:
         return f"情绪：{mood}"
 
     def _dialogue_prompt(self, tid: str, parts: list, cfg: dict | None = None,
-                         rift_line: str | None = None) -> str:
+                         rift_line: str | None = None,
+                         world_line: str | None = None) -> str:
         cfg = cfg or self._dlg_cfg()
         partners = [p for p in parts if p != self.agent_id]
         others = self._relation_line(partners) or "(独自)"
         return (self.persona.compressed_profile(self._current_goal())
                 + f"\n场景：{tid}；对象：{others}。{self._mood_line()}。"
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
+                + (world_line or "")         # D8：最近的镇上的事；关闭/无候选时为空串
                 + "\n请用一句话自然地说点什么。")  # D2 不改措辞要求（保持基线原句），措辞优化归 D4
 
     def _reply_prompt(self, partner: str | None, topic: str, history: list,
-                      cfg: dict | None = None, rift_line: str | None = None) -> str:
+                      cfg: dict | None = None, rift_line: str | None = None,
+                      world_line: str | None = None) -> str:
         cfg = cfg or self._dlg_cfg()
         lines = "\n".join(line for _, line in history) or "(还没说什么)"
         who = self._name(partner) if partner else "在场的人"
         return (self.persona.compressed_profile(self._current_goal())
                 + f"\n你正在和{who}聊「{topic}」。{self._mood_line()}。"
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
+                + (world_line or "")         # D8：最近的镇上的事；关闭/无候选时为空串
                 + f"\n刚才的对话：\n{lines}"
                 + "\n请接着说一句。")  # D2 只承载「承接上一轮」的结构必要性，不做措辞优化（归 D4）
 
@@ -1258,6 +1343,13 @@ class LifeLayerAgent:
 
     def _describe_event(self, ev) -> str:
         t, p = ev.type, (ev.payload or {})
+        if t in WA.WORLD_EVENT_TYPES:
+            # D8：世界事件写成记忆正文 —— **人话情境**（两种类型各一句不同模板；
+            # 绝不含 WORLD_*/wd.*/directive_id/*_bp 等内部 token，避免记忆里出现机器文本）
+            kind = str(p.get("kind", "")).lower()
+            scope = p.get("scope") or {}
+            place = scope.get("place") or p.get("place")
+            return WA.describe_event(t, kind, place)
         if t == "ACTIVITY_STARTED":
             return f"{ev.actor} 在 {p.get('place')} 开始 {p.get('activity_type')}。"
         if t == "ACTIVITY_COMPLETED":

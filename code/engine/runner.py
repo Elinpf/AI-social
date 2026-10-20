@@ -30,6 +30,10 @@ def load_config(path: str | Path | None = None) -> dict:
     if wd.exists():
         with open(wd, "r", encoding="utf-8") as f:
             cfg["world_director"] = json.load(f)  # 世界导演档（开关/剂量，进指纹）
+    wa = _CONFIG_DIR / "world_awareness.json"
+    if wa.exists():
+        with open(wa, "r", encoding="utf-8") as f:
+            cfg["world_awareness"] = json.load(f)  # D8 上下文机制开关（不进指纹；默认关）
     tp = _CONFIG_DIR / "time.json"
     if tp.exists():
         with open(tp, "r", encoding="utf-8") as f:

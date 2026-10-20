@@ -65,12 +65,25 @@ def visible_events(records: list, agent_id: str, upto_round: int, config: dict |
                scope_table=scope.get("scope", {}),
                default_cls=scope.get("default_visibility_class", "place_local"),
                place_local_actor_fallback=version.load_visibility_flags().get(
-                   "place_local_actor_fallback", False))
+                   "place_local_actor_fallback", False),
+               world_event_window=world_event_window_enabled(config))
     return [{
         "seq": r["seq"], "round": r["round"], "phase": r["phase"],
         "actor": r["actor"], "type": r["type"],
         "payload": r.get("payload", {}), "place": r.get("payload", {}).get("place"),
     } for r in recs]
+
+
+def world_event_window_enabled(config: dict | None) -> bool:
+    """D8：世界事件 `[start,end)` 时间窗裁剪开关（`config["world_awareness"]`；默认 False）。
+
+    缺省/缺失 ⇒ False（= 基线 2090287 行为等价，世界事件对已登记可见类仍永久可见）。
+    """
+    wa = (config or {}).get("world_awareness") or {}
+    try:
+        return bool(wa.get("world_window_enabled", False))
+    except Exception:
+        return False
 
 
 def current_activity(records: list, agent_id: str, upto_round: int) -> dict | None:
