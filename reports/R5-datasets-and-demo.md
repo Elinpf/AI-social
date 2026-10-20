@@ -14,10 +14,11 @@
 | # | 数据集 | 路径 | 生成方式 | 体量 | 状态 |
 |---|---|---|---|---|---|
 | D-1 | **v0-anchor** 语料（旧结构 + 原提示词） | `v2/evidence/run_d2_before_n16_seed42/run.jsonl` (c1f86bf6) | 真 LLM 跑批（`openai_compat`/`DeepSeek-Flash`，16×84，seed=42） | **87.5 MB / 186,972 行** | **已交付**（`max_round=83`；准入 ADMITTED/strict/evidence） |
-| D-2 | **A0** 语料（新结构 + 必要适配提示词） | 待填 | 真 LLM 跑批 | 待填 | 待交付 |
+| D-2 | **A0** 语料（新结构 + 必要适配提示词） | `v2/evidence/run_d2_after_n16_seed42/run.jsonl` (643f13a5) | 真 LLM 跑批（`openai_compat`/`DeepSeek-Flash`，16×84，seed=42） | **194,108 行** | **已交付**（`code_sha` fcf42bf9；消息 686 = DM497/PUB63/GRP126；`thread_schema=explicit`） |
 | D-3 | **A1** 语料（A0 + 措辞层优化） | 待填 | 真 LLM 跑批 | 待填 | 待交付 |
 | D-4 | 评测读数（各臂指标） | `v2/evidence/d5_metrics_*.json` / `.md` | `tools/d5/dialogue_metrics.py` | 每份数 KB–数十 KB | 部分已有（历史批） |
 | D-5 | 线程视图数据 · v0-anchor | `code/frontend/sample/dialogue_v0anchor_n16_seed42/threads.json` (e39168ea) | `code/frontend/tools/gen_threads.py` | 187 条线程（legacy 口径） | **已交付**（自带 `source.run_sha256=c1f86bf6…`、`generator_sha256`） |
+| D-5A | 线程视图数据 · A0 | `code/frontend/sample/dialogue_run_d2_after_n16_seed42/threads.json` (d6d89bda) | `code/frontend/tools/gen_threads.py` | 206 条线程（`explicit`） | **已交付**（自带 `source.run_sha256=643f13a5…`、194,108 事件） |
 | D-5b | 线程视图数据 · 历史样例 | `code/frontend/sample/dialogue_demo/threads.json` (0bfb6288) | 同上 | 543 KB，231 条线程 | 历史（**不作本轮结果**） |
 | D-6 | judge 原始输出（全量） | `judge_raw.jsonl`（不入库，给 sha） | `tools/d5/dialogue_judge.py` | 待填 | 待交付 |
 | D-7 | judge 抽样版（可核验用） | `v2/evidence/judge_raw_sample_n24x2.jsonl` | 同上（前缀子集） | 每臂 24 线程（≤72 条消息） | 待交付 |
@@ -98,7 +99,18 @@ cd code && python3 frontend/tools/serve.py            # 浏览器打开 http://1
 
 **【事实】** 四张图对应的线程视图数据为 `code/frontend/sample/dialogue_v0anchor_n16_seed42/threads.json` (e39168ea)，其 `source.run_sha256 = c1f86bf6…`、`events_total_in_log = 186,972`、`round_range = [0,83]`、`llm_provider_in_log = openai_compat` ⇒ **图与日志的对应关系可核对**（三件套齐）。
 
-**改造后（A0 / A1）截图：待交付**，届时成对引用（同视图、同口径），文件名同样是 `<batch_id>-<视图>-<sha8>.png`。
+**改造后（A0）四张已交付**，与上表**同视图、同口径成对引用**：
+
+| # | 截图文件（`v2/evidence/d7_shots/`） | 视图 | 来源 run | sha256（sha8） |
+|---|---|---|---|---|
+| S-5 | `run_d2_after_n16_seed42-chat-643f13a5.png` | 对话/聊天面板 | `run_d2_after_n16_seed42` (643f13a5) | `44b7fb23…`（`44b7fb23`） |
+| S-6 | `run_d2_after_n16_seed42-rhythm-643f13a5.png` | 一天的时间轴 | 同上 | `d553eaba…`（`d553eaba`） |
+| S-7 | `run_d2_after_n16_seed42-spread-643f13a5.png` | 话语/话题扩散 | 同上 | `aab855e4…`（`aab855e4`） |
+| S-8 | `run_d2_after_n16_seed42-600-643f13a5.png` | 600px 窄屏 | 同上 | `fad59476…`（`fad59476`） |
+
+**【事实】** 对应的线程视图数据 `code/frontend/sample/dialogue_run_d2_after_n16_seed42/threads.json` (d6d89bda)，其 `source.run_sha256 = 643f13a5…`、`events_total_in_log = 194,108` ⇒ 图 ↔ 日志对应可核对。
+
+**A1 截图：待交付**（A1 尚未解锁）。
 
 ---
 
