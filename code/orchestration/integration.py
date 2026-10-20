@@ -173,7 +173,7 @@ def _thread_fields(p: dict) -> dict:
     字段契约见 `life/dialogue_threads.py` 顶部注释与 `life/ports.py`。
     **不进 state_hash**（`WorldState.to_dict()` 投影不含 event payload），只进事件哈希链。
     """
-    return {
+    out = {
         "thread_id": p.get("thread_id"),
         "turn_index": p.get("turn_index"),
         "reply_to": p.get("reply_to"),
@@ -181,6 +181,10 @@ def _thread_fields(p: dict) -> dict:
         "topic": p.get("topic"),
         "ctx": p.get("ctx"),
     }
+    # R6-T2：F-4 上下文机制的自报字段（**只追加**；缺省 None ⇒ 不写键 ⇒ v0 日志逐字节不变）
+    if p.get("dialogue_rift") is not None:
+        out["dialogue_rift"] = p["dialogue_rift"]
+    return out
 
 
 def _load_social_cfg() -> dict:

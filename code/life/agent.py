@@ -26,6 +26,7 @@ from .persona import Persona
 from . import persona_drift as PD
 from . import emotion as E
 from . import dialogue_threads as DT
+from . import dialogue_repair as DR
 from . import sleep_window as _sleep
 from .policy import (social_enabled, exchange_enabled, m2b_judge_mode, m2b_importance_mode,
                      narrative_persist_enabled)
@@ -138,6 +139,10 @@ class LifeLayerAgent:
         self._wp_nonempty: int = 0       # ② 参数非空次数（关 ⇒ 必须=0）
         self._wp_changed_choice: int = 0  # ③ 实际改变活动选择次数（"真影响行为"的直接证据）
         self._wp_last: dict | None = None
+        # R6-T2 / F-4「误会与和解」上下文机制（默认关；见 config/dialogue_repair.json）
+        # **只读台账 + 只给处境**：不写正文、不发事件、不进 state_hash。
+        self._rifts: dict = {}              # rift_id -> {with, thread_id, msg_uid, seq, round, ...}
+        self._rifts_seen: set = set()       # 已吸收的 MSG 事件 seq（增量、幂等）
 
     # ---- T288 / T276: 从账本单一真源恢复「只前向累积」的内部态 ---------------
     def restore(self, state, records) -> None:
@@ -336,6 +341,17 @@ class LifeLayerAgent:
         self._replied_msg_ids = set(replied_uids)
         self._replied_msg_ids = set(replied_uids)
         self._rel_cache = rel
+        # R6-T2：F-4 上下文机制的 rift 台账**前向重建**（同一条规则 `DR.ingest_one`；
+        # 否则续跑会"忘记旧账"，与一次性跑不等价）。开关关闭时 `ingest_one` 立即返回。
+        self._rifts = {}
+        self._rifts_seen = set()
+        _dr = DR.load_params()
+        if _dr.get("enabled"):
+            for rec in records:
+                DR.ingest_one(self._rifts, self._rifts_seen, int(rec.get("seq", -1)),
+                              rec.get("type"), rec.get("payload") or {},
+                              int(rec.get("round", 0) or 0), self.agent_id, _dr)
+            DR.prune(self._rifts, _dr, int(state.round))
 
     # ---- public entry ------------------------------------------------------
     def step(self) -> StepReport:
@@ -798,11 +814,18 @@ class LifeLayerAgent:
             return
         self._comm_limits(wv)
         cfg = self._dlg_cfg()
+        dr = DR.load_params()
+        if dr.get("enabled"):                 # R6-T2：先吸收可见消息 → 更新 rift 台账（只读）
+            DR.ingest(self._rifts, self._rifts_seen, wv.visible_events,
+                      self.agent_id, dr, wv.round)
         slot_id = f"day{wv.time.day_of_week}-{wv.time.slot}"
         if int(self._slot_msgs.get(slot_id, 0)) >= int(cfg.get("max_messages_per_slot", 2)):
             return
         if cfg.get("enabled", True):
-            target = self._pick_reply_target(wv, cfg)
+            prefer = set()
+            if dr.get("enabled") and dr.get("reply_priority"):
+                prefer = DR.threads_with_open_rift(self._rifts)   # 有旧账的线程优先接话
+            target = self._pick_reply_target(wv, cfg, prefer_threads=prefer)
             if target is not None and self._send_reply(wv, target, cfg, slot_id):
                 return
         self._initiate(wv, cfg, slot_id)
@@ -822,13 +845,17 @@ class LifeLayerAgent:
         return mx
 
     # ---- 入站 → 回复 -------------------------------------------------------
-    def _pick_reply_target(self, wv, cfg):
+    def _pick_reply_target(self, wv, cfg, prefer_threads=frozenset()):
         """从可见事件里挑一条「对我说、尚未回、未超时、未到轮数顶」的消息。
 
         确定性：按 seq 倒序遍历（最近优先），取第一条满足全部条件的；无则 None。
+        `prefer_threads`（R6-T2）：这些线程里有「未了结的不愉快」⇒ **优先**接话；
+        仍是同一套硬条件（可见/未超时/未到轮数顶/未重复回），只改**挑选顺序**，
+        目的是提高「误会→和解」在自然语言里真正发生的机会，不造事件。
         """
         window = int(cfg.get("reply_window_rounds", 2))
         max_turns = int(cfg.get("max_turns", 6))
+        fallback = None
         for ev in reversed(list(wv.visible_events)):
             if ev.type not in ("MSG_DM", "MSG_GROUP"):
                 continue
@@ -850,8 +877,11 @@ class LifeLayerAgent:
                 continue
             if self._round_replies >= int(cfg.get("max_turns_per_round", 2)):
                 continue                      # K 上限（单回合最多推进 K 轮）
-            return ev
-        return None
+            if prefer_threads and tid in prefer_threads:
+                return ev                     # 有旧账的线程：立刻接
+            if fallback is None:
+                fallback = ev
+        return fallback
 
     def _thread_history(self, wv, tid: str, cfg) -> list:
         """同线程最近 `history_turns` 条（(说话人名字, body)），文本总长受 `max_thread_chars` 限。"""
@@ -902,7 +932,13 @@ class LifeLayerAgent:
         ctx_in = p.get("ctx") or {}
         topic = ctx_in.get("topic") or (p.get("tag_hints") or [None])[0] or "闲聊"
         history = self._thread_history(wv, tid, cfg)
-        prompt = self._reply_prompt(partner, topic, history, cfg)
+        dr_cfg = DR.load_params()
+        rift_line = None
+        if dr_cfg.get("enabled"):
+            rift_line = DR.context_line(self._rifts, partner, int(wv.round),
+                                        name=self._name(partner) if partner else None,
+                                        params=dr_cfg)
+        prompt = self._reply_prompt(partner, topic, history, cfg, rift_line=rift_line)
         res = self.llm.call("dialogue", prompt,
                             meta={"agent_id": self.agent_id, "round": wv.round,
                                   "thread": tid, "turn": turn})
@@ -918,6 +954,12 @@ class LifeLayerAgent:
             "ctx": self._ctx_snapshot(partner, topic, trigger="reply",
                                       initiator=DT.thread_initiator(tid)),
         }
+        if dr_cfg.get("enabled"):
+            # R6-T2：**只做追溯**（本条生成时我有哪些未了结旧账）；无旧账 ⇒ 不产生该键
+            f = DR.audit_fields(self._rifts, int(wv.round), "reply", peers=[partner])
+            if f is not None:
+                f["prompted"] = bool(rift_line)
+                payload["dialogue_rift"] = f
         if ev.type == "MSG_DM":
             payload["to"] = partner
         else:
@@ -949,7 +991,12 @@ class LifeLayerAgent:
             scope = "global"
         elif partners:
             scope, to = "private", partners[0]
-        res = self.llm.call("dialogue", self._dialogue_prompt(tid, parts, cfg),
+        dr_cfg = DR.load_params()
+        rift_line = None
+        if dr_cfg.get("enabled") and to:
+            rift_line = DR.context_line(self._rifts, to, int(wv.round),
+                                        name=self._name(to), params=dr_cfg)
+        res = self.llm.call("dialogue", self._dialogue_prompt(tid, parts, cfg, rift_line=rift_line),
                             meta={"agent_id": self.agent_id, "round": wv.round, "template": tid})
         body = (res.text or "").strip()
         if not body:
@@ -959,6 +1006,11 @@ class LifeLayerAgent:
             payload["to"] = to
         if gid:
             payload["group_id"] = gid
+        if dr_cfg.get("enabled") and to:
+            f = DR.audit_fields(self._rifts, int(wv.round), "initiate", peers=[to])
+            if f is not None:
+                f["prompted"] = bool(rift_line)
+                payload["dialogue_rift"] = f
         if cfg.get("enabled", True):
             # D2：线程起点（turn_index=0, reply_to=None）；topic 用模板 id（稳定字符串）
             if scope == "private" and to:
@@ -995,21 +1047,24 @@ class LifeLayerAgent:
             return f"情绪：{mood}；最紧的需求：{dim}={val}"
         return f"情绪：{mood}"
 
-    def _dialogue_prompt(self, tid: str, parts: list, cfg: dict | None = None) -> str:
+    def _dialogue_prompt(self, tid: str, parts: list, cfg: dict | None = None,
+                         rift_line: str | None = None) -> str:
         cfg = cfg or self._dlg_cfg()
         partners = [p for p in parts if p != self.agent_id]
         others = self._relation_line(partners) or "(独自)"
         return (self.persona.compressed_profile(self._current_goal())
                 + f"\n场景：{tid}；对象：{others}。{self._mood_line()}。"
+                + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + "\n请用一句话自然地说点什么。")  # D2 不改措辞要求（保持基线原句），措辞优化归 D4
 
     def _reply_prompt(self, partner: str | None, topic: str, history: list,
-                      cfg: dict | None = None) -> str:
+                      cfg: dict | None = None, rift_line: str | None = None) -> str:
         cfg = cfg or self._dlg_cfg()
         lines = "\n".join(line for _, line in history) or "(还没说什么)"
         who = self._name(partner) if partner else "在场的人"
         return (self.persona.compressed_profile(self._current_goal())
                 + f"\n你正在和{who}聊「{topic}」。{self._mood_line()}。"
+                + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + f"\n刚才的对话：\n{lines}"
                 + "\n请接着说一句。")  # D2 只承载「承接上一轮」的结构必要性，不做措辞优化（归 D4）
 
