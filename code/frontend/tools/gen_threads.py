@@ -412,7 +412,7 @@ def build(log_path: Path, meta_path: Path | None, personas: dict, places: dict,
         "generator_sha256": sha256_file(Path(__file__)),
         "source": {
             # 默认标签 = 「文件名-sha8」：仓库里存在读数接近的不同日志，只写批次名会混淆
-            "run_label": run_label or f"{Path(log_path).name}-{sha256_file(log_path)[:8]}",
+            "run_label": run_label or f"{Path(log_path).stem}-{sha256_file(log_path)[:8]}",
             "run_sha256": sha256_file(log_path),
             "run_bytes": Path(log_path).stat().st_size,
             "events_total_in_log": events,
