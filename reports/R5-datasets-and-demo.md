@@ -103,12 +103,21 @@ cd code && python3 frontend/tools/serve.py            # 浏览器打开 http://1
 
 | # | 截图文件（`v2/evidence/d7_shots/`） | 视图 | 来源 run | sha256（sha8） |
 |---|---|---|---|---|
-| S-5 | `run_d2_after_n16_seed42-chat-643f13a5.png` | 对话/聊天面板 | `run_d2_after_n16_seed42` (643f13a5) | `44b7fb23…`（`44b7fb23`） |
-| S-6 | `run_d2_after_n16_seed42-rhythm-643f13a5.png` | 一天的时间轴 | 同上 | `d553eaba…`（`d553eaba`） |
-| S-7 | `run_d2_after_n16_seed42-spread-643f13a5.png` | 话语/话题扩散 | 同上 | `aab855e4…`（`aab855e4`） |
-| S-8 | `run_d2_after_n16_seed42-600-643f13a5.png` | 600px 窄屏 | 同上 | `fad59476…`（`fad59476`） |
+| S-5 | `run_d2_after_n16_seed42-chat-643f13a5.png` | 对话/聊天面板 | `run_d2_after_n16_seed42` (643f13a5) | `15d02ab2…`（`15d02ab2`） |
+| S-6 | `run_d2_after_n16_seed42-rhythm-643f13a5.png` | 一天的时间轴 | 同上 | `baf2d9fc…`（`baf2d9fc`） |
+| S-7 | `run_d2_after_n16_seed42-spread-643f13a5.png` | 话语/话题扩散 | 同上 | `eae35979…`（`eae35979`） |
+| S-8 | `run_d2_after_n16_seed42-600-643f13a5.png` | 600px 窄屏 | 同上 | `45bf561c…`（`45bf561c`） |
 
-> ⚠️ **上表 A0 四张截图为 `20:24` 生成的旧版**（早于前端标签修正 `6ce44f9`：新标签显示「18 条 / 6 轮」+ 重复标记）。**按新标签重出后需替换**；在替换前，本报告引用这四张图时只用于"改造后有线程化对话"这一存在性说明，**不得据此图判读轮数**——轮数口径见 R2 §「轮数 = `turn_index` 去重」，A0 实测 **max 6 轮**（最长那条 18 条消息 / 6 轮）。
+> ✅ **重出记录（2026-10-21 00:05，按新标签重出并替换旧版）**
+> - 旧版生成时间 `2026-10-20 20:24`，早于前端标签修正 `6ce44f9`（2026-10-20 20:56）；旧图 sha8：chat `44b7fb23` / rhythm `d553eaba` / spread `aab855e4` / 600 `fad59476`。
+> - 新版生成时间 `2026-10-21 00:05`；新图 sha8：chat `15d02ab2` / rhythm `baf2d9fc` / spread `eae35979` / 600 `45bf561c`（全 sha256 见上表）。
+> - 重出命令（在 `code/` 下执行；服务 `http://127.0.0.1:8848` 已在跑，未重启）：
+>   ```bash
+>   cd code && bash frontend/tools/dialogue_shots.sh http://127.0.0.1:8848 \
+>        sample/dialogue_run_d2_after_n16_seed42/threads.json
+>   ```
+> - 数据源未变：`code/frontend/sample/dialogue_run_d2_after_n16_seed42/threads.json`，`source.run_sha256 = 643f13a5…`；**仅前端渲染标签变化，不是数据变化**。
+> - 标签已核验（Playwright 等 `window.__RENDER_READY__===true` 后读页面文本）：最长线程头显示 **「18 条 / 6 轮」**，并有「turn_index 重复」标记；页面排序提示写「当前最长 18 条 / 6 轮」。⇒ 现图可据以判读轮数（`turn_index` 去重，A0 实测 **max 6 轮**；`stats.max_turns=18` 是**消息条数**口径，不是轮数）。
 
 **【事实】** 对应的线程视图数据 `code/frontend/sample/dialogue_run_d2_after_n16_seed42/threads.json` (d6d89bda)，其 `source.run_sha256 = 643f13a5…`、`events_total_in_log = 194,108` ⇒ 图 ↔ 日志对应可核对。
 

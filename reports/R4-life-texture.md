@@ -59,11 +59,13 @@
 | F-4 | 修复闭环 | **5 次张力中 0 次（事件数）** | 5 | **probe**（分母 <30，无可用带） |
 | F-5 | 习惯强度 | **87.5%** | 16 agents | evidence |
 | F-6 | 跨天记忆引用率 | **6.4%** | 187 条消息 | evidence |
-| F-7a | 越界提及率 | **口径待澄清（见下）** | — | 暂不采用 |
+| F-7(P1) | 越界提及（提及层，统一口径） | **2 / 2**（P1 可判定消息；**分母 2 < 30 ⇒ 按全族纪律不写百分比**，仅事件数） | 2 | evidence（口径已统一，见 §4） |
 
 （同上来源：`v2/evidence/d5_metrics_v0anchor.md` (36ad719a)，日志 `run.jsonl` (c1f86bf6)，186,972 行，`max_round=83`）
 
-> ⚠️ **F-7a 待澄清**：机器读数中出现 `F-7a = 1.07%`（分母 187），而同批交付说明称 v0 阶段"越界提及不可判（无名字可检）"。两者矛盾，本报告**暂不采用该数值**，列入待澄清项；澄清前摘要与结论不引用 F-7。
+> ✅ **F-7 口径已统一（t3，metrics-dev；判据已定死，版本 `20cb6aed…`）**：判据卡 `v2/refs/F7-offscreen-criteria.md`（`20cb6aed668e172745005a8e505f1a6b2c374ae65c045b7822203ebc9c996b8d`），脚本 `tools/f7/f7_offscreen_mention.py`（`35349954…`），两臂同口径读数 `v2/evidence/f7_compare.md`（`655d89db1707060e57f21ccbd59db7b2e2f77af1fbaec29ab51fe9dd2e058292`）。
+>
+> **旧口径作废**：`F-7a = 1.07%`（v0）与 `15.60%`（A0）是**两个单位混用**的产物（分子只在极小可判子集上取值、分母却是全部消息），**不可解释、不可引用**；仅可在「旧口径解剖」中引用（`v2/evidence/f7_compare.md §4`）。
 
 **【判断】** 这组数放在一起才看得出问题所在：**闲聊量并不低（F-1 77%）、作息也算稳定（F-5 87.5%），但"人与人之间"的两个机制是零**——不接情绪（F-3）、不修复张力（F-4）。也就是说，居民各自过日子过得还行，**彼此之间没有过日子的往来**。这与 R1 §2.3 的结构事实（消息层没有会话对象、生成时看不见对方上一句）是同一件事的两个侧面。
 
@@ -103,7 +105,7 @@
 | F-4 修复闭环 | 5 次中 0 次（事件数） | **39 次中 3 次**（7.7%） | 待填 | 5 / 39 | **不可比（分母差>30%）** |
 | F-5 习惯强度 | 87.5% | **100.0%** | 待填 | 16 / 206 | 仅描述（无可用带） |
 | F-6 跨天记忆引用率 | 6.4% | **6.4%** | 待填 | 187 / 686 | **不可比（分母差>30%）** |
-| F-7a 越界提及率 | 1.07%（**口径曾存疑**） | **15.6%** | 待填 | 187 / 686 | **不可比（分母差>30%）** |
+| F-7(P1) 越界提及（提及层） | **2 / 2**（**分母 2 < 30 ⇒ 不写百分比**，仅事件数） | **81 / 108**（81 条含越界提及；raw hits 含 seq 与位置见 `f7_a0.json::raw_hits`，文件 sha `27f2d95a…`） | 待填 | **2 / 108**（P1 可判定消息） | **不可比（分母差 98.1%），不可引用** |
 
 **【判据同 R3】** **「有没有」可跨分母说，「多了多少」不行。** 故本节的 F-4 单列为**阈值型事实**，其余为**方向性**。
 
@@ -113,7 +115,13 @@
 1. **F-4**：已在上方按阈值型事实陈述（0/5 → 3/39，机制出现但远未成常态）；
 2. **F-3 从 1/6 到 26/107（24.3%）**：情绪呼应仍是四分之三机会没被接住；
 3. **F-2b 多话题线程占比 8.1% → 0.0%**：线程内话题更"专一"了——这既可能是承接变好，也可能是**线程把闲聊压成了单一话头**，两种解释本报告都不采纳（无证据支持任一方向）。
-4. **F-7a 15.6% 值得警惕**：越界/编造类提及在 A0 上升。但 v0 侧口径本身存疑（1.07% vs "不可判"），**两臂都不具备可比基础**，本报告只登记、不引用为结论；建议下一轮先修口径再谈变化。
+4. **F-7 统一口径后仍不可比，结论落在「不可引用」**：
+   - 跨臂唯一允许表述：「**统一口径后两臂仍不可比，P1 可判定消息分母 2 vs 108，差 98.1%；原因是 v0 第三方提及面只有 2 条、且两臂 `MSG_PUBLIC` 里他人指称均为 0 条**」。**不得写改善/恶化。**
+   - 臂内事件级事实（可写，须带分子/分母）：**A0 可判定 108 条消息中 81 条含越界提及**（`f7_a0.json::raw_hits` 含 seq 与位置，文件 sha `27f2d95a…`）；v0 为 **2/2**（**分母 2 < 30 ⇒ 不写百分比**，仅事件数，无频率意义）。
+   - **P1（提及层）与 P2（称呼层，「正则启发式代理」见判据卡 §6.4，卡版本 `20cb6aed…`）不相加、不互相代入。**
+   - 不可比的三个结构原因：① 两臂 `MSG_PUBLIC` 里他人指称都是 **0 条**（v0 48 条 vs A0 63 条全是自言自语/旁白）⇒ 最贴近编造场景的「当众对不在场者说话」两臂都无样本；② v0 的 58 条指称全在 DM，其中 56 条只点名收件人，剔除后只剩 **2 条**第三方提及；③ DM 量 132 vs 497、GROUP 7 vs 126（thread schema 自变量）⇒ 把全量消息当分母等于把发表机制改动记到 F-7 账上。
+   - **输入侧 sha（判据可追溯的根）**：名字表 `code/config/personas.json` = `08d11eb3…7f7f970f7d`（全值见证据索引第 7 行）；两臂日志 v0 `c1f86bf6…`、A0 `643f13a5…`（全 64 位在 `v2/evidence/f7_*.json::inputs.log_sha256`）。取数时基线 `dff515d`；t2 收口后 HEAD=`2fc8831`，两臂 `run.jsonl` 未变 ⇒ 读数不受基线推进影响（判据卡 §1，版本 `20cb6aed…`）。
+   - 复算命令：`python3 tools/f7/f7_offscreen_mention.py --log <run>/run.jsonl --out-json <arm>.json`（两臂各一次）→ `python3 tools/f7/f7_offscreen_mention.py --compare v2/evidence/f7_v0anchor.json v2/evidence/f7_a0.json --out-md v2/evidence/f7_compare.md`（脚本 sha `35349954…`；以 `--help` 为准；本节引用取 `v2/evidence/f7_compare.md`，sha `655d89db…`）。
 
 > **`v0-anchor` 列已用锁定批填入**（`v2/evidence/d5_metrics_v0anchor.md` (36ad719a)，日志 `run.jsonl` (c1f86bf6)，186,972 行，`max_round=83`）。F-3 / F-4 按全族纪律只写**事件数**（6 次中 1 次 / 5 次中 0 次），**不写百分比**，且不进摘要与结论要点。
 
@@ -139,7 +147,8 @@
 | 2 | 同批机器读数（含全部分母：MSG 187 / 线程 172 / 相邻对 51 / dm+group 139） | 读数 | `v2/evidence/d5_metrics_v0anchor.json` (e8c8409e) | `e8c8409e6a1205ce906aea1d1081925066f02fd496da78707ced65bb40a88101` | `e8c8409e` | 同上 |
 | 3 | v0-anchor 锁定凭证（四件套 + 准入 ADMITTED/strict/evidence） | 事实 | `v2/evidence/d5_v0anchor_lock.md` (2940fb8f) | `2940fb8fe110019f259945fa936bfaf099f6044942dbdc8675b06c9b4f4bdaeb` | `2940fb8f` | 见该文 |
 | 4 | 源日志本身（`wc -l`=186,972，`max_round=83`） | 事实 | `v2/evidence/run_d2_before_n16_seed42/run.jsonl` (c1f86bf6) | `c1f86bf61f62b3a0ce8e17e0c2312791cf0262381cd2120c2a63c9b6258963cf` | `c1f86bf6` | `wc -l`；`sha256sum` |
-| 6 | A0 的 F 系列读数（F-1 76.1%、F-3 26/107、F-4 3/39、F-5 100%、F-6 6.4%、F-7a 15.6%） | 读数（evidence） | `v2/evidence/d5_metrics_a0.md` (e20d74c7) | `e20d74c722e9fa604e95ec1eef55ee191cecbaefc1cf784375b303f660451eef` | `e20d74c7` | `python3 tools/d5/dialogue_metrics.py --log v2/evidence/run_d2_after_n16_seed42/run.jsonl --meta .../meta.json` |
+| 6 | A0 的 F 系列读数（F-1 76.1%、F-3 26/107、F-4 3/39、F-5 100%、F-6 6.4%；F-7 见第 7 行） | 读数（evidence） | `v2/evidence/d5_metrics_a0.md` (e20d74c7) | `e20d74c722e9fa604e95ec1eef55ee191cecbaefc1cf784375b303f660451eef` | `e20d74c7` | `python3 tools/d5/dialogue_metrics.py --log v2/evidence/run_d2_after_n16_seed42/run.jsonl --meta .../meta.json` |
+| 7 | F-7 统一口径读数（P1 v0 2/2、A0 81/108；两臂不可比） | 读数（evidence） | `f7_compare.md`=`655d89db1707060e57f21ccbd59db7b2e2f77af1fbaec29ab51fe9dd2e058292`；`f7_v0anchor.json`=`f11894a88da634adfe2d40fb90e38bee95bf425de9a4b65b71cdbad97a076260`；`f7_a0.json`=`27f2d95a4418a4c2e9104631c8f88638a5aa4a9ffbd3f0cf22149759d18ef033`；`v2/refs/F7-offscreen-criteria.md`=`20cb6aed668e172745005a8e505f1a6b2c374ae65c045b7822203ebc9c996b8d`；`tools/f7/f7_offscreen_mention.py`=`35349954464130fe065d1e16eedf48bd0a9b67c218c1370a56247e8c1e8912b1`；名字表 `code/config/personas.json`=`08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d` | `655d89db`（对照 md） | `python3 tools/f7/f7_offscreen_mention.py --log <run>/run.jsonl --out-json <arm>.json`（两臂各一次）→ `python3 tools/f7/f7_offscreen_mention.py --compare v2/evidence/f7_v0anchor.json v2/evidence/f7_a0.json --out-md v2/evidence/f7_compare.md` |
 | 7 | 官方双臂对比判定（F 系列全部「不可比（分母差>30%）」或无可用带） | 读数（口径判定） | `v2/evidence/d6_compare_a0.md` (544a4523) | `544a452362eeafd2ee37cb2fe3667e96e5318611d9806f8dfcd9356679a17450` | `544a4523` | 见该文首部源信息 |
 | 5 | F-1…F-7 定义式、统计单位、三个"不算改善"陷阱 | 事实（口径） | 口径定稿文件（对外以编号引用） | 见 R1 证据索引 | TODO | — |
 |---|---|---|---|---|---|---|
