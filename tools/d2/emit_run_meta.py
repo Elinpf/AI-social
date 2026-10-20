@@ -52,6 +52,63 @@ def _git(*args: str) -> str:
         return ""
 
 
+def _assertions(recs) -> dict:
+    """从日志复算 D2 结构断言（与 tools/d2/thread_metrics.py 同口径，纯只读）。"""
+    msgs = []
+    for r in recs:
+        if r["type"] not in ("MSG_DM", "MSG_PUBLIC", "MSG_GROUP"):
+            continue
+        p = r.get("payload") or {}
+        msgs.append({"seq": int(r["seq"]), "type": r["type"], "msg_id": p.get("msg_id"),
+                     "msg_uid": p.get("msg_uid"), "thread_id": p.get("thread_id"),
+                     "turn_index": p.get("turn_index"), "reply_to": p.get("reply_to"),
+                     "participants": tuple(sorted(p.get("participants") or []))})
+    uids = [m["msg_uid"] for m in msgs if m["msg_uid"]]
+    owner = {m["msg_uid"]: m for m in msgs if m["msg_uid"]}
+    cross = dangling = 0
+    for m in msgs:
+        rt = m["reply_to"]
+        if not rt:
+            continue
+        if rt not in owner:
+            dangling += 1
+        elif owner[rt]["thread_id"] != m["thread_id"] or owner[rt]["seq"] >= m["seq"]:
+            cross += 1
+    groups = {}
+    for m in msgs:
+        if m["thread_id"]:
+            groups.setdefault(m["thread_id"], []).append(m)
+    dense_bad = 0
+    for g in groups.values():
+        idx = sorted({m["turn_index"] for m in g if m["turn_index"] is not None})
+        if idx and (idx[0] != 0 or idx != list(range(0, idx[-1] + 1))):
+            dense_bad += 1
+    parts_bad = 0
+    for g in groups.values():
+        if len({m["participants"] for m in g}) > 1:
+            parts_bad += 1
+    return {
+        "msg_uid_unique": (len(set(uids)) == len(uids)) if uids else None,
+        "reply_to_same_thread": (cross == 0 and dangling == 0),
+        "ptr_cross_thread": cross,
+        "ptr_dangling": dangling,
+        "turn_index_dense": dense_bad == 0,
+        "turn_index_gap_threads": dense_bad,
+        "participants_consistent": parts_bad == 0,
+        "participants_violations": parts_bad,
+    }
+
+
+def _read_lines(path: str | None) -> list | None:
+    if not path:
+        return None
+    try:
+        with open(path, encoding="utf-8") as fh:
+            return [ln.rstrip("\n") for ln in fh if ln.strip()]
+    except Exception:
+        return None
+
+
 def _rounds_per_slot() -> int | None:
     try:
         src = (CODE / "life" / "constants.py").read_text(encoding="utf-8")
@@ -70,6 +127,10 @@ def main(argv=None) -> int:
     ap.add_argument("--mock-precalib-msg", type=int, default=0)
     ap.add_argument("--mock", action="store_true", help="本臂即 mock（跳过真跑判定）")
     ap.add_argument("--side-root", default=None)
+    ap.add_argument("--git-status-start", default=None,
+                    help="起跑时 git status --porcelain 快照文件（可选）")
+    ap.add_argument("--git-status-start-source", default=None,
+                    help="该快照的来源说明（实拍 / 事后重建及其证据）")
     ap.add_argument("--started-at", default=None)
     ap.add_argument("--finished-at", default=None)
     ap.add_argument("--duration-sec", type=int, default=None)
@@ -132,7 +193,10 @@ def main(argv=None) -> int:
         "provider": "openai_compat" if not (bad_provider or bad_model) else "NON-REAL",
         "llm_provider_in_events": {str(k): v for k, v in providers.items()},
         "llm_model_in_events": {str(k): v for k, v in models.items()},
+        "model": (sorted([str(k) for k in models if k]) or [None])[0],
         "model_requested": cfg.get("model"),
+        "model_reported": sorted([str(k) for k in models if k]) or None,
+        "assertions": _assertions(recs),
         "endpoint_host": (cfg.get("endpoint") or "").split("//")[-1].split("/")[0],
         "seed": seed_authoritative,
         "seed_declared": a.seed,
@@ -154,6 +218,10 @@ def main(argv=None) -> int:
         #   git diff <code_sha> -- code/life code/orchestration code/config 应为空。
         "git_dirty_code_files": [ln for ln in _git("status", "--porcelain").splitlines()
                                  if ln and (" code/" in ln or ln.endswith("code/"))],
+        "git_status_end": [ln for ln in _git("status", "--porcelain").splitlines() if ln],
+        "git_status_start": _read_lines(a.git_status_start),
+        "git_status_start_source": a.git_status_start_source,
+        "code_sha_end": _git("rev-parse", "HEAD"),
         "code_identity_note": ("代码身份硬证据 = code_sha + WORLD_INIT.config_components；"
                                "git_dirty_code_files 为空表示 code/ 无未提交改动"),
         "events": len(recs),
@@ -179,6 +247,11 @@ def main(argv=None) -> int:
     }
     drops = Counter((r["payload"].get("reason"), r["payload"].get("type"))
                     for r in recs if r["type"] == "DROPPED")
+    # 跑批窗口内 code/ 是否被改动（起跑快照 vs 结束快照，只比 code 路径）
+    end_code = sorted(x for x in meta["git_status_end"] if " code/" in x)
+    start_code = sorted(x for x in (meta["git_status_start"] or []) if " code/" in x)
+    meta["assertions"]["code_unchanged_during_run"] = (
+        None if meta["git_status_start"] is None else (start_code == end_code))
     meta["dropped_counts"] = {f"{k[0]}|{k[1]}": v for k, v in sorted(drops.items(), key=lambda kv: str(kv[0]))}
     meta["msg_dropped_unknown_intent_field"] = sum(
         v for k, v in drops.items() if k[0] == "unknown_intent_field" and str(k[1]).startswith("MSG"))

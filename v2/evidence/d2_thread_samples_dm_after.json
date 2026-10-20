@@ -1,0 +1,610 @@
+{
+  "schema": "hitt.d2.thread_samples/1",
+  "source": "v2/evidence/run_d2_after_n16_seed42/run.jsonl",
+  "run_sha256": "643f13a528c288d3e9677cb8ac100139224afbd0b46c0f7da0c3a5ed85b13141",
+  "n_threads_total": 130,
+  "n_threads_ge_min": 74,
+  "min_turns": 4,
+  "samples": [
+    {
+      "thread_id": "TH-P001-P005-39",
+      "participants": [
+        "P001",
+        "P005"
+      ],
+      "turns": 6,
+      "seq_range": [
+        59202,
+        79556
+      ],
+      "round_range": [
+        39,
+        46
+      ],
+      "messages": [
+        {
+          "seq": 59202,
+          "round": 39,
+          "type": "MSG_DM",
+          "from": "P001",
+          "to": "P005",
+          "group_id": null,
+          "turn_index": 0,
+          "reply_to": null,
+          "msg_uid": "42:59202",
+          "body": "（蹲在田埂上，捏着烟没点）今年这水，怕是抢不赢上游了。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 3,
+            "topic": "scarce_buy",
+            "trigger": "scarce_buy"
+          }
+        },
+        {
+          "seq": 60054,
+          "round": 40,
+          "type": "MSG_DM",
+          "from": "P005",
+          "to": "P001",
+          "group_id": null,
+          "turn_index": 1,
+          "reply_to": "42:59202",
+          "msg_uid": "42:60054",
+          "body": "（把药箱往田埂上一放，慢慢蹲下来）抢不赢也得抢，地里的苗等不起。我这儿还有两瓶葡萄糖，你要是撑不住就喝一口。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 3,
+            "topic": "scarce_buy",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 61206,
+          "round": 42,
+          "type": "MSG_DM",
+          "from": "P001",
+          "to": "P005",
+          "group_id": null,
+          "turn_index": 2,
+          "reply_to": "42:60054",
+          "msg_uid": "42:61206",
+          "body": "（抹了把汗，没接那瓶葡萄糖）先紧着苗。人扛得住。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 3,
+            "topic": "scarce_buy",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 62214,
+          "round": 43,
+          "type": "MSG_DM",
+          "from": "P005",
+          "to": "P001",
+          "group_id": null,
+          "turn_index": 3,
+          "reply_to": "42:61206",
+          "msg_uid": "42:62214",
+          "body": "（把葡萄糖放回柜子里，顺手把柜门关严）行，苗先留着。你坐下，我给你量个血压——别推，量完你再走。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 3,
+            "topic": "scarce_buy",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 64017,
+          "round": 45,
+          "type": "MSG_DM",
+          "from": "P001",
+          "to": "P005",
+          "group_id": null,
+          "turn_index": 4,
+          "reply_to": "42:62214",
+          "msg_uid": "42:64017",
+          "body": "（坐下，把袖子撸上去）量就量。陈医，我听说镇上化肥要断货了，真的假的？",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 3,
+            "topic": "scarce_buy",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 79556,
+          "round": 46,
+          "type": "MSG_DM",
+          "from": "P005",
+          "to": "P001",
+          "group_id": null,
+          "turn_index": 5,
+          "reply_to": "42:64017",
+          "msg_uid": "42:79556",
+          "body": "（把血压计袖带缠上，动作不紧不慢）先别动，深呼吸。化肥的事我听说了，供销社那边确实紧张，但还没到断的地步。你这血压……最近是不是又没睡好？",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 3,
+            "topic": "scarce_buy",
+            "trigger": "reply"
+          }
+        }
+      ]
+    },
+    {
+      "thread_id": "TH-P001-P007-28",
+      "participants": [
+        "P001",
+        "P007"
+      ],
+      "turns": 6,
+      "seq_range": [
+        37616,
+        52654
+      ],
+      "round_range": [
+        28,
+        34
+      ],
+      "messages": [
+        {
+          "seq": 37616,
+          "round": 28,
+          "type": "MSG_DM",
+          "from": "P001",
+          "to": "P007",
+          "group_id": null,
+          "turn_index": 0,
+          "reply_to": null,
+          "msg_uid": "42:37616",
+          "body": "（蹲在田埂上，头也不抬）阿林，你那套新法子我不试，地还是按老规矩种。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 3,
+            "topic": "counter_propose",
+            "trigger": "counter_propose"
+          }
+        },
+        {
+          "seq": 38565,
+          "round": 29,
+          "type": "MSG_DM",
+          "from": "P007",
+          "to": "P001",
+          "group_id": null,
+          "turn_index": 1,
+          "reply_to": "42:37616",
+          "msg_uid": "42:38565",
+          "body": "（搓了搓手，蹲到老周旁边）哎哟老周，你先别急着撂话嘛。我也不是非要你全改，就是有一小块地试试，亏了算我的，成了你明年再跟。你听我讲讲，这法子我在南边亲眼见过，人家一亩多打两成呢。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 3,
+            "topic": "counter_propose",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 38720,
+          "round": 30,
+          "type": "MSG_DM",
+          "from": "P001",
+          "to": "P007",
+          "group_id": null,
+          "turn_index": 2,
+          "reply_to": "42:38565",
+          "msg_uid": "42:38720",
+          "body": "（用锄头把敲了敲土）两成？我种了三十年，没见过天上掉粮。你要试，去村东那块荒地试，别动我的田。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 3,
+            "topic": "counter_propose",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 40251,
+          "round": 31,
+          "type": "MSG_DM",
+          "from": "P007",
+          "to": "P001",
+          "group_id": null,
+          "turn_index": 3,
+          "reply_to": "42:38720",
+          "msg_uid": "42:40251",
+          "body": "（笑了一声，往老周那边挪了挪）村东那块荒地？老周你这是打发我呢——那地石头比土多，试成了也说明不了啥。我要的就是你田角那两垄，土是一样的土，水是一样的水，比出来才服人。你就当借我两垄地，一季，收成我按你往年的数赔你，白纸黑字都行。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 3,
+            "topic": "counter_propose",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 42461,
+          "round": 33,
+          "type": "MSG_DM",
+          "from": "P001",
+          "to": "P007",
+          "group_id": null,
+          "turn_index": 4,
+          "reply_to": "42:40251",
+          "msg_uid": "42:42461",
+          "body": "（闷头抽了口烟）地不借。你要试，去村东。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 3,
+            "topic": "counter_propose",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 52654,
+          "round": 34,
+          "type": "MSG_DM",
+          "from": "P007",
+          "to": "P001",
+          "group_id": null,
+          "turn_index": 5,
+          "reply_to": "42:42461",
+          "msg_uid": "42:52654",
+          "body": "（搓了搓手，笑着凑近半步）哎，老周，别急着撂话嘛。村东那块地我知道，石头多，种啥啥不成。我不是来白占你便宜的——你开个价，或者我拿别的东西跟你换，成不成？",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 3,
+            "topic": "counter_propose",
+            "trigger": "reply"
+          }
+        }
+      ]
+    },
+    {
+      "thread_id": "TH-P001-P009-12",
+      "participants": [
+        "P001",
+        "P009"
+      ],
+      "turns": 6,
+      "seq_range": [
+        18794,
+        25300
+      ],
+      "round_range": [
+        12,
+        19
+      ],
+      "messages": [
+        {
+          "seq": 18794,
+          "round": 12,
+          "type": "MSG_DM",
+          "from": "P001",
+          "to": "P009",
+          "group_id": null,
+          "turn_index": 0,
+          "reply_to": null,
+          "msg_uid": "42:18794",
+          "body": "（擦汗）金先生，这练法太花哨，我庄稼把式，只求护住自家院子。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 16
+            },
+            "relation": 3,
+            "topic": "combat_training",
+            "trigger": "combat_training"
+          }
+        },
+        {
+          "seq": 20819,
+          "round": 13,
+          "type": "MSG_DM",
+          "from": "P009",
+          "to": "P001",
+          "group_id": null,
+          "turn_index": 1,
+          "reply_to": "42:18794",
+          "msg_uid": "42:20819",
+          "body": "（拨算盘）护院也得算成本。你这一身力气，练三天顶我请镖师一月。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "饥饿",
+            "need": {
+              "satiety": 25
+            },
+            "relation": 3,
+            "topic": "combat_training",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 21817,
+          "round": 15,
+          "type": "MSG_DM",
+          "from": "P001",
+          "to": "P009",
+          "group_id": null,
+          "turn_index": 2,
+          "reply_to": "42:20819",
+          "msg_uid": "42:21817",
+          "body": "（搓手）金先生，我练武不为别的，就图个夜里睡得踏实。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 10
+            },
+            "relation": 3,
+            "topic": "combat_training",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 22958,
+          "round": 16,
+          "type": "MSG_DM",
+          "from": "P009",
+          "to": "P001",
+          "group_id": null,
+          "turn_index": 3,
+          "reply_to": "42:21817",
+          "msg_uid": "42:22958",
+          "body": "（拨算盘）练武强身，账上少一笔药钱，划算。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "饥饿",
+            "need": {
+              "satiety": 17
+            },
+            "relation": 3,
+            "topic": "combat_training",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 23807,
+          "round": 18,
+          "type": "MSG_DM",
+          "from": "P001",
+          "to": "P009",
+          "group_id": null,
+          "turn_index": 4,
+          "reply_to": "42:22958",
+          "msg_uid": "42:23807",
+          "body": "（搓手）药钱是省了，可误了农时，地里少收的粮，谁补？",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 9
+            },
+            "relation": 3,
+            "topic": "combat_training",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 25300,
+          "round": 19,
+          "type": "MSG_DM",
+          "from": "P009",
+          "to": "P001",
+          "group_id": null,
+          "turn_index": 5,
+          "reply_to": "42:23807",
+          "msg_uid": "42:25300",
+          "body": "（拨算盘）账要平。药钱省下的，抵不上少收的粮。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "饥饿",
+            "need": {
+              "satiety": 7
+            },
+            "relation": 3,
+            "topic": "combat_training",
+            "trigger": "reply"
+          }
+        }
+      ]
+    },
+    {
+      "thread_id": "TH-P001-P013-48",
+      "participants": [
+        "P001",
+        "P013"
+      ],
+      "turns": 6,
+      "seq_range": [
+        83532,
+        90562
+      ],
+      "round_range": [
+        48,
+        55
+      ],
+      "messages": [
+        {
+          "seq": 83532,
+          "round": 48,
+          "type": "MSG_DM",
+          "from": "P001",
+          "to": "P013",
+          "group_id": null,
+          "turn_index": 0,
+          "reply_to": null,
+          "msg_uid": "42:83532",
+          "body": "（攥紧锄头把）这练法……跟伺候庄稼一个理，急不得。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 3,
+            "topic": "combat_training",
+            "trigger": "combat_training"
+          }
+        },
+        {
+          "seq": 85984,
+          "round": 49,
+          "type": "MSG_DM",
+          "from": "P013",
+          "to": "P001",
+          "group_id": null,
+          "turn_index": 1,
+          "reply_to": "42:83532",
+          "msg_uid": "42:85984",
+          "body": "（把铁锤往砧上一搁）伺候庄稼？我打铁三十年，火候差一息，整块料就废了。练拳也一样，急不来。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 3,
+            "topic": "combat_training",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 86583,
+          "round": 51,
+          "type": "MSG_DM",
+          "from": "P001",
+          "to": "P013",
+          "group_id": null,
+          "turn_index": 2,
+          "reply_to": "42:85984",
+          "msg_uid": "42:86583",
+          "body": "（搓了搓手上的泥）嗯，是这个理。地里的活也急不得，节气不到，种下去也白搭。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 3,
+            "topic": "combat_training",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 88035,
+          "round": 52,
+          "type": "MSG_DM",
+          "from": "P013",
+          "to": "P001",
+          "group_id": null,
+          "turn_index": 3,
+          "reply_to": "42:86583",
+          "msg_uid": "42:88035",
+          "body": "（把铁锤往砧上一搁）练拳跟打铁一个理，火候不到就急着下锤，铁准裂。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 3,
+            "topic": "combat_training",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 88797,
+          "round": 54,
+          "type": "MSG_DM",
+          "from": "P001",
+          "to": "P013",
+          "group_id": null,
+          "turn_index": 4,
+          "reply_to": "42:88035",
+          "msg_uid": "42:88797",
+          "body": "（搓了搓手上的泥）嗯，是这个理。我这把年纪，学拳不为打架，就图个身子骨硬朗。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 3,
+            "topic": "combat_training",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 90562,
+          "round": 55,
+          "type": "MSG_DM",
+          "from": "P013",
+          "to": "P001",
+          "group_id": null,
+          "turn_index": 5,
+          "reply_to": "42:88797",
+          "msg_uid": "42:90562",
+          "body": "（把铁锤往砧上一搁）老周，我懂。打铁三十年，腰早就不行了。学两招，防身是次要，主要是别让这身子先垮了。",
+          "ctx": {
+            "initiator": "P001",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 3,
+            "topic": "combat_training",
+            "trigger": "reply"
+          }
+        }
+      ]
+    }
+  ]
+}

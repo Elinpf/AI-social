@@ -39,6 +39,31 @@
 结果：**`RESULT: PASS`**。受害者心跳末行冻结在 `2026-10-12 16:46:45`（=重启时刻）——**恰好复现 T236「死在哪一刻」**。
 > 语义等价说明：只重启 decoy，**绝不真重启平台**（会打断全员会话）；decoy 与平台服务**同一 `KillMode`**，唯一杀组手段相同 → 结论对平台成立。
 
+## 3.9 【硬规则】跑批窗口内禁止改代码（2026-10-20 事故后新增）
+
+**规则**：批从起跑那一刻到最后一条 `TURN_SEAL` 落盘为止，**任何人不得修改**
+`code/life/`、`code/orchestration/`、`code/config/`、`code/engine/`。
+新功能一律开分支（`git switch -c feat/<topic>`），**跑完再合并**；紧急修复也必须等批结束。
+
+**为什么**：2026-10-20 的 A0 臂（19:19–20:09）期间，另一执行上下文在 20:05–20:06 把
+F4「误会与和解」的 4 个文件改进主树 ⇒ `meta.git_dirty_files` 记成"脏"，核验方按 S0a/S0e
+判 **FAIL**、整条证据链降级。事后证明无害（无 reload、`dialogue_rift` 零命中）——**那是运气，不是机制**。
+
+**配套机制（已落地）**：
+- `tools/d2/emit_run_meta.py` 现记录 `git_status_start` / `git_status_end` / `code_sha_end`，
+  并给出断言 `assertions.code_unchanged_during_run`（只比 `code/` 路径）；
+- **起跑时必须留快照**：`git status --porcelain > <out_dir>/git_status_start.txt`，
+  生成 meta 时用 `--git-status-start <该文件>`；缺快照则该断言为 `null`（不可判，需人工说明）。
+
+**起跑后 1 分钟内的三条自证（固定动作，缺一不可）**：
+```bash
+pgrep -fa "orchestration run"                    # ① 有进程
+ls -la <out_dir>/                                # ② 目录/文件在长
+wc -l <out_dir>/run.jsonl; sleep 30; wc -l <out_dir>/run.jsonl   # ③ 两次差值 >0
+```
+另：**跑批必须 `setsid` 脱离调用方进程组**；**禁止用超长 `sleep` 监控**（2026-10-20 实
+测：作者侧 `sleep 600` 被工具强杀，连带杀掉了同进程组的跑批进程）。进度检查用 30 秒级短轮询。
+
 ## 4. 启动清单（复制粘贴；一批一跑）
 > 约定：`REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`；批次名 `<B>`（如 `A`）；跑批产物落 `RUN=/root/t271/runs/<B>`。
 

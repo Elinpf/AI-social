@@ -101,12 +101,17 @@ def _metrics(groups, msgs) -> dict:
 
 
 def _turn_violations(groups) -> int:
+    """turn_index 稠密性：必须从 0 起、且**去重后无跳号**。
+
+    允许「同一 turn 多条」——群聊里多人可能在同一轮各自发言（并发），这是真实语义，
+    不是缺陷；因此判据是 `sorted(set(turns)) == range(0, max+1)`，而不是严格 +1。
+    """
     bad = 0
     for g in groups:
-        idx = [m["turn_index"] for m in g if m.get("turn_index") is not None]
+        idx = sorted({m["turn_index"] for m in g if m.get("turn_index") is not None})
         if not idx:
             continue
-        if idx[0] != 0 or any(b != a + 1 for a, b in zip(idx, idx[1:])):
+        if idx[0] != 0 or idx != list(range(0, idx[-1] + 1)):
             bad += 1
     return bad
 
@@ -250,6 +255,9 @@ def compute(path: str) -> dict:
     groups_tmp = group_temporal(msgs)
     ptr_chain = _chain_by_pointer(msgs)
     ptr_max = max(ptr_chain.values()) if ptr_chain else 0
+    dm_msgs = [m for m in msgs if m["type"] == "MSG_DM"]
+    ptr_chain_dm = _chain_by_pointer(dm_msgs) if dm_msgs else {}
+    ptr_max_dm = max(ptr_chain_dm.values()) if ptr_chain_dm else 0
     tid_metrics = _metrics(groups_tid, msgs)
     return {
         "source": path,
@@ -261,6 +269,10 @@ def compute(path: str) -> dict:
         "temporal_mode": _metrics(groups_tmp, msgs),
         "chain_by_alternation": tid_metrics["max_turns"],
         "chain_by_pointer": ptr_max,
+        "chain_by_pointer_dm_only": ptr_max_dm,
+        "chain_by_pointer_note": (
+            "指针链深度 = 沿 reply_to 回溯的最大层数；群聊里多人常回同一条，故深度天然小于"
+            "「消息条数（alternation）」。1:1 DM 上二者应相等，见 chain_by_pointer_dm_only。"),
         "chain_diff_detail": _chain_diff(msgs, groups_tid, ptr_chain),
         "assertions": assertions(msgs),
     }

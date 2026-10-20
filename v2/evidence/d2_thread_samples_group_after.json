@@ -1,0 +1,1136 @@
+{
+  "schema": "hitt.d2.thread_samples/1",
+  "source": "v2/evidence/run_d2_after_n16_seed42/run.jsonl",
+  "run_sha256": "643f13a528c288d3e9677cb8ac100139224afbd0b46c0f7da0c3a5ed85b13141",
+  "n_threads_total": 13,
+  "n_threads_ge_min": 9,
+  "min_turns": 5,
+  "samples": [
+    {
+      "thread_id": "TH-P009-Gplace-hall-67",
+      "participants": [
+        "P002",
+        "P005",
+        "P007",
+        "P009",
+        "P010",
+        "P012",
+        "P014",
+        "P016"
+      ],
+      "turns": 18,
+      "seq_range": [
+        123670,
+        154921
+      ],
+      "round_range": [
+        67,
+        72
+      ],
+      "messages": [
+        {
+          "seq": 123670,
+          "round": 67,
+          "type": "MSG_GROUP",
+          "from": "P009",
+          "to": null,
+          "group_id": "place:hall",
+          "turn_index": 0,
+          "reply_to": null,
+          "msg_uid": "42:123670",
+          "body": "（低头拨着算盘）账要平……可这局面，怎么算都不平。",
+          "ctx": {
+            "initiator": "P009",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 0,
+            "topic": "contest",
+            "trigger": "contest"
+          }
+        },
+        {
+          "seq": 125169,
+          "round": 68,
+          "type": "MSG_GROUP",
+          "from": "P016",
+          "to": null,
+          "group_id": "place:hall",
+          "turn_index": 1,
+          "reply_to": "42:123670",
+          "msg_uid": "42:125169",
+          "body": "（把秤砣往台面上一搁）金先生，账不平，多半是秤没调好。您这contest，比的到底是货，还是人心？我兰姐摆摊二十年，最怕的不是输，是有人把规矩给改了。",
+          "ctx": {
+            "initiator": "P009",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 26,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 126774,
+          "round": 69,
+          "type": "MSG_GROUP",
+          "from": "P002",
+          "to": null,
+          "group_id": "place:hall",
+          "turn_index": 2,
+          "reply_to": "42:125169",
+          "msg_uid": "42:126774",
+          "body": "（用刨子轻轻推过木料）规矩改不得。我这双手，只认尺寸。",
+          "ctx": {
+            "initiator": "P009",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 33,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 131202,
+          "round": 69,
+          "type": "MSG_GROUP",
+          "from": "P005",
+          "to": null,
+          "group_id": "place:hall",
+          "turn_index": 2,
+          "reply_to": "42:125169",
+          "msg_uid": "42:131202",
+          "body": "（把脉枕往桌角推了推）兰姐这话在理。我行医三十年，最怕的也是规矩被改——药方子一改，轻则无效，重则伤人。contest若比的是真本事，我陈医没话说；可要是比谁嗓门大、谁关系硬，那这镇上的人心，可就真散了。",
+          "ctx": {
+            "initiator": "P009",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 18,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 134011,
+          "round": 69,
+          "type": "MSG_GROUP",
+          "from": "P007",
+          "to": null,
+          "group_id": "place:hall",
+          "turn_index": 2,
+          "reply_to": "42:125169",
+          "msg_uid": "42:134011",
+          "body": "（搓着手凑近半步）兰姐这话在理……我走南闯北这些年，见过太多contest，明面上比货，暗地里比谁门路硬。哎，金先生，您这局，规矩是您定的，还是上头有人递了话？",
+          "ctx": {
+            "initiator": "P009",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 8,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 136875,
+          "round": 69,
+          "type": "MSG_GROUP",
+          "from": "P009",
+          "to": null,
+          "group_id": "place:hall",
+          "turn_index": 2,
+          "reply_to": "42:125169",
+          "msg_uid": "42:136875",
+          "body": "（手指停在算盘上）兰姐，规矩一改，账就永远平不了。我这contest，比的是谁先撑不住。",
+          "ctx": {
+            "initiator": "P009",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 18,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 138438,
+          "round": 69,
+          "type": "MSG_GROUP",
+          "from": "P010",
+          "to": null,
+          "group_id": "place:hall",
+          "turn_index": 2,
+          "reply_to": "42:125169",
+          "msg_uid": "42:138438",
+          "body": "（手指无意识地绞着围巾的流苏）兰姐，您这话扎我心上了。我上台前从来不想输赢，可这次……他们让我唱那首《月牙弯》，说评委爱听。我练了三十遍，越练越像别人的歌。",
+          "ctx": {
+            "initiator": "P009",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 1,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 141349,
+          "round": 69,
+          "type": "MSG_GROUP",
+          "from": "P012",
+          "to": null,
+          "group_id": "place:hall",
+          "turn_index": 2,
+          "reply_to": "42:125169",
+          "msg_uid": "42:141349",
+          "body": "桂婶：（把手里的菜篮往旁边一放，凑近了些）哎哟，兰姐这话说到我心坎上了。contest嘛，我是不懂那些弯弯绕绕，可我就认一个理——大家伙儿站一条线上，谁也别偷着往前挪半步。金先生，您说是不是这个理儿？",
+          "ctx": {
+            "initiator": "P009",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 1,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 144153,
+          "round": 69,
+          "type": "MSG_GROUP",
+          "from": "P014",
+          "to": null,
+          "group_id": "place:hall",
+          "turn_index": 2,
+          "reply_to": "42:125169",
+          "msg_uid": "42:144153",
+          "body": "（手指绕着围裙带子）兰姐这话扎心……我师父说，contest像打铁，火候差一点，整块料就废了。可要是有人往炉子里掺水呢？",
+          "ctx": {
+            "initiator": "P009",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 11,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 151651,
+          "round": 70,
+          "type": "MSG_GROUP",
+          "from": "P016",
+          "to": null,
+          "group_id": "place:hall",
+          "turn_index": 3,
+          "reply_to": "42:144153",
+          "msg_uid": "42:151651",
+          "body": "（兰姐把手里的账本往摊子上一合，抬眼看了看月牙，又扫了桂婶一眼，语气不急不缓）桂婶这话在理。contest嘛，就跟赶集卖货一个样——你货真价实，我秤平斗满，谁也别在秤砣底下粘泥。月牙，你唱那《月牙弯》练了三十遍，练成别人的了，那还叫你的歌吗？（顿了顿，肚子咕噜响了一声，她低头拍了拍肚子，自嘲地笑）哎，光顾着说，我这肚子先不乐意了。",
+          "ctx": {
+            "initiator": "P009",
+            "mood": "饥饿",
+            "need": {
+              "satiety": 0
+            },
+            "relation": 18,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 152107,
+          "round": 71,
+          "type": "MSG_GROUP",
+          "from": "P002",
+          "to": null,
+          "group_id": "place:hall",
+          "turn_index": 4,
+          "reply_to": "42:151651",
+          "msg_uid": "42:152107",
+          "body": "（拿刨子蹭了蹭木料边）掺水的铁，打不出好刃。contest也一样。",
+          "ctx": {
+            "initiator": "P009",
+            "mood": "饥饿",
+            "need": {
+              "satiety": 0
+            },
+            "relation": 33,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 152326,
+          "round": 71,
+          "type": "MSG_GROUP",
+          "from": "P005",
+          "to": null,
+          "group_id": "place:hall",
+          "turn_index": 4,
+          "reply_to": "42:151651",
+          "msg_uid": "42:152326",
+          "body": "陈医：（把听诊器往桌上一搁，慢慢坐下）掺水的事，我见过。早年间镇上比谁家药铺方子灵，有人往秤砣底下粘铜钱——后来呢？病人还是往我那破诊所跑。contest这东西，赢的是秤，输的是人。",
+          "ctx": {
+            "initiator": "P009",
+            "mood": "饥饿",
+            "need": {
+              "satiety": 0
+            },
+            "relation": 18,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 152460,
+          "round": 71,
+          "type": "MSG_GROUP",
+          "from": "P007",
+          "to": null,
+          "group_id": "place:hall",
+          "turn_index": 4,
+          "reply_to": "42:151651",
+          "msg_uid": "42:152460",
+          "body": "阿林：（搓了搓手，笑着往人堆里凑了半步）哎，兰姐，我走南闯北这些年，别的不敢说，contest这词儿我耳朵都听出茧子了。南边码头那帮人讲，contest最怕的不是对手强，是规矩半道上变。您说是不是？我倒是想听听，您心里那杆秤，到底怎么个称法？",
+          "ctx": {
+            "initiator": "P009",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 8,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 152598,
+          "round": 71,
+          "type": "MSG_GROUP",
+          "from": "P009",
+          "to": null,
+          "group_id": "place:hall",
+          "turn_index": 4,
+          "reply_to": "42:151651",
+          "msg_uid": "42:152598",
+          "body": "（手指在算盘上拨了一下）掺水？那账就不平了。contest也一样，规矩定在前头，谁也别事后改。",
+          "ctx": {
+            "initiator": "P009",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 18,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 152667,
+          "round": 71,
+          "type": "MSG_GROUP",
+          "from": "P010",
+          "to": null,
+          "group_id": "place:hall",
+          "turn_index": 4,
+          "reply_to": "42:151651",
+          "msg_uid": "42:152667",
+          "body": "（把吉他往桌上一搁，肚子先咕噜了一声）哎哟——先别聊contest了，谁那儿有吃的？我从早上排到这会儿，嗓子都唱哑了，胃里空得能听见回音。兰姐，你说这contest要是连口热饭都不管，那还比什么呀，比谁先饿晕在台上吗？",
+          "ctx": {
+            "initiator": "P009",
+            "mood": "饥饿",
+            "need": {
+              "satiety": 0
+            },
+            "relation": 1,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 152801,
+          "round": 71,
+          "type": "MSG_GROUP",
+          "from": "P012",
+          "to": null,
+          "group_id": "place:hall",
+          "turn_index": 4,
+          "reply_to": "42:151651",
+          "msg_uid": "42:152801",
+          "body": "桂婶：（拍了拍巧儿的手背，又扭头冲兰姐笑）哎哟，你们俩说的都在理。要我说啊，contest就跟咱镇上办席一样——菜得一样，筷子得一样长，谁也不能多夹一筷子。金先生，您倒是给句准话，这炉子到底谁看着火？",
+          "ctx": {
+            "initiator": "P009",
+            "mood": "饥饿",
+            "need": {
+              "satiety": 0
+            },
+            "relation": 1,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 152947,
+          "round": 71,
+          "type": "MSG_GROUP",
+          "from": "P014",
+          "to": null,
+          "group_id": "place:hall",
+          "turn_index": 4,
+          "reply_to": "42:151651",
+          "msg_uid": "42:152947",
+          "body": "巧儿：（肚子咕噜一声，赶紧捂住）哎哟……说到掺水，我这肚子先抗议了。兰姐，要不咱边吃边说？我早上就啃了半个馒头，这会儿脑子跟炉子一样空转呢。",
+          "ctx": {
+            "initiator": "P009",
+            "mood": "饥饿",
+            "need": {
+              "satiety": 0
+            },
+            "relation": 11,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 154921,
+          "round": 72,
+          "type": "MSG_GROUP",
+          "from": "P016",
+          "to": null,
+          "group_id": "place:hall",
+          "turn_index": 5,
+          "reply_to": "42:152947",
+          "msg_uid": "42:154921",
+          "body": "兰姐：（把手里那杆秤往摊上一放，先冲月牙努努嘴）饿成这样还唱什么，我这儿有半块饼，先垫垫。（又转向桂婶，压低声）contest那炉子啊，我看不是谁看火的事，是火底下那柴谁添——添多添少，最后都算在咱头上。金先生要真讲公道，就把账摊开，别光嘴上说一样长。",
+          "ctx": {
+            "initiator": "P009",
+            "mood": "饥饿",
+            "need": {
+              "satiety": 0
+            },
+            "relation": 18,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        }
+      ]
+    },
+    {
+      "thread_id": "TH-P014-Gplace-plaza-78",
+      "participants": [
+        "P002",
+        "P003",
+        "P005",
+        "P006",
+        "P010",
+        "P012",
+        "P014",
+        "P016"
+      ],
+      "turns": 15,
+      "seq_range": [
+        160407,
+        193664
+      ],
+      "round_range": [
+        78,
+        83
+      ],
+      "messages": [
+        {
+          "seq": 160407,
+          "round": 78,
+          "type": "MSG_GROUP",
+          "from": "P014",
+          "to": null,
+          "group_id": "place:plaza",
+          "turn_index": 0,
+          "reply_to": null,
+          "msg_uid": "42:160407",
+          "body": "（手里捏着半截废木料，眼睛却瞟着评委席）兰姐，你说我这小玩意儿要是拿不了名次，回头给桂婶当柴火烧，她能不能少念叨我两句？",
+          "ctx": {
+            "initiator": "P014",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 0,
+            "topic": "contest",
+            "trigger": "contest"
+          }
+        },
+        {
+          "seq": 160854,
+          "round": 79,
+          "type": "MSG_GROUP",
+          "from": "P002",
+          "to": null,
+          "group_id": "place:plaza",
+          "turn_index": 1,
+          "reply_to": "42:160407",
+          "msg_uid": "42:160854",
+          "body": "（头也不抬，用刨子推过木料）名次是别人的事。活儿细不细，你自己知道。",
+          "ctx": {
+            "initiator": "P014",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 8,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 160915,
+          "round": 79,
+          "type": "MSG_GROUP",
+          "from": "P003",
+          "to": null,
+          "group_id": "place:plaza",
+          "turn_index": 1,
+          "reply_to": "42:160407",
+          "msg_uid": "42:160915",
+          "body": "（低头搓着衣角）巧儿，别光想着名次……桂婶那边，我帮你说说。",
+          "ctx": {
+            "initiator": "P014",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 11,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 161057,
+          "round": 79,
+          "type": "MSG_GROUP",
+          "from": "P005",
+          "to": null,
+          "group_id": "place:plaza",
+          "turn_index": 1,
+          "reply_to": "42:160407",
+          "msg_uid": "42:161057",
+          "body": "（用镊子夹着棉球，头也没抬）巧儿，你这心思就没在木头上。名次是别人的事，手艺才是自己的。桂婶念叨你，是怕你糟蹋东西——你把这半截料子雕出个样子来，比什么名次都强。",
+          "ctx": {
+            "initiator": "P014",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 1,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 161666,
+          "round": 79,
+          "type": "MSG_GROUP",
+          "from": "P012",
+          "to": null,
+          "group_id": "place:plaza",
+          "turn_index": 1,
+          "reply_to": "42:160407",
+          "msg_uid": "42:161666",
+          "body": "（笑着拍了下巧儿的胳膊）哎哟，你这孩子，说什么呢！桂婶我啥时候念叨过你啦？你那手艺，镇上谁不夸？烧火？我可舍不得！",
+          "ctx": {
+            "initiator": "P014",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 1,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 161982,
+          "round": 79,
+          "type": "MSG_GROUP",
+          "from": "P016",
+          "to": null,
+          "group_id": "place:plaza",
+          "turn_index": 1,
+          "reply_to": "42:160407",
+          "msg_uid": "42:161982",
+          "body": "（把手里那串铜钱往摊上一搁，抬眼扫了扫巧儿那半截木料）念叨是躲不掉的，可你这手艺，烧了可惜。名次那玩意儿，评委眼一花就没了，货好不好，我一眼就看得出来——你这活儿，有心思在里头。",
+          "ctx": {
+            "initiator": "P014",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 18,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 184186,
+          "round": 81,
+          "type": "MSG_GROUP",
+          "from": "P014",
+          "to": null,
+          "group_id": "place:plaza",
+          "turn_index": 2,
+          "reply_to": "42:161982",
+          "msg_uid": "42:184186",
+          "body": "（把刻刀往木料上一搁，冲兰姐挤挤眼）兰姐这话我爱听——那评委要是眼花了，你替我瞪他们去？",
+          "ctx": {
+            "initiator": "P014",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 11,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 189823,
+          "round": 82,
+          "type": "MSG_GROUP",
+          "from": "P002",
+          "to": null,
+          "group_id": "place:plaza",
+          "turn_index": 3,
+          "reply_to": "42:184186",
+          "msg_uid": "42:189823",
+          "body": "（头也不抬，用刨子推过木面）手稳，眼准。花活没用。",
+          "ctx": {
+            "initiator": "P014",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 8,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 190004,
+          "round": 82,
+          "type": "MSG_GROUP",
+          "from": "P003",
+          "to": null,
+          "group_id": "place:plaza",
+          "turn_index": 3,
+          "reply_to": "42:184186",
+          "msg_uid": "42:190004",
+          "body": "（低头搓着衣角）巧儿，你那手艺，评委眼不花也看得见。我……我就盼着别出啥岔子。",
+          "ctx": {
+            "initiator": "P014",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 11,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 190369,
+          "round": 82,
+          "type": "MSG_GROUP",
+          "from": "P005",
+          "to": null,
+          "group_id": "place:plaza",
+          "turn_index": 3,
+          "reply_to": "42:184186",
+          "msg_uid": "42:190369",
+          "body": "（从药柜后探出半个身子，手里还捏着戥子）巧儿，你这刻刀搁得轻点儿——上回兰姐那把裁纸刀就是这么崩的口。contest的事我不懂，可手艺人争的是手上那点准头，不是嘴上那口气。",
+          "ctx": {
+            "initiator": "P014",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 1,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 190562,
+          "round": 82,
+          "type": "MSG_GROUP",
+          "from": "P006",
+          "to": null,
+          "group_id": "place:plaza",
+          "turn_index": 3,
+          "reply_to": "42:184186",
+          "msg_uid": "42:190562",
+          "body": "（揉着太阳穴，声音有点哑）巧儿，别光顾着说笑——你那刀口再偏半分，这块料就废了。来，我看看你刚才刻的那道线……嗯，手稳多了，比上回强。",
+          "ctx": {
+            "initiator": "P014",
+            "mood": "疲惫",
+            "need": {
+              "energy": 0
+            },
+            "relation": 1,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 191250,
+          "round": 82,
+          "type": "MSG_GROUP",
+          "from": "P010",
+          "to": null,
+          "group_id": "place:plaza",
+          "turn_index": 3,
+          "reply_to": "42:184186",
+          "msg_uid": "42:191250",
+          "body": "（把吉他往怀里一搂，笑得有点勉强）瞪评委这事儿我可不敢，上次在礼堂演出，台下坐着的那位评委光看我调弦就皱了三次眉。巧儿，你说咱们这contest到底图个啥？我这两天绷得快断了，连月牙都弹不利索。",
+          "ctx": {
+            "initiator": "P014",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 11,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 191600,
+          "round": 82,
+          "type": "MSG_GROUP",
+          "from": "P012",
+          "to": null,
+          "group_id": "place:plaza",
+          "turn_index": 3,
+          "reply_to": "42:184186",
+          "msg_uid": "42:191600",
+          "body": "（笑着拍了下巧儿的胳膊）哎哟，你这丫头，嘴比我还甜！评委要是真眼花，我第一个不答应——不过话说回来，你那手艺，闭着眼也挑不出毛病来。",
+          "ctx": {
+            "initiator": "P014",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 1,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 192274,
+          "round": 82,
+          "type": "MSG_GROUP",
+          "from": "P016",
+          "to": null,
+          "group_id": "place:plaza",
+          "turn_index": 3,
+          "reply_to": "42:184186",
+          "msg_uid": "42:192274",
+          "body": "（笑着摆手，顺手把摊上的布头理了理）我瞪人可不白瞪，回头你得给我留个好的——你那手艺我信得过。不过话说回来，巧儿，这比赛你打算拿什么去？我瞅你这两天净在这儿磨蹭，别到时候赶工赶出个糙活儿。",
+          "ctx": {
+            "initiator": "P014",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 18,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 193664,
+          "round": 83,
+          "type": "MSG_GROUP",
+          "from": "P014",
+          "to": null,
+          "group_id": "place:plaza",
+          "turn_index": 4,
+          "reply_to": "42:192274",
+          "msg_uid": "42:193664",
+          "body": "（把手里的小木片转了个圈）图啥？图个乐呗！我师父老石说了，手艺是玩出来的，不是绷出来的。月牙你弦都调不利索了，要不我拿废料给你削个拨片？",
+          "ctx": {
+            "initiator": "P014",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 11,
+            "topic": "contest",
+            "trigger": "reply"
+          }
+        }
+      ]
+    },
+    {
+      "thread_id": "TH-P016-Gplace-town_hall-76",
+      "participants": [
+        "P001",
+        "P004",
+        "P006",
+        "P010",
+        "P011",
+        "P016"
+      ],
+      "turns": 15,
+      "seq_range": [
+        159245,
+        187348
+      ],
+      "round_range": [
+        76,
+        81
+      ],
+      "messages": [
+        {
+          "seq": 159245,
+          "round": 76,
+          "type": "MSG_GROUP",
+          "from": "P016",
+          "to": null,
+          "group_id": "place:town_hall",
+          "turn_index": 0,
+          "reply_to": null,
+          "msg_uid": "42:159245",
+          "body": "（兰姐把秤砣往案板上一搁，眼皮都没抬）方老师，您这账我认，可您要拿我摊上的货去充公家的数，那我今儿这生意还做不做了？",
+          "ctx": {
+            "initiator": "P016",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 0,
+            "topic": "power_conflict",
+            "trigger": "power_conflict"
+          }
+        },
+        {
+          "seq": 159544,
+          "round": 77,
+          "type": "MSG_GROUP",
+          "from": "P006",
+          "to": null,
+          "group_id": "place:town_hall",
+          "turn_index": 1,
+          "reply_to": "42:159245",
+          "msg_uid": "42:159544",
+          "body": "（揉了揉眉心，声音放软）兰姐，我不是来充公的。就是……学校那边要凑个账，我想着先从您这儿赊两斤，回头我自个儿掏钱补上。您看成不成？",
+          "ctx": {
+            "initiator": "P016",
+            "mood": "疲惫",
+            "need": {
+              "energy": 0
+            },
+            "relation": 8,
+            "topic": "power_conflict",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 159702,
+          "round": 77,
+          "type": "MSG_GROUP",
+          "from": "P010",
+          "to": null,
+          "group_id": "place:town_hall",
+          "turn_index": 1,
+          "reply_to": "42:159245",
+          "msg_uid": "42:159702",
+          "body": "（把吉他往身后挪了挪，声音有点发紧）兰姐，我不是来充公的……我就是想问问，这台上台下，到底谁说了算？我唱什么，得先过谁的秤？",
+          "ctx": {
+            "initiator": "P016",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 1,
+            "topic": "power_conflict",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 160042,
+          "round": 78,
+          "type": "MSG_GROUP",
+          "from": "P001",
+          "to": null,
+          "group_id": "place:town_hall",
+          "turn_index": 2,
+          "reply_to": "42:159702",
+          "msg_uid": "42:160042",
+          "body": "（把烟袋在鞋底磕了磕）秤在谁手里，谁说了算。你唱你的，别踩线就行。",
+          "ctx": {
+            "initiator": "P016",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 1,
+            "topic": "power_conflict",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 160091,
+          "round": 78,
+          "type": "MSG_GROUP",
+          "from": "P004",
+          "to": null,
+          "group_id": "place:town_hall",
+          "turn_index": 2,
+          "reply_to": "42:159702",
+          "msg_uid": "42:160091",
+          "body": "秀娘：（从柜台后探出身，手里还捏着半块刚出炉的桃酥，语气温温的）哎哟，月牙，你这孩子，唱个歌还唱出官司来了。来，先尝口点心，甜的东西压得住火气。台上台下谁说了算——要我说啊，谁心里那杆秤准，就听谁的。",
+          "ctx": {
+            "initiator": "P016",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 1,
+            "topic": "power_conflict",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 160350,
+          "round": 78,
+          "type": "MSG_GROUP",
+          "from": "P011",
+          "to": null,
+          "group_id": "place:town_hall",
+          "turn_index": 2,
+          "reply_to": "42:159702",
+          "msg_uid": "42:160350",
+          "body": "（把秤砣又拿起来，在手里掂了掂）月牙，你这话问得……（瞥了方老师一眼）秤在我手里，可秤砣往哪边偏，有时候也不是我说了算。",
+          "ctx": {
+            "initiator": "P016",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 36,
+            "topic": "power_conflict",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 160467,
+          "round": 78,
+          "type": "MSG_GROUP",
+          "from": "P016",
+          "to": null,
+          "group_id": "place:town_hall",
+          "turn_index": 2,
+          "reply_to": "42:159702",
+          "msg_uid": "42:160467",
+          "body": "（兰姐这才抬眼，先扫了月牙一眼，又看了看方老师，手指在秤杆上轻轻一敲）月牙，你这话问得比账本还绕。台上你唱，台下我听，谁掏钱谁点戏——可你要问我这摊上谁说了算，那得看你是来买货的，还是来赊账的。",
+          "ctx": {
+            "initiator": "P016",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 8,
+            "topic": "power_conflict",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 161166,
+          "round": 79,
+          "type": "MSG_GROUP",
+          "from": "P006",
+          "to": null,
+          "group_id": "place:town_hall",
+          "turn_index": 3,
+          "reply_to": "42:160467",
+          "msg_uid": "42:161166",
+          "body": "方老师：（揉了揉眉心，声音比平时低了些）小满这话，我听着心里发沉。教了这些年书，我总跟学生说，尺子在你手里，可量什么、怎么量，得自己拿主意。可今天……（顿了顿）今天我才觉着，有时候连尺子都不是自己的。兰姐，你说，一个人累到连话都不想说了，还算不算“自主”？",
+          "ctx": {
+            "initiator": "P016",
+            "mood": "疲惫",
+            "need": {
+              "energy": 0
+            },
+            "relation": 8,
+            "topic": "power_conflict",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 161504,
+          "round": 79,
+          "type": "MSG_GROUP",
+          "from": "P010",
+          "to": null,
+          "group_id": "place:town_hall",
+          "turn_index": 3,
+          "reply_to": "42:160467",
+          "msg_uid": "42:161504",
+          "body": "（没接桃酥，手指在桌沿敲了两下，声音有点发紧）兰姐，我不是来争谁说了算的。我就是……（顿住，吸了口气）我唱了十年，头一回觉得话筒不是我的。",
+          "ctx": {
+            "initiator": "P016",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 1,
+            "topic": "power_conflict",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 162107,
+          "round": 80,
+          "type": "MSG_GROUP",
+          "from": "P001",
+          "to": null,
+          "group_id": "place:town_hall",
+          "turn_index": 4,
+          "reply_to": "42:161504",
+          "msg_uid": "42:162107",
+          "body": "（老周把烟袋在鞋底磕了磕，没看谁）地不哄人，你哄它一季，它哄你一年。",
+          "ctx": {
+            "initiator": "P016",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 1,
+            "topic": "power_conflict",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 167768,
+          "round": 81,
+          "type": "MSG_GROUP",
+          "from": "P004",
+          "to": null,
+          "group_id": "place:town_hall",
+          "turn_index": 5,
+          "reply_to": "42:162107",
+          "msg_uid": "42:167768",
+          "body": "（秀娘把刚出炉的桃酥往桌心推了推，手在围裙上蹭了蹭）我听着，倒想起我揉面。面是死的，手是活的，可手也得顺着面的性子来。你们说的那个“尺子”“话筒”，我不太懂，可我知道——要是揉面揉到胳膊抬不起来，那这炉点心，不做也罢。先歇歇，吃口热的。",
+          "ctx": {
+            "initiator": "P016",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": -11,
+            "topic": "power_conflict",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 171163,
+          "round": 81,
+          "type": "MSG_GROUP",
+          "from": "P006",
+          "to": null,
+          "group_id": "place:town_hall",
+          "turn_index": 5,
+          "reply_to": "42:162107",
+          "msg_uid": "42:171163",
+          "body": "方老师：（苦笑了一下，声音里带着点沙哑）老周这话，我懂。可地不会半夜改主意，说这块不算数了。人……（摇摇头）人比地难伺候多了。",
+          "ctx": {
+            "initiator": "P016",
+            "mood": "疲惫",
+            "need": {
+              "energy": 0
+            },
+            "relation": 6,
+            "topic": "power_conflict",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 177742,
+          "round": 81,
+          "type": "MSG_GROUP",
+          "from": "P010",
+          "to": null,
+          "group_id": "place:town_hall",
+          "turn_index": 5,
+          "reply_to": "42:162107",
+          "msg_uid": "42:177742",
+          "body": "（突然转向老周，声音有点抖）老周，你这话我认。可地不会半夜改主意，不会今天让你种麦子明天说你得唱戏。我哄了十年话筒，它今天告诉我——你哄错人了。",
+          "ctx": {
+            "initiator": "P016",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 1,
+            "topic": "power_conflict",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 179388,
+          "round": 81,
+          "type": "MSG_GROUP",
+          "from": "P011",
+          "to": null,
+          "group_id": "place:town_hall",
+          "turn_index": 5,
+          "reply_to": "42:162107",
+          "msg_uid": "42:179388",
+          "body": "小满：（把桃酥掰成两半，一半推给月牙）老周这话我记下了——地不哄人。可我想问，要是地本来就不是你的呢？",
+          "ctx": {
+            "initiator": "P016",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 8,
+            "topic": "power_conflict",
+            "trigger": "reply"
+          }
+        },
+        {
+          "seq": 187348,
+          "round": 81,
+          "type": "MSG_GROUP",
+          "from": "P016",
+          "to": null,
+          "group_id": "place:town_hall",
+          "turn_index": 5,
+          "reply_to": "42:162107",
+          "msg_uid": "42:187348",
+          "body": "兰姐：（把手里那杆秤往桌上一搁，秤砣磕出闷响）方老师，你这话我接不住也得接。我守摊子这些年，秤是我的，可斤两是买主说了算——你说这算谁的？月牙，话筒不是你的，可嗓子是你的，谁也拿不走。老周说得在理，地不哄人。可人哄人，哄久了，自己都信了。",
+          "ctx": {
+            "initiator": "P016",
+            "mood": "紧绷",
+            "need": {
+              "leisure": 0
+            },
+            "relation": 8,
+            "topic": "power_conflict",
+            "trigger": "reply"
+          }
+        }
+      ]
+    }
+  ]
+}

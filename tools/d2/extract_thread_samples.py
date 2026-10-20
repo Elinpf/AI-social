@@ -30,6 +30,8 @@ def main(argv=None) -> int:
     ap.add_argument("--out", required=True)
     ap.add_argument("--min-turns", type=int, default=3)
     ap.add_argument("--n-samples", type=int, default=5)
+    ap.add_argument("--channel", choices=["dm", "group", "all"], default="all",
+                    help="只抽某一通道的线程（dm=1:1，group=群聊；默认 all）")
     ap.add_argument("--include-public", action="store_true",
                     help="PUBLIC 线程天然长度为 1，默认不计入样本（只统计 DM/GROUP 往复）")
     a = ap.parse_args(argv)
@@ -47,6 +49,10 @@ def main(argv=None) -> int:
             continue
         p = r.get("payload") or {}
         if not a.include_public and r["type"] == "MSG_PUBLIC":
+            continue
+        if a.channel == "dm" and r["type"] != "MSG_DM":
+            continue
+        if a.channel == "group" and r["type"] != "MSG_GROUP":
             continue
         tid = p.get("thread_id")
         if not tid:

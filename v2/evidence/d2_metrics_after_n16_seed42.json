@@ -1,0 +1,191 @@
+{
+  "assertions": {
+    "dup_msg_ids_legacy_known_defect": {
+      "D-0-0": 7,
+      "D-1-0": 9,
+      "D-10-0": 6,
+      "D-12-0": 10,
+      "D-13-0": 11,
+      "D-15-0": 10,
+      "D-16-0": 10,
+      "D-18-0": 11,
+      "D-19-0": 12,
+      "D-21-0": 8,
+      "D-22-0": 7,
+      "D-24-0": 10,
+      "D-25-0": 12,
+      "D-27-0": 12,
+      "D-28-0": 13,
+      "D-29-0": 2,
+      "D-3-0": 10,
+      "D-30-0": 12,
+      "D-31-0": 16,
+      "D-33-0": 9,
+      "D-34-0": 6,
+      "D-35-0": 4,
+      "D-36-0": 6,
+      "D-37-0": 6,
+      "D-39-0": 13,
+      "D-4-0": 11,
+      "D-40-0": 13,
+      "D-41-0": 2,
+      "D-42-0": 14,
+      "D-43-0": 15,
+      "D-44-0": 2,
+      "D-45-0": 11,
+      "D-46-0": 10,
+      "D-47-0": 4,
+      "D-48-0": 9,
+      "D-49-0": 9,
+      "D-50-0": 2,
+      "D-51-0": 8,
+      "D-52-0": 9,
+      "D-54-0": 14,
+      "D-55-0": 16,
+      "D-57-0": 12,
+      "D-58-0": 11,
+      "D-59-0": 2,
+      "D-6-0": 15,
+      "D-60-0": 9,
+      "D-61-0": 9,
+      "D-63-0": 6,
+      "D-64-0": 6,
+      "D-7-0": 14,
+      "D-72-0": 4,
+      "D-73-0": 4,
+      "D-8-0": 2,
+      "D-9-0": 9,
+      "P-0-0": 5,
+      "P-1-0": 3,
+      "P-12-0": 3,
+      "P-13-0": 4,
+      "P-15-0": 2,
+      "P-16-0": 2,
+      "P-24-0": 3,
+      "P-25-0": 2,
+      "P-3-0": 3,
+      "P-36-0": 6,
+      "P-37-0": 6,
+      "P-4-0": 2,
+      "P-48-0": 3,
+      "P-49-0": 2,
+      "P-51-0": 4,
+      "P-52-0": 4,
+      "P-75-0": 3
+    },
+    "dup_msg_uids": {},
+    "msg_id_unique": false,
+    "msg_uid_unique": true,
+    "participants_consistent": true,
+    "participants_violations": 0,
+    "ptr_cross_thread": 0,
+    "ptr_dangling": 0,
+    "reply_to_same_thread": true,
+    "turn_index_dense": true,
+    "turn_index_violations": 0
+  },
+  "chain_by_alternation": 18,
+  "chain_by_pointer": 6,
+  "chain_by_pointer_dm_only": 6,
+  "chain_by_pointer_note": "指针链深度 = 沿 reply_to 回溯的最大层数；群聊里多人常回同一条，故深度天然小于「消息条数（alternation）」。1:1 DM 上二者应相等，见 chain_by_pointer_dm_only。",
+  "chain_diff_detail": {
+    "TH-P004-Gplace-market-75": {
+      "alternation": 6,
+      "by_pointer": 2
+    },
+    "TH-P004-Gplace-market-76": {
+      "alternation": 12,
+      "by_pointer": 6
+    },
+    "TH-P009-Gplace-hall-67": {
+      "alternation": 18,
+      "by_pointer": 6
+    },
+    "TH-P012-Gplace-market-64": {
+      "alternation": 13,
+      "by_pointer": 6
+    },
+    "TH-P012-Gplace-school-73": {
+      "alternation": 13,
+      "by_pointer": 6
+    },
+    "TH-P013-Gplace-library-61": {
+      "alternation": 13,
+      "by_pointer": 6
+    },
+    "TH-P014-Gplace-plaza-78": {
+      "alternation": 15,
+      "by_pointer": 5
+    },
+    "TH-P015-Gplace-town_hall-64": {
+      "alternation": 11,
+      "by_pointer": 6
+    },
+    "TH-P016-Gplace-town_hall-76": {
+      "alternation": 15,
+      "by_pointer": 6
+    }
+  },
+  "events_total": 194108,
+  "has_thread_fields": true,
+  "msg_counts": {
+    "MSG_DM": 497,
+    "MSG_GROUP": 126,
+    "MSG_PUBLIC": 63
+  },
+  "msg_share": 0.0035,
+  "source": "v2/evidence/run_d2_after_n16_seed42/run.jsonl",
+  "temporal_mode": {
+    "duplicate_body_ratio": 0.0408,
+    "max_turns": 19,
+    "mean_turns": 2.8115,
+    "median_turns": 2.0,
+    "multi_turn_thread_ratio": 0.373,
+    "n_messages": 686,
+    "n_threads": 244,
+    "reply_coverage": 0.6997,
+    "single_msg_thread_ratio": 0.3197,
+    "turn_index_violations": 113,
+    "turns_dist": {
+      "1": 78,
+      "11": 1,
+      "12": 1,
+      "13": 1,
+      "14": 1,
+      "17": 1,
+      "19": 1,
+      "2": 75,
+      "3": 23,
+      "4": 36,
+      "5": 10,
+      "6": 9,
+      "7": 2,
+      "8": 4,
+      "9": 1
+    }
+  },
+  "tid_mode": {
+    "duplicate_body_ratio": 0.0,
+    "max_turns": 18,
+    "mean_turns": 3.3301,
+    "median_turns": 2.0,
+    "multi_turn_thread_ratio": 0.4369,
+    "n_messages": 686,
+    "n_threads": 206,
+    "reply_coverage": 0.6997,
+    "single_msg_thread_ratio": 0.4951,
+    "turn_index_violations": 0,
+    "turns_dist": {
+      "1": 102,
+      "11": 1,
+      "12": 1,
+      "13": 3,
+      "15": 2,
+      "18": 1,
+      "2": 14,
+      "3": 6,
+      "4": 14,
+      "6": 62
+    }
+  }
+}
