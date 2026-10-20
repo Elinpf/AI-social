@@ -1,0 +1,22 @@
+{
+  "arm": "off",
+  "bodies_sha256": "ba953c838c89c6283b5f9258e0548a6258c883481c2238c7459c4a9580c7fb44",
+  "body_contains_ablation_phrase": false,
+  "config_file": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/config/dialogue_repair.json",
+  "effective_params": {
+    "context_max_age_rounds": 24,
+    "enabled": false,
+    "gripe_context": true,
+    "max_age_rounds": 84,
+    "max_open": 3,
+    "reply_priority": true,
+    "window_msgs": 8
+  },
+  "env_HITT_DIALOGUE_REPAIR": null,
+  "examples_body_not_in_stub_set": [],
+  "n_body_not_in_stub_set": 0,
+  "n_dialogue_rift_key": 0,
+  "n_dialogue_rift_null": 0,
+  "n_msgs": 106,
+  "samples": []
+}

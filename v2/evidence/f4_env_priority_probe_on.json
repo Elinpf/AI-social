@@ -1,0 +1,68 @@
+{
+  "arm": "on",
+  "bodies_sha256": "2215e9d89bda3d320004f7677a2a69c1bcfd7c2cd7179d7de5ea1fffb184cdf3",
+  "body_contains_ablation_phrase": false,
+  "config_file": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/config/dialogue_repair.json",
+  "effective_params": {
+    "context_max_age_rounds": 24,
+    "enabled": true,
+    "gripe_context": true,
+    "max_age_rounds": 84,
+    "max_open": 3,
+    "reply_priority": true,
+    "window_msgs": 8
+  },
+  "env_HITT_DIALOGUE_REPAIR": "1",
+  "examples_body_not_in_stub_set": [],
+  "n_body_not_in_stub_set": 0,
+  "n_dialogue_rift_key": 38,
+  "n_dialogue_rift_null": 0,
+  "n_msgs": 118,
+  "samples": [
+    {
+      "age_rounds": [
+        1
+      ],
+      "open": 1,
+      "prompted": true,
+      "route": "reply",
+      "threads": [
+        "TH-P004-P002-0"
+      ],
+      "v": "f4/1",
+      "with": [
+        "P004"
+      ]
+    },
+    {
+      "age_rounds": [
+        2
+      ],
+      "open": 1,
+      "prompted": true,
+      "route": "reply",
+      "threads": [
+        "TH-P001-P002-4"
+      ],
+      "v": "f4/1",
+      "with": [
+        "P001"
+      ]
+    },
+    {
+      "age_rounds": [
+        1
+      ],
+      "open": 1,
+      "prompted": true,
+      "route": "reply",
+      "threads": [
+        "TH-P001-P002-4"
+      ],
+      "v": "f4/1",
+      "with": [
+        "P002"
+      ]
+    }
+  ]
+}
