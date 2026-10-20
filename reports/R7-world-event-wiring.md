@@ -1,7 +1,7 @@
 # R7 · 世界事件接线诊断：剂量 → 触发 → 影响面 → 是否进对话
 
-> **状态：骨架版（读数未到齐）**。本文件第 1–2、6–9 节已写实并绑 sha；**第 5–6 节（A/B 对照读数 / 截图）已补齐为「空表 + 逐格定义 + 复算命令」脚手架**（§5.1.1 / §5.6 / §6），但**不含任何实测数字**——两臂真跑批（t4）落盘后才允许填数。
-> 空位一律标【待 t4 落盘】，**不含任何占位结论**；`N_world=6 / M-0 分母 24 / M-1 分母 64` 是按 60 回合口径的**预登记值**，填表时须用真实日志复核。
+> **状态：实测版（两臂已落盘，§5–§6 已填实测）**。第 1–2、5–9 节写实并绑 sha；第 5–6 节两臂读数与截图均来自真实 run（A `a17ffcfa` / B `3966309f`，两臂 `code_sha=6602b777`）。
+> **一句话结论（存在性事实层）**：世界事件到对话的链路**已接通**——B 臂 `M-0=24/24`（记忆沉淀）、`world_ctx=31/124`（进入对话上下文），A 臂均为 0；剂量 `aggressive` 为**刻意抬高**，只说明接通性、不是自然频率，不作「生活气息提升」类效果结论。
 >
 > 作者：report-writer（报告与交付编辑）｜2026-10-20
 > 诊断正文（源文档，已入库同批）：`v2/evidence/D8-world-director-diagnosis.md`（`aba26406`，含 22:34 时间窗更正）
@@ -57,7 +57,7 @@
 
 - 本轮代码 sha：`2090287`（`master`，诊断与判据均绑定此 sha）
 - 分支实现：`feat/world-event-dose`（工作树基于 `2090287`，**截至写作时该分支尚无提交**，改动在工作树中，见 §4）——提交 sha【待 d-dim-impl 落库后补】
-- A/B 验证批 sha：`【待 t4 落盘：两臂 meta.json 的 code_sha / run.jsonl sha8】`
+- A/B 验证批 sha：**`code_sha=6602b777`（分支 `feat/world-event-dose` HEAD，两臂同代码；t6 推送远端，非主树 master sha）**；A 臂 `run.jsonl`=`a17ffcfa…`（`a17ffcfab1d0a26b38b40978cb9bdfe7bccab4e09ff70bd7bfae4cbd7c2ed1c0`），B 臂 `run.jsonl`=`3966309f…`（`3966309f218b960ea5c84d6732cb1f872d7abfa170715a59c70b708ba041debd`）；两臂 `seed=42 / n=4 / rounds=60`，差异仅 `HITT_WORLD_AWARENESS=0/1`。
 
 ### 1.1 本轮最强的一句定位（已按 repo-scout 22:34 更正限缩）
 
@@ -97,7 +97,7 @@
 |---|---|---|---|
 | `affected_scope_count = 0` | **结构性** | `hooks/world_director.py:48` 是 Python 字面量 `0`，压根没有计算代码 | **不能**。跑到天荒地老还是 0 |
 | 世界事件沉淀 = 0（M=0, O=0） | **结构性** | `_SALIENT_EVENTS` 白名单不含 `WORLD_DIRECTIVE`/`WORLD_GROUP_EVENT`，`:403` 必丢弃 | **不能**。除非改白名单 |
-| 对话提及 = 0（M-1） | **未观测到** | 窗口内 686 条 MSG 中词表命中 0 —— 这是**观测事实**，不是代码必然（理论上存在"居民自己说缺货"的可能） | **能**。分母够大时可能出现，但当前 0 命中不能证明"不可能" |
+| 对话提及 = 0（M-1） | **未观测到** | 窗口内 686 条 MSG 中词表命中 0 —— 这是**观测事实**，不是代码必然（理论上存在"居民自己说缺货"的可能）。**基线 A0 只有 1 条 directive、无窗口重叠，故 M-1=0 不受 §5.1.3 的归属缺陷影响（真 0）** | **能**。分母够大时可能出现，但当前 0 命中不能证明"不可能" |
 | 窗口外提及 | **仅窗口外** | 本批未出现该情形（窗口内已 0 命中）；若 B 臂出现"窗口外才提到"，按下表注记单列 | 不适用（本批） |
 
 > **纪律**：三种零若写成同一句话，读者会误以为"都是缺数据"，从而得出"再跑一批就好了"的错误结论——而其中两个零是代码结构决定的，跑多少批都不会变。
@@ -107,7 +107,7 @@
 | 指标 | 分子 / 分母 | 值 | 含义 | 上界 |
 |---|---|---|---|---|
 | **感知覆盖率**（per directive，回合口径） | 可感知回合 3 / 有效期回合 6 | **3/6 = 50%** | `dose.slots=6` ⇒ 有效期 `[issued, issued+6)`；真实感知窗 `[r-2, r]` ⇒ 只有 `+0/+1/+2` 可见，`+3/+4/+5` 不可见但仍在 `world_params.active` 里起作用 | 50% |
-| **M-0**（entity 口径，"是否曾知道"） | 命中的 (agent, directive) 去重数 / (存活 agent × N_world) | 【待读数】 | 每个 agent 有 3 个回合机会知道，去重后 1 条即算命中 | **1.0**（=24/24），**不是 0.5** |
+| **M-0**（entity 口径，"是否曾知道"） | 命中的 (agent, directive) 去重数 / (存活 agent × N_world) | **A 臂 0/24；B 臂 24/24**（实测见 §5.1；A0 基线臂同为 0） | 每个 agent 有 3 个回合机会知道，去重后 1 条即算命中 | **1.0**（=24/24），**不是 0.5** |
 | M-0_w（窗口口径，可选） | 命中的 (agent, directive, round) 三元组 / `n_alive × Σ有效期回合数` = 4×(6×6)=144 | 【待读数，非必报】 | 若报此列才允许出现 0.5 上界 | 0.5 |
 
 > ⛔ **三套口径不得互相代入**：把"感知覆盖率 50%"当成"M-0 上界 0.5"是错的。M-0 上界 1.0 的静态依据见判据卡 R8.4：`_observe` 是 `for ev in wv.visible_events` 全量遍历，`:403` 只按 `_observed_seqs` 去重与 `_SALIENT_EVENTS` 过滤，**无每回合写入条数上限、无 salience 门限**，故 3 个可感知回合足以让每个 agent 各写 1 条。
@@ -257,13 +257,13 @@ team-leader 裁定两臂 `rounds` 由 84 降为 60：**60 回合内无死亡污�
 
 | 文件 | 作用 | 本轮状态 |
 |---|---|---|
-| `code/tests/test_d8_world_awareness.py`（新增） | 开关语义（默认关 ≡ 基线）、门控放行、人话描述无机器 token、payload 不多键 | 【未完成·待 d-dim-impl 给出 pytest 输出】 |
-| `v2/evidence/d8_tension_dose_recompute.py`（新增） | 剂量/期望复算脚本（`§9 ⑦′` 同口径） | 【未完成·待核实与 §9 命令是否同源】 |
+| `code/tests/test_d8_world_awareness.py`（新增） | 开关语义（默认关 ≡ 基线）、门控放行、人话描述无机器 token、payload 不多键 | **已通过**：18 passed（`D8-branch-impl.md §4` 原文）；关联 7 文件 51 passed |
+| `v2/evidence/d8_tension_dose_recompute.py`（新增，**在分支工作树** `feat-world-event-dose`，master 树无此文件） | 剂量/期望复算脚本 | **本轮已执行（分支工作树）**：按 master 当前配置输出 `E[触发]=1.344`（84 回合），**不是** `§9 ⑦′` 的 aggressive 3.864/6.048 复算；两者**不同源、不得互证**。`§9 ⑦′` 的 720bp/4.32 仍以 master `world_director.json` 逐行乘算为准。 |
 
 ## 5. A/B 对照读数表
 
 > **批配置（两章单位不得互相引用，见 §3.4）**：**A/B 批 = 4 agents / 60 rounds / `aggressive` + 8 机制 / 720bp**
-> 【待 t4 落盘】**判定口径：仅描述性，不作效果结论；小规模存在性臂，不构成频率估计（§5.0.2）。**
+> **判定口径：仅描述性，不作效果结论；小规模存在性臂，不构成频率估计（§5.0.2）。**
 
 ### 5.0 批配置与泄漏量（60 回合口径，不是 84）
 
@@ -298,21 +298,50 @@ A 臂在 **60 回合**下的基线重算结果与 84 回合**完全同值**：
   - **不得与 686 分母的任何读数并列比较**（分母口径不同，跨分母比较=R6 已纠过的错误）。
 - 报告正文固定写一句：「**本批为小规模存在性臂，`MSG_*` 分母 N=<填实测值>，不构成频率估计。**」
 - 两臂除 env 开关 `HITT_WORLD_AWARENESS=0/1` 外**代码完全相同**；剂量 `aggressive` 为**刻意抬高**（720bp/回合，60 回合 Poisson 期望 λ = 60×7.2% ≈ 4.32 条 directive）——研究的是**接通性**，不是自然频率。这两点必须同时出现在方法说明与结论旁。
+### 5.0.3 四条必须照抄的边界（来自运行记录 `d8-run-log.md §7`，缺一条即成稿不合格）
+
+1. **小规模存在性臂**：4 agents × 60 rounds × 单 seed，`MSG` 分母仅 **124**，远小于报告族 **686 / 150** 门槛 ⇒ **只能判「通 / 不通」，不出任何比率结论**（`M-1` 提及率、覆盖率百分比、与 R4/R5 的跨臂比率一律不出）。
+2. **`admission=REJECTED`（`messages=124 < 150`）、`d5_s0a` 判 `FAIL` 都是预期**：`d5_s0a` 的 `blocking=[]`（无违规），`nonblocking_count=21`；根因是它拿**主树 master HEAD `2fc8831`** 对比**批次 landing sha `6602b77`（分支）**，代码路径必然有差异——**本轮是分支跑批**，这不是跑批窗口内改代码。窗口内零改动的硬证据是运行记录 §5 的 HEAD / `git status --porcelain code/` / config sha256 前中后一致。**`d5_metrics_d8armA/B` 里的比率不得当结论引用。**
+3. **剂量刻意抬高**（`aggressive` + 8 机制 = **720bp/回合**，60 回合 `E=4.32`）⇒ **不得**被读成「建议把世界事件调密」；它只为让「事件进对话」有足够机会发生。
+4. **`OBSERVATION=48` 属信息位、非 M0**，且须**按通路分列**：`agent.py::_observe` 通路 **48 条（`salience` 全为 4）**；`settlement` 通路 **0 条**（该通路 `_SIGNIFICANT` 不含 `WORLD_*`，期望 0）。
 
 ### 5.1 读数表（列含「零的性质」，见下）
 
-> **状态：脚手架（等 t4 两臂 run 目录落盘后填数）。** 下表每一格「该填什么 / 从哪个字段取 / 用哪条命令算」见 §5.1.1；**未拿到 run 目录前不得预填任何数字**。
+> **状态：已填实测（t4 两臂落盘）。** 数据源：A 臂 `v2/evidence/run_d8_armA_n4r60_seed42/run.jsonl`（`a17ffcfa…`）、B 臂 `v2/evidence/run_d8_armB_n4r60_seed42/run.jsonl`（`3966309f…`），两臂 `code_sha=6602b777`（**分支 `feat/world-event-dose` HEAD；t6 将一并推送到远端以便复现——不是主树 master 的 sha**）。
 >
-> ⚠️ `N_world` / `M-0 分母=24` / `M-1 分母=64` 是**按 5.0.1 的 A 臂重算在 60 回合口径下的预登记值**，t4 落盘后必须用真实日志再核一遍；若实际与预登记不一致，以日志为准并在表下注明差异（不得沿用预登记值）。
+> ✅ **预登记值已被真实日志确认**：`N_world=6`、`M-0 分母=24`、`M-1 分母=64`，与 §5.0.1 完全一致。
 
-表列（判据卡 §5 + 本报告加的 `zero_nature`）：`arm | N_world | world_seqs | M-0 分子 | M-0 分母 | M-1 分子 | M-1 分母 | visibility_window | L-2 旁白率 | 词表 sha8 | zero_nature | 判定`
+表列（判据卡 §5 + 本报告加的 `zero_nature`；**M-1 两列并排保留**）：`arm | N_world | world_seqs | M-0 分子 | M-0 分母 | M-1(脚本原样) | M-1(修正 kind 归属) | M-1 分母 | visibility_window | L-2 旁白率 | 词表 sha8 | zero_nature | 判定`
 
-| arm | N_world | world_seqs | M-0 分子 | M-0 分母 | M-1 分子 | M-1 分母 | visibility_window | L-2 旁白率 | 词表 sha8 | zero_nature | 判定 |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| A（开关关，对照臂） | 待填（预登记 6，须日志复核） | 待填 | 待填 | 待填（预登记 24） | 待填 | 待填（预登记 64） | 待填 | 待填 | 待填 | **结构性**（须 `--whitelist off`） | 待填 |
-| B（开关开，处理臂） | 同上（两臂剂量逐字相同） | 待填 | 待填 | 待填（预登记 24） | 待填 | 待填（**须现算**，不得抄 A 臂） | 待填 | 待填 | 待填（须与 A 臂同值） | **未观测到**（若为 0；须 `--whitelist on`） | 待填 |
+| arm | N_world | world_seqs | M-0 分子 | M-0 分母 | M-1(脚本原样) | M-1(修正 kind 归属) | M-1 分母 | visibility_window | L-2 旁白率 | 词表 sha8 | zero_nature | 判定 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| A（开关关，对照臂） | **6** | 12（6 directive + 6 group event；`1829,1830,1937,1938,3588,3589,4807,4808,7309,7310,7492,7493`） | **0**（raw 0） | **24**（`4 agent × 6 directive`） | **0**（窗口归属缺陷，不可作结论） | **0**（两版一致） | **64** | 每 directive 3 回合可见（`[3,6]` 口径，见 §5.1.1） | **88.71%**（110/124） | `5365ded1` | **结构性**（白名单未开） | 按 §5.5：**对照臂，M-0=0 为结构必然** |
+| B（开关开，处理臂） | **6** | 12（同 6 directive；seq `1824,1825,1948,1949,3627,3628,4877,4878,7427,7428,7616,7617`） | **48**（`MEMORY_WRITE` 指世界 seq 的逐条数，覆盖 **12/12** 世界 seq；判据卡 entity 口径去重后 **24/24**） | **12 世界 seq（逐条口径）/ 24（`4 agent × 6 directive`）** | **0**（窗口归属缺陷，不可作结论） | **≥ 3**（`visitor` 词表未覆盖 ⇒ **下界**；见 §5.1.3） | **64** | 每 directive 3 回合可见（同 A） | **87.10%**（108/124） | `5365ded1` | **非零** | 按 §5.5：**链路已接通，并有沉淀证据** |
 
-#### 5.1.1 逐列定义与复算命令（填表时逐格对照，禁止凭印象填）
+#### 5.1.1 感知覆盖率与「进对话」的结构证据（独立指标，不与 M-0 混用）
+
+| 指标 | A（开关关） | B（开关开） | 口径 / 分母 |
+|---|---|---|---|
+| 感知覆盖率 | **3 回合 / 6 回合** | **3 回合 / 6 回合** | 分母 = 每 directive 有效期回合数 = **6**；分子 = 可感知回合数 = **3**（`perception_coverage_rounds` 每个 directive 均为 `[3,6]`）。**结构计数，按要求不写百分比、不作频率估计，也不是 `M-0` 上界**。 |
+| `OBSERVATION` 命中世界事件 seq | **0** | **48**（`layer3_observation_world_hits`） | 分母 = 世界事件 seq 数 12（成对 6 实体）。**按通路分列**：`agent.py::_observe` 通路 **48 条（salience 全为 4）**；`settlement` 通路 **0 条**（期望 0，若不为 0 须排查）。 |
+| 带 `world_ctx` 的消息 | **0** | **31 / 124**（`layer4_world_ctx_present_msgs`） | 分母 = 本臂全部 `MSG_*` = 124；窗口内分母见 `M-1 分母=64`。 |
+| 真引用 `world_ctx.refs` 命中世界事件实体的消息 | **0** | **31 / 124**（`layer4_real_ref_msgs`） | 结构事实，可复算；与 `M-1` 词表代理**并列、不相加**。 |
+| `M-1`（脚本原样，`d8_metrics.py`） | **0 / 64** | **0 / 64** | **窗口归属缺陷 ⇒ 不可作结论**（每条消息只取第一个命中窗口就 `break`，`visitor` 窗口 `[12,18)` 覆盖 `edict` 窗口 `[14,20)` 的 r15/r16，导致归属错）。 |
+| `M-1`（修正 kind 归属） | **0 / 64** | **3 / 64** | 按消息所在回合的**全部**命中实体 kind 查冻结词表：B 臂 3 条全为 `edict`（`seq 1974/1988/2118`）。**本批 6 实体 = `visitor×3 + tension×2 + edict×1`；`KIND_WORDS` 只覆盖 `tension/edict/festival` ⇒ 3 个 `visitor` 实体（占实体数 50%）结构上不可能被命中。窗口内 64 条 MSG 中：`visitor-only` **26 条**结构上不可测、可测 **38 条**、`visitor` 与其他 kind 重叠 **14 条**（`(msg,entity)` 对 78 > 64 即重叠）。⇒ B 只能说「**≥ 3**」，不能说「3」**。 |
+
+> **一句话读法**：B 臂的「接通」证据分三层——**记忆层** `M-0 = 24/24`、**上下文层** `world_ctx = 31/124`、**措辞层** `M-1(修正) = ≥ 3/64`（下界，`edict` 命中）。`M-1(脚本原样)=0/64` 不可作结论（窗口归属缺陷）；`visitor` 无词表覆盖 ⇒ 真实提及数 **≥ 3**。三层不得互相替代。
+**可复核的原文样本（B 臂，说明「进入对话上下文」不是计数幻觉）**：
+
+| 项 | 原文 / 值 |
+|---|---|
+| 消息 | `seq=1855`（round 13，`MSG_DM`，`msg_uid=42:1855`，`TH-P004-P001-12`） |
+| 正文（截取） | 「（接过糕点，咬了一小口）嗯，甜度正好。秀娘，你说那**外乡人**，到底想干啥？」 |
+| `world_ctx` | `{"v":"d8/1","refs":["D-12-wd.visitor"],"kinds":["visitor"],"prompted":true}` |
+| 复算 | `python3 - <<'PY'` 遍历 `run_d8_armB_n4r60_seed42/run.jsonl` 找 `seq==1855`（或 `grep -m1 '"seq": 1855'`） |
+
+> 这说明：模型在 `prompted=true` 时确实把「外乡人」写进了对话正文；而 `M-1` 冻结词表（`缺货/涨价/…/节日/庙会/…`）**完全没有 `visitor` 机制的词** ⇒ **不是个别词漏检，而是 `visitor` 整类无词表覆盖（系统性缺陷）**。因此 `M-1(修正)=3/64` 只是**下界**；不能反过来证明「没提及」，也不能把 visitor 措辞计入任何一列。
+
+#### 5.1.2 逐列定义与复算命令（填表时逐格对照，禁止凭印象填）
 
 | 列 | 口径 / 单位 | 取自字段 | 复算命令（仓库根执行） |
 |---|---|---|---|
@@ -320,7 +349,8 @@ A 臂在 **60 回合**下的基线重算结果与 84 回合**完全同值**：
 | `world_seqs` | 世界事件在日志里的 `seq` 列表 | `world_seqs` | 同上；或读上面 json 的 `world_seqs` |
 | `M-0 分子` | 只认 `MEMORY_WRITE.source_event_seq` 指向世界事件 seq 的条数（per `(agent,directive)` 去重，**不是** per message） | `layer3_M0_dedup`（主判据）；`layer3_M0_raw` 仅备查 | 同上 `d8_metrics.py` 输出 |
 | `M-0 分母` | `存活 agent 数 × N_world`（单位 `(agent, directive)`），本批预登记 `4×6=24` | `layer3_M0_denom`（含 `_alive_end` / `_window` 变体） | 同上；同时复核 `n_alive_agents` 必须 = 4（60 回合无死亡） |
-| `M-1 分子` | 剔除括号旁白后命中冻结词表的 `MSG_*` 条数（**词表代理**，与真引用分列不加和） | `layer4_M1_num_msgs`；并列看 `layer4_real_ref_msgs`（真引用） | 同上；两臂**必须各跑一次**，不得复用 |
+| `M-1(脚本原样)` | 每条消息只取**第一个**命中窗口查词表（`--m1-attribution first`，有 `break` 缺陷）。**不可作结论** | `layer4_M1_orig.num_msgs` | `python3 v2/evidence/d8_metrics.py --log <run>/run.jsonl --label <A|B> --whitelist <off|on> --m1-attribution first` |
+| `M-1(修正 kind 归属)` | 一条消息属于**全部**覆盖它的窗口；任一覆盖实体 kind 词表命中即算（默认 `--m1-attribution all`）；`visitor` 无词表 ⇒ **下界** | `layer4_M1_fixed.num_msgs` + `layer4_M1_lexicon_coverage.stats` | 同上，`--m1-attribution all`（默认） |
 | `M-1 分母` | 窗口内全部 `MSG_DM/MSG_PUBLIC/MSG_GROUP` 条数（per-message）；预登记 A 臂 64 | `layer4_M1_denom_msgs` | 同上；**两臂各自现算**，若两臂分母差 >30% ⇒ 判「不可比」，只报事件数 |
 | `visibility_window` | 世界事件对 agent 可见的回合区间（真实路径 `VisibilityIndex(window_rounds=2)`），写成 `[起,止)` | §9 ③ 复算；`perception_coverage_rounds` | `python3 v2/evidence/d8_metrics.py ...` 输出 `perception_coverage_rounds` |
 | `L-2 旁白率` | 括号旁白被剔除前后的比率代理；**只作参考，不作效果结论** | `L2_narration_rate_proxy` + `L2_denom` | 同上（须同时抄 `L2_denom`，无分母不写率） |
@@ -336,9 +366,48 @@ A 臂在 **60 回合**下的基线重算结果与 84 回合**完全同值**：
 >
 > ⛔ **`zero_nature` 陷阱（自动化读数必须核）**：A 臂的 0 是「**结构性**」（白名单未开，代码必然）；B 臂若也是 0，性质应变成「**未观测到**」（开了白名单但没观测到命中，是观测事实而非结构必然）。**两臂共用同一个常量 = 读数表撒谎**。若看到两臂 `zero_nature` 相同且都是"结构性"，**按 bug 上报**，该表不得引用。
 
+#### 5.1.3 `d8_metrics.py` 的 M-1 口径缺陷与修正复算（**必读，防止引用 0/64**）
+
+**官方输出（t7-m1fix / 脚本修订 R9，两列并存、不许合并）**：
+
+| 臂 | `layer4_M1_orig.num_msgs`（`--m1-attribution first`） | `layer4_M1_fixed.num_msgs`（`all`，默认） | `hit_seqs` |
+|---|---|---|---|
+| A（白名单关） | **0 / 64** | **0 / 64** | — |
+| B（白名单开） | **0 / 64** | **3 / 64** | **1974 / 1988 / 2118**（命中实体均为 `D-14-wd.edict`，词为「通告」） |
+
+**因果顺序（先缺陷、后数字，防止读成「之前算错、现在 3」）**：
+
+1. **窗口归属 `break` 缺陷**：原 `window_hit_msgs()` 对每条 MSG 只取**第一个**命中窗口就 `break`（按 `issued_round` 排序）。本批 `visitor [12,18)` 覆盖了 `edict [14,20)` 内的 r15/r16 ⇒ 这 3 条被**先发的 `visitor` 抢走归属**，`edict` 拿不到。
+2. **词表缺 `visitor`**：`KIND_WORDS` 只有 `tension/edict/festival`，D8 才首次启用 `visitor` ⇒ 被错归到 `visitor` 的消息再查词表**必空** ⇒ **双重归零**。
+3. **修复面可量化（t7 新增，比文字描述更可验证）**：`M1_fixed` 口径下 `(msg, entity)` 对 = **78**，窗口内去重消息只有 **64** 条 ⇒ **14 对来自 `visitor`/`edict` 窗口重叠**（`layer4_M1_win_pairs`）——这正是 `orig` 归错的机理。**口径边界**：64 条窗口消息中 **26 条只落在 `visitor` 窗口、结构性不可测**（`visitor` 无词表覆盖），可测 38 条，`visitor` 与其他 kind 重叠 14 条（`layer4_M1_lexicon_coverage.stats`）⇒ 正确读法是「**至少 3 条**」，不是点估计。
+
+**复算命令（官方 CLI，两臂各一次；同输入两次运行 JSON 逐字节相同）**：
+
+```bash
+python3 v2/evidence/d8_metrics.py --log v2/evidence/run_d8_armA_n4r60_seed42/run.jsonl \
+        --label A --whitelist off --m1-attribution all \
+        --out-json v2/evidence/d8_metrics_armA_n4r60_seed42.json
+python3 v2/evidence/d8_metrics.py --log v2/evidence/run_d8_armB_n4r60_seed42/run.jsonl \
+        --label B --whitelist on  --m1-attribution all \
+        --out-json v2/evidence/d8_metrics_armB_n4r60_seed42.json
+# 期望：A layer4_M1_orig=0 / fixed=0；B orig=0 / fixed=3，hit_seqs=[1974,1988,2118]，denom=64
+```
+
+> 旧口径读数保留在 `v2/evidence/d8_metrics_arm{A,B}_n4r60_seed42.orig.json`（由原脚本逐字节复现）；两列对照与词表缺口表见 `v2/evidence/d8_metrics_compare_n4r60_seed42.md`。
+
+**命中原文（B 臂，均为 `edict`）**：
+
+| seq | round | 正文（截取） |
+|---|---|---|
+| 1974 | 15 | 「新通告说，下月木料要统购，咱这手艺……怕是要难了。」 |
+| 1988 | 15 | 「…不过通告上说要登记外来人口…」 |
+| 2118 | 16 | 「新通告说，下月起木料要凭票领了。」 |
+
+> **引用纪律**：`M-1` 只报**事件数**（A 0 条 / B **≥ 3 条**，分母 = **窗口内 64 条 MSG**，不是全批 124 条），**不写百分比**；不得用脚本原样 0/64 声称「措辞完全没提」；也不得把 3 条引申为「措辞自然/效果好」。**下界的结构依据**：本批 6 个实体 = `visitor×3 + tension×2 + edict×1`，`KIND_WORDS` 无 `visitor` 词 ⇒ 3 个 visitor 实体（50%）结构上不可能被命中；`seq=1855`「外乡人」即属此类漏计。
+
 ### 5.2 M-1 的分母只有 64，比率不作统计推断
 
-- A 臂 60 回合下实际 `MSG_DM/MSG_PUBLIC/MSG_GROUP` 条数**预登记 = 64**（t4 落盘后必须现算复核；B 臂须单独现算，不得抄）。
+- 两臂 60 回合下窗口内 `MSG_DM/MSG_PUBLIC/MSG_GROUP` 条数**实测均 = 64**（`MSG_*` 总量 124，两臂同构；窗口截取后 64）。**分母差 0% ⇒ 可比；但仍只报事件数，不报率**。
 - **措辞纪律**：M-1 一律按「**事件数为主、比率仅作参考**」写，**禁止**写成"4.7% 的消息提及了世界事件"这类率式表述。报告正文写「**本批为小规模存在性臂，`MSG_*` 分母 N=<实测值>，不构成频率估计**」。
 - **不得与历史基准 A0 的 686 分母读数并列比较**（`16 agents × 84 rounds`，口径不同）。
 - 若两臂消息量分母差 >30% ⇒ M-1 判「不可比」，只报事件数（判据卡 R3/§4.3）。
@@ -354,15 +423,21 @@ cd code && python3 -m obs llm-cost --log ../v2/evidence/<ARM_RUN_DIR>/run.jsonl 
 
 | arm | provider | calls | cached | tokens_in | tokens_out | degraded | 日志 sha8 |
 |---|---|---|---|---|---|---|---|
-| A | 待填（须为 `openai_compat`） | 待填（须 >0 且 >cached） | 待填 | 待填（非零） | 待填（非零） | 待填（须 0） | 待填（`sha256sum <run>/run.jsonl` 前 8） |
-| B | 待填（须为 `openai_compat`） | 待填 | 待填 | 待填 | 待填 | 待填 | 待填 |
+| A | `openai_compat` | **272** | 43 | 37,157 | 33,578 | **0** | `a17ffcfa` |
+| B | `openai_compat` | **274** | 39 | 39,070 | 32,096 | **0** | `3966309f` |
 
 > 验真判据（基线证据包 §3）：`by_provider` 出现真实 provider 名、`calls > cached`、`tokens_in/out` 非零、`degraded=0`；再加 `--require-provider openai_compat` 作硬断言。
 > **三项判定齐全才算过**：① RC=0；② `provider_guard.ok=true` 且 `by_provider` **只含** `openai_compat`；③ `total.calls>0`。任一不满 ⇒ 该臂判失败，如实写，不得用 mock 读数充数。
+>
+> **两臂实测原文（`python3 -m obs llm-cost --require-provider openai_compat`，RC 均 0）**：
+> - A：`provider_guard.ok=true`、`by_provider={"openai_compat":272}`、`total={calls:272, cached:43, degraded:0, tokens_in:37157, tokens_out:33578}`；原文存 `v2/evidence/d8_llmcost_armA_n4r60_seed42.txt`。
+> - B：`provider_guard.ok=true`、`by_provider={"openai_compat":274}`、`total={calls:274, cached:39, degraded:0, tokens_in:39070, tokens_out:32096}`；原文存 `v2/evidence/d8_llmcost_armB_n4r60_seed42.txt`。
+> - 两臂 `meta.json`：`degraded_calls=0`、`fallback_detected=false`、`git_dirty_code_files=[]`、`code_sha=6602b777`（两臂同代码，差异只在 env 开关）。
 
 ### 5.4 关键差值
 
-- 【未完成·待读数】：`ΔM-0`、`ΔM-1`、`ΔL-2 旁白率`、分母差是否 >30%。
+- **实测差值（A → B）**：`ΔM-0 = 0/24 → 24/24`（raw `0 → 48`，因事件成对）；`ΔM-1(脚本原样) = 0/64 → 0/64`（**不可作结论**）；`ΔM-1(修正 kind 归属) = 0/64 → **≥ 3**/64`（B 命中 3 条全为 `edict`；3 个 `visitor` 实体无词表 ⇒ **下界，≥ 3**）；`Δworld_ctx = 0 → 31/124`；`ΔL-2 旁白率 = 88.71% → 87.10%`（分母各 124，差 1.61 个百分点，**不作效果结论**）。
+- **分母差**：`M-1 分母 64 vs 64`（差 0%，可比）；`消息总量 124 vs 124`（两臂同构，`MSG_DM=111 / MSG_PUBLIC=13` 两臂相同）。
 - **上界口径先钉死（读数到手前写定，防事后改口径）**：`M-0` 上界 **1.0（=24/24）**，**不是 0.5**；`0.5` 只属于独立指标「感知覆盖率 = 3/6」（见 §2.1.1）。`M-0_w` 若报，分母 = **144**、上界 0.5，**与 M-0 分列、不得互相代入**。
 - **本表仅描述性**：单 seed、单批、分母 <30 的项只报事件数不报比率；不做"接通后效果显著"类表述（预注册 §3 禁止项）。
 
@@ -383,8 +458,18 @@ cd code && python3 -m obs llm-cost --log ../v2/evidence/<ARM_RUN_DIR>/run.jsonl 
 > - 这次的风险是把"没观测到沉淀"读成"接通失败"。
 >
 > 两者的共同点是**用零去证明否定**。零只证明"这批里没有"，不证明"不可能有"。
+#### 5.5.1 本轮实测结论（`zero_nature = 非零` ⇒ 走 §5.5 第二支）
 
-### 5.6 读数执行手册（t4 落盘后按此逐条跑，命令级）
+> **结论句（照 §5.5 表第二支）**：「**链路已接通，并有沉淀证据**」。
+> - 沉淀证据：B 臂 `M-0 = 48` 条 `MEMORY_WRITE` 指向世界事件 seq（覆盖 **12/12** 世界 seq），按判据卡 entity 口径去重后 **24/24**（`4 agent × 6 directive`）；A 臂 0。
+> - 上下文证据：B 臂 **31/124** 条消息带 `world_ctx` 且 `refs` 真命中世界事件实体；A 臂 **0**。
+> - 感知覆盖率 **3 回合 / 6 回合**（结构计数，两臂相同）——说明**可见性没变**，变的是「看见之后是否进记忆、进上下文」；按要求不写成百分比、不作频率估计。
+> - **`M-1` 措辞层两列并排**：`M-1(脚本原样)` A 0/64、B 0/64 —— **窗口归属缺陷，不可作结论**；`M-1(修正 kind 归属)` A 0/64、B **≥ 3**/64（命中 `seq 1974/1988/2118`，全为 `edict`：「新通告说…木料要统购 / 登记外来人口 / 木料要凭票领」）。**`KIND_WORDS` 只覆盖 `tension/edict/festival`；本批 6 实体中 `visitor×3`（50%）结构上不可能被 M-1 命中 ⇒ 3 是下界，实际提及数 ≥ 3**；相关措辞（如「外乡人」）漏计。
+> - **引用纪律（硬）**：`M1_fixed` 是**下界**，**不得写成比率**（禁「B 臂提及率 x%」）、不得把 3 条引申为效果；`d8_metrics_arm*_n4r60_seed42.orig.json` 是**旧口径备份，禁止引用**（正文只可引 `layer4_M1_orig` 的缺陷留痕）。64 条窗口消息中 26 条只落在 visitor 窗口、结构上不可测。
+> - **剂量是刻意抬高（aggressive，720bp/回合，8 机制；60 回合实际 `N_world=6`，接近 Poisson 期望 4.32 的上侧）**：本结论只说明**接通性**，**不是自然频率**，也不是「生活气息提升」类效果结论——本轮不回答效果层问题（见 §6.2 边界最后一条）。
+> - 断点回顾：A 臂 `zero_nature=结构性`（`_SALIENT_EVENTS` 未含 `WORLD_*`，结构上不可能沉淀）；B 臂打开开关后变为 `非零`，即断点确在 `code/life/agent.py:41-45` 白名单与 `:1050-1069` 提示词装配两处（分支 `6602b777` 已补）。
+
+### 5.6 读数复算手册（已按此执行；命令保留供第三方核对）
 
 > 前置：t4 产出两个 run 目录（`v2/evidence/` 下，各含 `run.jsonl` + `meta.json`）。**只读、零 LLM、不改代码。** 两臂的 run 目录名以 t4 运行记录 md（`team-workspace/d8-run-log.md`）为准，本报告填表时原样引用。
 
@@ -414,9 +499,12 @@ a=json.load(open('v2/evidence/d8_metrics_<A_TAG>.json')); b=json.load(open('v2/e
 print('zero_nature', a.get('zero_nature'), '|', b.get('zero_nature'))
 print('lexicon', a.get('lexicon_sha8'), '|', b.get('lexicon_sha8'))
 print('M0', a.get('layer3_M0_dedup'), a.get('layer3_M0_denom'), '|', b.get('layer3_M0_dedup'), b.get('layer3_M0_denom'))
-print('M1', a.get('layer4_M1_num_msgs'), a.get('layer4_M1_denom_msgs'), '|', b.get('layer4_M1_num_msgs'), b.get('layer4_M1_denom_msgs'))
+print('M1_orig', a.get('layer4_M1_orig',{}).get('num_msgs'), '|', b.get('layer4_M1_orig',{}).get('num_msgs'))
+print('M1_fixed', a.get('layer4_M1_fixed',{}).get('num_msgs'), '|', b.get('layer4_M1_fixed',{}).get('num_msgs'), 'denom', b.get('layer4_M1_denom_msgs'))
 "
 ```
+
+> **字段语义注记**：旧 flat 字段 `layer4_M1_num_msgs` 仍为 **orig 语义（首个窗口 `break` 的缺陷口径）**，**不是修正值**；读修正值必须用 `layer4_M1_fixed.num_msgs`（见 §5.1.3）。
 
 **② LLM 验真（每臂原文）**：见 §5.3 命令；原文贴进本节下方「验真原文附录」。
 
@@ -442,6 +530,7 @@ sha256sum ../v2/evidence/d7_shots/<ARM_TAG>-*.png
 - [ ] 两臂 `--whitelist` 实参分别为 `off` / `on`（`zero_nature` 不同）；
 - [ ] 两臂 `lexicon_sha8` 相同；
 - [ ] `M-0 分母` = `n_alive_agents × N_world`，且 `n_alive_agents` 两臂均为 4；
+- [ ] `M-1` 两列都在：`M-1(脚本原样)` 只作缺陷留痕、**不可作结论**；`M-1(修正)` 按 §5.1.3 复算；两臂**不写百分比**；
 - [ ] `M-1 分母` 两臂各自现算；差 >30% ⇒ 判不可比；
 - [ ] 每个数字都绑 `<ARM_DIR>/run.jsonl` 的 sha8 与本次复算命令；
 - [ ] 结论只按 §5.5 分支照抄，不写效果层表述；剂量刻意抬高（aggressive）已在 §5.0 + §2.3 写明。
@@ -450,7 +539,7 @@ sha256sum ../v2/evidence/d7_shots/<ARM_TAG>-*.png
 
 ## 6. 真实截图引用
 
-> **状态：脚手架（等两臂 run 目录落盘后出图填表）。**
+> **状态：已出图填表（两臂各 4 视图，真实渲染）。**
 > 格式固定：`绝对路径 + 渲染的是哪一臂 + 渲染命令 + 日志 sha256`。
 > 纪律（全族通用）：文件名 `<batch_id>-<视图>-<sha8>.png`；禁止拼图与跨批混拼；拿不到图就写「无图 + 渲染命令」，不用图替代。
 > 截图必须真实渲染：`shot.py` 等 `window.__RENDER_READY__===true` 再截，等不到即非零退出。
@@ -464,16 +553,17 @@ cd code && bash frontend/tools/dialogue_shots.sh http://127.0.0.1:8848 \
         sample/dialogue_<ARM_TAG>/threads.json
 ```
 
-| 视图 | 绝对路径 | 渲染的是哪一臂 | 渲染命令 | 日志 sha8 |
-|---|---|---|---|---|
-| chat（对话流） | `v2/evidence/d7_shots/<A_TAG>-chat-<sha8>.png` 待填 | A（开关关） | 见上方命令 | 待填 |
-| chat（对话流） | `v2/evidence/d7_shots/<B_TAG>-chat-<sha8>.png` 待填 | B（开关开） | 见上方命令 | 待填 |
-| rhythm（节律·串门） | `v2/evidence/d7_shots/<A_TAG>-rhythm-<sha8>.png` 待填 | A | 同上 | 待填 |
-| rhythm（节律·串门） | `v2/evidence/d7_shots/<B_TAG>-rhythm-<sha8>.png` 待填 | B | 同上 | 待填 |
-| spread（闲话传播） | `v2/evidence/d7_shots/<A_TAG>-spread-<sha8>.png` 待填 | A | 同上 | 待填 |
-| spread（闲话传播） | `v2/evidence/d7_shots/<B_TAG>-spread-<sha8>.png` 待填 | B | 同上 | 待填 |
-| 600（窄屏） | `v2/evidence/d7_shots/<A_TAG>-600-<sha8>.png` 待填 | A | 同上 | 待填 |
-| 600（窄屏） | `v2/evidence/d7_shots/<B_TAG>-600-<sha8>.png` 待填 | B | 同上 | 待填 |
+| 视图 | 绝对路径 | 渲染的是哪一臂 | 图 sha256 | 生成时间 | 日志 sha8 |
+|---|---|---|---|---|---|
+| chat（对话流） | `v2/evidence/d7_shots/run_d8_armA_n4r60_seed42-chat-a17ffcfa.png` | A（开关关） | `f579165ae879852a9bcdf7e1dc4514192909cf7e2e5000922434da5ff33fbe4d` | 2026-10-21 00:42:08 | `a17ffcfa` |
+| chat（对话流） | `v2/evidence/d7_shots/run_d8_armB_n4r60_seed42-chat-3966309f.png` | B（开关开） | `75d22ecddc57481a230b4cae876033c8e5caf901b4fe2069b646d2effc5de070` | 2026-10-21 00:42:15 | `3966309f` |
+| chat（**只看世界事件**，`&world=1`） | `v2/evidence/d7_shots/run_d8_armB_n4r60_seed42-chat-world-3966309f.png` | B | `369af5c35d89609313ecb74fed5d282fe9ae00c2b9eb7bac0258af1f2cabd70b` | 2026-10-21 00:42:26 | `3966309f` |
+| rhythm（节律·串门） | `v2/evidence/d7_shots/run_d8_armA_n4r60_seed42-rhythm-a17ffcfa.png` | A | `9e3dbfdf06542541e5f9a84a5c756a44be809c0de8d596b95bb422ca366d2a57` | 2026-10-21 00:42:09 | `a17ffcfa` |
+| rhythm（节律·串门） | `v2/evidence/d7_shots/run_d8_armB_n4r60_seed42-rhythm-3966309f.png` | B | `17b4553433d2c958a34cd63319ed1ee79c93bc0eda1a8a327ee0d0b7d18c87a6` | 2026-10-21 00:42:17 | `3966309f` |
+| spread（闲话传播） | `v2/evidence/d7_shots/run_d8_armA_n4r60_seed42-spread-a17ffcfa.png` | A | `8e437f4005bdd447ccbc8fb91f319cf40e9a31981abc918148dda02d3bc29ab2` | 2026-10-21 00:42:11 | `a17ffcfa` |
+| spread（闲话传播） | `v2/evidence/d7_shots/run_d8_armB_n4r60_seed42-spread-3966309f.png` | B | `e5e2f9247f7c597b7857bb59c7f805e8fda1bbdfa402ff840ca944cc025366a5` | 2026-10-21 00:42:18 | `3966309f` |
+| 600（窄屏） | `v2/evidence/d7_shots/run_d8_armA_n4r60_seed42-600-a17ffcfa.png` | A | `6a1da04ea922cadf792c476655a66bd88f988c4e6deb226aa1180c8d7d83b734` | 2026-10-21 00:42:13 | `a17ffcfa` |
+| 600（窄屏） | `v2/evidence/d7_shots/run_d8_armB_n4r60_seed42-600-3966309f.png` | B | `05521fae10627805e72692d468db317eddb8beefed5616bfddab6290f22e38b7` | 2026-10-21 00:42:20 | `3966309f` |
 
 **填表附带（每张图三件套 + 自校验）**：
 
@@ -482,32 +572,49 @@ cd code && bash frontend/tools/dialogue_shots.sh http://127.0.0.1:8848 \
 - 生成时间：`stat -c '%y'`；
 - 页面文本核对（可选但建议）：Playwright 等 `__RENDER_READY__` 后读 `document.body.innerText`，B 臂 chat 视图应能看到世界事件线索 / `world_ctx`（若已加筛选）。
 
-### 6.1 前端「世界事件」筛选（**仅在两臂跑批全部结束后**才可做）
+### 6.1 前端「世界事件」可见化 + 筛选（**本轮已做，改动单列**）
 
-- 允许目录：`code/frontend/`（不在跑批禁改范围）；**不得**影响既有三视图（chat / rhythm / spread）渲染。
-- 目的：让 D8 的 `world_ctx.refs / prompted` 在页面上肉眼可见（B 臂有、A 臂无）。
-- 改动须单独说明：文件、行、默认行为（默认不改变既有视图）、回归证据（三视图截图 sha 前后一致或说明差异）。
-- **本轮若未做，在此写明「未做，原因：两臂未跑完 / 时间不足」，不得留空。**
+两臂跑批全部结束后，在 `code/frontend/`（不在跑批禁改范围）做了最小可见化，**默认不改变任何既有视图**：
 
+| 文件 | 改动 | 说明 |
+|---|---|---|
+| `code/frontend/tools/gen_threads.py` | 消息字段新增 `"world_ctx": pl.get("world_ctx")`；`field_contract` 增一行说明 | 只读搬运，缺键即该条未带世界上下文；旧数据集不产生该键 |
+| `code/frontend/src/dialogue.js` | 新增 `msgHasWorld/threadHasWorld`；`filters.worldOnly`（默认 `false`，URL `&world=1`）；`threadPasses` 增一行世界筛选；气泡在原有 `seq` 后追加一个 `世界事件` 徽标（`title` 显示 `v/refs/kinds/prompted`）；`renderFilters` 里**仅当数据出现 `world_ctx` 时才显示**开关 `#chip-world` | 开关默认关；无 `world_ctx` 的数据集（含 A0/v0）控件保持隐藏 |
+| `code/frontend/dialogue.html` | 新增 `<span class="chip" id="chip-world" hidden …>🌍 只看世界事件</span>` | 默认 `hidden`，由 JS 按数据决定是否显示 |
+
+**效果（B 臂）**：31 条消息显示 `世界事件` 徽标；`&world=1` 时线程数 **40 → 21**（只保留含世界上下文的线程）。A 臂：`chip-world` 仍为 `hidden`，0 徽标。
+
+**回归证据（既有三视图零影响，逐字节）**：改完后用**同一 A0 数据集**重截四视图，与改动前证据图 sha256 **完全相同**：
+
+| A0 视图 | 改动前 sha256 | 改动后重截 sha256 |
+|---|---|---|
+| chat | `15d02ab2…` | `15d02ab2…`（相同） |
+| rhythm | `baf2d9fc…` | `baf2d9fc…`（相同） |
+| spread | `eae35979…` | `eae35979…`（相同） |
+| 600 | `45bf561c…` | `45bf561c…`（相同） |
+
+另：`verify_dialogue_page.py` 在 A0 数据集上 **PASS**；`gen_threads_selftest.py` **PASS**（A/C、B/D、F、E 全过）。
 ---
 
 ## 7. 三档标注（已证实 / 仅机制接通未验证 / 未解决）
 
 ### 6.1 已证实（有代码 + 数据双证，可直接引用）
-1. **世界事件对对话零暴露**（L5）：prompt 装配函数无世界行（代码判据）+ `refs` 命中 0（数据判据）+ 检索输入不含世界维度（代码判据）。三判据按预注册 §2 L5 "①②③ 全为否"给出。
+1. **世界事件对对话零暴露（基线 `2090287`，已被 D8 分支改变，见第 8 条）**：基线 prompt 装配函数无世界行（代码判据）+ `refs` 命中 0（数据判据）+ 检索输入不含世界维度（代码判据）。三判据按预注册 §2 L5 "①②③ 全为否"给出。
 2. **可见但未沉淀**（L4/L4′）：世界事件存在于 `visible_events`（纯函数复算）+ 精确引用 seq 的 `MEMORY_WRITE`/`OBSERVATION` = 0。
 3. **`affected_scope_count` 是字面量 0**（L3）：全仓唯一写入点即字面量，无解析代码。
 4. **剂量 E=0.966 < 1**（L1）：配置 + 曲线实测复算，1 条落在 Poisson(E=0.966) 的 37% 分位，属正常。
 5. **触发逻辑与日志逐条全等**（L2）：复算触发集 == 日志触发集，`WORLD_DIRECTIVE_REJECTED`=0。
 6. **三条路径不同源不同界**：`world_params` 有 `[start,end)`；真实 perceive 路径有 2 回合滑窗（`VISIBLE_WINDOW_ROUNDS=2`，实测 round 30/31/32 可见、33 起不可见）；L6 的 `contracts.visible_events` 无时间维（`grep` 空输出 rc=1）。**注意这三者不对称，不是"感知层没有时间维"。**
 7. **`market_scarcity_bp` 无功能消费**（L6）：grep 原文只有"是否非空"计数，稀缺期唯一交易 `{"scarcity_index":0,"unit_price":100}` 价格未变。
+8. **D8 接线已接通（分支 `6602b777`，A/B 双证）**：B 臂 `M-0=24/24`（记忆沉淀，raw 48）、`world_ctx=31/124`、`real_ref=31/124`、`OBSERVATION` 命中世界事件 48；A 臂对应全为 **0**（`zero_nature=结构性`）。两臂 `N_world=6`、感知覆盖率 `3/6`、`lexicon_sha8=5365ded1` 相同 ⇒ 差异只来自开关。**注意：这是存在性事实，不是效果结论；剂量为刻意抬高（aggressive）。**
 
 ### 6.2 仅机制接通未验证（代码改了，效果没验）
-- 【未完成·待 d-dim-impl / d-dim-verify】本档的判据：**改了代码但 A/B 读数未到齐、或读数受污染（如 token 泄漏、时间窗未修）**，一律进本档，不得进 6.1。
-- **B 臂 `M-0 = 0` 时的归属（先定死，防事后挪档）**：进本档，结论句用 §5.5 的第一支「接通了，但在这批规模下没有观测到沉淀」；**不得**挪进 6.3「未解决」去暗示"机制无效"——"没测到"不属于"未解决"。
+- 本轮两臂读数已到齐且通过验真，**原计划进本档的「接线未验」项已升入 §6.1 第 8 条**。
+- **仍留在本档的边界**：D8 只验证「世界事件进入对话上下文」这一**接通性**；**效果层（是否让小镇更有生活气息）未验**。措辞层 `M-1(修正)` B 为 **≥ 3**/64（edict），且 `visitor` 无词表覆盖 ⇒ 只是**下界**、样本极小，**不能作「措辞自然度」结论**。
+- **B 臂 `M-0 = 0` 时的归属（先定死，防事后挪档）**：若出现，进本档，结论句用 §5.5 的第一支；**不得**挪进 §6.3「未解决」暗示"机制无效"——"没测到"不属于"未解决"。（本轮 B 臂实测 `M-0=24/24`，未触发此支。）
 
 ### 6.3 未解决
-- 【未完成·待 veriy】世界事件进对话后是否真的会让"小镇更有生活气息"（北极星目标）——本轮**不回答**，只回答"管道通不通"。
+- **效果层未验（本轮不做）**：世界事件进对话后是否真的会让"小镇更有生活气息"（北极星目标）——本轮**不回答**，只回答"管道通不通"。
 
 ---
 
@@ -698,7 +805,7 @@ PY
 ## 附：诚实边界
 
 1. 本报告第 2、7、8、9 节的读数均来自 repo-scout 诊断正文（同批入库），作者已按 §9 命令逐条复核过关键判据（`grep` 空输出、字面量 0、msg_id 撞号计数）；未复核的部分以源文档为准并在此标注。
-2. 第 5–6 节为**脚手架**（空表 + 逐格定义 + 复算命令），**不含任何实测数字、不含推断性内容**；t4 两臂落盘后填数。
+2. 第 5–6 节为**实测**：A 臂 `a17ffcfa` / B 臂 `3966309f`（两臂 `code_sha=6602b777`），数字均可按 §5.1.2 / §5.6 命令复算；`M-1` 词表代理两臂为 0 已如实保留，未用结构证据替代词表结论。
 3. `LLM_CALL` 只落 `prompt_hash` 不落 prompt 正文，"prompt 无世界行"只能由代码判据证明（行号 + 函数签名），不能用日志直接看到——这是本报告最容易被误读的边界，特此写明。
 4. **判据卡 sha256 已定版**：终版为 `4eddf77e`（含 R1–R8，已冻结）；Leader 先前给的 `9b20e740` 系旧值，已由 Leader 确认为作废。提交时仍会重算一次并核对。
 5. **本报告 §2 的 L4 曝光数依赖 D8 诊断 22:34 的自更正**：`864 → 48 agent-回合`（= 96 次事件-观测）。作者已独立实测复算该数（`48×2=96`）并写入 §9 ③；若读者用的是 22:16 之前的诊断版本，会读到 `864`——**以本报告与现行诊断文件为准**。
