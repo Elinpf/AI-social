@@ -1,0 +1,85 @@
+{
+  "assertions": {
+    "dup_msg_ids_legacy_known_defect": {
+      "D-0-0": 8,
+      "D-12-0": 7,
+      "D-15-0": 8,
+      "D-18-0": 10,
+      "D-24-0": 7,
+      "D-27-0": 8,
+      "D-3-0": 9,
+      "D-30-0": 13,
+      "D-36-0": 7,
+      "D-39-0": 12,
+      "D-42-0": 14,
+      "D-48-0": 6,
+      "D-51-0": 7,
+      "D-54-0": 14,
+      "D-6-0": 15,
+      "D-60-0": 5,
+      "D-63-0": 5,
+      "D-66-0": 3,
+      "D-72-0": 4,
+      "D-78-0": 3
+    },
+    "dup_msg_uids": {},
+    "msg_id_unique": false,
+    "msg_uid_unique": null,
+    "participants_consistent": true,
+    "participants_violations": 0,
+    "ptr_cross_thread": 0,
+    "ptr_dangling": 0,
+    "reply_to_same_thread": true,
+    "turn_index_dense": true,
+    "turn_index_violations": 0
+  },
+  "chain_by_alternation": 1,
+  "chain_by_pointer": 0,
+  "chain_diff_detail": {},
+  "events_total": 130296,
+  "has_thread_fields": false,
+  "msg_counts": {
+    "MSG_DM": 165,
+    "MSG_GROUP": 8,
+    "MSG_PUBLIC": 59
+  },
+  "msg_share": 0.0018,
+  "source": "v2/evidence/D2-compat-baseline-run.jsonl",
+  "temporal_mode": {
+    "duplicate_body_ratio": 0.0,
+    "max_turns": 8,
+    "mean_turns": 1.2889,
+    "median_turns": 1.0,
+    "multi_turn_thread_ratio": 0.0611,
+    "n_messages": 232,
+    "n_threads": 180,
+    "reply_coverage": 0.0,
+    "single_msg_thread_ratio": 0.9167,
+    "turn_index_violations": 0,
+    "turns_dist": {
+      "1": 165,
+      "2": 4,
+      "3": 3,
+      "4": 1,
+      "5": 2,
+      "6": 1,
+      "7": 2,
+      "8": 2
+    }
+  },
+  "tid_mode": {
+    "duplicate_body_ratio": 0.0,
+    "max_turns": 1,
+    "mean_turns": 1,
+    "median_turns": 1.0,
+    "multi_turn_thread_ratio": 0.0,
+    "n_messages": 232,
+    "n_threads": 232,
+    "reply_coverage": 0.0,
+    "single_msg_thread_ratio": 1.0,
+    "turn_index_violations": 0,
+    "turns_dist": {
+      "1": 232
+    }
+  }
+}

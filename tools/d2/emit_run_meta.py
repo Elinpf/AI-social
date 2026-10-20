@@ -69,6 +69,7 @@ def main(argv=None) -> int:
     ap.add_argument("--rounds", type=int)
     ap.add_argument("--mock-precalib-msg", type=int, default=0)
     ap.add_argument("--mock", action="store_true", help="本臂即 mock（跳过真跑判定）")
+    ap.add_argument("--side-root", default=None)
     ap.add_argument("--started-at", default=None)
     ap.add_argument("--finished-at", default=None)
     ap.add_argument("--duration-sec", type=int, default=None)
@@ -170,6 +171,8 @@ def main(argv=None) -> int:
         "mock_precalib_note": ("mock 预校准（同 n/rounds、MockProvider）的 MSG 总条数，仅用于跑前估规模；"
                                "其日志另存 v2/evidence/run_d2_mock_precalib_*.jsonl，不混入本臂任何统计"),
         "fallback_detected": bool(bad_provider or bad_model),
+        "side_root": a.side_root,
+        "side_root_note": "命令行声明值（非硬证据）；cache 隔离的硬证据见两臂 freeze_cache 目录 mtime/inode 不同 + 按 purpose 的 cached 率",
         "started_at": a.started_at,
         "finished_at": a.finished_at or datetime.now().isoformat(timespec="seconds"),
         "duration_sec": a.duration_sec,

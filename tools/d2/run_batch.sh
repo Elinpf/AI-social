@@ -63,6 +63,8 @@ python3 "$ROOT/tools/d2/emit_run_meta.py" "${META_ARGS[@]}"
 RC=$?
 set -e
 [[ "$RC" -eq 0 ]] || { echo "[d2] FAIL: emit_run_meta exit=$RC" >&2; exit "$RC"; }
+# 护栏：批结束后 meta 必须存在（防止「末尾写 meta」静默失败 ⇒ 证据无锚点）
+[[ -s "$OUT_ABS/meta.json" ]] || { echo "[d2] FAIL: meta.json 未生成（$OUT_ABS/meta.json）" >&2; exit 7; }
 
 LINES=$(wc -l < "$RUN")
 MEV=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['events'])" "$OUT_ABS/meta.json")
