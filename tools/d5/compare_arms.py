@@ -234,14 +234,22 @@ def main(argv=None) -> int:
             hdr = "| 指标 | 值 | 分母 | band_source | 判定 |"
             lines += [hdr, "|---|---|---|---|---|"]
             for r in subset:
-                lines.append(f"| {r['metric']} | {r['values'].get(names[0])} | {r['denominators'].get(names[0])} "
+                v = r["values"].get(names[0])
+                v = "N/A（该臂无此字段）" if v is None else ("N/A（该口径不适用）" if v == "N/A" else v)
+                lines.append(f"| {r['metric']} | {v} | {r['denominators'].get(names[0])} "
                              f"| {r['band_source']} | {r['verdict']} |")
             lines.append("")
             continue
         hdr = "| 指标 | " + " | ".join(names) + " | Δ(首→末) | 分母(末) | B2 上界 | band_source | 判定 |"
         lines += [hdr, "|---|---|" + "---|" * (len(names) + 4)]
+        def fmt(v):
+            if v is None:
+                return "N/A（该臂无此字段）"
+            if v == "N/A":
+                return "N/A（该口径不适用）"
+            return str(v)
         for r in subset:
-            cell_vals = " | ".join(str(r["values"].get(n)) for n in names)
+            cell_vals = " | ".join(fmt(r["values"].get(n)) for n in names)
             lines.append(f"| {r['metric']} | {cell_vals} | {r['delta_pp']} | {r['denominators'].get(names[-1])} "
                          f"| {r['band_halfwidth']} | {r['band_source']} | {r['verdict']} |")
         if kind == "struct" and len(names) >= 3:  # 单臂/两臂时无守恒检查列
