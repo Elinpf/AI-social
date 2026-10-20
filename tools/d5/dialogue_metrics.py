@@ -321,6 +321,19 @@ def compute(msgs: List[dict], lexicon: List[str], templates: List[re.Pattern],
         "B_roundtrips": dist(turns_b),
         "B_note": "v0 无指针字段时恒为 0（字段缺失，非缺陷）；B 不参与前后差",
     }
+    # S-1C 轮数（turn_index 去重）——与「说话人交替段」严格区分
+    ti_counts = []
+    for key in sorted(threads):
+        th = threads[key]
+        tis = [m["turn_index"] for m in th if m.get("turn_index") is not None]
+        if tis:
+            ti_counts.append(len(set(tis)))
+    out["S-1C_turns_by_turn_index"] = {
+        "definition": "轮数 = 线程内 turn_index 去重后的个数（群聊同轮多人并发只计 1 轮）；无 turn_index 的 legacy 批次为 null",
+        "dist": dist(ti_counts) if ti_counts else {"n": 0},
+        "note": "计轮请用本字段；S-1A 是「说话人交替段数」，不等于轮数；chain_by_pointer 只作可解析性辅助",
+    }
+
     out["S-2_thread_scale"] = {
         "msgs_per_thread": dist(lens),
         "single_msg_thread_ratio": rate(single_msg, len(threads)),
@@ -935,11 +948,14 @@ def to_markdown(res: Dict[str, Any], log_path: str) -> str:
         A("")
 
     s1 = res["S-1_turns_per_thread"]
-    tbl("S-1 线程轮次（per-thread）", [
-        ("A_speaker_turns.p50", s1["A_speaker_turns"]["p50"]),
-        ("A_speaker_turns.p90/max", f"{s1['A_speaker_turns']['p90']} / {s1['A_speaker_turns']['max']}"),
-        ("B_roundtrips.p50", s1["B_roundtrips"]["p50"]),
-        ("B_roundtrips.max", s1["B_roundtrips"]["max"]),
+    tbl("S-1 线程结构（per-thread；**轮数请用 S-1C**）", [
+        ("S-1C 轮数(turn_index 去重) p50/p90/max",
+         f"{res.get('S-1C_turns_by_turn_index', {}).get('dist', {}).get('p50')} / "
+         f"{res.get('S-1C_turns_by_turn_index', {}).get('dist', {}).get('p90')} / "
+         f"{res.get('S-1C_turns_by_turn_index', {}).get('dist', {}).get('max')}"),
+        ("S-1A 说话人交替段数 p50/p90/max",
+         f"{s1['A_speaker_turns']['p50']} / {s1['A_speaker_turns']['p90']} / {s1['A_speaker_turns']['max']}"),
+        ("S-1B 往复对数(指针) p50/max", f"{s1['B_roundtrips']['p50']} / {s1['B_roundtrips']['max']}"),
     ])
     s2 = res["S-2_thread_scale"]
     tbl("S-2 线程规模（per-thread）", [

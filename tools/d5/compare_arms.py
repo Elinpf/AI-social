@@ -38,8 +38,10 @@ SCHEMA = "d6-compare/1.0"
 # 分母来源：per_message / dm_group / threads / pairs / events
 SPECS: List[Tuple[str, str, str, Optional[str], str, Optional[str]]] = [
     # ---- 结构层（per-thread）
-    ("S-1A 说话人交替轮次 p50", "S-1_turns_per_thread.A_speaker_turns.p50", "threads", None, "struct", "up"),
-    ("S-1A 说话人交替轮次 max", "S-1_turns_per_thread.A_speaker_turns.max", "threads", None, "struct", "up"),
+    ("S-1C 轮数(turn_index 去重) p50", "S-1C_turns_by_turn_index.dist.p50", "threads", None, "struct", "up"),
+    ("S-1C 轮数(turn_index 去重) max", "S-1C_turns_by_turn_index.dist.max", "threads", None, "struct", "up"),
+    ("S-1A 说话人交替段数 p50", "S-1_turns_per_thread.A_speaker_turns.p50", "threads", None, "struct", "up"),
+    ("S-1A 说话人交替段数 max", "S-1_turns_per_thread.A_speaker_turns.max", "threads", None, "struct", "up"),
     ("S-1B 往复对数 p50（仅后臂）", "S-1_turns_per_thread.B_roundtrips.p50", "threads", None, "struct", "up"),
     ("S-2 线程消息数 p50", "S-2_thread_scale.msgs_per_thread.p50", "threads", None, "struct", "up"),
     ("S-2 单条消息线程占比", "S-2_thread_scale.single_msg_thread_ratio", "threads", "thread:single_msg_thread", "struct", "down"),
@@ -68,7 +70,9 @@ SPECS: List[Tuple[str, str, str, Optional[str], str, Optional[str]]] = [
     ("L-9 元话语率", "L_wording.L-9_meta_talk_rate", "per_message", "item:L-9", "wording", "down"),
     ("L-10 自称错误率", "L_wording.L-10_self_address_error_rate", "per_message", None, "wording", "down"),
     ("L-11 含第二人称率（dm+group）", "L_wording.L-11_second_person_rate_dm_group", "dm_group", "item:L-11", "wording", "up"),
-    ("L-12 对端称呼率（dm+group）", "L_wording.L-12_peer_name_address_rate", "dm_group", "item:L-12", "wording", "up"),
+    ("L-12b 对端称呼率（判定用，dm+group）", "L_wording.L-12b_peer_address_rate", "dm_group", "item:L-12", "wording", "up"),
+    ("L-12a 对端提及率（描述，dm+group）", "L_wording.L-12_peer_mention_rate", "dm_group", "item:L-12", "wording", "up"),
+    ("L-13 token 泄漏率", "L-13_token_leak.token_leak_rate", "per_message", None, "wording", "down"),
     # ---- 生活气息 F 系列
     ("F-1 非功能性闲聊占比", "F-1_chatter.nonfunctional_chatter_rate", "per_message", None, "struct", "up"),
     ("F-2 话题漂移率", "F-2_topic_drift.drift_rate", "pairs", None, "struct", None),
@@ -217,6 +221,8 @@ def main(argv=None) -> int:
         open(args.out_json, "w", encoding="utf-8").write(txt + "\n")
 
     lines = ["# 双臂对比表（脚本生成，勿手改）\n",
+             "> **口径声明**：轮数一律用 `S-1C 轮数(turn_index 去重)`，`S-1A` 是「说话人交替段数」（不等于轮数）；"
+             "L-12 判定用 **L-12b 称呼**，L-12a 提及为描述列。**旧版曾把 `L-12=49.8%` 写入本表，该值作废**（成因：GROUP 的 `to` 是 group_id，不可命中项仍留在分母）。\n",
              "- 臂：" + " / ".join(f"`{n}`" for n in names),
              "- 阈值：B2 同分母上界；退化用 rule-of-three；无可用带只作描述\n"]
     for kind, title in (("struct", "结构层 + 生活气息（S/K/F）"), ("wording", "措辞层（L）")):

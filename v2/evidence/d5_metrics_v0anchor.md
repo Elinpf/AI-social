@@ -2,20 +2,19 @@
 
 - 输入日志: `v2/evidence/run_d2_before_n16_seed42/run.jsonl`
 - run.jsonl sha256: `sha256:c1f86bf61f62b3a0ce8e17e0c2312791cf0262381cd2120c2a63c9b6258963cf`
-- 脚本 sha256: `sha256:4049fbf83f2bfde52c7565c28869669de40478a2db7282177e4567c749d1163c`
+- 脚本 sha256: `sha256:ac1a3886cc2d65588b0a030a168f93e2cfa25b82fd6dadd6ceb72e58a11751aa`
 - 口径版本: `d5-metrics/1.0` / thread_schema=`legacy`
 - 准入结论: **ADMITTED** / evidence_level=`evidence`
 
 消息数 187，线程数 172，channel={'public': 48, 'dm': 132, 'group': 7}
 
-### S-1 线程轮次（per-thread）
+### S-1 线程结构（per-thread；**轮数请用 S-1C**）
 
 | 指标 | 值 |
 |---|---|
-| `A_speaker_turns.p50` | 1.0 |
-| `A_speaker_turns.p90/max` | 1.0 / 2.0 |
-| `B_roundtrips.p50` | 0.0 |
-| `B_roundtrips.max` | 0.0 |
+| `S-1C 轮数(turn_index 去重) p50/p90/max` | None / None / None |
+| `S-1A 说话人交替段数 p50/p90/max` | 1.0 / 1.0 / 2.0 |
+| `S-1B 往复对数(指针) p50/max` | 0.0 / 0.0 |
 
 ### S-2 线程规模（per-thread）
 
