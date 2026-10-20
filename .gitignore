@@ -26,9 +26,10 @@ code/logs/
 *.tmp
 
 # ===== 误建的本地影子目录（2026-10-20 清理）=====
-# 有人用相对路径误建了 ./artifacts/（含 code/ 与 reports/）。它不是团队共享目录
-# （团队共享目录在 .agent_teams/.../team-workspace/artifacts/），且未被忽略 → 一提交就会进公开仓库。
-# 真实产物已归位：对内 → 团队 artifacts/{code,reports}/；对外 → reports/。
+# `/artifacts/` 为**误建的本地影子**（有人用相对路径在仓库根建了 artifacts/）。
+# 正式产物不在这里：**对内** → 团队共享工作区 `team-workspace/artifacts/{code,reports}/`；
+# **对外** → 仓库内 `reports/`（报告族）。
+# 不要再在仓库根新建 artifacts/ —— 它不是团队共享目录，一提交就会随公开仓库外泄。
 # 根锚定（前导 /），避免误伤其他层级同名目录。
 /artifacts/
 
