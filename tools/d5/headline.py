@@ -23,7 +23,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 INDICATORS = [
     ("多轮线程占比 (turns_A>=3)", "S-2_thread_scale.multi_turn_thread_ratio", "threads", "thread:multi_turn_thread"),
     ("回复指针完整率", "S-4_reply_pointer_coverage.rate", "ptr_nonfirst", None),
-    ("对端称呼率 L-12", "L_wording.L-12_peer_name_address_rate", "dm_group", "item:L-12"),
+    ("对端称呼率 L-12b（判定用）", "L_wording.L-12b_peer_address_rate", "dm_group", "item:L-12"),
+    ("对端提及率 L-12a（描述）", "L_wording.L-12_peer_mention_rate", "dm_group", "item:L-12"),
 ]
 
 
