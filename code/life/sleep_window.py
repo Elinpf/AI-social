@@ -38,8 +38,14 @@ def load_params(path: str | Path | None = None) -> dict[str, Any]:
                     sleep[k] = v
     # T297b: 运行时注入 hook —— 组合根可经 `config["life_v2"]` 覆盖（不落盘、不改指纹）。
     from . import config as _lcfg
+    from . import dialogue_threads as _DT
+    # D2：`dialogue`/`observe` 两段同属 `life_v2` 配置，作为**直通占位键**出现，
+    # 否则 `--override life_v2.dialogue.*`（run_override 机制）会在此处 fail-loud
+    # 报 unknown key。本模块不消费它们（由 `life/dialogue_threads.load_params` 读）。
     return _lcfg.apply("life_v2", {"sleep": sleep, "forgetting": forgetting,
-                                   "persona_drift": persona})
+                                   "persona_drift": persona,
+                                   "dialogue": dict(_DT.DEFAULTS),
+                                   "observe": dict(_DT.OBSERVE_DEFAULTS)})
 
 
 def enabled(params: dict) -> bool:

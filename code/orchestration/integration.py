@@ -162,6 +162,27 @@ def sweep_orphan_side_dirs(base_dir: str | None = None, prefix: str = SIDE_PREFI
     return {"removed": removed, "kept": kept, "warned": warned, "would_remove": would_remove}
 
 
+def _msg_uid(seed: int, seq: int) -> str:
+    """D2 全局唯一消息键：`<seed>:<seq>`（seq=事件全局序号，确定性、可重放、逐条一致）。"""
+    return f"{seed}:{seq}"
+
+
+def _thread_fields(p: dict) -> dict:
+    """D2 线程字段装配（只追加键；缺省 None/[] ⇒ 旧 intent 走同一路径也不会报错）。
+
+    字段契约见 `life/dialogue_threads.py` 顶部注释与 `life/ports.py`。
+    **不进 state_hash**（`WorldState.to_dict()` 投影不含 event payload），只进事件哈希链。
+    """
+    return {
+        "thread_id": p.get("thread_id"),
+        "turn_index": p.get("turn_index"),
+        "reply_to": p.get("reply_to"),
+        "participants": list(p.get("participants") or []),
+        "topic": p.get("topic"),
+        "ctx": p.get("ctx"),
+    }
+
+
 def _load_social_cfg() -> dict:
     """v2 社会层配额/去重（config/social.json，纳入 engine_version 指纹）。"""
     try:
@@ -800,6 +821,7 @@ class KernelAdapter:
             payload = {"msg_id": f"D-{r}-{n}", "from": agent_id, "to": to,
                        "body": body, "body_ref": body_ref, "refs": refs, "tag_hints": tags,
                        "place": place, "day": t["day"], "slot": t["slot"]}
+            payload.update(_thread_fields(p))   # D2：线程字段（只追加；旧 intent 缺省→None/[]）
         elif scope == "global":
             n_a = sum(1 for rec in self._round_msgs("MSG_PUBLIC")
                       if rec["payload"].get("author") == agent_id)
@@ -811,9 +833,11 @@ class KernelAdapter:
                                              "author": agent_id, "day": t["day"], "slot": t["slot"]},
                                  phase=PHASE_COMMUNICATE, actor=agent_id)
                 return IntentResult(ok=False, reason="quota_global", event_seqs=(seq,))
-            payload = {"msg_id": f"P-{r}-{n_g}", "author": agent_id, "topic": p.get("topic"),
+            payload = {"msg_id": f"P-{r}-{n_a}", "author": agent_id,
+                       "topic": p.get("topic"),
                        "body": body, "body_ref": body_ref, "refs": refs, "tag_hints": tags,
                        "place": None, "scope": "global", "day": t["day"], "slot": t["slot"]}
+            payload.update(_thread_fields(p))   # D2：线程字段（只追加）
         else:  # place_group
             gid = p.get("group_id")
             if not gid or gid not in st.groups:
@@ -836,7 +860,13 @@ class KernelAdapter:
             payload = {"msg_id": f"G-{gid}-{r}-{n_g}", "group_id": gid, "from": agent_id,
                        "body": body, "body_ref": body_ref, "refs": refs, "tag_hints": tags,
                        "place": place, "day": t["day"], "slot": t["slot"]}
+            payload.update(_thread_fields(p))   # D2：线程字段（只追加）
 
+        # D2：msg_uid —— 用**预测的全局 seq** 派生（arbiter 的 prov_seq 规则：
+        # seq = len(ledger.records) + len(pending)），因此该值与落账后的 seq 相同、
+        # 同 seed 重放逐条一致；`reply_to` 指向 msg_uid 即无歧义。
+        pred_seq = len(self.engine.ledger.records) + len(getattr(self.engine.arbiter, "_pending", []))
+        payload["msg_uid"] = _msg_uid(int(self.engine.state.seed), pred_seq)
         seq = self._emit_assembled(etype, p, payload, phase=PHASE_COMMUNICATE, actor=agent_id)
         return IntentResult(ok=True, event_seqs=(seq,))
 
@@ -963,9 +993,11 @@ def build_world(seed: int, config: dict | None = None, *, n: int | None = None,
         llm = _default_llm(cache_dir=str(Path(side_root) / "freeze_cache"), engine=engine)
     side = SideStore(side_root)
     embed = HashEmbeddingModel()
+    from life.dialogue_threads import build_display_map
+    peer_names = build_display_map(personas)   # D2：{persona_id: 提示词显示名}（只读注入）
     agents = [LifeLayerAgent(pid, personas[pid], adapter, llm=llm,
                              side_store=side, embedding=embed, places=places,
-                             peers=pids)
+                             peers=pids, peer_names=peer_names)
               for pid in pids]
     engine.agent_steppers = agents
     engine.kernel = adapter  # T338：组合根注入内核只读端口（life 经 ctx.kernel.round_events）

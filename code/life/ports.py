@@ -62,6 +62,26 @@ ALL_INTENT_CLASSES = (
 #   place_group -> MSG_GROUP (members).
 SOCIAL_SCOPES = ("private", "place_group", "global")
 
+# ---- D2 线程化字段（payload 追加键；只追加不改既有语义）----------------------
+# 全部是 **MSG_* payload 的附加键**（不新增事件类型）：
+#   thread_id     str        同一次「你来我往」共享；DM=`TH-<发起人>-<对端>-<发起round>`，
+#                            GROUP=`TH-<发起人>-G<group_id>-<round>`，
+#                            PUBLIC=`TH-<发起人>-PUB-<round>-<k>`（k 同 round 内自增，保证全局唯一）
+#   turn_index    int        线程内序号，0=发起，回复=+1（连续无跳号）
+#   reply_to      str|None   被回复的 msg_id（发起为 None）；**必须同线程且 seq 更早**
+#   participants  list[str]  线程参与者（agent_id 列表，同线程内一致）
+#   ctx           dict       {relation:int, mood:str, need:{dim:int}, topic:str|None,
+#                             trigger:str, initiator:str}——生成时快照，缺的键省略
+#   topic         str|None   话题线（发起=模板 id；回复沿用线程首条）
+# 语义边界：措辞与结构**不进判定/数值**；**不进 state_hash**（`WorldState.to_dict()` 不含
+# event payload），只进事件哈希链。旧日志缺这些键时按「单发、轮次=1」降级（向后兼容）。
+SOCIAL_THREAD_FIELDS = ("thread_id", "turn_index", "reply_to", "participants", "ctx", "topic")
+
+# msg_id 契约（D2 修正）：`D-<round>-<agent_id>-<n>` / `P-<round>-<agent_id>-<n>` /
+# `G-<group_id>-<round>-<n>`。旧格式 `D-<round>-<n>` 在**同回合不同 agent** 间会撞，
+# 不满足「msg_id 全局唯一」，故必须带 author/agent。
+
+
 
 @dataclass(frozen=True)
 class TimeCoord:

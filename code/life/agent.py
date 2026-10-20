@@ -25,6 +25,7 @@ from .memory import AssociativeMemory, EmbeddingModel, HashEmbeddingModel, SideS
 from .persona import Persona
 from . import persona_drift as PD
 from . import emotion as E
+from . import dialogue_threads as DT
 from . import sleep_window as _sleep
 from .policy import (social_enabled, exchange_enabled, m2b_judge_mode, m2b_importance_mode,
                      narrative_persist_enabled)
@@ -92,7 +93,8 @@ class LifeLayerAgent:
                  embedding: EmbeddingModel | None = None,
                  memory_params: dict | None = None,
                  places: dict[str, dict] | None = None,
-                 peers: list[str] | None = None) -> None:
+                 peers: list[str] | None = None,
+                 peer_names: dict[str, str] | None = None) -> None:
         self.agent_id = agent_id
         self.persona = persona
         self.kernel = kernel
@@ -109,6 +111,14 @@ class LifeLayerAgent:
         self._appraised: set = set()        # (to, week) already social-appraised (T127)
         self._narrated_weeks: set = set()
         self._comm_slot: str | None = None  # last slot we generated dialogue for (≤1/slot)
+        # D2 线程化（agent-local 表达层状态；不进 state_hash、不发事件）
+        self._peer_names = dict(peer_names or {})   # persona_id -> 提示词显示名（只读注入）
+        self._slot_msgs: dict = {}                  # slot_id -> 本 slot 已发 MSG 条数（上限见配置）
+        self._thread_replied_turn: dict = {}        # thread_id -> 我已回复到的最大 turn
+        self._replied_msg_ids: set = set()          # 已回复过的 msg_id（防重复回同一条）
+        self._round_replies = 0                     # 本回合已发出的回复数（K 上限）
+        self._round_marker = -1
+        self._pub_k = 0                             # 本回合 PUBLIC 线程自增序号
         self._accepted: set = set()         # offer_ids already accepted (T133)
         # own needs (initial from persona; then folded from own NEED_UPDATE events)
         self.needs: dict[str, int] = {d: int(persona.needs_init.get(d, 50)) for d in C.NEED_DIMS}
@@ -250,6 +260,10 @@ class LifeLayerAgent:
             return f"day{(rr // per_day) % _dow}-{_slot_names[(rr % per_day) // _rps]}"
 
         rel: dict = {}
+        # D2：线程化状态的**前向重建**（否则续跑会在同一 slot 重复发消息 / 重复接同一轮，
+        # 破坏 T276「续跑与一次性跑逐字节一致」）。纯读日志、确定性。
+        slot_msgs: dict = {}
+        thread_replied: dict = {}
         for rec in records:
             t = rec.get("type")
             p = rec.get("payload") or {}
@@ -263,6 +277,12 @@ class LifeLayerAgent:
                 if who == self.agent_id:
                     if comm_round is None or r >= comm_round:
                         comm_round = r
+                    sid = _slot_of(r)
+                    slot_msgs[sid] = slot_msgs.get(sid, 0) + 1
+                    tid_ = p.get("thread_id")
+                    ti_ = p.get("turn_index")
+                    if tid_ and ti_ is not None:
+                        thread_replied[tid_] = max(thread_replied.get(tid_, -1), int(ti_))
             elif t == "INTENT_REJECTED":
                 # `_communicate` 在**尝试**时就置 `_comm_slot`（即使 SOCIAL 被拒、无 MSG_*）⇒
                 # 被拒的对话尝试也必须算，否则续跑会**重复尝试**同一 slot（T298 cut=75）。
@@ -303,6 +323,8 @@ class LifeLayerAgent:
         self._judged = judged
         self._appraised = appraised
         self._comm_slot = _slot_of(comm_round) if comm_round is not None else None
+        self._slot_msgs = dict(slot_msgs)
+        self._thread_replied_turn = dict(thread_replied)
         self._rel_cache = rel
 
     # ---- public entry ------------------------------------------------------
@@ -346,9 +368,16 @@ class LifeLayerAgent:
     # 1. perceive ----------------------------------------------------------
     def _observe(self, wv, rep: StepReport) -> None:
         rep.perceived = len(wv.visible_events)
+        observe_msg = True
+        try:
+            observe_msg = bool(DT.load_params()["observe"].get("msg_enabled", True))
+        except Exception:
+            observe_msg = True
         for ev in wv.visible_events:
             if ev.seq in self._observed_seqs or ev.type not in _SALIENT_EVENTS:
                 continue
+            if not observe_msg and ev.type in ("MSG_DM", "MSG_PUBLIC", "MSG_GROUP"):
+                continue  # D2 消融开关：对话措辞不进记忆（默认开；关闭=行为回到旧链路）
             self._observed_seqs.add(ev.seq)
             text = self._describe_event(ev)
             imp = self._score_importance(text, wv.round)
@@ -725,19 +754,176 @@ class LifeLayerAgent:
             self._submit_audit("NARRATIVE", payload, phase=6)
         return True
 
-    # ---- M6 dialogue / public / group (T98) --------------------------------
+    # ---- M6 dialogue / public / group (T98) + D2 线程化 ---------------------
+    def _dlg_cfg(self) -> dict:
+        try:
+            return DT.load_params()["dialogue"]
+        except Exception:
+            return dict(DT.DEFAULTS)
+
+    def _name(self, pid: str, cfg: dict | None = None) -> str:
+        """提示词里的称呼：优先显示名，关闭开关则回退 persona_id（保证非空、无裸 ID 断链）。"""
+        cfg = cfg or self._dlg_cfg()
+        if not cfg.get("names_enabled", True):
+            return pid
+        return self._peer_names.get(pid) or pid
+
+    def _comm_limits(self, wv) -> None:
+        if self._round_marker != wv.round:
+            self._round_marker = int(wv.round)
+            self._round_replies = 0
+            self._pub_k = 0
+
     def _communicate(self, wv) -> None:
-        """Generate wording via the LLM (purpose=dialogue) for a significant social
-        event and submit INTENT.SOCIAL. Wording is frozen (logged in the MSG_* event),
-        so replay never re-calls the model. ≤1 per agent per slot; round-level quotas
-        are enforced by the kernel."""
-        slot_id = f"day{wv.time.day_of_week}-{wv.time.slot}"
+        """D2：先看「是否有该我接的话」，有就接着往下说（多轮往复）；否则按计划发起一段新对话。
+
+        措辞由 LLM 生成后**冻结进 MSG_* 事件**（重放直接读 body，不重调模型）；
+        结构字段（thread_id/turn_index/reply_to/participants/ctx）由本处决定、内核落盘。
+        上限：单 slot 最多 `max_messages_per_slot` 条；单回合回复 ≤ `max_turns_per_round`；
+        单线程 ≤ `max_turns` 轮（到顶封口）。**不含任何世界态/数值后果。**
+        """
         if not social_enabled():          # T115: whole social-voice channel off
             return
         if not self._llm_ok(wv):          # T221c: M4 未许可 → 不发对话 LLM
             return
-        if slot_id == self._comm_slot:
+        self._comm_limits(wv)
+        cfg = self._dlg_cfg()
+        slot_id = f"day{wv.time.day_of_week}-{wv.time.slot}"
+        if int(self._slot_msgs.get(slot_id, 0)) >= int(cfg.get("max_messages_per_slot", 2)):
             return
+        if cfg.get("enabled", True):
+            target = self._pick_reply_target(wv, cfg)
+            if target is not None and self._send_reply(wv, target, cfg, slot_id):
+                return
+        self._initiate(wv, cfg, slot_id)
+
+    def _thread_max_turn(self, wv, tid: str) -> int:
+        """线程内「已存在的最大 turn_index」（按可见事件；无则 -1）。多方可同时处于同一 turn。"""
+        mx = -1
+        for ev in wv.visible_events:
+            if ev.type not in ("MSG_DM", "MSG_GROUP"):
+                continue
+            p = ev.payload or {}
+            if p.get("thread_id") != tid:
+                continue
+            t = p.get("turn_index")
+            if t is not None:
+                mx = max(mx, int(t))
+        return mx
+
+    # ---- 入站 → 回复 -------------------------------------------------------
+    def _pick_reply_target(self, wv, cfg):
+        """从可见事件里挑一条「对我说、尚未回、未超时、未到轮数顶」的消息。
+
+        确定性：按 seq 倒序遍历（最近优先），取第一条满足全部条件的；无则 None。
+        """
+        window = int(cfg.get("reply_window_rounds", 2))
+        max_turns = int(cfg.get("max_turns", 6))
+        for ev in reversed(list(wv.visible_events)):
+            if ev.type not in ("MSG_DM", "MSG_GROUP"):
+                continue
+            p = ev.payload or {}
+            if not DT.is_replyable(ev.type, p, self.agent_id):
+                continue
+            tid = p.get("thread_id")
+            if not tid:
+                continue                      # 旧格式（无线程字段）不接话：保持向后兼容
+            max_turn = self._thread_max_turn(wv, tid)
+            if max_turn + 1 >= max_turns:
+                continue                      # 线程到顶，封口
+            if int(wv.round) - int(ev.round) > window:
+                continue                      # 超时，线程结束
+            if int(self._thread_replied_turn.get(tid, -1)) >= max_turn:
+                continue                      # 线程最新一轮我已经接过
+            mid = p.get("msg_uid") or p.get("msg_id")   # D2：优先用全局唯一 msg_uid 去重
+            if mid and mid in self._replied_msg_ids:
+                continue
+            if self._round_replies >= int(cfg.get("max_turns_per_round", 2)):
+                continue                      # K 上限（单回合最多推进 K 轮）
+            return ev
+        return None
+
+    def _thread_history(self, wv, tid: str, cfg) -> list:
+        """同线程最近 `history_turns` 条（(说话人名字, body)），文本总长受 `max_thread_chars` 限。"""
+        rows = []
+        for ev in wv.visible_events:
+            if ev.type not in ("MSG_DM", "MSG_GROUP"):
+                continue
+            p = ev.payload or {}
+            if p.get("thread_id") != tid:
+                continue
+            rows.append((p.get("from") or "?", (p.get("body") or "").strip()))
+        rows = rows[-int(cfg.get("history_turns", 3)):]
+        budget = int(cfg.get("max_thread_chars", 240))
+        out = []
+        for who, body in rows:
+            line = f"{self._name(who, cfg)}：{body}"
+            if sum(len(x[1]) for x in out) + len(body) > budget:
+                break
+            out.append((who, line))
+        return out
+
+    def _ctx_snapshot(self, partner: str | None, topic: str | None,
+                      trigger: str | None = None, initiator: str | None = None) -> dict:
+        """生成时的语境快照（体积控：只存被引用的键；缺的键省略而非填假值）。
+
+        `trigger`/`initiator` 记录「这段对话怎么起的、谁先开口」——下一阶段做「生活气息」
+        （非功能闲聊、串门偶遇触发）时直接可用，不必重做字段。
+        """
+        rel = 0
+        if partner:
+            rel = int(self._rel_cache.get((partner, "affinity"), 0))
+        ctx = {"relation": rel, "mood": DT.mood_label(self.needs),
+               "need": DT.scarcest_need(self.needs), "topic": topic}
+        if trigger:
+            ctx["trigger"] = trigger
+        if initiator:
+            ctx["initiator"] = initiator
+        return ctx
+
+    def _send_reply(self, wv, ev, cfg, slot_id: str) -> bool:
+        p = ev.payload or {}
+        tid = p["thread_id"]
+        turn = self._thread_max_turn(wv, tid) + 1
+        partner = p.get("from")
+        parts = [x for x in (p.get("participants") or [partner, p.get("to")]) if x]
+        if self.agent_id not in parts:
+            parts.append(self.agent_id)
+        ctx_in = p.get("ctx") or {}
+        topic = ctx_in.get("topic") or (p.get("tag_hints") or [None])[0] or "闲聊"
+        history = self._thread_history(wv, tid, cfg)
+        prompt = self._reply_prompt(partner, topic, history, cfg)
+        res = self.llm.call("dialogue", prompt,
+                            meta={"agent_id": self.agent_id, "round": wv.round,
+                                  "thread": tid, "turn": turn})
+        body = (res.text or "").strip()
+        if not body:
+            return False
+        payload: dict = {
+            "scope": "private" if ev.type == "MSG_DM" else "place_group",
+            "body": body, "refs": [], "tag_hints": list(p.get("tag_hints") or []),
+            "thread_id": tid, "turn_index": turn,
+            "reply_to": p.get("msg_uid") or p.get("msg_id"),   # D2：指针指向 msg_uid（全局唯一）
+            "participants": sorted(set(parts)), "topic": topic,
+            "ctx": self._ctx_snapshot(partner, topic, trigger="reply",
+                                      initiator=DT.thread_initiator(tid)),
+        }
+        if ev.type == "MSG_DM":
+            payload["to"] = partner
+        else:
+            payload["group_id"] = p.get("group_id")
+        self._round_replies += 1
+        self._thread_replied_turn[tid] = turn
+        mid = p.get("msg_uid") or p.get("msg_id")
+        if mid:
+            self._replied_msg_ids.add(mid)
+        self._slot_msgs[slot_id] = int(self._slot_msgs.get(slot_id, 0)) + 1
+        self._comm_slot = slot_id
+        self.kernel.submit_intent(self.agent_id, Intent(INTENT_SOCIAL, self.agent_id, payload))
+        return True
+
+    # ---- 发起一段新对话 ----------------------------------------------------
+    def _initiate(self, wv, cfg, slot_id: str) -> None:
         entry = self._plan_slots.get(slot_id)
         if not entry or not entry.get("template_id"):
             return
@@ -753,23 +939,69 @@ class LifeLayerAgent:
             scope = "global"
         elif partners:
             scope, to = "private", partners[0]
-        res = self.llm.call("dialogue", self._dialogue_prompt(tid, parts),
+        res = self.llm.call("dialogue", self._dialogue_prompt(tid, parts, cfg),
                             meta={"agent_id": self.agent_id, "round": wv.round, "template": tid})
         body = (res.text or "").strip()
         if not body:
             return
-        self._comm_slot = slot_id
         payload: dict = {"scope": scope, "body": body, "refs": [], "tag_hints": [tid]}
         if to:
             payload["to"] = to
         if gid:
             payload["group_id"] = gid
+        if cfg.get("enabled", True):
+            # D2：线程起点（turn_index=0, reply_to=None）；topic 用模板 id（稳定字符串）
+            if scope == "private" and to:
+                thread_id = DT.thread_id_dm(self.agent_id, to, wv.round)
+            elif scope == "place_group" and gid:
+                thread_id = DT.thread_id_group(self.agent_id, gid, wv.round)
+            else:
+                thread_id = DT.thread_id_public(self.agent_id, wv.round, self._pub_k)
+                self._pub_k += 1
+            payload.update({"thread_id": thread_id, "turn_index": 0, "reply_to": None,
+                            "participants": sorted(set(parts)), "topic": tid,
+                            "ctx": self._ctx_snapshot(to, tid, trigger=tid,
+                                                      initiator=self.agent_id)})
+        self._slot_msgs[slot_id] = int(self._slot_msgs.get(slot_id, 0)) + 1
+        self._comm_slot = slot_id
         self.kernel.submit_intent(self.agent_id, Intent(INTENT_SOCIAL, self.agent_id, payload))
 
-    def _dialogue_prompt(self, tid: str, parts: list) -> str:
-        others = ", ".join(p for p in parts if p != self.agent_id) or "(独自)"
+    # ---- 提示词装配 --------------------------------------------------------
+    def _relation_line(self, partners: list) -> str:
+        bits = []
+        for p in partners:
+            if p not in self._peer_names and not self._rel_cache:
+                pass
+            fam = int(self._rel_cache.get((p, "familiarity"), 0))
+            aff = int(self._rel_cache.get((p, "affinity"), 0))
+            bits.append(f"{self._name(p)}（熟悉度{fam}/好感{aff}）")
+        return "、".join(bits)
+
+    def _mood_line(self) -> str:
+        mood = DT.mood_label(self.needs)
+        need = DT.scarcest_need(self.needs)
+        if need:
+            dim, val = next(iter(need.items()))
+            return f"情绪：{mood}；最紧的需求：{dim}={val}"
+        return f"情绪：{mood}"
+
+    def _dialogue_prompt(self, tid: str, parts: list, cfg: dict | None = None) -> str:
+        cfg = cfg or self._dlg_cfg()
+        partners = [p for p in parts if p != self.agent_id]
+        others = self._relation_line(partners) or "(独自)"
         return (self.persona.compressed_profile(self._current_goal())
-                + f"\n场景：{tid}；对象：{others}。请用一句话自然地说点什么。")
+                + f"\n场景：{tid}；对象：{others}。{self._mood_line()}。"
+                + "\n请用一句话自然地说点什么。")  # D2 不改措辞要求（保持基线原句），措辞优化归 D4
+
+    def _reply_prompt(self, partner: str | None, topic: str, history: list,
+                      cfg: dict | None = None) -> str:
+        cfg = cfg or self._dlg_cfg()
+        lines = "\n".join(line for _, line in history) or "(还没说什么)"
+        who = self._name(partner) if partner else "在场的人"
+        return (self.persona.compressed_profile(self._current_goal())
+                + f"\n你正在和{who}聊「{topic}」。{self._mood_line()}。"
+                + f"\n刚才的对话：\n{lines}"
+                + "\n请接着说一句。")  # D2 只承载「承接上一轮」的结构必要性，不做措辞优化（归 D4）
 
     # ---- economy: negotiation / offer / order-cancel (T133) ----------------
     def _maybe_negotiate(self, wv) -> None:
