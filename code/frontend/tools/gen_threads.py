@@ -213,7 +213,8 @@ class ContextIndex:
 
 def build(log_path: Path, meta_path: Path | None, personas: dict, places: dict,
           keep_context: bool = True, keep_moves: bool = True,
-          run_label: str | None = None) -> dict:
+          run_label: str | None = None,
+          personas_path: Path | None = None, places_path: Path | None = None) -> dict:
     events = 0
     msgs: list[dict] = []
     moves: list[dict] = []
@@ -417,7 +418,15 @@ def build(log_path: Path, meta_path: Path | None, personas: dict, places: dict,
             "round_range": [first_round, last_round],
             "llm_provider_in_log": provider,
             "meta_json": meta or None,
-            "meta_path": str(meta_path) if meta_path else None,
+            # 派生输入的字节绑定：换 personas/places 也会产出不同 threads.json，此处留痕以便解释差异
+            "inputs": {
+                "personas": {"name": Path(personas_path).name if personas_path else None,
+                             "sha256": sha256_file(Path(personas_path)) if personas_path and Path(personas_path).exists() else None},
+                "places": {"name": Path(places_path).name if places_path else None,
+                           "sha256": sha256_file(Path(places_path)) if places_path and Path(places_path).exists() else None},
+                "params": {"keep_context": bool(keep_context), "keep_moves": bool(keep_moves),
+                           "label": run_label},
+            },
         },
         "prune_rule": (
             "保留 MSG_DM/MSG_PUBLIC/MSG_GROUP + 语境因果事件"
@@ -491,7 +500,8 @@ def main() -> int:
     places = load_places(Path(a.places))
     data = build(log_path, Path(a.meta) if a.meta else None, personas, places,
                  keep_context=not a.no_keep_context, keep_moves=not a.no_keep_moves,
-                 run_label=a.label)
+                 run_label=a.label,
+                 personas_path=Path(a.personas), places_path=Path(a.places))
 
     st = data["stats"]
     print(f"[gen_threads] events={data['source']['events_total_in_log']} "
