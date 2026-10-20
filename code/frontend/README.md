@@ -520,7 +520,8 @@ print('rounds',r,'seals',len(seals),'range',seals[0],seals[-1],'OK' if seals==li
 | 区块 | 内容 | 数据来源 |
 |---|---|---|
 | 顶栏数据源条 | run.jsonl 路径、`run_sha256`（前 12 位）、provider、seed、事件数、消息数、meta 是否对齐 | `threads.json.source` |
-| 线程头 | 参与者像素头像/姓名（含角色）、渠道（私聊/公开说/群聊）、地点、模拟时间、`thread_id`、轮次数 | `threads[]` |
+| 线程头 | 参与者像素头像/姓名（含角色）、渠道（私聊/公开说/群聊）、地点、模拟时间、`thread_id`、`N 条 / M 轮` | `threads[]` |
+| 轮次口径 | **条 = 线程内消息数**；**轮 = `turn_index` 去重后的回合数**（日志字段直接去重，不推断）。两者不同是因为同一回合可能多人先后发言（`turn_index` 重复，页面会标「turn_index 重复 k 组 / n 条」） | `messages[].turn_index` |
 | 消息气泡 | 第 n 轮 · 说话人 · 正文 · `#seq`（点击复制事件定位） | `messages[]` |
 | 为什么这么聊（可展开） | 生成时语境快照（`payload.ctx`）、关系证据（before→after + cause + seq）、当时需求、在场/群组证据、本条溯源（seq/msg_id/reply_to/turn_index/refs） | `messages[].context` |
 | 筛选 | 只看多轮（一键热键）、按人物、按地点、线程长度 ≥N、正文搜索 | 全部来自数据文件 |

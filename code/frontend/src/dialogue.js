@@ -673,7 +673,8 @@
       var top = state.threads[idxs[0]];
       notice.appendChild(el("div", {
         class: "notice", style: "border-color:rgba(92,200,255,0.4);background:rgba(92,200,255,0.08);color:#b9e6ff",
-        text: "已按「轮次」排序：先看最长的线程（当前最长 " + top.turns + " 轮，"
+        text: "已按「轮次」排序：先看最长的线程（当前最长 " + top.turns + " 条"
+            + (threadDistinctTurns(top) ? " / " + threadDistinctTurns(top) + " 轮" : "") + "，"
             + (top.participants || []).map(agentShort).join(" ⇄ ") + "）。想看时间顺序请在左侧「排序」切换。"
       }));
     }
@@ -753,11 +754,26 @@
     var who = el("div", { class: "who" }, [names, el("div", { class: "meta", text: metaBits.join(" · ") })]);
 
     var tags = el("div", { class: "tags" });
-    tags.appendChild(el("span", { class: "tag turns", text: t.turns + " 轮" }));
+    var dt = threadDistinctTurns(t);
+    tags.appendChild(el("span", {
+      class: "tag turns",
+      text: dt ? (t.turns + " 条 / " + dt + " 轮") : (t.turns + " 轮"),
+      title: dt ? ("条 = 线程内消息数；轮 = turn_index 去重后的回合数（日志字段直接去重）")
+                : "旧格式无 turn_index：只能按消息条数计"
+    }));
     if (t.multi_turn) tags.appendChild(el("span", { class: "tag multi", text: "多轮" }));
     if (t.legacy) tags.appendChild(el("span", { class: "tag legacy", text: "旧格式·单发" }));
     if (state.filters.leak) {
       tags.appendChild(el("span", { class: "tag legacy", text: "泄漏 " + threadLeakCount(t) + " 条" }));
+    }
+    // turn_index 重复 = 同一轮有多人先后发言（日志事实，不是前端推断）：显式标出来
+    var dupTurns = threadDupTurns(t);
+    if (dupTurns.groups > 0) {
+      tags.appendChild(el("span", {
+        class: "tag",
+        text: "turn_index 重复 " + dupTurns.groups + " 组 / " + dupTurns.extra + " 条",
+        title: "同一 turn_index 下有多条消息（例如都回复同一条上轮消息）；页面按日志原样显示，不合并、不重排"
+      }));
     }
     var shown = visibleCount(ti);
     if (shown < t.messages.length) tags.appendChild(el("span", { class: "tag live", text: "回放中 " + shown + "/" + t.messages.length }));
@@ -807,7 +823,12 @@
           toast("已复制事件定位 " + s + "（msg_id=" + (m.msg_id || "未记录") + "）");
         }
       }));
-      var bubble = el("div", { class: "bubble" }, bubbleChildren);
+      var bubble = el("div", {
+        class: "bubble",
+        title: "seq #" + m.seq + " · msg_id=" + (m.msg_id || "未记录")
+             + " · turn_index=" + (m.turn_index == null ? "未记录" : m.turn_index)
+             + " · reply_to=" + (m.reply_to || "null")
+      }, bubbleChildren);
       var row = el("div", {
         class: "msg" + (right ? " right" : ""),
         "data-seq": String(m.seq == null ? "" : m.seq),
@@ -830,6 +851,30 @@
 
     if (shown < t.messages.length) card.classList.add("flash");
     return card;
+  }
+
+  // 「轮」有两种口径，页面必须分开写，否则读者会把「18 条消息」误读成「18 个回合」：
+  //   turns        = 线程内消息条数（统计单位）
+  //   distinctTurns= turn_index 去重后的回合数（日志字段直接去重，不推断）
+  function threadDistinctTurns(t) {
+    var set = {};
+    (t.messages || []).forEach(function (m) { if (m.turn_index != null) set[m.turn_index] = 1; });
+    var k = Object.keys(set).length;
+    return k || null;
+  }
+
+  function threadDupTurns(t) {
+    var byTurn = {};
+    (t.messages || []).forEach(function (m) {
+      var k = m.turn_index;
+      if (k == null) return;
+      (byTurn[k] = byTurn[k] || []).push(m);
+    });
+    var groups = 0, extra = 0;
+    Object.keys(byTurn).forEach(function (k) {
+      if (byTurn[k].length > 1) { groups++; extra += byTurn[k].length - 1; }
+    });
+    return { groups: groups, extra: extra };
   }
 
   function threadKey(t) { return t.thread_id || ("legacy:" + (t.messages[0] || {}).seq); }
