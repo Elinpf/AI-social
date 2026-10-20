@@ -27,7 +27,7 @@ DEFAULTS = {
     "max_turns": 6,               # 单线程最大轮数（含发起），到顶即封口
     "max_turns_per_round": 2,     # 单线程单回合最多推进轮数（K）
     "max_messages_per_slot": 2,   # 单 agent 单 slot 最多发出的 MSG 条数（发起+回复合计）
-    "reply_window_rounds": 2,     # 入站消息在多少回合内仍可被回（超时即线程结束）
+    "reply_window_rounds": 4,     # 入站消息在多少回合内仍可被回（超时即线程结束）[D9: 2→4 单变量]
     "history_turns": 3,           # 上下文装配只带最近 K 轮（控 token）
     "max_thread_chars": 240,      # 线程历史文本硬上限（控 token）
     "names_enabled": True,        # 邻居显示名注入（false = 回退到 persona_id 裸 ID）
