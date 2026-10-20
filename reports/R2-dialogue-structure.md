@@ -81,6 +81,13 @@
 
 **【事实】** 改造后（`thread_schema = explicit`）：按 `thread_id` 分组，组内按 `(round, seq)` 升序排序即得一条线程；线程轮次 = 组内条数。
 
+**【事实 · 指针解析判据】** `reply_to` 存的是 **`msg_uid`**（全局唯一键，格式 `<seed>:<预测全局seq>`），不是 `msg_id`——代码取值为 `p.get("msg_uid") or p.get("msg_id")`，优先唯一键。因此：
+- `ptr_ok` = `reply_to` 能解析到**同 `thread_id` 且 `seq` 更早**的 `msg_uid`；
+- `ptr_dangling` = 解析不到；`ptr_cross_thread` = 解析到别的线程；`ptr_forward` = 指向更晚的 `seq`；
+- `msg_uid` 的唯一性由 `tools/d2/thread_metrics.py` 的 `msg_uid_unique` 断言给出（跑批时附读数）。
+
+**【事实】** 旧格式日志（v0-anchor）没有 `msg_uid`、也没有线程字段，故 **不会出现"用 `msg_id` 当指针"的情况**——v0 的指针完整率恒为 0 是**字段缺失**，不是"发消息却都不回复"。
+
 **【事实】** 改造前（`thread_schema = legacy`）：`thread_key = (day, channel, frozenset{from, to})`，同样按 `(round, seq)` 升序。
 
 **【判断】** 把"边界规则"和"复算规则"分开是本设计的要点：边界规则只影响**新生成的世界**；复算规则对所有日志一致。这样将来若调整边界规则（例如把最大轮次从 6 改到 8），旧日志的线程切分数字**不会**跟着变——读者任何时候重算都得到与报告一致的结果。
