@@ -1,9 +1,24 @@
-# R9 · 措辞臂 A1：压低括号旁白的单变量提示词改造（方向性筛查）
+# R9 · 措辞臂 A1：压低括号旁白的提示词改造（**名义双变量**，窗口变量经 D9 证明惰性；方向性筛查）
 
 > **版本状态：【读数、截图与判定已定稿（裁定 B：真实但有副作用）· 已随 `feat/wording-a1` 推送】** 本轮**不出效果结论**：形式层（括号旁白）与本提示词约束一致，但具体性通道被替换（详见 §4.2）。
 > **报告族**：R9｜短名 `wording-a1`｜可信边界总则见 **R1 §3**，生活气息维度定义见 **R4 §1**，措辞层口径见 **R3 §2**（本份不复制定义，只引用编号）
 > **分层标记**：【事实】／【读数】／【判断】／【未完成】
 > **署名**：AI 小镇 · 对话体验与研究发布小队（JiuwenSwarm 多智能体团队）
+
+---
+
+## 0.0 更正记录（leader 裁定 2026-10-21 10:17，按此为准）
+
+**【更正 1 · A0 绑错树】** 本报告原把 A0 记为 `884f4541` 并引 `prompt_sha = e6ec7355…`，**错误**。A0 日志是 19:19 在 landing **`3ec85a0`** 上跑的：
+- **运行期树（拍板身份）= `3ec85a0`**（`code_sha_start`，landing 记录 + 期间无改动）；
+- `884f4541` 只是 **meta 写入时刻的 HEAD**，**不代表跑批代码**；
+- A0 的 `prompt_sha` 应为 **`2cb2f5ba…`**（`3ec85a0` 的值），不是 `e6ec7355…`（那是 `884f4541` 的）。
+
+**【更正 2 · A1 不是单变量】** `git diff 884f4541 a637371 -- code/life` 除两条收尾提示词外，**还含 `dialogue_threads.py` 中 `reply_window_rounds: 2 → 4`**。故 A1 是**名义双变量**：
+- **窗口变量经 D9 单变量臂证明为惰性/死参数**：两臂回复间隔分布完全相同 `{1: 327, 2: 153}`、最大间隔 = 2，**从未出现 3/4** ⇒ 在**行为上**不产生差异；
+- 因此结论统一改写为：**「措辞层效应（在名义双变量下观测，其中窗口变量经 D9 证明为惰性）」**；**全文不再使用「单变量」表述**。
+
+> 以上两条为本报告的口径更正；原「单变量」与 `e6ec7355` 的表述已按此替换。
 
 ---
 
@@ -13,19 +28,19 @@
 
 | 臂 | 分支 / `code_sha` | 规模 | `run.jsonl` sha256（sha8） | 消息数 | 准入 |
 |---|---|---|---|---|---|
-| **A0**（基线） | `feat/dialogue-density` @ `884f4541`（数据源 `run_d2_after_n16_seed42`） | 16 agents × 84 rounds / seed 42 | `643f13a528c288d3e9677cb8ac100139224afbd0b46c0f7da0c3a5ed85b13141`（`643f13a5`） | **686** | `ADMITTED / evidence` |
+| **A0**（基线） | **运行期树 `3ec85a0`（landing；数据源 `run_d2_after_n16_seed42`）**；`884f4541` 仅记为 meta 写入时刻 HEAD，**不代表跑批代码** | 16 agents × 84 rounds / seed 42 | `643f13a528c288d3e9677cb8ac100139224afbd0b46c0f7da0c3a5ed85b13141`（`643f13a5`） | **686** | `ADMITTED / evidence` |
 | **A1**（措辞臂） | `feat/wording-a1` @ **`a637371`**（`code_sha = code_sha_end`） | **4 agents × 60 rounds / seed 42** | `ae969198feaefd1f69147001e027394d55527bd1a0e460ff654697bdc3b1559b`（`ae969198`） | **124** | **`REJECTED / probe`**（见 §2.4） |
 
 > ⚠️ **规模不同（n16r84 vs n4r60；686 条 vs 124 条）是本报告最重要的边界**：分母差 **>30%**，按族纪律（`reports/README.md`）两臂率值**不可比**，本报告**只写方向性**，不写效果结论、不做显著性断言。
 
-### 0.2 A1 的改动面（单变量：只动两条收尾指令）
+### 0.2 A1 的改动面（**名义双变量**：两条收尾提示词 + `reply_window_rounds` 2→4；后者经 D9 证明惰性）
 
 - 文件：`code/life/agent.py`，**精确两行** —— `L1058`（`_dialogue_prompt` 末行）、`L1069`（`_reply_prompt` 末行）；`2 insertions / 2 deletions`，不增删行、缩进不变。
 - 旧 → 新：
   - dialogue：`请用一句话自然地说点什么。` → `只写台词本身（一句家常话）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。`
   - reply：`请接着说一句。` → `只写台词本身（接着刚才的话往下说一句）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。`
 - 逐字 diff + 基线声明 + 变/不变对照：**`v2/evidence/d4_prompt_diff_a1.txt`**
-- `prompt_sha`（口径 `tools/prompt_iter/prompt_iter.py:32`）：**A0 `e6ec7355789358d8` → A1 `5186aa9a3db55de8`**（不相等 ⇒ 提示词改动确实生效）
+- `prompt_sha`（口径 `tools/prompt_iter/prompt_iter.py:32`）：**A0 `2cb2f5ba…`（运行期树 `3ec85a0`）→ A1 `5186aa9a3db55de8`**（不相等 ⇒ 提示词改动确实生效）。⚠️ 原写的 A0 `e6ec7355…` 属 `884f4541` 树，**已作废**。
 - 零 `config` 改动、零 `engine` 改动、零结构改动；`soft.py` / `planner.py` / `freeze/llm_client.py` / `persona.py` 整文件 sha256 未变。
 
 ### 0.3 复算命令（逐字，仓库根执行）
@@ -47,9 +62,9 @@ cd code && python3 -m obs llm-cost --log ../v2/evidence/run_a1_wording_n4r60_see
 
 ---
 
-## 1. 方法论与单变量声明
+## 1. 方法论与变量声明（**名义双变量**）
 
-- **单变量**：两臂差别 = **仅 `_dialogue_prompt` / `_reply_prompt` 的两条收尾指令**。相对 master 的 diff 只落在 `code/life/agent.py` 两行；函数级对照显示全文件 51 个函数中**只有这 2 个函数变化**，其余 49 个不变且**无行号移动**（`d4_prompt_diff_a1.txt` §4）。
+- **名义双变量**：两臂差别 = ①`_dialogue_prompt`/`_reply_prompt` 两条收尾指令；②`dialogue_threads.py` 的 `reply_window_rounds` 2→4。**②在行为上惰性**（D9 单变量臂：回复间隔分布 `{1:327,2:153}` 两臂完全相同、最大间隔 2，从未出现 3/4）⇒ 措辞层效应可近似归因于 ①，但**表述上仍须写「名义双变量」**。相对 master 的 diff 只落在 `code/life/agent.py` 两行；函数级对照显示全文件 51 个函数中**只有这 2 个函数变化**，其余 49 个不变且**无行号移动**（`d4_prompt_diff_a1.txt` §4）。
 - **未改 **：`reply_window_rounds`（保持 D9 的 4）、`max_messages_per_slot=2`、`max_turns=6`、感知窗 `VISIBLE_WINDOW_ROUNDS=2`、全部 `config`、全部 `engine`/调度/时间模型 ⇒ 与本轮正交。
 - **两臂不可比的部分**：规模（16×84 vs 4×60）、消息分母（686 vs 124）；A1 为**方向性筛查批**（成本约束下的最小样本），不是与 A0 同规模的正式对照臂。
 - **本报告不做的**：不做率值显著性比较、不给噪声带（本轮未跑同分母 bootstrap）、不把 `probe` 级读数写成结论。
@@ -254,7 +269,7 @@ cd code && python3 -m obs llm-cost --log ../v2/evidence/run_a1_wording_n4r60_see
 | 2 | **A1 源日志**：`run.jsonl` 全值 `ae969198feaefd1f69147001e027394d55527bd1a0e460ff654697bdc3b1559b`（4,749,329 B，`wc -l` **9,940** = `meta.events`）；四图文件名 sha8 = 此前 8 位 | 事实（数据源） | `v2/evidence/run_a1_wording_n4r60_seed42/run.jsonl`（**不入库**，`.gitignore:8 **/*.jsonl`；以 sha256 作引用凭据） | `ae969198feaefd1f69147001e027394d55527bd1a0e460ff654697bdc3b1559b` | `ae969198` | `sha256sum v2/evidence/run_a1_wording_n4r60_seed42/run.jsonl`；`wc -l …` |
 | 3 | 真跑与成本验真：RC=0、`provider_guard.ok=true`、`{openai_compat:272}`、calls 272、cached 45、degraded 0 | 事实（验真） | `v2/evidence/run_a1_wording_n4r60_seed42/llmcost.json`、`v2/evidence/a1_llmcost_ae969198.txt` | `llmcost.json` = `709ce510a7ef12fb…`；`a1_llmcost_ae969198.txt` = `142039f13bbd5d46…` | `709ce510` / `142039f1` | `cd code && python3 -m obs llm-cost --log ../v2/evidence/run_a1_wording_n4r60_seed42/run.jsonl --require-provider openai_compat` |
 | 4 | 措辞层读数（L-2/L-3 0/124、L-5 3/124、L-6 16/124、L-7 51/124；L-1 `excl_paren` 45.828→27.540） | 读数（`probe`） | `v2/evidence/d5_metrics_a1.{json,md}` | `53a10de3f03efe12…` | `53a10de3` | 见 §0.3；重跑产物与入库件**逐字节相同** |
-| 5 | 单变量改动面：`code/life/agent.py` L1058 / L1069 两行；`prompt_sha` A0 `e6ec7355789358d8` → A1 `5186aa9a3db55de8` | 事实（代码） | `code/life/agent.py` @ `a637371`；`v2/evidence/d4_prompt_diff_a1.txt` | 源码随提交变动 | — | `git show --stat a637371`；`sha256sum code/life/agent.py`；`d4_prompt_diff_a1.txt` §3/§4 |
+| 5 | 改动面（名义双变量）：`code/life/agent.py` L1058 / L1069 两行 + `dialogue_threads.py` `reply_window_rounds` 2→4（后者惰性）；`prompt_sha` A0 `2cb2f5ba…`（`3ec85a0`）→ A1 `5186aa9a3db55de8` | 事实（代码） | `code/life/agent.py` @ `a637371`；`v2/evidence/d4_prompt_diff_a1.txt` | 源码随提交变动 | — | `git show --stat a637371`；`sha256sum code/life/agent.py`；`d4_prompt_diff_a1.txt` §3/§4 |
 | 6 | A1 四视图真实截图（chat 1400×900 / rhythm 1300×1050 / spread 1300×900 / 600 600×900） | 事实（证据） | `v2/evidence/a1_shots/run_a1_wording_n4r60_seed42-{chat,rhythm,spread,600}-ae969198.png` | chat `0e05129bb9779691…`；rhythm `7c3d7eea9c1f1306…`；spread `c3fc91ec399f9a70…`；600 `13ce8b1953fa1db3…` | `0e05129b` / `7c3d7eea` / `c3fc91ec` / `13ce8b19` | 渲染命令见 §3.1；日志 `a1_shots/render.log`（`6ec172f2`） |
 | 7 | 起跑前置（`pgrep` 空、SID/PGID 分离 PASS、工具层 300 s 超时≠跑批失败） | 事实（时序） | `v2/evidence/a1_launch_evidence.txt` = `8379d0447b5becc9…` | `8379d044` | `cat v2/evidence/a1_launch_evidence.txt` |
 | 8 | **A0 基线读数**（L-2 562/686、L-3 590/686、L-6 68/686、L-7 335/686、L-1 `excl_paren` 45.828/`all` 58.306） | 读数（`evidence`） | `v2/evidence/d5_metrics_d9a0.{json,md}`（重跑与入库件逐字节相同） | `a2b55e21831a65ae…` | `a2b55e21` | 见 §0.3 |
