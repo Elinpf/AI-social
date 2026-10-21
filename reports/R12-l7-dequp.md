@@ -4,7 +4,7 @@
 > 报告日期：2026-10-21 ｜ 团队轮次：ROUND-1 ｜ 维度：L-7（单一维度，不扩散）
 > 代码 sha（本轮实现，跑批用树）：`263a4300692d2ef3136c8a50e9bade2f99608945`
 > 分支：`feat/life-l7-dedup-1021`（从 `origin/master=44c28d5` 切出）
-> 本文件 commit sha：`{提交后回填}`
+> 本文件 commit sha：`f899fe7ebbfa924033452a7456624d09b086850b`（报告内容首版提交；本次回填见锚点行）
 > 锚点行：`git log --format=%H -- reports/R12-l7-dequp.md`
 
 ---
