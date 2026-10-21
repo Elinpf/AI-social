@@ -72,7 +72,7 @@
 | 臂 | 结构 / 提示词 | `code_sha`（臂 commit） | `prompt_sha` | `run.jsonl` sha256（sha8） | `provider` / `model` | `admission.verdict` |
 |---|---|---|---|---|---|---|
 | v0-anchor | 旧结构 / 原提示词 | 待填 | 待填 | 待填 | 待填 | 待填 |
-| A0 | 新结构 / **必要适配提示词** | 待填 | 待填（**须 ≠ v0-anchor**，差异须逐项落在成分边界表内） | 待填 | 待填 | 待填 |
+| A0 | 新结构 / **必要适配提示词** | **运行期树 `3ec85a0`**（`884f4541` 仅 meta 写入 HEAD） | `2cb2f5ba…`（运行期树值；原引 `e6ec7355` 属 `884f4541`，已作废） | `643f13a5` | `openai_compat` | `ADMITTED/evidence` |
 | A1 | A0 + 措辞层优化 | 待填 | 待填（**须 ≠ A0**，diff 仅落在 `_dialogue_prompt`/`_reply_prompt`） | 待填 | 待填 | 待填 |
 
 > **⚠️ A0 的「树干净」证明方式已被 D9 降级（必须写明）**：A0 `meta.git_dirty_files` 含 `code/life/agent.py`、`code/orchestration/integration.py`、`code/config/dialogue_repair.json`、`code/life/dialogue_repair.py`，且该字段是**跑完时刻快照**，不能证明「起跑时树干净」；`fcf42bf9..HEAD` 在四代码路径亦非空。**但**三条独立证据表明**实际执行代码仍是 landing 版**：① 运行期无 `importlib.reload`；② A0 日志中 F4 才引入的 `dialogue_rift` 0 命中；③ `WORLD_INIT` 四项指纹与 before 臂**逐字相同**。D9 结论：**降级的是该条的证明方式，不作废整臂**（A0 数据可用）。
@@ -153,7 +153,7 @@
 
 **【事实 · 归零本身】** A1 臂（`run_a1_wording_n4r60_seed42`，4 agents × 60 回合，MSG **124**，日志 (ae969198)）**L-2 = 0 / 124**、**L-3 = 0 / 124**——括号旁白一篇都没有（另有独立脚本直扫 124 条 body，全角/半角括号出现总数均为 0，排除度量 bug）。
 
-**【事实 · 它怎么做到的（逐字 diff）】** A1 相对 A0 只改了 `code/life/agent.py` 的**两条收尾指令**（`_dialogue_prompt` L1058、`_reply_prompt` L1069），改动文字是：
+**【事实 · 它怎么做到的（逐字 diff）】** A1 相对 A0 是**名义双变量**：①`code/life/agent.py` 两条收尾指令（`_dialogue_prompt` L1058、`_reply_prompt` L1069）；②`dialogue_threads.py` 的 `reply_window_rounds` **2 → 4**。**②的豁免理由是「另一臂证明惰性」**：单变量窗口臂（`05636bc`）与 A0 的回复间隔分布**完全相同 `{1:327, 2:153}`、最大间隔 2，从未出现 3/4** ⇒ 该变量在行为上不产生差异，措辞层效应可近似归因于 ①，但**正文必须带此限定**。① 的改动文字是：
 > 「只写台词本身（一句家常话）：**不要用括号、方括号或星号写动作、神态或心理旁白**，不要解释也不要总结；用口语短句，别反复用同一句口头禅。」
 
 即：**旁白归零是通过在产品提示词里明令禁止括号/动作描写达成的**，不是模型自发学会"台词就该只是台词"。

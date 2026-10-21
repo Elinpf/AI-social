@@ -53,7 +53,7 @@
 | 臂 | 结构 / 提示词 | `code_sha`（臂 commit） | `run.jsonl` sha256（sha8） | `provider` / `model` | `admission.verdict` |
 |---|---|---|---|---|---|
 | v0-anchor | 旧结构 / 原提示词 | 待填 | 待填 | 待填 | 待填 |
-| A0 | 新结构 / 必要适配提示词 | 待填 | 待填 | 待填 | 待填 |
+| A0 | 新结构 / 必要适配提示词 | **运行期树 `3ec85a0`**（`code_sha_start`；`884f4541` 仅为 meta 写入时刻 HEAD，**不代表跑批代码**） | `643f13a5` | `openai_compat` / DeepSeek-Flash | `ADMITTED / evidence` |
 | A1 | A0 + 措辞层优化 | 待填 | 待填 | 待填 | 待填 |
 
 > **⚠️ A0 的「树干净」证明方式已被 D9 降级（必须写明）**：A0 `meta.git_dirty_files` 含 `code/life/agent.py`、`code/orchestration/integration.py`、`code/config/dialogue_repair.json`、`code/life/dialogue_repair.py`，且该字段是**跑完时刻快照**，不能证明「起跑时树干净」；`fcf42bf9..HEAD` 在四代码路径亦非空。**但**三条独立证据表明**实际执行代码仍是 landing 版**：① 运行期无 `importlib.reload`；② A0 日志中 F4 才引入的 `dialogue_rift` 0 命中；③ `WORLD_INIT` 四项指纹与 before 臂**逐字相同**。D9 结论：**降级的是该条的证明方式，不作废整臂**（A0 数据可用）。
