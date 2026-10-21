@@ -1,0 +1,71 @@
+# render.log · F-3 ON 臂「运行中快照」截图（真拍，非结果回放）
+
+# 采集时刻: 2026-10-22 02:11:22 +0800
+# 采集性质: **运行中快照（LIVE 跟随）**，不是跑完后的结果回放；对话原文/节律/传播三视图需跑完后用
+#           gen_threads.py + dialogue_shots.sh 另出（见 R14 §4.6）。
+# 来源 run 目录: v2/evidence/run_f3_on_n16r60_seed42/
+# run.jsonl 采集时状态: 13,149 字节, mtime 02:06（跑批中，缓冲未刷完 ⇒ sha256 会变，故此处**不记 sha256**，
+#           只记 size/off；跑完后由 §4.1 批身份表登记最终 sha256）
+# /__tail 端点返回: off=13149 size=13149
+# 跑批进程: pid 3078054  bash tools/d2/run_batch.sh --out-dir v2/evidence/run_f3_on_n16r60_seed42 ...
+#           pid 3078064  python3 -m orchestration run --life --seed 42 --agents 16 --rounds 60 \
+#                        --out <repo>/v2/evidence/run_f3_on_n16r60_seed42/run.jsonl --flush-every 2 \
+#                        --side-root /tmp/f3_on60_side
+# 静态服务: python3 frontend/tools/serve.py --port 8849（本次专用实例；8848 已被既有实例占用，未干扰）
+#           env: HITT_LIVE_ROOTS=<repo>/v2/evidence/run_f3_on_n16r60_seed42（/__tail 只读白名单）
+# 采集手段: code/frontend/tools/shot.py（Playwright headless chromium，等就绪信号后才截，防黑图）
+
+$ python3 frontend/tools/shot.py \
+    --url "http://127.0.0.1:8849/index.html?live=<repo>/v2/evidence/run_f3_on_n16r60_seed42/run.jsonl&tail=1&tailmb=4&view=default" \
+    --out ../v2/evidence/f3_shots/run_f3_on_n16r60_seed42-live-chat-running.png \
+    --width 1500 --height 950 --timeout 120 --retry-blank 2 \
+    --wait-fn "(()=>{const e=document.getElementById('live-round');return !!e&&/round\s*\d+\s*·\s*\d+\s*事件/.test(e.textContent)})()"
+
+SHOT OK: ../v2/evidence/f3_shots/run_f3_on_n16r60_seed42-live-chat-running.png  elapsed=7.39s  mean_brightness=97.4(gray601,0-255,黑<8)  max_color_frac=12.30%  blank_retries=0/2
+  blank_cumulative=7/167 次空白/总取证（T282 观察哨，仅留痕）
+
+# 画面可读事实（人工核对，非推断）:
+#   标题「青溪镇」/ 时间「第 1 日 06:00（早晨）」/ 状态栏「LIVE · 运行中 round 0 · 34 事件 · 跟随中」
+#   ⇒ 页面确实在跟随 ON 臂正在增长的 run.jsonl（round 0 阶段，事件 34 条）
+#
+# 已作废并删除的同批文件（防误引用）:
+#   run_f3_on_n16r60_seed42-live-rhythm-running.png / -live-spread-running.png
+#   原因: dialogue.html 无 live/tail 支持，index.html 的 rhythm/spread 视图在 LIVE 模式下未生效，
+#         两文件与 chat 快照字节大小相同（786,482 B）⇒ 属同画面重复，不能当"三个视图"，已删除。
+#
+# 纪律声明:
+#   - 采集全程只读：未改 code/life|orchestration|config|engine，未写 git index，未对 run 目录做任何写操作；
+#   - 未启动任何新的模拟进程（live_run.py 会另起世界，**未使用**）；
+#   - 未读取半成品日志作为读数（读数等跑完由 §4.1/§4.3 正式登记）。
+
+# ============================================================
+# 【追加】结果回放四视图（跑批结束后，标准管线 gen_threads.py → dialogue_shots.sh）
+# 采集时刻: 2026-10-22 02:53
+# 性质: **结果回放**（读完整 run.jsonl 生成 threads.json 后渲染），与上方「运行中快照」严格区分
+# 来源 run 目录: v2/evidence/run_f3_on_n16r60_seed42/
+# run.jsonl sha256: 087072f84518eb009fb8d0a6ec445c5515b7561c1f031430702a5187394af16c
+# meta.json  : 2b4cdf25795c6d43a13381401b73baca40c12ac6438831860613fa40a80b1442
+# threads.json: code/frontend/sample/dialogue_run_f3_on_n16r60_seed42/threads.json (b062c200)
+# 静态服务: 8849（沿用本节上方实例）
+
+$ python3 frontend/tools/gen_threads.py --log ../v2/evidence/run_f3_on_n16r60_seed42/run.jsonl \
+    --meta ../v2/evidence/run_f3_on_n16r60_seed42/meta.json \
+    --out frontend/sample/dialogue_run_f3_on_n16r60_seed42/threads.json \
+    --require-complete --label run_f3_on_n16r60_seed42-087072f8
+[gen_threads] 完整性断言通过：TURN_SEAL 60 条覆盖 round 0..59
+[gen_threads] events=115494 messages=502 threads=170 multi_turn=89 ge3=74 legacy_msgs=0 moves=299 ref_edges=0 echoes=0
+
+$ bash frontend/tools/dialogue_shots.sh http://127.0.0.1:8849 \
+    sample/dialogue_run_f3_on_n16r60_seed42/threads.json "" "" ../v2/evidence/f3_shots
+batch=run_f3_on_n16r60_seed42-087072f8  log_sha256=087072f84518eb009fb8d0a6ec445c5515b7561c1f031430702a5187394af16c  sha8=087072f8
+SHOT OK: ../v2/evidence/f3_shots/run_f3_on_n16r60_seed42-chat-087072f8.png    elapsed=2.78s mean_brightness=33.3 max_color_frac=30.26% blank_retries=0/2
+SHOT OK: ../v2/evidence/f3_shots/run_f3_on_n16r60_seed42-rhythm-087072f8.png  elapsed=1.71s mean_brightness=32.4 max_color_frac=34.44% blank_retries=0/2
+SHOT OK: ../v2/evidence/f3_shots/run_f3_on_n16r60_seed42-spread-087072f8.png  elapsed=1.69s mean_brightness=23.2 max_color_frac=71.20% blank_retries=0/2
+SHOT OK: ../v2/evidence/f3_shots/run_f3_on_n16r60_seed42-600-087072f8.png     elapsed=1.79s mean_brightness=38.2 max_color_frac=36.07% blank_retries=0/2
+
+# 人工核验:
+#   chat   = 真实对话流（事件115494/消息502/线程170/多轮89，可读到具体台词）✓
+#   spread = **数据空态**：页面自述「本批日志 refs 全为空…这里显示空态，不用相似度硬凑」⇒ 是数据事实，非渲染失败
+#   gen_threads 输出的 echoes=0 指的是**另一字段**（msg 级同句复现分组），与 F-3 的 ctx.echo 无关，不得当反证
+# 作废记录（沿用上方）:
+#   -live-rhythm / -live-spread 两图（786,482 B，与 chat 同字节）已删除，不充三视图

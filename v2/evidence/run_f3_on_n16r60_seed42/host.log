@@ -1,0 +1,32 @@
+=== 0. 串行纪律自检（起跑前） ===
+pgrep_orchestration_rc=1
+pgrep_run_batch_rc=1
+=== 0b. 单变量开关自检（必须只有 HITT_DIALOGUE_EMOTION_ECHO） ===
+=== 1. 代码身份（起跑前） ===
+6f87363fc30c52adf77d51b560aec312053ec484
+feat/life-f3-emotion-echo
+sha_B=6f87363fc30c52adf77d51b560aec312053ec484
+?? code/frontend/sample/dialogue_run_g1_b0_n16r60_seed42/
+--- 口径 B 指纹（四子树，108 文件）---
+68683fe3caef04369bd262fc586522a93f5df8326fddd52400f50f57f4b780af  -
+108
+=== 2. 起跑（setsid，仅打开 emotion echo） ===
+launched_pid=3078054 started=2026-10-22T02:06:45+08:00 t0=1792606005
+[d2] run: python3 -m orchestration run --life --seed 42 --agents 16 --rounds 60 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f3_on_n16r60_seed42/run.jsonl --flush-every 2 --side-root /tmp/f3_on60_side
+[monitor] 2026-10-22T02:26:43+0800 flush_mtime=02:25:58 lines=28939 rounds_seen=21 echo=79 llm_calls=2222 degraded=0
+[monitor] 2026-10-22T02:31:27+0800 flush_mtime=02:29:12 lines=51009 round=33 echo=151 llm_calls=2386 degraded=0
+[monitor] 2026-10-22T02:36:01+0800 flush_mtime=02:35:31 lines=62782 round=43 echo=204 llm_calls=2556 degraded=0
+[monitor] 2026-10-22T02:40:35+0800 flush_mtime=02:37:27 lines=78002 round=45 echo=217 llm_calls=2595 degraded=0
+[monitor] 2026-10-22T02:45:22+0800 flush_mtime=02:44:31 lines=110885 round=57 echo=283 llm_calls=2819 degraded=0
+[life] n_agents=16 rounds=60 events=115494 seconds=2407.4195 log_bytes=54863033
+  unknown_event_types=[]
+  chain_ok=True replay_parity=True first_run_equals_replay=True
+  conservation_ok=True final_state_hash=sha256:bb3ccf1bc15a8980c3bcfcdf2887f080821e8a3fdae07724ca9ec122d155d453
+  log written: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f3_on_n16r60_seed42/run.jsonl
+[meta] /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f3_on_n16r60_seed42/meta.json
+[meta] events=115494 llm_calls=2869 cached_ratio=0.5103 provider={'openai_compat': 2869} model={'DeepSeek-Flash': 2869}
+[meta] seed_in_log=42 n_in_log=16 rounds_effective=60
+[meta] OK: 真跑判定通过
+[d2] self-check wc -l=115494 meta.events=115494
+{"engine_log":{"by_provider":{"openai_compat":2869},"by_purpose":{"dialogue":{"cached":39,"calls":502,"degraded":0,"thinking":0,"tokens_in":96928,"tokens_out":10903},"importance":{"cached":1387,"calls":1523,"degraded":0,"thinking":0,"tokens_in":2312,"tokens_out":35513},"judge":{"cached":0,"calls":667,"degraded":0,"thinking":667,"tokens_in":88228,"tokens_out":230227},"negotiation":{"cached":34,"calls":49,"degraded":0,"thinking":0,"tokens_in":1787,"tokens_out":542},"plan":{"cached":0,"calls":16,"degraded":0,"thinking":0,"tokens_in":1447,"tokens_out":995},"reflect":{"cached":4,"calls":112,"degraded":0,"thinking":0,"tokens_in":45844,"tokens_out":6913}},"llm_judgment_by_dimension":{"affection":132,"rel_affinity":33,"rel_familiarity":220,"rel_trust":2,"respect":132,"stance":132,"weekly_focus":16},"source":"engine_log(LLM_CALL)","total":{"cached":1464,"calls":2869,"degraded":0,"thinking":667,"tokens_in":236546,"tokens_out":285093,"tokens_total":521639}},"provider_guard":{"by_provider":{"openai_compat":2869},"expected":"openai_compat","ok":true,"policy":"计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。","problems":[]}}
+[d2] OK

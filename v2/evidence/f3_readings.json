@@ -1,0 +1,381 @@
+{
+  "arms": {
+    "off": {
+      "arm": "off",
+      "mechanism_口径": {
+        "band": "count_only",
+        "den": 0,
+        "field_names": {},
+        "field_present_msgs": 0,
+        "hits": 0,
+        "kind_dist": {},
+        "prev_polarity_crosscheck": {
+          "agree": 0,
+          "all_agree": false,
+          "checked": 0,
+          "note": "仅对 source 含 text 的条目核对：字段 sign 是否等于日志复算的上一句极性"
+        },
+        "prompted_msgs": 0,
+        "rate": null,
+        "rule": "分母=机制判定可呼应的轮次(ctx.echo 存在)；命中=模型输出接住该情绪(极性一致或含共情标记)",
+        "sign_dist": {},
+        "source_dist": {},
+        "wilson95": [
+          null,
+          null
+        ],
+        "口径标签": "机制可呼应轮次（payload.ctx.echo 存在）"
+      },
+      "n_lines": 116336,
+      "n_msgs": 510,
+      "official_impl": {
+        "agree_with_replica": true,
+        "denominator": 24,
+        "echo_rate": 0.041667,
+        "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/f3_off_official.json",
+        "sha256": "3835ba58b10a81c3adac8d2935039de9f3dc92d87281d3b993256ebeac3e34e2"
+      },
+      "official_口径": {
+        "band": "count_only",
+        "conflict_subset": {
+          "band": "count_only",
+          "dedup_by_body_loose": 0,
+          "dedup_by_body_marker_based": 0,
+          "dedup_by_body_polarity_match": 0,
+          "dedup_delta": 0,
+          "definitions": {
+            "loose": "tools/d5 原式：极性相同 ∪ 任意 EMPATHY_MARKERS",
+            "loose_no_agree": "极性相同 ∪ 标记剔「我懂」",
+            "marker_based": "只认真实回应标记(剔 我懂/确实/是啊/可不是)，不要求极性一致 —— **主指标**",
+            "polarity_match": "只认极性一致(p_cur==p_prev)，标记一律不算。**禁止称「严格」**：它把「负→负各说各话」全数保留为命中，是另一种宽松，不是严格"
+          },
+          "den": 15,
+          "hits": 0,
+          "loose_no_agree_ok": 0,
+          "loose_no_agree_rate": 0.0,
+          "loose_ok": 0,
+          "loose_rate": 0.0,
+          "main_口径": "marker_based（leader 2026-10-22 裁决）；polarity_match 仅作技术对照，C(A∪B) 已弃用",
+          "marker_based_ok": 0,
+          "marker_based_rate": 0.0,
+          "note": "R13 报告的 3 / 0 / 1 是**三臂各自的 F-4 张力分母**（人际冲突子集：张力句须含 生气/烦/委屈/失望/后悔/吵/凭什么/你什么意思/别这样 之一），既不是 hits，也不是本字段；22 / 15 / 15 是同一批三臂的旧口径张力分母（极性相反 或 当前句为负）。本字段只按「上一句极性<0」判定，是 F-3 专用子集，与上述口径数值**不可比**，数值偶然相同不代表同义。",
+          "polarity_match_ok": 0,
+          "polarity_match_rate": 0.0,
+          "wilson95_loose": [
+            0.0,
+            0.2039
+          ],
+          "wilson95_loose_no_agree": [
+            0.0,
+            0.2039
+          ],
+          "wilson95_marker_based": [
+            0.0,
+            0.2039
+          ],
+          "wilson95_polarity_match": [
+            0.0,
+            0.2039
+          ],
+          "口径标签": "F-3 负向前句子集（上一句极性<0）"
+        },
+        "dedup_by_body": {
+          "key": "当前句 body 原文（不是 cur_seq）",
+          "全消息_dedup_loose": 1,
+          "全消息_delta": 0,
+          "全消息_events_loose": 1,
+          "回复路径_dedup_loose": 1,
+          "回复路径_delta": 0,
+          "回复路径_events_loose": 1
+        },
+        "den": 24,
+        "hits": 1,
+        "n_msgs": 510,
+        "n_threads": 169,
+        "rate": 0.0417,
+        "reply_path": {
+          "band": "count_only",
+          "dedup_by_body_loose": 1,
+          "dedup_by_body_marker_based": 0,
+          "dedup_by_body_polarity_match": 1,
+          "dedup_delta": 0,
+          "definitions": {
+            "loose": "tools/d5 原式：极性相同 ∪ 任意 EMPATHY_MARKERS",
+            "loose_no_agree": "极性相同 ∪ 标记剔「我懂」",
+            "marker_based": "只认真实回应标记(剔 我懂/确实/是啊/可不是)，不要求极性一致 —— **主指标**",
+            "polarity_match": "只认极性一致(p_cur==p_prev)，标记一律不算。**禁止称「严格」**：它把「负→负各说各话」全数保留为命中，是另一种宽松，不是严格"
+          },
+          "den": 24,
+          "denominator_adjacent_pairs_with_prev_polarity": 24,
+          "loose_no_agree_ok": 1,
+          "loose_no_agree_rate": 0.0417,
+          "loose_official_ok": 1,
+          "loose_ok": 1,
+          "loose_rate": 0.0417,
+          "main_口径": "marker_based（leader 2026-10-22 裁决）；polarity_match 仅作技术对照，C(A∪B) 已弃用",
+          "marker_based_ok": 0,
+          "marker_based_rate": 0.0,
+          "n_messages_reply_path": 341,
+          "note": "F-3 仅在 `_send_reply` 生效，`_initiate` 路径即使 ON 也与 OFF 逐字节相同；故主口径用本子集，全消息口径并列作对照（两者数值相同属该臂巧合，不可外推）",
+          "polarity_match_ok": 1,
+          "polarity_match_rate": 0.0417,
+          "wilson95_loose": [
+            0.0074,
+            0.2024
+          ],
+          "wilson95_loose_no_agree": [
+            0.0074,
+            0.2024
+          ],
+          "wilson95_marker_based": [
+            0.0,
+            0.138
+          ],
+          "wilson95_polarity_match": [
+            0.0074,
+            0.2024
+          ],
+          "口径标签": "回复路径子集（main）：当前句 reply_to 非空 且 上一句极性≠0"
+        },
+        "rule": "上一句极性≠0 时，下一句极性相同 或 含共情标记 → 呼应（tools/d5 同式）",
+        "wilson95": [
+          0.0074,
+          0.2024
+        ],
+        "口径标签": "全消息口径（上一句极性≠0 的相邻对）"
+      },
+      "run_jsonl": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f3_off_n16r60_seed42/run.jsonl",
+      "run_sha256": "19d5cb03de2f0203e3b8aa1c9160adfbef787a159f961713f40b88027931d305"
+    },
+    "on": {
+      "arm": "on",
+      "mechanism_口径": {
+        "band": "ok",
+        "den": 295,
+        "field_names": {
+          "ctx.echo": 295
+        },
+        "field_present_msgs": 295,
+        "hits": 37,
+        "kind_dist": {
+          "cheer": 15,
+          "soothe": 280
+        },
+        "prev_polarity_crosscheck": {
+          "agree": 3,
+          "all_agree": false,
+          "checked": 43,
+          "note": "仅对 source 含 text 的条目核对：字段 sign 是否等于日志复算的上一句极性"
+        },
+        "prompted_msgs": 295,
+        "rate": 0.1254,
+        "rule": "分母=机制判定可呼应的轮次(ctx.echo 存在)；命中=模型输出接住该情绪(极性一致或含共情标记)",
+        "sign_dist": {
+          "-1": 280,
+          "1": 15
+        },
+        "source_dist": {
+          "mood": 252,
+          "text": 9,
+          "text+mood": 34
+        },
+        "wilson95": [
+          0.0924,
+          0.1681
+        ],
+        "口径标签": "机制可呼应轮次（payload.ctx.echo 存在）"
+      },
+      "n_lines": 115494,
+      "n_msgs": 502,
+      "official_impl": {
+        "agree_with_replica": true,
+        "denominator": 26,
+        "echo_rate": 0.192308,
+        "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/f3_on_official.json",
+        "sha256": "d8cf5b8017e29c4237cbdd63a39ffa93d41a1ca1aed3a604d29082cdd3dc02bd"
+      },
+      "official_口径": {
+        "band": "count_only",
+        "conflict_subset": {
+          "band": "count_only",
+          "dedup_by_body_loose": 5,
+          "dedup_by_body_marker_based": 0,
+          "dedup_by_body_polarity_match": 5,
+          "dedup_delta": 0,
+          "definitions": {
+            "loose": "tools/d5 原式：极性相同 ∪ 任意 EMPATHY_MARKERS",
+            "loose_no_agree": "极性相同 ∪ 标记剔「我懂」",
+            "marker_based": "只认真实回应标记(剔 我懂/确实/是啊/可不是)，不要求极性一致 —— **主指标**",
+            "polarity_match": "只认极性一致(p_cur==p_prev)，标记一律不算。**禁止称「严格」**：它把「负→负各说各话」全数保留为命中，是另一种宽松，不是严格"
+          },
+          "den": 21,
+          "hits": 5,
+          "loose_no_agree_ok": 5,
+          "loose_no_agree_rate": 0.2381,
+          "loose_ok": 5,
+          "loose_rate": 0.2381,
+          "main_口径": "marker_based（leader 2026-10-22 裁决）；polarity_match 仅作技术对照，C(A∪B) 已弃用",
+          "marker_based_ok": 0,
+          "marker_based_rate": 0.0,
+          "note": "R13 报告的 3 / 0 / 1 是**三臂各自的 F-4 张力分母**（人际冲突子集：张力句须含 生气/烦/委屈/失望/后悔/吵/凭什么/你什么意思/别这样 之一），既不是 hits，也不是本字段；22 / 15 / 15 是同一批三臂的旧口径张力分母（极性相反 或 当前句为负）。本字段只按「上一句极性<0」判定，是 F-3 专用子集，与上述口径数值**不可比**，数值偶然相同不代表同义。",
+          "polarity_match_ok": 5,
+          "polarity_match_rate": 0.2381,
+          "wilson95_loose": [
+            0.1063,
+            0.4509
+          ],
+          "wilson95_loose_no_agree": [
+            0.1063,
+            0.4509
+          ],
+          "wilson95_marker_based": [
+            -0.0,
+            0.1546
+          ],
+          "wilson95_polarity_match": [
+            0.1063,
+            0.4509
+          ],
+          "口径标签": "F-3 负向前句子集（上一句极性<0）"
+        },
+        "dedup_by_body": {
+          "key": "当前句 body 原文（不是 cur_seq）",
+          "全消息_dedup_loose": 5,
+          "全消息_delta": 0,
+          "全消息_events_loose": 5,
+          "回复路径_dedup_loose": 5,
+          "回复路径_delta": 0,
+          "回复路径_events_loose": 5
+        },
+        "den": 26,
+        "hits": 5,
+        "n_msgs": 502,
+        "n_threads": 170,
+        "rate": 0.1923,
+        "reply_path": {
+          "band": "count_only",
+          "dedup_by_body_loose": 5,
+          "dedup_by_body_marker_based": 0,
+          "dedup_by_body_polarity_match": 5,
+          "dedup_delta": 0,
+          "definitions": {
+            "loose": "tools/d5 原式：极性相同 ∪ 任意 EMPATHY_MARKERS",
+            "loose_no_agree": "极性相同 ∪ 标记剔「我懂」",
+            "marker_based": "只认真实回应标记(剔 我懂/确实/是啊/可不是)，不要求极性一致 —— **主指标**",
+            "polarity_match": "只认极性一致(p_cur==p_prev)，标记一律不算。**禁止称「严格」**：它把「负→负各说各话」全数保留为命中，是另一种宽松，不是严格"
+          },
+          "den": 26,
+          "denominator_adjacent_pairs_with_prev_polarity": 26,
+          "loose_no_agree_ok": 5,
+          "loose_no_agree_rate": 0.1923,
+          "loose_official_ok": 5,
+          "loose_ok": 5,
+          "loose_rate": 0.1923,
+          "main_口径": "marker_based（leader 2026-10-22 裁决）；polarity_match 仅作技术对照，C(A∪B) 已弃用",
+          "marker_based_ok": 0,
+          "marker_based_rate": 0.0,
+          "n_messages_reply_path": 332,
+          "note": "F-3 仅在 `_send_reply` 生效，`_initiate` 路径即使 ON 也与 OFF 逐字节相同；故主口径用本子集，全消息口径并列作对照（两者数值相同属该臂巧合，不可外推）",
+          "polarity_match_ok": 5,
+          "polarity_match_rate": 0.1923,
+          "wilson95_loose": [
+            0.0851,
+            0.3788
+          ],
+          "wilson95_loose_no_agree": [
+            0.0851,
+            0.3788
+          ],
+          "wilson95_marker_based": [
+            0.0,
+            0.1287
+          ],
+          "wilson95_polarity_match": [
+            0.0851,
+            0.3788
+          ],
+          "口径标签": "回复路径子集（main）：当前句 reply_to 非空 且 上一句极性≠0"
+        },
+        "rule": "上一句极性≠0 时，下一句极性相同 或 含共情标记 → 呼应（tools/d5 同式）",
+        "wilson95": [
+          0.0851,
+          0.3788
+        ],
+        "口径标签": "全消息口径（上一句极性≠0 的相邻对）"
+      },
+      "run_jsonl": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f3_on_n16r60_seed42/run.jsonl",
+      "run_sha256": "087072f84518eb009fb8d0a6ec445c5515b7561c1f031430702a5187394af16c"
+    }
+  },
+  "compare": {
+    "mechanism_口径": {
+      "abs_diff": null,
+      "band_off": "count_only",
+      "band_on": "ok",
+      "diff_ci95_newcombe": [
+        null,
+        null
+      ],
+      "min_den": 0,
+      "off_den": 0,
+      "off_hits": 0,
+      "off_rate": null,
+      "off_wilson95": [
+        null,
+        null
+      ],
+      "on_den": 295,
+      "on_hits": 37,
+      "on_rate": 0.1254,
+      "on_wilson95": [
+        0.0924,
+        0.1681
+      ]
+    },
+    "official_口径": {
+      "abs_diff": 0.1506,
+      "band_off": "count_only",
+      "band_on": "count_only",
+      "diff_ci95_newcombe": [
+        -0.0426,
+        0.3403
+      ],
+      "min_den": 24,
+      "off_den": 24,
+      "off_hits": 1,
+      "off_rate": 0.0417,
+      "off_wilson95": [
+        0.0074,
+        0.2024
+      ],
+      "on_den": 26,
+      "on_hits": 5,
+      "on_rate": 0.1923,
+      "on_wilson95": [
+        0.0851,
+        0.3788
+      ]
+    }
+  },
+  "emotion_lexicon": {
+    "n": 34,
+    "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/emotion_lexicon.txt",
+    "sha256": "8427245cdf65550c6fb80d10616a01d9054d3d4fe97842b4b81feed7afd4a996"
+  },
+  "empathy_markers": [
+    "我懂",
+    "我也",
+    "别难过",
+    "恭喜",
+    "辛苦",
+    "真惨",
+    "太好了",
+    "确实",
+    "是啊",
+    "可不是"
+  ],
+  "judge_rule": "分母<30 只报事件数；<68 标 probe；两臂差分用 Newcombe hybrid score 95%CI，CI 跨 0 即不得宣称有差异；跨批/跨时间窗不做显著性外推。",
+  "schema": "f3-readings/1.0",
+  "script": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/f3/f3_metrics.py",
+  "script_sha256": "249113b75a14ebbbb91a6708119855eae700f21822abd8faa7cbcc1d02a0a7dc"
+}

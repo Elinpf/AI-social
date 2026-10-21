@@ -1,0 +1,15 @@
+### F-3 ON 臂 · 运行期单变量开关取证（读 /proc/<pid>/environ，权威于 shell 侧 env）
+采集时刻: 2026-10-22T02:07:14+08:00
+样本进程: 3078064  (python3 -m orchestration run)
+
+=== 命令 ===
+tr '\0' '\n' < /proc/3078064/environ | grep -E '^(HITT_|LIFE_PROMPT_)' | sort
+=== 输出 ===
+HITT_DIALOGUE_EMOTION_ECHO=1
+HITT_LLM_PROVIDER=openai_compat
+
+=== 判据 ===
+F-3 单变量：只应出现 HITT_DIALOGUE_EMOTION_ECHO=1（HITT_LLM_PROVIDER=openai_compat 由 tools/d2/run_batch.sh 内部设定，属真跑门禁，非实验变量）
+以下开关必须为空（否则与 F-4/F-6/L-7/G-1 混跑、归因失效）：
+  HITT_DIALOGUE_REPAIR（F-4） / LIFE_PROMPT_MEMORY_F6*（F-6）/ LIFE_PROMPT_MEMORY_F6_DEQUP（L-7）/ G-1 相关
+实测：上述变量全部未出现 ⇒ 单变量成立。

@@ -1,0 +1,20 @@
+### F-3 ON 臂 · 跑后代码身份锚点（口径 B：code 四子树，108 文件）
+采集时刻: 2026-10-22T02:49:26+08:00
+HEAD: 6f87363fc30c52adf77d51b560aec312053ec484
+分支: feat/life-f3-emotion-echo
+
+=== 口径 B 采集命令 ===
+find code/life code/config code/orchestration code/engine -type f ! -path '*__pycache__*' ! -name '*.pyc' | sort | xargs sha256sum | sha256sum
+--- 结果 ---
+68683fe3caef04369bd262fc586522a93f5df8326fddd52400f50f57f4b780af  -
+--- 文件计数 ---
+108
+
+=== 复算器与口径依赖脚本 sha256（跑后回采，比对 tools/ 未漂） ===
+249113b75a14ebbbb91a6708119855eae700f21822abd8faa7cbcc1d02a0a7dc  tools/f3/f3_metrics.py
+14eec0894ef70dee674c33104797e91fbd0dc6ff73d941dca885f8a32701ac3d  tools/f3/f3_samples.py
+ac1a3886cc2d65588b0a030a168f93e2cfa25b82fd6dadd6ceb72e58a11751aa  tools/d5/dialogue_metrics.py
+8427245cdf65550c6fb80d10616a01d9054d3d4fe97842b4b81feed7afd4a996  tools/d5/emotion_lexicon.txt
+
+=== git status --porcelain code config ===
+?? code/frontend/sample/dialogue_run_g1_b0_n16r60_seed42/
