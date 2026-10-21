@@ -1,0 +1,10 @@
+{
+  "_comment": "F-3「情绪呼应」（life/emotion_echo.py）。enabled=false（默认）⇒ 回复提示词与 MSG payload 与接入前逐字节一致，无 dialogue_echo 字段。本文件**不进** engine/version.py::FINGERPRINT_FILES，开/关都不改 engine_version 指纹。消融/逃生口：env HITT_DIALOGUE_EMOTION_ECHO=1|true|on|yes → 开；其它任何取值（含 0/false/off/no/空串）→ 关。判定与强度全部确定性推导（纯函数），LLM 只按提示词出措辞，不参与任何数值。",
+  "schema_version": "1.0",
+  "enabled": false,
+  "criterion": "natural",
+  "min_intensity": 30,
+  "text_hit_intensity": 60,
+  "mood_bonus_div": 2,
+  "tier_cuts": [45, 70]
+}

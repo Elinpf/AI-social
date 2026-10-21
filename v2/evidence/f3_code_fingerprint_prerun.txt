@@ -1,0 +1,37 @@
+### 跑前代码身份锚点（F-3 跑批开始前采集）
+采集时间: 2026-10-22T00:20:38+08:00
+HEAD: 6b7ae8a98694dd87d2ea26d14e663705eab69e92
+分支: feat/life-f3-emotion-echo
+
+=== git status --porcelain code config ===
+ M code/life/agent.py
+?? code/config/emotion_echo.json
+?? code/frontend/sample/dialogue_run_g1_b0_n16r60_seed42/
+?? code/life/emotion_echo.py
+?? code/life/tests/test_f3_emotion_echo.py
+
+=== code 树指纹（life/config/orchestration/engine 下 .py/.json，按路径排序后逐个 sha256）===
+AGGREGATE_SHA256=42c1bdd94e9c53499c2406e20c8c698f49763ab51fc68fbeed5f7c8a0b9c7e38
+
+=== 逐文件（前 20 行，完整见 /tmp/f3_files_str.sha256）===
+ff087e57e5ab3c97dd0ce338eb31b5ea7e959f81af9745cb051bf39f5032020b  code/config/activity_templates.json
+a94fba10e6d71ea0b9c12d2513e74fc0be2d3a70ad3d8468863e23e207e6ab8d  code/config/default.json
+f04355716d494f7b1a7236865c1bc3c6d3e13c9b250143a066bc1dd5ea8e9eec  code/config/dialogue_repair.json
+83e24ae486e541d7d3066586f7979406fd655e8129729955271a225bc4499276  code/config/emotion_echo.json
+11c569534b40a68269972cb8019cd5a3d4b99e569db1fb94e915a5ea56fdc5e7  code/config/engine_version.json
+72b40de904069af4492b4a1acf484d9c4ccb20f8caade6e9ac112a1ace6d5197  code/config/life_v2.json
+65fd915b1d4a3633dbdf9b2b72832c33be5ea724613821eedd79fe612d99fa44  code/config/llm.json
+c018d69f1e8a4a00c83b58787f139777836bca23b3f9beaddb773ce829df2bf7  code/config/narrative_weights.json
+c6306689eaf0081cf619f4238e434648d5df0b3df40c5384bb7f7c6ab24f8601  code/config/perception_scope.json
+08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d  code/config/personas.json
+c36c0f8776372f4e36ec39126f0fd9546c1dadf5e814c294172f5e2e04bb66fa  code/config/places.json
+609f22b679947fb418cb4f0db5fa2fd9d11d48d4ecf7c337fa8e8a13b4767008  code/config/policy.json
+6cd105f5a2f44309ab2bf133111d47e117d9f46d922a1cbabcbd428da701ddd9  code/config/social.json
+3a07a50123760381e93a62122ff683d9199ba38745261ea5a0349a6b924e0fbf  code/config/time.json
+20f7e9790d0a828c79ae90c25972cea7de4dda245ad6f2360326d21b28d407ab  code/config/topology.json
+5f9b7c16b8b94043a8f18bc444514e7b8ca4a9588fea96e593306097aa020038  code/config/world_director.json
+db53dca982aa8b7959bcf94c208e39f2af4ddebe474d5252edbdede592018863  code/engine/arbiter.py
+fdfc8839a6ab36550cba0c0c36a3ef6591012ebf36456ceca23172ff23a9e7e7  code/engine/canon.py
+8b0f8c04705a4ec2d912a6adbfc25d1578c5732fb965335cac718ff4b10fcb83  code/engine/cli.py
+a6b8b49247b5528b6e9a1af8bf4751b057cee76b8cf205ce1eaaa54b5e0f97aa  code/engine/conservation.py
+... 共 105 个文件

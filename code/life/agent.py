@@ -27,6 +27,7 @@ from .memory import AssociativeMemory, EmbeddingModel, HashEmbeddingModel, SideS
 from .persona import Persona
 from . import persona_drift as PD
 from . import emotion as E
+from . import emotion_echo as EE   # F-3：情绪呼应臂（env HITT_DIALOGUE_EMOTION_ECHO，默认 OFF）
 from . import dialogue_threads as DT
 from . import dialogue_repair as DR
 from . import sleep_window as _sleep
@@ -934,7 +935,8 @@ class LifeLayerAgent:
         return out
 
     def _ctx_snapshot(self, partner: str | None, topic: str | None,
-                      trigger: str | None = None, initiator: str | None = None) -> dict:
+                      trigger: str | None = None, initiator: str | None = None,
+                      echo: dict | None = None) -> dict:
         """生成时的语境快照（体积控：只存被引用的键；缺的键省略而非填假值）。
 
         `trigger`/`initiator` 记录「这段对话怎么起的、谁先开口」——下一阶段做「生活气息」
@@ -958,6 +960,12 @@ class LifeLayerAgent:
             # R12 去重臂审计（additive）：本条生成时去重机制的累计行为。
             # 默认 OFF ⇒ 该键不出现 ⇒ payload 与接入前逐字节一致。
             ctx["dequp"] = AR.audit()
+        if echo is not None:
+            # F-3 审计（additive）：本条回复接的是谁的哪种情绪、多强（确定性推导，可复算）。
+            # 默认 OFF / 不产 ⇒ 该键不出现 ⇒ payload 与接入前逐字节一致。
+            # 刻意放进已透传的 `ctx`（`orchestration/integration.py::_thread_fields` 有白名单，
+            # 顶层新键会被静默吞掉；`ctx` 已整体透传，与 memory_refs/dequp 同一先例）。
+            ctx["echo"] = echo
         return ctx
 
     def _dequp_body(self, prompt: str, body: str, meta: dict) -> str:
@@ -977,6 +985,28 @@ class LifeLayerAgent:
         out = (res.text or "").strip() or body
         AR.remember(out)
         return out
+
+    def _emotion_echo(self, ctx_in: dict | None, partner_body: str | None,
+                      partner: str | None) -> tuple[str | None, dict | None]:
+        """F-3 情绪呼应：判定「对方此刻的情绪」并给出**一句处境提示**（+ 审计字段）。
+
+        单变量约束（沿用 `_gossip_hint` / `_memory_line` 的开关先例）：
+          - 开关关闭（`config/emotion_echo.json::enabled=false` 且未设 env，**默认**）
+            ⇒ 直接返回 `(None, None)`：提示词不加任何字、payload 不加任何键，逐字节不变；
+          - 打开 ⇒ 只在提示词中**插入**这一段，并**只追加** `ctx.echo` 审计键
+            （`ctx` 是 `orchestration/integration.py::_thread_fields` 已整体透传的段，
+            与既有 `ctx.memory_refs` / `ctx.dequp` 同一先例）。
+        判定与强度全部由 `life/emotion_echo.py` 的纯函数推导（**不调用 LLM**）：
+        语面极性复用 `life/emotion.emotion_sign`（单一真源），处境情绪取入站消息
+        `payload["ctx"]["mood"]`（发送方生成时按自身 needs 算出的确定性标签）。
+        """
+        if not EE.enabled():
+            return None, None
+        plan = EE.plan((ctx_in or {}).get("mood"), partner_body or "")
+        if plan is None:
+            return None, None
+        name = self._name(partner) if partner else None
+        return EE.prompt_line(plan, name), EE.audit(plan)
 
     def _send_reply(self, wv, ev, cfg, slot_id: str) -> bool:
         p = ev.payload or {}
@@ -998,8 +1028,10 @@ class LifeLayerAgent:
                                         params=dr_cfg)
             # R13 / F-4：本线程确有未了结旧账 ⇒ 追加「这一句把话说开」的动作要求（只提要求，不给句式）
             repair_line = DR.repair_ask(self._rifts, tid, partner, int(wv.round), dr_cfg)
+        # F-3：接住对方情绪（默认 OFF ⇒ (None, None)，下面两处都退化为"什么都不加"）
+        echo_line, echo_audit = self._emotion_echo(ctx_in, p.get("body"), partner)
         prompt = self._reply_prompt(partner, topic, history, cfg, rift_line=rift_line,
-                                    repair_line=repair_line, wv=wv)
+                                    repair_line=repair_line, echo_line=echo_line, wv=wv)
         meta = {"agent_id": self.agent_id, "round": wv.round,
                 "thread": tid, "turn": turn}
         res = self.llm.call("dialogue", prompt, meta=meta)
@@ -1014,7 +1046,8 @@ class LifeLayerAgent:
             "reply_to": p.get("msg_uid") or p.get("msg_id"),   # D2：指针指向 msg_uid（全局唯一）
             "participants": sorted(set(parts)), "topic": topic,
             "ctx": self._ctx_snapshot(partner, topic, trigger="reply",
-                                      initiator=DT.thread_initiator(tid)),
+                                      initiator=DT.thread_initiator(tid),
+                                      echo=echo_audit),   # F-3：OFF/不产 ⇒ None ⇒ 不多键
         }
         if dr_cfg.get("enabled"):
             # R6-T2：**只做追溯**（本条生成时我有哪些未了结旧账）；无旧账 ⇒ 不产生该键
@@ -1255,7 +1288,8 @@ class LifeLayerAgent:
 
     def _reply_prompt(self, partner: str | None, topic: str, history: list,
                       cfg: dict | None = None, rift_line: str | None = None,
-                      wv=None, repair_line: str | None = None) -> str:
+                      wv=None, repair_line: str | None = None,
+                      echo_line: str | None = None) -> str:
         cfg = cfg or self._dlg_cfg()
         lines = "\n".join(line for _, line in history) or "(还没说什么)"
         who = self._name(partner) if partner else "在场的人"
@@ -1264,6 +1298,7 @@ class LifeLayerAgent:
                 + f"\n你正在和{who}聊「{topic}」。{self._mood_line()}。"
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + (repair_line or "")        # R13：本线程旧账的「这一句把话说开」要求；关闭/无旧账为空串
+                + (echo_line or "")          # F-3：接住对方情绪的一句处境提示；关闭/不产为空串
                 + f"\n刚才的对话：\n{lines}"
                 + self._gossip_hint([partner] if partner else [])  # G系列A1臂：可引用真人名单（默认OFF ⇒ 空串）
                 + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
