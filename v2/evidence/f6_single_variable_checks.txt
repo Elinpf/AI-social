@@ -1,0 +1,70 @@
+# F-6 单变量三查 · 终态原始输出（R11，n16×60 seed42 正式批）
+
+> 生成方式：由脚本逐条执行下列命令并原样捕获 stdout/stderr，**未经人工改写**。
+> 生成时刻：2026-10-21 16:08:46 ｜ 仓库 HEAD：895b9a381cd5a1838c23bd3b38e139f7edade3b8 ｜ 工作树：feat/life-memory-f6-on
+> 用途：R11 §4.6 三查 (a)(b)(c) 的终态留档件（证据索引 E-20）。
+
+## (a) 两臂 code_sha 相同，且与当时 landing 一致
+
+```text
+$ python3 -c "import json;[print(a,'code_sha=',(d:=json.load(open(f'v2/evidence/run_f6_{a}_n16r60_seed42/meta.json')))['code_sha'],'code_sha_end=',d['code_sha_end'],'generated_after_run=',d['generated_after_run'],'started_at=',d['started_at']) for a in ('off','on')]"
+off code_sha= 895b9a381cd5a1838c23bd3b38e139f7edade3b8 code_sha_end= 895b9a381cd5a1838c23bd3b38e139f7edade3b8 generated_after_run= True started_at= 2026-10-21T12:35:19+08:00
+on code_sha= 895b9a381cd5a1838c23bd3b38e139f7edade3b8 code_sha_end= 895b9a381cd5a1838c23bd3b38e139f7edade3b8 generated_after_run= True started_at= 2026-10-21T14:05:57+08:00
+rc=0
+$ git rev-parse HEAD
+895b9a381cd5a1838c23bd3b38e139f7edade3b8
+```
+
+判读：(a) **通过**。两臂 `code_sha = code_sha_end = 895b9a381cd5a1838c23bd3b38e139f7edade3b8`，与 `git rev-parse HEAD` 逐字相同 ⇒ 两臂跑的是同一份代码，且 meta 生成于跑批之后（`generated_after_run=True`），无事后回填迹象（回填会留下 `code_sha ≠ HEAD` 或 `code_sha_end` 缺失）。
+
+## (b) 唯一差异是 `LIFE_PROMPT_MEMORY_F6`（OFF 提示词 = ON 去记忆段后逐字节相同）
+
+**B-1 代码级复核（本轮可复算，零网络、零 LLM）**：两个对话提示词都在同一位置以 `+ mem_line` 拼接，`mem_line` 由 `_memory_line()` 产出，其**首两个语句**是 `self._mem_refs = []; if not memory_f6_enabled(): return ""`。
+
+```text
+$ sed -n '1114,1119p' code/life/agent.py; echo '--- 插入点 ---'; grep -n 'mem_line' code/life/agent.py
+        """
+        self._mem_refs = []
+        if not memory_f6_enabled():
+            return ""
+        today = int(getattr(wv, "day", 0))
+        # 只排除「自己的」记忆条目（`subject` 是自己）；**不排除**对话对象——
+--- 插入点 ---
+1211:        mem_line = self._memory_line(wv, partners) if wv is not None else ""
+1216:                + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
+1225:        mem_line = self._memory_line(wv, [partner] if partner else []) if wv is not None else ""
+1231:                + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
+```
+
+判读：OFF 时 `mem_line` 为**空串**，`A + "" == A` ⇒ 提示词与 A0 逐字节相同；ON 时仅多出「一段 `\n你想起的事：…` 插入块 + 收尾提示语」，不改任何既有段落。**这是代码级机械验证（【事实】），不需要跑批也不需要 LLM。**
+
+**B-2 上一届 mock 探针（`insert_only` 4/4、跨进程 200 对 diff）**：脚本未入仓 ⇒ **不可在本仓复算**，只引用其留档 sha256（§8 E-5/E-6/E-7），**不升级为证据**。本轮**未新跑**任何 mock 探针（零跑批纪律）。
+
+## (c) 提交后代码与 `code_sha` 一致（期望空输出）
+
+```text
+$ git diff 895b9a3 -- code/life code/orchestration code/config; echo "rc=$?"; git status --porcelain | grep -E "^.. code/(life|orchestration|config|engine)" || echo "code/{life,orchestration,config,engine} 无未提交项"
+rc=0
+code/{life,orchestration,config,engine} 无未提交项
+```
+
+判读：(c) **通过**。`git diff 895b9a3 -- code/{life,orchestration,config}` 空输出、rc=0；`git status` 中四个运行期目录无任何未提交项 ⇒ 本报告写作期间未改运行期代码。
+
+## 附：作废批隔离确认
+
+```text
+$ ls -d v2/evidence/*VOID* 2>/dev/null; echo '---'; head -6 v2/evidence/run_f6_off_n16r84_seed42_VOID/VOID.md 2>/dev/null; echo '---'; sha256sum v2/evidence/run_f6_off_n16r84_seed42_VOID/VOID.md 2>/dev/null
+v2/evidence/run_f6_off_n16r84_seed42_VOID
+---
+# ⛔ 本批作废（不作证据）
+
+- 尺寸：n16×84 seed42，OFF 臂（`LIFE_PROMPT_MEMORY_F6` 未设）
+- 起跑：2026-10-21T12:11:50+08:00（setsid，pid 1066344 / sid 1066333）
+- 停止：2026-10-21T12:35:01+08:00，kill 进程组后 `pgrep -fa "orchestration[ ]run"` 空 + rc=1
+- 停止时进度：last TURN_SEAL round = 9，`run.jsonl` 9679 行，
+---
+c6e961cf23b35bab3179691d9aa3c54e349158dd3be4471ee58e2b09c22e7fa4  v2/evidence/run_f6_off_n16r84_seed42_VOID/VOID.md
+```
+
+判读：作废批目录保留不删、只标注；本报告与复算回执**未引用该批任何读数**，两臂正式批目录名均为 `*_n16r60_seed42`。
+

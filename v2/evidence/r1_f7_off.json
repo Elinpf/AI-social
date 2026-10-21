@@ -1,0 +1,2546 @@
+{
+ "arm": "run_f6_off_n16r60_seed42",
+ "inputs": {
+  "bootstrap": {
+   "method": "percentile-95",
+   "n": 2000,
+   "seed": 42
+  },
+  "log_path": "v2/evidence/run_f6_off_n16r60_seed42/run.jsonl",
+  "log_sha256": "c73bead61a440db789f6d6ba1de555fe326a203ee27d1219690174e3d9483642",
+  "n_personas": 20,
+  "n_records": 116294,
+  "name_collision_check": {
+   "collisions": [],
+   "ok": true
+  },
+  "name_field": "personas[].persona_id + personas[].display_name（strip '青溪镇·'）",
+  "name_table_sha256": "cdf28d499146220921482d175d43298269d2c2b08c25c0585b6f5e51af4b64d1",
+  "personas_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/config/personas.json",
+  "personas_sha256": "08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d",
+  "script_sha256": "35349954464130fe065d1e16eedf48bd0a9b67c218c1370a56247e8c1e8912b1"
+ },
+ "legacy_compat": {
+  "den": 510,
+  "pos": 74,
+  "rate": 0.145098,
+  "raw_hits": [
+   {
+    "body_excerpt": "秀娘，练完这趟就歇歇吧，账要平，力气也得省着用。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place_round_last": "library",
+      "pid": "P004"
+     }
+    ],
+    "round": 0,
+    "sender_place": "park",
+    "seq": 124
+   },
+   {
+    "body_excerpt": "桂婶，您这招真利索，教教我呗？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "桂婶",
+      "peer_place_round_last": "school",
+      "pid": "P012"
+     }
+    ],
+    "round": 0,
+    "sender_place": "park",
+    "seq": 145
+   },
+   {
+    "body_excerpt": "兰姐，你刚来镇上可能还不熟，往后有啥要搭把手的，尽管喊我一声就行。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place_round_last": "park",
+      "pid": "P016"
+     }
+    ],
+    "round": 0,
+    "sender_place": "school",
+    "seq": 156
+   },
+   {
+    "body_excerpt": "陈医啊，你这身手看着挺利索，平时没少练吧？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "陈医",
+      "peer_place_round_last": "workshop",
+      "pid": "P005"
+     }
+    ],
+    "round": 0,
+    "sender_place": "park",
+    "seq": 200
+   },
+   {
+    "body_excerpt": "陈医，您这儿还有多余的药材吗？我跑了好几个地方都没买着，想跟您匀一点。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "陈医",
+      "peer_place_round_last": "bank",
+      "pid": "P005"
+     }
+    ],
+    "round": 3,
+    "sender_place": "market",
+    "seq": 2107
+   },
+   {
+    "body_excerpt": "金先生，账平不平我不在乎，我在乎的是我唱的那些歌，到底有没有人真的听进去。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "金先生",
+      "peer_place_round_last": "market",
+      "pid": "P009"
+     }
+    ],
+    "round": 3,
+    "sender_place": "farm",
+    "seq": 2162
+   },
+   {
+    "body_excerpt": "巧儿姐你别笑我，我这擀面杖手要是练成了，第一个先擀你！",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place_round_last": "workshop",
+      "pid": "P014"
+     }
+    ],
+    "round": 3,
+    "sender_place": "bank",
+    "seq": 2183
+   },
+   {
+    "body_excerpt": "兰姐你这么说就见外了，跟镇上人打交道啊，就一条，真心换真心，你摊子上多备点零嘴，谁来都招呼一声，日子久了自然就熟了。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place_round_last": "bank",
+      "pid": "P016"
+     }
+    ],
+    "round": 3,
+    "sender_place": "cafe",
+    "seq": 2196
+   },
+   {
+    "body_excerpt": "阿禾，这袋新米你拿回去尝尝。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "阿禾",
+      "peer_place_round_last": "plaza",
+      "pid": "P003"
+     }
+    ],
+    "round": 6,
+    "sender_place": "market",
+    "seq": 4869
+   },
+   {
+    "body_excerpt": "阿林，退烧药我这儿确实不多了，得先留给急用的病人。糙米你拿回去，家里孩子要紧。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "阿林",
+      "peer_place_round_last": "park",
+      "pid": "P007"
+     }
+    ],
+    "round": 6,
+    "sender_place": "cafe",
+    "seq": 4941
+   },
+   {
+    "body_excerpt": "秀娘，你这灶上炖的啥这么香？我这一路赶回来，肚子早就咕咕叫了，闻着味儿脚都挪不动啦。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place_round_last": "community_center",
+      "pid": "P004"
+     }
+    ],
+    "round": 6,
+    "sender_place": "park",
+    "seq": 4967
+   },
+   {
+    "body_excerpt": "阿林，今天下班后有空一起去河边走走吗？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "阿林",
+      "peer_place_round_last": "park",
+      "pid": "P007"
+     }
+    ],
+    "round": 6,
+    "sender_place": "community_center",
+    "seq": 4988
+   },
+   {
+    "body_excerpt": "秀娘，点心先放放。我今儿来是想问你，镇上那批铁料你听说没，到底还进不进得来。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place_round_last": "community_center",
+      "pid": "P004"
+     }
+    ],
+    "round": 6,
+    "sender_place": "cafe",
+    "seq": 5065
+   },
+   {
+    "body_excerpt": "方老师，我肚子空着，听不太进去。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "方老师",
+      "peer_place_round_last": "park",
+      "pid": "P006"
+     }
+    ],
+    "round": 12,
+    "sender_place": "farm",
+    "seq": 18951
+   },
+   {
+    "body_excerpt": "老周，你尝尝这个新烤的桂花糕，我少放了糖，配茶正好。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老周",
+      "peer_place_round_last": "park",
+      "pid": "P001"
+     }
+    ],
+    "round": 12,
+    "sender_place": "school",
+    "seq": 19026
+   },
+   {
+    "body_excerpt": "阿禾，馒头我这儿有，你先拿去吃。不过下次饿了要早点说，别硬撑着。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "阿禾",
+      "peer_place_round_last": "farm",
+      "pid": "P003"
+     }
+    ],
+    "round": 12,
+    "sender_place": "park",
+    "seq": 19166
+   },
+   {
+    "body_excerpt": "阿林，风声不是我能透的，你这话就到此为止吧。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "阿林",
+      "peer_place_round_last": "school",
+      "pid": "P007"
+     }
+    ],
+    "round": 12,
+    "sender_place": "town_hall",
+    "seq": 19312
+   },
+   {
+    "body_excerpt": "巧儿，先歇会儿吧，我肚子空得慌，账都算不平了。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place_round_last": "workshop",
+      "pid": "P014"
+     }
+    ],
+    "round": 12,
+    "sender_place": "park",
+    "seq": 19381
+   },
+   {
+    "body_excerpt": "周公文，你这招真能打中人吗？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "周公文",
+      "peer_place_round_last": "town_hall",
+      "pid": "P008"
+     }
+    ],
+    "round": 12,
+    "sender_place": "park",
+    "seq": 19525
+   },
+   {
+    "body_excerpt": "老石，你这刀工稳得跟钉钉子似的，我站旁边手都发紧，要不咱先歇口气，我请你喝碗我刚瞎调的酸辣汤？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "workshop",
+      "pid": "P002"
+     }
+    ],
+    "round": 12,
+    "sender_place": "park",
+    "seq": 19815
+   },
+   {
+    "body_excerpt": "老石，你这就没意思了。我兰姐送出去的东西，哪有收回来的道理？拿着，回头你媳妇儿也能用上。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "workshop",
+      "pid": "P002"
+     }
+    ],
+    "round": 12,
+    "sender_place": "school",
+    "seq": 19890
+   },
+   {
+    "body_excerpt": "老周你这话说的，我四十一了还天天琢磨新方子呢。来，先尝块刚出炉的枣泥酥，边吃边聊，学东西这事儿啊，跟发面一样，啥时候都不晚。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老周",
+      "peer_place_round_last": "bank",
+      "pid": "P001"
+     }
+    ],
+    "round": 15,
+    "sender_place": "market",
+    "seq": 21835
+   },
+   {
+    "body_excerpt": "五味啊，今天这摊子我实在走不开，改天再陪你聊，行不？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "五味",
+      "peer_place_round_last": "kitchen",
+      "pid": "P015"
+     }
+    ],
+    "round": 15,
+    "sender_place": "cafe",
+    "seq": 22003
+   },
+   {
+    "body_excerpt": "铁头你先坐，汤在灶上温着呢，我给你盛一碗，再拿两个刚出炉的芝麻烧饼，热乎的垫垫肚子。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place_round_last": "cafe",
+      "pid": "P013"
+     }
+    ],
+    "round": 18,
+    "sender_place": "market",
+    "seq": 23843
+   },
+   {
+    "body_excerpt": "陈医，我带了点路上买的桂花糕，您先垫垫肚子，顺便帮我看看这脸色是不是还差点火候？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "陈医",
+      "peer_place_round_last": "cafe",
+      "pid": "P005"
+     }
+    ],
+    "round": 18,
+    "sender_place": "plaza",
+    "seq": 23879
+   },
+   {
+    "body_excerpt": "周公文，我肚子都咕咕叫了，先让我啃两口再练行不行？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "周公文",
+      "peer_place_round_last": "cafe",
+      "pid": "P008"
+     }
+    ],
+    "round": 18,
+    "sender_place": "plaza",
+    "seq": 23954
+   },
+   {
+    "body_excerpt": "老周啊，你家灶上还热着饭没？我这肚子饿得咕咕叫，闻着谁家飘来的香味儿，腿都挪不动了。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老周",
+      "peer_place_round_last": "community_center",
+      "pid": "P001"
+     }
+    ],
+    "round": 18,
+    "sender_place": "cafe",
+    "seq": 23967
+   },
+   {
+    "body_excerpt": "五味，你这汤我可记下了，改天一定去喝。不过话说回来，你要的那批干货，我今早看了三家，成色都不行，回头我给你挑好的。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "五味",
+      "peer_place_round_last": "plaza",
+      "pid": "P015"
+     }
+    ],
+    "round": 18,
+    "sender_place": "cafe",
+    "seq": 24005
+   },
+   {
+    "body_excerpt": "铁头啊，铜板是没剩几个了，可我这肚子饿得直叫唤，你先让我啃口剩面包垫垫，咱再慢慢合计买粮的事。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place_round_last": "workshop",
+      "pid": "P013"
+     }
+    ],
+    "round": 24,
+    "sender_place": "library",
+    "seq": 34117
+   },
+   {
+    "body_excerpt": "老石，先歇会儿吧，我肚子都饿得咕咕叫了，咱们边吃边聊刚才那几招，你觉得我哪里还差点意思？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "farm",
+      "pid": "P002"
+     }
+    ],
+    "round": 24,
+    "sender_place": "park",
+    "seq": 34263
+   },
+   {
+    "body_excerpt": "铁头，练完这趟咱去吃点啥？我肚子都快叫出声了。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place_round_last": "workshop",
+      "pid": "P013"
+     }
+    ],
+    "round": 24,
+    "sender_place": "park",
+    "seq": 34630
+   },
+   {
+    "body_excerpt": "哎哟老周，那我就不跟你客气了，肚子正咕咕叫呢。你这红薯闻着就甜，我先拿一个，回头我家腌的萝卜干给你送一坛来。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老周",
+      "peer_place_round_last": "park",
+      "pid": "P001"
+     }
+    ],
+    "round": 24,
+    "sender_place": "office",
+    "seq": 34699
+   },
+   {
+    "body_excerpt": "五味，你身上有吃的没？我饿得手都抖了，再练下去怕是要把锤子甩你脸上。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "五味",
+      "peer_place_round_last": "kitchen",
+      "pid": "P015"
+     }
+    ],
+    "round": 24,
+    "sender_place": "park",
+    "seq": 34841
+   },
+   {
+    "body_excerpt": "兰姐你先吃，别等我，我这锅汤再煨两分钟就到位，闻着这味儿我肚子都叫了。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place_round_last": "park",
+      "pid": "P016"
+     }
+    ],
+    "round": 24,
+    "sender_place": "kitchen",
+    "seq": 34916
+   },
+   {
+    "body_excerpt": "铁头，先别练了，过来吃口我带的饼，饿着肚子打拳可没力气。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place_round_last": "workshop",
+      "pid": "P013"
+     }
+    ],
+    "round": 24,
+    "sender_place": "park",
+    "seq": 34991
+   },
+   {
+    "body_excerpt": "哎哟秀娘，你可真是救了我一命，肚子早就咕咕叫了。不过说真的，我这一路走南闯北，最惦记的不是吃的，是能有个明白人指点指点。你说我做了这么多年小买卖，咋就总感觉差那么一口气呢？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place_round_last": "kitchen",
+      "pid": "P004"
+     }
+    ],
+    "round": 27,
+    "sender_place": "market",
+    "seq": 37097
+   },
+   {
+    "body_excerpt": "金先生，规矩上训练前不宜进食，我照章办。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "金先生",
+      "peer_place_round_last": "farm",
+      "pid": "P009"
+     }
+    ],
+    "round": 27,
+    "sender_place": "cafe",
+    "seq": 37122
+   },
+   {
+    "body_excerpt": "秀娘，你灶上那锅粥还热着吗，我今儿从早唱到现在，肚子空得能听见回音了。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place_round_last": "kitchen",
+      "pid": "P004"
+     }
+    ],
+    "round": 27,
+    "sender_place": "market",
+    "seq": 37164
+   },
+   {
+    "body_excerpt": "老石啊，我家灶上还炖着菜呢，要不你上我那儿吃口热乎的，咱边吃边聊？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "workshop",
+      "pid": "P002"
+     }
+    ],
+    "round": 27,
+    "sender_place": "market",
+    "seq": 37192
+   },
+   {
+    "body_excerpt": "巧儿你这话说的，饿着肚子打铁，铁都得跟着你抖三抖。饼我留了半张，不过你先尝尝我新调的酱，蘸着吃，保准你锤子都抡得比平时圆。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place_round_last": "plaza",
+      "pid": "P014"
+     }
+    ],
+    "round": 30,
+    "sender_place": "cafe",
+    "seq": 38847
+   },
+   {
+    "body_excerpt": "兰姐，你这一下差点把我手腕别过去，我还没学会呢。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place_round_last": "town_hall",
+      "pid": "P016"
+     }
+    ],
+    "round": 36,
+    "sender_place": "park",
+    "seq": 57196
+   },
+   {
+    "body_excerpt": "陈医，这药先给我留两包，钱我明天送来。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "陈医",
+      "peer_place_round_last": "cafe",
+      "pid": "P005"
+     }
+    ],
+    "round": 39,
+    "sender_place": "market",
+    "seq": 59182
+   },
+   {
+    "body_excerpt": "铁头啊，你这点小毛病真不用专门跑一趟，回去多喝点热水，晚上早点睡就行。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place_round_last": "workshop",
+      "pid": "P013"
+     }
+    ],
+    "round": 39,
+    "sender_place": "cafe",
+    "seq": 59230
+   },
+   {
+    "body_excerpt": "兰姐，按号来，别挤，我这儿都记着呢。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place_round_last": "cafe",
+      "pid": "P016"
+     }
+    ],
+    "round": 39,
+    "sender_place": "market",
+    "seq": 59277
+   },
+   {
+    "body_excerpt": "方老师，这个数我算过了，差三块，咱得再对一遍。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "方老师",
+      "peer_place_round_last": "school",
+      "pid": "P006"
+     }
+    ],
+    "round": 39,
+    "sender_place": "cafe",
+    "seq": 59300
+   },
+   {
+    "body_excerpt": "方老师，我肚子都唱空城计了，再练下去怕是要把您当包子啃啦。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "方老师",
+      "peer_place_round_last": "school",
+      "pid": "P006"
+     }
+    ],
+    "round": 39,
+    "sender_place": "market",
+    "seq": 59340
+   },
+   {
+    "body_excerpt": "巧儿啊，你可别拿废铁皮瞎折腾，伤着筋骨可不是闹着玩的。婶子年轻时也练过两下子，回头我教你几个松肩的法子，保管比那铁皮管用。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place_round_last": "plaza",
+      "pid": "P014"
+     }
+    ],
+    "round": 39,
+    "sender_place": "farm",
+    "seq": 59361
+   },
+   {
+    "body_excerpt": "兰姐，我这手腕跟木头似的，越使劲越僵。要不咱歇会儿？我兜里还有俩糖块儿。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place_round_last": "cafe",
+      "pid": "P016"
+     }
+    ],
+    "round": 39,
+    "sender_place": "plaza",
+    "seq": 59397
+   },
+   {
+    "body_excerpt": "小满，今天这锅我改了三次方子，自己都拿不准，你先别急着尝，等我再顺一遍火候，回头给你留一碗稳当的。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "小满",
+      "peer_place_round_last": "market",
+      "pid": "P011"
+     }
+    ],
+    "round": 39,
+    "sender_place": "plaza",
+    "seq": 59402
+   },
+   {
+    "body_excerpt": "小满啊，你这价我实在接不了，再添两块，咱这摊子上东西你也看得见，值这个数。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "小满",
+      "peer_place_round_last": "market",
+      "pid": "P011"
+     }
+    ],
+    "round": 39,
+    "sender_place": "cafe",
+    "seq": 59407
+   },
+   {
+    "body_excerpt": "周公文，这点菜你收着，自家地里刚摘的。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "周公文",
+      "peer_place_round_last": "cafe",
+      "pid": "P008"
+     }
+    ],
+    "round": 42,
+    "sender_place": "plaza",
+    "seq": 61232
+   },
+   {
+    "body_excerpt": "老周，种子的事我也听说了，心里正堵得慌。先尝块新烤的枣泥酥吧，甜一口，咱再慢慢说。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老周",
+      "peer_place_round_last": "cafe",
+      "pid": "P001"
+     }
+    ],
+    "round": 42,
+    "sender_place": "plaza",
+    "seq": 61261
+   },
+   {
+    "body_excerpt": "铁头，你这毛病不是治不治的问题，是得先弄清楚它到底碍不碍你过日子。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place_round_last": "community_center",
+      "pid": "P013"
+     }
+    ],
+    "round": 42,
+    "sender_place": "cafe",
+    "seq": 61278
+   },
+   {
+    "body_excerpt": "小满，今天这道题你想到哪一步了？慢慢说，我听着呢。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "小满",
+      "peer_place_round_last": "park",
+      "pid": "P011"
+     }
+    ],
+    "round": 42,
+    "sender_place": "community_center",
+    "seq": 61283
+   },
+   {
+    "body_excerpt": "周公文，你上回托我打的那把柴刀，我还没动火，这两天心里堵得慌。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "周公文",
+      "peer_place_round_last": "cafe",
+      "pid": "P008"
+     }
+    ],
+    "round": 42,
+    "sender_place": "community_center",
+    "seq": 61436
+   },
+   {
+    "body_excerpt": "小满啊，挂件是真搭不了，进价都摆在那。这样，你诚心要，我给你抹个零头，再送你根红绳，回去自己编个结也好看。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "小满",
+      "peer_place_round_last": "park",
+      "pid": "P011"
+     }
+    ],
+    "round": 42,
+    "sender_place": "plaza",
+    "seq": 61465
+   },
+   {
+    "body_excerpt": "巧儿，来尝尝这个新烤的桂花糕，刚出炉的，还热乎着呢。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place_round_last": "cafe",
+      "pid": "P014"
+     }
+    ],
+    "round": 43,
+    "sender_place": "plaza",
+    "seq": 62091
+   },
+   {
+    "body_excerpt": "铁头，手上劲别太猛，稳着点。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "铁头",
+      "peer_place_round_last": "library",
+      "pid": "P013"
+     }
+    ],
+    "round": 48,
+    "sender_place": "park",
+    "seq": 83481
+   },
+   {
+    "body_excerpt": "周公文，这不算啥礼，就是自家地里收的，你不收我心里过不去。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "周公文",
+      "peer_place_round_last": "town_hall",
+      "pid": "P008"
+     }
+    ],
+    "round": 48,
+    "sender_place": "farm",
+    "seq": 83693
+   },
+   {
+    "body_excerpt": "兰姐，先别急着发力，把呼吸稳住，咱们一步一步来。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place_round_last": "market",
+      "pid": "P016"
+     }
+    ],
+    "round": 48,
+    "sender_place": "park",
+    "seq": 83963
+   },
+   {
+    "body_excerpt": "金先生，核账我在行，可您得先告诉我这账是谁的、跟谁对不上，不然我连从哪儿下手都不知道。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "金先生",
+      "peer_place_round_last": "farm",
+      "pid": "P009"
+     }
+    ],
+    "round": 48,
+    "sender_place": "market",
+    "seq": 84056
+   },
+   {
+    "body_excerpt": "可手艺换不来一个能说话的人啊。老石，你说我是不是把日子过成了一场演出，灯一灭就什么都不剩。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "school",
+      "pid": "P002"
+     }
+    ],
+    "round": 48,
+    "sender_place": "library",
+    "seq": 84324
+   },
+   {
+    "body_excerpt": "五味叔，你这话说得跟那锅汤一样，越熬越没味儿。我又不是来砸招牌的，就想蹭口热乎的，你倒好，直接把我拒门外了。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "五味",
+      "peer_place_round_last": "kitchen",
+      "pid": "P015"
+     }
+    ],
+    "round": 48,
+    "sender_place": "school",
+    "seq": 84423
+   },
+   {
+    "body_excerpt": "兰姐，账本跑不了，可你这口气要是乱了，回去算账更容易出错。咱再练十分钟，就十分钟，练完你心里那块石头也能轻一点。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "兰姐",
+      "peer_place_round_last": "cafe",
+      "pid": "P016"
+     }
+    ],
+    "round": 51,
+    "sender_place": "bank",
+    "seq": 86612
+   },
+   {
+    "body_excerpt": "五味，这数不对，你再算算。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "五味",
+      "peer_place_round_last": "bank",
+      "pid": "P015"
+     }
+    ],
+    "round": 51,
+    "sender_place": "market",
+    "seq": 86635
+   },
+   {
+    "body_excerpt": "巧儿啊，你这价我实在没法应，要不这样，你再加两成，我这边给你搭点添头，咱俩都不亏。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place_round_last": "workshop",
+      "pid": "P014"
+     }
+    ],
+    "round": 51,
+    "sender_place": "cafe",
+    "seq": 86730
+   },
+   {
+    "body_excerpt": "陈医，这点菜你收着，自家地里刚摘的。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "陈医",
+      "peer_place_round_last": "plaza",
+      "pid": "P005"
+     }
+    ],
+    "round": 54,
+    "sender_place": "cafe",
+    "seq": 88794
+   },
+   {
+    "body_excerpt": "桂婶，药按时吃就行，别老惦记着省钱，身子骨要紧。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "桂婶",
+      "peer_place_round_last": "cafe",
+      "pid": "P012"
+     }
+    ],
+    "round": 54,
+    "sender_place": "plaza",
+    "seq": 88867
+   },
+   {
+    "body_excerpt": "老石，你说这消息到底准不准？我跑这一路听了好几个人都在传，可谁也说不出个源头来。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "老石",
+      "peer_place_round_last": "cafe",
+      "pid": "P002"
+     }
+    ],
+    "round": 54,
+    "sender_place": "community_center",
+    "seq": 88926
+   },
+   {
+    "body_excerpt": "账要平，可我这心里不平。五味，你陪我坐会儿，就坐会儿。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "五味",
+      "peer_place_round_last": "cafe",
+      "pid": "P015"
+     }
+    ],
+    "round": 54,
+    "sender_place": "park",
+    "seq": 88952
+   },
+   {
+    "body_excerpt": "月牙，你最近是不是也老想着往外跑？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "月牙",
+      "peer_place_round_last": "community_center",
+      "pid": "P010"
+     }
+    ],
+    "round": 54,
+    "sender_place": "cafe",
+    "seq": 88968
+   },
+   {
+    "body_excerpt": "秀娘，你瞧这木簪子，废料改的，戴着玩呗？",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "秀娘",
+      "peer_place_round_last": "cafe",
+      "pid": "P004"
+     }
+    ],
+    "round": 54,
+    "sender_place": "community_center",
+    "seq": 88999
+   },
+   {
+    "body_excerpt": "金先生，我算了两遍，数没错。您要是觉得哪儿不对，咱把账本摊开，一条一条对，我陪您看到底。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "金先生",
+      "peer_place_round_last": "park",
+      "pid": "P009"
+     }
+    ],
+    "round": 54,
+    "sender_place": "cafe",
+    "seq": 89038
+   },
+   {
+    "body_excerpt": "巧儿，添头我早给你备好了，你先别急着咬牙。这两成不是白加的，货你上手一摸就知道值不值。",
+    "channel": "MSG_DM",
+    "mentioned": [
+     {
+      "name": "巧儿",
+      "peer_place_round_last": "community_center",
+      "pid": "P014"
+     }
+    ],
+    "round": 54,
+    "sender_place": "cafe",
+    "seq": 89045
+   }
+  ],
+  "rule": "tools/d5/dialogue_metrics.py::F-7a（主干名 / 旁白不剔除 / 含收件人 / 同 round 最后位置 / 分母=全部消息）",
+  "unknown_place_lookups": 340
+ },
+ "notes": [
+  "本脚本零 LLM 成本：只读 run.jsonl 与 personas.json。",
+  "bootstrap 种子固定，同输入两次运行输出逐字节相等。",
+  "脚本不按臂名分支：臂名只从日志目录名派生并回显。",
+  "P1（提及层）与 P2（称呼层）是两层，禁止相加或互相代入；P2 是正则启发式，非人工标注。"
+ ],
+ "primary": {
+  "config": {
+   "addressee": "exclude",
+   "channel": "all",
+   "identity": "names+id",
+   "narration": "exclude",
+   "presence": "pit"
+  },
+  "n_msgs_scope": 510,
+  "n_msgs_with_mention": 301,
+  "per_mention": {
+   "den": 2,
+   "pos": 1,
+   "rate": 0.5
+  },
+  "per_message": {
+   "ci95": [
+    0.0,
+    1.0
+   ],
+   "den": 2,
+   "pos": 1,
+   "rate": 0.5
+  },
+  "uncheckable_mentions": 3,
+  "variant_id": "nar=exclude|id=names+id|ch=all|addr=exclude|pres=pit"
+ },
+ "raw_hits": [
+  {
+   "body_excerpt": "周公文，你来啦，正好，我刚烤了一炉新点心，你帮我尝尝味道够不够。",
+   "channel": "MSG_DM",
+   "from": "P004",
+   "mentioned": [
+    {
+     "name": "周公文",
+     "peer_place": "bank",
+     "pid": "P008",
+     "tokens": [
+      "周公文"
+     ],
+     "vocative": true
+    }
+   ],
+   "round": 4,
+   "sender_place": "market",
+   "seq": 3121,
+   "to": "P013"
+  }
+ ],
+ "rules": {
+  "channel_scope": "MSG_DM|MSG_PUBLIC|MSG_GROUP（与 tools/d5/dialogue_metrics.py 消息类型集合一致）",
+  "excluded_mentions": "DM 收件人（payload.to）不算越界（点名说话 ≠ 越界；其不在场是 DM 通道属性，不是叙事错误）",
+  "name_regex": "主干名直接子串匹配（names 表见 inputs.name_table_sha256）；裸 ID 正则 P\\d{3}(?!\\d)",
+  "name_source": "code/config/personas.json → personas[].display_name 去前缀「青溪镇·」；无别名扩展",
+  "narration_regex": "(?:（[^）]*）|\\([^)]*\\))（P1 先剔除再匹配）",
+  "offscreen_rule": "sender payload.place ≠ 被提及者消息时刻 place ⇒ 该消息记 1 次越界命中（per-message）；per-mention 按被提及者逐个计",
+  "presence_rule": "P1：该居民在消息 seq 之前最后一条 PLACE_ARRIVED/PLACE_MOVE 的 place；无任何位置事件 ⇒ 不可判定"
+ },
+ "schema_version": "f7-offscreen/1.0",
+ "units": {
+  "msgs_with_mention_by_channel": {
+   "MSG_DM": 301
+  },
+  "n_msgs": 510,
+  "n_msgs_by_channel": {
+   "MSG_DM": 455,
+   "MSG_PUBLIC": 55
+  }
+ },
+ "variants": [
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 510,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 2,
+    "pos": 1,
+    "rate": 0.5
+   },
+   "per_message": {
+    "ci95": [
+     0.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 1,
+    "rate": 0.5
+   },
+   "primary": true,
+   "uncheckable_mentions": 3,
+   "variant_id": "nar=exclude|id=names+id|ch=all|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 510,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 1,
+    "pos": 0,
+    "rate": 0.0
+   },
+   "per_message": {
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "den": 1,
+    "pos": 0,
+    "rate": 0.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 4,
+   "variant_id": "nar=exclude|id=names+id|ch=all|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 510,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 300,
+    "pos": 183,
+    "rate": 0.61
+   },
+   "per_message": {
+    "ci95": [
+     0.555184,
+     0.665552
+    ],
+    "den": 299,
+    "pos": 183,
+    "rate": 0.61204
+   },
+   "primary": false,
+   "uncheckable_mentions": 5,
+   "variant_id": "nar=exclude|id=names+id|ch=all|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 510,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 133,
+    "pos": 74,
+    "rate": 0.556391
+   },
+   "per_message": {
+    "ci95": [
+     0.469697,
+     0.643939
+    ],
+    "den": 132,
+    "pos": 74,
+    "rate": 0.560606
+   },
+   "primary": false,
+   "uncheckable_mentions": 172,
+   "variant_id": "nar=exclude|id=names+id|ch=all|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names+id|ch=public_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names+id|ch=public_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names+id|ch=public_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names+id|ch=public_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 455,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 2,
+    "pos": 1,
+    "rate": 0.5
+   },
+   "per_message": {
+    "ci95": [
+     0.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 1,
+    "rate": 0.5
+   },
+   "primary": false,
+   "uncheckable_mentions": 3,
+   "variant_id": "nar=exclude|id=names+id|ch=dm_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 455,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 1,
+    "pos": 0,
+    "rate": 0.0
+   },
+   "per_message": {
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "den": 1,
+    "pos": 0,
+    "rate": 0.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 4,
+   "variant_id": "nar=exclude|id=names+id|ch=dm_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 455,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 300,
+    "pos": 183,
+    "rate": 0.61
+   },
+   "per_message": {
+    "ci95": [
+     0.555184,
+     0.665552
+    ],
+    "den": 299,
+    "pos": 183,
+    "rate": 0.61204
+   },
+   "primary": false,
+   "uncheckable_mentions": 5,
+   "variant_id": "nar=exclude|id=names+id|ch=dm_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 455,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 133,
+    "pos": 74,
+    "rate": 0.556391
+   },
+   "per_message": {
+    "ci95": [
+     0.469697,
+     0.643939
+    ],
+    "den": 132,
+    "pos": 74,
+    "rate": 0.560606
+   },
+   "primary": false,
+   "uncheckable_mentions": 172,
+   "variant_id": "nar=exclude|id=names+id|ch=dm_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 510,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 2,
+    "pos": 1,
+    "rate": 0.5
+   },
+   "per_message": {
+    "ci95": [
+     0.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 1,
+    "rate": 0.5
+   },
+   "primary": false,
+   "uncheckable_mentions": 3,
+   "variant_id": "nar=exclude|id=names|ch=all|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 510,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 1,
+    "pos": 0,
+    "rate": 0.0
+   },
+   "per_message": {
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "den": 1,
+    "pos": 0,
+    "rate": 0.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 4,
+   "variant_id": "nar=exclude|id=names|ch=all|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 510,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 300,
+    "pos": 183,
+    "rate": 0.61
+   },
+   "per_message": {
+    "ci95": [
+     0.555184,
+     0.665552
+    ],
+    "den": 299,
+    "pos": 183,
+    "rate": 0.61204
+   },
+   "primary": false,
+   "uncheckable_mentions": 5,
+   "variant_id": "nar=exclude|id=names|ch=all|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 510,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 133,
+    "pos": 74,
+    "rate": 0.556391
+   },
+   "per_message": {
+    "ci95": [
+     0.469697,
+     0.643939
+    ],
+    "den": 132,
+    "pos": 74,
+    "rate": 0.560606
+   },
+   "primary": false,
+   "uncheckable_mentions": 172,
+   "variant_id": "nar=exclude|id=names|ch=all|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names|ch=public_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names|ch=public_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names|ch=public_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=exclude|id=names|ch=public_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 455,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 2,
+    "pos": 1,
+    "rate": 0.5
+   },
+   "per_message": {
+    "ci95": [
+     0.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 1,
+    "rate": 0.5
+   },
+   "primary": false,
+   "uncheckable_mentions": 3,
+   "variant_id": "nar=exclude|id=names|ch=dm_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 455,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 1,
+    "pos": 0,
+    "rate": 0.0
+   },
+   "per_message": {
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "den": 1,
+    "pos": 0,
+    "rate": 0.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 4,
+   "variant_id": "nar=exclude|id=names|ch=dm_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 455,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 300,
+    "pos": 183,
+    "rate": 0.61
+   },
+   "per_message": {
+    "ci95": [
+     0.555184,
+     0.665552
+    ],
+    "den": 299,
+    "pos": 183,
+    "rate": 0.61204
+   },
+   "primary": false,
+   "uncheckable_mentions": 5,
+   "variant_id": "nar=exclude|id=names|ch=dm_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "exclude",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 455,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 133,
+    "pos": 74,
+    "rate": 0.556391
+   },
+   "per_message": {
+    "ci95": [
+     0.469697,
+     0.643939
+    ],
+    "den": 132,
+    "pos": 74,
+    "rate": 0.560606
+   },
+   "primary": false,
+   "uncheckable_mentions": 172,
+   "variant_id": "nar=exclude|id=names|ch=dm_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 510,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 2,
+    "pos": 1,
+    "rate": 0.5
+   },
+   "per_message": {
+    "ci95": [
+     0.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 1,
+    "rate": 0.5
+   },
+   "primary": false,
+   "uncheckable_mentions": 3,
+   "variant_id": "nar=include|id=names+id|ch=all|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 510,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 1,
+    "pos": 0,
+    "rate": 0.0
+   },
+   "per_message": {
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "den": 1,
+    "pos": 0,
+    "rate": 0.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 4,
+   "variant_id": "nar=include|id=names+id|ch=all|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 510,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 300,
+    "pos": 183,
+    "rate": 0.61
+   },
+   "per_message": {
+    "ci95": [
+     0.555184,
+     0.665552
+    ],
+    "den": 299,
+    "pos": 183,
+    "rate": 0.61204
+   },
+   "primary": false,
+   "uncheckable_mentions": 5,
+   "variant_id": "nar=include|id=names+id|ch=all|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 510,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 133,
+    "pos": 74,
+    "rate": 0.556391
+   },
+   "per_message": {
+    "ci95": [
+     0.469697,
+     0.643939
+    ],
+    "den": 132,
+    "pos": 74,
+    "rate": 0.560606
+   },
+   "primary": false,
+   "uncheckable_mentions": 172,
+   "variant_id": "nar=include|id=names+id|ch=all|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names+id|ch=public_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names+id|ch=public_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names+id|ch=public_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names+id|ch=public_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 455,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 2,
+    "pos": 1,
+    "rate": 0.5
+   },
+   "per_message": {
+    "ci95": [
+     0.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 1,
+    "rate": 0.5
+   },
+   "primary": false,
+   "uncheckable_mentions": 3,
+   "variant_id": "nar=include|id=names+id|ch=dm_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 455,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 1,
+    "pos": 0,
+    "rate": 0.0
+   },
+   "per_message": {
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "den": 1,
+    "pos": 0,
+    "rate": 0.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 4,
+   "variant_id": "nar=include|id=names+id|ch=dm_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 455,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 300,
+    "pos": 183,
+    "rate": 0.61
+   },
+   "per_message": {
+    "ci95": [
+     0.555184,
+     0.665552
+    ],
+    "den": 299,
+    "pos": 183,
+    "rate": 0.61204
+   },
+   "primary": false,
+   "uncheckable_mentions": 5,
+   "variant_id": "nar=include|id=names+id|ch=dm_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names+id",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 455,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 133,
+    "pos": 74,
+    "rate": 0.556391
+   },
+   "per_message": {
+    "ci95": [
+     0.469697,
+     0.643939
+    ],
+    "den": 132,
+    "pos": 74,
+    "rate": 0.560606
+   },
+   "primary": false,
+   "uncheckable_mentions": 172,
+   "variant_id": "nar=include|id=names+id|ch=dm_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 510,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 2,
+    "pos": 1,
+    "rate": 0.5
+   },
+   "per_message": {
+    "ci95": [
+     0.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 1,
+    "rate": 0.5
+   },
+   "primary": false,
+   "uncheckable_mentions": 3,
+   "variant_id": "nar=include|id=names|ch=all|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "all",
+    "identity": "names",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 510,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 1,
+    "pos": 0,
+    "rate": 0.0
+   },
+   "per_message": {
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "den": 1,
+    "pos": 0,
+    "rate": 0.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 4,
+   "variant_id": "nar=include|id=names|ch=all|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 510,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 300,
+    "pos": 183,
+    "rate": 0.61
+   },
+   "per_message": {
+    "ci95": [
+     0.555184,
+     0.665552
+    ],
+    "den": 299,
+    "pos": 183,
+    "rate": 0.61204
+   },
+   "primary": false,
+   "uncheckable_mentions": 5,
+   "variant_id": "nar=include|id=names|ch=all|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "all",
+    "identity": "names",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 510,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 133,
+    "pos": 74,
+    "rate": 0.556391
+   },
+   "per_message": {
+    "ci95": [
+     0.469697,
+     0.643939
+    ],
+    "den": 132,
+    "pos": 74,
+    "rate": 0.560606
+   },
+   "primary": false,
+   "uncheckable_mentions": 172,
+   "variant_id": "nar=include|id=names|ch=all|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names|ch=public_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names|ch=public_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names|ch=public_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "public_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 55,
+   "n_msgs_with_mention": 0,
+   "per_mention": {
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "per_message": {
+    "ci95": [
+     null,
+     null
+    ],
+    "den": 0,
+    "pos": 0,
+    "rate": null
+   },
+   "primary": false,
+   "uncheckable_mentions": 0,
+   "variant_id": "nar=include|id=names|ch=public_group|addr=include|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 455,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 2,
+    "pos": 1,
+    "rate": 0.5
+   },
+   "per_message": {
+    "ci95": [
+     0.0,
+     1.0
+    ],
+    "den": 2,
+    "pos": 1,
+    "rate": 0.5
+   },
+   "primary": false,
+   "uncheckable_mentions": 3,
+   "variant_id": "nar=include|id=names|ch=dm_group|addr=exclude|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "exclude",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 455,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 1,
+    "pos": 0,
+    "rate": 0.0
+   },
+   "per_message": {
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "den": 1,
+    "pos": 0,
+    "rate": 0.0
+   },
+   "primary": false,
+   "uncheckable_mentions": 4,
+   "variant_id": "nar=include|id=names|ch=dm_group|addr=exclude|pres=round_last"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "pit"
+   },
+   "n_msgs_scope": 455,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 300,
+    "pos": 183,
+    "rate": 0.61
+   },
+   "per_message": {
+    "ci95": [
+     0.555184,
+     0.665552
+    ],
+    "den": 299,
+    "pos": 183,
+    "rate": 0.61204
+   },
+   "primary": false,
+   "uncheckable_mentions": 5,
+   "variant_id": "nar=include|id=names|ch=dm_group|addr=include|pres=pit"
+  },
+  {
+   "config": {
+    "addressee": "include",
+    "channel": "dm_group",
+    "identity": "names",
+    "narration": "include",
+    "presence": "round_last"
+   },
+   "n_msgs_scope": 455,
+   "n_msgs_with_mention": 301,
+   "per_mention": {
+    "den": 133,
+    "pos": 74,
+    "rate": 0.556391
+   },
+   "per_message": {
+    "ci95": [
+     0.469697,
+     0.643939
+    ],
+    "den": 132,
+    "pos": 74,
+    "rate": 0.560606
+   },
+   "primary": false,
+   "uncheckable_mentions": 172,
+   "variant_id": "nar=include|id=names|ch=dm_group|addr=include|pres=round_last"
+  }
+ ],
+ "vocative_layer": {
+  "config": {
+   "addressee": "exclude",
+   "channel": "all",
+   "identity": "names+id",
+   "narration": "exclude",
+   "presence": "pit",
+   "vocative": "vocative"
+  },
+  "definition_id": "P2",
+  "n_msgs_with_mention": 301,
+  "narration_included_recheck": {
+   "note": "同一 P2 在「旁白计入」下的读数，用于量化旁白隔离的影响",
+   "per_message": {
+    "den": 2,
+    "pos": 1
+   }
+  },
+  "per_mention": {
+   "den": 2,
+   "pos": 1,
+   "rate": 0.5
+  },
+  "per_message": {
+   "ci95": [
+    0.0,
+    1.0
+   ],
+   "den": 2,
+   "pos": 1,
+   "rate": 0.5
+  },
+  "raw_hits": [
+   {
+    "body_excerpt": "周公文，你来啦，正好，我刚烤了一炉新点心，你帮我尝尝味道够不够。",
+    "channel": "MSG_DM",
+    "from": "P004",
+    "mentioned": [
+     {
+      "name": "周公文",
+      "peer_place": "bank",
+      "pid": "P008",
+      "tokens": [
+       "周公文"
+      ],
+      "vocative": true
+     }
+    ],
+    "round": 4,
+    "sender_place": "market",
+    "seq": 3121,
+    "to": "P013"
+   }
+  ],
+  "rule": "P1 的提及集合里，只保留称呼型：token 后紧跟 !,?~—…、吧呀呢啊！，？～ 之一，或前 ≤6 字以 (?:喂|哎|嘿|嗨|哟|唉)[，,、]?\\s*$ 结尾",
+  "uncheckable_mentions": 0
+ }
+}

@@ -1,0 +1,233 @@
+{
+  "arms": [
+    {
+      "run": "OFF",
+      "run_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f6_off_n16r60_seed42/run.jsonl",
+      "records": 116294,
+      "messages": 510,
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "threads": 169,
+      "body_len": {
+        "p50": 29,
+        "max": 95,
+        "mean": 32.38
+      },
+      "M-1_opportunity": {
+        "hits": 3,
+        "den": 33,
+        "rate": 0.0909,
+        "wilson95": [
+          0.0314,
+          0.2357
+        ]
+      },
+      "M-1b_allday": {
+        "hits": 3,
+        "den": 412,
+        "rate": 0.0073,
+        "wilson95": [
+          0.0025,
+          0.0212
+        ]
+      },
+      "M-0_sameday_control": {
+        "hits": 5,
+        "den": 260,
+        "rate": 0.0192,
+        "wilson95": [
+          0.0082,
+          0.0442
+        ]
+      },
+      "crosscheck_timeref": {
+        "hits": 19,
+        "den": 510,
+        "rate": 0.0373,
+        "note": "本地复现，仅与官方 F-6 交叉核对，不作结论",
+        "wilson95": [
+          0.024,
+          0.0575
+        ]
+      },
+      "crosscheck_L6": {
+        "hits": 52,
+        "den": 510,
+        "rate": 0.102
+      },
+      "crosscheck_L7": {
+        "hits": 101,
+        "den": 510,
+        "rate": 0.198
+      },
+      "ctx_memory_refs_msgs": 0,
+      "ctx_memory_refs_rate": 0.0,
+      "official": {
+        "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r1_f6_off_metrics.json",
+        "F-6_rate": 0.037255,
+        "L-5": 0.011765,
+        "L-6": 0.101961,
+        "L-7": 0.354902,
+        "L-8": 0.0
+      },
+      "cost": {
+        "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/f6_cost_off.json",
+        "calls": 2878,
+        "tokens_in": 228749,
+        "tokens_out": 256086,
+        "cached": 1472,
+        "degraded": 0,
+        "provider_guard_ok": true,
+        "by_provider": {
+          "openai_compat": 2878
+        }
+      }
+    },
+    {
+      "run": "ON",
+      "run_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f6_on_n16r60_seed42/run.jsonl",
+      "records": 116261,
+      "messages": 510,
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "threads": 169,
+      "body_len": {
+        "p50": 40,
+        "max": 128,
+        "mean": 43.81
+      },
+      "M-1_opportunity": {
+        "hits": 6,
+        "den": 33,
+        "rate": 0.1818,
+        "wilson95": [
+          0.0861,
+          0.3439
+        ]
+      },
+      "M-1b_allday": {
+        "hits": 6,
+        "den": 412,
+        "rate": 0.0146,
+        "wilson95": [
+          0.0067,
+          0.0314
+        ]
+      },
+      "M-0_sameday_control": {
+        "hits": 77,
+        "den": 260,
+        "rate": 0.2962,
+        "wilson95": [
+          0.244,
+          0.3543
+        ]
+      },
+      "crosscheck_timeref": {
+        "hits": 57,
+        "den": 510,
+        "rate": 0.1118,
+        "note": "本地复现，仅与官方 F-6 交叉核对，不作结论",
+        "wilson95": [
+          0.0873,
+          0.1421
+        ]
+      },
+      "crosscheck_L6": {
+        "hits": 65,
+        "den": 510,
+        "rate": 0.1275
+      },
+      "crosscheck_L7": {
+        "hits": 256,
+        "den": 510,
+        "rate": 0.502
+      },
+      "ctx_memory_refs_msgs": 412,
+      "ctx_memory_refs_rate": 0.8078,
+      "official": {
+        "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r1_f6_on_metrics.json",
+        "F-6_rate": 0.111765,
+        "L-5": 0.015686,
+        "L-6": 0.127451,
+        "L-7": 0.65098,
+        "L-8": 0.0
+      },
+      "cost": {
+        "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/f6_cost_on.json",
+        "calls": 2878,
+        "tokens_in": 271717,
+        "tokens_out": 269123,
+        "cached": 1477,
+        "degraded": 0,
+        "provider_guard_ok": true,
+        "by_provider": {
+          "openai_compat": 2878
+        }
+      }
+    }
+  ],
+  "deltas": {
+    "M-1_opportunity": {
+      "delta_pp": 9.09,
+      "ci_overlap": true,
+      "significant": false,
+      "rule": "|Δ|>=1pp 且 Wilson95 区间不重叠 ⇒ 判显著（事前定）"
+    },
+    "M-1b_allday": {
+      "delta_pp": 0.73,
+      "ci_overlap": true,
+      "significant": false,
+      "rule": "|Δ|>=1pp 且 Wilson95 区间不重叠 ⇒ 判显著（事前定）"
+    },
+    "M-0_sameday_control": {
+      "delta_pp": 27.7,
+      "ci_overlap": false,
+      "significant": true,
+      "rule": "|Δ|>=1pp 且 Wilson95 区间不重叠 ⇒ 判显著（事前定）"
+    },
+    "crosscheck_timeref": {
+      "delta_pp": 7.45,
+      "ci_overlap": false,
+      "significant": true,
+      "rule": "|Δ|>=1pp 且 Wilson95 区间不重叠 ⇒ 判显著（事前定）"
+    },
+    "F-6_rate": {
+      "delta_pp": 7.45,
+      "note": "官方标量（脚本不输出计数，故本表不给 CI）"
+    },
+    "L-6": {
+      "delta_pp": 2.55,
+      "note": "官方标量（脚本不输出计数，故本表不给 CI）"
+    },
+    "L-7": {
+      "delta_pp": 29.61,
+      "note": "官方标量（脚本不输出计数，故本表不给 CI）"
+    },
+    "L-8": {
+      "delta_pp": 0.0,
+      "note": "官方标量（脚本不输出计数，故本表不给 CI）"
+    },
+    "L-5": {
+      "delta_pp": 0.39,
+      "note": "官方标量（脚本不输出计数，故本表不给 CI）"
+    },
+    "tokens_in": {
+      "OFF": 228749,
+      "ON": 271717,
+      "delta": 42968,
+      "delta_pct": 18.78,
+      "rule": "计数型：报绝对差与相对差；|相对差|<5% 视为无实质差别（事前定，不与率类混用）"
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+ "run": "v2/evidence/run_f6_off_n16r60_seed42/run.jsonl",
+ "denominator": 33,
+ "M-1": "3/33",
+ "M-1'": "1/33",
+ "M-1'_strict": "2/33",
+ "hits": 3,
+ "drop_main": 2,
+ "drop_strict": 1,
+ "thresholds": {
+  "ngram": 6,
+  "shared_min": 3,
+  "cover_min": 0.5
+ },
+ "rows": [
+  {
+   "seq": 19241,
+   "round": 12,
+   "day": 1,
+   "speaker": "P007",
+   "earlier_seq": 8348,
+   "earlier_day": 0,
+   "earlier_speaker": "P007",
+   "thread": "T:TH-P008-P007-7",
+   "shared_6gram": 1,
+   "covA": 0.027,
+   "same_speaker": true,
+   "drop_main": false,
+   "drop_strict": false,
+   "body": "周哥，方位我真说不准，就记得是后半夜，声音贴着河那边飘过来的，断断续续的，像有人压着嗓子在数数。",
+   "earlier_body": "周公文你这一问我还真得说两句，前阵子夜里老听见有人压着嗓子嘀咕，凑近又没声了，我肚子饿得慌也没心思细追，你说这算不算怪事？"
+  },
+  {
+   "seq": 34699,
+   "round": 24,
+   "day": 2,
+   "speaker": "P012",
+   "earlier_seq": 28261,
+   "earlier_day": 1,
+   "earlier_speaker": "P012",
+   "thread": "T:TH-P012-P001-18",
+   "shared_6gram": 3,
+   "covA": 0.07,
+   "same_speaker": true,
+   "drop_main": true,
+   "drop_strict": false,
+   "body": "哎哟老周，那我就不跟你客气了，肚子正咕咕叫呢。你这红薯闻着就甜，我先拿一个，回头我家腌的萝卜干给你送一坛来。",
+   "earlier_body": "哎哟老周，那我就不客气啦，肚子正饿得咕咕叫呢。"
+  },
+  {
+   "seq": 86316,
+   "round": 50,
+   "day": 4,
+   "speaker": "P008",
+   "earlier_seq": 82424,
+   "earlier_day": 3,
+   "earlier_speaker": "P008",
+   "thread": "T:TH-P003-P008-42",
+   "shared_6gram": 13,
+   "covA": 1.0,
+   "same_speaker": true,
+   "drop_main": true,
+   "drop_strict": true,
+   "body": "阿禾，心意我领了，但东西真不能收，这是规矩。",
+   "earlier_body": "阿禾，心意我领了，但东西真不能收，这是规矩。"
+  }
+ ]
+}

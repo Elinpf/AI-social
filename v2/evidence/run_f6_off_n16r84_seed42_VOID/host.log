@@ -1,0 +1,1 @@
+[d2] run: python3 -m orchestration run --life --seed 42 --agents 16 --rounds 84 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f6_off_n16r84_seed42/run.jsonl --flush-every 2 --side-root /tmp/f6_off_side
