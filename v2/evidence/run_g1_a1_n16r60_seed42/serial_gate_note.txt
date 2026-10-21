@@ -1,0 +1,15 @@
+=== 串行闸门复核说明（如实记录，含一次自命中）===
+1) 独立命令取证（04:05:07，与本说明文件 launch_evidence.txt 同源）：
+   pgrep -af "[o]rchestration run" -> 无输出 orch_gate_rc=1
+   pgrep -af "[r]un_batch"        -> 无输出 rc=1
+   => 起批前确无并发跑批。
+
+2) 起批命令内的 4 次闸门复检返回 gate_orch=1 / gate_batch=0。
+   gate_batch=0 是**自命中伪阳性**，不是并发跑批：
+   该次调用把 `bash tools/d2/run_batch.sh ...` 的启动文本写在同一行命令里，
+   外层 /bin/sh -c 包装进程(pid 3356522)的 cmdline 含字面量 "run_batch.sh"，
+   因此被 `[r]un_batch` 正则匹配到自身。
+   证据：起批前任何时刻 `pgrep -af "[o]rchestration run"` 始终 rc=1，
+   且起批后 `pgrep -af "[r]un_batch"` 只命中本次自己的 wrapper(3356603) 与
+   本次 orchestration run 进程(3356614)，无第三方批次。
+   gate_orch 两次路径都 rc=1，是真正有效的并发判据（唯一实际执行的跑批入口）。

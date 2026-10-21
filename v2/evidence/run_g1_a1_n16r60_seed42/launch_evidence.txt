@@ -1,0 +1,16 @@
+=== G-1 A1 臂起批取证 (batch-runner) ===
+采集时刻: 2026-10-22T04:05:07+08:00
+工作树: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+分支: feat/life-f3-emotion-echo
+HEAD: 52492099550954d8ad42d3c21c685a7056b24702
+
+[A1] 串行闸门1: pgrep -af "[o]rchestration run"
+pgrep_rc=0
+orch_gate_rc=1
+batch_gate_rc=1
+
+[A1] env | grep LIFE_PROMPT_GOSSIP_G1 (期望空=1)
+(empty)
+
+[A1] out_dir=v2/evidence/run_g1_a1_n16r60_seed42
+[A1] side_root=/tmp/g1a1_side

@@ -1,0 +1,402 @@
+{
+  "_purpose": "R15 G-1 八卦提示词 A1 臂原始批次读数（batch-runner 交付）。仅报事实数字，不下因果/提升判定；判定归 verifier + report-writer。",
+  "_generated_at": "2026-10-22T04:49:14+08:00",
+  "_generated_by": "batch-runner (r15-run-a1)",
+  "_discipline_note": "本文件不含任何『提升/改善/显著』措辞，也不基于有缺陷脚本下结论。",
+  "batch": {
+    "path": "v2/evidence/run_g1_a1_n16r60_seed42/",
+    "arm": "A1 = LIFE_PROMPT_GOSSIP_G1=1（其余对话机制开关全部未设）",
+    "started_at": "2026-10-22T04:05:19+08:00",
+    "finished_at": "2026-10-22T04:47:30+08:00",
+    "duration_sec": 2531,
+    "seed": 42,
+    "n": 16,
+    "rounds_effective": 60,
+    "events": 116265,
+    "wc_l": 116265,
+    "line_guard_ok": true,
+    "run_sha256": "6d95332e4603133f67775d42fd62e9a78201d0f39e1a9b9b1a31d180b5b3317a",
+    "run_bytes": 55224454,
+    "code_sha": "52492099550954d8ad42d3c21c685a7056b24702",
+    "code_sha_end": "52492099550954d8ad42d3c21c685a7056b24702",
+    "HEAD_at_launch": "52492099550954d8ad42d3c21c685a7056b24702",
+    "msg_counts": {
+      "MSG_DM": 455,
+      "MSG_PUBLIC": 55
+    },
+    "assertions": {
+      "code_unchanged_during_run": null,
+      "msg_uid_unique": true,
+      "participants_consistent": true,
+      "participants_violations": 0,
+      "ptr_cross_thread": 0,
+      "ptr_dangling": 0,
+      "reply_to_same_thread": true,
+      "turn_index_dense": true,
+      "turn_index_gap_threads": 0
+    },
+    "degraded_calls": 0
+  },
+  "anchor_note": {
+    "why_tree_manifest": "工作树 dirty（21 项全为未跟踪），code_sha 只绑定 HEAD 提交，未跟踪文件不进入 code_sha ⇒ 另用 tree_manifest.txt 钉住 code/life|orchestration|config|engine 四子树逐文件 sha256。",
+    "git_dirty_code_files_at_meta": [
+      "?? code/frontend/sample/dialogue_run_g1_b0_n16r60_seed42/"
+    ],
+    "git_dirty_code_files_explain": "非空，但唯一项是 `code/frontend/sample/dialogue_run_g1_b0_n16r60_seed42/`——上一轮遗留的**未跟踪**目录（前端样张），不是已跟踪文件被修改；全程 git status 无 M/A/D/R 项。",
+    "tree_unchanged_after_run": {
+      "code/life": {
+        "before_rollup": "65221dedf3bbb318b1687df373725caa66190506168af657f2c0edcc7adb2296",
+        "after_rollup": "65221dedf3bbb318b1687df373725caa66190506168af657f2c0edcc7adb2296",
+        "verdict": "SAME"
+      },
+      "code/orchestration": {
+        "before_rollup": "7e7a79ce3cf16acbf4b1d0e5f8a96df0759b10b3809d228733ca802876f6f10d",
+        "after_rollup": "7e7a79ce3cf16acbf4b1d0e5f8a96df0759b10b3809d228733ca802876f6f10d",
+        "verdict": "SAME"
+      },
+      "code/config": {
+        "before_rollup": "6e490b49237b5f5bfb802eec02a99b6aed4b1b1bea634757a3950535e43ec624",
+        "after_rollup": "6e490b49237b5f5bfb802eec02a99b6aed4b1b1bea634757a3950535e43ec624",
+        "verdict": "SAME"
+      },
+      "code/engine": {
+        "before_rollup": "aa06e43ea8ef6ce2c816ff852afac493469658d0e74091024694629eef4e08b9",
+        "after_rollup": "aa06e43ea8ef6ce2c816ff852afac493469658d0e74091024694629eef4e08b9",
+        "verdict": "SAME"
+      }
+    },
+    "head_after_run": "52492099550954d8ad42d3c21c685a7056b24702",
+    "tracked_files_modified": 0,
+    "manifest_file": "v2/evidence/run_g1_a1_n16r60_seed42/tree_manifest.txt"
+  },
+  "single_variable_check": {
+    "proc_environ_HITT_OR_LIFE_var_count": 2,
+    "proc_environ_vars": [
+      "HITT_LLM_PROVIDER=openai_compat",
+      "LIFE_PROMPT_GOSSIP_G1=1"
+    ],
+    "env_local_keys": [
+      "HITT_LLM_PROVIDER",
+      "LLM_API_KEY"
+    ],
+    "all_dialogue_mechanism_switches_in_code": [
+      "HITT_DIALOGUE_EMOTION_ECHO",
+      "HITT_DIALOGUE_REPAIR",
+      "HITT_DIALOGUE_THREADS",
+      "HITT_OBSERVE_MSG",
+      "LIFE_PROMPT_MEMORY_F6",
+      "LIFE_PROMPT_MEMORY_F6_DEQUP",
+      "LIFE_PROMPT_GOSSIP_G1"
+    ],
+    "rollback_switches_note": "HITT_DIALOGUE_THREADS / HITT_OBSERVE_MSG 是回退开关（code/life/dialogue_threads.py:87,89 只有显式设为 0/false/off 才关闭），未设即默认开；基线 b0 同样未设 ⇒ 不构成两臂差异。",
+    "g1_injection_code_ref": "code/life/agent.py:44-54（GOSSIP_G1_ENV 与 gossip_g1_enabled()）、:1135-1150（名单段拼装，仅当 gossip_g1_enabled() 为真才返回文本，否则返回空串）",
+    "conclusion_factual": "进程环境中 HITT_/LIFE_ 前缀变量只有 2 个，机制开关差异仅 LIFE_PROMPT_GOSSIP_G1=1；其余对话机制开关未设（与基线同一默认态）。"
+  },
+  "truth_run_gate": {
+    "cmd": "cd code && python3 -m obs llm-cost --log ../v2/evidence/run_g1_a1_n16r60_seed42/run.jsonl --require-provider openai_compat --out ../v2/evidence/g1a1_llmcost.json",
+    "exit_code": 0,
+    "provider_guard": {
+      "by_provider": {
+        "openai_compat": 2878
+      },
+      "expected": "openai_compat",
+      "ok": true,
+      "policy": "计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。",
+      "problems": []
+    },
+    "by_provider": {
+      "openai_compat": 2878
+    },
+    "total": {
+      "cached": 1473,
+      "calls": 2878,
+      "degraded": 0,
+      "thinking": 668,
+      "tokens_in": 269005,
+      "tokens_out": 287006,
+      "tokens_total": 556011
+    },
+    "by_purpose": {
+      "dialogue": {
+        "cached": 48,
+        "calls": 510,
+        "degraded": 0,
+        "thinking": 0,
+        "tokens_in": 127427,
+        "tokens_out": 18295
+      },
+      "importance": {
+        "cached": 1387,
+        "calls": 1523,
+        "degraded": 0,
+        "thinking": 0,
+        "tokens_in": 2312,
+        "tokens_out": 37068
+      },
+      "judge": {
+        "cached": 0,
+        "calls": 668,
+        "degraded": 0,
+        "thinking": 668,
+        "tokens_in": 88382,
+        "tokens_out": 222201
+      },
+      "negotiation": {
+        "cached": 34,
+        "calls": 49,
+        "degraded": 0,
+        "thinking": 0,
+        "tokens_in": 1787,
+        "tokens_out": 522
+      },
+      "plan": {
+        "cached": 0,
+        "calls": 16,
+        "degraded": 0,
+        "thinking": 0,
+        "tokens_in": 1447,
+        "tokens_out": 1178
+      },
+      "reflect": {
+        "cached": 4,
+        "calls": 112,
+        "degraded": 0,
+        "thinking": 0,
+        "tokens_in": 47650,
+        "tokens_out": 7742
+      }
+    },
+    "three_criteria": {
+      "provider_guard_ok": true,
+      "by_provider_only_openai_compat": true,
+      "degraded_zero": true
+    },
+    "real_generation_calls_calls_minus_cached": 1405
+  },
+  "cost_comparison_A1_vs_B0": {
+    "_note": "只报事实并排，不下『谁更真/更好』的价值判断。",
+    "A1": {
+      "calls": 2878,
+      "cached": 1473,
+      "real_gen": 1405,
+      "tokens_total": 556011,
+      "duration_sec": 2531
+    },
+    "B0": {
+      "calls": 2878,
+      "cached": 1473,
+      "real_gen": 1405,
+      "tokens_total": 504062,
+      "duration_sec": 4357,
+      "source": "v2/evidence/run_g1_b0_n16r60_seed42/meta.json + host.log(engine_log 原文)"
+    },
+    "difference_fact": "A1 tokens_total 多 51949（+10.3%），calls/cached 计数相同（2878/1473）。A1 使用全新 --side-root /tmp/g1a1_side，但 obs 口径下 cached 计数与基线一致；因此『A1 缓存为空』的初始预期与实际观测不符，此处按观测事实记录，不解释成因。",
+    "leader_mandated_sentence": "本轮成本与基线不可直接比较（两臂 tokens_in 分母不同：269005 vs 228871，G-1 提示词插入本身改变了输入 token），且两臂缓存计数相同而非一方为空——结论：成本差异不足以作为任何机制优劣依据。"
+  },
+  "readings_authoritative_labeled": {
+    "_script": "v2/evidence/g1_metrics_fixed.py（作者 verifier，R15 权威口径；batch-runner 仅运行它并转述输出，判定权仍归 verifier）",
+    "_files": [
+      "v2/evidence/g1_readings_a1_fixed.json",
+      "v2/evidence/g1_readings_b0_fixed.json"
+    ],
+    "A1": {
+      "G-1_third_party_mention": {
+        "hit": 344,
+        "denom": 510,
+        "rate_pct": 67.45,
+        "ci95_pct": [
+          63.27,
+          71.37
+        ],
+        "excluded_as_in_room_partner_msgs": 111,
+        "by_channel": {
+          "dm": {
+            "denom": 455,
+            "hit": 321,
+            "rate_pct": 70.55
+          },
+          "group": {
+            "denom": 0,
+            "hit": 0,
+            "rate_pct": null
+          },
+          "public": {
+            "denom": 55,
+            "hit": 23,
+            "rate_pct": 41.82
+          }
+        },
+        "mention_targets": {
+          "五味": 15,
+          "兰姐": 32,
+          "周公文": 6,
+          "小满": 36,
+          "巧儿": 10,
+          "方老师": 21,
+          "月牙": 8,
+          "桂婶": 189,
+          "石头": 4,
+          "秀娘": 6,
+          "老周": 17,
+          "老石": 22,
+          "金先生": 12,
+          "铁头": 70,
+          "阿林": 29,
+          "阿禾": 29,
+          "陈医": 22
+        }
+      },
+      "G-1b_strict_offscreen_mention": {
+        "hit": 85,
+        "denom": 510,
+        "rate_pct": 16.67,
+        "ci95_pct": [
+          13.68,
+          20.15
+        ],
+        "unknown_place_base": 23,
+        "unknown_place_lookups": 354
+      },
+      "G-1b_upper_offscreen_mention": {
+        "hit": 96,
+        "denom": 510,
+        "rate_pct": 18.82,
+        "ci95_pct": [
+          15.67,
+          22.44
+        ],
+        "unknown_place_base": 11,
+        "unknown_place_lookups": 354
+      },
+      "guards": {
+        "L-2_narration_head": {
+          "denom": 510,
+          "hit": 0,
+          "rate_pct": 0.0
+        },
+        "L-3_paren_any": {
+          "denom": 510,
+          "hit": 0,
+          "rate_pct": 0.0
+        },
+        "L-7_ngram8_shared_U8b": {
+          "denom": 510,
+          "hit": 243,
+          "rate_pct": 47.65
+        },
+        "L-8_naked_id": {
+          "denom": 510,
+          "hit": 0,
+          "rate_pct": 0.0
+        }
+      },
+      "participants_value_kinds": {
+        "persona_id": 457
+      },
+      "n_msgs": 510,
+      "lines_in_log": 116265,
+      "script": "v2/evidence/g1_metrics_fixed.py（R15 权威版，作者 verifier）",
+      "criterion_source": "experiments/gossip-third-party/DESIGN-preregistration.md §2.1/§2.2/§2.4 + recon/r15-guards-frozen.md §6"
+    },
+    "B0": {
+      "G-1_third_party_mention": {
+        "hit": 2,
+        "denom": 510,
+        "rate_pct": 0.39,
+        "ci95_pct": [
+          0.11,
+          1.42
+        ],
+        "excluded_as_in_room_partner_msgs": 299,
+        "by_channel": {
+          "dm": {
+            "denom": 455,
+            "hit": 2,
+            "rate_pct": 0.44
+          },
+          "group": {
+            "denom": 0,
+            "hit": 0,
+            "rate_pct": null
+          },
+          "public": {
+            "denom": 55,
+            "hit": 0,
+            "rate_pct": 0.0
+          }
+        },
+        "mention_targets": {
+          "老周": 2
+        }
+      },
+      "G-1b_strict_offscreen_mention": {
+        "hit": 1,
+        "denom": 510,
+        "rate_pct": 0.2,
+        "ci95_pct": [
+          0.03,
+          1.1
+        ],
+        "unknown_place_base": 0,
+        "unknown_place_lookups": 2
+      },
+      "G-1b_upper_offscreen_mention": {
+        "hit": 1,
+        "denom": 510,
+        "rate_pct": 0.2,
+        "ci95_pct": [
+          0.03,
+          1.1
+        ],
+        "unknown_place_base": 0,
+        "unknown_place_lookups": 2
+      },
+      "guards": {
+        "L-2_narration_head": {
+          "denom": 510,
+          "hit": 0,
+          "rate_pct": 0.0
+        },
+        "L-3_paren_any": {
+          "denom": 510,
+          "hit": 0,
+          "rate_pct": 0.0
+        },
+        "L-7_ngram8_shared_U8b": {
+          "denom": 510,
+          "hit": 186,
+          "rate_pct": 36.47
+        },
+        "L-8_naked_id": {
+          "denom": 510,
+          "hit": 0,
+          "rate_pct": 0.0
+        }
+      },
+      "participants_value_kinds": {
+        "persona_id": 301
+      },
+      "n_msgs": 510,
+      "lines_in_log": 116318,
+      "script": "v2/evidence/g1_metrics_fixed.py（R15 权威版，作者 verifier）",
+      "criterion_source": "experiments/gossip-third-party/DESIGN-preregistration.md §2.1/§2.2/§2.4 + recon/r15-guards-frozen.md §6"
+    }
+  },
+  "readings_legacy_deprecated": {
+    "_WARNING": "脚本口径有缺陷（experiments/gossip-third-party/g_metrics.py:184-189,232-234 用 persona_id 比主干名 ⇒ 'nm not in parts' 恒真，在场伙伴从未被排除）。以下仅为原始对照，**不可用于 G-1 结论**。",
+    "_file": "v2/evidence/g1_readings_legacy_buggy.json",
+    "_cmd": "python3 experiments/gossip-third-party/g_metrics.py --run A1=... --run B0=... --out-json v2/evidence/g1_readings_legacy_buggy.json",
+    "A1_G-1": "455/510 = 89.22%",
+    "B0_G-1": "301/510 = 59.02%",
+    "A1_G-1b_strict": "120/510 = 23.53%",
+    "B0_G-1b_strict": "79/510 = 15.49%",
+    "A1_G-1b_upper": "131/510 = 25.69%",
+    "B0_G-1b_upper": "79/510 = 15.49%"
+  },
+  "notes": [
+    "b0 契约口径基线 = 2/510 = 0.39%（Wilson [0.11,1.42]），来源 v2/evidence/g1_readings_b0_fixed.json；『2/187=1.07%』是 v0-anchor(run_d2_before, 84 轮 legacy) 的值，不用于 A1 对照。",
+    "本文件所有数字均可用 g1_readings_a1_fixed.json / g1_metrics_fixed.py 重算；A1 原始日志 run.jsonl sha256=6d95332e4603133f67775d42fd62e9a78201d0f39e1a9b9b1a31d180b5b3317a。",
+    "跑批期间 batch-runner 未对 code/ 下任何文件做写操作；四子树 rollup 起批前后逐字节一致。",
+    "跑批期间其他成员在 v2/evidence/ 下新增了未跟踪文件（如 g1_metrics_fixed.py、reports/R15-g1-gossip.md），不影响 code_sha 与本次读数。"
+  ]
+}

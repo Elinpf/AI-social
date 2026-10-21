@@ -1,0 +1,71 @@
+{
+  "run": "v2/evidence/run_g1_b0_n16r60_seed42/run.jsonl",
+  "n_msgs": 510,
+  "channels": {
+    "MSG_PUBLIC": 55,
+    "MSG_DM": 455
+  },
+  "G-1": {
+    "k": 2,
+    "n": 510,
+    "pct": 0.3922,
+    "wilson95": [
+      0.1076,
+      1.4184
+    ]
+  },
+  "G-1b": {
+    "k": 1,
+    "n": 510,
+    "pct": 0.1961
+  },
+  "targets": {
+    "老周": 2
+  },
+  "hits": [
+    {
+      "seq": 32901,
+      "round": 23,
+      "author": "阿林",
+      "place": "residence",
+      "third": [
+        "老周"
+      ],
+      "third_positions": {
+        "老周": null
+      },
+      "violation": false,
+      "body": "南边见了老周，做陈皮的，他说今年雨水多，晒货难，存货都捂在手里不肯放。我寻思着，要是真涨，您这边是不是也得提前备点？"
+    },
+    {
+      "seq": 34194,
+      "round": 24,
+      "author": "陈医",
+      "place": "library",
+      "third": [
+        "老周"
+      ],
+      "third_positions": {
+        "老周": "park"
+      },
+      "violation": true,
+      "body": "备是要备，可我这小诊所，压不起太多货。老周那人我认得，他捂货归捂货，真到用的时候，还得看谁先撑不住。你手头要是宽，倒可以跟他谈谈，别一口价，慢慢磨。"
+    }
+  ],
+  "mapping_check": {
+    "personas_pids": 20,
+    "log_born_pids": 16,
+    "pids_in_msgs_not_in_mapping": [],
+    "names_mapped_to_pid_absent_from_log": []
+  },
+  "G-1_band_pp": [
+    -0.7843,
+    0.7843
+  ],
+  "band_source": "v2/evidence/run_g1_b0_n16r60_seed42/run.jsonl",
+  "dispersion": {
+    "M1_distinct_over_total": 0.5,
+    "M2_max_target_share": 1.0,
+    "note": "D7 要求的披露列（F5 判据过松），不作放行条件"
+  }
+}

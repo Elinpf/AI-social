@@ -1,0 +1,13 @@
+[d2] run: python3 -m orchestration run --life --seed 42 --agents 16 --rounds 60 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_g1_a1_n16r60_seed42/run.jsonl --flush-every 2 --side-root /tmp/g1a1_side
+[life] n_agents=16 rounds=60 events=116265 seconds=2517.9945 log_bytes=55224454
+  unknown_event_types=[]
+  chain_ok=True replay_parity=True first_run_equals_replay=True
+  conservation_ok=True final_state_hash=sha256:33053069097e171641a34d16fc2730a8c9e3bf5fa23c78396461165860488624
+  log written: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_g1_a1_n16r60_seed42/run.jsonl
+[meta] /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_g1_a1_n16r60_seed42/meta.json
+[meta] events=116265 llm_calls=2878 cached_ratio=0.5118 provider={'openai_compat': 2878} model={'DeepSeek-Flash': 2878}
+[meta] seed_in_log=42 n_in_log=16 rounds_effective=60
+[meta] OK: 真跑判定通过
+[d2] self-check wc -l=116265 meta.events=116265
+{"engine_log":{"by_provider":{"openai_compat":2878},"by_purpose":{"dialogue":{"cached":48,"calls":510,"degraded":0,"thinking":0,"tokens_in":127427,"tokens_out":18295},"importance":{"cached":1387,"calls":1523,"degraded":0,"thinking":0,"tokens_in":2312,"tokens_out":37068},"judge":{"cached":0,"calls":668,"degraded":0,"thinking":668,"tokens_in":88382,"tokens_out":222201},"negotiation":{"cached":34,"calls":49,"degraded":0,"thinking":0,"tokens_in":1787,"tokens_out":522},"plan":{"cached":0,"calls":16,"degraded":0,"thinking":0,"tokens_in":1447,"tokens_out":1178},"reflect":{"cached":4,"calls":112,"degraded":0,"thinking":0,"tokens_in":47650,"tokens_out":7742}},"llm_judgment_by_dimension":{"affection":132,"rel_affinity":32,"rel_familiarity":222,"rel_trust":2,"respect":132,"stance":132,"weekly_focus":16},"source":"engine_log(LLM_CALL)","total":{"cached":1473,"calls":2878,"degraded":0,"thinking":668,"tokens_in":269005,"tokens_out":287006,"tokens_total":556011}},"provider_guard":{"by_provider":{"openai_compat":2878},"expected":"openai_compat","ok":true,"policy":"计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。","problems":[]}}
+[d2] OK
