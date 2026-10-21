@@ -564,6 +564,7 @@ print('rounds',r,'seals',len(seals),'range',seals[0],seals[-1],'OK' if seals==li
 |---|---|---|---|---|---|
 | `sample/dialogue_v0anchor_n16_seed42/threads.json` | `run_d2_before_n16_seed42-c1f86bf6` | `c1f86bf61f62b3a0ce8e17e0c2312791cf0262381cd2120c2a63c9b6258963cf` | 186,972 / 187 | 旧格式（无 thread_id） | **v0-anchor 真 LLM 跑批**（n=16 × 84 回合 × seed=42，provider `openai_compat`，meta 已对齐：seed/code_sha=`dc93c9d…`） |
 | `sample/dialogue_run_d2_after_n16_seed42/threads.json` | `run_d2_after_n16_seed42-643f13a5` | `643f13a528c288d3e9677cb8ac100139224afbd0b46c0f7da0c3a5ed85b13141` | 194,108 / 686 | **`explicit`（多轮线程 104，最长 18 轮）** | **D2 线程化改造后**（n=16 × 84 × seed=42，`TURN_SEAL` 84 条覆盖 0..83，meta 已对齐） |
+| `sample/dialogue_run_d9_a1_n16r84_seed42/threads.json` | `D9-reply-window-2to4-abefdf73` | `abefdf73ca239cda6b4b11ebf1081949f9f278586989d392113b5c57e1c9f427` | 194,126 / 686 | `explicit` | **D9 回复窗口臂（`reply_window_rounds` 2→4，`code_sha=05636bc`）——不是措辞臂**（目录名 `run_d9_a1_*` 是历史遗留，内容与 A0 结构一致：阴性结果） |
 | `sample/dialogue_demo/threads.json` | `run_p1_final_n20_llm-fb832372` | `fb832372af235736b78e539ab676feff08c3e94e79ffcdbe0dc4b5d88b13a2fc` | 128,564 / 231 | 旧格式 | 历史真 LLM 日志（n=20 × 84），无 meta.json → 页面 provider 列取自日志 `LLM_CALL.provider` |
 
 打开方式：
@@ -622,7 +623,32 @@ env -i PATH=/usr/bin:/bin HOME=/tmp/d7home python3 tools/verify_dialogue_page.py
 本页/本脚本**不含**任何本机或内网绝对路径：浏览器由 `tools/_chrome.py` 探测（`HITT_CHROME` 可覆盖），
 数据路径一律显式传入，`threads.json` 只记 `run_label` + `run_sha256`。
 
-### 17.11 已知边界
+### 17.11 复现边界与实验身份（**必读**）
+
+**产出 `threads.json` 的复现单元**：
+
+```
+(gen_threads.py 字节 sha + run.jsonl 字节 sha + personas.json 字节 sha + places.json 字节 sha + 参数)
+   → 产出 threads.json 字节
+```
+
+`threads.json.source` 已绑定 `generator_sha256`、`run_sha256`、`inputs.personas.sha256`、
+`inputs.places.sha256`、`inputs.params`。**换脚本（哪怕只改注释）或换人格文件都会产出不同字节**，
+这是特性不是缺陷——引用时必须把这几项一起带上。
+
+**实验标签只能由 `meta.code_sha` + 变量清单推导，不能由目录名或文件名推断**（血泪教训，2026-10-21）：
+仓库里存在目录名带 `a1` 却**不是**措辞臂的批次——`run_d9_a1_n16r84_seed42` 实为 D9 的
+`reply_window_rounds` 2→4 臂（`code_sha=05636bc`），曾被误标为「措辞 A1」并进了报告，事后返工。因此：
+
+- 出数据集前**先读 `<RUN_DIR>/meta.json` 的 `code_sha`**，对照该提交的实际 diff/提交信息确认「这一臂改的是什么变量」；
+- `--label` 用**变量语义**命名（如 `D9-reply-window-2to4-<sha8>`），不要用目录名；
+- 报告里写实验身份时**引 `code_sha`，不引目录名**；两个批次 `code_sha` 不同 ⇒ **不能称「同树复跑」**，
+  只能按实际相同面表述（例如「提示词三文件逐字节相同，但整树不同」）；
+- 「同提示词、同 seed」也不等于「正文可逐条复现」：A0（`884f4541`）与 D9 窗口臂（`05636bc`）前 13 次
+  `dialogue` 调用的 `prompt_hash` 逐字节相同、第 14 次（seq 674）起分叉 ⇒ 采样差异会沿上下文向前传播。
+  复算见 `reports/D7-演示页面.md` §5b。
+
+### 17.12 已知边界
 
 - 页面只吃 `threads.json`（不直接解析 run.jsonl）：解析与聚合口径只保留在 `gen_threads.py` **一处**，
   避免前端/脚本两套口径分叉。拖入 `.jsonl` 会提示先生成。
