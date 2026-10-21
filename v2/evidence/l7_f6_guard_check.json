@@ -1,0 +1,182 @@
+{
+  "arms": [
+    {
+      "run": "DEQUP",
+      "run_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f6_dequp_n16r60_seed42/run.jsonl",
+      "records": 116385,
+      "messages": 510,
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "threads": 169,
+      "body_len": {
+        "p50": 33,
+        "max": 102,
+        "mean": 36.53
+      },
+      "M-1_opportunity": {
+        "hits": 3,
+        "den": 33,
+        "rate": 0.0909,
+        "wilson95": [
+          0.0314,
+          0.2357
+        ]
+      },
+      "M-1b_allday": {
+        "hits": 3,
+        "den": 412,
+        "rate": 0.0073,
+        "wilson95": [
+          0.0025,
+          0.0212
+        ]
+      },
+      "M-0_sameday_control": {
+        "hits": 14,
+        "den": 260,
+        "rate": 0.0538,
+        "wilson95": [
+          0.0323,
+          0.0883
+        ]
+      },
+      "crosscheck_timeref": {
+        "hits": 42,
+        "den": 510,
+        "rate": 0.0824,
+        "note": "本地复现，仅与官方 F-6 交叉核对，不作结论",
+        "wilson95": [
+          0.0615,
+          0.1094
+        ]
+      },
+      "crosscheck_L6": {
+        "hits": 2,
+        "den": 510,
+        "rate": 0.0039
+      },
+      "crosscheck_L7": {
+        "hits": 113,
+        "den": 510,
+        "rate": 0.2216
+      },
+      "ctx_memory_refs_msgs": 412,
+      "ctx_memory_refs_rate": 0.8078,
+      "official": {
+        "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/l7_metrics_dequp_d5.json",
+        "F-6_rate": 0.082353,
+        "L-5": 0.001961,
+        "L-6": 0.003922,
+        "L-7": 0.378431,
+        "L-8": 0.0
+      }
+    },
+    {
+      "run": "ON",
+      "run_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f6_on_n16r60_seed42/run.jsonl",
+      "records": 116261,
+      "messages": 510,
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "threads": 169,
+      "body_len": {
+        "p50": 40,
+        "max": 128,
+        "mean": 43.81
+      },
+      "M-1_opportunity": {
+        "hits": 6,
+        "den": 33,
+        "rate": 0.1818,
+        "wilson95": [
+          0.0861,
+          0.3439
+        ]
+      },
+      "M-1b_allday": {
+        "hits": 6,
+        "den": 412,
+        "rate": 0.0146,
+        "wilson95": [
+          0.0067,
+          0.0314
+        ]
+      },
+      "M-0_sameday_control": {
+        "hits": 77,
+        "den": 260,
+        "rate": 0.2962,
+        "wilson95": [
+          0.244,
+          0.3543
+        ]
+      },
+      "crosscheck_timeref": {
+        "hits": 57,
+        "den": 510,
+        "rate": 0.1118,
+        "note": "本地复现，仅与官方 F-6 交叉核对，不作结论",
+        "wilson95": [
+          0.0873,
+          0.1421
+        ]
+      },
+      "crosscheck_L6": {
+        "hits": 65,
+        "den": 510,
+        "rate": 0.1275
+      },
+      "crosscheck_L7": {
+        "hits": 256,
+        "den": 510,
+        "rate": 0.502
+      },
+      "ctx_memory_refs_msgs": 412,
+      "ctx_memory_refs_rate": 0.8078,
+      "official": {
+        "path": null,
+        "F-6_rate": null,
+        "L-5": null,
+        "L-6": null,
+        "L-7": null,
+        "L-8": null
+      }
+    }
+  ],
+  "deltas": {
+    "M-1_opportunity": {
+      "delta_pp": 9.09,
+      "ci_overlap": true,
+      "significant": false,
+      "rule": "|Δ|>=1pp 且 Wilson95 区间不重叠 ⇒ 判显著（事前定）"
+    },
+    "M-1b_allday": {
+      "delta_pp": 0.73,
+      "ci_overlap": true,
+      "significant": false,
+      "rule": "|Δ|>=1pp 且 Wilson95 区间不重叠 ⇒ 判显著（事前定）"
+    },
+    "M-0_sameday_control": {
+      "delta_pp": 24.24,
+      "ci_overlap": false,
+      "significant": true,
+      "rule": "|Δ|>=1pp 且 Wilson95 区间不重叠 ⇒ 判显著（事前定）"
+    },
+    "crosscheck_timeref": {
+      "delta_pp": 2.94,
+      "ci_overlap": true,
+      "significant": false,
+      "rule": "|Δ|>=1pp 且 Wilson95 区间不重叠 ⇒ 判显著（事前定）"
+    }
+  }
+}

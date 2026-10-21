@@ -1,0 +1,26 @@
+# render.log · R12 DEQUP 臂截图（真拍）
+# 生成时刻: 2026-10-21 20:07:52 +0800
+# 来源 run 目录: v2/evidence/run_f6_dequp_n16r60_seed42/
+# run.jsonl sha256: 6bf3ec88700fa1a7451b18c63678d0904c69b9de39896739190e7e674db8fdbd
+# threads.json: code/frontend/sample/dialogue_run_f6_dequp_n16r60_seed42/threads.json
+# render cmd: bash frontend/tools/dialogue_shots.sh http://127.0.0.1:8848 sample/dialogue_run_f6_dequp_n16r60_seed42/threads.json "" "" ../v2/evidence/l7_shots
+
+$ python3 frontend/tools/gen_threads.py --log ../v2/evidence/run_f6_dequp_n16r60_seed42/run.jsonl --meta ../v2/evidence/run_f6_dequp_n16r60_seed42/meta.json --out frontend/sample/dialogue_run_f6_dequp_n16r60_seed42/threads.json --require-complete --label run_f6_dequp_n16r60_seed42-6bf3ec88
+[gen_threads] 完整性断言通过：TURN_SEAL 60 条覆盖 round 0..59
+[gen_threads] events=116385 messages=510 threads=169 multi_turn=88 ge3=77 legacy_msgs=0 moves=299 ref_edges=0 echoes=0
+
+$ bash frontend/tools/dialogue_shots.sh http://127.0.0.1:8848 sample/dialogue_run_f6_dequp_n16r60_seed42/threads.json "" "" ../v2/evidence/l7_shots
+batch=run_f6_dequp_n16r60_seed42-6bf3ec88  log_sha256=6bf3ec88700fa1a7451b18c63678d0904c69b9de39896739190e7e674db8fdbd  sha8=6bf3ec88
+→ ../v2/evidence/l7_shots/run_f6_dequp_n16r60_seed42-chat-6bf3ec88.png
+SHOT OK: ../v2/evidence/l7_shots/run_f6_dequp_n16r60_seed42-chat-6bf3ec88.png  elapsed=1.88s  mean_brightness=33.5(gray601,0-255,黑<8)  max_color_frac=30.33%  blank_retries=0/2
+  blank_cumulative=7/157 次空白/总取证（T282 观察哨，仅留痕）
+→ ../v2/evidence/l7_shots/run_f6_dequp_n16r60_seed42-rhythm-6bf3ec88.png
+SHOT OK: ../v2/evidence/l7_shots/run_f6_dequp_n16r60_seed42-rhythm-6bf3ec88.png  elapsed=1.67s  mean_brightness=32.5(gray601,0-255,黑<8)  max_color_frac=34.45%  blank_retries=0/2
+  blank_cumulative=7/158 次空白/总取证（T282 观察哨，仅留痕）
+→ ../v2/evidence/l7_shots/run_f6_dequp_n16r60_seed42-spread-6bf3ec88.png
+SHOT OK: ../v2/evidence/l7_shots/run_f6_dequp_n16r60_seed42-spread-6bf3ec88.png  elapsed=1.66s  mean_brightness=23.2(gray601,0-255,黑<8)  max_color_frac=71.20%  blank_retries=0/2
+  blank_cumulative=7/159 次空白/总取证（T282 观察哨，仅留痕）
+→ ../v2/evidence/l7_shots/run_f6_dequp_n16r60_seed42-600-6bf3ec88.png
+SHOT OK: ../v2/evidence/l7_shots/run_f6_dequp_n16r60_seed42-600-6bf3ec88.png  elapsed=1.68s  mean_brightness=38.5(gray601,0-255,黑<8)  max_color_frac=35.53%  blank_retries=0/2
+  blank_cumulative=7/160 次空白/总取证（T282 观察哨，仅留痕）
+OK: ../v2/evidence/l7_shots/run_f6_dequp_n16r60_seed42-{chat,rhythm,spread,600}-6bf3ec88.png

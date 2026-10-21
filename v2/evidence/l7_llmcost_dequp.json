@@ -1,0 +1,85 @@
+{
+ "engine_log": {
+  "by_provider": {
+   "openai_compat": 2966
+  },
+  "by_purpose": {
+   "dialogue": {
+    "cached": 0,
+    "calls": 598,
+    "degraded": 0,
+    "thinking": 0,
+    "tokens_in": 236082,
+    "tokens_out": 18232
+   },
+   "importance": {
+    "cached": 1387,
+    "calls": 1523,
+    "degraded": 0,
+    "thinking": 0,
+    "tokens_in": 2312,
+    "tokens_out": 35942
+   },
+   "judge": {
+    "cached": 0,
+    "calls": 668,
+    "degraded": 0,
+    "thinking": 668,
+    "tokens_in": 88382,
+    "tokens_out": 205158
+   },
+   "negotiation": {
+    "cached": 34,
+    "calls": 49,
+    "degraded": 0,
+    "thinking": 0,
+    "tokens_in": 1787,
+    "tokens_out": 531
+   },
+   "plan": {
+    "cached": 0,
+    "calls": 16,
+    "degraded": 0,
+    "thinking": 0,
+    "tokens_in": 1447,
+    "tokens_out": 978
+   },
+   "reflect": {
+    "cached": 4,
+    "calls": 112,
+    "degraded": 0,
+    "thinking": 0,
+    "tokens_in": 46054,
+    "tokens_out": 7715
+   }
+  },
+  "llm_judgment_by_dimension": {
+   "affection": 132,
+   "rel_affinity": 32,
+   "rel_familiarity": 222,
+   "rel_trust": 2,
+   "respect": 132,
+   "stance": 132,
+   "weekly_focus": 16
+  },
+  "source": "engine_log(LLM_CALL)",
+  "total": {
+   "cached": 1425,
+   "calls": 2966,
+   "degraded": 0,
+   "thinking": 668,
+   "tokens_in": 376064,
+   "tokens_out": 268556,
+   "tokens_total": 644620
+  }
+ },
+ "provider_guard": {
+  "by_provider": {
+   "openai_compat": 2966
+  },
+  "expected": "openai_compat",
+  "ok": true,
+  "policy": "计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。",
+  "problems": []
+ }
+}
