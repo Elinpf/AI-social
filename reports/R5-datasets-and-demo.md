@@ -15,7 +15,7 @@
 |---|---|---|---|---|---|
 | D-1 | **v0-anchor** 语料（旧结构 + 原提示词） | `v2/evidence/run_d2_before_n16_seed42/run.jsonl` (c1f86bf6) | 真 LLM 跑批（`openai_compat`/`DeepSeek-Flash`，16×84，seed=42） | **87.5 MB / 186,972 行** | **已交付**（`max_round=83`；准入 ADMITTED/strict/evidence） |
 | D-2 | **A0** 语料（新结构 + 必要适配提示词） | `v2/evidence/run_d2_after_n16_seed42/run.jsonl` (643f13a5) | 真 LLM 跑批（`openai_compat`/`DeepSeek-Flash`，16×84，seed=42） | **194,108 行** | **已交付**（`code_sha` fcf42bf9；消息 686 = DM497/PUB63/GRP126；`thread_schema=explicit`） |
-| D-3 | **A1** 语料（A0 + 措辞层优化） | 待填 | 真 LLM 跑批 | 待填 | 待交付 |
+| D-3 | **A1** 语料（A0 + 措辞层优化） | `v2/evidence/run_a1_wording_n4r60_seed42/`（`run.jsonl` **被 .gitignore 排除、未入库**；`meta.json` / llmcost / host.log 已落） | 真 LLM 跑批（`openai_compat`/`DeepSeek-Flash`，**4×60**，seed=42） | 9,940 事件 / MSG **124**（DM 111 / PUB 13） | **probe（准入 REJECTED：B-15 MSG 124<150）**；日志 sha256 `ae969198…`，`code_sha` `a637371` |
 | D-4 | 评测读数（各臂指标） | `v2/evidence/d5_metrics_*.json` / `.md` | `tools/d5/dialogue_metrics.py` | 每份数 KB–数十 KB | 部分已有（历史批） |
 | D-5 | 线程视图数据 · v0-anchor | `code/frontend/sample/dialogue_v0anchor_n16_seed42/threads.json` (e39168ea) | `code/frontend/tools/gen_threads.py` | 187 条线程（legacy 口径） | **已交付**（自带 `source.run_sha256=c1f86bf6…`、`generator_sha256`） |
 | D-5A | 线程视图数据 · A0 | `code/frontend/sample/dialogue_run_d2_after_n16_seed42/threads.json` (d6d89bda) | `code/frontend/tools/gen_threads.py` | 206 条线程（`explicit`） | **已交付**（自带 `source.run_sha256=643f13a5…`、194,108 事件） |
@@ -121,7 +121,17 @@ cd code && python3 frontend/tools/serve.py            # 浏览器打开 http://1
 
 **【事实】** 对应的线程视图数据 `code/frontend/sample/dialogue_run_d2_after_n16_seed42/threads.json` (d6d89bda)，其 `source.run_sha256 = 643f13a5…`、`events_total_in_log = 194,108` ⇒ 图 ↔ 日志对应可核对。
 
-**A1 截图：待交付**（A1 尚未解锁）。
+**A1（措辞臂）四张：已交付**，来源 `v2/evidence/a1_shots/`，均按 `<batch>-<视图>-<sha8>.png` 命名（`sha8` = 源日志 `ae969198`）：
+
+| # | 截图文件（`v2/evidence/a1_shots/`） | 视图 | 来源 run | sha256（sha8） |
+|---|---|---|---|---|
+| S-9 | `run_a1_wording_n4r60_seed42-chat-ae969198.png` | 对话流（1400×900） | `run_a1_wording_n4r60_seed42` (ae969198) | `0e05129b…`（`0e05129b`） |
+| S-10 | `run_a1_wording_n4r60_seed42-rhythm-ae969198.png` | 节律·串门（1300×1050） | 同上 | `7c3d7eea…`（`7c3d7eea`） |
+| S-11 | `run_a1_wording_n4r60_seed42-spread-ae969198.png` | 闲话怎么传开（1300×900） | 同上 | `c3fc91ec…`（`c3fc91ec`） |
+| S-12 | `run_a1_wording_n4r60_seed42-600-ae969198.png` | 600px 窄屏（600×900） | 同上 | `13ce8b19…`（`13ce8b19`） |
+
+> ⚠️ **A1 图的引用边界（必须一起写）**：A1 为 **4 agents × 60 回合、MSG 124**、`admission.verdict = REJECTED`（`B-15_msg_volume`）、`evidence_level = probe` ⇒ **A1 与 A0（16×84 / 686）不可比**。这四张图**只用于看"规则禁令生效后的对话形态"**（无括号旁白、句更短），**不得与 A0 图并列做"改善"判断**；两者并置时须标注各自规模与准入结论。
+> 渲染与复现命令见 `v2/evidence/a1_shots/README.md`（生产形态 `dialogue_shots.sh` 与复现形态 `shot.py --url` 参数一致）。
 
 ---
 
