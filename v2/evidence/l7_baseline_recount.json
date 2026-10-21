@@ -1,0 +1,103 @@
+{
+ "on": {
+  "log": "v2/evidence/run_f6_on_n16r60_seed42/run.jsonl",
+  "n_msg": 510,
+  "n_msgs_with_memory_refs": 412,
+  "n_refs_total": 824,
+  "n_refs_unique_mem_ids": 128,
+  "refs_per_msg_mean": 2.0,
+  "refs_per_unique_mem_mean": 6.4375,
+  "top_mem_ids": [
+   {
+    "mem_id": "M-P001-000007",
+    "refs": 8
+   },
+   {
+    "mem_id": "M-P001-000024",
+    "refs": 8
+   },
+   {
+    "mem_id": "M-P004-000009",
+    "refs": 8
+   },
+   {
+    "mem_id": "M-P004-000028",
+    "refs": 8
+   },
+   {
+    "mem_id": "M-P013-000007",
+    "refs": 8
+   }
+  ],
+  "n_dup_msgs_L7": 332,
+  "L7_rate": 0.65098,
+  "n_dup_msgs_with_memory_refs": 315,
+  "dup_examples": [
+   {
+    "seq": 73,
+    "from": "P004",
+    "body": "老石啊，你尝尝这个新烤的桂花糕，我今早刚试的方子，糖少放了点，你牙口不好，这个软和。"
+   },
+   {
+    "seq": 135,
+    "from": "P010",
+    "body": "金先生，你说人练这些招式，到底是为了打赢别人，还是为了让自己心里有个底？"
+   },
+   {
+    "seq": 189,
+    "from": null,
+    "body": "今天这锅汤我少放了半勺盐，多搁了一小把干贝，你猜怎么着，鲜得我自己都多喝了两碗。"
+   },
+   {
+    "seq": 1075,
+    "from": "P010",
+    "body": "金先生，你说人练这些招式，到底是为了打赢别人，还是为了让自己心里踏实点？"
+   },
+   {
+    "seq": 1509,
+    "from": null,
+    "body": "今天这锅汤我换了种熬法，先别急着说好不好喝，等它再咕嘟一会儿，味道自己会出来。"
+   }
+  ]
+ },
+ "off": {
+  "log": "v2/evidence/run_f6_off_n16r60_seed42/run.jsonl",
+  "n_msg": 510,
+  "n_msgs_with_memory_refs": 0,
+  "n_refs_total": 0,
+  "n_refs_unique_mem_ids": 0,
+  "refs_per_msg_mean": null,
+  "refs_per_unique_mem_mean": null,
+  "top_mem_ids": [],
+  "n_dup_msgs_L7": 181,
+  "L7_rate": 0.354902,
+  "n_dup_msgs_with_memory_refs": 0,
+  "dup_examples": [
+   {
+    "seq": 73,
+    "from": "P004",
+    "body": "老石，你尝尝这个新烤的枣泥酥，我少放了糖，配茶正好。"
+   },
+   {
+    "seq": 135,
+    "from": "P010",
+    "body": "金先生，你说人练这些招式，到底是为了打赢别人，还是为了让自己心里有个底？"
+   },
+   {
+    "seq": 167,
+    "from": null,
+    "body": "这锤子抡久了，胳膊倒先知道歇了。"
+   },
+   {
+    "seq": 178,
+    "from": "P014",
+    "body": "小满，你这握刀的姿势跟捏绣花针似的，来，我教你个巧劲儿。"
+   },
+   {
+    "seq": 189,
+    "from": null,
+    "body": "今天这锅汤我换了种炖法，先煸后焖，闻着是挺香，就是不知道喝起来会不会太冲。"
+   }
+  ]
+ }
+}

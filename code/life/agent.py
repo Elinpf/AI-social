@@ -30,6 +30,7 @@ from . import emotion as E
 from . import dialogue_threads as DT
 from . import dialogue_repair as DR
 from . import sleep_window as _sleep
+from . import anti_repeat as AR   # R12：L-7 去重臂（env LIFE_PROMPT_MEMORY_F6_DEQUP，默认 OFF）
 from .policy import (social_enabled, exchange_enabled, m2b_judge_mode, m2b_importance_mode,
                      narrative_persist_enabled)
 from .ports import (
@@ -953,7 +954,29 @@ class LifeLayerAgent:
             ctx["trigger"] = trigger
         if initiator:
             ctx["initiator"] = initiator
+        if AR.enabled():
+            # R12 去重臂审计（additive）：本条生成时去重机制的累计行为。
+            # 默认 OFF ⇒ 该键不出现 ⇒ payload 与接入前逐字节一致。
+            ctx["dequp"] = AR.audit()
         return ctx
+
+    def _dequp_body(self, prompt: str, body: str, meta: dict) -> str:
+        """R12 去重臂：新台词与最近窗口内的台词撞 8-gram ⇒ **一次性**重生成。
+
+        默认 OFF ⇒ `AR.collide()` 恒 None、`AR.remember()` 不记账，本方法等于
+        `return body`（零额外 LLM 调用、提示词与 payload 与接入前一致）。
+        开启时最多多花 1 次 `purpose="dialogue"` 调用（有界，不级联）。
+        """
+        hit = AR.collide(body)
+        if hit is None:
+            AR.remember(body)
+            return body
+        AR.note_retry()
+        res = self.llm.call("dialogue", prompt + AR.retry_suffix(hit),
+                            meta={**meta, "dequp_retry": 1})
+        out = (res.text or "").strip() or body
+        AR.remember(out)
+        return out
 
     def _send_reply(self, wv, ev, cfg, slot_id: str) -> bool:
         p = ev.payload or {}
@@ -973,12 +996,13 @@ class LifeLayerAgent:
                                         name=self._name(partner) if partner else None,
                                         params=dr_cfg)
         prompt = self._reply_prompt(partner, topic, history, cfg, rift_line=rift_line, wv=wv)
-        res = self.llm.call("dialogue", prompt,
-                            meta={"agent_id": self.agent_id, "round": wv.round,
-                                  "thread": tid, "turn": turn})
+        meta = {"agent_id": self.agent_id, "round": wv.round,
+                "thread": tid, "turn": turn}
+        res = self.llm.call("dialogue", prompt, meta=meta)
         body = (res.text or "").strip()
         if not body:
             return False
+        body = self._dequp_body(prompt, body, meta)   # R12：撞车一次性重生成（默认OFF ⇒ 原样返回）
         payload: dict = {
             "scope": "private" if ev.type == "MSG_DM" else "place_group",
             "body": body, "refs": [], "tag_hints": list(p.get("tag_hints") or []),
@@ -1030,11 +1054,13 @@ class LifeLayerAgent:
         if dr_cfg.get("enabled") and to:
             rift_line = DR.context_line(self._rifts, to, int(wv.round),
                                         name=self._name(to), params=dr_cfg)
-        res = self.llm.call("dialogue", self._dialogue_prompt(tid, parts, cfg, rift_line=rift_line, wv=wv),
-                            meta={"agent_id": self.agent_id, "round": wv.round, "template": tid})
+        prompt = self._dialogue_prompt(tid, parts, cfg, rift_line=rift_line, wv=wv)
+        meta = {"agent_id": self.agent_id, "round": wv.round, "template": tid}
+        res = self.llm.call("dialogue", prompt, meta=meta)
         body = (res.text or "").strip()
         if not body:
             return
+        body = self._dequp_body(prompt, body, meta)   # R12：撞车一次性重生成（默认OFF ⇒ 原样返回）
         payload: dict = {"scope": scope, "body": body, "refs": [], "tag_hints": [tid]}
         if to:
             payload["to"] = to
@@ -1188,7 +1214,8 @@ class LifeLayerAgent:
         # 先观察类、后反思类（反思是内心独白，作旧事引用比具体观察淡）
         for want in ("observation", "other"):
             for kind, day, _imp, key, text, mid in sorted(
-                    cand, key=lambda t: (t[0] != "observation", -t[1], -t[2], t[3])):
+                    cand, key=lambda t: (t[0] != "observation", -t[1], -t[2],
+                                         AR.mem_usage(t[5]), t[3])):
                 if len(picked) >= MEMORY_F6_TOP_N:
                     break
                 if want == "observation" and kind != "observation":
@@ -1199,6 +1226,7 @@ class LifeLayerAgent:
                 self._mem_refs.append(mid)
         if not picked:
             return ""
+        AR.note_memory(self._mem_refs)   # R12：去重臂记账（默认 OFF ⇒ 不改任何状态）
         items = "；".join(f"第{d}天：{t}" for d, t in picked)
         return (f"\n你想起的事：{items}"
                 "\n（这些话跟你眼下说的事有关，就顺口提一句；无关就别硬提，也别编没记过的事。）")
@@ -1214,6 +1242,7 @@ class LifeLayerAgent:
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + self._gossip_hint(partners)  # G系列A1臂：可引用真人名单（默认OFF ⇒ 空串）
                 + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
+                + AR.prompt_line()           # R12 去重臂：最近说过的话（默认OFF ⇒ 空串）
                 + "\n只写台词本身（一句家常话）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（零 config/结构改动）
 
     def _reply_prompt(self, partner: str | None, topic: str, history: list,
@@ -1229,6 +1258,7 @@ class LifeLayerAgent:
                 + f"\n刚才的对话：\n{lines}"
                 + self._gossip_hint([partner] if partner else [])  # G系列A1臂：可引用真人名单（默认OFF ⇒ 空串）
                 + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
+                + AR.prompt_line()           # R12 去重臂：最近说过的话（默认OFF ⇒ 空串）
                 + "\n只写台词本身（接着刚才的话往下说一句）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（承载「承接上一轮」结构不变）
 
     # ---- economy: negotiation / offer / order-cancel (T133) ----------------
