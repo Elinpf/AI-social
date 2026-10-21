@@ -63,15 +63,29 @@
 
 ---
 
-## 3. 页面入口
+## 3. 页面入口（可观看）
 
-**【事实】** 静态服务（只读）：`cd code && python3 frontend/tools/serve.py`，默认 `http://127.0.0.1:8848/`；或 `make serve`（绑定 0.0.0.0:8848）。**必须通过 http 访问**，直接双击 `file://` 打不开（浏览器的同源策略会挡住取数）。
-**【事实】** 服务端点：`/__gitstamp` 返回当前提交 sha 与是否 dirty；`/__tail?path=&off=` 支持按偏移增量读取日志尾部（用于"实时跟随"），可读根目录有白名单限制。
-**【事实】** 页面清单：`index.html` 小镇观测台（像素镇 + 事件流 + 审计抽屉）、`dialogue.html` 对话线程视图（本轮新增）、`trace.html` 单 agent 时间线、`dashboard.html` 指标仪表盘、`fourgroups.html` 四组对照、`review.html` 人工评分页。
+```bash
+cd code && python frontend/tools/serve.py     # 静态服务，端口 8848；原生 JS，无构建链
+# 浏览器打开 http://127.0.0.1:8848/dialogue.html?data=<threads.json 相对路径>&sort=turns
+```
 
-**【未完成】** 本轮演示入口的最终形态（页面路径 + 需要的数据文件 + 看什么）待 D7 定稿后填入。平台约束不变：任何"看起来像实时"的说法都要能对应到具体日志文件。
+**【事实】** 三个入口（**同一页面、同一视图、同尺寸**，只换 `data`）：
 
----
+| 阶段 | `data` 参数 | `run_label` | 日志 sha256 |
+|---|---|---|---|
+| 改造前 v0-anchor | `sample/dialogue_v0anchor_n16_seed42/threads.json` | `run_d2_before_n16_seed42-c1f86bf6` | `c1f86bf61f62b3a0ce8e17e0c2312791cf0262381cd2120c2a63c9b6258963cf` |
+| 改造后 A0 | `sample/dialogue_run_d2_after_n16_seed42/threads.json` | `run_d2_after_n16_seed42-643f13a5` | `643f13a528c288d3e9677cb8ac100139224afbd0b46c0f7da0c3a5ed85b13141` |
+| 措辞臂 A1（**probe**） | `sample/dialogue_a1_wording_n4r60_seed42/threads.json` | `run_a1_wording_n4r60_seed42-ae969198` | `ae969198feaefd1f69147001e027394d55527bd1a0e460ff654697bdc3b1559b` |
+
+示例 URL：
+```text
+http://127.0.0.1:8848/dialogue.html?data=sample/dialogue_run_d2_after_n16_seed42/threads.json&thread=TH-P009-Gplace-hall-67&sort=turns
+http://127.0.0.1:8848/dialogue.html?data=sample/dialogue_v0anchor_n16_seed42/threads.json&sort=time
+http://127.0.0.1:8848/dialogue.html?data=sample/dialogue_a1_wording_n4r60_seed42/threads.json&sort=turns
+```
+
+> ⚠️ **一处标注错误必须在此纠正（我自算核实过）**：另有批次 `run_d9_a1_n16r84_seed42`（日志 `abefdf73`）曾被称为"A1 措辞后"，但其 `code_sha = 05636bc`（**A0 基线树**），且正文**首字符括号 556/686 = 81.0%**（A0 为 562/686 = 81.9%，probe-A1 为 **0/124**）⇒ **它是 A0 同树重跑，不是措辞臂**。本报告一律以 **`run_a1_wording_n4r60_seed42`（`a637371`，probe）** 作 A1 入口与读数来源；`d9_a1` 只作为 A0 同树复跑记录，**不得标为"措辞改造后"**。
 
 ## 4. 截图清单
 
