@@ -184,6 +184,9 @@ def _thread_fields(p: dict) -> dict:
     # R6-T2：F-4 上下文机制的自报字段（**只追加**；缺省 None ⇒ 不写键 ⇒ v0 日志逐字节不变）
     if p.get("dialogue_rift") is not None:
         out["dialogue_rift"] = p["dialogue_rift"]
+    # R13：F-4 修复闭环的可审计配对（**只追加**；缺省 None ⇒ 不写键 ⇒ OFF 路径字节级不变）
+    if p.get("dialogue_repair") is not None:
+        out["dialogue_repair"] = p["dialogue_repair"]
     return out
 
 

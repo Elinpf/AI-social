@@ -384,3 +384,137 @@ def test_synthetic_ablation_polarity_flip_artifact_quantified():
     flip[2]["body"] = "真好，谢谢你。" + flip[2]["body"]   # 修复正文自带正向词
     den, num = _f4(flip, emo, rep)
     assert den == 2 and num == 1, (den, num)          # 分子不变、分母 +1 ⇒ 率被拉低
+
+
+# ---------------------------------------------------------------- D. R13：修复闭环可达 + 可审计
+# 目标（R13 / f4-impl）：让「张力 → 同一线程内的和解」在机制上第一次可达，且**不复用词表匹配**：
+# 新信号只记录台账事实（rift_id + trigger_seq），本条的 seq 由日志自带，可逐条配对复核。
+
+
+def test_repair_ask_only_in_rift_thread_and_not_a_script():
+    """要求只在「本线程确有旧账」时出现；关闭/别线程/超龄 ⇒ None；不得含任何现成句式。"""
+    p = _params()
+    rifts, seen = {}, set()
+    DR.ingest(rifts, seen, [_ev(9, 10, "你什么意思，我有点生气。", topic="借东西",
+                               thread_id="TH-R1")], "P003", p, 10)
+    line = DR.repair_ask(rifts, "TH-R1", "P002", 12, p)
+    assert line and "往开处" in line
+    assert DR.repair_ask(rifts, "TH-OTHER", "P002", 12, p) is None       # 别的线程
+    assert DR.repair_ask(rifts, "TH-R1", "P009", 12, p) is None          # 别的对端
+    assert DR.repair_ask(rifts, "TH-R1", "P002", 12, _params(enabled=False)) is None
+    assert DR.repair_ask(rifts, "TH-R1", "P002", 10 + 999, p) is None    # 超龄
+    for ph in DR.REPAIR_WORDS:                                           # 不得给现成句式
+        assert ph not in line, ph
+    from devtools import repair_ablation as RA
+    for ph in RA.FRICTION_PHRASES + RA.REPAIR_PHRASES:
+        assert ph not in line
+
+
+def test_repair_audit_is_traceable_and_empty_when_off():
+    """可审计信号：rift_id + trigger_seq 必须能对上台账；无旧账 ⇒ None（不产生键）。"""
+    p = _params()
+    rifts, seen = {}, set()
+    ev = _ev(9, 10, "你什么意思，我有点生气。", thread_id="TH-R1")
+    DR.ingest(rifts, seen, [ev], "P003", p, 10)
+    a = DR.repair_audit(rifts, "TH-R1", "P002", 12, True)
+    assert a["v"] == "f4/repair/1" and a["thread"] == "TH-R1"
+    assert a["rift_ids"] == [DR.rift_id("TH-R1", ev.payload["msg_uid"], 9)]
+    assert a["trigger_seqs"] == [9] and a["peers"] == ["P002"]
+    assert a["age_rounds"] == [2] and a["prompted"] is True
+    assert DR.repair_audit(rifts, "TH-OTHER", "P002", 12, True) is None
+    assert DR.repair_audit({}, "TH-R1", "P002", 12, True) is None
+
+
+def test_reply_prompt_default_repair_line_is_none():
+    """默认参数 None ⇒ 提示词与接入前逐字节一致（OFF 路径不新增任何字符）。"""
+    _, _kernel, _llm = _agent(Path(tempfile.mkdtemp()))
+    a = _llm_agent_prompt = None  # noqa: F841  (占位，避免误用未定义名)
+    agent, _k, _l = _agent(Path(tempfile.mkdtemp()))
+    cfg = agent._dlg_cfg()
+    p1 = agent._reply_prompt("P002", "闲聊", [], cfg, wv=None)
+    p2 = agent._reply_prompt("P002", "闲聊", [], cfg, wv=None, repair_line=None)
+    assert p1 == p2 and "往开处" not in p1
+
+
+def test_gate_off_no_repair_field_even_with_rifts(monkeypatch, tmp_path):
+    """OFF：台账里有旧账也不写 `dialogue_repair`、提示词无要求（与 v0 一致）。"""
+    monkeypatch.setattr(DR, "load_params", lambda path=None: dict(DR.DEFAULTS))
+    agent, kernel, llm = _agent(tmp_path)
+    ev = _ev(22, 4, "算了，你什么意思，我有点生气。")
+    agent._rifts = {"R|x": {"rift_id": "R|x", "with": "P002", "thread_id": "TH-P002-P003-1",
+                            "msg_uid": "7:22", "seq": 22, "round": 4, "day": 0,
+                            "slot": "morning", "topic": "闲聊"}}
+    assert agent._send_reply(_wv(5, [ev]), ev, agent._dlg_cfg(), "day0-morning") is True
+    payload = kernel.intents[-1][1].payload
+    assert "dialogue_repair" not in payload and "dialogue_rift" not in payload
+    assert "往开处" not in llm.prompts[-1]
+
+
+def test_gate_on_records_auditable_pair_without_rewriting_body(monkeypatch, tmp_path):
+    """ON：本线程有旧账 ⇒ 提示词出现要求 + payload 落可审计配对；正文仍逐字节等于 LLM 原文。"""
+    monkeypatch.setattr(DR, "load_params", lambda path=None: _params())
+    agent, kernel, llm = _agent(tmp_path)
+    trigger = _ev(23, 4, "算了，你什么意思，我有点生气。")
+    DR.ingest(agent._rifts, set(), [trigger], "P003", _params(), 4)
+    assert agent._send_reply(_wv(5, [trigger]), trigger, agent._dlg_cfg(), "day0-morning") is True
+    payload = kernel.intents[-1][1].payload
+    assert payload["body"] == llm.text                     # 不下笔
+    ra = payload["dialogue_repair"]
+    assert ra["thread"] == "TH-P002-P003-1"
+    assert ra["trigger_seqs"] == [23]
+    assert ra["rift_ids"] == [DR.rift_id("TH-P002-P003-1", trigger.payload["msg_uid"], 23)]
+    assert ra["prompted"] is True and "往开处" in llm.prompts[-1]
+    # 同一线程后续出现和解句 ⇒ 台账注销（闭环）；本测试只证「注销规则未变」
+    DR.ingest(agent._rifts, set(agent._rifts_seen),
+              [_ev(24, 5, "抱歉，我不是那个意思。", author="P002")], "P003", _params(), 5)
+    assert agent._rifts == {}
+
+
+class _AltLLM:
+    """mock：负向/中性交替，用来在离线世界里制造「张力 → 后续回合」的序列。"""
+    name = "stub"
+    TEXTS = ("算了，你什么意思。", "今天天气不错，真好。")
+
+    def __init__(self) -> None:
+        self.i = 0
+        self.prompts: list = []
+
+    def call(self, purpose, prompt, *, model=None, meta=None):
+        self.prompts.append(prompt)
+        t = self.TEXTS[self.i % len(self.TEXTS)]
+        self.i += 1
+        return LLMResult(text=t)
+
+
+def _run_world_with_llm(llm, n: int = 6, rounds: int = 40, seed: int = 7):
+    from engine.integration import build_world
+    w = build_world(seed=seed, n=n, llm=llm)
+    eng = w["engine"]
+    for r in range(rounds):
+        eng.run_round(r)
+    return list(eng.ledger.records)
+
+
+def test_gate_on_offline_mock_repair_loop_is_reachable(monkeypatch):
+    """ON + 离线 mock：日志里第一次出现 `dialogue_repair`（机制可达），schema 可审计、正文不被改写。"""
+    monkeypatch.setattr(DR, "load_params", lambda path=None: _params())
+    recs = _run_world_with_llm(_AltLLM())
+    msgs = _msgs(recs)
+    assert msgs
+    rows = [(m["seq"], m["payload"]["dialogue_repair"]) for m in msgs
+            if "dialogue_repair" in (m["payload"] or {})]
+    assert rows, "ON 臂在离线 mock 上必须至少产生一条可审计的修复机会信号"
+    for seq, ra in rows:
+        assert ra["v"] == "f4/repair/1"
+        assert ra["rift_ids"] and ra["trigger_seqs"]
+        assert all(s < seq for s in ra["trigger_seqs"])       # 触发句必须早于本条
+        assert isinstance(ra["prompted"], bool)
+
+
+def test_gate_off_offline_mock_has_no_repair_field(monkeypatch):
+    """OFF + 同一 mock：一条 `dialogue_repair` 都不许出现（OFF 路径闭环仍为 0）。"""
+    monkeypatch.setattr(DR, "load_params", lambda path=None: dict(DR.DEFAULTS))
+    recs = _run_world_with_llm(_AltLLM())
+    msgs = _msgs(recs)
+    assert msgs
+    assert not [m for m in msgs if "dialogue_repair" in (m["payload"] or {})]

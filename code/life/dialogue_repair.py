@@ -264,6 +264,59 @@ def audit_fields(rifts: dict, round_no: int, route: str,
     }
 
 
+def repair_ask(rifts: dict, thread_id: str, peer: str | None, round_no: int,
+               params: dict | None = None) -> str | None:
+    """R13 / F-4 修复闭环：**在旧账所在线程里**要求这一句把话说开（只提要求，不给句式）。
+
+    与 `context_line()` 的分工：
+      * `context_line()` 是「处境」——告诉你心里还压着什么事（按对端，可跨线程）；
+      * `repair_ask()` 是本回合的**动作要求**——只在本条要回复的线程里确有未了结旧账时出现，
+        明确要求「这一句就把话说开」，从而让「张力 → 和解」在**同一线程内**可达。
+    关闭 / 本线程无旧账 / 超龄 ⇒ `None`（提示词逐字节不变）。
+    """
+    params = params or _cfg()
+    if not params.get("enabled") or not thread_id:
+        return None
+    rows = [v for v in rifts.values()
+            if v.get("thread_id") == thread_id and (peer is None or v.get("with") == peer)]
+    if not rows:
+        return None
+    oldest = min(rows, key=lambda v: v["seq"])
+    if int(round_no) - int(oldest["round"]) > int(params.get("context_max_age_rounds", 24)):
+        return None
+    return ("\n你俩刚才这话没说痛快，这一句可以把话往开处带一带：别扭着、也别含糊过去，"
+            "也别硬顶着认错——挑一个你愿意的法子，一句家常话把台阶递出去就行。")
+
+
+def repair_audit(rifts: dict, thread_id: str, peer: str | None, round_no: int,
+                 prompted: bool) -> dict | None:
+    """R13 / F-4 结构化**可审计**信号（不做任何词表匹配，只记录台账事实）。
+
+    每条记录都能被下游逐条点开复核：
+        rift_id     → 台账主键（`R|<thread>|<msg_uid|seq>`）
+        trigger_seq → 触发这条旧账的原句在日志里的 `seq`
+        thread      → 旧账所在线程
+        reply_seq   → **本条回复本身的 seq 由调用方落盘**（事件记录自带），与 trigger_seq 配对
+    本线程无旧账 / 关闭 ⇒ `None`（不产生任何键）。
+    """
+    if not thread_id:
+        return None
+    rows = [v for v in rifts.values()
+            if v.get("thread_id") == thread_id and (peer is None or v.get("with") == peer)]
+    if not rows:
+        return None
+    rows = sorted(rows, key=lambda v: (v["seq"], v["rift_id"]))
+    return {
+        "v": "f4/repair/1",
+        "thread": thread_id,
+        "rift_ids": [v["rift_id"] for v in rows],
+        "trigger_seqs": [int(v["seq"]) for v in rows],
+        "peers": sorted({v["with"] for v in rows if v.get("with")}),
+        "age_rounds": [max(0, int(round_no) - int(v["round"])) for v in rows],
+        "prompted": bool(prompted),
+    }
+
+
 def _prompted(rows: list, round_no: int) -> bool:
     params = _cfg()
     if not params.get("gripe_context"):

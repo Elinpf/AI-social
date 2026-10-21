@@ -991,11 +991,15 @@ class LifeLayerAgent:
         history = self._thread_history(wv, tid, cfg)
         dr_cfg = DR.load_params()
         rift_line = None
+        repair_line = None
         if dr_cfg.get("enabled"):
             rift_line = DR.context_line(self._rifts, partner, int(wv.round),
                                         name=self._name(partner) if partner else None,
                                         params=dr_cfg)
-        prompt = self._reply_prompt(partner, topic, history, cfg, rift_line=rift_line, wv=wv)
+            # R13 / F-4：本线程确有未了结旧账 ⇒ 追加「这一句把话说开」的动作要求（只提要求，不给句式）
+            repair_line = DR.repair_ask(self._rifts, tid, partner, int(wv.round), dr_cfg)
+        prompt = self._reply_prompt(partner, topic, history, cfg, rift_line=rift_line,
+                                    repair_line=repair_line, wv=wv)
         meta = {"agent_id": self.agent_id, "round": wv.round,
                 "thread": tid, "turn": turn}
         res = self.llm.call("dialogue", prompt, meta=meta)
@@ -1018,6 +1022,10 @@ class LifeLayerAgent:
             if f is not None:
                 f["prompted"] = bool(rift_line)
                 payload["dialogue_rift"] = f
+            # R13 / F-4：本线程旧账的**可审计**配对（rift_id + trigger_seq；本条事件的 seq 由日志自带）
+            ra = DR.repair_audit(self._rifts, tid, partner, int(wv.round), bool(repair_line))
+            if ra is not None:
+                payload["dialogue_repair"] = ra
         if ev.type == "MSG_DM":
             payload["to"] = partner
         else:
@@ -1247,7 +1255,7 @@ class LifeLayerAgent:
 
     def _reply_prompt(self, partner: str | None, topic: str, history: list,
                       cfg: dict | None = None, rift_line: str | None = None,
-                      wv=None) -> str:
+                      wv=None, repair_line: str | None = None) -> str:
         cfg = cfg or self._dlg_cfg()
         lines = "\n".join(line for _, line in history) or "(还没说什么)"
         who = self._name(partner) if partner else "在场的人"
@@ -1255,6 +1263,7 @@ class LifeLayerAgent:
         return (self.persona.compressed_profile(self._current_goal())
                 + f"\n你正在和{who}聊「{topic}」。{self._mood_line()}。"
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
+                + (repair_line or "")        # R13：本线程旧账的「这一句把话说开」要求；关闭/无旧账为空串
                 + f"\n刚才的对话：\n{lines}"
                 + self._gossip_hint([partner] if partner else [])  # G系列A1臂：可引用真人名单（默认OFF ⇒ 空串）
                 + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
