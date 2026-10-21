@@ -1,0 +1,103 @@
+### 0) 环境与代码锚点
+021baec30222d59a45c0e5838791acf9bc835fb2
+feat/life-l7-dedup-1021
+
+### 1) 三份 run.jsonl 的 sha256（sha8 = 前 8 位）
+c73bead61a440db789f6d6ba1de555fe326a203ee27d1219690174e3d9483642  v2/evidence/run_f6_off_n16r60_seed42/run.jsonl
+7de6a7be5adff276f1e42c065a708c271f870f2bf8daa930cf0cdfc983f7434d  v2/evidence/run_f6_on_n16r60_seed42/run.jsonl
+6bf3ec88700fa1a7451b18c63678d0904c69b9de39896739190e7e674db8fdbd  v2/evidence/run_f6_dequp_n16r60_seed42/run.jsonl
+
+### 2) dialogue_repair 开关默认值（config 原文）
+{
+  "_comment": "R6-T2 · F-4「误会与和解」上下文机制开关（life/dialogue_repair.py）。默认 enabled=false ⇒ v0 语义零扰动。本文件**不进** engine/version.py::FINGERPRINT_FILES，因此打开/关闭都不会改变 v0/anchor 旧日志的 engine_version 指纹（这是刻意选择：机制默认关时旧日志必须仍可复现）。消融逃生口：env HITT_DIALOGUE_REPAIR=1|0。",
+  "schema_version": "1.0",
+  "enabled": false,
+  "gripe_context": true,
+  "reply_priority": true,
+  "window_msgs": 8,
+  "max_open": 3,
+  "max_age_rounds": 84,
+  "context_max_age_rounds": 24
+}
+
+### 3) 日志里 dialogue_rift 字段命中条数（grep -c；默认关闭应为 0）
+v2/evidence/run_f6_off_n16r60_seed42/run.jsonl 0
+v2/evidence/run_f6_on_n16r60_seed42/run.jsonl 0
+v2/evidence/run_f6_dequp_n16r60_seed42/run.jsonl 0
+
+### 4) 官方指标实现复算（tools/d5/dialogue_metrics.py 的 compute()，F-4 / L-13）
+written: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/f4_anchor_recompute.json
+
+## 每臂读数（官方实现 + 明细复算一致性）
+| arm | sha8 | MSG | mixed线程 | 张力(官方) | 修复(官方) | 明细张力 | 明细修复 | 一致 | dialogue_rift 命中 | L-13 n |
+|---|---|---|---|---|---|---|---|---|---|---|
+| off | c73bead6 | 510 | 169 | 22 | 0 | 22 | 0 | OK | 0 | 2 |
+| on | 7de6a7be | 510 | 169 | 15 | 2 | 15 | 2 | OK | 0 | 14 |
+| dequp | 6bf3ec88 | 510 | 169 | 15 | 0 | 15 | 0 | OK | 0 | 9 |
+
+### 5) 近失分析（张力后同线程最近修复词的距离）
+written: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/f4_anchor_nearmiss.json
+
+| arm | sha8 | MSG | 张力 | 8条内修复 | 最近修复 lag 分布 | 全日志修复词消息数 | 修复词计数 |
+|---|---|---|---|---|---|---|---|
+| off | c73bead6 | 510 | 22 | 0 | {"none": 22} | 5 | {"我懂": 3, "慢慢来": 1, "对不起": 1} |
+| on | 7de6a7be | 510 | 15 | 2 | {"none": 13, "<=8": 2} | 13 | {"慢慢来": 2, "我懂": 11} |
+| dequp | 6bf3ec88 | 510 | 15 | 0 | {"none": 15} | 5 | {"慢慢来": 3, "我懂": 2} |
+
+### 6) 逐事件明细：张力事件 topic 分布 + 修复命中（off 臂原文，其余见 JSON）
+== arm off sha8 c73bead6 MSG 510 neg_msgs 29 repair_msgs 5 dialogue_rift 0
+   by_topic: {"combat_training": {"repaired": 0, "tension": 9}, "counter_propose": {"repaired": 0, "tension": 5}, "gift": {"repaired": 0, "tension": 2}, "polite_reject": {"repaired": 0, "tension": 1}, "rel_maintain": {"repaired": 0, "tension": 1}, "whisper": {"repaired": 0, "tension": 4}}
+   by_event_type: {"MSG_DM": {"repaired": 0, "tension": 22}}
+   repaired_in_detail: []
+== arm on sha8 7de6a7be MSG 510 neg_msgs 22 repair_msgs 13 dialogue_rift 0
+   by_topic: {"combat_training": {"repaired": 0, "tension": 4}, "counter_propose": {"repaired": 0, "tension": 2}, "gift": {"repaired": 1, "tension": 2}, "mentorship": {"repaired": 1, "tension": 2}, "polite_reject": {"repaired": 0, "tension": 1}, "rel_maintain": {"repaired": 0, "tension": 1}, "scarce_buy": {"repaired": 0, "tension": 3}}
+   by_event_type: {"MSG_DM": {"repaired": 2, "tension": 15}}
+   repaired_in_detail: [('m:T|TH-P003-P005-54', 89804, ['我懂'], 1), ('m:T|TH-P010-P009-37', 59288, ['我懂'], 2)]
+== arm dequp sha8 6bf3ec88 MSG 510 neg_msgs 16 repair_msgs 5 dialogue_rift 0
+   by_topic: {"combat_training": {"repaired": 0, "tension": 5}, "counter_propose": {"repaired": 0, "tension": 5}, "gift": {"repaired": 0, "tension": 1}, "mentorship": {"repaired": 0, "tension": 1}, "polite_reject": {"repaired": 0, "tension": 2}, "rel_maintain": {"repaired": 0, "tension": 1}}
+   by_event_type: {"MSG_DM": {"repaired": 0, "tension": 15}}
+   repaired_in_detail: []
+
+### 7) 三臂 meta.json 身份（code_sha / 规模 / provider）
+off {'code_sha': '895b9a381cd5a1838c23bd3b38e139f7edade3b8', 'rounds': 60, 'seed': 42, 'events': 116294, 'provider': 'openai_compat', 'model': 'DeepSeek-Flash', 'llm_calls': 2878, 'degraded_calls': 0}
+on {'code_sha': '895b9a381cd5a1838c23bd3b38e139f7edade3b8', 'rounds': 60, 'seed': 42, 'events': 116261, 'provider': 'openai_compat', 'model': 'DeepSeek-Flash', 'llm_calls': 2878, 'degraded_calls': 0}
+dequp {'code_sha': '263a4300692d2ef3136c8a50e9bade2f99608945', 'rounds': 60, 'seed': 42, 'events': 116385, 'provider': 'openai_compat', 'model': 'DeepSeek-Flash', 'llm_calls': 2966, 'degraded_calls': 0}
+
+### 8) L-13 泄漏串明细（ctx.topic 原串出现在正文）
+== arm off n= 2 by_topic= {'whisper': 2}
+   seq=6049 type=MSG_DM topic=whisper body=哎哟周公文，你这一说我肚子先叫了，河边走走倒是行，可我这会儿饿得前胸贴后背，要不咱先找个摊子垫两口？对了，你刚说的那个whisper，到底是啥门道，边走边给我讲讲呗。
+   seq=99056 type=MSG_DM topic=whisper body=方老师您太客气了，我哪敢老打扰您。不过说到whisper，我最近跑货的时候听人提过一嘴，说那玩意儿能转文字，我寻思着要是真能行，以后记账可就省事了。您说这东西靠谱吗？
+== arm on n= 14 by_topic= {'combat_training': 1, 'scarce_buy': 2, 'whisper': 11}
+   seq=8350 type=MSG_DM topic=whisper body=周公文，流程我懂，可我这肚子先不答应了。你听说了没，西街那家面馆今天开张，说是汤头熬了一整夜。咱边吃边聊 whisper 的事，我请客。
+   seq=13356 type=MSG_DM topic=whisper body=阿林，按规定午休前不能离岗， whisper 的事还是先走流程。
+   seq=21903 type=MSG_DM topic=combat_training body=小满，汤的事先放一放，我这边得说正事。combat_training的申请，你按流程填表了吗？
+   seq=60137 type=MSG_DM topic=scarce_buy body=老石，兰姐那碗汤的事先放放，我这两天听周公文念叨，说先把动作做稳，别急着求快，练完再去吃饭。你说这scarce_buy，是不是也得先稳住手，别一上来就抢？
+   seq=60920 type=MSG_DM topic=scarce_buy body=老石，兰姐那碗汤的事先放放，我这两天听周公文念叨，说先把动作做稳，别急着求快，练完再去吃饭。你说这scarce_buy，是不是也得先稳住手，别一上来就抢？
+   seq=62319 type=MSG_DM topic=whisper body=金先生，账我记着呢，周公文那锅汤跑不了。不过你刚说训练做稳，我倒想起第二天他也这么念叨我，先把动作做稳，别急着求快，练完再去吃饭。秀娘那会儿还掰了半个黄油卷给我，说月牙饿得前胸贴后背都惦记着五味。你说
+   seq=62422 type=MSG_DM topic=whisper body=铁头，汤的事先放一放，我眼下得把 whisper 这摊子理清楚。
+   seq=71011 type=MSG_DM topic=whisper body=阿林，稳着来没错，可账要平，whisper这事也得有个数，不能光靠惦记。
+   seq=74613 type=MSG_DM topic=whisper body=whisper那摊子我不懂，但兰姐那碗汤五味拖到现在没影，你要找他就顺道堵一下。
+   seq=79833 type=MSG_DM topic=whisper body=金先生，我心里有数，就是这两天事赶事，脑子有点乱。周公文还叮嘱我先做稳动作，别急着求快，我听着也在理。whisper那边我回头就理个明白账，不叫它光挂在嘴上。
+   seq=80012 type=MSG_DM topic=whisper body=铁头，whisper的事我先记下，回头按流程问清楚。兰姐那碗汤我顺路去催，但得先把训练办妥。
+   seq=82482 type=MSG_DM topic=whisper body=阿林，周公文那话在理，先稳动作再吃饭。whisper的账你回头理清，别拖。
+   seq=84033 type=MSG_DM topic=whisper body=金先生，说到稳，我倒想起兰姐和月牙这两天也在念叨这事。兰姐守着摊子走不开，还惦记那锅汤；月牙更逗，说练完连吃什么都想不出来。我这边whisper的账，回头就一笔一笔捋清楚，不叫它再悬着。
+   seq=99021 type=MSG_DM topic=whisper body=方老师，那我就接着问了啊——whisper这东西，是不是就像兰姐那锅汤，火候到了才出味？我这两天听月牙说练动作要先稳，我琢磨着，是不是先把耳朵练稳了，再谈听不听得见？
+== arm dequp n= 9 by_topic= {'mentorship': 3, 'scarce_buy': 1, 'whisper': 5}
+   seq=22394 type=MSG_DM topic=mentorship body=秀娘，奶酥先放着吧，老石那事我都没应， mentorship 我也教不了谁。
+   seq=60991 type=MSG_DM topic=scarce_buy body=老石，你先坐着，我这肚子也跟着起哄，咱俩半斤八两。要不这样，我去灶房翻翻，有口热的咱俩分着垫垫，回来再琢磨这scarce_buy的事，脑子空着可转不动。
+   seq=61421 type=MSG_DM topic=mentorship body=金先生，秀娘那碗薏米粥我到现在还记得，热乎乎端过来的时候我就想，有人惦记着让你先垫一口，这事儿本身比粥还暖。可我现在坐在这儿，心里空落落的，不是肚子空，是不知道这 mentorship 到底能给我什么
+   seq=62599 type=MSG_DM topic=mentorship body=月牙，账要平，人心也得平。 mentorship 给不了你热粥，但能给你个准头，先垫一口再算。
+   seq=69339 type=MSG_DM topic=whisper body=桂婶，我这会儿是真坐不住，心里像揣了只兔子，蹦得我连茶都咽不下。你听我一句，先别急着劝，我就想弄明白那 whisper 到底是谁先传出来的。
+   seq=79921 type=MSG_DM topic=whisper body=金先生，你这么一说我倒想起来了，陈医和周公文前两天也是空着肚子跟我聊，聊到一半都撑不住。行，我先去弄口吃的，回来咱把whisper这事好好捋捋。
+   seq=99140 type=MSG_DM topic=whisper body=方老师，粥我喝，可我这心里还挂着whisper那摊事，老石和金先生都劝我先垫肚子，我嘴上应着，脑子却没停。
+   seq=112826 type=MSG_DM topic=whisper body=阿林，你先把这碗粥喝完，whisper的事跑不了。月牙和秀娘都说过，肚子一空，脑子里全是嗡嗡的，哪还谈得上正事。
+   seq=113175 type=MSG_DM topic=whisper body=老石，你先吃，我不催。whisper的事等你缓过这阵再说，我就在这儿等着。
+### 9) 张力检测精度初查（自述状态词 vs 人际冲突词；只披露分子噪声，不改口径）
+written: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/f4_tension_precision.json
+
+| arm | sha8 | 张力事件 | 含人际冲突词 | 仅自述状态词 | 自述词分布 |
+|---|---|---|---|---|---|
+| off | c73bead6 | 22 | 3 | 19 | {"怕": 15, "疼": 2, "算了": 2, "累": 1, "苦": 1} |
+| on | 7de6a7be | 15 | 0 | 15 | {"怕": 10, "累": 2, "疼": 3} |
+| dequp | 6bf3ec88 | 15 | 1 | 14 | {"怕": 10, "算了": 1, "苦": 2, "疼": 1} |
+

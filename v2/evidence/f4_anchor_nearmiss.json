@@ -1,0 +1,735 @@
+{
+ "arms": [
+  {
+   "label": "off",
+   "log": "v2/evidence/run_f6_off_n16r60_seed42/run.jsonl",
+   "log_sha8": "c73bead6",
+   "n_messages": 510,
+   "n_repair_msgs_total": 5,
+   "nearest_lag_dist": {
+    "none": 22
+   },
+   "repair_msg_event_types": {
+    "MSG_DM": 5
+   },
+   "repair_msgs": [
+    {
+     "body": "铁头，你先别上火，我懂你急。这样，我明儿去镇上找老李再问问，看能不能先匀你一点应急。你先尝尝这酥，热乎着呢。",
+     "event_type": "MSG_DM",
+     "seq": 8197,
+     "thread": "m:T|TH-P004-P013-4",
+     "words": [
+      "我懂"
+     ]
+    },
+    {
+     "body": "哎，周兄，我懂规矩，可我这人走南闯北就靠一张嘴混口饭吃，你多少透点风，我保证烂肚子里。",
+     "event_type": "MSG_DM",
+     "seq": 12887,
+     "thread": "m:T|TH-P008-P007-6",
+     "words": [
+      "我懂"
+     ]
+    },
+    {
+     "body": "周哥，我懂我懂，不问了。就是这肚子饿得慌，你这边有没有什么吃的先垫垫？",
+     "event_type": "MSG_DM",
+     "seq": 20650,
+     "thread": "m:T|TH-P008-P007-6",
+     "words": [
+      "我懂"
+     ]
+    },
+    {
+     "body": "巧儿啊，你要是真喜欢，回头我把方子写给你，不过做点心这事急不得，得慢慢来。",
+     "event_type": "MSG_DM",
+     "seq": 82105,
+     "thread": "m:T|TH-P004-P014-43",
+     "words": [
+      "慢慢来"
+     ]
+    },
+    {
+     "body": "对不起嘛，我最近绷得太紧了，连玩都玩不进去，一上手就没轻没重的。",
+     "event_type": "MSG_DM",
+     "seq": 86662,
+     "thread": "m:T|TH-P014-P010-49",
+     "words": [
+      "对不起"
+     ]
+    }
+   ],
+   "repair_threads": 4,
+   "repair_words_counter": {
+    "对不起": 1,
+    "慢慢来": 1,
+    "我懂": 3
+   },
+   "repaired_in_8": 0,
+   "rows": [
+    {
+     "cur_seq": 112739,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P006-P007-55",
+     "topic": "whisper"
+    },
+    {
+     "cur_seq": 115312,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P006-P007-55",
+     "topic": "whisper"
+    },
+    {
+     "cur_seq": 24847,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P007-P005-18",
+     "topic": "gift"
+    },
+    {
+     "cur_seq": 34192,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P007-P005-19",
+     "topic": "gift"
+    },
+    {
+     "cur_seq": 62803,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P007-P012-42",
+     "topic": "whisper"
+    },
+    {
+     "cur_seq": 79856,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P009-P007-42",
+     "topic": "whisper"
+    },
+    {
+     "cur_seq": 37147,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P009-P008-24",
+     "topic": "combat_training"
+    },
+    {
+     "cur_seq": 38031,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P009-P008-25",
+     "topic": "combat_training"
+    },
+    {
+     "cur_seq": 88128,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P009-P015-51",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_seq": 89038,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P009-P015-52",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_seq": 59340,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P011-P006-36",
+     "topic": "combat_training"
+    },
+    {
+     "cur_seq": 113443,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P011-P010-54",
+     "topic": "rel_maintain"
+    },
+    {
+     "cur_seq": 38139,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P011-P013-25",
+     "topic": "combat_training"
+    },
+    {
+     "cur_seq": 60605,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P012-P014-36",
+     "topic": "combat_training"
+    },
+    {
+     "cur_seq": 4766,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P012-P015-4",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_seq": 7127,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P012-P015-4",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_seq": 8812,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P012-P015-4",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_seq": 88963,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P014-P010-49",
+     "topic": "combat_training"
+    },
+    {
+     "cur_seq": 6955,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P014-P011-1",
+     "topic": "combat_training"
+    },
+    {
+     "cur_seq": 36370,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P014-P015-24",
+     "topic": "combat_training"
+    },
+    {
+     "cur_seq": 37225,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P014-P015-25",
+     "topic": "combat_training"
+    },
+    {
+     "cur_seq": 31904,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P016-P015-15",
+     "topic": "polite_reject"
+    }
+   ],
+   "tension_events": 22
+  },
+  {
+   "label": "on",
+   "log": "v2/evidence/run_f6_on_n16r60_seed42/run.jsonl",
+   "log_sha8": "7de6a7be",
+   "n_messages": 510,
+   "n_repair_msgs_total": 13,
+   "nearest_lag_dist": {
+    "<=8": 2,
+    "none": 13
+   },
+   "repair_msg_event_types": {
+    "MSG_DM": 13
+   },
+   "repair_msgs": [
+    {
+     "body": "金先生，这料子我看了，能用，就是得慢慢来。",
+     "event_type": "MSG_DM",
+     "seq": 2068,
+     "thread": "m:T|TH-P002-P009-3",
+     "words": [
+      "慢慢来"
+     ]
+    },
+    {
+     "body": "周哥，流程我懂，就是这肚子不争气，咕咕叫得比货郎鼓还响。你听说了没，西街口那家面摊今天开张，说是汤头熬了一整夜，咱忙完这趟去整一碗？",
+     "event_type": "MSG_DM",
+     "seq": 6049,
+     "thread": "m:T|TH-P008-P007-6",
+     "words": [
+      "我懂"
+     ]
+    },
+    {
+     "body": "铁头啊，我懂你急，可你越慌越容易被人拿捏。要不这样，我认识镇上几个老伙计，回头帮你问问有没有囤着货的，先匀你一点应应急。",
+     "event_type": "MSG_DM",
+     "seq": 8199,
+     "thread": "m:T|TH-P004-P013-4",
+     "words": [
+      "我懂"
+     ]
+    },
+    {
+     "body": "周公文，流程我懂，可我这肚子先不答应了。你听说了没，西街那家面馆今天开张，说是汤头熬了一整夜。咱边吃边聊 whisper 的事，我请客。",
+     "event_type": "MSG_DM",
+     "seq": 8350,
+     "thread": "m:T|TH-P008-P007-7",
+     "words": [
+      "我懂"
+     ]
+    },
+    {
+     "body": "月牙，粥是真没了，可你别急着走，灶上还温着一锅杂粮糊糊，我本来留着自己垫肚子的，先给你盛一碗。你上回说饿得连想吃啥都想不出来，我懂，这种时候就得先来口热的，胃里",
+     "event_type": "MSG_DM",
+     "seq": 37757,
+     "thread": "m:T|TH-P010-P004-27",
+     "words": [
+      "我懂"
+     ]
+    },
+    {
+     "body": "老周，我懂，收成是大事。不过你听我说，周公文那天也跟我讲，西街口的事先放一放，按流程来，火候到了味道自然出来。我琢磨着，你这季收成也是一样的理儿，急不得，但也不",
+     "event_type": "MSG_DM",
+     "seq": 38539,
+     "thread": "m:T|TH-P001-P007-28",
+     "words": [
+      "我懂"
+     ]
+    },
+    {
+     "body": "阿林，章程我懂，可地不等人。你说的那锅汤，我听着像月牙那丫头念叨的，饿着肚子等味道，等不起。",
+     "event_type": "MSG_DM",
+     "seq": 38694,
+     "thread": "m:T|TH-P001-P007-28",
+     "words": [
+      "我懂"
+     ]
+    },
+    {
+     "body": "陈医，你这话我懂。可兰姐那锅汤的事还悬着呢，五味拍胸脯说留一碗，到现在影子都没见。",
+     "event_type": "MSG_DM",
+     "seq": 60521,
+     "thread": "m:T|TH-P005-P013-39",
+     "words": [
+      "我懂"
+     ]
+    },
+    {
+     "body": "金先生，账要平我懂，可我现在连自己想吃什么都不知道，你让我怎么找对路的人啊。",
+     "event_type": "MSG_DM",
+     "seq": 61350,
+     "thread": "m:T|TH-P010-P009-37",
+     "words": [
+      "我懂"
+     ]
+    },
+    {
+     "body": "阿林啊，你这话我懂，月牙那孩子连自己想吃啥都想不出来，听着就让人心里发酸。周公文说先练稳再吃饭，理是那个理，可人空着肚子空着心，稳给谁看呢。",
+     "event_type": "MSG_DM",
+     "seq": 80727,
+     "thread": "m:T|TH-P007-P012-42",
+     "words": [
+      "我懂"
+     ]
+    },
+    {
+     "body": "陈医，我懂。可兰姐那锅汤，我尝过，五味也让我带过话，说欠巧儿个快的。我这点菜，不算啥。",
+     "event_type": "MSG_DM",
+     "seq": 94160,
+     "thread": "m:T|TH-P003-P005-54",
+     "words": [
+      "我懂"
+     ]
+    },
+    {
+     "body": "桂婶，你说的这个我懂。兰姐那天也问过我，说那锅汤惦记着，可摊子离不了人。我当时也没敢替她拿主意。人有时候不是不想歇，是怕一歇，手底下的活儿就散了。",
+     "event_type": "MSG_DM",
+     "seq": 96586,
+     "thread": "m:T|TH-P005-P012-54",
+     "words": [
+      "我懂"
+     ]
+    },
+    {
+     "body": "阿林，你这个比方打得挺好，火候确实急不得。不过我想起兰姐前两天还念叨那锅汤，说守着摊子走不开，你看，连熬汤的人都得先稳住自己。所以你说先练耳朵，我觉得对，但别把",
+     "event_type": "MSG_DM",
+     "seq": 112702,
+     "thread": "m:T|TH-P006-P007-55",
+     "words": [
+      "慢慢来"
+     ]
+    }
+   ],
+   "repair_threads": 12,
+   "repair_words_counter": {
+    "慢慢来": 2,
+    "我懂": 11
+   },
+   "repaired_in_8": 2,
+   "rows": [
+    {
+     "cur_seq": 60005,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P001-P005-39",
+     "topic": "scarce_buy"
+    },
+    {
+     "cur_seq": 89804,
+     "cur_type": "MSG_DM",
+     "in8": true,
+     "nearest_after": {
+      "body": "陈医，我懂。可兰姐那锅汤，我尝过，五味也让我带过话，说欠巧儿个快的。我这点菜，不算啥。",
+      "event_type": "MSG_DM",
+      "lag": 1,
+      "seq": 94160,
+      "words": [
+       "我懂"
+      ]
+     },
+     "thread": "m:T|TH-P003-P005-54",
+     "topic": "gift"
+    },
+    {
+     "cur_seq": 61817,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P004-P001-39",
+     "topic": "scarce_buy"
+    },
+    {
+     "cur_seq": 96586,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P005-P012-54",
+     "topic": "rel_maintain"
+    },
+    {
+     "cur_seq": 12414,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P006-P003-7",
+     "topic": "gift"
+    },
+    {
+     "cur_seq": 86100,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P006-P016-48",
+     "topic": "combat_training"
+    },
+    {
+     "cur_seq": 86434,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P006-P016-49",
+     "topic": "combat_training"
+    },
+    {
+     "cur_seq": 47225,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P010-P004-28",
+     "topic": "scarce_buy"
+    },
+    {
+     "cur_seq": 59288,
+     "cur_type": "MSG_DM",
+     "in8": true,
+     "nearest_after": {
+      "body": "金先生，账要平我懂，可我现在连自己想吃什么都不知道，你让我怎么找对路的人啊。",
+      "event_type": "MSG_DM",
+      "lag": 2,
+      "seq": 61350,
+      "words": [
+       "我懂"
+      ]
+     },
+     "thread": "m:T|TH-P010-P009-37",
+     "topic": "mentorship"
+    },
+    {
+     "cur_seq": 4766,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P012-P015-4",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_seq": 7127,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P012-P015-4",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_seq": 1632,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P012-P016-0",
+     "topic": "mentorship"
+    },
+    {
+     "cur_seq": 37217,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P014-P015-24",
+     "topic": "combat_training"
+    },
+    {
+     "cur_seq": 38325,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P014-P015-25",
+     "topic": "combat_training"
+    },
+    {
+     "cur_seq": 54167,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P016-P002-28",
+     "topic": "polite_reject"
+    }
+   ],
+   "tension_events": 15
+  },
+  {
+   "label": "dequp",
+   "log": "v2/evidence/run_f6_dequp_n16r60_seed42/run.jsonl",
+   "log_sha8": "6bf3ec88",
+   "n_messages": 510,
+   "n_repair_msgs_total": 5,
+   "nearest_lag_dist": {
+    "none": 15
+   },
+   "repair_msg_event_types": {
+    "MSG_DM": 5
+   },
+   "repair_msgs": [
+    {
+     "body": "兰姐，你这话说得我心里热乎，咱俩慢慢来，练拳跟过日子一个理儿，急不得。",
+     "event_type": "MSG_DM",
+     "seq": 156,
+     "thread": "m:T|TH-P012-P016-0",
+     "words": [
+      "慢慢来"
+     ]
+    },
+    {
+     "body": "秀娘，你揉面那会儿，我刨木头也一个样，手生就得慢慢来。",
+     "event_type": "MSG_DM",
+     "seq": 549,
+     "thread": "m:T|TH-P004-P002-0",
+     "words": [
+      "慢慢来"
+     ]
+    },
+    {
+     "body": "陈医，那我先啃两口，肚子叫得实在不像话。铁头那话我记着呢，攒钱一天一点，我看做事也一样，先把眼前这口顾上，别的慢慢来。",
+     "event_type": "MSG_DM",
+     "seq": 32924,
+     "thread": "m:T|TH-P007-P005-19",
+     "words": [
+      "慢慢来"
+     ]
+    },
+    {
+     "body": "金先生，账上的事我懂，可我这会儿心里有根刺，不拔出来连灶都懒得碰。",
+     "event_type": "MSG_DM",
+     "seq": 89122,
+     "thread": "m:T|TH-P009-P015-52",
+     "words": [
+      "我懂"
+     ]
+    },
+    {
+     "body": "小满，我懂你，可我这会儿脑子真转不动了，金先生都说了先吃再算，咱就垫一口，回来我陪你捋到平。",
+     "event_type": "MSG_DM",
+     "seq": 113532,
+     "thread": "m:T|TH-P011-P010-54",
+     "words": [
+      "我懂"
+     ]
+    }
+   ],
+   "repair_threads": 5,
+   "repair_words_counter": {
+    "慢慢来": 3,
+    "我懂": 2
+   },
+   "repaired_in_8": 0,
+   "rows": [
+    {
+     "cur_seq": 81175,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P004-P014-43",
+     "topic": "gift"
+    },
+    {
+     "cur_seq": 40133,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P005-P006-30",
+     "topic": "rel_maintain"
+    },
+    {
+     "cur_seq": 38072,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P009-P008-25",
+     "topic": "combat_training"
+    },
+    {
+     "cur_seq": 90776,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P009-P015-51",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_seq": 108930,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P009-P015-52",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_seq": 6268,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P010-P009-0",
+     "topic": "combat_training"
+    },
+    {
+     "cur_seq": 23974,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P011-P008-12",
+     "topic": "combat_training"
+    },
+    {
+     "cur_seq": 38182,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P011-P013-25",
+     "topic": "combat_training"
+    },
+    {
+     "cur_seq": 4426,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P012-P016-0",
+     "topic": "mentorship"
+    },
+    {
+     "cur_seq": 72930,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P015-P011-40",
+     "topic": "polite_reject"
+    },
+    {
+     "cur_seq": 77266,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P016-P011-39",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_seq": 37291,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P016-P013-25",
+     "topic": "combat_training"
+    },
+    {
+     "cur_seq": 90658,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P016-P014-51",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_seq": 110098,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P016-P014-51",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_seq": 25939,
+     "cur_type": "MSG_DM",
+     "in8": false,
+     "nearest_after": null,
+     "thread": "m:T|TH-P016-P015-15",
+     "topic": "polite_reject"
+    }
+   ],
+   "tension_events": 15
+  }
+ ],
+ "repair_lexicon": [
+  "对不起",
+  "抱歉",
+  "我不是那个意思",
+  "别生气",
+  "别往心里去",
+  "误会",
+  "我错了",
+  "是我不好",
+  "没事",
+  "不要紧",
+  "消消气",
+  "我理解",
+  "我懂",
+  "慢慢来"
+ ],
+ "repo_head": "021baec30222d59a45c0e5838791acf9bc835fb2",
+ "schema": "f4-anchor-nearmiss/1"
+}

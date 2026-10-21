@@ -1,0 +1,597 @@
+{
+ "arms": [
+  {
+   "label": "off",
+   "log_sha8": "c73bead6",
+   "only_self_state_word": 19,
+   "rows": [
+    {
+     "cur_body": "靠谱是靠谱，不过得看你怎么用。你要是跑货的时候录一段，回头让它转成文字，确实能省不少事。就是口音重了或者环境太吵，它可能",
+     "cur_seq": 112739,
+     "interpersonal_words": [
+      "吵"
+     ],
+     "self_state_words": [],
+     "thread": "m:T|TH-P006-P007-55",
+     "topic": "whisper"
+    },
+    {
+     "cur_body": "那我回头试试，反正记账也不怕多核对一遍。对了方老师，这玩意儿是手机上下载就能用，还是得配啥专门的设备？",
+     "cur_seq": 115312,
+     "interpersonal_words": [
+      "吵"
+     ],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P006-P007-55",
+     "topic": "whisper"
+    },
+    {
+     "cur_body": "阿林，桂花糕先放着吧，我这会儿饿是饿，可更想弄明白一件事——你总惦记着给人带东西，是图个心里踏实，还是怕空着手不好开口？",
+     "cur_seq": 24847,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P007-P005-18",
+     "topic": "gift"
+    },
+    {
+     "cur_body": "你带不带都行，别为这个破费。镇上能有什么新鲜事，无非是东家咳嗽西家腰疼。倒是你，最近气色不太对，自己上点心。",
+     "cur_seq": 34192,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "疼"
+     ],
+     "thread": "m:T|TH-P007-P005-19",
+     "topic": "gift"
+    },
+    {
+     "cur_body": "哎哟阿林，你可算问着了，我这心里也堵得慌。前儿个夜里听见老赵家那边有动静，像是吵架，又像是哭，我过去敲门又没人应。你说这",
+     "cur_seq": 62803,
+     "interpersonal_words": [
+      "吵"
+     ],
+     "self_state_words": [],
+     "thread": "m:T|TH-P007-P012-42",
+     "topic": "whisper"
+    },
+    {
+     "cur_body": "金先生，您这话说得我心里直打鼓，什么账要平还得找外人搭手？我走南闯北这些年，最怕的就是这种说不清道不明的活儿。您要不把话",
+     "cur_seq": 79856,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P009-P007-42",
+     "topic": "whisper"
+    },
+    {
+     "cur_body": "周先生，账要平，肚子也得平，空着练我怕出岔子。",
+     "cur_seq": 37147,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P009-P008-24",
+     "topic": "combat_training"
+    },
+    {
+     "cur_body": "周先生，账要平，肚子也得平，空着练我怕出岔子。",
+     "cur_seq": 38031,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P009-P008-25",
+     "topic": "combat_training"
+    },
+    {
+     "cur_body": "金先生，我算了两遍，数没错。您要是觉得哪儿不对，咱把账本摊开，一条一条对，我陪您看到底。",
+     "cur_seq": 88128,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "算了"
+     ],
+     "thread": "m:T|TH-P009-P015-51",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_body": "金先生，我算了两遍，数没错。您要是觉得哪儿不对，咱把账本摊开，一条一条对，我陪您看到底。",
+     "cur_seq": 89038,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "算了"
+     ],
+     "thread": "m:T|TH-P009-P015-52",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_body": "方老师，我肚子都唱空城计了，再练下去怕是要把您当包子啃啦。",
+     "cur_seq": 59340,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P011-P006-36",
+     "topic": "combat_training"
+    },
+    {
+     "cur_body": "比就比，谁怕谁啊——不过我这人一紧张就爱眨眼，你可得看清楚了，别到时候赖账。",
+     "cur_seq": 113443,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P011-P010-54",
+     "topic": "rel_maintain"
+    },
+    {
+     "cur_body": "铁头哥，我肚子都咕咕叫了，再站下去怕是要晕给你看。",
+     "cur_seq": 38139,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P011-P013-25",
+     "topic": "combat_training"
+    },
+    {
+     "cur_body": "桂婶您这话说的，我拿废铁皮都能敲出花来，还怕它咬我手不成？",
+     "cur_seq": 60605,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P012-P014-36",
+     "topic": "combat_training"
+    },
+    {
+     "cur_body": "桂婶您说，换什么法子？我这人您也知道，菜谱都敢改，法子更不怕换。",
+     "cur_seq": 4766,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P012-P015-4",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_body": "桂婶，摆桌子这主意我赞成，可光摆着等人来问，怕是冷场。要不我头天晚上熬一锅杂烩汤，谁凑过来就盛一碗，边喝边聊，话头自然就",
+     "cur_seq": 7127,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P012-P015-4",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_body": "桂婶，碗筷您别全包了，我那儿还有一摞粗瓷碗，摔了不心疼。汤里我打算搁点干贝和萝卜，鲜是鲜，就是怕有人吃不惯，到时候您帮我",
+     "cur_seq": 8812,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕",
+      "疼"
+     ],
+     "thread": "m:T|TH-P012-P015-4",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_body": "巧儿，你这话说得我手都痒了。不过我现在砸东西，怕是把整间铺子都拆了。",
+     "cur_seq": 88963,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P014-P010-49",
+     "topic": "combat_training"
+    },
+    {
+     "cur_body": "跑得快有啥用，我拿废铁皮敲个小盾牌，你追我躲，看谁先累趴下。",
+     "cur_seq": 6955,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "累"
+     ],
+     "thread": "m:T|TH-P014-P011-1",
+     "topic": "combat_training"
+    },
+    {
+     "cur_body": "我兜里就剩半块昨天试菜剩的饼，本来想留着当晚饭的，你要不嫌弃先垫垫？不过说真的，你手抖成这样还练锤子，我怕待会儿飞过来的",
+     "cur_seq": 36370,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕",
+      "怕"
+     ],
+     "thread": "m:T|TH-P014-P015-24",
+     "topic": "combat_training"
+    },
+    {
+     "cur_body": "我兜里就剩半块昨天试菜剩的饼，本来想留着当晚饭的，你要不嫌弃先垫垫？不过说真的，你手抖成这样还练锤子，我怕待会儿飞过来的",
+     "cur_seq": 37225,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕",
+      "怕"
+     ],
+     "thread": "m:T|TH-P014-P015-25",
+     "topic": "combat_training"
+    },
+    {
+     "cur_body": "兰姐你先坐，我给你盛碗汤垫垫，牛腩我挑瘦的切，肥油都撇了。不过今天这锅我多搁了半勺陈皮，你要是吃着发苦可别怪我，回头我再",
+     "cur_seq": 31904,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "苦"
+     ],
+     "thread": "m:T|TH-P016-P015-15",
+     "topic": "polite_reject"
+    }
+   ],
+   "self_state_word_counter": {
+    "怕": 15,
+    "疼": 2,
+    "算了": 2,
+    "累": 1,
+    "苦": 1
+   },
+   "tension_events": 22,
+   "with_interpersonal_word": 3
+  },
+  {
+   "label": "on",
+   "log_sha8": "7de6a7be",
+   "only_self_state_word": 15,
+   "rows": [
+    {
+     "cur_body": "老周，锅里不宽裕是一回事，可月牙那孩子再这么饿下去，怕是要出大毛病。我这儿还有点米，先匀她一口，别的事往后再说。",
+     "cur_seq": 60005,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P001-P005-39",
+     "topic": "scarce_buy"
+    },
+    {
+     "cur_body": "阿禾，菜我收下，可你这份心意太重了。兰姐昨天还念叨那锅五味汤，说守着摊子走不开，我听着也替她累。人哪，有时候得先顾自己那",
+     "cur_seq": 89804,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "累"
+     ],
+     "thread": "m:T|TH-P003-P005-54",
+     "topic": "gift"
+    },
+    {
+     "cur_body": "秀娘，粥先放着吧，我得去把种子买了，晚了怕又涨价。",
+     "cur_seq": 61817,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P004-P001-39",
+     "topic": "scarce_buy"
+    },
+    {
+     "cur_body": "桂婶，你说的这个我懂。兰姐那天也问过我，说那锅汤惦记着，可摊子离不了人。我当时也没敢替她拿主意。人有时候不是不想歇，是怕",
+     "cur_seq": 96586,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P005-P012-54",
+     "topic": "rel_maintain"
+    },
+    {
+     "cur_body": "阿禾，我想说的这个礼物，不是要你花钱买什么，而是想请你给自己留一点空。你最近绷得太紧了，我看着都心疼。",
+     "cur_seq": 12414,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "疼"
+     ],
+     "thread": "m:T|TH-P006-P003-7",
+     "topic": "gift"
+    },
+    {
+     "cur_body": "方老师，练稳当是正理，可我这心里跟猫抓似的，摊子空一天就少一天进项。小满那肚子咕咕叫，我听着也心疼，要不咱先垫吧两口再练",
+     "cur_seq": 86100,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "疼"
+     ],
+     "thread": "m:T|TH-P006-P016-48",
+     "topic": "combat_training"
+    },
+    {
+     "cur_body": "方老师，练稳当是正理，可我这心里跟猫抓似的，摊子空一天就少一天进项。小满那肚子咕咕叫，我听着也心疼，要不咱先垫吧两口再练",
+     "cur_seq": 86434,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "疼"
+     ],
+     "thread": "m:T|TH-P006-P016-49",
+     "topic": "combat_training"
+    },
+    {
+     "cur_body": "秀娘，你那葱油饼先别收，我闻着味儿胃都抽了一下。可我又怕一咬下去，就彻底想不起那锅汤到底缺什么了。",
+     "cur_seq": 47225,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P010-P004-28",
+     "topic": "scarce_buy"
+    },
+    {
+     "cur_body": "金先生，你说我是不是该找个师父带带，别老自己瞎琢磨，可我又怕跟了人反倒更拧巴。",
+     "cur_seq": 59288,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P010-P009-37",
+     "topic": "mentorship"
+    },
+    {
+     "cur_body": "桂婶您说，换什么法子？我这人您也知道，菜谱都敢改，法子更不怕换。您先讲讲怎么个换法，我听着呢。",
+     "cur_seq": 4766,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P012-P015-4",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_body": "三天就三天，试错嘛，我这灶台最不怕的就是试。不过桂婶，咱得说好，三天里谁要是吃出个好歹来，可得算您的。",
+     "cur_seq": 7127,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P012-P015-4",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_body": "桂婶你这话我爱听，教你不难，就是得起早贪黑守着摊子，你受得住这份累，我就把挑货算账的门道一样样说给你。",
+     "cur_seq": 1632,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "累"
+     ],
+     "thread": "m:T|TH-P012-P016-0",
+     "topic": "mentorship"
+    },
+    {
+     "cur_body": "柴给你，快炒快炒，我这肚子都唱空城计了，再等下去我怕是连锅都想啃。",
+     "cur_seq": 37217,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P014-P015-24",
+     "topic": "combat_training"
+    },
+    {
+     "cur_body": "柴给你，快炒快炒，我这肚子都唱空城计了，再等下去我怕是连锅都想啃。",
+     "cur_seq": 38325,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P014-P015-25",
+     "topic": "combat_training"
+    },
+    {
+     "cur_body": "老石，你这一拳下去，五味那锅汤怕是更咸了。他那人嘴硬心软，改天熬好了还真会给我留一碗，你可别又抢在前头。",
+     "cur_seq": 54167,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P016-P002-28",
+     "topic": "polite_reject"
+    }
+   ],
+   "self_state_word_counter": {
+    "怕": 10,
+    "疼": 3,
+    "累": 2
+   },
+   "tension_events": 15,
+   "with_interpersonal_word": 0
+  },
+  {
+   "label": "dequp",
+   "log_sha8": "6bf3ec88",
+   "only_self_state_word": 14,
+   "rows": [
+    {
+     "cur_body": "秀娘，你这话倒让我想起老石那天也念叨先垫两口，手上活儿不急——可我这会儿心里跟揣了只兔子似的，蹦得慌，雕啥都怕下刀歪了。",
+     "cur_seq": 81175,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P004-P014-43",
+     "topic": "gift"
+    },
+    {
+     "cur_body": "陈医，我这两天心里总像压着块石头，跟人说话都怕说岔了。",
+     "cur_seq": 40133,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P005-P006-30",
+     "topic": "rel_maintain"
+    },
+    {
+     "cur_body": "周公文，空着肚子练，回头动作一乱，账就不好算了。我先去弄口吃的。",
+     "cur_seq": 38072,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "算了"
+     ],
+     "thread": "m:T|TH-P009-P008-25",
+     "topic": "combat_training"
+    },
+    {
+     "cur_body": "金先生，账我认，可我这会儿手真稳不住，数错一笔回头更麻烦。你先让我咬两口垫垫，就两口，回来咱一笔一笔对，成不？",
+     "cur_seq": 90776,
+     "interpersonal_words": [
+      "烦"
+     ],
+     "self_state_words": [],
+     "thread": "m:T|TH-P009-P015-51",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_body": "金先生，我不是不想吃，是这舌头现在尝啥都发苦，灶上那锅汤我尝了三回，回回觉得少一味，可又说不上来少哪味。",
+     "cur_seq": 108930,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "苦"
+     ],
+     "thread": "m:T|TH-P009-P015-52",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_body": "月牙，账乱不怕，怕的是不敢翻。你先坐下，喝口水，把今天练的几笔跟我说说。",
+     "cur_seq": 6268,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P010-P009-0",
+     "topic": "combat_training"
+    },
+    {
+     "cur_body": "枣糕我收下啦，不过周公文，饿着肚子练卸力，我怕把自己卸地上。",
+     "cur_seq": 23974,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P011-P008-12",
+     "topic": "combat_training"
+    },
+    {
+     "cur_body": "铁头，你那窝头先别动，我肚子叫得比出拳还响，再练下去怕是要把自己当沙包了。",
+     "cur_seq": 38182,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P011-P013-25",
+     "topic": "combat_training"
+    },
+    {
+     "cur_body": "桂婶你这话我爱听，带人这事儿啊，就跟守摊子一个理，你得先让他自己上手摸两回货，赔过一回才知道心疼。",
+     "cur_seq": 4426,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "疼"
+     ],
+     "thread": "m:T|TH-P012-P016-0",
+     "topic": "mentorship"
+    },
+    {
+     "cur_body": "五味，我不是要堵你话头，就是怕你越说越拧巴。你先去灶上扒两口，我在这儿等你，回来再接着唠。",
+     "cur_seq": 72930,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P015-P011-40",
+     "topic": "polite_reject"
+    },
+    {
+     "cur_body": "小满，你先别急着倒苦水，我这儿灶上还温着半锅粥，你扒两口垫垫，我坐这儿等你，回来咱一句一句捋清楚。",
+     "cur_seq": 77266,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "苦"
+     ],
+     "thread": "m:T|TH-P016-P011-39",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_body": "铁头，你这话我爱听，肚子不填饱，拳头都是软的。走，先去灶上扒拉两口，哪怕就着凉水也得咽点东西下去。",
+     "cur_seq": 37291,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P016-P013-25",
+     "topic": "combat_training"
+    },
+    {
+     "cur_body": "兰姐，你这一说我还真想起秀娘那枣泥酥了，可我这会儿手抖得跟筛糠似的，雕啥都怕下刀歪，要不咱先掰半块垫垫再琢磨？",
+     "cur_seq": 90658,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P016-P014-51",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_body": "巧儿，你先别急着下刀，手抖着雕出来的东西卖不上价。我这儿有半块饼，你垫一口，听我把话说完——小满那丫头前两天也这样，心里",
+     "cur_seq": 110098,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P016-P014-51",
+     "topic": "counter_propose"
+    },
+    {
+     "cur_body": "兰姐，枣糕我先不拿了，肚子空得慌，怕一口甜下去更饿。你上回说的那话我记着呢，光站田埂上喊没用，得自己下地踩泥。我这就回去",
+     "cur_seq": 25939,
+     "interpersonal_words": [],
+     "self_state_words": [
+      "怕"
+     ],
+     "thread": "m:T|TH-P016-P015-15",
+     "topic": "polite_reject"
+    }
+   ],
+   "self_state_word_counter": {
+    "怕": 10,
+    "疼": 1,
+    "算了": 1,
+    "苦": 2
+   },
+   "tension_events": 15,
+   "with_interpersonal_word": 1
+  }
+ ],
+ "interpersonal": [
+  "你什么意思",
+  "凭什么",
+  "别这样",
+  "后悔",
+  "吵",
+  "失望",
+  "委屈",
+  "烦",
+  "生气"
+ ],
+ "schema": "f4-tension-precision/1",
+ "self_state": [
+  "倒霉",
+  "怕",
+  "担心",
+  "疼",
+  "算了",
+  "累",
+  "苦",
+  "难受",
+  "难过"
+ ]
+}
