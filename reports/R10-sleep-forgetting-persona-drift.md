@@ -2,7 +2,10 @@
 
 > **本轮维度标签**：F-2「睡眠—遗忘—人格漂移」（团队轮次口径）。
 > **性质**：不加新功能、不改 `code/`，把一套**已经 `enabled=true` 在跑、但全套报告零字提及**的机制变成可观测、可复算、可判读。
-> **图源诚实声明（先读这条）**：本报告全部截图的图源是**既有已完成批次** `v2/evidence/run_g1_b0_n16r60_seed42`（`finished_at=2026-10-21T07:46:18`），**不是本轮新跑的批**。截图于 2026-10-21T10:09–10:11 由真实日志现场渲染。
+> **图源诚实声明（先读这条）**：本报告全部截图的图源是**既有已完成批次** `v2/evidence/run_g1_b0_n16r60_seed42`，**不是本轮新跑的批**。两个时间**必须分开读，不可混为一件**：
+> - **图片生成时间（渲染时刻）** ＝ `2026-10-21T10:09–10:11`（文件 mtime 可核）；
+> - **所观测批运行时间（数据产生时刻）** ＝ `2026-10-21T06:33:41 → 07:46:18`（`meta.json.started_at` / `finished_at`，`duration_sec=4357`）。
+> ⇒ 「生成时间」只是本轮把旧日志重新渲染成图的时刻，**与批的跑批时刻无关**；把两者读成同一件事即为引用错误。
 > **代码零改动声明**：本报告所属提交**不含** `code/life`、`code/orchestration`、`code/config`、`code/engine` 任何文件（`git show --stat <本报告提交>` 可核）。
 
 ---
@@ -40,6 +43,7 @@
 |---|---|---|
 | 本轮脚本与证据（`tools/f2/memory_drift_report.py`、5 张 PNG、2 份 obs 验真原文、`render.log`） | 证据入库提交 | **`aa0078ddc0c792a9edd41734521a11f8b2c72abc`**（`aa0078d`） |
 | 本报告正文 | 报告提交 | `git log -1 --format=%H -- reports/R10-sleep-forgetting-persona-drift.md`（报告无法自引自身 sha，故给命令而不给常量，避免「提交后 sha 变化导致过期」） |
+| 本报告**收尾订正**（行号改为 grep 锚点、P5 图表脚本入库、截图时间窗改两栏） | 收尾提交 | `git log --oneline --grep='R10 收尾'`（同上，给命令不给定值） |
 | 被观测批次 `run_g1_b0_n16r60_seed42` 的代码身份 | `meta.json.code_sha`（**不是** commit 推导的臂名） | `d9391a37cbfc286537748b1ce959f6cb3267cb16`（`d9391a3`） |
 | 交叉臂 `run_dr_round1_arm-ctrl_n16r60_seed42` | `meta.json.code_sha` | `d5657ceb…44fe5d8b`（`d5657ce`） |
 | 引用的既有结论：D2 对话结构 A0 | 历史 commit | `884f454` |
@@ -321,7 +325,15 @@ rc=0
 ### 4.3 截图（5 张，**图源=既有批次，非本轮新跑**）
 
 - **图源 run 目录**：`v2/evidence/run_g1_b0_n16r60_seed42/`（`run.jsonl` sha8 = `6db62e8a`）
-- **生成时间**：2026-10-21T10:09–10:11（文件 mtime 可核）
+
+| 维度 | 值 | 出处 |
+|---|---|---|
+| **所观测批运行时间**（数据产生时刻） | `2026-10-21T06:33:41 → 07:46:18`（`duration_sec=4357`） | `v2/evidence/run_g1_b0_n16r60_seed42/meta.json` 的 `started_at` / `finished_at` |
+| **图片生成时间**（本轮渲染时刻） | `2026-10-21T10:09–10:11` | 5 个 PNG 与 `render.log` 的 mtime |
+
+> ⚠️ **两栏不得合并引用**：生成时间只说明「我在 10:09–10:11 把一份 06:33 起跑、07:46 结束的旧日志画成了图」，
+> **不表示**本轮跑过任何批。图注一律写「**图源自既有批产物，非新跑批截图**」。
+
 - **生成命令**（原文，两段）：
 
 ```bash
@@ -356,8 +368,11 @@ cd code && bash frontend/tools/dialogue_shots.sh \
 **P5 为什么加、以及它是什么**：为让 F-2 维度**可判读**，用真实 log 另派生一张三联时间线
 （① `MEMORY_FORGET` 三级/回合堆叠柱 ② `PERSONA_DRIFT`/回合 ③ 对话条数/回合 + 睡眠窗竖线 round 9/21/33/45/57）。
 
+**图注（P1–P5 统一）**：**图源自既有批产物（`run_g1_b0_n16r60_seed42`，06:33:41–07:46:18），非新跑批截图**；图片生成时刻 10:09–10:11 仅为渲染时间。
+
 ```bash
-python3 <f2 时间线图脚本> v2/evidence/run_g1_b0_n16r60_seed42/run.jsonl \
+# 脚本已入库：tools/f2/f2_chart.py（本轮新增，3902 B，sha256 2d168bcc1b73c9257bb33d61621b539de5e1d12e7acee6215e29c957f81a2d8a）
+python3 tools/f2/f2_chart.py v2/evidence/run_g1_b0_n16r60_seed42/run.jsonl \
         v2/evidence/f2_shots/run_g1_b0_n16r60_seed42-f2sleep-6db62e8a.png
 # 实跑 stdout：{"log_sha256":"6db62e8a…","rounds":57,
 #   "forget_total":{"demote":30664,"merge":6392,"drop":1920},
@@ -365,8 +380,29 @@ python3 <f2 时间线图脚本> v2/evidence/run_g1_b0_n16r60_seed42/run.jsonl \
 #   "sleep_windows":{"9":16,"21":16,"33":16,"45":16,"57":16}}
 ```
 
-**诚实标注**：该图脚本本轮**未入库**（仅存在于 `/tmp/f2_chart.py`，全文见团队内部 `f2-run-evidence.md` 附录 A）。
-⇒ **P5 目前是「有图、有 sha256、缺脚本」的状态**，第二人只能靠附录 A 的全文复现。这是本报告的一处已知缺口（§6.1）。
+**P5 可复现性已闭环（逐字节复现实测）**：把入库脚本重跑到 `/tmp` 后与入库图比对 sha256：
+
+```
+$ python3 tools/f2/f2_chart.py v2/evidence/run_g1_b0_n16r60_seed42/run.jsonl /tmp/p5_recheck.png
+$ sha256sum /tmp/p5_recheck.png
+7685525a0ec36b93f85140462bed65f35ec261c151bbfcd7f55f02ed9fadcd61  /tmp/p5_recheck.png
+$ sha256sum v2/evidence/f2_shots/run_g1_b0_n16r60_seed42-f2sleep-6db62e8a.png
+7685525a0ec36b93f85140462bed65f35ec261c151bbfcd7f55f02ed9fadcd61  …-f2sleep-6db62e8a.png
+```
+
+⇒ **两值完全相同**：P5 不再是「有图无脚本」，第二人用入库脚本可得到**逐字节一致**的图。
+（入库脚本与生成原图时用的 `/tmp/f2_chart.py` 亦经 `cmp` 验证逐字节相同；`/tmp` 副本随重启消失，故必须入库。）
+
+**运行依赖（复现 P5 所需，版本为本轮实测）**：
+
+| 依赖 | 版本 / 值 | 说明 |
+|---|---|---|
+| Python | 3.12.3（`/opt/openjiuwen/workswarm-venv/bin/python3`） | 仓库既有 venv |
+| matplotlib | **3.11.2** | 后端 `Agg`（无显示环境必需） |
+| 中文字体 | **`Noto Sans CJK SC`**（备用 `Noto Sans CJK JP`；本机 **无** `WenQuanYi Zen Hei` / `SimHei`） | 脚本按此顺序探测；缺字体则中文显示为方块 |
+| 输入 | `v2/evidence/run_g1_b0_n16r60_seed42/run.jsonl`（sha256 `6db62e8a…`） | 只读，不写 run 目录 |
+
+> 未锁定 `matplotlib` 版本时，跨环境复现可能因默认 rcParams 差异导致**像素不同**（本报告已验证的逐字节一致是在上表版本下取得的）。
 
 ### 4.4 未入库的 `threads.json`（截图复现输入，1.9 MB）
 
@@ -407,6 +443,11 @@ cd code && python3 frontend/tools/gen_threads.py --log ../v2/evidence/run_g1_b0_
   --require-complete --label run_g1_b0_n16r60_seed42-6db62e8a
 bash frontend/tools/dialogue_shots.sh http://127.0.0.1:8871 \
   sample/dialogue_run_g1_b0_n16r60_seed42/threads.json "" "" ../v2/evidence/f2_shots
+
+# ⑤ F-2 时间线派生图（P5，脚本已入库；输出应与入库图逐字节相同）
+cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+python3 tools/f2/f2_chart.py v2/evidence/run_g1_b0_n16r60_seed42/run.jsonl /tmp/recheck-f2sleep.png
+sha256sum /tmp/recheck-f2sleep.png   # 期望 7685525a0ec36b93…9fadcd61
 ```
 
 ---
@@ -445,7 +486,18 @@ bash frontend/tools/dialogue_shots.sh http://127.0.0.1:8871 \
 - 原文样例：`{"actual_ticks":3,"agent_id":"P001","day":0,"drift_permille":null,"pf0":null,"pf_t":null,"slot":"night"}`
 - 同期 `PERSONA_DRIFT` 事件**却有** `pf0/pf_t/drift_permille`（如 P004 round21 `drift_permille=4`）。
 
-⇒ **数据存在、只是没回填到收尾事件**（`agent.py:1232-1233` 的 `sleep_end` intent 只带 `actual_ticks`，未携带这三个字段）。
+⇒ **数据存在、只是没回填到收尾事件**（`sleep_end` intent 只带 `actual_ticks`，未携带这三个字段）。
+
+**行号锚点（抗漂移写法，以此为准）**：
+
+```bash
+$ grep -n '"op": "sleep_end"' code/life/agent.py
+1233:            "op": "sleep_end", "day": day, "slot": slot, "actual_ticks": planned}))
+```
+
+⇒ 该 intent **语句跨 L1232–L1233**（L1232 为 `self.kernel.submit_intent(...`，L1233 为载荷行；L1234=`return n`，L1235=空行）。
+`code/` 自证据提交 `aa0078d` 起未再改动，`git diff aa0078d HEAD -- code/` 输出为空 ⇒ 行号与本报告全篇一致。
+（**说明**：复核意见曾提出应为「1233-1235」，实测 L1234 是 `return n`、L1235 是空行，故**保留 1232–1233**；并改用上述 grep 锚点，使将来代码行数变动时读者仍能以命令定位，而不是依赖一个会漂移的常量。）
 故**人格漂移只能取 `PERSONA_DRIFT` 事件**，`SLEEP_COMPLETED` 不能当快照来源；`obs/life.py` 的 `last_fp` 在睡眠事件上取不到值。
 
 **这两条合起来给出本报告的结论上限**：
@@ -518,7 +570,7 @@ grep -n 'artifact' .gitignore
 
 ### 6.4 其它缺口
 
-- **P5 派生图脚本未入库**（§4.3）：`/tmp/f2_chart.py` 只存在于本机 `/tmp`，重启即失。**建议下一轮补入库到 `tools/f2/`**。
+- **P5 派生图脚本：本轮已入库**（§4.3）：`tools/f2/f2_chart.py`（3902 B，sha256 `2d168bcc…`），重跑可逐字节复现 P5。原 `/tmp/f2_chart.py` 副本已无用，可弃。
 - `tools/f2/memory_drift_report.py` 与既有 `code/obs/life.py` 存在**口径重叠但不重复**：后者已提供遗忘分级计数/保留度直方图/固化计数/漂移 by_dim；本脚本只补它没有的（存活率按 `replay` 语义、R×年龄曲线、睡前睡后召回对照、逐 agent L2/cosine、睡前后行为差、装配层 DROPPED 审计）。两者可交叉验证：`retrieval_hit_rate=0.983333` 同义（16/960 空检索）。
 
 ---
@@ -530,7 +582,7 @@ grep -n 'artifact' .gitignore
 | P0 | **修 `integration.py` 的 `consolidate` 白名单**（把 `text` 纳入，或改在 `_do_memory` 内直接写 SM 记忆并 `MEMORY_WRITE`） | 缺陷 ① 让「固化」这一支**实际未生效**，不修则固化永远不可评估 | 下一轮开新分支，单变量改动 |
 | P0 | **`sleep_end` 回填 `drift_permille/pf0/pf_t`** | 缺陷 ② 让睡眠事件不能当快照源；改动极小、收益直接 | 同上（可与 P0-1 同分支，但需声明两处改动面） |
 | P1 | **设计「睡眠巩固」的正向对照**：同一 `presleep` 集合，比较「经过一次睡眠」vs「经过同等 round 数但不睡眠（消融 `sleep.enabled=false`）」的召回 | 现设计只能证明「无增益」，无法分离「新近性偏置」与「睡眠无效」 | 需 Leader 批两臂（sell: 每臂 ~75 分钟） |
-| P1 | 把 `f2_chart.py` 入库到 `tools/f2/`，补齐 P5 的脚本缺口 | §6.4 | 一行级 |
+| P1 | 把 `f2_chart.py` 入库到 `tools/f2/`，补齐 P5 的脚本缺口 | §6.4 | ✅ **已完成**（`tools/f2/f2_chart.py`，重跑逐字节复现 P5） |
 | P2 | 确认 `run_d4_P1_n16r12/` 那 6 个被删文件是否需恢复 | §6.3 数据丢失风险 | 起批人 |
 | P2 | 把 `round-recon.md` 落进仓库正式路径，或将「勘测第一名」依据写成可复算形式 | §6.1 缺口 G-1 | Leader / G1 负责人 |
 
@@ -548,11 +600,11 @@ grep -n 'artifact' .gitignore
 | E6 | 真 LLM 验真 PASS（2878 调用、degraded=0） | 已证实 | `v2/evidence/f2_llmcost_g1_b0_6db62e8a.txt` | 见文件 | — | §4.5 ② |
 | E7 | 交叉臂验真 PASS（500513 tokens） | 已证实 | `v2/evidence/f2_llmcost_armctrl_99c92d4b.txt` | 见文件 | — | §4.5 ② |
 | E8 | 四视图真拍（P1–P4） | 已证实 | `v2/evidence/f2_shots/*-{chat,rhythm,spread,600}-6db62e8a.png` | 见 §4.3 表 | `6db62e8a` | §4.5 ④ |
-| E9 | F-2 时间线派生图（P5） | 已证实（脚本未入库） | `v2/evidence/f2_shots/*-f2sleep-6db62e8a.png` | `7685525a0ec36b93…9fadcd61` | `6db62e8a` | §4.3 |
+| E9 | F-2 时间线派生图（P5） | 已证实（脚本已入库，逐字节可复现） | `v2/evidence/f2_shots/*-f2sleep-6db62e8a.png` | `7685525a0ec36b93…9fadcd61` | `6db62e8a` | `python3 tools/f2/f2_chart.py <run.jsonl> <out.png>`（§4.3） |
 | E10 | 渲染日志 4/4 SHOT OK、blank_retries=0/2 | 已证实 | `v2/evidence/f2_shots/render.log` | 见文件 | — | §4.3 |
 | E11 | 指标脚本可被第二人原样跑出 | 已证实 | `tools/f2/memory_drift_report.py`（`aa0078d`） | 见文件 | `TODO（源码随提交变动）` | §4.5 ③ |
 | E12 | 固化 `text` 被丢弃 1267 条、SM 写入 0 | 已证实（缺陷） | `code/life/agent.py:1218-1221` → `code/orchestration/integration.py:426-434`；源数据 E1 | `TODO（源码随提交变动）` | — | `--out-dir` 的 `anomalies.json` |
-| E13 | `SLEEP_COMPLETED` 漂移字段 80/80 null | 已证实（缺陷） | `code/life/agent.py:1232-1233`；源数据 E1 | `TODO（源码随提交变动）` | — | 同上 |
+| E13 | `SLEEP_COMPLETED` 漂移字段 80/80 null | 已证实（缺陷） | `code/life/agent.py` L1232-1233（grep 锚点：`'"op": "sleep_end"'` → L1233）；源数据 E1 | `TODO（源码随提交变动）` | — | §5.3 ② 的 grep 命令 |
 | E14 | 截图复现输入（未入库，1.9 MB） | 派生 | `code/frontend/sample/dialogue_run_g1_b0_n16r60_seed42/threads.json` | `8b6f51701fbaba58ebd83ccb76614813b16fff62b01551f62f96c0be2840ff5e` | — | §4.3 ① |
 
 ---

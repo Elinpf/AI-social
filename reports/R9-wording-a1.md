@@ -10,7 +10,7 @@
 ## 0.0 更正记录（leader 裁定 2026-10-21 10:17，按此为准）
 
 **【更正 1 · A0 绑错树】** 本报告原把 A0 记为 `884f4541` 并引 `prompt_sha = e6ec7355…`，**错误**。A0 日志是 19:19 在 landing **`3ec85a0`** 上跑的：
-- **运行期树（拍板身份）= `3ec85a0`**（`code_sha_start`，landing 记录 + 期间无改动）；
+- **运行期树（拍板身份）= `3ec85a0`**（可复算证据：`v2/evidence/d5_s0a_a0.json` 的 `batch_landing.batch_landing_sha` = `3ec85a0` + `meta.git_status_start_source`；⚠️ A0 的 `meta.json` **没有 `code_sha_start` 字段**，勿按该键名去取）；
 - `884f4541` 只是 **meta 写入时刻的 HEAD**，**不代表跑批代码**；
 - A0 的 `prompt_sha` 应为 **`2cb2f5ba…`**（`3ec85a0` 的值），不是 `e6ec7355…`（那是 `884f4541` 的）。
 

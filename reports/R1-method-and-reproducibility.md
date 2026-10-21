@@ -137,11 +137,12 @@ mock 生成器按输入字符串的哈希从词池取句、**不读语义**。�
 **边界 6 · 副本结论需标副本 sha。**
 任何在副本树（非主树）上得到的结论，必须标明副本 sha 并注明"落地需复核"。主树与副本的差异哪怕是无关改动，也可能改变上下文从而改变措辞。
 
-**边界 8 · `meta` 里的 `code_sha` 可能是「meta 写入时刻的 HEAD」，不等于跑批代码。**
-已实测发生：A0 臂运行期树是 landing **`3ec85a0`**，但 `meta.code_sha` 写的是 `884f4541`（事后重生成 meta 时的 HEAD）。因此确定「这批数据是哪版代码跑的」必须**三件共同确定**：① `code_sha_start`（跑批开始时记录）；② landing 记录（分支/提交）；③ 期间无改动（`assertions.code_unchanged_during_run` 或等价的起止校验）。**只用 `meta.code_sha` 是错的**；同理，凡引用 `prompt_sha` 必须绑定**运行期树**，而不是 meta 写入时的 HEAD。
-
 **边界 7 · 所有计数均为事件级，不是人次级。**
 本报告族的 `MSG_*` 计数、`LLM_CALL` 计数、指标分母全部以**日志事件条数**为单位，不是"多少人说/说了几次"。凡出现 per-agent-round / per-thread 等统计单位，一律按各自定义使用，**不与事件条数换算**；同一名称在不同层的含义不互相替代（例如"话题"在消息 payload、活动标签、议题统计三处含义不同，不可互引）。
+
+**边界 8 · `meta` 里的 `code_sha` 可能是「meta 写入时刻的 HEAD」，不等于跑批代码。**
+已实测发生：A0 臂运行期树是 landing **`3ec85a0`**，但 `meta.code_sha` 写的是 `884f4541`（事后重生成 meta 时的 HEAD）。因此确定「这批数据是哪版代码跑的」必须**三件共同确定**：① `code_sha_start`（跑批开始时记录）；② landing 记录（分支/提交）；③ 期间无改动（`assertions.code_unchanged_during_run` 或等价的起止校验）。**只用 `meta.code_sha` 是错的**；同理，凡引用 `prompt_sha` 必须绑定**运行期树**，而不是 meta 写入时的 HEAD。
+> **口径说明（本轮实测补充）**：本仓库当前两批（`run_d2_after_n16_seed42`、`run_g1_b0_n16r60_seed42`）的 `meta.json` **并没有 `code_sha_start` 字段**。可复算的替代证据是：① landing 记录 `v2/evidence/d5_s0a_a0.json` 的 `batch_landing.batch_landing_sha`（= `3ec85a0`）；② `meta.git_status_start_source`（文本，记录"起跑前 code/ 无未提交改动"及其来源）。**引用时须写这两个真实字段，不得写成 `code_sha_start`——那会指向一个不存在的键，读者无法复算。**
 
 ---
 
