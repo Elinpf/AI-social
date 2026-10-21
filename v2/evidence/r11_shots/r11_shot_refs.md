@@ -123,6 +123,8 @@ for l in open('v2/evidence/run_f6_on_n16r60_seed42/run.jsonl'):
 "
 ```
 
+> L-13 无预注册闸门，仅读数登记、不判恶化。
+
 ### 1.5 四视图 ON 臂真拍（渲染层证据，非 F-6 证据）
 
 ```markdown

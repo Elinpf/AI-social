@@ -1038,8 +1038,8 @@ done
 
 | # | 结论 | 层级 | 来源路径 | sha256（源码行=commit sha） | sha8 | 复算命令 |
 |---|---|---|---|---|---|---|
-| E-1 | F-6 装配缺口（检索有、prompt 无） | 【事实】 | `code/life/agent.py:450` ↔ `:1206/:1219` | `895b9a381cd5a1838c23bd3b38e139f7edade3b8`（改动前树 `c1bb5335af8c00…`） | `895b9a3` / `c1bb533` | `git show c1bb533:code/life/agent.py \| sed -n '1080,1101p' \| grep -c "记忆\|memory"`（实测 0） |
-| E-2 | 干预实现与开关默认 OFF | 【事实】 | `code/life/agent.py:56,58,60,63-65,174,947-951,1103-1199,1206,1219` | `895b9a381cd5a1838c23bd3b38e139f7edade3b8` | `895b9a3` | `git show 895b9a3 --stat` + `grep -n "MEMORY_F6_ENV\|def _memory_line\|def _dialogue_prompt" code/life/agent.py` |
+| E-1 | F-6 装配缺口（检索有、prompt 无） | 【事实】 | `code/life/agent.py:450` ↔ `:1206/:1219` | `895b9a381cd5a1838c23bd3b38e139f7edade3b8`（改动前树 `c1bb5335af8c00…`） | `895b9a3` / `c1bb533` | `git show c1bb533:code/life/agent.py > /tmp/e1.py; sed -n '1080,1101p' /tmp/e1.py > /tmp/e1_slice.txt; grep -c "记忆" /tmp/e1_slice.txt; grep -c "memory" /tmp/e1_slice.txt`（两个计数均实测 0） |
+| E-2 | 干预实现与开关默认 OFF | 【事实】 | `code/life/agent.py:56,58,60,63-65,174,947-951,1103-1199,1206,1219` | `895b9a381cd5a1838c23bd3b38e139f7edade3b8` | `895b9a3` | `git show 895b9a3 --stat` + `grep -n -e MEMORY_F6_ENV -e "def _memory_line" -e "def _dialogue_prompt" code/life/agent.py` |
 | E-3 | 指标口径冻结版 v1 | 【口径】 | `metrics-definition-frozen.md`（**上一届团队工作空间 round1/，未入仓、不可本仓复算**） | `f0f1f4b45b5f6c832fa4739879592261843bcc5196c947e62388b2eaac0c4cb8` | `f0f1f4b4` | 见 §5.4「不可复算」条目；原命令 `sha256sum <round1>/metrics-definition-frozen.md` |
 | E-4 | **M-1/M-1b/M-0 计算脚本（已入仓）** | 【口径】 | `tools/f6/f6_metrics.py` | `be27a3be696f39e6f64c506ad19f42e20fbc33b9e056ce2a22820cf9ccc90c6a`（与源件**双 sha 一致**，`cmp` 通过） | `be27a3be` | `sha256sum tools/f6/f6_metrics.py`；源件同名 sha 见 §4.5 订正说明 |
 | E-5 | 单变量自证（同 wv 装配，mock） | 【读数·mock·**不可复算**】 | `round1/evidence_prompt_identity.jsonl`（未入仓） | `619ef419aa920859cccc25120a6a36ab2bdd2352ff8d18d9c7fe56a0a595adf8` | `619ef419` | 无本仓复算入口（脚本未入仓），见 §5.4 |
@@ -1069,4 +1069,4 @@ done
 |---|---|---|---|
 | v0-skeleton | 2026-10-21 12:47 | 骨架：§1/§2/§3 定义/§4 命令/§5 局限/§6 对比口径 已写实；读数留中等价占位（花括号空位） | — |
 | v1-off-filled | 2026-10-21 14:45 | 本版：尺寸订正 n16×60（§6.1 次序 4）；补 §0.2 分母纪律/证据分级；回填 OFF 臂全部读数、验真原文、4 张真拍截图、抽样本与质地判读；新增 §6.3 成本对比；MDE 与「不可判定」措辞按预注册写死；证据索引扩到 E-21（ON 行留占位）；M-1′ 三档分层（1/33 主口径，2/33 与 3/33 降为敏感性/上界）；§3.6 阈值理由写入判据定义并声明改组须预注册；新增附录 D 占位符逐条说明 | 未提交（ON 门禁） |
-| v2 | 2026-10-21 16:20（ON 臂收口） | 回填 ON 臂全部读数（批身份/验真原文/官方指标/M 家族/成本）+ 新增 §3.6b ON 抽样本与质地对比 + §5.2「C-实际」与「D 新观察」 + §5.4 缺口 + 附录 D 重扫归零 + 证据索引补 E-19b/E-22；三查终态入库 `f6_single_variable_checks.txt`（`aa9f9f7e…`） | **未获取到（原因：本文件尚未 commit；sha 由 delivery-gatekeeper 提交后以 `git log -1 --format=%H -- reports/R11-f6-memory-into-dialogue.md` 取得）** |
+| v2 | 2026-10-21 16:20（ON 臂收口） | 回填 ON 臂全部读数（批身份/验真原文/官方指标/M 家族/成本）+ 新增 §3.6b ON 抽样本与质地对比 + §5.2「C-实际」与「D 新观察」 + §5.4 缺口 + 附录 D 重扫归零 + 证据索引补 E-19b/E-22；三查终态入库 `f6_single_variable_checks.txt`（`aa9f9f7e…`） | **`167e0bee5a98dda78d3543ee0c3ece49baae6fc0`**（**包含本报告内容的提交**；取法 `git log -1 --format=%H -- reports/R11-f6-memory-into-dialogue.md`） |
