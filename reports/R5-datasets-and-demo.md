@@ -135,6 +135,17 @@ cd code && python3 frontend/tools/serve.py            # 浏览器打开 http://1
 
 **【事实】** 对应的线程视图数据 `code/frontend/sample/dialogue_run_d2_after_n16_seed42/threads.json` (d6d89bda)，其 `source.run_sha256 = 643f13a5…`、`events_total_in_log = 194,108` ⇒ 图 ↔ 日志对应可核对。
 
+**D9 回复窗口臂四张（`D9-reply-window-2to4`，`05636bc`，`abefdf73`）——阴性结果，非措辞臂**：
+
+| # | 截图文件（`v2/evidence/d7_shots/`） | 视图 | 来源 run | 图 sha256（sha8） |
+|---|---|---|---|---|
+| S-13 | `D9-reply-window-2to4-chat-abefdf73.png` | 对话流 | `run_d9_a1_n16r84_seed42` (abefdf73) | `2e45bc26…`（`2e45bc26`） |
+| S-14 | `D9-reply-window-2to4-rhythm-abefdf73.png` | 时间轴 | 同上 | `c7d7141a…`（`c7d7141a`） |
+| S-15 | `D9-reply-window-2to4-spread-abefdf73.png` | 扩散 | 同上 | `7bbc9cf0…`（`7bbc9cf0`） |
+| S-16 | `D9-reply-window-2to4-600-abefdf73.png` | 600px | 同上 | `e7d87f8c…`（`e7d87f8c`） |
+
+> ⚠️ 该组**不是**「措辞改造后」，也**不是** A0 复跑：整树不同（`05636bc` vs A0 `884f4541`），只把 `reply_window_rounds` 2→4。**结构指标与 A0 逐项相同 ⇒ 阴性结果**（回复窗口不是多轮结构瓶颈），**不得作为结构改造有效的证据**。
+
 **A1（措辞臂）四张：已交付**，来源 `v2/evidence/a1_shots/`，均按 `<batch>-<视图>-<sha8>.png` 命名（`sha8` = 源日志 `ae969198`）：
 
 | # | 截图文件（`v2/evidence/a1_shots/`） | 视图 | 来源 run | sha256（sha8） |
