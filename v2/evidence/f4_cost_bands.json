@@ -1,0 +1,194 @@
+{
+ "arms": [
+  {
+   "bands": {
+    "0-9": {
+     "calls": 732,
+     "calls_per_round": 81.333,
+     "degraded": 0,
+     "delta_vs_baseline": {
+      "baseline_label": "off",
+      "baseline_rounds": 9,
+      "calls": 0,
+      "comparable": true,
+      "degraded": 0,
+      "dequp_retry": 0
+     },
+     "dequp_retry": 0,
+     "purposes": {
+      "dialogue": 91,
+      "importance": 307,
+      "judge": 295,
+      "plan": 16,
+      "reflect": 23
+     },
+     "rounds": 9
+    },
+    "10-10": {
+     "calls": 1355,
+     "calls_per_round": 1355.0,
+     "degraded": 0,
+     "delta_vs_baseline": {
+      "baseline_label": "off",
+      "baseline_rounds": 1,
+      "calls": 0,
+      "comparable": true,
+      "degraded": 0,
+      "dequp_retry": 0
+     },
+     "dequp_retry": 0,
+     "purposes": {
+      "dialogue": 6,
+      "importance": 1216,
+      "judge": 117,
+      "reflect": 16
+     },
+     "rounds": 1
+    },
+    "11-30": {
+     "calls": 264,
+     "calls_per_round": 13.2,
+     "degraded": 0,
+     "delta_vs_baseline": {
+      "baseline_label": "off",
+      "baseline_rounds": 20,
+      "calls": 0,
+      "comparable": true,
+      "degraded": 0,
+      "dequp_retry": 0
+     },
+     "dequp_retry": 0,
+     "purposes": {
+      "dialogue": 161,
+      "judge": 17,
+      "negotiation": 19,
+      "reflect": 67
+     },
+     "rounds": 20
+    },
+    "31-60": {
+     "calls": 527,
+     "calls_per_round": 18.172,
+     "degraded": 0,
+     "delta_vs_baseline": {
+      "baseline_label": "off",
+      "baseline_rounds": 29,
+      "calls": 0,
+      "comparable": true,
+      "degraded": 0,
+      "dequp_retry": 0
+     },
+     "dequp_retry": 0,
+     "purposes": {
+      "dialogue": 252,
+      "judge": 239,
+      "negotiation": 30,
+      "reflect": 6
+     },
+     "rounds": 29
+    }
+   },
+   "label": "off",
+   "log": "v2/evidence/run_f6_off_n16r60_seed42/run.jsonl",
+   "log_sha8": "c73bead6",
+   "max_round": 59,
+   "total_calls": 2878
+  },
+  {
+   "bands": {
+    "0-9": {
+     "calls": 732,
+     "calls_per_round": 81.333,
+     "degraded": 0,
+     "delta_vs_baseline": {
+      "baseline_label": "off",
+      "baseline_rounds": 9,
+      "calls": 0,
+      "comparable": true,
+      "degraded": 0,
+      "dequp_retry": 0
+     },
+     "dequp_retry": 0,
+     "purposes": {
+      "dialogue": 91,
+      "importance": 307,
+      "judge": 295,
+      "plan": 16,
+      "reflect": 23
+     },
+     "rounds": 9
+    },
+    "10-10": {
+     "calls": 1355,
+     "calls_per_round": 1355.0,
+     "degraded": 0,
+     "delta_vs_baseline": {
+      "baseline_label": "off",
+      "baseline_rounds": 1,
+      "calls": 0,
+      "comparable": true,
+      "degraded": 0,
+      "dequp_retry": 0
+     },
+     "dequp_retry": 0,
+     "purposes": {
+      "dialogue": 6,
+      "importance": 1216,
+      "judge": 117,
+      "reflect": 16
+     },
+     "rounds": 1
+    },
+    "11-30": {
+     "calls": 264,
+     "calls_per_round": 13.2,
+     "degraded": 0,
+     "delta_vs_baseline": {
+      "baseline_label": "off",
+      "baseline_rounds": 20,
+      "calls": 0,
+      "comparable": true,
+      "degraded": 0,
+      "dequp_retry": 0
+     },
+     "dequp_retry": 0,
+     "purposes": {
+      "dialogue": 161,
+      "judge": 17,
+      "negotiation": 19,
+      "reflect": 67
+     },
+     "rounds": 20
+    },
+    "31-60": {
+     "calls": 521,
+     "calls_per_round": 17.966,
+     "degraded": 0,
+     "delta_vs_baseline": {
+      "baseline_label": "off",
+      "baseline_rounds": 29,
+      "calls": -6,
+      "comparable": true,
+      "degraded": 0,
+      "dequp_retry": 0
+     },
+     "dequp_retry": 0,
+     "purposes": {
+      "dialogue": 246,
+      "judge": 239,
+      "negotiation": 30,
+      "reflect": 6
+     },
+     "rounds": 29
+    }
+   },
+   "label": "on",
+   "log": "v2/evidence/run_f4_on_n16r60_seed42/run.jsonl",
+   "log_sha8": "faeba580",
+   "max_round": 59,
+   "total_calls": 2872
+  }
+ ],
+ "bands": "0-9,10-10,11-30,31-60",
+ "schema": "f4-cost-bands/1"
+}

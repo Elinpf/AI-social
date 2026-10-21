@@ -1,0 +1,1072 @@
+{
+ "agreement_only_excluded_in_strict": [
+  "我懂"
+ ],
+ "arms": [
+  {
+   "audit_rows": [],
+   "audit_rows_n": 0,
+   "interpersonal": {
+    "by_topic": {
+     "whisper": 3
+    },
+    "closed_and_paired_events": 0,
+    "closed_events": 0,
+    "closed_strict_events": 0,
+    "rows": [
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 99056,
+      "round": 58,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P006-P007-55",
+      "topic": "whisper",
+      "trigger_seq": 112739
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 112739,
+      "round": 59,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P006-P007-55",
+      "topic": "whisper",
+      "trigger_seq": 115312
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 61328,
+      "round": 43,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P007-P012-42",
+      "topic": "whisper",
+      "trigger_seq": 62803
+     }
+    ],
+    "tension_events": 3
+   },
+   "label": "off",
+   "legacy": {
+    "by_topic": {
+     "combat_training": 9,
+     "counter_propose": 5,
+     "gift": 2,
+     "polite_reject": 1,
+     "rel_maintain": 1,
+     "whisper": 4
+    },
+    "closed_and_paired_events": 0,
+    "closed_events": 0,
+    "closed_strict_events": 0,
+    "rows": [
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 99056,
+      "round": 58,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P006-P007-55",
+      "topic": "whisper",
+      "trigger_seq": 112739
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 112739,
+      "round": 59,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P006-P007-55",
+      "topic": "whisper",
+      "trigger_seq": 115312
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 23879,
+      "round": 19,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P007-P005-18",
+      "topic": "gift",
+      "trigger_seq": 24847
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 32896,
+      "round": 24,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P007-P005-19",
+      "topic": "gift",
+      "trigger_seq": 34192
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 61328,
+      "round": 43,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P007-P012-42",
+      "topic": "whisper",
+      "trigger_seq": 62803
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 71039,
+      "round": 46,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P009-P007-42",
+      "topic": "whisper",
+      "trigger_seq": 79856
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 35851,
+      "round": 27,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P009-P008-24",
+      "topic": "combat_training",
+      "trigger_seq": 37147
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 37122,
+      "round": 28,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P009-P008-25",
+      "topic": "combat_training",
+      "trigger_seq": 38031
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 86635,
+      "round": 52,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P009-P015-51",
+      "topic": "counter_propose",
+      "trigger_seq": 88128
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 87730,
+      "round": 54,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P009-P015-52",
+      "topic": "counter_propose",
+      "trigger_seq": 89038
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 57977,
+      "round": 39,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P011-P006-36",
+      "topic": "combat_training",
+      "trigger_seq": 59340
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 103994,
+      "round": 58,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P011-P010-54",
+      "topic": "rel_maintain",
+      "trigger_seq": 113443
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 37197,
+      "round": 28,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P011-P013-25",
+      "topic": "combat_training",
+      "trigger_seq": 38139
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 59361,
+      "round": 40,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P012-P014-36",
+      "topic": "combat_training",
+      "trigger_seq": 60605
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 4039,
+      "round": 5,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P012-P015-4",
+      "topic": "counter_propose",
+      "trigger_seq": 4766
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 5044,
+      "round": 7,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P012-P015-4",
+      "topic": "counter_propose",
+      "trigger_seq": 7127
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 7815,
+      "round": 9,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P012-P015-4",
+      "topic": "counter_propose",
+      "trigger_seq": 8812
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 88599,
+      "round": 54,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P014-P010-49",
+      "topic": "combat_training",
+      "trigger_seq": 88963
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 5039,
+      "round": 7,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P014-P011-1",
+      "topic": "combat_training",
+      "trigger_seq": 6955
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 34841,
+      "round": 25,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P014-P015-24",
+      "topic": "combat_training",
+      "trigger_seq": 36370
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 36315,
+      "round": 27,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P014-P015-25",
+      "topic": "combat_training",
+      "trigger_seq": 37225
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 28681,
+      "round": 22,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P016-P015-15",
+      "topic": "polite_reject",
+      "trigger_seq": 31904
+     }
+    ],
+    "tension_events": 22
+   },
+   "log": "v2/evidence/run_f6_off_n16r60_seed42/run.jsonl",
+   "log_sha8": "c73bead6",
+   "n_messages": 510,
+   "n_threads": 169
+  },
+  {
+   "audit_rows": [
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P014-P011-1|42:5039"
+     ],
+     "round": 7,
+     "seq": 6955,
+     "thread": "TH-P014-P011-1",
+     "topic": "combat_training",
+     "trigger_seqs": [
+      5039
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P004-P013-4|42:7844"
+     ],
+     "round": 9,
+     "seq": 8197,
+     "thread": "TH-P004-P013-4",
+     "topic": "scarce_buy",
+     "trigger_seqs": [
+      7844
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P016-P015-15|42:24016"
+     ],
+     "round": 19,
+     "seq": 25929,
+     "thread": "TH-P016-P015-15",
+     "topic": "polite_reject",
+     "trigger_seqs": [
+      24016
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P007-P005-19|42:26539"
+     ],
+     "round": 21,
+     "seq": 27719,
+     "thread": "TH-P007-P005-19",
+     "topic": "gift",
+     "trigger_seqs": [
+      26539
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P007-P005-19|42:27719"
+     ],
+     "round": 22,
+     "seq": 30177,
+     "thread": "TH-P007-P005-19",
+     "topic": "gift",
+     "trigger_seqs": [
+      27719
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P016-P015-15|42:24016"
+     ],
+     "round": 22,
+     "seq": 31909,
+     "thread": "TH-P016-P015-15",
+     "topic": "polite_reject",
+     "trigger_seqs": [
+      24016
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P016-P015-16|42:28581"
+     ],
+     "round": 22,
+     "seq": 32099,
+     "thread": "TH-P016-P015-16",
+     "topic": "polite_reject",
+     "trigger_seqs": [
+      28581
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P007-P005-19|42:30177"
+     ],
+     "round": 23,
+     "seq": 32901,
+     "thread": "TH-P007-P005-19",
+     "topic": "gift",
+     "trigger_seqs": [
+      30177
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P012-P001-19|42:36165"
+     ],
+     "round": 27,
+     "seq": 36999,
+     "thread": "TH-P012-P001-19",
+     "topic": "whisper",
+     "trigger_seqs": [
+      36165
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P009-P008-24|42:37147"
+     ],
+     "round": 28,
+     "seq": 37970,
+     "thread": "TH-P009-P008-24",
+     "topic": "combat_training",
+     "trigger_seqs": [
+      37147
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P009-P008-25|42:38031"
+     ],
+     "round": 30,
+     "seq": 38762,
+     "thread": "TH-P009-P008-25",
+     "topic": "combat_training",
+     "trigger_seqs": [
+      38031
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P009-P008-24|42:37147"
+     ],
+     "round": 31,
+     "seq": 40369,
+     "thread": "TH-P009-P008-24",
+     "topic": "combat_training",
+     "trigger_seqs": [
+      37147
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P009-P008-25|42:38031"
+     ],
+     "round": 33,
+     "seq": 46131,
+     "thread": "TH-P009-P008-25",
+     "topic": "combat_training",
+     "trigger_seqs": [
+      38031
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P008-P016-39|42:59271"
+     ],
+     "round": 40,
+     "seq": 60713,
+     "thread": "TH-P008-P016-39",
+     "topic": "scarce_buy",
+     "trigger_seqs": [
+      59271
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P008-P016-40|42:60241"
+     ],
+     "round": 42,
+     "seq": 61461,
+     "thread": "TH-P008-P016-40",
+     "topic": "scarce_buy",
+     "trigger_seqs": [
+      60241
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P004-P014-43|42:63795"
+     ],
+     "round": 45,
+     "seq": 66624,
+     "thread": "TH-P004-P014-43",
+     "topic": "gift",
+     "trigger_seqs": [
+      63795
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P008-P016-40|42:60241"
+     ],
+     "round": 45,
+     "seq": 77210,
+     "thread": "TH-P008-P016-40",
+     "topic": "scarce_buy",
+     "trigger_seqs": [
+      60241
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null,
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P004-P014-43|42:63795",
+      "R|TH-P004-P014-43|42:81113"
+     ],
+     "round": 47,
+     "seq": 82114,
+     "thread": "TH-P004-P014-43",
+     "topic": "gift",
+     "trigger_seqs": [
+      63795,
+      81113
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P008-P016-40|42:60241"
+     ],
+     "round": 48,
+     "seq": 84927,
+     "thread": "TH-P008-P016-40",
+     "topic": "scarce_buy",
+     "trigger_seqs": [
+      60241
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P008-P002-54|42:88934"
+     ],
+     "round": 55,
+     "seq": 89545,
+     "thread": "TH-P008-P002-54",
+     "topic": "whisper",
+     "trigger_seqs": [
+      88934
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P010-P004-51|42:88964"
+     ],
+     "round": 55,
+     "seq": 89781,
+     "thread": "TH-P010-P004-51",
+     "topic": "counter_propose",
+     "trigger_seqs": [
+      88964
+     ]
+    },
+    {
+     "closed_by_seq": [
+      null
+     ],
+     "prompted": true,
+     "rift_ids": [
+      "R|TH-P008-P002-54|42:88934"
+     ],
+     "round": 58,
+     "seq": 112032,
+     "thread": "TH-P008-P002-54",
+     "topic": "whisper",
+     "trigger_seqs": [
+      88934
+     ]
+    }
+   ],
+   "audit_rows_n": 22,
+   "interpersonal": {
+    "by_topic": {
+     "whisper": 1
+    },
+    "closed_and_paired_events": 0,
+    "closed_events": 0,
+    "closed_strict_events": 0,
+    "rows": [
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 33899,
+      "round": 25,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P012-P001-19",
+      "topic": "whisper",
+      "trigger_seq": 36165
+     }
+    ],
+    "tension_events": 1
+   },
+   "label": "on",
+   "legacy": {
+    "by_topic": {
+     "combat_training": 4,
+     "gift": 6,
+     "polite_reject": 2,
+     "scarce_buy": 1,
+     "whisper": 1
+    },
+    "closed_and_paired_events": 0,
+    "closed_events": 2,
+    "closed_strict_events": 2,
+    "rows": [
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 5732,
+      "round": 8,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P004-P013-4",
+      "topic": "scarce_buy",
+      "trigger_seq": 7844
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 62087,
+      "round": 44,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P004-P014-43",
+      "topic": "gift",
+      "trigger_seq": 63795
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 66624,
+      "round": 46,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P004-P014-43",
+      "topic": "gift",
+      "trigger_seq": 81113
+     },
+     {
+      "closed": true,
+      "closed_and_paired": false,
+      "closed_by": {
+       "lag": 2,
+       "seq": 30177,
+       "words": [
+        "别往心里去"
+       ]
+      },
+      "closed_strict": true,
+      "closed_strict_by": {
+       "lag": 2,
+       "seq": 30177,
+       "words": [
+        "别往心里去"
+       ]
+      },
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 25039,
+      "round": 20,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P007-P005-19",
+      "topic": "gift",
+      "trigger_seq": 26539
+     },
+     {
+      "closed": true,
+      "closed_and_paired": false,
+      "closed_by": {
+       "lag": 1,
+       "seq": 30177,
+       "words": [
+        "别往心里去"
+       ]
+      },
+      "closed_strict": true,
+      "closed_strict_by": {
+       "lag": 1,
+       "seq": 30177,
+       "words": [
+        "别往心里去"
+       ]
+      },
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 26539,
+      "round": 21,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P007-P005-19",
+      "topic": "gift",
+      "trigger_seq": 27719
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 27719,
+      "round": 22,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P007-P005-19",
+      "topic": "gift",
+      "trigger_seq": 30177
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 35851,
+      "round": 27,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P009-P008-24",
+      "topic": "combat_training",
+      "trigger_seq": 37147
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 37122,
+      "round": 28,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P009-P008-25",
+      "topic": "combat_training",
+      "trigger_seq": 38031
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 56860,
+      "round": 37,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P010-P012-31",
+      "topic": "gift",
+      "trigger_seq": 58401
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 33899,
+      "round": 25,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P012-P001-19",
+      "topic": "whisper",
+      "trigger_seq": 36165
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 5070,
+      "round": 7,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P014-P011-0",
+      "topic": "combat_training",
+      "trigger_seq": 6525
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 4240,
+      "round": 6,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P014-P011-1",
+      "topic": "combat_training",
+      "trigger_seq": 5039
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 23346,
+      "round": 18,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P016-P015-15",
+      "topic": "polite_reject",
+      "trigger_seq": 24016
+     },
+     {
+      "closed": false,
+      "closed_and_paired": false,
+      "closed_by": null,
+      "closed_strict": false,
+      "closed_strict_by": null,
+      "event_type": "MSG_DM",
+      "mechanism_pairs": [],
+      "prev_seq": 26061,
+      "round": 21,
+      "strict_and_paired": false,
+      "thread": "m:T|TH-P016-P015-16",
+      "topic": "polite_reject",
+      "trigger_seq": 28581
+     }
+    ],
+    "tension_events": 14
+   },
+   "log": "v2/evidence/run_f4_on_n16r60_seed42/run.jsonl",
+   "log_sha8": "faeba580",
+   "n_messages": 504,
+   "n_threads": 167
+  }
+ ],
+ "interpersonal_neg": [
+  "生气",
+  "烦",
+  "委屈",
+  "失望",
+  "后悔",
+  "吵",
+  "凭什么",
+  "你什么意思",
+  "别这样"
+ ],
+ "repo_head": "6b7ae8a98694dd87d2ea26d14e663705eab69e92",
+ "schema": "f4-subset-metrics/2",
+ "window_msgs": 8
+}
