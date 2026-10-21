@@ -1,0 +1,6 @@
+=== obs llm-cost 验真原文 ===
+命令: cd code && python3 -m obs llm-cost --log ../v2/evidence/run_g1_b0_n16r60_seed42/run.jsonl --require-provider openai_compat
+时间: 2026-10-21T10:09:51+08:00
+--- stdout 原文:
+{"engine_log":{"by_provider":{"openai_compat":2878},"by_purpose":{"dialogue":{"cached":48,"calls":510,"degraded":0,"thinking":0,"tokens_in":88830,"tokens_out":12283},"importance":{"cached":1387,"calls":1523,"degraded":0,"thinking":0,"tokens_in":2312,"tokens_out":35725},"judge":{"cached":0,"calls":668,"degraded":0,"thinking":668,"tokens_in":88382,"tokens_out":218197},"negotiation":{"cached":34,"calls":49,"degraded":0,"thinking":0,"tokens_in":1787,"tokens_out":604},"plan":{"cached":0,"calls":16,"degraded":0,"thinking":0,"tokens_in":1447,"tokens_out":996},"reflect":{"cached":4,"calls":112,"degraded":0,"thinking":0,"tokens_in":46113,"tokens_out":7386}},"llm_judgment_by_dimension":{"affection":132,"rel_affinity":32,"rel_familiarity":222,"rel_trust":2,"respect":132,"stance":132,"weekly_focus":16},"source":"engine_log(LLM_CALL)","total":{"cached":1473,"calls":2878,"degraded":0,"thinking":668,"tokens_in":228871,"tokens_out":275191,"tokens_total":504062}},"provider_guard":{"by_provider":{"openai_compat":2878},"expected":"openai_compat","ok":true,"policy":"计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。","problems":[]}}
+rc=0

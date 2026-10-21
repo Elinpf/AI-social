@@ -1,0 +1,14 @@
+batch=run_g1_b0_n16r60_seed42-6db62e8a  log_sha256=6db62e8a3b926af7755fe220a5e8361c851e195d94afff00d16c00e7e1d0c983  sha8=6db62e8a
+→ ../v2/evidence/f2_shots/run_g1_b0_n16r60_seed42-chat-6db62e8a.png
+SHOT OK: ../v2/evidence/f2_shots/run_g1_b0_n16r60_seed42-chat-6db62e8a.png  elapsed=4.45s  mean_brightness=33.3(gray601,0-255,黑<8)  max_color_frac=30.33%  blank_retries=0/2
+  blank_cumulative=7/140 次空白/总取证（T282 观察哨，仅留痕）
+→ ../v2/evidence/f2_shots/run_g1_b0_n16r60_seed42-rhythm-6db62e8a.png
+SHOT OK: ../v2/evidence/f2_shots/run_g1_b0_n16r60_seed42-rhythm-6db62e8a.png  elapsed=1.75s  mean_brightness=32.5(gray601,0-255,黑<8)  max_color_frac=34.45%  blank_retries=0/2
+  blank_cumulative=7/141 次空白/总取证（T282 观察哨，仅留痕）
+→ ../v2/evidence/f2_shots/run_g1_b0_n16r60_seed42-spread-6db62e8a.png
+SHOT OK: ../v2/evidence/f2_shots/run_g1_b0_n16r60_seed42-spread-6db62e8a.png  elapsed=1.67s  mean_brightness=23.2(gray601,0-255,黑<8)  max_color_frac=71.20%  blank_retries=0/2
+  blank_cumulative=7/142 次空白/总取证（T282 观察哨，仅留痕）
+→ ../v2/evidence/f2_shots/run_g1_b0_n16r60_seed42-600-6db62e8a.png
+SHOT OK: ../v2/evidence/f2_shots/run_g1_b0_n16r60_seed42-600-6db62e8a.png  elapsed=1.77s  mean_brightness=38.2(gray601,0-255,黑<8)  max_color_frac=36.24%  blank_retries=0/2
+  blank_cumulative=7/143 次空白/总取证（T282 观察哨，仅留痕）
+OK: ../v2/evidence/f2_shots/run_g1_b0_n16r60_seed42-{chat,rhythm,spread,600}-6db62e8a.png
