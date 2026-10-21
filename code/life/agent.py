@@ -14,6 +14,7 @@ The agent never mutates world state.
 from __future__ import annotations
 
 import os
+import re
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -48,6 +49,20 @@ GOSSIP_G1_ENV = "LIFE_PROMPT_GOSSIP_G1"
 def gossip_g1_enabled() -> bool:
     """A1 臂开关（env `LIFE_PROMPT_GOSSIP_G1` ∈ {1,true,yes,on}）；默认关。"""
     return os.environ.get(GOSSIP_G1_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+# F-6 臂开关（跨天记忆进对话提示词）：**只影响提示词文本 + 一个附加审计字段**，默认 OFF。
+# 目的：OFF/ON 用同一份代码跑，两臂之间只剩「提示词里有没有这段记忆」这一个差异。
+MEMORY_F6_ENV = "LIFE_PROMPT_MEMORY_F6"
+#: 每次装配最多注入几条跨天记忆（控 token；2 条≈60 token 量级）
+MEMORY_F6_TOP_N = 2
+#: 单条记忆正文截断长度（字符）
+MEMORY_F6_ITEM_CHARS = 60
+
+
+def memory_f6_enabled() -> bool:
+    """F-6 臂开关（env `LIFE_PROMPT_MEMORY_F6` ∈ {1,true,yes,on}）；默认关。"""
+    return os.environ.get(MEMORY_F6_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
 
 _SALIENT_EVENTS = {
     "ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "PLACE_ARRIVED",
@@ -154,6 +169,9 @@ class LifeLayerAgent:
         # **只读台账 + 只给处境**：不写正文、不发事件、不进 state_hash。
         self._rifts: dict = {}              # rift_id -> {with, thread_id, msg_uid, seq, round, ...}
         self._rifts_seen: set = set()       # 已吸收的 MSG 事件 seq（增量、幂等）
+        # F-6「记忆进对话」：本次装配实际注入的跨天记忆 id（**纯审计**，供 ctx 落盘追溯；
+        # 不进 state_hash、不发事件、不参与决策；OFF 臂恒为空）。
+        self._mem_refs: list = []
 
     # ---- T288 / T276: 从账本单一真源恢复「只前向累积」的内部态 ---------------
     def restore(self, state, records) -> None:
@@ -926,6 +944,11 @@ class LifeLayerAgent:
             rel = int(self._rel_cache.get((partner, "affinity"), 0))
         ctx = {"relation": rel, "mood": DT.mood_label(self.needs),
                "need": DT.scarcest_need(self.needs), "topic": topic}
+        if getattr(self, "_mem_refs", None):
+            # F-6 审计（additive）：本条消息生成时提示词里实际注入了哪些跨天记忆
+            # （可回 run.jsonl 的 MEMORY_WRITE 事件按 mem_id 还原其 day/slot/text）。
+            # OFF 臂 `_mem_refs` 恒为空 ⇒ 该键不出现 ⇒ payload 与 A0 逐字节一致。
+            ctx["memory_refs"] = list(self._mem_refs)
         if trigger:
             ctx["trigger"] = trigger
         if initiator:
@@ -949,7 +972,7 @@ class LifeLayerAgent:
             rift_line = DR.context_line(self._rifts, partner, int(wv.round),
                                         name=self._name(partner) if partner else None,
                                         params=dr_cfg)
-        prompt = self._reply_prompt(partner, topic, history, cfg, rift_line=rift_line)
+        prompt = self._reply_prompt(partner, topic, history, cfg, rift_line=rift_line, wv=wv)
         res = self.llm.call("dialogue", prompt,
                             meta={"agent_id": self.agent_id, "round": wv.round,
                                   "thread": tid, "turn": turn})
@@ -1007,7 +1030,7 @@ class LifeLayerAgent:
         if dr_cfg.get("enabled") and to:
             rift_line = DR.context_line(self._rifts, to, int(wv.round),
                                         name=self._name(to), params=dr_cfg)
-        res = self.llm.call("dialogue", self._dialogue_prompt(tid, parts, cfg, rift_line=rift_line),
+        res = self.llm.call("dialogue", self._dialogue_prompt(tid, parts, cfg, rift_line=rift_line, wv=wv),
                             meta={"agent_id": self.agent_id, "round": wv.round, "template": tid})
         body = (res.text or "").strip()
         if not body:
@@ -1077,27 +1100,135 @@ class LifeLayerAgent:
             return f"情绪：{mood}；最紧的需求：{dim}={val}"
         return f"情绪：{mood}"
 
+    def _memory_line(self, wv, exclude: list | None = None) -> str:
+        """F-6 臂（跨天记忆进对话）：把「**本人**前些天记下的事」原样接进提示词。
+
+        单变量约束（沿用 `_gossip_hint` 的开关先例）：
+          - 开关关闭（默认 OFF）⇒ `self._mem_refs` 置空、返回空串，A0 提示词**逐字节不变**；
+          - 打开 ⇒ 只在提示词中**插入**这一段，不改任何既有段落、不改配置、不改世界态、不改检索权重。
+
+        取材只读现有的 `memory.nodes`（**不新增检索通道、不改 `score_and_rank` 权重、
+        不 touch/不改 access_count**）：过滤 `node.day < 当前 day`（跨天，含昨天）+
+        「人话」门（见 `_readable`），再按 (day 新→旧, importance 高→低, 去重键升序) 取前 N。
+        审计：实际注入的 `mem_id` 记到 `self._mem_refs`，由 `_ctx_snapshot()` 落进 MSG payload。
+        """
+        self._mem_refs = []
+        if not memory_f6_enabled():
+            return ""
+        today = int(getattr(wv, "day", 0))
+        # 只排除「自己的」记忆条目（`subject` 是自己）；**不排除**对话对象——
+        # 「昨天阿禾说……／阿禾送来半袋米」正是最像过日子的引用，排除掉就剩不下什么了。
+        ex = {self.agent_id}
+        picked: list[tuple[int, str]] = []
+        seen: set[str] = set()
+
+        def _norm(t: str) -> str:
+            """去重键：去掉尾部括注（如「（insight 3）」）与空白，防同义重复白占额度。"""
+            t = re.sub(r"[（(][^（）()]{0,12}[)）]\s*$", "", (t or "").strip())
+            return re.sub(r"\s+", "", t)
+
+        def _readable(t: str) -> str | None:
+            """记忆流 → 人话。**本臂的第二道门**（不是装饰，见 exec-notes §机制事实）：
+
+            记忆流里大量条目是原始事件短语（实测如「P001 的 RELATION_CHANGE 事件。」、
+            「P003 在 residence 开始 rest。」）。原样喂进提示词会 ①把内部 token 泄漏给模型
+            （等于制造 L-8/L-13 回归）②把台词带成机器话。故：
+              - `Pxxx` → 显示名（复用 `_name`，失败保留原串）；
+              - 含 ASCII 词（≥3 字母）或「事件」/全大写 token ⇒ 丢弃（非人话）；
+              - 去空白后短于 6 字 ⇒ 丢弃（没有信息量）。
+            返回 None 表示不可用。
+            """
+            s = (t or "").strip().replace("\n", " ")
+            if not s:
+                return None
+
+            def _sub(m):
+                pid = m.group(0)
+                try:
+                    return self._name(pid) or pid
+                except Exception:
+                    return pid
+
+            s = re.sub(r"P\d{3}", _sub, s)
+            s = re.sub(r"\s*说：", "说：", s)          # 「秀娘 说：」→「秀娘说：」
+            if "事件" in s or re.search(r"[A-Za-z]{3,}", s):
+                return None
+            if re.search(r"[A-Z]{2,}", s):
+                return None
+            if len(re.sub(r"\s+", "", s)) < 6:
+                return None
+            return s
+
+        # 取材：**本人的跨天记忆**里，挑「最近发生、还挂得上心」的两条。
+        # 排序键固定为 (day 新→旧, importance 高→低, 去重键升序) ⇒ 确定性、与 RNG 无关。
+        # 只读 `memory.nodes`：不 touch、不改 access_count、不改检索权重 ⇒ 对既有检索零影响。
+        cand: list[tuple[str, int, int, str, str, str]] = []   # (kind, day, imp, key, text, mem_id)
+        for node in self.memory.nodes.values():
+            try:
+                if int(node.day) >= today:        # 只要跨天记忆（当天的不算"想起来"）
+                    continue
+            except Exception:
+                continue
+            text = _readable(node.text)
+            if text is None:
+                continue
+            key = _norm(text)
+            # 内容级去重：同一句话由不同人说过也只引一次（避免两条记忆只是换了说话人）
+            content_key = key.split("说：", 1)[1] if "说：" in key else key
+            if not key or key in seen or content_key in seen:
+                continue
+            if node.subject and str(node.subject) in ex:   # 不喂「正在跟我说话的人」的旧账
+                continue
+            seen.add(key)
+            seen.add(content_key)
+            cand.append((str(getattr(node, "kind", "") or ""),
+                         int(node.day), int(getattr(node, "importance", 0) or 0),
+                         key, text, str(node.mem_id)))
+
+        # 先观察类、后反思类（反思是内心独白，作旧事引用比具体观察淡）
+        for want in ("observation", "other"):
+            for kind, day, _imp, key, text, mid in sorted(
+                    cand, key=lambda t: (t[0] != "observation", -t[1], -t[2], t[3])):
+                if len(picked) >= MEMORY_F6_TOP_N:
+                    break
+                if want == "observation" and kind != "observation":
+                    continue
+                if want == "other" and kind == "observation":
+                    continue
+                picked.append((day, text[:MEMORY_F6_ITEM_CHARS]))
+                self._mem_refs.append(mid)
+        if not picked:
+            return ""
+        items = "；".join(f"第{d}天：{t}" for d, t in picked)
+        return (f"\n你想起的事：{items}"
+                "\n（这些话跟你眼下说的事有关，就顺口提一句；无关就别硬提，也别编没记过的事。）")
+
     def _dialogue_prompt(self, tid: str, parts: list, cfg: dict | None = None,
-                         rift_line: str | None = None) -> str:
+                         rift_line: str | None = None, wv=None) -> str:
         cfg = cfg or self._dlg_cfg()
         partners = [p for p in parts if p != self.agent_id]
         others = self._relation_line(partners) or "(独自)"
+        mem_line = self._memory_line(wv, partners) if wv is not None else ""
         return (self.persona.compressed_profile(self._current_goal())
                 + f"\n场景：{tid}；对象：{others}。{self._mood_line()}。"
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + self._gossip_hint(partners)  # G系列A1臂：可引用真人名单（默认OFF ⇒ 空串）
+                + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
                 + "\n只写台词本身（一句家常话）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（零 config/结构改动）
 
     def _reply_prompt(self, partner: str | None, topic: str, history: list,
-                      cfg: dict | None = None, rift_line: str | None = None) -> str:
+                      cfg: dict | None = None, rift_line: str | None = None,
+                      wv=None) -> str:
         cfg = cfg or self._dlg_cfg()
         lines = "\n".join(line for _, line in history) or "(还没说什么)"
         who = self._name(partner) if partner else "在场的人"
+        mem_line = self._memory_line(wv, [partner] if partner else []) if wv is not None else ""
         return (self.persona.compressed_profile(self._current_goal())
                 + f"\n你正在和{who}聊「{topic}」。{self._mood_line()}。"
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + f"\n刚才的对话：\n{lines}"
                 + self._gossip_hint([partner] if partner else [])  # G系列A1臂：可引用真人名单（默认OFF ⇒ 空串）
+                + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
                 + "\n只写台词本身（接着刚才的话往下说一句）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（承载「承接上一轮」结构不变）
 
     # ---- economy: negotiation / offer / order-cancel (T133) ----------------
