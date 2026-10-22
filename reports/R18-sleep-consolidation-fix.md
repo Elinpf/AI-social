@@ -145,7 +145,8 @@ rc=0
 end=2026-10-22T18:20:16+08:00 | epoch=1792664416.488382243
 ```
 
-- **时序**：BEFORE `…416.08→416.28`，AFTER `…416.29→416.49`，AFTER 严格在后；两次各约 0.2s（与 .out 文件 mtime `18:20:16.255` / `18:20:16.465` 一致）。
+- **时序**：BEFORE `…416.08→416.28`，AFTER `…416.29→416.49`，AFTER 严格在后；两次各约 0.2s。
+  **mtime 说明（勘误）**：证据文件的文件 mtime 已被 18:26:38 那次提交/checkout 重写（实测 `v2/evidence/fix-sleep-consolidation-20261022/` 下所有 `verify_*.out/.err` 与 `shots/*.png` 的 mtime 均为 `2026-10-22 18:26:38`），因此**不要用文件 mtime 判运行时刻**；运行/渲染时刻一律以 `ab_rerun.log`、`shots/render.log` 的**内部时间戳**为准（本节引用的 epoch 即来自 `ab_rerun.log`）。
 - **代码身份**：基线树与 `git show 46e4380:<file>` 的 sha256 **逐位相同**；AFTER 的 HEAD = `c01f6dd`（§9）。
 - 说明：基线树用 `git archive 46e4380 | tar -x` 解到 `/tmp/r10-before-tree`（不在主树 stash 来回切、不污染工作区/指纹）。
 
@@ -237,7 +238,7 @@ cd code && python3 -m obs llm-cost --log ../v2/evidence/run_a5_real_n16r42_seed4
 2. **非本轮修后行为**（本轮未起新批）；
 3. **仅作修前对照**——用来看被修链路所依附的世界长什么样，不是效果证据。
 
-**渲染时刻** 18:10（文件 mtime 可核）≠ **数据产生时刻**（该批运行期）。渲染原始输出 `shots/render.log`（4 次 `SHOT OK`，含亮度/彩色占比）；`threads.json` 落 `code/frontend/sample/dialogue_run_a5_real_n16r42_seed42/`。
+**渲染时刻**（勘误：以 `shots/render.log` 内部时间戳为准；文件 mtime 已被 18:26:38 的提交/checkout 重写，**不可**用于判时刻）≠ **数据产生时刻**（该批运行期）。渲染原始输出 `shots/render.log`（4 次 `SHOT OK`，含亮度/彩色占比）；`threads.json` 落 `code/frontend/sample/dialogue_run_a5_real_n16r42_seed42/`。
 
 ---
 
@@ -307,11 +308,12 @@ cd8f02439480298a17a93cd3460ee108e495af16	refs/heads/master
 ## 10. 纪律自查
 
 1. **跑批串行 / 起跑前 pgrep**：本轮**未起任何新批（含 mock）**。开工时（18:20:23）pgrep 原文见 `discipline_pgrep.txt §(a)`：仅 1172001（**非本轮所起**）+ 他人 watcher shell + 我这条命令自身（自匹配）。
-2. **PID 1132529 的处置（如实）**：18:03:21 我按**当时有效的**Leader 指令对其与父脚本 1132519 发 **TERM**（未用 -9）；Leader 18:04:42 的「不许 kill」改判晚于我的动作。活性证据保留：18:02:59→18:03:07 `run.jsonl` 尺寸 `5,004,434 B` 不变、末条为 round 9 `TURN_SEAL`、`CPU TIME 5s/15min`、ESTAB 到 `172.16.3.41:31809`；但 18:01 前确有 6s +1.05MB 增长 ⇒ **证据不足以判定其为活批或卡死**，按「证据不足」如实记录，不写「确认误杀」也不写「确认残留」。
+2. **PID 1132529 的处置（如实）**：18:03:21 我按**当时有效的**Leader 指令对其与父脚本 1132519 发 **TERM**（未用 -9）；Leader 18:04:42 的「不许 kill」改判晚于我的动作。活性证据保留：18:02:59→18:03:07 `run.jsonl` 尺寸 `5,004,434 B` 不变、末条为 round 9 `TURN_SEAL`、`CPU TIME 5s/15min`、ESTAB 到 `172.16.3.41:31809`；但 18:01 前确有 6s +1.05MB 增长 ⇒ **证据不足以判定其为活批或卡死**。
+   **按团队口径记为「疑似误杀」（责任在决策层，不在执行官）**；可复算旁证：`/tmp/a1b_partial_1003.jsonl` 共 **9914 行**、末条 `type=TURN_SEAL, round=9, seq=9913`、最后写入 `18:01:38`（大小 5,004,434 B）⇒ 该批**死于 round 9/42**，不是自然收尾。
 3. **TERM 后 pgrep 原文**：**未留存（留证缺口）**；补救 = 事后从会话记录补录 + 18:03:33 复查 `(EMPTY)` + 本轮交付前重新执行 pgrep（`discipline_pgrep.txt §(c)`）。
 4. **1159195 单列披露**：遗留 `sleep 290` 轮询 shell（父 295404），**终止前未保存其 cmdline 原文**，属我自身操作的留证缺口（`§(d)`）。
 5. **改动位置与分支**：全部改动在 `feat/life-memory-fix-20261022` 分支；改动发生时 1172001 在跑，但改动只落在主树的**工作分支**，未触碰在跑批所用的 `.worktrees/a2-prefer`（其代码与分支独立）。
-6. **后台进程**：本轮无后台跑批；`make code-test` 为前台执行；无长 `sleep` 轮询（仅 A/B 前后各 0.2s 的两次进程内运行）。
+6. **后台进程**：本轮无后台跑批；`make code-test` 为前台执行；无长 `sleep` 轮询（仅 A/B 前后各 0.2s 的两次进程内运行）。环境侧存在**他人的** `sleep 25` 轮询 shell（如 1206696 / 1224152，父进程为应用侧服务），**非我所起**。
 7. **真 LLM 验真**：本轮无新批；基线批的 llm-cost 原文与 rc 见 §6，并明确标注 cache 占比与「推断」字样。
 
 ---
