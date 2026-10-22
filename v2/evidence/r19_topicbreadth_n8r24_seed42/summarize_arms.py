@@ -62,6 +62,7 @@ def arm_stats(arm_dir: str) -> tuple[dict, list[dict]]:
 
     D = through = msgs = 0
     tag_rows: list[dict] = []
+    prev_body_by_thread: dict[str, str] = {}
     with open(log, encoding="utf-8") as fh:
         for line in fh:
             line = line.strip()
@@ -72,6 +73,9 @@ def arm_stats(arm_dir: str) -> tuple[dict, list[dict]]:
                 continue
             msgs += 1
             p = r.get("payload") or {}
+            th_key = str(p.get("thread_id") or "")
+            _prev = prev_body_by_thread.get(th_key)
+            prev_body_by_thread[th_key] = str(p.get("body") or "")
             tb = (p.get("ctx") or {}).get("topic_breadth")
             if not tb:
                 continue
@@ -87,6 +91,7 @@ def arm_stats(arm_dir: str) -> tuple[dict, list[dict]]:
                     "base": tb.get("base"), "shift": tb.get("shift"), "tags": tags,
                     "body": p.get("body"), "thread": p.get("thread_id"),
                     "turn": p.get("turn_index"), "landed": landed,
+                    "prev_body": _prev,
                 })
     out.update({
         "msgs": msgs, "D_dispatched": D, "through": through,
@@ -98,19 +103,31 @@ def arm_stats(arm_dir: str) -> tuple[dict, list[dict]]:
 
 
 def precision_sample(rows: list[dict], n: int = 15) -> str:
-    """人工 precision 抽样：按 seq 升序**等间隔**取（不按质量挑选）。"""
-    if not rows:
+    """人工 precision 抽样。
+
+    判定对象 = **真正发生 tag 追加**的事件（`landed=True`），不是「len(tag_hints)>=2」的全部消息
+    （后者含同线程后续消息继承来的 2 个 tag，属于同一事件的下游，不得重复计样本）。
+    规则（预注册 B.1/B.4）：N >= 15 时按 seq 升序**等间隔**抽 15；`8 <= N < 15` 时**全量判并标 n=N**。
+    """
+    appends = [r for r in rows if r.get("landed")]
+    inherited = [r for r in rows if not r.get("landed")]
+    if not appends:
         return ("# R19 人工 precision 抽样\n\n"
                 "（on 臂没有任何 tag 追加事件 ⇒ 无法抽样；按 Leader 规则判「不可判（召回不足）」，"
                 "**不得**写成「改造无效」。）\n")
-    step = max(1, len(rows) // n)
-    picked = rows[::step][:n]
+    if len(appends) >= n:
+        step = max(1, len(appends) // n)
+        picked = appends[::step][:n]
+        rule = f"N={len(appends)} ≥ 15 ⇒ 按 seq 升序等间隔抽 {len(picked)} 条"
+    else:
+        picked = appends
+        rule = f"N={len(appends)} ∈ [8,15) ⇒ **全量判**（预注册 B.4），n={len(picked)}"
     lines = [
-        "# R19 人工 precision 抽样（tag 追加 = 「话题展开」事件）", "",
-        f"> 抽样规则：按 seq 升序**等间隔**取（不按质量挑选），共 {len(picked)} 条 / 总 {len(rows)} 条。",
+        "# R19 人工 precision 抽样（话题展开事件 = tag 追加）", "",
+        f"> 判定对象：`ctx.topic_breadth.landed = true` 的消息，共 **{len(appends)}** 条；抽样规则：{rule}。",
         "> 判定标准：这句台词是否**接着上一句对话**自然带出第二个话题线索（不是硬拐、不是答非所问、"
         "不是把内部 token 念出来）。逐条填 `judgement`（真展开 / 假展开 / 存疑）。",
-        "> 判定者须是**未参与实现代码编写**的人；本目录只提供抽样与原文。", "",
+        "> 判定者须是**未参与实现代码编写**的人；本目录只提供事件与原文。", "",
     ]
     for i, r in enumerate(picked, 1):
         lines += [
@@ -119,10 +136,16 @@ def precision_sample(rows: list[dict], n: int = 15) -> str:
             f"- base 话题（本线程原有）：`{r['base']}`",
             f"- shift 话题（下发给模型的相邻话题）：`{r['shift']}`",
             f"- 记入日志的 tag_hints：`{r['tags']}`",
-            f"- 正文：{r['body']}",
+            f"- 上一句（同线程）：{r.get('prev_body') or '（本线程首条，无上一句）'}",
+            f"- 本条正文：{r['body']}",
             "- judgement：【待人工填】",
             "",
         ]
+    if inherited:
+        lines += ["", "## 附录：非判定对象（同线程继承 2 个 tag 的消息，不重复计样本）", ""]
+        for r in inherited:
+            lines.append(f"- seq={r['seq']} round={r['round']} thread={r['thread']} "
+                         f"tags=`{r['tags']}`｜正文：{r['body']}")
     return "\n".join(lines) + "\n"
 
 
