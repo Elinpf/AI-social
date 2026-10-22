@@ -59,3 +59,21 @@ A1 首次起跑（17:48）在 round 9 被外部信号杀掉，**已作废并从�
 | A1-回复预算 `run_a1budget_real_n16r42_seed42/run.jsonl` | `0bc80cd2` |
 | A5 `run_a5_real_n16r42_seed42/run.jsonl` | `aa6edc35` |
 | A0 全量 `run_d2_after_n16_seed42/run.jsonl`（前缀来源） | `643f13a5` |
+
+## 6. 开关默认值（"实验性机制"与"默认行为"的分界）
+
+| 机制 | 开关 | **默认值** | 说明 |
+|---|---|---|---|
+| A1-回复预算 | `HITT_REPLY_BUDGET` | **关（未设=关）** | 未设环境变量 ⇒ `_reply_budget_enabled()` 返回 False ⇒ 行为回到"发起/回复共用 `max_messages_per_slot`" |
+| A5-发起选未回对端 | `HITT_INIT_PREFER_UNREPLIED` | **关（未设=关）** | 未设 ⇒ `_init_prefer_unreplied_enabled()` False ⇒ 发起仍按计划模板 `partners[0]` |
+| A2-对未回对端不发起 | `HITT_NO_INIT_UNREPLIED` | **关（未设=关）** | 本轮 `<unset>` |
+| `observe.msg_enabled`（D2） | `life_v2.dialogue.*` / env | **开**（D2 已交付默认行为） | 与 A1/A2/A5 无关 |
+
+> **重要**：A1 / A2 / A5 **三者默认全部关闭**，线上/默认跑批行为 = A0（D2 结构 + 提示词必要适配）。
+> 本文件所有"改善"读数都来自**显式打开开关的实验臂**，**不代表默认行为已改变**。
+> 代码位置：`code/life/agent.py`（分支 `feat/d2-prefer`，`51cdb07`；对应 worktree `.worktrees/a2-prefer`）。
+
+## 7. 可直接引用的两句话（供报告/发布）
+
+1. **净增量的方向**：「A5−A1 的净增量是**回复 +16.4%、发起 −9.1%、`p50` 2→5、转化率 86.05%→93.99%（分母 172→183 未缩水）** ⇒ 不是"少说话换比值"，而是**把产能从"各起一段"搬到"接着聊"**。」
+2. **不是换口径**：「`p90≡6`、`max≡6` 三臂全同，而 `p50` 整体右移 ⇒ **长尾没有被牺牲，中位真的动了**。」
