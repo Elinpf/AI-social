@@ -1,0 +1,48 @@
+== P1 同 wall-clock 偏移：真实 LLM 响应文件增长率 ==
+--- ctrl: responses=1737 首次=14:28:51 末次=15:28:08
+    t+   60s ->    35 responses
+    t+  120s ->    68 responses
+    t+  300s ->   166 responses
+    t+  540s ->   283 responses
+    t+  600s ->   322 responses
+    t+  900s ->   496 responses
+    t+ 1500s ->   788 responses
+    t+ 2100s ->  1033 responses
+    t+ 2700s ->  1333 responses
+    t+ 3300s ->  1654 responses
+--- a1: responses=515 首次=16:08:03 末次=16:23:35
+    t+   60s ->    38 responses
+    t+  120s ->    80 responses
+    t+  300s ->   164 responses
+    t+  540s ->   293 responses
+    t+  600s ->   337 responses
+    t+  900s ->   506 responses
+    t+ 1500s ->   515 responses
+    t+ 2100s ->   515 responses
+    t+ 2700s ->   515 responses
+    t+ 3300s ->   515 responses
+
+== P1 偏移比（a1 / ctrl，同 t+）==
+    t+   60s: ctrl=   35 a1=   38  比=1.086
+    t+  120s: ctrl=   68 a1=   80  比=1.176
+    t+  300s: ctrl=  166 a1=  164  比=0.988
+    t+  540s: ctrl=  283 a1=  293  比=1.035
+    t+  600s: ctrl=  322 a1=  337  比=1.047
+    t+  900s: ctrl=  496 a1=  506  比=1.020
+    t+ 1500s: ctrl=  788 a1=  515  比=0.654
+    t+ 2100s: ctrl= 1033 a1=  515  比=0.499
+    t+ 2700s: ctrl= 1333 a1=  515  比=0.386
+    t+ 3300s: ctrl= 1654 a1=  515  比=0.311
+
+== P2 同 round（0..9）结构对齐 ==
+ctrl 累计到 round<=9: LLM_CALL=732 cached=247 真调用=485 tokens_in=75443 tokens_out=78062
+    每轮 LLM_CALL=[44, 203, 0, 13, 208, 3, 15, 193, 44, 9]
+a1   累计到 round<=9: LLM_CALL=732 cached=247 真调用=485 tokens_in=77978 tokens_out=80090
+    每轮 LLM_CALL=[44, 203, 0, 13, 208, 3, 15, 193, 44, 9]
+    LLM_CALL 偏移比 a1/ctrl = 1.000（1.000=结构完全同形）
+    tokens_in  a1/ctrl = 1.0336  （C-1 那一行带来的输入成本增量）
+    tokens_out a1/ctrl = 1.0260
+
+== P3 每轮事件数（round 0..11）==
+    ctrl=[426, 1262, 355, 586, 1859, 363, 596, 1948, 633, 1652, 7595, 1449]
+    a1  =[426, 1262, 355, 586, 1859, 363, 596, 1948, 633, 1654, 0, 0]

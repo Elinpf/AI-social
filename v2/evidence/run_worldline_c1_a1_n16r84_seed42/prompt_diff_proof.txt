@@ -1,0 +1,26 @@
+code_sha=af1dffc61040adc97c828b4927ac3935dbef2d1b
+test_module=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/worldline-c1-n16r84/code/tests/test_world_c1_prompt_single_variable.py
+switch_env=LIFE_PROMPT_WORLD_C1
+
+== OFF 臂（生产默认：变量不存在）==
+_world_line=''
+dialogue_prompt sha256=d80df99940ad5020eb0b3158c599197ab3e1c710fb03b0cf1a6070099b515a16 len=351 lines=5
+reply_prompt    sha256=3cf4bcae0f0534d297bde42f632778c621c99f636a4cdc62b711f6145b7029ba len=359 lines=8
+
+== ON 臂（LIFE_PROMPT_WORLD_C1=1）==
+_world_line='\n你眼下在市集；镇上气氛有点紧；镇上在办节庆；集市上东西有点紧俏。（用自己的话顺口带一句，不要照抄这句的措辞。）'
+dialogue_prompt sha256=119c9f9f5d2b648d58fa1f38e74d438c071005d6b3b70b2fbd311d247e37bdd3 len=407 lines=6
+reply_prompt    sha256=3d76448f1250059745bfa56dcd667d530f3a3f51bafb93e0bec83bdbee22a324 len=415 lines=9
+
+== 单变量断言 ==
+A. OFF ⇒ _world_line 为空串                 : True
+B. ON  ⇒ 插入段恰一行（含 1 个换行）        : True
+C. ON._dialogue_prompt 去掉插入段 == OFF     : True
+D. ON._reply_prompt    去掉插入段 == OFF     : True
+E. dialogue 行数 +1                          : True
+F. reply    行数 +1                          : True
+
+== 被插入的那一行（ON 唯一增量）==
+你眼下在市集；镇上气氛有点紧；镇上在办节庆；集市上东西有点紧俏。（用自己的话顺口带一句，不要照抄这句的措辞。）
+
+VERDICT=PASS single_variable_prompt_diff

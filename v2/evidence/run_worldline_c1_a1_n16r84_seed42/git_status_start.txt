@@ -1,0 +1,4 @@
+?? v2/evidence/mock_trigA2_INVALID_switch_not_applied_n16r84_seed42/
+?? v2/evidence/mock_trigA2_n16r84_seed42/
+?? v2/evidence/run_worldline_c1_a1_n16r84_seed42/
+?? v2/evidence/run_worldline_c1_ctrl_n16r84_seed42/

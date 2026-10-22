@@ -1,0 +1,11 @@
+[a1] arm=a1
+[a1] run: python3 -m orchestration run --life --seed 42 --agents 16 --rounds 84 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_worldline_c1_a1_n16r84_seed42/run.jsonl --flush-every 2 --side-root /tmp/worldline_c1_a1_side
+[a1] env: LIFE_PROMPT_WORLD_C1=SET（值=1）
+[a1] code_sha=af1dffc61040adc97c828b4927ac3935dbef2d1b code_dir=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/worldline-c1-n16r84/code
+[a1] host=systemd-run unit=worldline-c1-a1-n16r84 env_file=/tmp/worldline_c1_a1_env
+[a1] started_at=2026-10-22T16:07:59+08:00
+[life] n_agents=16 rounds=84 events=194047 seconds=3492.0673 log_bytes=91397526
+  unknown_event_types=[]
+  chain_ok=True replay_parity=True first_run_equals_replay=True
+  conservation_ok=True final_state_hash=sha256:96de5c628103420b40904b372a9471c285603e816c1930787e877d5bd0129faf
+  log written: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_worldline_c1_a1_n16r84_seed42/run.jsonl

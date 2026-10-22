@@ -52,3 +52,6 @@ code/logs/
 
 # 根级冻结缓存（可再生）
 freeze_cache/
+
+# R19：mock 臂产物（89MB 级，从不入库；只加规则不删磁盘文件）
+v2/evidence/mock_trigA2_*

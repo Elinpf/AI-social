@@ -1,0 +1,73 @@
+================ C-1 · a1 起批证据（臂 a1） ================
+采集时刻: 2026-10-22T16:07:55+08:00
+repo:      /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+worktree:  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/worldline-c1-n16r84
+branch:    feat/world-line-c1
+HEAD:      af1dffc61040adc97c828b4927ac3935dbef2d1b
+out_dir:   /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_worldline_c1_a1_n16r84_seed42
+side_root: /tmp/worldline_c1_a1_side
+host:      systemd-run（transient unit，脱离会话 cgroup）
+arm:       a1（ctrl=OFF / a1=ON，单变量 LIFE_PROMPT_WORLD_C1）
+
+---- [闸门0] 开关可见性：git -C $WT grep -n LIFE_PROMPT_WORLD_C1 -- code/life/ ----
+code/life/agent.py:76:WORLD_C1_ENV = "LIFE_PROMPT_WORLD_C1"
+code/life/agent.py:107:    """C-1 臂开关（env `LIFE_PROMPT_WORLD_C1` ∈ {1,true,yes,on}）；默认关。"""
+grep_rc=0 (0=开关在树上可见=通过；1=不可见=禁止起跑)
+---- [闸门0b] 模块可导入 ----
+import_rc=0
+---- [闸门0c] worktree 分支/HEAD 与 ctrl 臂 code_sha 一致性 ----
+worktree_branch=feat/world-line-c1
+worktree_HEAD=af1dffc61040adc97c828b4927ac3935dbef2d1b
+ctrl_code_sha=af1dffc61040adc97c828b4927ac3935dbef2d1b
+same_code_sha=YES
+---- [闸门1] 串行铁律：pgrep -af "[o]rchestration run" （期望无命中） ----
+pgrep_rc=1 (1=无命中=通过)
+---- [闸门1·上臂互斥] ctrl 臂收批完整（[life] 汇总行三真 + run.jsonl 稳定） ----
+ctrl host.log 是否含 [life] 汇总行：1
+  chain_ok=True replay_parity=True first_run_equals_replay=True
+  conservation_ok=True final_state_hash=sha256:a8bf29c82ed56a4b394b37b31e8bac723adc04782c2c9d2c6b396ac7ac070c7a
+prev_run_jsonl_lines: n1=194057 n2=194057 （相等=不再增长=flush 完整）
+prev_done_marker=OK
+（说明：ctrl 臂用 setsid 直跑，host.log 里没有 tools/d2 的 '[d2] OK' 行；本闸门改用更硬的 '[life] 汇总行 + run.jsonl 稳定' 判据，已在此留痕。）
+
+---- [闸门2] 当前 shell env | grep -E 'LIFE_PROMPT_|HITT_DIALOGUE_' （期望空；开关只在 env-file 里给） ----
+env_grep_rc=1
+---- [闸门3] git status 过滤 code/(life|orchestration|config|engine) （期望无输出） ----
+code_dirty_rc=1 (1=干净=通过)
+worktree 全量 git status --short：
+(end)
+
+---- [快照] git status --porcelain > /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_worldline_c1_a1_n16r84_seed42/git_status_start.txt ----
+?? v2/evidence/mock_trigA2_INVALID_switch_not_applied_n16r84_seed42/
+?? v2/evidence/mock_trigA2_n16r84_seed42/
+?? v2/evidence/run_worldline_c1_a1_n16r84_seed42/
+?? v2/evidence/run_worldline_c1_ctrl_n16r84_seed42/
+(end)
+
+---- [env-file] 只落到 /tmp（600），凭据值不上屏 ----
+env_file=/tmp/worldline_c1_a1_env
+# 本地真实 LLM 凭据（禁止提交；已被 .gitignore 忽略）
+HITT_LLM_PROVIDER=<redacted>
+LLM_API_KEY=<redacted>
+LIFE_PROMPT_WORLD_C1=<redacted>
+sha256(env_file)=307bd09867e3a7a2e62687b602bc36467f0c7d0c6f035dec5051d83fbb06e214  （ctrl 臂 env 里该变量不存在 ⇒ 差异就是这最后一行）
+
+---- [起跑 argv] ----
+systemd-run --unit=worldline-c1-a1-n16r84 --collect -p WorkingDirectory=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/worldline-c1-n16r84/code -p EnvironmentFile=/tmp/worldline_c1_a1_env \
+  -p MemoryHigh=12G -p MemoryMax=16G -p StandardOutput=append:/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_worldline_c1_a1_n16r84_seed42/host.log -p StandardError=append:/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_worldline_c1_a1_n16r84_seed42/host.log \
+  -- python3 -m orchestration run --life --seed 42 --agents 16 --rounds 84 \
+       --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_worldline_c1_a1_n16r84_seed42/run.jsonl --flush-every 2 --side-root /tmp/worldline_c1_a1_side
+Running as unit: worldline-c1-a1-n16r84.service; invocation ID: 168dd7f337304820a581feedeb512de8
+systemd_run_rc=0
+
+---- [进程级开关自证] unit=worldline-c1-a1-n16r84 MainPID=873031 ----
+systemctl show ActiveState=active SubState=running
+cgroup=/system.slice/worldline-c1-a1-n16r84.service  （须为 /system.slice/worldline-c1-a1-n16r84.service ⇒ 已脱离会话 cgroup）
+MainPID 进程命令行：/opt/openjiuwen/workswarm-venv/bin/python3 -m orchestration run --life --seed 42 --agents 16 --rounds 84 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_worldline_c1_a1_n16r84_seed42/run.jsonl --flush-every 2 --side-root /tmp/worldline_c1_a1_side 
+子进程实际生效的关键 env：
+  PROC-ENV HITT_LLM_PROVIDER=openai_compat
+  PROC-ENV LIFE_PROMPT_WORLD_C1=1
+switch_in_process=PASS（跑批进程内确认 LIFE_PROMPT_WORLD_C1=1）
+env_file_removed_after_start=YES（环境已在 unit 进程内，减少凭据落盘暴露面）
+
+launched arm=a1 unit=worldline-c1-a1-n16r84 MainPID=873031 out=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_worldline_c1_a1_n16r84_seed42 hostlog=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_worldline_c1_a1_n16r84_seed42/host.log

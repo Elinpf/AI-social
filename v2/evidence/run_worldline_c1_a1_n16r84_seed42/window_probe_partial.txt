@@ -1,0 +1,31 @@
+--- ctrl（OFF） ----
+  窗口 rounds 30-35：MSG 合计 48（{'MSG_DM': 48}）  线程数 16  dialogue LLM 调用 48
+  窗口内正文含世界类词的消息：0 条
+  全批世界事件：2 条
+     {'round': 30, 'type': 'WORLD_DIRECTIVE', 'kind': 'tension', 'directed': True, 'start_round': 30, 'end_round': 36, 'directive_id': 'D-30-wd.tension', 'payload_keys': ['directed', 'directive_id', 'dose', 'dose_curve', 'effective_from_round', 'expires_round', 'issued_round', 'kind', 'mechanism_id', 'params', 'place', 'rng_branch', 'scope']}
+     {'round': 30, 'type': 'WORLD_GROUP_EVENT', 'kind': 'tension', 'directed': True, 'start_round': 30, 'end_round': 36, 'directive_id': None, 'payload_keys': ['affected_scope_count', 'directed', 'directive_ref', 'end_round', 'group_event_id', 'kind', 'params', 'place', 'scope', 'start_round']}
+
+--- a1（ON） ----
+  窗口 rounds 30-35：MSG 合计 48（{'MSG_DM': 48}）  线程数 16  dialogue LLM 调用 48
+  窗口内正文含世界类词的消息：11 条
+     r31 MSG_DM None 集市/眼下/紧俏 :: 兔子面团耳朵你正过来就好，我这儿刚把陈家小孙子的兔脸按上两颗黑豆当眼睛，看着倒像那么回事了；眼下集市上面粉糖都紧，我这炉子一开也得省着点用，你说这紧俏劲儿还得熬
+     r31 MSG_DM None 集市 :: 哎，刚把李家二小子那篇作文改完，红笔还攥在手里呢。集市上菜都紧，我这心里也紧。得空再聊。
+     r31 MSG_DM None 集市 :: 肚子一空，手就抖，赵家二小子的迁出存根我核到一半，笔都拿不稳了。金先生，您那边集市上还买得着干粮吗？
+     r31 MSG_DM None 集市 :: 你这几天在集市上还能买到新鲜菜吧，我这儿正给桂婶家小孙子画糖画呢，手都抖了，先让我蹭口热乎的嘛。
+     r31 MSG_DM None 集市 :: 肚子都叫成这样了，赵家那把镰刀再磨下去我怕先啃铁屑。集市上连个烧饼都抢不着，你说这日子还怎么练？
+     r31 MSG_DM None 集市 :: 你这两天跑集市还顺当吧，我这儿正给桂英家小孙子缝书包带子呢，线都快不够用了呀。
+     r33 MSG_DM None 集市 :: 哎，我手里这半杯咖啡凉了也没顾上喝，光想着西头老赵家那小子换锄头的事，咱这集市上东西紧，还是攥紧自家那点谷子稳当吧。
+     r33 MSG_DM None 镇上 :: 这日子真是越过越紧巴，我刚把兜里那点零钱数了两遍，连杯热豆浆都舍不得加。你婶子今早还念叨她家小满的学费，你说咱这镇上啥时候能松快点儿？
+     r33 MSG_DM None 集市/紧俏 :: 集市上菜是紧俏了点，我这儿还攥着给月牙家小孙女纳的鞋底呢，你那边糖画摊子还撑得住不？先喝口热的。
+     r33 MSG_DM None 集市 :: 烧饼抢不着，我这铁砧上还压着赵家那把镰刀没淬完火呢。你练你的，我锤我的，谁也别嫌谁响——可你说，这集市再空下去，咱俩拿什么填肚子？
+  全批世界事件：2 条
+     {'round': 30, 'type': 'WORLD_DIRECTIVE', 'kind': 'tension', 'directed': True, 'start_round': 30, 'end_round': 36, 'directive_id': 'D-30-wd.tension', 'payload_keys': ['directed', 'directive_id', 'dose', 'dose_curve', 'effective_from_round', 'expires_round', 'issued_round', 'kind', 'mechanism_id', 'params', 'place', 'rng_branch', 'scope']}
+     {'round': 30, 'type': 'WORLD_GROUP_EVENT', 'kind': 'tension', 'directed': True, 'start_round': 30, 'end_round': 36, 'directive_id': None, 'payload_keys': ['affected_scope_count', 'directed', 'directive_ref', 'end_round', 'group_event_id', 'kind', 'params', 'place', 'scope', 'start_round']}
+
+== 对照小结 ==
+  dialogue 暴露机会：ctrl=48 a1=48（a1/ctrl=1.000）
+  窗口消息数：ctrl=48 a1=48
+  窗口线程数：ctrl=16 a1=16
+  正文代理命中：ctrl=0 a1=11（弱指标，见文件头口径说明）
+  世界事件落点：ctrl=[(30, 'tension', 'WORLD_DIRECTIVE'), (30, 'tension', 'WORLD_GROUP_EVENT')]
+                a1  =[(30, 'tension', 'WORLD_DIRECTIVE'), (30, 'tension', 'WORLD_GROUP_EVENT')]

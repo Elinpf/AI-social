@@ -1,0 +1,75 @@
+================ R1 · C-1 起批证据（臂 ctrl） ================
+采集时刻: 2026-10-22T14:27:44+08:00
+repo:     /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+worktree: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/worldline-c1-n16r84
+branch:   feat/world-line-c1
+HEAD:     af1dffc61040adc97c828b4927ac3935dbef2d1b
+out_dir:  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_worldline_c1_ctrl_n16r84_seed42
+side_root: /tmp/worldline_c1_ctrl_side
+arm:      ctrl （ctrl=OFF / a1=ON，单变量 LIFE_PROMPT_WORLD_C1）
+
+---- [闸门0] 开关可见性：git grep -c "LIFE_PROMPT_WORLD_C1" -- code/life/ ----
+code/life/agent.py:2
+grep_rc=0 (0=开关在树上可见=通过；1=不可见=禁止起跑)
+---- [闸门0b] 模块可导入：python3 -c 'import life.agent' ----
+import_rc=0 (0=通过)
+
+---- [闸门1] 串行铁律：pgrep -af "[o]rchestration run" （期望：无命中） ----
+pgrep_rc=1 (1=无命中=通过)
+---- [闸门1·上臂互斥] 本臂为首臂（ctrl），无上臂需等待 ----
+
+---- [闸门2] env | grep -E 'LIFE_PROMPT_|HITT_DIALOGUE_' （ctrl 期望空；a1 期望只含 LIFE_PROMPT_WORLD_C1） ----
+env_grep_rc=1
+
+---- [闸门3] git status --short 过滤 code/(life|orchestration|config|engine) （期望：无输出） ----
+code_dirty_rc=1 (1=干净=通过)
+worktree 全量 git status --short：
+(end)
+
+---- [分支可见性 · 远端（诚实留痕，Leader 裁决 A：出网不可达 ⇒ 降级本地双证）] ----
+命令: timeout 60 git ls-remote --heads origin feat/world-line-c1 （GitHub 出网 443，实测不可达）
+stdout+stderr: []
+lsremote_rc=124   elapsed=60s （124=timeout；128=连接失败）
+DNS 解析: 20.205.243.166  github.com
+TCP 443 探测: 可达
+远端可见性：未验证（出网 443 不可达），本轮降级为本地双证
+
+---- [分支可见性 · 本地双证（至少三件）] ----
+① git rev-parse feat/world-line-c1:
+af1dffc61040adc97c828b4927ac3935dbef2d1b
+rc=0
+② git log -1 --format='%H %s' feat/world-line-c1:
+af1dffc61040adc97c828b4927ac3935dbef2d1b feat(life): C-1 世界/场景状态进对话（LIFE_PROMPT_WORLD_C1，默认关）
+rc=0
+③ git branch --contains af1dffc61040adc97c828b4927ac3935dbef2d1b:
++ feat/world-line-c1
+rc=0
+④ 与主树 HEAD 的关系: 主树 HEAD=b8ac413 on feat/d2-trigger
+   git merge-base --is-ancestor <branch> HEAD ?
+   branch 是 HEAD 的祖先=否（HEAD 不含该分支）
+   git rev-list --count <branch>..HEAD = 4
+
+---- [起跑 argv] ----
+cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/worldline-c1-n16r84/code && setsid python3 -m orchestration run --life --seed 42 --agents 16 --rounds 84 \
+  --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_worldline_c1_ctrl_n16r84_seed42/run.jsonl --flush-every 2 --side-root /tmp/worldline_c1_ctrl_side
+
+---- [闸门0c] worktree 分支/HEAD 一致性 ----
+worktree_branch=feat/world-line-c1 （期望 feat/world-line-c1）
+worktree_HEAD=af1dffc61040adc97c828b4927ac3935dbef2d1b
+feat/world-line-c1=af1dffc61040adc97c828b4927ac3935dbef2d1b
+---- [生效 env 快照 + 单变量存在性断言]（凭据值脱敏） ----
+arm: ctrl
+LIFE_PROMPT_WORLD_C1 = UNSET（变量不存在）
+检验命令: [ -z "${LIFE_PROMPT_WORLD_C1+x}" ] ; 展开=
+存在性判定: NO （ctrl 要求 NO=变量根本不存在；a1 要求 YES 且值=1）
+开关断言: PASS
+HITT_LLM_PROVIDER=openai_compat
+LLM_API_KEY=<set:32 chars>
+  (env grep 结束)
+cwd=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/worldline-c1-n16r84/code  code_head=af1dffc61040adc97c828b4927ac3935dbef2d1b
+---- [取证瑕疵勘误] 2026-10-22T14:28:52+08:00 ----
+launch_arm.sh 在 'cd $WT/code' 之后执行 cp "$0" → 相对路径失效，报 'cp: cannot stat launch_arm.sh'，
+故 launch.sh 未自动落盘。本文件由 batch-runner 事后从 artifacts/r1-batch/launch_arm.sh 手工补齐（同一份，未改内容）。
+sha256(launch.sh) = 99f583fb39f4d95de6e88836794b8408aca88e35c662b502b0766ee76a8ddf0f
+另：本次闸门打印 'TCP 443 探测: 可达' 但 git ls-remote rc=124（TCP 建连成功、TLS/HTTP 阶段挂起）；
+降级判定以 ls-remote 实际结果为准（rc=124 ⇒ 远端可见性未验证），不以 TCP 探测为准。
