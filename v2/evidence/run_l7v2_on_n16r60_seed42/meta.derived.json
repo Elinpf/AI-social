@@ -1,0 +1,32 @@
+{
+  "_warning": "【派生 meta，非原始】本目录（run_l7v2_on_n16r60_seed42）没有跑批器写出的原版 meta.json（meta_gate.txt 已记录其缺失）。此文件由 evidence-closer 逐字段从同目录旁证文件派生，供 gen_threads.py / serve.py 出图与白名单留痕使用；**不得**当作原版 meta.json 引用，也**不得**用于任何准入判定。",
+  "_derived_by": "evidence-closer",
+  "_derived_at_note": "生成于 R16 证据收口（零跑批）",
+  "_derivation": {
+    "n": "host.log 第5行 `[life] n_agents=16 rounds=60 ...`",
+    "rounds": "host.log 第5行 `rounds=60`（与 argv `--rounds 60` 一致）",
+    "seed": "host.log 第2行 argv `--seed 42`",
+    "events": "host.log 第5行 `events=116498`（与 run.jsonl 非空行数 116498 实测一致）",
+    "code_sha": "host.log 第4行 `[d2] code_sha=a851a8fcac82846cc12150df43783d4c5922e902`；launch_evidence.txt `HEAD:` 同值；four_dir_integrity.txt `HEAD=` 同值",
+    "provider": "env_dump.txt `HITT_LLM_PROVIDER=openai_compat`；并由 run.jsonl 的 LLM_CALL payload.provider = openai_compat 交叉确证",
+    "model": "run.jsonl 内 LLM_CALL 事件 payload.model = DeepSeek-Flash（批内自报，比 config/llm.json 当前值更可信）",
+    "llm_cached_ratio": "obs llm-cost 输出 total.cached=1425 / total.calls=3042 = 0.46844（本轮亲跑，见 llmcost.json / recompute_r16.txt §5）",
+    "started_at": "launch_evidence.txt `采集时刻: 2026-10-22T06:16:52+08:00`（该文件由起批脚本在起跑瞬间写出；本批无批内墙钟时间戳，事件只带 mono_ts，故以采集时刻近似起跑时刻）",
+    "finished_at": "run.jsonl 与 host.log 的文件 mtime = 2026-10-22 06:58（host.log 第5行 seconds=2500.5991 ⇒ 06:16:52 + 2500.6s ≈ 06:58:33）",
+    "weeks": "无旁证（argv 未传 --weeks，按 rounds=60 运行）⇒ 本字段**故意留空**"
+  },
+  "n": 16,
+  "rounds": 60,
+  "seed": 42,
+  "events": 116498,
+  "code_sha": "a851a8fcac82846cc12150df43783d4c5922e902",
+  "provider": "openai_compat",
+  "model": "DeepSeek-Flash",
+  "llm_cached_ratio": 0.46844,
+  "started_at": "2026-10-22T06:16:52+08:00",
+  "finished_at": "2026-10-22T06:58:33+08:00",
+  "batch": "run_l7v2_on_n16r60_seed42",
+  "_meta_kind": "derived",
+  "_original_meta_present": false,
+  "_original_meta_evidence": "meta_gate.txt: \"meta.json 不可读 ⇒ 批次 VOID\"；本目录 ls 无 meta.json"
+}

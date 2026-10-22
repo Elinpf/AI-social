@@ -1,0 +1,167 @@
+# R16 · L-7 v2 臂 独立复算回执（evidence-closer 亲跑，零跑批）
+
+> 本回执的规矩：每条数值都是「命令 → 输入路径 → 输出」，输出为实跑捕获，未人工改写。
+> 复算器：`v2/evidence/recompute_l7_indep.py`（自写，不 import `l7v2_judge.py` / `r1_recompute.py`；口径定义只做只读引用）
+
+## 0. 串行纪律（起跑前双闸，防自匹配用字符类）
+```text
+$ pgrep -af 'orchestration ru[n]'; echo rc=$?
+rc=1
+$ pgrep -af 'run_batc[h]'; echo rc=$?
+rc=1
+```
+> rc=1（无命中）⇒ 本次复算期间无跑批在跑；本任务全程零跑批。
+
+## 1. 仓根与批身份
+```text
+$ git rev-parse --show-toplevel; git log -1 --format='%H %s'
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+3730240f3ad8416f69b5d90d016b4e42fe008c9e life: L-7 结构臂（LIFE_PROMPT_L7_STRUCT，默认 ON）——去重从生成后重试前移到生成前结构约束
+$ ls -la v2/evidence/run_l7v2_on_n16r60_seed42/
+total 54388
+drwxr-xr-x  2 root root     4096 Oct 22 10:05 .
+drwxr-xr-x 54 root root    32768 Oct 22 10:04 ..
+-rw-r--r--  1 root root      291 Oct 22 06:17 env_dump.txt
+-rw-r--r--  1 root root      183 Oct 22 06:59 four_dir_integrity.txt
+-rw-r--r--  1 root root      917 Oct 22 06:58 host.log
+-rw-r--r--  1 root root     1190 Oct 22 06:59 l7v2_judge.stdout
+-rw-r--r--  1 root root     2718 Oct 22 06:59 l7v2_readings.json
+-rw-r--r--  1 root root     1970 Oct 22 06:59 l7v2_readings.md
+-rw-r--r--  1 root root     3000 Oct 22 06:17 launch_evidence.txt
+-rw-r--r--  1 root root     4372 Oct 22 06:16 launch.sh
+-rw-r--r--  1 root root     1162 Oct 22 06:59 llmcost.json
+-rw-r--r--  1 root root        0 Oct 22 06:59 llmcost.stderr
+-rw-r--r--  1 root root     1162 Oct 22 06:59 llmcost.txt
+-rw-r--r--  1 root root      189 Oct 22 06:59 meta_gate.txt
+-rw-r--r--  1 root root      982 Oct 22 10:05 recompute_r16.txt
+-rw-r--r--  1 root root 55598046 Oct 22 06:58 run.jsonl
+```
+
+## 2. 独立复算（raw8 判定口径 / norm8 辅助口径 / 守卫分子）
+```text
+$ python3 v2/evidence/recompute_l7_indep.py --log v2/evidence/run_l7v2_on_n16r60_seed42/run.jsonl --tag 'R16 L-7v2 ON'
+=== 独立复算 R16 L-7v2 ON（脚本 v2/evidence/recompute_l7_indep.py）
+日志: v2/evidence/run_l7v2_on_n16r60_seed42/run.jsonl
+日志 sha256: sha256:ee3d28bc9606f2c2ee6609af7c5272673e54db674d5268878aa5d99e477f11b8
+解析: 非空行 116498，JSON 解析失败 0，MSG_* 消息数 n_msg = 510
+MSG 类型分布: {"MSG_DM": 455, "MSG_PUBLIC": 55}
+
+[raw8 · 判定口径] dup = 111 / 510 = 21.764706%
+[norm8 · 辅助口径] dup = 74 / 510 = 14.509804%
+[集合交集] raw8∩norm8 dup = 67（raw8 独有 44，norm8 独有 7）
+[OFF 基线 raw8] 193 / 510 = 37.843137%
+[M1] Δ(raw8 vs OFF) = -16.0784pp，噪声带 [-4.31, +5.88]pp ⇒ BELOW_BAND
+[wilson95 raw8] [18.402, 25.55]
+[newcombe95 Δpp] [-21.526, -10.496]
+[逐频道] {"MSG_DM": {"n": 455, "dup_raw8": 100, "dup_norm8": 65}, "MSG_PUBLIC": {"n": 55, "dup_raw8": 11, "dup_norm8": 9}, "MSG_GROUP": {"n": 0, "dup_raw8": 0, "dup_norm8": 0}}
+
+[守卫独立重算] S1 F-6 memory_refs = 412/510（floor 32 ⇒ PASS）
+                S2 L-2 旁白头 = 0/510（==0 ⇒ PASS）
+                S3 L-8 裸ID = 0/510（==0 ⇒ PASS）
+                S3b L-13 token泄漏 = 6/510（<=9 v1.1 ⇒ PASS）
+```
+
+## 3. 官方口径对照：`tools/d5/dialogue_metrics.py`（其 L-7 = norm8，**不是**判定口径 raw8）
+```text
+$ python3 tools/d5/dialogue_metrics.py --log v2/evidence/run_l7v2_on_n16r60_seed42/run.jsonl --out-json v2/evidence/metrics_r16_official.json --out-md v2/evidence/metrics_r16_official.md
+{
+ "messages": 510,
+ "threads": 169,
+ "thread_schema": "explicit",
+ "v0_reply_pointer_rate": 1.0,
+ "v0_single_msg_thread_ratio": 0.47929,
+ "v0_agent_id_leak_rate": 0.0,
+ "admission": "REJECTED",
+ "out_json": "v2/evidence/metrics_r16_official.json",
+ "out_md": "v2/evidence/metrics_r16_official.md"
+}
+
+$ python3 -c "...读 metrics_r16_official.json 的 L_wording..."
+L-7_dup_ngram8_rate = 0.145098   (= norm8，官方脚本唯一 L-7 实现，:588)
+L-6_dup_exact_rate  = 0.0
+L-2_narration_rate  = 0.0
+L-8_agent_id_leak   = 0.0
+L-13_token_leak n   = 6
+n_messages = 510  n_threads = 169
+admission.verdict = REJECTED （因本目录无 meta.json，准入 REJECTED；不影响指标复算）
+```
+
+> **口径分裂（本轮关键发现之一）**：官方 `dialogue_metrics.py:588` 的 L-7 用 `normalize_body`（去标点+小写+全角转半角）取 8-window ⇒ **= 74/510 = 14.5098%（即 R16 读数里的 norm8）**；
+> 而 R16 的 M1 判定用的 raw8（仅 `re.sub(r'\s+','',body)`）**不是**该脚本实现的，是 `l7v2_judge.py:53` 的另实现 ⇒ **111/510 = 21.7647%**。
+> 两者差 37 条（raw8 独有 44 条、norm8 独有 7 条、交集 67 条）：raw8 保留标点 ⇒ 归一后本应重合的句子在 raw8 下被标点差异拆开（净 +37）。**任何引用都必须写明是哪一个口径。**
+
+## 4. 「193/510」这个基线到底是哪一批 / 哪一口径（我亲跑，不抄）
+```text
+$ python3 v2/evidence/recompute_l7_indep.py --log v2/evidence/run_f6_off_n16r60_seed42/run.jsonl
+日志 sha256: sha256:c73bead61a440db789f6d6ba1de555fe326a203ee27d1219690174e3d9483642
+解析: 非空行 116294，JSON 解析失败 0，MSG_* 消息数 n_msg = 510
+MSG 类型分布: {"MSG_DM": 455, "MSG_PUBLIC": 55}
+
+[raw8 · 判定口径] dup = 193 / 510 = 37.843137%
+[norm8 · 辅助口径] dup = 181 / 510 = 35.490196%
+[集合交集] raw8∩norm8 dup = 179（raw8 独有 14，norm8 独有 2）
+[OFF 基线 raw8] 193 / 510 = 37.843137%
+
+$ python3 v2/evidence/recompute_l7_indep.py --log v2/evidence/run_f6_dequp_n16r60_seed42/run.jsonl
+日志 sha256: sha256:6bf3ec88700fa1a7451b18c63678d0904c69b9de39896739190e7e674db8fdbd
+解析: 非空行 116385，JSON 解析失败 0，MSG_* 消息数 n_msg = 510
+MSG 类型分布: {"MSG_DM": 455, "MSG_PUBLIC": 55}
+
+[raw8 · 判定口径] dup = 268 / 510 = 52.549020%
+[norm8 · 辅助口径] dup = 193 / 510 = 37.843137%
+[集合交集] raw8∩norm8 dup = 189（raw8 独有 79，norm8 独有 4）
+[OFF 基线 raw8] 193 / 510 = 37.843137%
+
+```
+> **结论（复算支撑）**：193/510 在**两处**同时成立，属数值巧合，极易混用：
+> ① **OFF 臂 raw8**（`run_f6_off_n16r60_seed42`）= 193/510 = 37.8431% —— 这才是 R16 判定使用的基线，与 R16 的 raw8 111 **同口径**；
+> ② **R12 DEQUP 臂 norm8**（`run_f6_dequp_n16r60_seed42`）= 193/510 = 37.8431% —— 同数不同口径不同批（同批的 raw8 是 268/510 = 52.5490%）。
+> 因此 `l7v2_readings.md` 的脚注「R12 的 193/510 属此口径(norm8)」**字面成立但极易误导**：判定实际拿的是 ①（OFF raw8），不是 ②。
+> 判定配对 **raw8(R16 111) vs raw8(OFF 193)** 口径一致 ⇒ Δ = −16.0784pp **成立**，不是跨口径相减。
+
+## 5. 真 LLM 成本（`obs llm-cost` 亲跑）
+```text
+$ cd code && python3 -m obs llm-cost --log <abs>/v2/evidence/run_l7v2_on_n16r60_seed42/run.jsonl --require-provider openai_compat ; echo rc=$?
+{"engine_log":{"by_provider":{"openai_compat":3042},"by_purpose":{"dialogue":{"cached":0,"calls":674,"degraded":0,"thinking":0,"tokens_in":305556,"tokens_out":21189},"importance":{"cached":1387,"calls":1523,"degraded":0,"thinking":0,"tokens_in":2312,"tokens_out":36387},"judge":{"cached":0,"calls":668,"degraded":0,"thinking":668,"tokens_in":88382,"tokens_out":221374},"negotiation":{"cached":34,"calls":49,"degraded":0,"thinking":0,"tokens_in":1787,"tokens_out":565},"plan":{"cached":0,"calls":16,"degraded":0,"thinking":0,"tokens_in":1447,"tokens_out":1087},"reflect":{"cached":4,"calls":112,"degraded":0,"thinking":0,"tokens_in":45918,"tokens_out":7597}},"llm_judgment_by_dimension":{"affection":132,"rel_affinity":32,"rel_familiarity":222,"rel_trust":2,"respect":132,"stance":132,"weekly_focus":16},"source":"engine_log(LLM_CALL)","total":{"cached":1425,"calls":3042,"degraded":0,"thinking":668,"tokens_in":445402,"tokens_out":288199,"tokens_total":733601}},"provider_guard":{"by_provider":{"openai_compat":3042},"expected":"openai_compat","ok":true,"policy":"计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。","problems":[]}}
+rc=0
+```
+> 关键读数：`dialogue.calls=674`、`dialogue.tokens_in=305556`、`dialogue.tokens_out=21189`、`total.calls=3042`、`total.tokens_total=733601`、`provider_guard.ok=true`、`problems=[]`。
+> 对照 OFF 臂（同 run_f6_off，**我本轮亲跑**，见 §5′）：`dialogue.calls=510 / tokens_in=88878 / tokens_out=12057`、`total.tokens_total=484835`。
+> ⇒ R16 的 dequp-v2 重试把 dialogue 调用从 510 抬到 674（+164，恰等于 `retries`），dialogue tokens_in **+216,678（+243.79%）**，tokens_out +9,132（+75.74%），total tokens_total +248,766（+51.31%）。
+
+## 5′. OFF 臂成本：**我本轮亲跑**（替代对 `docs/forensics` 的引用）
+
+```text
+$ cd code && python3 -m obs llm-cost --log <abs>/v2/evidence/run_f6_off_n16r60_seed42/run.jsonl --require-provider openai_compat ; echo rc=$?
+{"engine_log":{"by_provider":{"openai_compat":2878},"by_purpose":{"dialogue":{"cached":47,"calls":510,"degraded":0,"thinking":0,"tokens_in":88878,"tokens_out":12057},"importance":{"cached":1387,"calls":1523,"degraded":0,"thinking":0,"tokens_in":2312,"tokens_out":34276},"judge":{"cached":0,"calls":668,"degraded":0,"thinking":668,"tokens_in":88382,"tokens_out":201605},"negotiation":{"cached":34,"calls":49,"degraded":0,"thinking":0,"tokens_in":1787,"tokens_out":525},"plan":{"cached":0,"calls":16,"degraded":0,"thinking":0,"tokens_in":1447,"tokens_out":906},"reflect":{"cached":4,"calls":112,"degraded":0,"thinking":0,"tokens_in":45943,"tokens_out":6717}},"llm_judgment_by_dimension":{"affection":132,"rel_affinity":32,"rel_familiarity":222,"rel_trust":2,"respect":132,"stance":132,"weekly_focus":16},"source":"engine_log(LLM_CALL)","total":{"cached":1472,"calls":2878,"degraded":0,"thinking":668,"tokens_in":228749,"tokens_out":256086,"tokens_total":484835}},"provider_guard":{"by_provider":{"openai_compat":2878},"expected":"openai_compat","ok":true,"policy":"计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。","problems":[]}}
+rc=0
+```
+
+> **与 `docs/forensics/2026-10-22-repo-state.md` §4.3 记的 `tokens_in=88830 / tokens_out=12283` 不一致**（差 +48 / −226）——本回执以**亲跑**为准并登记差异，不抄旧数；该差异不影响 L-7（L-7 不依赖 token）。
+> 该批 `run.jsonl` sha256 = `c73bead61a440db789f6d6ba1de555fe326a203ee27d1219690174e3d9483642`，与 `reports/R11-f6-memory-into-dialogue.md:445` 登记的 OFF 臂 sha 逐位相同 ⇒ 同一批。
+
+## 6. 与 `l7v2_readings.md` / `l7v2_judge.stdout` 的逐项比对
+
+| # | 项目 | 旧读数（l7v2_readings.md / .stdout） | 我的独立复算 | 一致？ |
+|---|---|---|---|---|
+| 1 | n_msg（分母） | 510 | 510（455 DM + 55 PUBLIC，116498 行解析 0 失败） | ✅ |
+| 2 | raw8 dup（判定） | 111 | **111** | ✅ |
+| 3 | raw8 率 | 21.7647% | **21.764706%** | ✅ |
+| 4 | norm8 dup（辅助） | 74 | **74** | ✅ |
+| 5 | norm8 率 | 14.5098% | **14.509804%** | ✅ |
+| 6 | OFF 基线 raw8 | 193/510=37.8431% | **193/510=37.843137%**（我自己跑 OFF 臂复算得到） | ✅ |
+| 7 | Δ（raw8 vs OFF raw8） | −16.08pp | **−16.0784pp** | ✅ |
+| 8 | wilson95(raw8) | [18.402, 25.55] | **[18.402, 25.55]** | ✅ |
+| 9 | S1 F-6 | 412/510 | **412/510** | ✅ |
+| 10 | S2 L-2 | 0/510 | **0/510** | ✅ |
+| 11 | S3 L-8 | 0/510 | **0/510** | ✅ |
+| 12 | S3b L-13 | 6/510 | **6/510** | ✅ |
+| 13 | S4 dialogue calls | 674 | **674** | ✅ |
+| 14 | S4 total calls | 3042 | **3042** | ✅ |
+| 15 | S4 total tokens | 733601 | **733601** | ✅ |
+| 16 | dialogue tokens_in | 305556 | **305556** | ✅ |
+
+**差异说明：无。** 16 项逐项一致（不是抄数——raw8/norm8/守卫分子由自写脚本从 run.jsonl 重解析重算；成本三数由 `obs llm-cost` 亲跑）。
+唯一需要「纠正表述」的是**两处口径注解**（不影响任何数值）：
+1. 官方 `dialogue_metrics.py:588` 的 L-7 实现是 **norm8**（74/510），判定用的 raw8（111/510）来自 `l7v2_judge.py:53`，任务书把二者都称作「L-7」；报告必须逐处标注口径。
+2. `l7v2_readings.md` 表格把 193 标为「OFF 基线 raw8（冻死）」并把脚注写成「R12 的 193/510 属 norm8」——两句话指向**两个不同的 193**（OFF raw8 = 193、R12 DEQUP norm8 = 193）。判定取的是前者，配对同口径，结论不变，但脚注应改写。

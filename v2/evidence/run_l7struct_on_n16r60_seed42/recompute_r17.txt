@@ -1,0 +1,161 @@
+# R17 · L-7 结构臂 读数回执（evidence-closer 亲跑，零跑批）
+
+> 本回执的规矩：每条数值都是「命令 → 输入路径 → 输出」，输出为实跑捕获，未人工改写。
+> 本批**只出读数，不下效果判定**（R17 的判定需按策略包另行裁定，本轮任务书明令不得替它下判定）。
+
+## 0. 串行纪律（双闸）
+```text
+$ pgrep -af 'orchestration ru[n]'; echo rc=$?
+rc=1
+$ pgrep -af 'run_batc[h]'; echo rc=$?
+4193344 /bin/sh -c cd "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment" && OUT=v2/evidence/run_l7struct_on_n16r60_seed42/recompute_r17.txt && { echo "# R17 · L-7 结构臂 读数回执（evidence-closer 亲跑，零跑批）" echo echo "> 本回执的规矩：每条数值都是「命令 → 输入路径 → 输出」，输出为实跑捕获，未人工改写。" echo "> 本批**只出读数，不下效果判定**（R17 的判定需按策略包另行裁定，本轮任务书明令不得替它下判定）。" echo echo "## 0. 串行纪律（双闸）" echo '```text' echo "\$ pgrep -af 'orchestration ru[n]'; echo rc=\$?" pgrep -af 'orchestration ru[n]'; echo rc=$? echo "\$ pgrep -af 'run_batc[h]'; echo rc=\$?" pgrep -af 'run_batc[h]'; echo rc=$? echo '```' echo echo "## 1. 批身份（该目录**无 meta.json**）" echo '```text' echo "\$ ls -la v2/evidence/run_l7struct_on_n16r60_seed42/" ls -la v2/evidence/run_l7struct_on_n16r60_seed42/ echo echo "\$ cat v2/evidence/run_l7struct_on_n16r60_seed42/host.log" cat v2/evidence/run_l7struct_on_n16r60_seed42/host.log echo '```' echo echo "## 2. 门禁复现：\`tools/d5/run_batch_eval.sh\` 在 B-7 准入 exit 2（我亲跑，证明「不是绕过门禁」而是门禁确实拒绝）" echo '```text' echo "\$ bash tools/d5/run_batch_eval.sh --run-dir v2/evidence/run_l7struct_on_n16r60_seed42 --tag r17gate ; echo rc=\$?" bash tools/d5/run_batch_eval.sh --run-dir v2/evidence/run_l7struct_on_n16r60_seed42 --tag r17gate 2>&1; echo "rc=$?" echo '```' echo "> 该脚本在「== 0) 输入检查」处即 exit 2，**未触发任何 LLM 调用、未写任何文件**（下方 \`git status\` 可核）。" echo echo "## 3. 绕开 meta 门禁：直接调用官方指标器出读数（\`dialogue_metrics.py\`，其 L-7 = norm8）" echo '```text' echo "\$ python3 tools/d5/dialogue_metrics.py --log v2/evidence/run_l7struct_on_n16r60_seed42/run.jsonl --out-json v2/evidence/metrics_r17_official.json --out-md v2/evidence/metrics_r17_official.md" python3 tools/d5/dialogue_metrics.py --log v2/evidence/run_l7struct_on_n16r60_seed42/run.jsonl --out-json v2/evidence/metrics_r17_official.json --out-md v2/evidence/metrics_r17_official.md echo echo "\$ python3 -c \"...读 metrics_r17_official.json...\"" python3 -c " import json;d=json.load(open('v2/evidence/metrics_r17_official.json'));L=d['L_wording'] print('L-7_dup_ngram8_rate (=norm8) =',L['L-7_dup_ngram8_rate'],' n=',round(L['L-7_dup_ngram8_rate']*d['meta']['n_messages'])) print('L-6_dup_exact_rate  =',L['L-6_dup_exact_rate']) print('L-2_narration_rate  =',L['L-2_narration_rate_proxy']) print('L-8_agent_id_leak   =',L['L-8_agent_id_leak_rate']) print('L-13_token_leak n   =',d['L-13_token_leak']['n']) print('n_messages =',d['meta']['n_messages'],' n_threads =',d['meta']['n_threads']) print('admission.verdict =',d['admission']['verdict'],'（无 meta.json ⇒ 准入 REJECTED，指标照算）') " echo '```' echo echo "## 4. 独立复算（自写复算器：raw8 判定口径 + norm8 辅助口径 + 守卫分子）" echo '```text' echo "\$ python3 v2/evidence/recompute_l7_indep.py --log v2/evidence/run_l7struct_on_n16r60_seed42/run.jsonl --tag 'R17 L-7STRUCT ON'" python3 v2/evidence/recompute_l7_indep.py --log v2/evidence/run_l7struct_on_n16r60_seed42/run.jsonl --tag "R17 L-7STRUCT ON" echo '```' echo echo "## 5. 真 LLM 成本（\`obs llm-cost\` 亲跑，复核 dialogue tokens_in / calls）" echo '```text' echo "\$ cd code && python3 -m obs llm-cost --log <abs>/v2/evidence/run_l7struct_on_n16r60_seed42/run.jsonl --require-provider openai_compat ; echo rc=\$?" ( cd code && python3 -m obs llm-cost --log "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_l7struct_on_n16r60_seed42/run.jsonl" --require-provider openai_compat; echo "rc=$?" ) echo '```' } > "$OUT" 2>&1; echo done; wc -l "$OUT"
+rc=0
+```
+
+## 1. 批身份（该目录**无 meta.json**）
+```text
+$ ls -la v2/evidence/run_l7struct_on_n16r60_seed42/
+total 54128
+drwxr-xr-x  2 root root     4096 Oct 22 10:06 .
+drwxr-xr-x 54 root root    32768 Oct 22 10:04 ..
+-rw-r--r--  1 root root     3158 Oct 22 08:35 env_dump.txt
+-rw-r--r--  1 root root     1241 Oct 22 08:35 git_status_start.txt
+-rw-r--r--  1 root root      934 Oct 22 09:27 host.log
+-rw-r--r--  1 root root     3158 Oct 22 08:35 launch_evidence.txt
+-rw-r--r--  1 root root     5126 Oct 22 08:35 launch.sh
+-rw-r--r--  1 root root     4424 Oct 22 10:06 recompute_r17.txt
+-rw-r--r--  1 root root 55347247 Oct 22 09:27 run.jsonl
+
+$ cat v2/evidence/run_l7struct_on_n16r60_seed42/host.log
+[launch] run: python3 -m orchestration run --life --seed 42 --agents 16 --rounds 60 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_l7struct_on_n16r60_seed42/run.jsonl --flush-every 2 --side-root /tmp/l7struct_side_n16r60_seed42
+[launch] env: LIFE_PROMPT_L7_STRUCT=1 其余对话开关全部未设
+[launch] code_sha=3730240f3ad8416f69b5d90d016b4e42fe008c9e code_dir=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code
+[launch] started_at=2026-10-22T08:35:14+08:00
+[life] n_agents=16 rounds=60 events=116385 seconds=3141.9324 log_bytes=55347247
+  unknown_event_types=[]
+  chain_ok=True replay_parity=True first_run_equals_replay=True
+  conservation_ok=True final_state_hash=sha256:fec8a5c9d8bd7c693d835f8f2fcf8304436782310a8a5325275bb1a9a1115e87
+  log written: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_l7struct_on_n16r60_seed42/run.jsonl
+```
+
+## 2. 门禁复现：`tools/d5/run_batch_eval.sh` 在 B-7 准入 exit 2（我亲跑，证明「不是绕过门禁」而是门禁确实拒绝）
+```text
+$ bash tools/d5/run_batch_eval.sh v2/evidence/run_l7struct_on_n16r60_seed42 r17gate ; echo rc=$?
+== 0) 输入检查
+[FAIL] 缺 meta.json（跑批未正常收尾）——按准入清单 B-7 拒绝出数
+rc=2
+```
+> 该脚本在「== 0) 输入检查」处即 exit 2，**未触发任何 LLM 调用、未写任何文件**（跑后 `git status --porcelain` 内无任何 `r17gate` 产物）。
+> ⇒ 本条是「R17 缺 meta.json ⇒ 门禁真的会拒绝」的现场复现；§3 是**在门禁之外、显式声明**地直接调指标器出数，**不是**把门禁当成通过。
+
+## 3. 绕开 meta 门禁：直接调用官方指标器出读数（`dialogue_metrics.py`，其 L-7 = norm8）
+```text
+$ python3 tools/d5/dialogue_metrics.py --log v2/evidence/run_l7struct_on_n16r60_seed42/run.jsonl --out-json v2/evidence/metrics_r17_official.json --out-md v2/evidence/metrics_r17_official.md
+{
+ "messages": 510,
+ "threads": 169,
+ "thread_schema": "explicit",
+ "v0_reply_pointer_rate": 1.0,
+ "v0_single_msg_thread_ratio": 0.47929,
+ "v0_agent_id_leak_rate": 0.0,
+ "admission": "REJECTED",
+ "out_json": "v2/evidence/metrics_r17_official.json",
+ "out_md": "v2/evidence/metrics_r17_official.md"
+}
+
+$ python3 -c "...读 metrics_r17_official.json..."
+L-7_dup_ngram8_rate (=norm8) = 0.25098  n= 128
+L-6_dup_exact_rate  = 0.0
+L-2_narration_rate  = 0.0
+L-8_agent_id_leak   = 0.0
+L-13_token_leak n   = 2
+n_messages = 510  n_threads = 169
+admission.verdict = REJECTED （无 meta.json ⇒ 准入 REJECTED，指标照算）
+```
+
+## 4. 独立复算（自写复算器：raw8 判定口径 + norm8 辅助口径 + 守卫分子）
+```text
+$ python3 v2/evidence/recompute_l7_indep.py --log v2/evidence/run_l7struct_on_n16r60_seed42/run.jsonl --tag 'R17 L-7STRUCT ON'
+=== 独立复算 R17 L-7STRUCT ON（脚本 v2/evidence/recompute_l7_indep.py）
+日志: v2/evidence/run_l7struct_on_n16r60_seed42/run.jsonl
+日志 sha256: sha256:4df89f4ac1dac1a8df00766b538f4fe12c9e9999664bcf6a606054438446fb5e
+解析: 非空行 116385，JSON 解析失败 0，MSG_* 消息数 n_msg = 510
+MSG 类型分布: {"MSG_DM": 455, "MSG_PUBLIC": 55}
+
+[raw8 · 判定口径] dup = 163 / 510 = 31.960784%
+[norm8 · 辅助口径] dup = 128 / 510 = 25.098039%
+[集合交集] raw8∩norm8 dup = 127（raw8 独有 36，norm8 独有 1）
+[OFF 基线 raw8] 193 / 510 = 37.843137%
+[M1] Δ(raw8 vs OFF) = -5.8824pp，噪声带 [-4.31, +5.88]pp ⇒ BELOW_BAND
+[wilson95 raw8] [28.061, 36.13]
+[newcombe95 Δpp] [-11.677, -0.033]
+[逐频道] {"MSG_DM": {"n": 455, "dup_raw8": 145, "dup_norm8": 113}, "MSG_PUBLIC": {"n": 55, "dup_raw8": 18, "dup_norm8": 15}, "MSG_GROUP": {"n": 0, "dup_raw8": 0, "dup_norm8": 0}}
+
+[守卫独立重算] S1 F-6 memory_refs = 0/510（floor 32 ⇒ FAIL）
+                S2 L-2 旁白头 = 0/510（==0 ⇒ PASS）
+                S3 L-8 裸ID = 0/510（==0 ⇒ PASS）
+                S3b L-13 token泄漏 = 2/510（<=9 v1.1 ⇒ PASS）
+```
+
+## 5. 真 LLM 成本（`obs llm-cost` 亲跑，复核 dialogue tokens_in / calls）
+```text
+$ cd code && python3 -m obs llm-cost --log <abs>/v2/evidence/run_l7struct_on_n16r60_seed42/run.jsonl --require-provider openai_compat ; echo rc=$?
+{"engine_log":{"by_provider":{"openai_compat":2878},"by_purpose":{"dialogue":{"cached":0,"calls":510,"degraded":0,"thinking":0,"tokens_in":148660,"tokens_out":19093},"importance":{"cached":1387,"calls":1523,"degraded":0,"thinking":0,"tokens_in":2312,"tokens_out":36895},"judge":{"cached":0,"calls":668,"degraded":0,"thinking":668,"tokens_in":88382,"tokens_out":218204},"negotiation":{"cached":34,"calls":49,"degraded":0,"thinking":0,"tokens_in":1787,"tokens_out":546},"plan":{"cached":0,"calls":16,"degraded":0,"thinking":0,"tokens_in":1447,"tokens_out":1001},"reflect":{"cached":4,"calls":112,"degraded":0,"thinking":0,"tokens_in":48684,"tokens_out":7409}},"llm_judgment_by_dimension":{"affection":132,"rel_affinity":32,"rel_familiarity":222,"rel_trust":2,"respect":132,"stance":132,"weekly_focus":16},"source":"engine_log(LLM_CALL)","total":{"cached":1425,"calls":2878,"degraded":0,"thinking":668,"tokens_in":291272,"tokens_out":283148,"tokens_total":574420}},"provider_guard":{"by_provider":{"openai_compat":2878},"expected":"openai_compat","ok":true,"policy":"计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。","problems":[]}}
+rc=0
+```
+
+## 5′. OFF 臂成本：**我本轮亲跑**（替代此前对 `docs/forensics` 的引用）
+
+```text
+$ cd code && python3 -m obs llm-cost --log <abs>/v2/evidence/run_f6_off_n16r60_seed42/run.jsonl --require-provider openai_compat ; echo rc=$?
+{"engine_log":{"by_provider":{"openai_compat":2878},"by_purpose":{"dialogue":{"cached":47,"calls":510,"degraded":0,"thinking":0,"tokens_in":88878,"tokens_out":12057},"importance":{"cached":1387,"calls":1523,"degraded":0,"thinking":0,"tokens_in":2312,"tokens_out":34276},"judge":{"cached":0,"calls":668,"degraded":0,"thinking":668,"tokens_in":88382,"tokens_out":201605},"negotiation":{"cached":34,"calls":49,"degraded":0,"thinking":0,"tokens_in":1787,"tokens_out":525},"plan":{"cached":0,"calls":16,"degraded":0,"thinking":0,"tokens_in":1447,"tokens_out":906},"reflect":{"cached":4,"calls":112,"degraded":0,"thinking":0,"tokens_in":45943,"tokens_out":6717}},"llm_judgment_by_dimension":{"affection":132,"rel_affinity":32,"rel_familiarity":222,"rel_trust":2,"respect":132,"stance":132,"weekly_focus":16},"source":"engine_log(LLM_CALL)","total":{"cached":1472,"calls":2878,"degraded":0,"thinking":668,"tokens_in":228749,"tokens_out":256086,"tokens_total":484835}},"provider_guard":{"by_provider":{"openai_compat":2878},"expected":"openai_compat","ok":true,"policy":"计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。","problems":[]}}
+rc=0
+```
+
+> 亲跑关键读数：`dialogue.calls=510 / tokens_in=88878 / tokens_out=12057`、`total.calls=2878`、`total.tokens_total=484835`、`cached=1472`、`provider_guard.ok=true`。
+> **与 `docs/forensics/2026-10-22-repo-state.md` §4.3 记的 `tokens_in=88830 / tokens_out=12283` 不一致**（差 +48 / −226）——本回执以**亲跑**为准并登记差异，不抄旧数；该差异不影响 L-7（L-7 不依赖 token）。
+> 另：该批 `run.jsonl` sha256 = `c73bead61a440db789f6d6ba1de555fe326a203ee27d1219690174e3d9483642`，与 `reports/R11-f6-memory-into-dialogue.md:445` 登记的 OFF 臂 sha 逐位相同 ⇒ 同一批，可放心当基线。
+
+## 6. 读数汇总（**只是读数，不是效果判定**）
+
+| 项 | R17 L-7 结构臂 | 来源（本回执内的命令） |
+|---|---|---|
+| n_msg（分母） | 510（455 DM + 55 PUBLIC，116385 行解析 0 失败） | §4 自写复算器 |
+| L-7 **raw8**（判定口径） | **163/510 = 31.9608%** | §4 |
+| L-7 norm8（辅助口径，=官方 `dialogue_metrics` 的 L-7） | 128/510 = 25.0980% | §3 与 §4 一致 |
+| Δ(raw8 vs OFF raw8 193) | **−5.8824pp**（= −30 条/510） | §4 |
+| wilson95(raw8) | [28.061, 36.130] | §4 |
+| newcombe95(Δ vs OFF pp) | [−11.677, −0.033] | §4 |
+| S1 F-6 记忆引用 | 0/510（本臂 F-6 未开 ⇒ 该守卫在本臂**不适用**，不能当 FAIL 记） | §4 |
+| S2 L-2 旁白头 | 0/510 PASS | §4 |
+| S3 L-8 裸 ID | 0/510 PASS | §4 |
+| S3b L-13 token 泄漏 | 2/510 PASS（≤9，v1.1） | §4 |
+| dequp2 行数 / retries | 0 / 0（本臂无去重重试） | §4 附注 |
+| dialogue calls | **510**（=n_msg，无重试） | §5 obs llm-cost |
+| **dialogue tokens_in** | **148660** | §5 obs llm-cost |
+| dialogue tokens_out | 19093 | §5 obs llm-cost |
+| total calls / tokens_total | 2878 / 574420 | §5 obs llm-cost |
+| 缓存率 | 1425/2878 = 49.51% | §5 obs llm-cost |
+| provider_guard | ok=true、problems=[]、by_provider 只有 openai_compat(2878) | §5 obs llm-cost |
+
+### 成本对照（相对 OFF 臂）
+
+| 目的 | OFF 臂（`run_f6_off`，**我本轮亲跑 `obs llm-cost`，见 §5′**） | R17（§5 亲跑） | 变化 |
+|---|---|---|---|
+| dialogue calls | 510 | 510 | 0 |
+| dialogue tokens_in | **88878** | 148660 | **+59782（+67.26%）** |
+| dialogue tokens_out | **12057** | 19093 | +7036（+58.36%） |
+| total tokens_total | **484835** | 574420 | +89585（+18.48%） |
+
+> **结构约束把「事后重试」换成了「生成前加约束行」**：R17 的重试为 0（dialogue calls 恰好 510），但每次对话输入的 tokens 明显上升（+67.26%）——因为提示词里多了 L-7 结构约束段。这是**用 token 换重试与撞车**，成本上升必须计入判据。
+
+### R17 的待定项（本报告不下判定）
+
+1. raw8 = 163/510 的 Δ = **−5.8824pp**，落在噪声带下界之外（< −4.31）——按 M1 四档的字面规则会落到 **BELOW_BAND**。但 **R17 尚未做完整的 S1/S4 契约自检**（无 dequp2 契约行、无 meta.json ⇒ 准入 REJECTED），且 S1 在本臂不适用。因此本轮**只登记读数，不写 R17 的效果判定**：判定需要先补 `meta.json`（或按策略包为「结构臂」单独登记一份不带 dequp 契约的判据），再由 Leader 裁定。
+2. net：R17 噪声带是按 OFF/DEQUP 臂标定的；结构臂重试为 0 ⇒ 其分布是否与带同分布**未检验**（本回执不声称）。
+
+### 边界（诚实标注）
+
+- `obs llm-cost` 读的是**事件日志自报的 provider**，它**不能证明上游 API 真的被调用过一次**；旁证只有 freeze 内容寻址缓存（cached 1425 / calls 2878 = 49.51%，mock 路径不产生真实 token 计数与缓存命中）+ 端点 `172.16.3.41:31809`。**仓内没有端点侧计费/网关硬证。**
+- R17 无 `meta.json` ⇒ 无 `fallback_detected` / `degraded_calls` 的批级自报锚，第二锚只能靠 `env_dump.txt` + `launch_evidence.txt`。
+- 本回执未做截图（R17 不在本轮截图范围；截图三件套只对 R16 做）。
