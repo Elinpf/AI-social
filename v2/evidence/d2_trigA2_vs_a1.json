@@ -1,0 +1,53 @@
+{
+  "baseline": {
+    "events": 193364,
+    "msg": 666,
+    "inits": 228,
+    "replies": 438,
+    "threads": 228,
+    "p50": 1.0,
+    "p90": 6.0,
+    "max": 6,
+    "mean": 2.671,
+    "multi3_ratio": 0.3553,
+    "multi3_abs": 81,
+    "single_ratio": 0.5614,
+    "single_abs": 128,
+    "conv": 0.7352,
+    "denom": 321
+  },
+  "a1": {
+    "events": 197771,
+    "msg": 929,
+    "inits": 266,
+    "replies": 663,
+    "threads": 266,
+    "p50": 1.0,
+    "p90": 6.0,
+    "max": 6,
+    "mean": 3.094,
+    "multi3_ratio": 0.4511,
+    "multi3_abs": 120,
+    "single_ratio": 0.5226,
+    "single_abs": 139,
+    "conv": 0.8667,
+    "denom": 345
+  },
+  "a2": {
+    "events": 197726,
+    "msg": 923,
+    "inits": 264,
+    "replies": 659,
+    "threads": 264,
+    "p50": 1.0,
+    "p90": 6.0,
+    "max": 6,
+    "mean": 3.087,
+    "multi3_ratio": 0.4545,
+    "multi3_abs": 120,
+    "single_ratio": 0.5227,
+    "single_abs": 138,
+    "conv": 0.8638,
+    "denom": 345
+  }
+}
