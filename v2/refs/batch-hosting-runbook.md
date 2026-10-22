@@ -127,6 +127,27 @@ EOF
 - 若确需"关"的臂：**用 `env -u HITT_<SWITCH>` 显式清空**，并在 proof 里写 `<unset>`（此时 `<unset>` 才是事实）；
 - **更强做法**（可选）：让被测进程自己把 `os.environ` 相关键 dump 到 run 目录（"被执行层"自证）。
 
+### 3.98b 【硬规则·升级】`switch_proof` 的标准取法：读 `/proc/<PID>/environ`，**不用 `printenv`**
+
+> 来源：2026-10-23 leader 裁决（prompt-linguist 提出，替换此前 §3.98 里"用 `printenv`"的写法）。
+
+**为什么**：`printenv` 读的是**执行 `printenv` 的那个 shell** 的环境（即"写命令的那一层"），
+`systemd-run --property=Environment=...` 注入的是**unit/进程那一层**；两者可以不一致——D12-B 的事故就是这样把 `=1` 记成 `<unset>`。
+
+**标准做法（三件真值，缺一不算证明）**
+```bash
+PID=<跑批进程 pid>
+# ① 执行层环境真值（唯一可信来源）
+tr '\0' '\n' < /proc/$PID/environ | grep 'LIFE_<SWITCH>'   # OFF 臂应**无输出**；ON 臂应 `=1`
+# ② 实际 cmdline（证明跑的确实是这条命令）
+tr '\0' ' ' < /proc/$PID/cmdline; echo
+# ③ unit 名
+systemctl show -p Id <unit>
+```
+- **OFF 臂的期望是"无输出"**：证明"变量不存在"比证明"变量=1"更难，必须写成**显式期望**，不许写"未设置"含糊了事；
+- 抓取时刻要记（`date -Is`），并在 60 秒硬闸时**再抓一次**（防止中途被重启成另一个进程）；
+- `printenv` 仍可用于**自查你自己 shell**（如 `env_pre_*.txt`），但**不得**作为 `switch_proof` 的字段。
+
 ## 4. 启动清单（复制粘贴；一批一跑）
 > 约定：`REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`；批次名 `<B>`（如 `A`）；跑批产物落 `RUN=/root/t271/runs/<B>`。
 
