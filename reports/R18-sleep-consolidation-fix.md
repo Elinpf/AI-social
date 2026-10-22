@@ -278,9 +278,27 @@ bash v2/evidence/fix-sleep-consolidation-20261022/r10_defect_baseline.sh \
 | 对象 | sha / 命令 |
 |---|---|
 | 代码改动（三处 + 测试 + 脚本） | `c01f6dd278cae3d6109f4dee154fa49bd208676b`（分支 `feat/life-memory-fix-20261022`） |
-| 本报告与证据 | `git log -1 --format=%H -- reports/R18-sleep-consolidation-fix.md`（报告无法自引自身 sha，给命令） |
+| 本报告与证据 | `619b18aa71ef455ca34f2154699d3fd7ab60b111`（+ 门禁证据 `ea252a3b0f6317d31f0902210fec219e25fa90a2`） |
+| 合入 master 的合并提交 | `cd8f02439480298a17a93cd3460ee108e495af16`（merge `46e4380..ea252a3`） |
 | 修前基线批的代码身份 | master `46e43808f28a891c26234703a48440bd0ceb9d4a`（a5 / worldline 两批产出时代） |
 | 与在跑批的关系 | PID 1172001 属 `feat/d2-prefer@51cdb07`，**与本轮结论无关**，未取其为证据 |
+
+**推送记录（原样）**：
+
+```
+$ git ls-remote origin refs/heads/master          # push 前
+46e43808f28a891c26234703a48440bd0ceb9d4a	refs/heads/master
+$ git push origin master
+To https://github.com/Elinpf/AI-social.git
+   46e4380..cd8f024  master -> master
+$ git push origin feat/life-memory-fix-20261022
+ * [new branch]      feat/life-memory-fix-20261022 -> feat/life-memory-fix-20261022
+$ git ls-remote origin refs/heads/master refs/heads/feat/life-memory-fix-20261022   # push 后
+ea252a3b0f6317d31f0902210fec219e25fa90a2	refs/heads/feat/life-memory-fix-20261022
+cd8f02439480298a17a93cd3460ee108e495af16	refs/heads/master
+```
+
+⇒ **远端 master 已前进**：`46e4380` → `cd8f024`（本仓库该次 push 未出现 GnuTLS -110；`git fetch` 的问题不影响 push）。
 
 ---
 
