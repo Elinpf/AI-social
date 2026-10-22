@@ -233,7 +233,7 @@ R17 已在 `code/life/l7_structural.py` 做了"生成前结构约束"（`LIFE_PR
 |---|---|
 | 环境变量 | **`LIFE_PROMPT_D12C_SPECIFIC`**（`0/false/off` = 关闭，**默认 OFF**） |
 | 代码位置 | `code/life/agent.py` 的两个 prompt 函数（**仅追加上述两行**） |
-| **`prompt_fn_sha256`（两态对照）** | 关闭态：`<FILL_OFF>`；打开态：`<FILL_ON>` —— **两者必须不同**，否则接线没生效、起跑即作废 |
+| **`prompt_fn_sha256`（两态对照，已复现）** | 关闭态：`5cf08593d562dc09fdd42ab289319a819481c4882701407b039fa514ff8293f7`；打开态：`effc14dbffdb6865aa52d9d8adab9db269ab3b92ae9a1a230a22cab6c0ed73f5` —— **两者不同 ✅**；复现于 2026-10-23 05:58，来源分支 `feat/d12c-specific`（commit `a977cb0`）|
 | 采样核验 | 用**固定输入**（同一 agent/round/template 三元组）各渲染一次完整 prompt，落 `d12c_prompt_render_off.txt` / `_on.txt`，并各算 sha256 |
 
 > 起跑前把两态 sha 与两份渲染文本贴进本表；**只看 sha 不同、不看 diff 的做法不算接线证明**。

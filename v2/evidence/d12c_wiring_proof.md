@@ -38,7 +38,21 @@
 
 ⇒ OFF 态两函数输出**与基线逐字相同**（渲染 sha 已比对）；ON 态仅多两行。
 
-## 4. 起跑前还缺的三项（跑前必须补）
+## 4. 分支落库与两态复现（2026-10-23 05:58，已通过）
+
+| 项 | 值 |
+|---|---|
+| 分支 | **`feat/d12c-specific`**，基于 **`3ec85a0`** |
+| commit | **`a977cb0`**（`life(d12c): 具体物/数 + 不在场第三方旧账…`） |
+| `git diff --numstat 3ec85a0 feat/d12c-specific` | `code/life/agent.py` **19+/2−**（净 +17 行）；`tools/d12c/render_d12c_prompt.py` **21+/0−**（新增脚本） |
+| 分支解出位置 | `/tmp/t271-d12c-br`（`git archive feat/d12c-specific`） |
+| **OFF 复现** | `5cf08593d562dc09fdd42ab289319a819481c4882701407b039fa514ff8293f7` ✅ 与 §1 逐字相等 |
+| **ON 复现** | `effc14dbffdb6865aa52d9d8adab9db269ab3b92ae9a1a230a22cab6c0ed73f5` ✅ 与 §1 逐字相等 |
+| 复现命令 | `cd /tmp/t271-d12c-br/code && PYTHONPATH=$PWD env -u LIFE_PROMPT_D12C_SPECIFIC python3 ../tools/d12c/render_d12c_prompt.py`（ON 用 `LIFE_PROMPT_D12C_SPECIFIC=1`） |
+
+> 与 leader 测的"26 行"差异说明：我这边 `git diff --numstat` 是 **19+/2−（净 +17）**；若按"增+删+脚本"合计则 19+2+21=42 行，若按"agent.py 变更行含上下文"会得到不同数字。**内容以两态 sha 逐字相等为准**（已通过），行数口径差异不影响接线结论。
+
+## 4b. 起跑前还缺的三项（跑前必须补）
 
 1. `pgrep`/`ps` 逐条环境确认时刻与结果（见 §5）；
 2. OFF 臂 60 秒硬闸结果（`paren_rate ≥50%` + provider + 结构）；
