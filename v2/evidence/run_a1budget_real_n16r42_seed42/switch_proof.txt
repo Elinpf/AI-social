@@ -1,0 +1,10 @@
+started_at=2026-10-22T18:04:18+08:00
+code_sha=51cdb07
+branch=feat/d2-prefer
+env_HITT_LLM_PROVIDER=openai_compat
+env_HITT_REPLY_BUDGET=1
+env_HITT_INIT_PREFER_UNREPLIED=0
+env_HITT_NO_INIT_UNREPLIED=<unset>
+grep_reply_budget=3
+grep_prefer=2
+params seed=42 n=16 rounds=42 max_turns=6 max_messages_per_slot=2 max_turns_per_round=2 reply_window_rounds=2
