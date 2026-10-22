@@ -1,0 +1,34 @@
+{
+  "ctrl": {
+    "events": 197771,
+    "msg": 929,
+    "inits": 266,
+    "replies": 663,
+    "threads": 266,
+    "p50": 1.0,
+    "p90": 6.0,
+    "max": 6,
+    "mean": 3.094,
+    "multi3_ratio": 0.4511,
+    "multi3_abs": 120,
+    "single_ratio": 0.5226,
+    "init_to_unreplied": 160,
+    "init_to_unreplied_ratio": 0.6015
+  },
+  "treat": {
+    "events": 196086,
+    "msg": 961,
+    "inits": 243,
+    "replies": 718,
+    "threads": 243,
+    "p50": 4.0,
+    "p90": 6.0,
+    "max": 6,
+    "mean": 3.593,
+    "multi3_ratio": 0.535,
+    "multi3_abs": 130,
+    "single_ratio": 0.4239,
+    "init_to_unreplied": 168,
+    "init_to_unreplied_ratio": 0.6914
+  }
+}
