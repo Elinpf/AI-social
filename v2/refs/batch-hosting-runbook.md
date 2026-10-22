@@ -127,6 +127,39 @@ tail -f "$RUN/heartbeat.tsv"                          # 时间 / size / round / 
 
 **每批 run 元数据（`meta.json`，缺一不可）**：批名 / `sha` / `engine_version_fingerprint` / `switch` / `started_at` / `ended_at` / `heartbeat_file` / `copy`（副本路径）/ `side_root` / `flush_every` / `cmd`。
 
+### 4.5 `systemd-run` 托管模板（**已实测通过**，2026-10-22T22:24）
+
+> 结论：**本机 `systemd-run` 可用**（systemd 255；root 权限），transient unit 落在 **`/system.slice/<unit>.service`**，
+> **不在 `jiuwenswarm.service` 的 cgroup 内** ⇒ 平台重启/memguard 重启不会连坐。
+
+**生效命令模板（复制即用）**：
+```bash
+WT=<repo>/.worktrees/<branch>            # 代码必须来自 worktree，不碰主树
+TS=$(date +%H%M%S)
+systemd-run --unit=t271-<batch>-$TS --collect \
+  --property=MemoryMax=2G \
+  --working-directory=$WT/code \
+  /bin/bash -c "cd $WT/code && unset HITT_LLM_PROVIDER HITT_D12_DETAIL; \
+    python3 -m orchestration run --life --seed 42 --agents 4 --rounds 2 \
+      --out /tmp/<batch>_run_$TS.jsonl --side-root /tmp/<batch>_side_$TS --flush-every 1 \
+      > /tmp/<batch>_log_$TS.txt 2>&1"
+```
+- 真 LLM 批把 env 用 `--property=EnvironmentFile=<主树>/code/.env.local` 传入（**不要 `--setenv` 放密钥**）；
+- `--collect` 会在进程退出后**自动清理 unit**（见下第 3 条），不必再 `reset-failed`。
+
+**三件自查（冒烟实测输出，2026-10-22T22:24，unit `t271-smoke-222412`）**：
+
+| # | 检查 | 实测 |
+|---|---|---|
+| 1 | `systemctl status t271-smoke-222412` | 起跑瞬间 `Active: active (running)`；退出后 `--collect` 自动清理，`LoadState=not-found`（**无需 reset-failed**） |
+| 2 | `cat /proc/$MainPID/cgroup` | `0::/system.slice/t271-smoke-222412.service` ← **不含 `jiuwenswarm.service`** ⇒ 真正脱离 |
+| 2b | `systemctl show <unit> --property=ControlGroup` | `/system.slice/t271-smoke-222412.service`（与 `/proc` 一致） |
+| 3 | 日志/产物 | `/tmp/smoke_run_222412.jsonl` **285 行**；日志尾部 `chain_ok=True replay_parity=True conservation_ok=True` + `log written:` |
+
+**两条注意（本次实测发现）**：
+1. **mock 2 回合跑得太快**（~2–3 秒）⇒ 用 `--collect` 时 unit 会在你 `systemctl status` 之前就消失；**要抓 cgroup 证据，须在命令前加 `sleep 8` 当"观察窗"**（本次即如此）或跑更长规模。
+2. `MainPID` 只在单元存活期间可取；**拿不到 PID 就说明已完成并清理**，此时以"产物 + 日志尾部"为完成证据。
+
 ## 5. 平台重启后如何判读
 1. `cat "$RUN/meta.json"` → 确认批次身份（sha/开关/指纹）。
 2. `cat "$RUN/heartbeat.tsv"` → **末行时间 = 死亡（或结束）时刻**；末行 round/size 就是死点。
