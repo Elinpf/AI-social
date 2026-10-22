@@ -1,0 +1,34 @@
+repo=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+timeref_lexicon sha256=9357b4c91aad8584e6d845e311eed289b1f58179ccbfdc3a49588641978b7d5d  n_terms=11
+
+==============================================================================
+[A5 (pre-fix)] log=v2/evidence/run_a5_real_n16r42_seed42/run.jsonl
+  switch_proof: code_sha=51cdb07 started=2026-10-22T17:07:25+08:00 branch=feat/d2-prefer params=seed=42 n=16 rounds=42 max_turns=6 max_messages_per_slot=2 max_turns_per_round=2 reply_window_rounds=2
+  是否含修复 c01f6dd（ancestor?）: False  (True=修复后批次, False=修复前)
+  C1 CONSOLIDATE n=755  text非空=0 (0.00%)  模板文本=0
+     DROPPED[unknown_intent_field,keys=(text,),MEMORY_CONSOLIDATE]=755
+  C2 SM(MEMORY_WRITE mem_id含-SM-)唯一条数=0  kind分布={}
+     交叉: CONSOLIDATE.produced_mem_id 去重=256  SM write 去重=0  相等=False
+     SM 写入按 day: {}
+  C3 RETRIEVE n=672  selected非空=656 (97.62%)  被选中的SM唯一条数=0  选中SM⊆SM写入=True
+  C4 MSG n=523  ctx.memory_refs非空=0  switch_proof env_LIFE_PROMPT_MEMORY_F6=<unset>
+  F-6 timeref_rate = 52/523 = 0.099426 (词表 sha 9357b4c91aad…)
+  结构: SM 模板文本过 _readable 门 = 0/755 (subject 分布见下)
+  observation MEMORY_WRITE 按 day 分布: {0: 6221, 1: 5383, 2: 5492, 3: 2007}
+  CONSOLIDATE subject top6: [('P002', 45), ('P003', 45), ('P004', 45), ('P005', 45), ('P006', 45), ('P007', 45)]
+
+==============================================================================
+[D12A (post-fix)] log=v2/evidence/run_d12a_real_n16r24_seed42/run.jsonl
+  switch_proof: code_sha=a6ae5e5 started=2026-10-22T20:24:36+08:00 branch=feat/d12-detail params=seed=42 n=16 rounds=24
+  是否含修复 c01f6dd（ancestor?）: True  (True=修复后批次, False=修复前)
+  C1 CONSOLIDATE n=499  text非空=499 (100.00%)  模板文本=499
+     DROPPED[unknown_intent_field,keys=(text,),MEMORY_CONSOLIDATE]=0
+  C2 SM(MEMORY_WRITE mem_id含-SM-)唯一条数=256  kind分布={'semantic': 256}
+     交叉: CONSOLIDATE.produced_mem_id 去重=256  SM write 去重=256  相等=True
+     SM 写入按 day: {0: 243, 1: 13}
+  C3 RETRIEVE n=384  selected非空=368 (95.83%)  被选中的SM唯一条数=103  选中SM⊆SM写入=True
+  C4 MSG n=191  ctx.memory_refs非空=0  switch_proof env_LIFE_PROMPT_MEMORY_F6=<unset>
+  F-6 timeref_rate = 18/191 = 0.094241 (词表 sha 9357b4c91aad…)
+  结构: SM 模板文本过 _readable 门 = 480/499 (subject 分布见下)
+  observation MEMORY_WRITE 按 day 分布: {0: 6125, 1: 5313}
+  CONSOLIDATE subject top6: [('P002', 30), ('P003', 30), ('P004', 30), ('P005', 30), ('P006', 30), ('P007', 30)]
