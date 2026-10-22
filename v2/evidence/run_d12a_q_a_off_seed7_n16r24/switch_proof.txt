@@ -1,0 +1,4 @@
+unit=t271-d12off-225342
+code_sha=a6ae5e5
+env_HITT_D12_DETAIL=<unset>
+params seed=7 n=16 rounds=24
