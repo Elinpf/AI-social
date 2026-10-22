@@ -1,0 +1,71 @@
+{
+  "dims": {
+    "is_reply": {
+      "agree_3of3": 5,
+      "agree_rate": 0.5,
+      "n_msgs": 10,
+      "rho_mean": 0.9505,
+      "rho_pairwise": [
+        0.9507,
+        0.9392,
+        0.9617
+      ],
+      "rho_pass_070": true
+    },
+    "naturalness": {
+      "agree_3of3": 6,
+      "agree_rate": 0.4,
+      "n_msgs": 15,
+      "rho_mean": 0.3282,
+      "rho_pairwise": [
+        0.5527,
+        0.2996,
+        0.1322
+      ],
+      "rho_pass_070": false
+    },
+    "persona_fit": {
+      "agree_3of3": 8,
+      "agree_rate": 0.5333,
+      "n_msgs": 15,
+      "rho_mean": 0.4576,
+      "rho_pairwise": [
+        0.3521,
+        0.2887,
+        0.7319
+      ],
+      "rho_pass_070": false
+    },
+    "specificity": {
+      "agree_3of3": 9,
+      "agree_rate": 0.6,
+      "n_msgs": 15,
+      "rho_mean": 0.6533,
+      "rho_pairwise": [
+        0.5142,
+        0.9923,
+        0.4534
+      ],
+      "rho_pass_070": false
+    }
+  },
+  "fail_reasons": [
+    "naturalness ρ<0.70",
+    "多数票达成率<80%"
+  ],
+  "msg_majority": {
+    "n_msgs": 15,
+    "n_pass": 4,
+    "rate": 0.2667
+  },
+  "n_calls": 48,
+  "n_msgs_complete3": 15,
+  "pass": false,
+  "request_params": {
+    "model": "DeepSeek-Flash",
+    "temperature": 0.0,
+    "thinking": false
+  },
+  "runs": "v2/evidence/judge_v2_selfcheck_runs.jsonl",
+  "template_sha256": "5be4e52e29676646174df7d3a3dc33a3e4af6cc93e27ed87d7369140b005fc85"
+}
