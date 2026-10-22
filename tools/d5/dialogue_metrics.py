@@ -1060,12 +1060,20 @@ def main(argv=None) -> int:
     ap.add_argument("--repair", default=DEFAULT_REPAIR)
     ap.add_argument("--timeref", default=DEFAULT_TIMEREF)
     ap.add_argument("--task-tags", default=DEFAULT_TASK_TAGS)
+    ap.add_argument("--prefix-rounds", type=int, default=None,
+                    help="只统计 round < N 的前缀子集（用于同窗口对照；此时准入按子集标注）")
     args = ap.parse_args(argv)
 
     if not os.path.exists(args.log):
         print(f"[FAIL] 日志不存在: {args.log}", file=sys.stderr)
         return 2
     recs, parse = read_run(args.log)
+    subset_note = None
+    if args.prefix_rounds is not None:
+        n0 = len(recs)
+        recs = [r for r in recs if (r.get("round") is None) or int(r.get("round")) < args.prefix_rounds]
+        subset_note = {"prefix_rounds": args.prefix_rounds, "records_before": n0, "records_after": len(recs),
+                       "note": "前缀子集：只含 round < prefix_rounds；准入判据按子集说明，不与完整批的 meta.events 比较"}
     msgs = extract_messages(recs)
     if not msgs:
         print("[FAIL] 日志中没有 MSG_DM/MSG_PUBLIC/MSG_GROUP 消息事件", file=sys.stderr)
@@ -1123,6 +1131,7 @@ def main(argv=None) -> int:
             "personas": pinfo,
             "f_lexicons": {k: v for k, v in extra.items() if k.endswith("_sha")},
             "log_parse": parse,
+            "subset": subset_note,
             "rounds_max": (max((r.get("round") or 0) for r in recs) + 1) if recs else None,
             "seed": next((int((r.get("payload") or {}).get("seed")) for r in recs
                           if r.get("type") == "WORLD_INIT"), None),

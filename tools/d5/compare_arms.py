@@ -153,6 +153,21 @@ def main(argv=None) -> int:
         print("[info] 单臂「事实对照」模式：只出值 + 分母 + band_source，不出 Δ/判定", file=sys.stderr)
     band_json = json.load(open(args.band, encoding="utf-8"))
 
+    scales = {n: (arms[n].get("inputs", {}).get("rounds_max"), arms[n].get("inputs", {}).get("seed")) for n in names}
+    subsets = {n: (arms[n].get("inputs", {}).get("subset") or {}) for n in names}
+    rounds_set = {v[0] for v in scales.values()}
+    same_window = len(rounds_set) == 1
+    window_n = next(iter(rounds_set)) if same_window else None
+    any_subset = any(bool(v) for v in subsets.values())
+    window_check = {
+        "per_arm": {n: {"rounds_max": v[0], "seed": v[1],
+                        "prefix_subset": subsets[n].get("prefix_rounds")} for n, v in scales.items()},
+        "same_window": same_window,
+        "window_rounds": window_n,
+        "mode": ("same_window(%s)" % window_n) if same_window else "不同窗口（不可比）",
+        "note": (("两臂回合窗口一致" + ("，且含前缀子集（按 round< 截断）" if any_subset else ""))
+                 if same_window else "两臂回合数不同 ⇒ 属不同规模，Δ 与判定仅作事实对照，不得宣称改善"),
+    }
     rows: List[Dict[str, Any]] = []
     for label, path, dsrc, bkey, kind, expect in SPECS:
         vals = {n: get(arms[n], path) for n in names}
@@ -173,11 +188,19 @@ def main(argv=None) -> int:
         if not single and isinstance(a, (int, float)) and isinstance(b, (int, float)):
             row["delta_pp"] = round(100 * (b - a), 3) if abs(a) <= 1 and abs(b) <= 1 else round(b - a, 6)
         hw, src = band_for(band_json, bkey, db or da) if not single else (None, "single-arm")
+        # 退化保护：rule-of-three 只适用于「两臂都恒为 0/恒为 1」的情形；
+        # 若 null-pair 退化(band=0) 但本对两臂并非全 0/全 1，则**无可比之带**，只能描述。
+        if src.startswith("rule-of-three"):
+            both_degenerate = all(isinstance(v, (int, float)) and v in (0, 1) for v in (a, b))
+            if not both_degenerate:
+                hw, src = None, "无可用带（null-pair 退化 band=0，但本对两臂非退化）"
         row["band_halfwidth"] = hw
         row["band_source"] = src
         row["comparable"] = comparable
         if single:
             row["verdict"] = "事实（单臂，无对照）"
+        elif not same_window:
+            row["verdict"] = "不可比（不同窗口）"
         elif not comparable:
             row["verdict"] = "不可比（分母差>30%）"
         elif hw is None:
@@ -207,11 +230,70 @@ def main(argv=None) -> int:
                 }
         rows.append(row)
 
-    scales = {n: (arms[n].get("inputs", {}).get("rounds_max"), arms[n].get("inputs", {}).get("seed")) for n in names}
-    same_scale = len({v[0] for v in scales.values()}) == 1
+    rows: List[Dict[str, Any]] = []
+    for label, path, dsrc, bkey, kind, expect in SPECS:
+        vals = {n: get(arms[n], path) for n in names}
+        if all(v is None for v in vals.values()):
+            continue
+        denoms = {n: denominator(arms[n], dsrc, path) for n in names}
+        row: Dict[str, Any] = {"metric": label, "path": path, "kind": kind,
+                               "values": vals, "denominators": denoms,
+                               "expected_direction": expect}
+        # 以最后一臂 vs 第一臂为主差（D6 主对照 = v0-anchor vs A1）；单臂时跳过
+        first, last = names[0], names[-1]
+        a, b = vals.get(first), vals.get(last)
+        da, db = denoms.get(first), denoms.get(last)
+        comparable = True
+        if da and db and max(da, db) / max(min(da, db), 1) > 1.30:
+            comparable = False
+        row["delta_pp"] = None
+        if not single and isinstance(a, (int, float)) and isinstance(b, (int, float)):
+            row["delta_pp"] = round(100 * (b - a), 3) if abs(a) <= 1 and abs(b) <= 1 else round(b - a, 6)
+        hw, src = band_for(band_json, bkey, db or da) if not single else (None, "single-arm")
+        # 退化保护：rule-of-three 只适用于「两臂都恒为 0/恒为 1」的情形；
+        # 若 null-pair 退化(band=0) 但本对两臂并非全 0/全 1，则**无可比之带**，只能描述。
+        if src.startswith("rule-of-three"):
+            both_degenerate = all(isinstance(v, (int, float)) and v in (0, 1) for v in (a, b))
+            if not both_degenerate:
+                hw, src = None, "无可用带（null-pair 退化 band=0，但本对两臂非退化）"
+        row["band_halfwidth"] = hw
+        row["band_source"] = src
+        row["comparable"] = comparable
+        if single:
+            row["verdict"] = "事实（单臂，无对照）"
+        elif not same_window:
+            row["verdict"] = "不可比（不同窗口）"
+        elif not comparable:
+            row["verdict"] = "不可比（分母差>30%）"
+        elif hw is None:
+            row["verdict"] = "仅描述（无可用带）"
+        elif row["delta_pp"] is None:
+            row["verdict"] = "仅描述"
+        else:
+            d = abs(row["delta_pp"])
+            row["vs_band"] = round(d / hw, 3) if hw else None
+            if d > hw:
+                direction_ok = (expect is None) or ((row["delta_pp"] > 0 and expect == "up")
+                                                    or (row["delta_pp"] < 0 and expect == "down"))
+                row["verdict"] = "带外（结构性变化）" if direction_ok else "带外·方向不符（需回查）"
+            else:
+                row["verdict"] = "带内（仅印象）"
+        # 单变量守恒检查（结构类，A0 vs A1）
+        if kind == "struct" and len(names) >= 3:  # 单臂/两臂时无守恒检查列
+            a0, a1 = get(arms[names[-2]], path), get(arms[names[-1]], path)
+            if isinstance(a0, (int, float)) and isinstance(a1, (int, float)):
+                hw2, src2 = band_for(band_json, bkey, denoms.get(names[-1]) or denoms.get(names[-2]))
+                delta = round(100 * (a1 - a0), 3) if abs(a0) <= 1 and abs(a1) <= 1 else round(a1 - a0, 6)
+                row["conservation"] = {
+                    "delta_a0_to_a1": delta, "band_halfwidth": hw2, "band_source": src2,
+                    "decision": ("II-a 可解释的二阶影响" if (expect is None or (
+                        (delta > 0 and expect == "up") or (delta < 0 and expect == "down") or delta == 0))
+                        else "II-b 泄露信号（方向不符，需回查）"),
+                }
+        rows.append(row)
+
     res = {"schema_version": SCHEMA, "mode": ("single-arm-facts" if single else "compare"),
-           "scale_check": {"per_arm": scales, "same_rounds": same_scale,
-                           "note": "不同 rounds 属不同规模：比率差不可判定（分母差>30% 同样进不可比）"},
+           "window_check": window_check,
            "arms": {n: {"path": p} for n, p in (s.split(":", 1) for s in args.roles)},
            "rules": {"threshold": "B2 同分母上界（B1 与 2pp 已作废）",
                      "degenerate": "两臂恒 0/恒 1 ⇒ rule-of-three(3/n)"
@@ -229,8 +311,9 @@ def main(argv=None) -> int:
              "L-12 判定用 **L-12b 称呼**，L-12a 提及为描述列。**旧版曾把 `L-12=49.8%` 写入本表，该值作废**（成因：GROUP 的 `to` 是 group_id，不可命中项仍留在分母）。\n",
              "- 臂：" + " / ".join(f"`{n}`" for n in names),
              "- 阈值：B2 同分母上界；退化用 rule-of-three；无可用带只作描述",
-             ("- **规模检查**：各臂 rounds = " + ", ".join(f"{n}:{v[0]}" for n, v in scales.items())
-              + ("；**同规模 ✔**" if same_scale else "；**⚠️ 不同规模 ⇒ 本表所有 Δ 与判定仅作事实对照，不得据此宣称改善**")) + "\n"]
+             ("- **窗口检查**：各臂 rounds = " + ", ".join(f"{n}:{v[0]}" for n, v in scales.items())
+              + ("；**同窗口 ✔**（`same_window(%s)`%s）" % (window_n, "，含前缀子集" if any_subset else "")
+                 if same_window else "；**⚠️ 不同窗口 ⇒ 本表所有 Δ 与判定仅作事实对照，不得据此宣称改善**")) + "\n"]
     for kind, title in (("struct", "结构层 + 生活气息（S/K/F）"), ("wording", "措辞层（L）")):
         subset = [r for r in rows if r["kind"] == kind]
         if not subset:
