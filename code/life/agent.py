@@ -34,6 +34,7 @@ from . import sleep_window as _sleep
 from . import anti_repeat as AR   # R12：L-7 去重臂（env LIFE_PROMPT_MEMORY_F6_DEQUP，默认 OFF）
 from . import l7_structural as L7S  # L-7 结构臂（env LIFE_PROMPT_L7_STRUCT，**默认 ON**）
 from . import topic_breadth as TB  # R19 话题宽度臂（env LIFE_PROMPT_TOPIC_BREADTH，**默认 OFF**）
+from . import scene_anchor as SA  # 处境锚臂（env LIFE_PROMPT_SCENE，**默认 OFF**）
 from .policy import (social_enabled, exchange_enabled, m2b_judge_mode, m2b_importance_mode,
                      narrative_persist_enabled)
 from .ports import (
@@ -182,6 +183,10 @@ class LifeLayerAgent:
         # F-6「记忆进对话」：本次装配实际注入的跨天记忆 id（**纯审计**，供 ctx 落盘追溯；
         # 不进 state_hash、不发事件、不参与决策；OFF 臂恒为空）。
         self._mem_refs: list = []
+        # 处境锚臂（scene-anchor）：本条消息生成时实际下发的那一行处境的审计快照
+        # （**纯审计**，供 ctx 落盘追溯；不进 state_hash、不发事件、不参与决策；
+        #  OFF 臂恒为 None ⇒ ctx.scene 不出现）。
+        self._scene: dict | None = None
 
     # ---- T288 / T276: 从账本单一真源恢复「只前向累积」的内部态 ---------------
     def restore(self, state, records) -> None:
@@ -985,6 +990,11 @@ class LifeLayerAgent:
             # R19 话题宽度臂审计（additive）：本条生成前下发了哪个相邻话题、正文是否真的落地。
             # 关闭（LIFE_PROMPT_TOPIC_BREADTH 未设）⇒ breadth 恒 None ⇒ 该键不出现。
             ctx["topic_breadth"] = breadth
+        if SA.enabled() and getattr(self, "_scene", None) is not None:
+            # 处境锚臂审计（additive）：本条生成时提示词里实际下发的那一行处境
+            # （时段/场所 id/活动 id + 该行 sha256）。关闭（LIFE_PROMPT_SCENE 未设）⇒
+            # `_scene` 恒 None ⇒ 该键不出现 ⇒ payload 与接入前逐字节一致。
+            ctx["scene"] = self._scene
         return ctx
 
     def _dequp_body(self, prompt: str, body: str, meta: dict) -> str:
@@ -1198,6 +1208,40 @@ class LifeLayerAgent:
             return f"情绪：{mood}；最紧的需求：{dim}={val}"
         return f"情绪：{mood}"
 
+    # ---- 处境锚臂（SA）：此刻时段 + 所在场所 + 手上正做什么 --------------
+    def _scene_line(self, wv) -> str:
+        """把「此刻什么时段、你在哪儿、手上正做什么」渲染成**一行**人话处境。
+
+        单变量约束（沿用 `_gossip_hint` / `_memory_line` 的开关先例）：
+          - 开关关闭（默认 OFF）⇒ `self._scene=None`、返回空串 ⇒ 两条提示词**逐字节不变**、
+            `ctx.scene` 键不出现（payload 亦逐字节不变）；
+          - 打开 ⇒ 只在提示词中**插入一行**，并把本条的处境快照写进 `ctx.scene`（additive）。
+
+        素材**只读** `WorldView`：`time.slot` / `location` / `current_activity`。
+        场所名走 `self.places[place_id]["name_cn"]`（人话）；缺项则**不写该片段**，
+        **绝不把 `plaza` / `farm` 这类内部 id 递进提示词**（防 L-8c / L-13 回归）。
+        """
+        self._scene = None
+        if wv is None or not SA.enabled():
+            return ""
+        try:
+            slot = str(getattr(getattr(wv, "time", None), "slot", "") or "")
+            place = str(getattr(wv, "location", "") or "")
+            rnd = int(getattr(wv, "round", 0))
+            ca = getattr(wv, "current_activity", None) or {}
+            activity = str(ca.get("activity_type") or "") if isinstance(ca, dict) else ""
+        except Exception:      # 世界视图字段缺失 ⇒ 退化为「不加处境」，不打断对话
+            return ""
+        name = ""
+        if place:
+            spec = (self.places or {}).get(place) or {}
+            name = str(spec.get("name_cn") or "").strip()
+        line = SA.render(self.agent_id, rnd, slot, name, activity or None)
+        if not line:
+            return ""
+        self._scene = SA.audit(slot, place or None, activity or None, line)
+        return line
+
     def _memory_line(self, wv, exclude: list | None = None) -> str:
         """F-6 臂（跨天记忆进对话）：把「**本人**前些天记下的事」原样接进提示词。
 
@@ -1392,6 +1436,7 @@ class LifeLayerAgent:
         mem_line = self._memory_line(wv, partners) if wv is not None else ""
         return (self.persona.compressed_profile(self._current_goal())
                 + f"\n场景：{self._topic_label(tid)}；对象：{others}。{self._mood_line()}。"
+                + self._scene_line(wv)      # 处境锚臂：时段/场所/手上事（默认 OFF ⇒ 空串）
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + self._gossip_hint(partners)  # G系列A1臂：可引用真人名单（默认OFF ⇒ 空串）
                 + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
@@ -1410,6 +1455,7 @@ class LifeLayerAgent:
         mem_line = self._memory_line(wv, [partner] if partner else []) if wv is not None else ""
         return (self.persona.compressed_profile(self._current_goal())
                 + f"\n你正在和{who}聊「{self._topic_label(topic)}」。{self._mood_line()}。"
+                + self._scene_line(wv)      # 处境锚臂：时段/场所/手上事（默认 OFF ⇒ 空串）
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + (repair_line or "")        # R13：本线程旧账的「这一句把话说开」要求；关闭/无旧账为空串
                 + (echo_line or "")          # F-3：接住对方情绪的一句处境提示；关闭/不产为空串
