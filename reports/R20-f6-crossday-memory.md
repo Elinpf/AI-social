@@ -439,7 +439,7 @@ git log --all --since="2026-10-22T20:24:36+08:00" --until="2026-10-22T20:47:29+0
 | E4 | C3 SM 命中 `0` vs `103`（`selected ⊆ written` 打印 True） | 机制 `probe` | 同上 | `672e2eb0…` | §7-1 |
 | E5 | C4 注入面 `0/523`、`0/191`（臂 `<unset>`，开关决定） | 机制 `probe` | 同上 | `672e2eb0…` | §7-1 |
 | E6 | DROPPED[text] `755 → 0`（修复因果签名） | 机制 `probe` | 同上 | `672e2eb0…` | §7-1 |
-| E7 | SM 模板占位 `499/499`；过 `_readable` `480/499`（19 全 `MARKET`） | 机制 `probe` | 同上 + `code/life/forgetting.py:177-179`（源码随提交变动 ⇒ `sha8` = `TODO`） | — | §7-1 |
+| E7 | SM 模板占位 `499/499`；过 `_readable` `480/499`（19 全 `MARKET`） | 机制 `probe` | 同上 + `code/life/forgetting.py:177-179` + `code/life/agent.py:62,1285-1295` | forgetting.py blob `c9aaca74…`、agent.py blob `1357fbac…`（`git rev-parse 8f1a492:<path>`，blob 级不再变动） | §7-1 |
 | E8 | F-6 `52/523`、`18/191`（**仅信息性**） | `probe` | `f6_chain_20261022/d12a_dialogue_metrics.json` | `c379953a…` | §7-3 |
 | E9 | 真 LLM：`openai_compat 2705/2705`、`2252/2252`、`degraded=0` | 机制 `probe` | `f6_chain_20261022/llmcost_a5.json` / `llmcost_d12a.json` | `02f58d29…` / `dc4d7be2…` | §7-8 |
 | E10 | 词表指纹 `9357b4c9…`（11 项） | 口径 | `tools/d5/timeref_lexicon.txt` | `9357b4c9…` | §7-6 |
@@ -449,7 +449,7 @@ git log --all --since="2026-10-22T20:24:36+08:00" --until="2026-10-22T20:47:29+0
 | E14 | 审计结论「有条件通过」+ 5 条降级 + 白名单/缺口清单 | 审计 | `v2/evidence/f6_audit_20261022.md` | `64923856…` | §5 |
 | E15 | 归因链三条（git 祖先 / 代码树 diff / 批内签名） | 机制 `probe` | `f6_audit_20261022.md` §3 + 本报告 §2.1 | `64923856…` | §7-11 |
 
-> 源码类引用按报告族纪律写「臂 commit + 文件:行号」；`sha8` 列写 `TODO（源码随提交变动）`——本表 E7 即此例。
+> 源码类引用按报告族纪律写「臂 commit + 文件:行号」，并给出**该 commit 上的 blob sha8**（`git rev-parse <commit>:<path>`，对某一 commit 恒为定值，故本表不留占位符）；本表 E7 即此例（`8f1a492` 上的 `forgetting.py` / `agent.py` blob）。
 > 排除项（不进结论）：`run_d12a_base_seed7_n16r24_INVALID_confounded`、`run_d12a_treat_seed7_n16r24_INVALID_incomplete` 名字已自述作废，不作对照臂引用（台账 §5 附）。
 
 ---
