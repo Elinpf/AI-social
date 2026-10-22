@@ -1,0 +1,9 @@
+started_at=2026-10-22T20:24:36+08:00
+code_sha=a6ae5e5
+branch=feat/d12-detail
+env_HITT_LLM_PROVIDER=openai_compat
+env_HITT_D12_DETAIL=1
+grep_d12=2
+params seed=42 n=16 rounds=24
+prompt_fn_sha256=0e16c4f8d47cce4a29548295cd4555a2da7e589581a5762dcecb8efbfdc03541
+detail_line_len_on=55
