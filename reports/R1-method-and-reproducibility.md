@@ -144,6 +144,8 @@ mock 生成器按输入字符串的哈希从词池取句、**不读语义**。�
 已实测：`expired_unanswered_inbound` 两臂分别算出 **38 vs 22**，但**行为逐项相同** ⇒ 该差值是**定义/窗口口径造成的产物**，**不构成"行为差异"的证据**。因此凡出现「某个计数器两臂不同、但行为指标逐项相同」时，必须**单独标注为定义产物**，不得计入结论、不得用于解释机制。
 （推论：`config_digest`/日志字节 sha 变化同理——**能变的东西不等于变了的东西**；判定一律看**行为指标是否逐项相同**。）
 
+> **判定口径（与发布包一致）**：**判定一律看「行为指标是否逐项相同」**；行为指标逐项相同而计数器/sha 不同时，记「定义产物」，不计入结论。
+
 **边界 8 · `meta` 里的 `code_sha` 可能是「meta 写入时刻的 HEAD」，不等于跑批代码。**
 已实测发生：A0 臂运行期树是 landing **`3ec85a0`**，但 `meta.code_sha` 写的是 `884f4541`（事后重生成 meta 时的 HEAD）。因此确定「这批数据是哪版代码跑的」必须**三件共同确定**：① `code_sha_start`（跑批开始时记录）；② landing 记录（分支/提交）；③ 期间无改动（`assertions.code_unchanged_during_run` 或等价的起止校验）。**只用 `meta.code_sha` 是错的**；同理，凡引用 `prompt_sha` 必须绑定**运行期树**，而不是 meta 写入时的 HEAD。
 > **口径说明（本轮实测补充）**：本仓库当前两批（`run_d2_after_n16_seed42`、`run_g1_b0_n16r60_seed42`）的 `meta.json` **并没有 `code_sha_start` 字段**。可复算的替代证据是：① landing 记录 `v2/evidence/d5_s0a_a0.json` 的 `batch_landing.batch_landing_sha`（= `3ec85a0`）；② `meta.git_status_start_source`（文本，记录"起跑前 code/ 无未提交改动"及其来源）。**引用时须写这两个真实字段，不得写成 `code_sha_start`——那会指向一个不存在的键，读者无法复算。**
