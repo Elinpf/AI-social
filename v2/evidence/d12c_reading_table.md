@@ -6,6 +6,23 @@
 
 ---
 
+## 0. 冻结件 sha 登记（**起跑前登记，跑后不得改**）
+
+| 件 | sha256 | 备注 |
+|---|---|---|
+| **读数器** `v2/evidence/d12c_metrics.py` | `c41cb5aca03c9499fc47047d5acaeba8f4b33bef5298b69556b15d3da290ab58` | 出数**必须**用这一版；由 eval-researcher 独立复核 |
+| **代理词表** `v2/evidence/d12c_proxy_lexicon.txt` | `38a5e2866e5688e807ce1825ac956587fcd62822acc0edb419706c3d3d0e16eb` | P1 词表 + P2 主名表规则 |
+| **本表** `v2/evidence/d12c_reading_table.md` | `f903e5e7652c92c740881b7c82b8a42fe850c20cd0269597692914cc86370b92`（**登记前版本**）| 本行写入后本表 sha 必然变化，故以"登记前版本"为准；登记动作本身的 commit 由 §5 记录 |
+
+> **口径说明（更正一处误传）**：任务卡里把 `f903e5e7…` 记成"`d12c_metrics.py`"的 sha，实际 **`f903e5e7…` 是本表（reading_table.md）的 sha**；`d12c_metrics.py` 的真实 sha 是 `c41cb5ac…`。以本表登记为准。
+
+## 5. 登记记录（commit 锚点）
+
+- 登记时间：**2026-10-23 06:00 (+08:00)**，**早于任何 D12-C 读数**（两臂目录尚未生成）
+- 登记 commit：`<见下一条提交后回填>`（本表在该 commit 中的 blob sha 另行回填）
+
+---
+
 ## 0. 起跑前置闸（缺一不跑；逐项填时刻与值）
 
 | # | 项 | 期望 | OFF 臂实测 | ON 臂实测 |
