@@ -486,6 +486,6 @@ $ git rev-list --left-right --count origin/master...master
 0	0
 ```
 
-⇒ **master 与 origin/master 齐平（`0 0`）**；交付 HEAD = `810dc0077bffe48f1a52daf34fd6355d35983cf6`；本报告取数时刻 HEAD 为 `84ed6b1`（§0），两者之差即本轮 R20 的两个交付提交。
+⇒ **master 与 origin/master 齐平（`0 0`）**；交付 HEAD = `810dc0077bffe48f1a52daf34fd6355d35983cf6`；本报告取数时刻 HEAD 为 `84ed6b1`（§0），两者之差即本轮 R20 的交付提交（内容 `ae863fc` + 补强 `810dc00` + 本回执回填；回执回填只改本文档 §11，不改任何读数）。
 
 > 未使用 `git push --force`；推送前已按 `.gitignore` 核对，**未提交任何 `run.jsonl` / 证据大文件 / 敏感内容**（提交文件最大 44K，全在 `reports/` 与 `v2/evidence/` 下）。
