@@ -1,5 +1,8 @@
 # R10 · 睡眠—遗忘—人格漂移：一个「已默认开启却零报告」的生活气息机制的首次可观测化
 
+> 本文件仅做脱敏替换（绝对路径→仓库相对路径），内容与结论未改。
+
+
 > **本轮维度标签**：F-2「睡眠—遗忘—人格漂移」（团队轮次口径）。
 > **性质**：不加新功能、不改 `code/`，把一套**已经 `enabled=true` 在跑、但全套报告零字提及**的机制变成可观测、可复算、可判读。
 > **图源诚实声明（先读这条）**：本报告全部截图的图源是**既有已完成批次** `v2/evidence/run_g1_b0_n16r60_seed42`，**不是本轮新跑的批**。两个时间**必须分开读，不可混为一件**：
@@ -61,7 +64,7 @@
 ### 1.1 空白是可复算的，不是形容词
 
 ```bash
-cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+cd <repo-root>
 grep -rn "睡眠\|遗忘" reports/*.md | wc -l
 # 0
 grep -rln "睡眠\|遗忘" reports/*.md
@@ -260,7 +263,7 @@ def bounded_update(p, anchor, dim, delta, params):
 ### 3.4 本轮报告作者的独立复跑（不只转录上游）
 
 ```bash
-cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+cd <repo-root>
 time python3 tools/f2/memory_drift_report.py \
      --run-dir v2/evidence/run_g1_b0_n16r60_seed42 --out-dir /tmp/f2_rd_check
 ```
@@ -418,7 +421,7 @@ $ sha256sum v2/evidence/f2_shots/run_g1_b0_n16r60_seed42-f2sleep-6db62e8a.png
 ### 4.5 复算命令清单（第二人照做即可）
 
 ```bash
-cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+cd <repo-root>
 
 # ① 日志身份
 sha256sum v2/evidence/run_g1_b0_n16r60_seed42/run.jsonl   # 期望 6db62e8a…1d0c983
@@ -445,7 +448,7 @@ bash frontend/tools/dialogue_shots.sh http://127.0.0.1:8871 \
   sample/dialogue_run_g1_b0_n16r60_seed42/threads.json "" "" ../v2/evidence/f2_shots
 
 # ⑤ F-2 时间线派生图（P5，脚本已入库；输出应与入库图逐字节相同）
-cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+cd <repo-root>
 python3 tools/f2/f2_chart.py v2/evidence/run_g1_b0_n16r60_seed42/run.jsonl /tmp/recheck-f2sleep.png
 sha256sum /tmp/recheck-f2sleep.png   # 期望 7685525a0ec36b93…9fadcd61
 ```

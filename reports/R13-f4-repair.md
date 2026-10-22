@@ -1,5 +1,8 @@
 # R13 · F-4「误会与和解」修复闭环：让闭环第一次在机制上可达且可审计（n16×60 seed42，F-4 ON vs OFF 基线）
 
+> 本文件仅做脱敏替换（绝对路径→仓库相对路径），内容与结论未改。
+
+
 > 性质：骨架先写、读数后填（§1–§3 与 §4 表头为跑批前写死；读数到手只填空、不改表头与口径）。
 > 报告日期：2026-10-21 ｜ 团队轮次：ROUND-1 ｜ 维度：F-4（单一维度，不扩散）
 > 代码 sha（本轮实现，跑批用树）：`6b7ae8a98694dd87d2ea26d14e663705eab69e92`（= 本臂 `meta.json.code_sha`，与 `code_sha_end` 相同；不使用当前 HEAD / master 顶替）
@@ -89,7 +92,7 @@ F-4 臂（`HITT_DIALOGUE_REPAIR=1`），并新增**零词表匹配**的可审计
 ### 1.1 缺口是可复算的（零跑批锚点，先做再花钱）
 
 ```bash
-cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+cd <repo-root>
 bash tools/f4/f4_anchor_receipt.sh > v2/evidence/f4_anchor_receipt.txt 2>&1
 ```
 
@@ -179,7 +182,7 @@ bash tools/f4/f4_anchor_receipt.sh > v2/evidence/f4_anchor_receipt.txt 2>&1
 ### 4.3 读数表（零跑批，只读日志；命令可原样复制）
 
 ```bash
-cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+cd <repo-root>
 
 # ① 双口径 + 可审计配对行（主表）
 python3 tools/f4/f4_subset_metrics.py \

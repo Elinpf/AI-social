@@ -1,5 +1,8 @@
 # R15 · G-1「八卦 / 第三方提及」A1 收口：把「提到别人」从称呼率里拆出来（n16×60 seed42，A1 提示词 C15 ON vs 基线 b0）
 
+> 本文件仅做脱敏替换（绝对路径→仓库相对路径），内容与结论未改。
+
+
 > **本文件状态：定稿（A1 已落盘，独立审计判定已给）**
 >
 > | 项 | 状态 |
@@ -8,7 +11,7 @@
 > | 能否宣称「改善」（审计判定 ②） | **BLOCK —— 不得宣称改善；按冻结判据 F2 判「失败」** |
 > | 本报告允许的结论形态 | `机制侧存在性事实` + `效果判失败/不可判` |
 >
-> 仓库：`/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`
+> 仓库：`<repo-root>`
 > 锚点：`HEAD = 52492099550954d8ad42d3c21c685a7056b24702`（`5249209`），分支 `feat/life-f3-emotion-echo`
 > 独立审计：`<team-workspace>/recon/r15-audit.md`（verifier）｜冻结判据：`<team-workspace>/recon/r15-guards-frozen.md` §6
 > 纪律：本报告零跑批、不改 `code/**`、不 commit（提交在 `r15-ship` 单独执行）。
@@ -142,7 +145,7 @@ grep -rhoE '\b(HITT_[A-Z0-9_]+|LIFE_PROMPT_[A-Z0-9_]+)\b' code/ --include=*.py |
 | 7 | `HITT_OBSERVE_MSG` | 对话机制（**默认开**的回退开关） | **ON** | **未设（=保持默认开）** | 同上 `:88-89`；两臂一致 |
 | 8 | `HITT_LLM_PROVIDER` | **非对话**（provider 选择） | — | `=openai_compat` | 只决定调用哪家 provider，**不改提示词文本** |
 | 9 | `HITT_CHROME` | **非对话**（浏览器定位） | — | **未设** | **只用于截图取证时定位 Chrome 可执行文件**：`code/frontend/tools/_chrome.py:44` 按 `("HITT_CHROME","PLAYWRIGHT_CHROME")` 顺序探测路径；**不进 `code/life` / `code/orchestration` / `code/engine` 任何逻辑** ⇒ 与居民对话文本无关 |
-| 10 | `HITT_LIVE_ROOTS` | **非对话**（静态服务路径白名单） | 默认 `/root/t271/runs` | **未设** | **只作前端静态服务的路径白名单**：`code/frontend/tools/serve.py:61,82,115`，realpath 规范化后判断是否允许读取，防路径穿越 ⇒ 与居民对话文本无关 |
+| 10 | `HITT_LIVE_ROOTS` | **非对话**（静态服务路径白名单） | 默认 `$HITT_LIVE_ROOTS（默认指向本机运行目录，公开版不给出具体路径）` | **未设** | **只作前端静态服务的路径白名单**：`code/frontend/tools/serve.py:61,82,115`，realpath 规范化后判断是否允许读取，防路径穿越 ⇒ 与居民对话文本无关 |
 
 ⇒ **收敛结论**：7 个对话机制开关中，A1 只开了 **1 个**（`LIFE_PROMPT_GOSSIP_G1`）；其余 **6 个未设**，其中 2 个（`HITT_DIALOGUE_THREADS` / `HITT_OBSERVE_MSG`）是**默认开的回退开关**、两臂同为"未设"⇒ 行为一致；另 4 个（emotion_echo / repair / memory_f6 / dequp）默认 OFF ⇒ 未设即关。
 **⇒ 单变量成立，无未知对话开关。**
@@ -345,7 +348,7 @@ third = [nm for nm in names if nm != own and nm not in parts]   # nm 是主干�
 ### 4.4 复算命令（任何人可重跑）
 
 ```bash
-cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+cd <repo-root>
 
 # ① 基线（修正口径权威版）
 python3 v2/evidence/g1_metrics_fixed.py \
@@ -501,6 +504,12 @@ EXIT=0
 > `cached` 分布：`importance` 1387 / `dialogue` 48 / `negotiation` 34 / `reflect` 4 ⇒ 命中集中在**评分**而非对话，对话路径受影响量级仅 48 条。
 
 ### 5.4 截图（真实渲染：A1 为主图、基线为辅图，共 8 张）
+
+> **⚠ 证据状态注记（2026-10-22 由 repo-forensics 追加；不改本节任何结论、不改任何 sha 绑定）**
+> 本节登记的 8 张截图（4 张 A1 主图 + 4 张 b0 辅图）**原件已丢失**：渲染输出目录 `<team-workspace>/reports/r15-shots` 随团队工作区于 2026-10-22 08:00 重建而清空，仓库内也**不存在** `v2/evidence/r15_shots/`（`find . -iname "*r15*"` 仅命中本报告；`v2/evidence/` 下无 `r15_shots` 目录）。
+> 因此：**本节的截图证据当前不可核验**。下表 sha256 仅保留其原始含义——"当时产出的那 8 个字节流的指纹"，已无法与任何现存文件比对。
+> 按纪律：**不重出、不以今日渲染冒充当轮证据**（重出即伪造历史证据）。本报告的全部结论以 **§5.2 真 LLM 验真命令证据 + §5.3 读数表 + §5.5 文件 sha 台账**为准，三者均可复算。
+> 若日后需要图形证据，只能作为**新一批**重新渲染并另立批次标签，**不得回填本节**、不得替换本节 sha。
 
 **基线臂四图（真实渲染，非示意图/占位图）**——本轮管线取证产物，落团队产物目录：
 

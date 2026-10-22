@@ -1,5 +1,8 @@
 # R12 · L-7「套路化」代价治理：记忆注入的去重与反照抄（第三臂 DEQUP）
 
+> 本文件仅做脱敏替换（绝对路径→仓库相对路径），内容与结论未改。
+
+
 > 性质：骨架先写、读数后填（骨架期用花括号占位符留空；**本版已全部填实，口径未改**）。
 > 报告日期：2026-10-21 ｜ 团队轮次：ROUND-1 ｜ 维度：L-7（单一维度，不扩散）
 > 代码 sha（本轮实现，跑批用树）：`263a4300692d2ef3136c8a50e9bade2f99608945`
@@ -43,7 +46,7 @@
 命令（只读两个已入库日志，零 LLM、零批次）：
 
 ```bash
-cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+cd <repo-root>
 python3 tools/l7/l7_baseline_recount.py \
   --on  v2/evidence/run_f6_on_n16r60_seed42/run.jsonl \
   --off v2/evidence/run_f6_off_n16r60_seed42/run.jsonl \

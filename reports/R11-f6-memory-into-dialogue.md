@@ -1,5 +1,8 @@
 # R11 · F-6「跨天记忆进对话」：一个纯装配缺口的单变量干预（n16×60 seed42，OFF vs ON）
 
+> 本文件仅做脱敏替换（绝对路径→仓库相对路径），内容与结论未改。
+
+
 > 性质：**两臂读数均已填实（v2 定稿版）**。骨架在 ON 臂起跑前写成（凡数字一律留花括号占位，读数到手只填空、不改表头与口径）；
 > v2 已回填 ON 臂（`run_f6_on_n16r60_seed42`，15:53:13 结束、`provider_guard.ok=true`、`calls=2878`、`degraded=0`）全部读数，**模板占位符清零**；唯一仍缺的是本文件自身的 commit sha（提交后才产生），已在原处标注「未获取到 + 原因」，见附录 D。
 > 锚点行：本文件首版提交见 `git log --format=%H -- reports/R11-f6-memory-into-dialogue.md`。
@@ -95,7 +98,7 @@ F-6 的缺口不是我们的说法，是仓库里可以直接验证的两处代�
 
 ```bash
 # ① 检索侧：记忆检索早就实现了（返回 top-k）
-cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+cd <repo-root>
 sed -n '450,500p' code/life/agent.py          # _retrieve() —— 算好了，还给 rank/meta
 # ② 装配侧：两个对话提示词只看 persona/scene/relation/mood/rift/gossip，看不到任何记忆正文
 sed -n '1206,1240p' code/life/agent.py        # _dialogue_prompt / _reply_prompt（改动前树 c1bb533）
@@ -308,7 +311,7 @@ print('MDE(power)=%.2fpp'   % (100*(z+zb)*math.sqrt(2*pbar*(1-pbar)/n_arm)))
 复算本节的命令（不改冻结脚本，只是把它的命中按 `seq` 反查正文）：
 
 ```bash
-cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+cd <repo-root>
 python3 - <<'PY'
 import json,re
 from collections import defaultdict
@@ -610,7 +613,7 @@ rc=1        # 未被任何 .gitignore 规则忽略
 > **上一届团队工作空间的旧路径 `…/jiuwen_team_cron___1a15c9dae2f_32922fef9198/team-workspace/round1/scripts/f6_metrics.py` 已失效，不要再照抄**（该目录不在本团队成员可见的路由内，且随时可能被清理）。冻结件的**公式/分母/阈值/抽样规则不变**（`metrics-definition-frozen.md` sha256 `f0f1f4b45b5f6c832fa4739879592261843bcc5196c947e62388b2eaac0c4cb8`），只有路径过期。
 
 ```bash
-REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+REPO=<repo-root>
 
 # ① 官方指标（F-6 / L-5..L-8 的唯一来源）
 cd $REPO
@@ -932,7 +935,7 @@ $ git status --porcelain | grep '^??' | cat -n
 ### 附录 C：可直接粘贴的复算命令（n16r60 正式批版；不必先读 §4.5）
 
 ```bash
-REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+REPO=<repo-root>
 OFF=$REPO/v2/evidence/run_f6_off_n16r60_seed42
 ON=$REPO/v2/evidence/run_f6_on_n16r60_seed42
 

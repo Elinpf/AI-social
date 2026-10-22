@@ -1,5 +1,8 @@
 # R16 · L-7「对话套路化」v2 去重臂收口 —— raw8 111/510（21.7647%）落到 OFF 基线带**下侧带外**（BELOW_BAND）
 
+> 本文件仅做脱敏替换（绝对路径→仓库相对路径），内容与结论未改。
+
+
 > **本文件状态：定稿（复算 + 守卫 + 截图三件套 + R17 读数已齐；R17 不下效果判定）**
 >
 > | 项 | 状态 |
@@ -9,7 +12,7 @@
 > | 能否宣称「生活气息已改善」 | **BLOCK —— 不能。** L-7 只是「结构性对冲」这一道子盾解除，不是质量结论 |
 > | R17 | **只登记读数与成本，不下效果判定**（缺 `meta.json`、无 dequp 契约行 ⇒ 契约自检不完整） |
 >
-> 仓库：`/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`
+> 仓库：`<repo-root>`
 > R16 批次代码身份：`code_sha = a851a8fcac82846cc12150df43783d4c5922e902`（分支 `feat/l7-dequp-v2`，worktree `.worktrees/l7v2-dequp-n16r60`）
 > R17 批次代码身份：`code_sha = 3730240f3ad8416f69b5d90d016b4e42fe008c9e`（`feat/l7-structural-dedup`，主树 `code/`）
 > 本报告执行时 HEAD：`3730240f3ad8416f69b5d90d016b4e42fe008c9e`；纪律：**本轮零跑批**、未改 `code/**`、**只做本地 commit（不 push）**
@@ -396,7 +399,7 @@ rc=2
 ## 7. 可复算命令块（照抄可用；全程零跑批、零 LLM）
 
 ```bash
-cd "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment"
+cd "<repo-root>"
 
 # 0) 跑批双闸（防自匹配）
 pgrep -af 'orchestration ru[n]'; echo rc=$?      # 期望 rc=1
@@ -441,7 +444,7 @@ sha256sum v2/evidence/l7v2_shots/*.png v2/evidence/l7v2_shots/render.log
 
 ## 8. 边界与「不可判」声明（硬约束，逐条列）
 
-1. **`obs llm-cost` 不能证明上游 API 真被调用**。它读的是事件日志自报 provider；旁证只有 `provider_guard` + token 计数 + freeze 缓存命中率。**仓内没有端点侧计费/网关硬证**（端点 `172.16.3.41:31809`，无网关日志）。
+1. **`obs llm-cost` 不能证明上游 API 真被调用**。它读的是事件日志自报 provider；旁证只有 `provider_guard` + token 计数 + freeze 缓存命中率。**仓内没有端点侧计费/网关硬证**（内网端点地址不透出；公开版只写「内网端点」，无网关日志）。
 2. **R16 目录无原始 `meta.json`** ⇒ `fallback_detected` / `degraded_calls` 的**批级自报锚缺失**；出图用的 meta 是**派生物**，报告已逐字段标源。任何「R16 批次准入 PASS」的说法本报告都不给。
 3. **L-7 下降与「对话质量改善」之间没有链条**。v2 机制的定义就是「撞了就重写」，读数下降是构造性结果；本轮设计**无法分离**「重写」与「内容变多样」的贡献。
 4. **BELOW_BAND 不等于好结果**。策略包对带外·下侧的处置要求是「先查消息条数/线程结构/守卫」，本报告 §2.3 已查（结构未变、消息更长、模板/精确重复归零），但**仍不足以升级为质量结论**。
