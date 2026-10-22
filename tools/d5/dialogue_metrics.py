@@ -660,6 +660,19 @@ def compute(msgs: List[dict], lexicon: List[str], templates: List[re.Pattern],
 
     drift_pairs = pairs_cnt = 0
     multi_tag_threads = 0
+    # --- R19 尺子修复（口径变更，保留旧口径对照） -------------------------------
+    # 死尺子事实（board-scout `r19-f2-recheck.md` §1/§2，构造正例 PASS）：
+    #   新结构下 `tag_hints` 在同一线程内**恒为常量**（发起=模板 id，回复原样继承），
+    #   于是旧 F-2 的「tag 无交集」否决项恒 False、旧 F-2b 的「union≥2」恒不成立
+    #   ⇒ 两指标在真实数据上**数学不可能 >0**；而内容层实测 66~73% 相邻对 jaccard<0.10。
+    # 修法：把「机制侧（tag 是否变）」与「内容侧（相邻消息是否换话头）」拆成两列，
+    #       内容侧不再被 tag 一票否决；旧口径原样保留输出（键名不变），供跨报告对照。
+    content_drift_pairs = 0          # 内容侧：jaccard < 0.10（不看 tag）
+    tag_switch_pairs = 0             # 机制侧：相邻对 tag 集合不相等（= tag_added + tag_replaced）
+    tag_added_pairs = 0              # 机制侧：旧 tag 集是新 tag 集的**真子集**（多挂一个，原话题没丢）
+    tag_replaced_pairs = 0           # 机制侧：两集合**无交集**（真换话题）
+    switch_jacs: List[float] = []    # 发生 tag 切换的相邻对的 jaccard 分布
+    all_jacs: List[float] = []       # 全部相邻对的 jaccard 分布
     for key in sorted(threads_mixed):
         th = threads_mixed[key]
         tagsets = [set(m["tags"]) for m in th]
@@ -669,6 +682,17 @@ def compute(msgs: List[dict], lexicon: List[str], templates: List[re.Pattern],
             pairs_cnt += 1
             a, b = content_bigrams(th[i - 1]["body"]), content_bigrams(th[i]["body"])
             jac = (len(a & b) / len(a | b)) if (a | b) else 0.0
+            all_jacs.append(jac)
+            if jac < 0.10:
+                content_drift_pairs += 1
+            prev_tags, cur_tags = set(th[i - 1]["tags"]), set(th[i]["tags"])
+            if prev_tags != cur_tags:
+                tag_switch_pairs += 1
+                switch_jacs.append(jac)
+                if prev_tags and prev_tags < cur_tags:
+                    tag_added_pairs += 1          # 话题展开（原有话题保留）
+                elif not (prev_tags & cur_tags):
+                    tag_replaced_pairs += 1       # 真换话题（R19 主判据）
             if not (set(th[i - 1]["tags"]) & set(th[i]["tags"])) and jac < 0.10:
                 drift_pairs += 1
     out["F-2_topic_drift"] = {
@@ -676,6 +700,44 @@ def compute(msgs: List[dict], lexicon: List[str], templates: List[re.Pattern],
         "multi_topic_thread_ratio": rate(multi_tag_threads, len(threads)),
         "rule": "相邻消息 tag 无交集 且 char-bigram Jaccard<0.10 记一次话题转移；漂移率=转移/相邻对",
         "denominator_adjacent_pairs": pairs_cnt,
+        "status": "LEGACY_DEAD_RULER",
+        "status_note": ("R19：本键保留原口径仅作跨报告对照。新结构下 tag_hints 线程内恒定 ⇒ "
+                        "「tag 无交集」恒 False ⇒ 该读数结构性恒 0，不得作为效果判据；"
+                        "请读 F-2_content_drift / F-2_tag_switch（口径变更依据 "
+                        "team-workspace/r19-f2-recheck.md）。"),
+    }
+    out["F-2_content_drift"] = {
+        "drift_rate": rate(content_drift_pairs, pairs_cnt),
+        "denominator_adjacent_pairs": pairs_cnt,
+        "rule": ("内容侧话题漂移：相邻消息 char-bigram Jaccard<0.10 记一次换话头；"
+                 "**不以 tag 作否决项**（tag 恒定是引擎构造，不是对话事实）"),
+        "jaccard_all": dist(all_jacs),
+        "jaccard_switched": dist(switch_jacs),
+    }
+    out["F-2_tag_switch"] = {
+        "switch_rate": rate(tag_switch_pairs, pairs_cnt),
+        "switch_pairs": tag_switch_pairs,
+        "denominator_adjacent_pairs": pairs_cnt,
+        "rule": ("机制侧话题切换：相邻消息 tag 集合不相等即记一次（含「回复追加第二个 tag」）；"
+                 "本列测「引擎是否承认话题变了」，**不得单独作为效果判据**"),
+    }
+    out["F-2_tag_change_split"] = {
+        "tag_added": tag_added_pairs,
+        "tag_added_rate": rate(tag_added_pairs, pairs_cnt),
+        "tag_replaced": tag_replaced_pairs,
+        "tag_replaced_rate": rate(tag_replaced_pairs, pairs_cnt),
+        "denominator_adjacent_pairs": pairs_cnt,
+        "rule": ("R19 拆分（board-scout 要求）：「多挂一个 tag、原话题保留」记 tag_added（话题展开）；"
+                 "「两集合无交集」记 tag_replaced（真换话题，**主判据**）。"
+                 "两者互斥，和 = F-2_tag_switch.switch_pairs（仅当 prev 非空时；空 tag 集不计入任一侧）"),
+    }
+    out["F-2b_multi_topic_threads"] = {
+        "multi_topic_thread_ratio": rate(multi_tag_threads, len(threads_mixed)),
+        "n_multi_topic_threads": multi_tag_threads,
+        "denominator_threads": len(threads_mixed),
+        "denominator_threads_group": len(threads),
+        "rule": ("线程内 tag 种数≥2 的线程数 / 线程数；R19 起**分子分母统一到 mixed_key 线程口径**，"
+                 "并同时打印两个分母（旧版分子 mixed_key、分母 group_threads，v0 批 136 vs 172 不一致）"),
     }
 
     echo_den = echo_ok = 0

@@ -33,6 +33,7 @@ from . import dialogue_repair as DR
 from . import sleep_window as _sleep
 from . import anti_repeat as AR   # R12：L-7 去重臂（env LIFE_PROMPT_MEMORY_F6_DEQUP，默认 OFF）
 from . import l7_structural as L7S  # L-7 结构臂（env LIFE_PROMPT_L7_STRUCT，**默认 ON**）
+from . import topic_breadth as TB  # R19 话题宽度臂（env LIFE_PROMPT_TOPIC_BREADTH，**默认 OFF**）
 from .policy import (social_enabled, exchange_enabled, m2b_judge_mode, m2b_importance_mode,
                      narrative_persist_enabled)
 from .ports import (
@@ -937,7 +938,8 @@ class LifeLayerAgent:
 
     def _ctx_snapshot(self, partner: str | None, topic: str | None,
                       trigger: str | None = None, initiator: str | None = None,
-                      echo: dict | None = None) -> dict:
+                      echo: dict | None = None,
+                      breadth: dict | None = None) -> dict:
         """生成时的语境快照（体积控：只存被引用的键；缺的键省略而非填假值）。
 
         `trigger`/`initiator` 记录「这段对话怎么起的、谁先开口」——下一阶段做「生活气息」
@@ -973,6 +975,10 @@ class LifeLayerAgent:
             # 刻意放进已透传的 `ctx`（`orchestration/integration.py::_thread_fields` 有白名单，
             # 顶层新键会被静默吞掉；`ctx` 已整体透传，与 memory_refs/dequp 同一先例）。
             ctx["echo"] = echo
+        if TB.enabled() and breadth is not None:
+            # R19 话题宽度臂审计（additive）：本条生成前下发了哪个相邻话题、正文是否真的落地。
+            # 关闭（LIFE_PROMPT_TOPIC_BREADTH 未设）⇒ breadth 恒 None ⇒ 该键不出现。
+            ctx["topic_breadth"] = breadth
         return ctx
 
     def _dequp_body(self, prompt: str, body: str, meta: dict) -> str:
@@ -1045,7 +1051,7 @@ class LifeLayerAgent:
         echo_line, echo_audit = self._emotion_echo(ctx_in, p.get("body"), partner)
         prompt = self._reply_prompt(partner, topic, history, cfg, rift_line=rift_line,
                                     repair_line=repair_line, echo_line=echo_line, wv=wv,
-                                    turn=turn)
+                                    turn=turn, tid=tid)
         meta = {"agent_id": self.agent_id, "round": wv.round,
                 "thread": tid, "turn": turn}
         res = self.llm.call("dialogue", prompt, meta=meta)
@@ -1053,15 +1059,20 @@ class LifeLayerAgent:
         if not body:
             return False
         body = self._dequp_body(prompt, body, meta)   # R12：撞车一次性重生成（默认OFF ⇒ 原样返回）
+        # R19 话题宽度臂：**内容门控**——正文真的落到岔入话题才追加第二个 tag（OFF ⇒ 恒 None）
+        tb_tag = self._topic_shift_tag(body)
+        tb_audit = TB.audit(getattr(self, "_tb", None), bool(tb_tag)) if TB.enabled() else None
         payload: dict = {
             "scope": "private" if ev.type == "MSG_DM" else "place_group",
-            "body": body, "refs": [], "tag_hints": list(p.get("tag_hints") or []),
+            "body": body, "refs": [],
+            "tag_hints": list(p.get("tag_hints") or []) + ([tb_tag] if tb_tag else []),
             "thread_id": tid, "turn_index": turn,
             "reply_to": p.get("msg_uid") or p.get("msg_id"),   # D2：指针指向 msg_uid（全局唯一）
             "participants": sorted(set(parts)), "topic": topic,
             "ctx": self._ctx_snapshot(partner, topic, trigger="reply",
                                       initiator=DT.thread_initiator(tid),
-                                      echo=echo_audit),   # F-3：OFF/不产 ⇒ None ⇒ 不多键
+                                      echo=echo_audit,   # F-3：OFF/不产 ⇒ None ⇒ 不多键
+                                      breadth=tb_audit),
         }
         if dr_cfg.get("enabled"):
             # R6-T2：**只做追溯**（本条生成时我有哪些未了结旧账）；无旧账 ⇒ 不产生该键
@@ -1311,6 +1322,43 @@ class LifeLayerAgent:
                              recent=L7S.recent_bodies(wv))
         return L7S.render(self._l7s)
 
+    # ---- R19 话题宽度臂（TB）：人话化 topic + 岔题提示 + 内容门控 ----------
+    def _topic_label(self, topic: str | None) -> str:
+        """TB 臂：模板/话题 id → 人话（关闭时原样返回 ⇒ 提示词逐字节不变）。
+
+        L-13 的正解：`whisper` / `combat_training` 这类内部 token 不再直接递给模型。
+        """
+        return TB.label(topic) if TB.enabled() else (topic or "")
+
+    def _topic_shift_line(self, wv, partner: str | None, tid: str | None,
+                          topic: str | None, turn: int | None) -> str:
+        """TB 臂：turn≥1 的回复**生成前**给一个「可自然岔入的相邻话题」。
+
+        指派完全确定性（sha256(agent|thread|round|turn|base)），不读墙钟/随机 ⇒ replay 一致；
+        关闭时 `self._tb=None`、返回空串 ⇒ 提示词与接入前逐字节一致。
+        """
+        self._tb = None
+        if not TB.enabled():
+            return ""
+        try:
+            rnd = int(getattr(wv, "round", 0))
+            t = 0 if turn is None else int(turn)
+            thread_key = str(tid or f"{partner or '-'}|{topic or '-'}")
+        except Exception:
+            return ""
+        self._tb = TB.plan(self.agent_id, thread_key, rnd, t, topic)
+        return TB.render(self._tb)
+
+    def _topic_shift_tag(self, body: str) -> str | None:
+        """TB 臂：**内容门控**——正文真的落到该话题（命中关键词）才返回可追加的 tag。"""
+        if not TB.enabled():
+            return None
+        p = getattr(self, "_tb", None)
+        if not p:
+            return None
+        # 双条件：命中 shift 关键词 且 不命中 base 关键词（防「本来就在说这个话题」白送）
+        return p["shift"] if TB.confirm(body, p["shift"], p.get("base")) else None
+
     def _dialogue_prompt(self, tid: str, parts: list, cfg: dict | None = None,
                          rift_line: str | None = None, wv=None) -> str:
         cfg = cfg or self._dlg_cfg()
@@ -1318,7 +1366,7 @@ class LifeLayerAgent:
         others = self._relation_line(partners) or "(独自)"
         mem_line = self._memory_line(wv, partners) if wv is not None else ""
         return (self.persona.compressed_profile(self._current_goal())
-                + f"\n场景：{tid}；对象：{others}。{self._mood_line()}。"
+                + f"\n场景：{self._topic_label(tid)}；对象：{others}。{self._mood_line()}。"
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + self._gossip_hint(partners)  # G系列A1臂：可引用真人名单（默认OFF ⇒ 空串）
                 + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
@@ -1329,13 +1377,14 @@ class LifeLayerAgent:
     def _reply_prompt(self, partner: str | None, topic: str, history: list,
                       cfg: dict | None = None, rift_line: str | None = None,
                       wv=None, repair_line: str | None = None,
-                      echo_line: str | None = None, turn: int | None = None) -> str:
+                      echo_line: str | None = None, turn: int | None = None,
+                      tid: str | None = None) -> str:
         cfg = cfg or self._dlg_cfg()
         lines = "\n".join(line for _, line in history) or "(还没说什么)"
         who = self._name(partner) if partner else "在场的人"
         mem_line = self._memory_line(wv, [partner] if partner else []) if wv is not None else ""
         return (self.persona.compressed_profile(self._current_goal())
-                + f"\n你正在和{who}聊「{topic}」。{self._mood_line()}。"
+                + f"\n你正在和{who}聊「{self._topic_label(topic)}」。{self._mood_line()}。"
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + (repair_line or "")        # R13：本线程旧账的「这一句把话说开」要求；关闭/无旧账为空串
                 + (echo_line or "")          # F-3：接住对方情绪的一句处境提示；关闭/不产为空串
@@ -1345,6 +1394,7 @@ class LifeLayerAgent:
                 + self._l7_struct_line(wv, [partner] if partner else [],
                                        len(history) if turn is None else turn,
                                        "reply")  # L-7 结构臂：开口/收束/禁忌开头（默认ON）
+                + self._topic_shift_line(wv, partner, tid, topic, turn)  # R19 话题宽度臂（默认OFF ⇒ 空串）
                 + AR.prompt_line()           # R12 去重臂：最近说过的话（默认OFF ⇒ 空串）
                 + "\n只写台词本身（接着刚才的话往下说一句）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（承载「承接上一轮」结构不变）
 
