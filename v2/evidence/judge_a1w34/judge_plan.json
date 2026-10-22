@@ -1,0 +1,237 @@
+{
+ "inputs": {
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_a1wording_n16r42_seed42/run.jsonl",
+  "log_sha256": "sha256:800ab1f8490c73341857e6efd31a60df6a6ec56ae4140227a161a4dd1a7d6037",
+  "log_sha8": "800ab1f8"
+ },
+ "protocol": {
+  "dim_zh": {
+   "flow": "往复流畅",
+   "naturalness": "自然度",
+   "persona_fit": "人设贴合",
+   "responsiveness": "回应有效",
+   "specificity": "具体性"
+  },
+  "dims": [
+   "naturalness",
+   "persona_fit",
+   "specificity",
+   "responsiveness",
+   "flow"
+  ],
+  "max_tokens": 700,
+  "model_requested": "DeepSeek-Flash",
+  "n_threads": 12,
+  "pool_multi_msg_threads": 51,
+  "pool_size": 51,
+  "repeat": 2,
+  "round_range": "0-33",
+  "sampling_unit": "thread",
+  "seed": 20261022,
+  "system_prompt": "你是「AI 小镇」对话质量评审员。你会看到一段居民之间的对话线程，按时间顺序排列，标注了说话人。\n只评这段对话本身读起来是否像真人说话，不要评剧情设定、事件是否合理、角色是否做了该做的事。\n\n请对 5 个维度各打一个 **1–7 的整数分**：\n1. naturalness 自然度：像不像熟人之间随口说话。1=机械/书面/翻译腔/像模板；4=能读但明显是生成的；7=几乎像真人对话录音转写。\n2. persona_fit 人设贴合：语气、用词、关心的事是否贴合说话人身份。1=换成谁都能说；4=部分贴合；7=明显只有这个角色会这么说。\n3. specificity 具体性：是否有具体细节、情绪、处境。1=全是空泛客套；4=有一点细节；7=细节可感、有画面。\n4. responsiveness 回应有效：每句是否在接上一句（回答/追问/反驳/共情/接梗），而不是各说各话。1=完全自说自话；4=部分接得上；7=环环相扣。\n5. flow 往复流畅：整体是否像一段连续对话。1=碎片拼接；4=有来回但不连贯；7=一气呵成。\n\n额外要求：\n- `worst_line`：最不自然的一句，**原样摘录且不超过 40 字**（超出请截断到 40 字内，不要改写）。\n- `reason`：扣分主因，**不超过 30 字**。\n- 只输出一行 JSON，不要解释文字、不要 markdown 代码块、不要换行：\n{\"naturalness\":n,\"persona_fit\":n,\"specificity\":n,\"responsiveness\":n,\"flow\":n,\"worst_line\":\"...\",\"reason\":\"...\"}",
+  "system_prompt_sha256": "sha256:547e52c747c313e0552201d5181c8e56cd1011f35686c7ee7e92c4b0bff3f6a6",
+  "temperature": 0.0,
+  "thread_pool_scheme": "multi|all"
+ },
+ "samples": [
+  {
+   "msg_ids": [
+    "D-4-0",
+    "D-6-0",
+    "D-7-0"
+   ],
+   "n_msgs": 3,
+   "rounds": [
+    4,
+    6,
+    7
+   ],
+   "sample_id": "S001",
+   "thread_key": "T:TH-P001-P002-4",
+   "transcript_sha256": "sha256:0e525606dfc203bc73296946add2e9daa589ef7685a9f2e7d4cd15c9e23f4d84",
+   "user_prompt_sha256": "sha256:06b625bdd0cd749850a95836e31302b5a91e289c9eaf2387940d7c2aa54d4477"
+  },
+  {
+   "msg_ids": [
+    "D-12-0",
+    "D-13-0",
+    "D-16-0"
+   ],
+   "n_msgs": 3,
+   "rounds": [
+    12,
+    13,
+    16
+   ],
+   "sample_id": "S002",
+   "thread_key": "T:TH-P004-P001-12",
+   "transcript_sha256": "sha256:c8cb2bce8f68bf2793f9ecbe2b3e6f3b3e45cc163a2da08521f7876910eeb89b",
+   "user_prompt_sha256": "sha256:314dee112515090f3aa7687e0c26ba2e0ef7031765ab0991d02f7850294bb46e"
+  },
+  {
+   "msg_ids": [
+    "D-31-0",
+    "D-32-0",
+    "D-33-0"
+   ],
+   "n_msgs": 3,
+   "rounds": [
+    31,
+    32,
+    33
+   ],
+   "sample_id": "S003",
+   "thread_key": "T:TH-P005-P006-31",
+   "transcript_sha256": "sha256:c19c818944db55c62e55bed6f05f1aabe23b7b2ebf01f17334c9774d088e5a82",
+   "user_prompt_sha256": "sha256:b255b3efc5f02fed5b38e9efcbee6814f5d276797d6d19f47d325fa39e0e96cd"
+  },
+  {
+   "msg_ids": [
+    "D-6-0",
+    "D-9-0",
+    "D-10-0"
+   ],
+   "n_msgs": 3,
+   "rounds": [
+    6,
+    9,
+    10
+   ],
+   "sample_id": "S004",
+   "thread_key": "T:TH-P006-P003-6",
+   "transcript_sha256": "sha256:22e9fad417125cc6ff91f7ad22fc9e4af5611163967ed57e72c4f3ecf566ea14",
+   "user_prompt_sha256": "sha256:4cb3896cca3761a5c79b2bd408c2670e8bc30157327b9e5f38abf46ca18c922a"
+  },
+  {
+   "msg_ids": [
+    "D-19-0",
+    "D-20-0",
+    "D-24-0"
+   ],
+   "n_msgs": 3,
+   "rounds": [
+    19,
+    20,
+    24
+   ],
+   "sample_id": "S005",
+   "thread_key": "T:TH-P007-P005-19",
+   "transcript_sha256": "sha256:b704da0eb01a4061e6a03240b33e087f63452d5a500766b8e8de097cc8e19943",
+   "user_prompt_sha256": "sha256:2ed7048b4014368985be9834ed8ada5716e22cf5b13c99eaffc2ac3fd834efd0"
+  },
+  {
+   "msg_ids": [
+    "D-4-0",
+    "D-6-0"
+   ],
+   "n_msgs": 2,
+   "rounds": [
+    4,
+    6
+   ],
+   "sample_id": "S006",
+   "thread_key": "T:TH-P007-P005-4",
+   "transcript_sha256": "sha256:0f7fcac1f8af340f754dca7b8dbdcbc593d7ccf2a3a0180db00c48b5cea5f4af",
+   "user_prompt_sha256": "sha256:e2a13e342e7eebf9e33ba0393aa0ece4b42b0f4cfbac537274bcd100eee65a89"
+  },
+  {
+   "msg_ids": [
+    "D-0-0",
+    "D-1-0"
+   ],
+   "n_msgs": 2,
+   "rounds": [
+    0,
+    1
+   ],
+   "sample_id": "S007",
+   "thread_key": "T:TH-P009-P004-0",
+   "transcript_sha256": "sha256:ac204d42cb64a3bda084d555700ae954b61c83a7245c9eed2f47b61ad639e5c0",
+   "user_prompt_sha256": "sha256:d79520b358b56a0d5e0fc0b7de9b71a2b984cd604dbc2c2f6576c9dc3141e504"
+  },
+  {
+   "msg_ids": [
+    "D-27-0",
+    "D-28-0"
+   ],
+   "n_msgs": 2,
+   "rounds": [
+    27,
+    28
+   ],
+   "sample_id": "S008",
+   "thread_key": "T:TH-P010-P004-27",
+   "transcript_sha256": "sha256:7fbbaf38693feebb09969acb0e26df922de3682ca5f08ba1e4825a68b09d1f48",
+   "user_prompt_sha256": "sha256:ee0471846d7732e39f2512bde780a8d56a1e5478b7c61952048fd14105c0c5dd"
+  },
+  {
+   "msg_ids": [
+    "D-27-0",
+    "D-28-0",
+    "D-31-0"
+   ],
+   "n_msgs": 3,
+   "rounds": [
+    27,
+    28,
+    31
+   ],
+   "sample_id": "S009",
+   "thread_key": "T:TH-P012-P002-27",
+   "transcript_sha256": "sha256:c0760fd812df8027dcb5bbf9fbfdbd537d9be1a00648d3a4ba821081158239fe",
+   "user_prompt_sha256": "sha256:557bced544c81f9e8abb74de69b91a77a97b6882ec1e2435f3196c0ae4981649"
+  },
+  {
+   "msg_ids": [
+    "D-15-0",
+    "D-16-0",
+    "D-18-0"
+   ],
+   "n_msgs": 3,
+   "rounds": [
+    15,
+    16,
+    18
+   ],
+   "sample_id": "S010",
+   "thread_key": "T:TH-P013-P004-15",
+   "transcript_sha256": "sha256:259fab8f22041a39aa7c9affca9dece667c76727db49ce3b07b8f88f01d45ff3",
+   "user_prompt_sha256": "sha256:3183a4c10bff8e2a6220e6efd7170568c49f224eb1f8f42c0b4a593a709c9c41"
+  },
+  {
+   "msg_ids": [
+    "D-13-0",
+    "D-14-0",
+    "D-15-0"
+   ],
+   "n_msgs": 3,
+   "rounds": [
+    13,
+    14,
+    15
+   ],
+   "sample_id": "S011",
+   "thread_key": "T:TH-P015-P002-13",
+   "transcript_sha256": "sha256:74b1b6092dbd5604b234e170b34d162f8663cac9477ab01fdbff7b200c7902bf",
+   "user_prompt_sha256": "sha256:7830dcbd28f74dc86c2de7f1ce47e50f10c100e1f4b50ed549311d951ffe5289"
+  },
+  {
+   "msg_ids": [
+    "D-28-0",
+    "D-30-0",
+    "D-33-0"
+   ],
+   "n_msgs": 3,
+   "rounds": [
+    28,
+    30,
+    33
+   ],
+   "sample_id": "S012",
+   "thread_key": "T:TH-P016-P002-28",
+   "transcript_sha256": "sha256:b5785dfc3bcfdc6a55ccb493da7c84e961adda29dd94e55881e03725cbbc14c1",
+   "user_prompt_sha256": "sha256:a7cef2149ff1a5247673afb30196fb02856b64feffe12ae659f38eadc7686c2f"
+  }
+ ],
+ "schema_version": "d5-judge/1.0"
+}

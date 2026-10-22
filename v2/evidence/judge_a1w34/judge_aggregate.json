@@ -1,0 +1,421 @@
+{
+ "agreement": {
+  "rep0_vs_rep1.flow": {
+   "cohen_kappa_binary5": 1.0,
+   "exact_agreement": 0.833333,
+   "mean_abs_diff": 0.166667,
+   "n": 12,
+   "spearman": 0.977778
+  },
+  "rep0_vs_rep1.naturalness": {
+   "cohen_kappa_binary5": null,
+   "exact_agreement": 0.916667,
+   "mean_abs_diff": 0.083333,
+   "n": 12,
+   "spearman": 0.934199
+  },
+  "rep0_vs_rep1.persona_fit": {
+   "cohen_kappa_binary5": null,
+   "exact_agreement": 0.916667,
+   "mean_abs_diff": 0.083333,
+   "n": 12,
+   "spearman": 0.83666
+  },
+  "rep0_vs_rep1.responsiveness": {
+   "cohen_kappa_binary5": 0.75,
+   "exact_agreement": 0.916667,
+   "mean_abs_diff": 0.083333,
+   "n": 12,
+   "spearman": 0.988557
+  },
+  "rep0_vs_rep1.specificity": {
+   "cohen_kappa_binary5": null,
+   "exact_agreement": 1.0,
+   "mean_abs_diff": 0.0,
+   "n": 12,
+   "spearman": 1.0
+  }
+ },
+ "inputs": {
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_a1wording_n16r42_seed42/run.jsonl",
+  "log_sha256": "sha256:800ab1f8490c73341857e6efd31a60df6a6ec56ae4140227a161a4dd1a7d6037",
+  "log_sha8": "800ab1f8"
+ },
+ "n_calls": 24,
+ "n_parse_ok": 24,
+ "parse_fail_rate": 0.0,
+ "per_sample": [
+  {
+   "n_msgs": 3,
+   "reason": "三句偏短，信息量少，像收尾寒暄",
+   "sample_id": "S001",
+   "scores_per_repeat": [
+    {
+     "flow": 5,
+     "naturalness": 6,
+     "persona_fit": 6,
+     "responsiveness": 6,
+     "specificity": 5
+    },
+    {
+     "flow": 6,
+     "naturalness": 6,
+     "persona_fit": 6,
+     "responsiveness": 6,
+     "specificity": 5
+    }
+   ],
+   "thread_key": "T:TH-P001-P002-4",
+   "transcript": "[第4回合 afternoon market] 老周 对 老石 说：老石，这事我就不掺和了，地里还等着我呢。\n[第6回合 evening community_center] 老石 对 老周 说：行，你忙你的。\n[第7回合 evening plaza] 老周 对 老石 说：嗯，改天吧。",
+   "worst_line": "嗯，改天吧。"
+  },
+  {
+   "n_msgs": 3,
+   "reason": "第三句与前面枣泥酥话题脱节，答非所问",
+   "sample_id": "S002",
+   "scores_per_repeat": [
+    {
+     "flow": 3,
+     "naturalness": 6,
+     "persona_fit": 6,
+     "responsiveness": 3,
+     "specificity": 5
+    },
+    {
+     "flow": 3,
+     "naturalness": 6,
+     "persona_fit": 6,
+     "responsiveness": 3,
+     "specificity": 5
+    }
+   ],
+   "thread_key": "T:TH-P004-P001-12",
+   "transcript": "[第12回合 morning school] 秀娘 对 老周 说：老周，你尝尝这个新烤的枣泥酥，我减了糖，怕你嫌甜。\n[第13回合 morning park] 老周 对 秀娘 说：秀娘，你费心了。我这人嘴笨，吃啥都行，就是别太甜。\n[第16回合 afternoon bank] 老周 对 秀娘 说：学那干啥，地里的活还忙不完。",
+   "worst_line": "学那干啥，地里的活还忙不完。"
+  },
+  {
+   "n_msgs": 3,
+   "reason": "整体自然，首句略平，稍显客套",
+   "sample_id": "S003",
+   "scores_per_repeat": [
+    {
+     "flow": 6,
+     "naturalness": 6,
+     "persona_fit": 7,
+     "responsiveness": 7,
+     "specificity": 6
+    },
+    {
+     "flow": 6,
+     "naturalness": 6,
+     "persona_fit": 7,
+     "responsiveness": 7,
+     "specificity": 6
+    }
+   ],
+   "thread_key": "T:TH-P005-P006-31",
+   "transcript": "[第31回合 evening cafe] 陈医 对 方老师 说：方老师，最近还忙吗？我这儿刚闲下来，想着找你坐坐。\n[第32回合 evening cafe] 方老师 对 陈医 说：陈医，你来得正好，我这两天确实有点绷着。课是照常上，就是心里总惦记着班里那几个孩子，闲下来反倒不踏实。\n[第33回合 night residence] 陈医 对 方老师 说：方老师，你这心啊，跟我看病一个理，病人走了还老想着有没有漏掉什么。可弦绷太紧，自己先垮了，那几个孩子反倒没人管。",
+   "worst_line": "方老师，最近还忙吗？我这儿刚闲下来，想着找你坐坐。"
+  },
+  {
+   "n_msgs": 3,
+   "reason": "第9句与第6句重复，回应脱节",
+   "sample_id": "S004",
+   "scores_per_repeat": [
+    {
+     "flow": 4,
+     "naturalness": 6,
+     "persona_fit": 6,
+     "responsiveness": 4,
+     "specificity": 5
+    },
+    {
+     "flow": 4,
+     "naturalness": 6,
+     "persona_fit": 6,
+     "responsiveness": 4,
+     "specificity": 5
+    }
+   ],
+   "thread_key": "T:TH-P006-P003-6",
+   "transcript": "[第6回合 evening plaza] 方老师 对 阿禾 说：阿禾，来，这是老师给你挑的一本小书，闲下来翻翻，有不懂的随时来问我。\n[第9回合 night residence] 方老师 对 阿禾 说：慢慢看就好，有不懂的地方随时来问我。读书最怕一个人闷着，问出来，思路才会越走越宽。\n[第10回合 night residence] 阿禾 对 方老师 说：方老师，我带了几个鸡蛋，您收下吧。",
+   "worst_line": "慢慢看就好，有不懂的地方随时来问我。"
+  },
+  {
+   "n_msgs": 3,
+   "reason": "第24回合与第20回合时间地点跳跃，回应脱节",
+   "sample_id": "S005",
+   "scores_per_repeat": [
+    {
+     "flow": 5,
+     "naturalness": 6,
+     "persona_fit": 6,
+     "responsiveness": 5,
+     "specificity": 6
+    },
+    {
+     "flow": 5,
+     "naturalness": 6,
+     "persona_fit": 6,
+     "responsiveness": 5,
+     "specificity": 6
+    }
+   ],
+   "thread_key": "T:TH-P007-P005-19",
+   "transcript": "[第19回合 evening plaza] 阿林 对 陈医 说：陈医，我带了点路上买的桂花糕，您先垫垫肚子，顺便帮我看看这趟货里有没有啥门道。\n[第20回合 evening cafe] 陈医 对 阿林 说：阿林，桂花糕我先收下，肚子确实有点空。货的事你放桌上，我边吃边看，别急，先说说这批货是从哪条路进来的。\n[第24回合 morning library] 陈医 对 阿林 说：后街老赵家还亮着灯，你先去垫垫肚子，货我慢慢看。",
+   "worst_line": "后街老赵家还亮着灯，你先去垫垫肚子，货我慢慢看。"
+  },
+  {
+   "n_msgs": 2,
+   "reason": "对话自然贴切，细节具体，回应紧密",
+   "sample_id": "S006",
+   "scores_per_repeat": [
+    {
+     "flow": 7,
+     "naturalness": 7,
+     "persona_fit": 7,
+     "responsiveness": 7,
+     "specificity": 7
+    },
+    {
+     "flow": 7,
+     "naturalness": 7,
+     "persona_fit": 7,
+     "responsiveness": 7,
+     "specificity": 7
+    }
+   ],
+   "thread_key": "T:TH-P007-P005-4",
+   "transcript": "[第4回合 afternoon market] 阿林 对 陈医 说：陈医，您这儿还有多余的退烧药吗？我拿两斤糙米跟您换，家里孩子烧得厉害。\n[第6回合 evening cafe] 陈医 对 阿林 说：退烧药我这儿确实不多了，先紧着孩子用，糙米你拿回去。药你按说明喂，别加量，烧退不下来再抱过来我看。",
+   "worst_line": ""
+  },
+  {
+   "n_msgs": 2,
+   "reason": "对话自然，但稍显简短，细节可更丰富",
+   "sample_id": "S007",
+   "scores_per_repeat": [
+    {
+     "flow": 6,
+     "naturalness": 6,
+     "persona_fit": 6,
+     "responsiveness": 6,
+     "specificity": 6
+    },
+    {
+     "flow": 6,
+     "naturalness": 6,
+     "persona_fit": 6,
+     "responsiveness": 6,
+     "specificity": 6
+    }
+   ],
+   "thread_key": "T:TH-P009-P004-0",
+   "transcript": "[第0回合 morning park] 金先生 对 秀娘 说：秀娘，练完这趟就歇歇吧，账要平，力气也得省着用。\n[第1回合 morning library] 秀娘 对 金先生 说：金先生说得对，我这就收手。对了，刚烤好的枣泥酥还热乎着，你带两块回去尝尝？",
+   "worst_line": "秀娘，练完这趟就歇歇吧，账要平，力气也得省着用。"
+  },
+  {
+   "n_msgs": 2,
+   "reason": "对话自然生动，贴合人设，细节具体，回应紧密，流畅连贯。",
+   "sample_id": "S008",
+   "scores_per_repeat": [
+    {
+     "flow": 7,
+     "naturalness": 7,
+     "persona_fit": 7,
+     "responsiveness": 7,
+     "specificity": 7
+    },
+    {
+     "flow": 7,
+     "naturalness": 7,
+     "persona_fit": 7,
+     "responsiveness": 7,
+     "specificity": 7
+    }
+   ],
+   "thread_key": "T:TH-P010-P004-27",
+   "transcript": "[第27回合 afternoon market] 月牙 对 秀娘 说：秀娘，你灶上那锅粥还热着吗，我今儿从早唱到现在，肚子空得直打鼓，先给我盛一碗行不行。\n[第28回合 afternoon kitchen] 秀娘 对 月牙 说：月牙你来得正好，粥还温着呢，我给你盛一碗，再搭两块刚出炉的桂花糕，唱了一天可别饿坏了。",
+   "worst_line": "秀娘，你灶上那锅粥还热着吗，我今儿从早唱到现在，肚子空得直打鼓，先给我盛一碗行不行。"
+  },
+  {
+   "n_msgs": 3,
+   "reason": "第31回合与第28回合重复，缺桂婶回应",
+   "sample_id": "S009",
+   "scores_per_repeat": [
+    {
+     "flow": 4,
+     "naturalness": 6,
+     "persona_fit": 6,
+     "responsiveness": 5,
+     "specificity": 5
+    },
+    {
+     "flow": 4,
+     "naturalness": 6,
+     "persona_fit": 6,
+     "responsiveness": 5,
+     "specificity": 5
+    }
+   ],
+   "thread_key": "T:TH-P012-P002-27",
+   "transcript": "[第27回合 afternoon market] 桂婶 对 老石 说：老石啊，我家灶上正炖着萝卜排骨呢，你闻着味儿没？要不先上我那儿扒两口，有啥事咱边吃边说。\n[第28回合 afternoon workshop] 老石 对 桂婶 说：不了，我把这榫头弄完再说。\n[第31回合 evening cafe] 老石 对 桂婶 说：茶先放着吧，我把这最后一道刨完。",
+   "worst_line": "茶先放着吧，我把这最后一道刨完。"
+  },
+  {
+   "n_msgs": 3,
+   "reason": "对话自然生动，贴合角色，细节具体，回应紧密，流畅连贯。",
+   "sample_id": "S010",
+   "scores_per_repeat": [
+    {
+     "flow": 7,
+     "naturalness": 7,
+     "persona_fit": 7,
+     "responsiveness": 7,
+     "specificity": 7
+    },
+    {
+     "flow": 7,
+     "naturalness": 7,
+     "persona_fit": 7,
+     "responsiveness": 7,
+     "specificity": 7
+    }
+   ],
+   "thread_key": "T:TH-P013-P004-15",
+   "transcript": "[第15回合 afternoon market] 铁头 对 秀娘 说：秀娘，这铁价又涨了，你家那口锅还补不补？\n[第16回合 afternoon market] 秀娘 对 铁头 说：铁头啊，锅先搁着吧，我这肚子饿得直打鼓，刚出炉的奶香包你尝一个，补锅的事咱吃饱了再唠。\n[第18回合 evening cafe] 铁头 对 秀娘 说：秀娘，包子我收下，可这锅你得让我先补完，饿着肚子干活手抖，砸了招牌你赔？",
+   "worst_line": ""
+  },
+  {
+   "n_msgs": 3,
+   "reason": "老石回应略短，稍显生硬",
+   "sample_id": "S011",
+   "scores_per_repeat": [
+    {
+     "flow": 7,
+     "naturalness": 7,
+     "persona_fit": 6,
+     "responsiveness": 7,
+     "specificity": 7
+    },
+    {
+     "flow": 7,
+     "naturalness": 7,
+     "persona_fit": 7,
+     "responsiveness": 7,
+     "specificity": 7
+    }
+   ],
+   "thread_key": "T:TH-P015-P002-13",
+   "transcript": "[第13回合 morning park] 五味 对 老石 说：老石，先歇会儿吧，我这肚子都饿得打鼓了，练不动了。\n[第14回合 morning workshop] 老石 对 五味 说：那先吃口饼，我再练会儿。\n[第15回合 afternoon kitchen] 五味 对 老石 说：哎，光啃饼哪顶得住，等会儿我给你露一手，就着灶上那点剩料随便炒个饭，保准比干饼香。",
+   "worst_line": "那先吃口饼，我再练会儿。"
+  },
+  {
+   "n_msgs": 3,
+   "reason": "老石两次回应几乎重复，像复制粘贴",
+   "sample_id": "S012",
+   "scores_per_repeat": [
+    {
+     "flow": 4,
+     "naturalness": 6,
+     "persona_fit": 6,
+     "responsiveness": 5,
+     "specificity": 5
+    },
+    {
+     "flow": 3,
+     "naturalness": 5,
+     "persona_fit": 6,
+     "responsiveness": 4,
+     "specificity": 5
+    }
+   ],
+   "thread_key": "T:TH-P016-P002-28",
+   "transcript": "[第28回合 afternoon plaza] 兰姐 对 老石 说：老石啊，今天这单我真接不了，家里一堆事等着我呢，改天我请你喝茶赔个不是。\n[第30回合 evening cafe] 老石 对 兰姐 说：行，你先忙。我回去把刨子磨磨。\n[第33回合 night residence] 老石 对 兰姐 说：行，那先这样。我回去把柜子收个尾。",
+   "worst_line": "行，那先这样。我回去把柜子收个尾。"
+  }
+ ],
+ "protocol": {
+  "dim_zh": {
+   "flow": "往复流畅",
+   "naturalness": "自然度",
+   "persona_fit": "人设贴合",
+   "responsiveness": "回应有效",
+   "specificity": "具体性"
+  },
+  "dims": [
+   "naturalness",
+   "persona_fit",
+   "specificity",
+   "responsiveness",
+   "flow"
+  ],
+  "max_tokens": 700,
+  "model_requested": "DeepSeek-Flash",
+  "n_threads": 12,
+  "pool_multi_msg_threads": 51,
+  "pool_size": 51,
+  "repeat": 2,
+  "round_range": "0-33",
+  "sampling_unit": "thread",
+  "seed": 20261022,
+  "system_prompt": "你是「AI 小镇」对话质量评审员。你会看到一段居民之间的对话线程，按时间顺序排列，标注了说话人。\n只评这段对话本身读起来是否像真人说话，不要评剧情设定、事件是否合理、角色是否做了该做的事。\n\n请对 5 个维度各打一个 **1–7 的整数分**：\n1. naturalness 自然度：像不像熟人之间随口说话。1=机械/书面/翻译腔/像模板；4=能读但明显是生成的；7=几乎像真人对话录音转写。\n2. persona_fit 人设贴合：语气、用词、关心的事是否贴合说话人身份。1=换成谁都能说；4=部分贴合；7=明显只有这个角色会这么说。\n3. specificity 具体性：是否有具体细节、情绪、处境。1=全是空泛客套；4=有一点细节；7=细节可感、有画面。\n4. responsiveness 回应有效：每句是否在接上一句（回答/追问/反驳/共情/接梗），而不是各说各话。1=完全自说自话；4=部分接得上；7=环环相扣。\n5. flow 往复流畅：整体是否像一段连续对话。1=碎片拼接；4=有来回但不连贯；7=一气呵成。\n\n额外要求：\n- `worst_line`：最不自然的一句，**原样摘录且不超过 40 字**（超出请截断到 40 字内，不要改写）。\n- `reason`：扣分主因，**不超过 30 字**。\n- 只输出一行 JSON，不要解释文字、不要 markdown 代码块、不要换行：\n{\"naturalness\":n,\"persona_fit\":n,\"specificity\":n,\"responsiveness\":n,\"flow\":n,\"worst_line\":\"...\",\"reason\":\"...\"}",
+  "system_prompt_sha256": "sha256:547e52c747c313e0552201d5181c8e56cd1011f35686c7ee7e92c4b0bff3f6a6",
+  "temperature": 0.0,
+  "thread_pool_scheme": "multi|all"
+ },
+ "provider": {
+  "model_requested": "DeepSeek-Flash",
+  "models_reported": [
+   "DeepSeek-Flash"
+  ],
+  "name": "openai_compat"
+ },
+ "schema_version": "d5-judge/1.0",
+ "scores": {
+  "flow": {
+   "max": 7,
+   "mean": 5.416667,
+   "min": 3,
+   "n": 24,
+   "p10": 3.3,
+   "p50": 6.0,
+   "p90": 7.0
+  },
+  "naturalness": {
+   "max": 7,
+   "mean": 6.291667,
+   "min": 5,
+   "n": 24,
+   "p10": 6.0,
+   "p50": 6.0,
+   "p90": 7.0
+  },
+  "persona_fit": {
+   "max": 7,
+   "mean": 6.375,
+   "min": 6,
+   "n": 24,
+   "p10": 6.0,
+   "p50": 6.0,
+   "p90": 7.0
+  },
+  "responsiveness": {
+   "max": 7,
+   "mean": 5.708333,
+   "min": 3,
+   "n": 24,
+   "p10": 4.0,
+   "p50": 6.0,
+   "p90": 7.0
+  },
+  "specificity": {
+   "max": 7,
+   "mean": 5.916667,
+   "min": 5,
+   "n": 24,
+   "p10": 5.0,
+   "p50": 6.0,
+   "p90": 7.0
+  }
+ }
+}
