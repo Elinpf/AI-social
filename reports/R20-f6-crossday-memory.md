@@ -105,6 +105,27 @@ diff /tmp/chain_recheck.txt v2/evidence/f6_chain_20261022/chain_out.txt && echo 
 
 **旁证（同一脚本直接复算）**：A5 的 `DROPPED[reason=unknown_intent_field, keys=('text',), type=MEMORY_CONSOLIDATE]` = **755**，与 `MEMORY_CONSOLIDATE` 数（755）**逐条相等** ⇒ 修复前每次固化的 `text` 都被丢；D12-A 同项 = **0**。这正是 `code/orchestration/integration.py:211`（`"MEMORY_CONSOLIDATE": ("text",)`）生效的直接证据。
 
+**修复前缺陷的准确定性（审计 + 实现者只读复算一致，比单看 C1 更硬）**：
+两批的**固化目标集合相同**——`produced_mem_id` 形如 `M-{agent}-SM-{subject}`，由 agent×subject 决定，**16×16 = 256**；两批 `produced_mem_id` 去重集合**双向差集为空（完全相同，256 个）**。但**落账结果不同**：A5 的 **755** 条固化落到同样这 256 个 id 上、`MEMORY_WRITE(-SM-)` 去重 = **0**；D12-A 的 **499** 条固化落到同样这 256 个 id 上、`MEMORY_WRITE(-SM-)` 去重 = **256**。
+⇒ 修复前的缺陷**不是"没算出固化组"，而是"算出来了（256 个目标齐全）、正文透传与落账全丢"**。
+> 注意措辞：**不得**写"两批固化量相同"（755 ≠ 499，且 499 条落 256 个 id 是设计使然）；正确写法是「**目标集合相同（16×16=256），落账结果不同（A5 = 0 / D12-A = 256）**」。
+> 复算（只读，两批 `produced_mem_id` 集合比对）：
+
+```bash
+python3 -c "import json
+def P(f):
+    s=set()
+    for l in open(f):
+        d=json.loads(l)
+        if d['type']=='MEMORY_CONSOLIDATE':
+            p=d['payload'].get('produced_mem_id')
+            if p: s.add(p)
+    return s
+a=P('v2/evidence/run_a5_real_n16r42_seed42/run.jsonl'); b=P('v2/evidence/run_d12a_real_n16r24_seed42/run.jsonl')
+print(len(a),len(b),a==b,len(a-b),len(b-a))"
+# 期望输出：256 256 True 0 0
+```
+
 **链内自洽（原为审计额外交叉检查项，现已在 `chain_out.txt` 中直接打印，可复算）**：
 - `MEMORY_CONSOLIDATE.produced_mem_id` 去重 = **256**，与 SM `MEMORY_WRITE` 的去重 `mem_id` 集合**完全相等**（双向差集皆空）；
 - 被检索选中的 **103** 个 SM id **全部 ⊆** 这 256 个（无"检索到从未写入过的记忆"）；
@@ -378,6 +399,7 @@ git log --all --since="2026-10-22T20:24:36+08:00" --until="2026-10-22T20:47:29+0
 
 **机制层（Q1）——已达成（存在性事实）**
 `c01f6dd` 修复后，`MEMORY_CONSOLIDATE(落 text) → MEMORY_WRITE(SM) → MEMORY_RETRIEVE(选中 SM)` 三段在**真 LLM 日志**（D12-A，`code_sha a6ae5e5`，已由 `obs llm-cost` rc=0 验真）中确实活了：C1 `499/499`、C2 `256` 条 SM、C3 选中 SM `103`；修复前对照（A5，`51cdb07`）分别为 `0/755`、`0`、`0`。
+**更硬的缺陷定性**：两批的固化**目标集合相同**（`produced_mem_id` 16×16 = **256**，双向差集为 0），但**落账结果不同**（A5 = 0 / D12-A = 256）⇒ 修复前不是"算不出固化组"，而是"**算出来了、透传与落账全丢**"。
 这是**本轮新增的一条端到端日志证据**——R18 的 A/B 是**进程内脚本夹具**（`v2/evidence/fix-sleep-consolidation-20261022/ab_rerun.log`），本轮是**首个真跑批日志证据**。**但"管道活了"不等于"F-6 变好"**。
 
 **本节证据等级 = `probe`**：A5 与 D12-A **两批均无 `meta.json`**（d5 `admission=REJECTED`），可信度来自**代码归因（§2.1 三条）+ 事件字段签名（DROPPED 755→0）**，**不是**准入等级；且两批跨臂跨窗口（42 轮 / d2-prefer vs 24 轮 / d12-detail）⇒ **是存在性对比，不是 DiD 受控对照**。
