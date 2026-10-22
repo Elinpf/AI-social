@@ -633,7 +633,8 @@ env -i PATH=/usr/bin:/bin HOME=/tmp/d7home python3 tools/verify_dialogue_page.py
 ```
 
 `threads.json.source` 已绑定 `generator_sha256`、`run_sha256`、`inputs.personas.sha256`、
-`inputs.places.sha256`、`inputs.params`。**换脚本（哪怕只改注释）或换人格文件都会产出不同字节**，
+`inputs.places.sha256`、`inputs.params`。**复现时必须把 `--label` 一起带上**：`inputs.params.label` 参与产出，
+不传就会与仓库里的文件字节不同（2026-10-22 就因为三份数据集「旧生成器 + `label=None`」被核验方判为不可复现而返工）。**换脚本（哪怕只改注释）或换人格文件都会产出不同字节**，
 这是特性不是缺陷——引用时必须把这几项一起带上。
 
 **实验标签只能由 `meta.code_sha` + 变量清单推导，不能由目录名或文件名推断**（血泪教训，2026-10-21）：
