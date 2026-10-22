@@ -62,6 +62,12 @@ MEMORY_F6_ENV = "LIFE_PROMPT_MEMORY_F6"
 MEMORY_F6_TOP_N = 2
 #: 单条记忆正文截断长度（字符）
 MEMORY_F6_ITEM_CHARS = 60
+#: D1（本轮）：`TOP_N` 里留给「固化印象」（`kind=="semantic"`，即 `-SM-` 条目）的保底名额。
+#: 改前：两个槽位由 observation 桶先占满 ⇒ 固化印象**基本排不进**（R20 静态定位的根因②）。
+#: 改后：先给固化印象 1 个槽，剩余额度再按 observation → 其它 的顺序填。
+#: `TOP_N` 本身**不变**（仍是 2），变的只是准入顺序；该常量可审计、可解释为
+#: 「一次最多想起 1 件攒下来的印象 + 1 件具体的事」。设为 0 即退化为改动前的行为。
+MEMORY_F6_SEMANTIC_QUOTA = 1
 
 
 def memory_f6_enabled() -> bool:
@@ -1201,8 +1207,11 @@ class LifeLayerAgent:
 
         取材只读现有的 `memory.nodes`（**不新增检索通道、不改 `score_and_rank` 权重、
         不 touch/不改 access_count**）：过滤 `node.day < 当前 day`（跨天，含昨天）+
-        「人话」门（见 `_readable`），再按 (day 新→旧, importance 高→低, 去重键升序) 取前 N。
-        审计：实际注入的 `mem_id` 记到 `self._mem_refs`，由 `_ctx_snapshot()` 落进 MSG payload。
+        「人话」门（见 `_readable`），再按 (day 新→旧, importance 高→低, 去重键升序) 排序。
+        准入（D1 改动）：先给固化印象（`kind=="semantic"`）保底 `MEMORY_F6_SEMANTIC_QUOTA`
+        个槽，剩余额度按 observation → 其它 填，总数仍受 `MEMORY_F6_TOP_N` 约束。
+        审计：实际注入的 `mem_id` 记到 `self._mem_refs`，由 `_ctx_snapshot()` 落进 MSG payload；
+        `-SM-` 条目可直接从 `mem_id` 里区分（如 `M-P003-SM-P007`）。
         """
         self._mem_refs = []
         if not memory_f6_enabled():
@@ -1277,16 +1286,32 @@ class LifeLayerAgent:
                          int(node.day), int(getattr(node, "importance", 0) or 0),
                          key, text, str(node.mem_id)))
 
-        # 先观察类、后反思类（反思是内心独白，作旧事引用比具体观察淡）
+        # D1：准入顺序（改前是「先 observation 桶、后 other 桶」两趟，observation 常常
+        # 一趟就把 TOP_N 占满 ⇒ 固化印象几乎排不进）。改后**分两段**：
+        #   ① 固化印象（`kind=="semantic"`，即 `-SM-`）先占 `MEMORY_F6_SEMANTIC_QUOTA` 个槽；
+        #   ② 剩余额度仍按观察类 → 其它 的顺序填（这两趟内部排序口径与改前逐字一致）。
+        # 排序键固定为 (day 新→旧, importance 高→低, 去重键升序) ⇒ 确定性、与 RNG 无关。
+        ranked = sorted(cand, key=lambda t: (-t[1], -t[2], AR.mem_usage(t[5]), t[3]))
+
+        # ① 固化印象保底（跨天攒出来的「关于某人的印象」，带细节或至少带人话）
+        for kind, day, _imp, key, text, mid in ranked:
+            if len(picked) >= MEMORY_F6_SEMANTIC_QUOTA:
+                break
+            if kind != "semantic":
+                continue
+            picked.append((day, text[:MEMORY_F6_ITEM_CHARS]))
+            self._mem_refs.append(mid)
+
+        # ② 剩余额度：先观察类、后反思/其它（沿用改前的桶序，只是不会再吃掉印象的槽）
         for want in ("observation", "other"):
-            for kind, day, _imp, key, text, mid in sorted(
-                    cand, key=lambda t: (t[0] != "observation", -t[1], -t[2],
-                                         AR.mem_usage(t[5]), t[3])):
+            for kind, day, _imp, key, text, mid in ranked:
                 if len(picked) >= MEMORY_F6_TOP_N:
                     break
+                if mid in self._mem_refs:          # ① 已用掉的条目不再重复占槽
+                    continue
                 if want == "observation" and kind != "observation":
                     continue
-                if want == "other" and kind == "observation":
+                if want == "other" and kind in ("observation", "semantic"):
                     continue
                 picked.append((day, text[:MEMORY_F6_ITEM_CHARS]))
                 self._mem_refs.append(mid)
@@ -1460,6 +1485,29 @@ class LifeLayerAgent:
             return                                    # ≤1 accept per round
 
     # ---- misc ------------------------------------------------------------
+    def _summary_names(self, mems: list[dict]) -> dict[str, str]:
+        """D1：把 `Pxxx` 映射成**显示名**，交给 `forgetting.summarize` 组摘要措辞。
+
+        只收「显示名 ≠ 原始 id」的条目（`names_enabled=False` 时映射为空 ⇒ 摘要写
+        「有人」，绝不把内部 id 递给模型）。映射只由 `personas.json` 的显示名与
+        记忆文本里实际出现的 id 决定（`sorted` 遍历）⇒ 与随机/墙钟无关。
+        """
+        ids: set[str] = set()
+        for m in mems:
+            subj = m.get("subject")
+            if subj:
+                ids.add(str(subj))
+            ids.update(re.findall(r"P\d{3}", m.get("text") or ""))
+        out: dict[str, str] = {}
+        for pid in sorted(ids):
+            try:
+                nm = self._name(pid)
+            except Exception:
+                nm = pid
+            if nm and nm != pid:
+                out[pid] = nm
+        return out
+
     def _sleep_params(self) -> dict:
         """T224：睡眠窗口参数（读 config/life_v2.json；默认关）。可被测试覆盖。"""
         return _sleep.load_params()
@@ -1489,9 +1537,12 @@ class LifeLayerAgent:
         if self._persona_state is None:      # 锚定不写回：P(0)=anchor，之后只动表达层
             self._persona_state = PD.init_state(anchor)
             self._persona_p0 = dict(self._persona_state)
+        # D1（本轮）：记忆快照**带上正文** `text`，供 `forgetting.summarize` 从被聚合
+        # 的经历里提取可读细节（人物/地点/活动）。只读拷贝，不改任何节点状态。
         mems = [{"mem_id": n.mem_id, "kind": n.kind, "importance": n.importance,
                  "last_access": n.last_access, "access_count": n.access_count,
-                 "subject": n.subject, "emo": 0, "consolidated": False}
+                 "subject": n.subject, "emo": 0, "consolidated": False,
+                 "text": n.text or ""}
                 for n in self.memory.nodes.values()]
 
         planned = int(params["sleep"].get("planned_ticks", 3))
@@ -1501,7 +1552,8 @@ class LifeLayerAgent:
                                       day=day, slot=slot, anchor=anchor,
                                       p_state=self._persona_state, p0=self._persona_p0,
                                       drift_events=self._reflection_drift_events(
-                                          params, day=day, slot=slot, window=day))
+                                          params, day=day, slot=slot, window=day),
+                                      names=self._summary_names(mems))
         n = 0
         for a in out["forget"]:
             if self.kernel.submit_intent(self.agent_id, Intent(INTENT_MEMORY, self.agent_id, {

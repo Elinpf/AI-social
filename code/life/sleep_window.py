@@ -65,6 +65,7 @@ def run_sleep_window(
     p_state: dict | None = None,
     p0: dict | None = None,
     drift_events: list[dict] | None = None,
+    names: dict[str, str] | None = None,
 ) -> dict:
     """睡眠离线窗口一次执行（纯函数）。
 
@@ -75,6 +76,10 @@ def run_sleep_window(
       - `persona`：人格漂移结果（若提供 anchor）
       - `events`：**待发事件**（MEMORY_CONSOLIDATE / MEMORY_FORGET / PERSONA_DRIFT），交调用方落账
     关闭时：`{"...", "consolidate": [], "forget": [], "events": []}`（空计划、零副作用）。
+
+    `names`（D1，可选）：内部 token → 人话映射（`Pxxx` → 显示名）。**只影响摘要措辞**，
+    由调用方（agent/组合根）传进来——本模块不认识显示名；缺省 ⇒ 摘要里的 `Pxxx`
+    写作「有人」，绝不把内部 id 递给模型。
     """
     mems = list(memories)
     sl = slot if slot is not None else str(params.get("sleep", {}).get("slot", "night"))
@@ -89,7 +94,8 @@ def run_sleep_window(
     fparams = params["forgetting"]
     groups = F.consolidation_groups(mems, fparams)
     for g in groups:
-        text = F.summarize(g["subject"], g["count"])
+        text = F.summarize(g["subject"], g["count"],
+                           g.get("source_texts"), names=names)
         out["consolidate"].append({"subject": g["subject"],
                                    "source_mem_ids": g["source_mem_ids"],
                                    "count": g["count"], "text": text})

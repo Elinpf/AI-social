@@ -15,6 +15,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -174,9 +175,152 @@ def plan_forgetting(memories: Iterable[dict], round_no: int, params: dict) -> li
     return out
 
 
-def summarize(subject: str, count: int) -> str:
-    """确定性摘要文本（固化用；**非 LLM 生成**）。"""
-    return f"关于{subject}的印象（由{count}条经历聚合）"
+# ---- 固化摘要：口径声明 + 人话细节提取（D1 / 2026-10-23） ---------------------
+#: 固化摘要的**确定性口径声明**（本轮 D1 改动的可审计锚）。
+#:
+#: 为什么需要它：本函数的输出正文会经 `life/agent.py::_maybe_sleep_window` 写进
+#: side 存贮（`side://mem/<agent>/<mem_id>.txt`，见 `life/memory.py::SideStore.write`），
+#: 并由 `MEMORY_WRITE.body_ref/embed_ref` 指向它；`MEMORY_CONSOLIDATE` 意图虽带 `text`，
+#: 但组合根 `orchestration/integration.py::_do_memory` **不把它落进事件 payload**
+#: （实测 `run_f6_on_n16r60_seed42` 的 1267 条 MEMORY_CONSOLIDATE 均无 text 字段），
+#: 因此正文只在 side blob 里，`run.jsonl` 里没有。
+#: 也就是说**代码改动会改变 side blob 正文与 SM 的冻结向量**，而 `engine_version` 指纹
+#: 只覆盖 `config/*.json` 的复现输入常数（`engine/version.py::FINGERPRINT_FILES`），
+#: **覆盖不到 `life/*.py`**。故本改动**不能**靠改指纹来「声明」，只能靠这里显式声明口径
+#: + 报告登记：
+#:
+#:   * v1（改动前，`8a768f4` 及以前）：`关于{subject}的印象（由{count}条经历聚合）`
+#:     ——空壳模板，无任何具体内容（即使被引用也不带生活气息）。
+#:   * v2（本改动）：`关于{subject}的印象：{细节1}；{细节2}`，细节从**被聚合的那几条
+#:     经历正文**里确定性提取（人物/地点/活动），提取不到时**逐字节回退 v1**。
+#:
+#: 跨口径可比性：v1 与 v2 的 SM 正文不同 ⇒ ① side blob 正文不同 ② SM 的冻结向量
+#: （由正文词法算出）不同 ⇒ `MEMORY_RETRIEVE.scores` 与后续行为可能不同。
+#: 故 OF/OFF 对照必须**同一口径（同一 sha、同一分支）**跑两臂；v2 的读数**不可**直接
+#: 与 v1 口径（`8a768f4` 及以前的批次）横向比。本次**未改**任何 config，故
+#: `engine_version` 指纹前后一致（这一点在下游跑批时应看到两臂同指纹）。
+SEMANTIC_SUMMARY_SPEC = "f6-sem-impression-v2"
+
+#: 场所 id → 人话（`code/config/topology.json` 的 17 个 place_id；不读盘、进不了指纹）
+_PLACE_CN = {
+    "residence": "住处", "farm": "田里", "workshop": "作坊", "kitchen": "厨房",
+    "clinic": "医馆", "school": "学堂", "office": "铺子", "market": "市集",
+    "bank": "钱庄", "plaza": "广场", "town_hall": "镇公所", "library": "藏书楼",
+    "community_center": "公屋", "cafe": "茶棚", "park": "园子", "hall": "大堂",
+    "gate": "镇口",
+}
+
+#: 活动类型 id → 人话（`activity_templates.json` 实测 6 类 + 常见别名兜底）
+_ACTIVITY_CN = {
+    "self_care": "照应自己", "rest": "歇一歇", "socialize": "和人说说话",
+    "leisure": "闲逛", "civic": "忙镇上的事", "learn": "学手艺", "trade": "做买卖",
+    "work": "干活",
+}
+
+#: 单条细节的字符上限 / 一次摘要最多挂几条细节（控 token；与 F-6 注入端 `ITEM_CHARS` 同量级）
+SUMMARY_DETAIL_CHARS = 22
+SUMMARY_DETAIL_MAX = 2
+
+
+def _tokens_to_cn(text: str) -> str:
+    """把已知的内部 token 换成中文说法（未登记的 token 原样留下，交给可读门判死）。"""
+    def _sub(m):
+        tok = m.group(0)
+        return _PLACE_CN.get(tok) or _ACTIVITY_CN.get(tok) or tok
+    pat = r"\b(?:" + "|".join(sorted(
+        {*_PLACE_CN, *_ACTIVITY_CN}, key=lambda s: (-len(s), s))) + r")\b"
+    return re.sub(pat, _sub, text)
+
+
+def _humanize_detail(text: str, names: dict[str, str] | None = None) -> str | None:
+    """把一条经历正文 → 一句可读的「细节」。**纯文本规则、无 LLM、无随机**。
+
+    只认 `life/agent.py::_describe_event` 实际产出的几种句式，其余一律 `None`
+    （宁缺毋滥：宁可退回空壳模板，也不把内部 token 混进居民的话里）。
+
+    返回 None 表示这条经历提不出细节。
+    """
+    s = (text or "").strip().replace("\n", " ")
+    if not s:
+        return None
+    nm = names or {}
+
+    def _name(tok: str) -> str:
+        return nm.get(tok) or "有人"          # 不把 Pxxx 这类内部 id 递给模型
+
+    m = re.match(r"^(P\d{3})\s*说：(.+)$", s)
+    if m:
+        body = m.group(2).strip()
+        if not body:
+            return None
+        return f"{_name(m.group(1))}说起：{body[:SUMMARY_DETAIL_CHARS]}"
+    m = re.match(r"^(P\d{3})\s*与\s*(P\d{3})\s*在\s*([a-z_]+)\s*相遇。$", s)
+    if m:
+        return f"{_name(m.group(1))}在{_PLACE_CN.get(m.group(3), m.group(3))}碰上了{_name(m.group(2))}"
+    m = re.match(r"^(P\d{3})\s*在\s*([a-z_]+)\s*开始\s*([a-z_]+)。$", s)
+    if m:
+        pl = _PLACE_CN.get(m.group(2))
+        ac = _ACTIVITY_CN.get(m.group(3))
+        if not pl or not ac:
+            return None
+        return f"{_name(m.group(1))}在{pl}{ac}"
+    m = re.match(r"^(P\d{3})\s*完成了\s*([a-z_]+)（([a-z_]+)\|([a-z_]+)）。$", s)
+    if m:
+        ac = _ACTIVITY_CN.get(m.group(2))
+        if not ac:
+            return None
+        return f"{_name(m.group(1))}把{ac}忙完了"
+    m = re.match(r"^(P\d{3})\s*到达\s*([a-z_]+)。$", s)
+    if m:
+        pl = _PLACE_CN.get(m.group(2))
+        if not pl:
+            return None
+        return f"{_name(m.group(1))}去了{pl}"
+    # 兜底：先换 token，再走可读门（挡掉「P003 的 RELATION_CHANGE 事件。」这类机器话）
+    t = _tokens_to_cn(re.sub(r"P\d{3}", lambda mo: _name(mo.group(0)), s))
+    if "事件" in t or re.search(r"[A-Za-z]{3,}", t) or re.search(r"[A-Z]{2,}", t):
+        return None
+    if len(re.sub(r"\s+", "", t)) < 6:
+        return None
+    return t[:SUMMARY_DETAIL_CHARS]
+
+
+def summarize(subject: str, count: int,
+              sources: Iterable[str] | None = None,
+              *, names: dict[str, str] | None = None) -> str:
+    """确定性固化摘要文本（固化用；**非 LLM 生成**）。
+
+    两种口径（见 `SEMANTIC_SUMMARY_SPEC`）：
+      * 无 `sources`（或全提不出细节）⇒ **逐字节回退 v1**：
+        `关于{subject}的印象（由{count}条经历聚合）`；
+      * 有 `sources` 且至少一条提出细节 ⇒ v2：
+        `关于{subject}的印象：{细节1}；{细节2}`。
+
+    确定性：`sources` 按**给定顺序**（调用方须传 `source_mem_ids` 的升序，
+    即 mem_id 升序）逐条提取，细节按出现顺序去重取前 `SUMMARY_DETAIL_MAX` 条；
+    不读墙钟、不用随机、不依赖 dict 遍历序以外的任何进程态 ⇒ 同一输入**逐字节同输出**。
+
+    `names`：内部 token → 人话（`Pxxx` → 显示名）；仅影响措辞，不进任何指纹。
+    """
+    text_v1 = f"关于{subject}的印象（由{count}条经历聚合）"
+    if sources is None:
+        return text_v1
+    details: list[str] = []
+    seen: set[str] = set()
+    for src in sources:
+        d = _humanize_detail(src, names)
+        if not d:
+            continue
+        key = re.sub(r"\s+", "", d)
+        if key in seen:
+            continue
+        seen.add(key)
+        details.append(d)
+        if len(details) >= SUMMARY_DETAIL_MAX:
+            break
+    if not details:
+        return text_v1
+    return f"关于{subject}的印象：{'；'.join(details)}"
 
 
 # ---- 固化分组（供睡眠窗口调用） ----------------------------------------------
@@ -184,10 +328,15 @@ def consolidation_groups(memories: Iterable[dict], params: dict) -> list[dict]:
     """按 `subject` 分组、达到阈值且尚未固化的情节记忆 → 固化候选（确定性）。
 
     仅考虑 `kind == "observation"/"chat"`；按 subject 升序、mem_id 升序。
+
+    D1（本轮）：额外带出 `source_texts` —— 与 `source_mem_ids` **同序**（mem_id 升序）
+    的原始正文，供 `summarize` 从中提取可读细节。记忆字典里没有 `text` 键时
+    `source_texts` 为空列表 ⇒ `summarize` 走 v1 兜底（行为与改动前一致）。
     """
     if not params.get("enabled"):
         return []
     groups: dict[str, list[str]] = {}
+    texts: dict[str, dict[str, str]] = {}
     for m in sorted((m for m in memories if m.get("mem_id")), key=lambda m: str(m["mem_id"])):
         if m.get("kind") not in ("observation", "chat"):
             continue
@@ -196,10 +345,16 @@ def consolidation_groups(memories: Iterable[dict], params: dict) -> list[dict]:
         subj = m.get("subject")
         if not subj:
             continue
-        groups.setdefault(str(subj), []).append(str(m["mem_id"]))
+        mid = str(m["mem_id"])
+        groups.setdefault(str(subj), []).append(mid)
+        t = m.get("text")
+        if isinstance(t, str) and t:
+            texts.setdefault(str(subj), {})[mid] = t
     out = []
     for subj in sorted(groups):
         ids = groups[subj]
         if len(ids) >= int(params["consolidate_min"]):
-            out.append({"subject": subj, "source_mem_ids": ids, "count": len(ids)})
+            by_id = texts.get(subj, {})
+            out.append({"subject": subj, "source_mem_ids": ids, "count": len(ids),
+                        "source_texts": [by_id[i] for i in ids if i in by_id]})
     return out
