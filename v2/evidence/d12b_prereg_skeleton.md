@@ -57,11 +57,34 @@ python3 tools/d9/arm_state_check.py --run <arm>/run.jsonl \
 - **单 seed（7）**；`ON` 臂被中断 ⇒ **作废重跑**，不使用 `--resume-from`；
 - 若机制未生效（句首熵未升）⇒ 结论是"机制未生效"，**不是"无效"**（两者含义不同）。
 
-## 6. 待定稿项（明早 Leader 点头后补齐，缺一不许起跑）
+## 6. 待定稿项 —— **已全部补齐（2026-10-23T01:3x）**
 
-1. `HITT_D12_PREFWORD` 的**实际代码 diff**（15 行内，只加不减）与 `prompt_fn_sha256`；
-2. **句首熵实现冻结**（函数 + `impl_sha256`），与具体性代理同等对待（runbook §3.97）；
-3. 两臂的 `switch_proof`（`printenv` 真值）与 `arm_state_check.txt` 落盘位置。
+### ① 提示词接线：已实现 + **sha 证明两态不同**
+
+- 代码：分支 `feat/d12-prefword`（worktree `.worktrees/d12-prefword`），commit **`76bb2d0`**，`git diff --numstat` = **`15 0`**（**只加不减**）；
+- 开关：`HITT_D12_PREFWORD`（**默认关**）；
+- **接线证明（`tools/d9/prompt_fn_sha.py`，输出存 `v2/evidence/d12b_prompt_fn_sha.txt`）**：
+
+| 项 | OFF | ON |
+|---|---|---|
+| `dialogue_prompt_sha256` | `ae858c2854aea7f3541d4e97e88aafd8f3f74e0946582466893f0db4f874a5ad` | `70dd5072ef19bd9a38894e177bb0085992b391d21a227e4a7a95e1df229da7b5` |
+| `reply_prompt_sha256` | `035eaf39e1353537a892ac43af04909b9a27c8a933f022fa73d48d5c577aec1a` | `bd2f68f0d1acef26c27e44c370a527b828805ac930907c71cd5bfc88517f67ff` |
+
+- `prompt_fn_source_sha256 = c9e0f9941e7cd0315e3379d47a90b1678a9b70c4f3e5c23fdb68499cd9f561de`（两态相同，属预期：源码含分支）；
+- **结论：两态 prompt 不同 ⇒ 开关确实接进提示词**（工具输出 `[PASS]`；若相同会 exit 3）。
+
+### ② 句首熵实现冻结：`tools/d9/onset_entropy.py`
+
+- **`impl_sha256 = 0e685f1f13c97e1897b3df0c9776cf6ec3743bf0adf01dc66004ff7d3806fab8`**；
+- 口径：per-agent / 前 4 字 / 经验熵（自然对数）/ 有效 agent 均值 / 渠道合并 / 不规范化；
+- 判据：`H_mean(ON)/H_mean(OFF)-1 ≥ 10%` 才「机制生效」，否则「机制未生效」；
+- 冻结说明：`v2/refs/onset-entropy-freeze.md`；基线参考 `H_mean(OFF, 24 轮) = 2.362216`（agents=16, msgs=191）。
+
+### ③ 留痕位置：`v2/evidence/d12b_artifact_paths.md`
+
+- 两臂各自的 `switch_proof.txt`（`printenv` 真值：OFF `<unset>` / ON `1`；含 `code_sha`、`unit`、`prompt_fn_sha256`）；
+- 两臂各自的 `arm_state_check.txt`（60 秒硬闸，OFF 的 `paren_rate` 必须 ≈0.78）；
+- 判定输出：`d12b_onset_entropy.txt`（熵 compare）、`d12b_detail_proxy.txt`（具体性两臂）。
 
 ## 锚点
 

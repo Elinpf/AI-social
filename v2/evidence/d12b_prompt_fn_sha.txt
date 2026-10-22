@@ -1,0 +1,15 @@
+prompt_fn_source_sha256 = c9e0f9941e7cd0315e3379d47a90b1678a9b70c4f3e5c23fdb68499cd9f561de  (两态相同，属预期：源码含分支)
+OFF dialogue_prompt_sha256 = ae858c2854aea7f3541d4e97e88aafd8f3f74e0946582466893f0db4f874a5ad
+ON  dialogue_prompt_sha256 = 70dd5072ef19bd9a38894e177bb0085992b391d21a227e4a7a95e1df229da7b5
+OFF reply_prompt_sha256    = 035eaf39e1353537a892ac43af04909b9a27c8a933f022fa73d48d5c577aec1a
+ON  reply_prompt_sha256    = bd2f68f0d1acef26c27e44c370a527b828805ac930907c71cd5bfc88517f67ff
+[PASS] 两态 prompt 不同 ⇒ 开关已接进提示词
+---- OFF dialogue_prompt ----
+性格：开放35/尽责82/外向30/宜人60/神经质45（0-100）。价值：自主40/仁爱60/成就45/安全85。语气：plain；长度：short。当前目标：security
+场景：rel_maintain；对象：秀娘（熟悉度20/好感5）。情绪：平和；最紧的需求：social=40。
+请用一句话自然地说点什么。
+---- ON  dialogue_prompt ----
+，认定的事不轻易改。性格：开放35/尽责82/外向30/宜人60/神经质45（0-100）。价值：自主40/仁爱60/成就45/安全85。语气：plain；长度：short。当前目标：security
+场景：rel_maintain；对象：秀娘（熟悉度20/好感5）。情绪：平和；最紧的需求：social=40。
+先从你自己那点脾气/习惯里挑一个词起头（你这个人平时爱怎么说就怎么说），别用别人也爱用的那种开场。
+请用一句话自然地说点什么。
