@@ -18,7 +18,10 @@ pgrep -fa "orchestration run|judge_run" || echo "无并发，可起跑"        #
 并把本批的「**树期望**」写成 JSON（例如 A0 树 `{"paren_rate":0.70,"len_p50":39}`；
 A1 措辞树 `{"paren_rate":0.0,"len_p50":29}`；mock 树 `{"len_p50":14}` 之类）。
 
-## 2. 起跑后 1 分钟内（秒级自检）
+## 2. 起跑后 1 分钟内（**强制步骤 + 留痕**）
+
+> **不做 pre-commit 钩子**（钩子在提交路径上，误判会阻断所有人的正常提交）；改为**强制步骤 + 留痕**：
+> 起跑后 1 分钟内跑一次，把输出**贴进该批目录的 `arm_state_check.txt`**。留痕比拦截更合适。
 
 ```bash
 python3 tools/d9/arm_state_check.py \
@@ -27,8 +30,11 @@ python3 tools/d9/arm_state_check.py \
   --expect-struct '{"msgs": 686, "threads": 206, "ge3": 90}' \
   --expect-provider openai_compat \
   [--expect-env HITT_D12_DETAIL=1 --expect-behavior '{"paren_rate": {"min": 0.30}}'] \
-  --tolerance 0.05
+  --tolerance 0.05 | tee <RUN_DIR>/arm_state_check.txt
 ```
+
+**口径提醒（否则两个数会对不上）**：C1 全部指标基于**前 `--first-n` 条（默认 20）**、`len_p50` 是**原始 body 长度（不去括号）**；C4 的 `msgs/threads/ge3` 是**全批**。
+A0 参考值：前 20 条 raw p50 = **38.5**（去括号 33.0）；全批 raw p50 = **54.0**（去括号 41.0）；A0 前 34 回合子集 = **48.0**。看到 38.5/48/54 先问「哪个子集、是否去括号」。
 
 | 判据 | 抓什么 | 规则 |
 |---|---|---|
@@ -58,6 +64,29 @@ cd code && python3 -m obs llm-cost --log <RUN_DIR>/run.jsonl --require-provider 
 #   ⚠ 别用管道接 tail/head——管道会吃掉退出码
 python3 tools/d9/arm_state_check.py --run <RUN_DIR>/run.jsonl | grep -A1 C2   # 轮数以 TURN_SEAL 覆盖为准
 ```
+
+## 4.5 托管方式（`setsid` 不够，需 `systemd-run`）
+
+> **`setsid` 只脱离会话，不换 cgroup** ⇒ 平台重启 `jiuwenswarm.service` 时，同 cgroup 内的跑批进程**仍会被连坐回收**（今天三次"被杀"由此而来，不是玄学）。
+> 因此"跑批期间别做长等待调用"只是缓解，**根治要换托管方式**：把跑批放进 **transient unit**（`system.slice` 下、与平台服务平级）。
+
+```bash
+# 长跑批托管模板（transient service，立即 detach、由 PID 1 托管、可查可停）
+LOG=/tmp/batch-$(date +%Y%m%dT%H%M%S).log
+systemd-run --unit=<batch>-<run_tag> --collect \
+  --property=MemoryHigh=6G --property=MemoryMax=8G \
+  bash -lc "cd <REPO>/code && python3 -m orchestration run --life --seed 42 --agents 16 \
+            --rounds 84 --out <RUN_DIR>/run.jsonl --flush-every 2 --side-root <SIDE_DIR> \
+            >> $LOG 2>&1"
+
+# 自查三件
+systemctl status <batch>-<run_tag>.service --no-pager | head -5
+ls -la <RUN_DIR>/run.jsonl            # mtime 应 ≥ 起跑时刻
+cat /proc/$(systemctl show -p MainPID --value <batch>-<run_tag>.service)/cgroup   # 应不在 jiuwenswarm.service 内
+```
+
+> 命名：`--unit=t271-<name>` 与既有托管 runbook（T271）保持一致，便于 `systemctl list-units 't271-*'` 统一查看。
+> 日志落 `/tmp`（不进 git）；跑完把 `run.jsonl` + `meta.json` + `arm_state_check.txt` 归档进 `v2/evidence/<RUN_DIR>/`。
 
 ## 5. 纪律（事故教训，均实际发生过）
 

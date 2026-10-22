@@ -124,7 +124,20 @@ def near(actual: float, expect: float, tol: float) -> bool:
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser()
+    epilog = """指标口径（务必看清，避免两个数对不上）：
+  * C1 全部指标基于 **前 --first-n 条消息（默认 20）**，不是全批；
+  * `len_p50` = **原始 body 字符数**中位数（**不去括号**）；
+  * `len_p50_excl` = 去括号块后的中位数；
+  * `paren_rate` = 含括号块消息 / 消息数；`id_leak_rate` = 命中 P\\d{3} 的消息占比；
+  * `dup_exact_rate` = 1 - 唯一(body)/消息数（前 N 条内）；
+  * C4 的 `msgs/threads/ge3` 是**全批**口径。
+参考值（A0 = run_d2_after_n16_seed42，686 条）：
+  前 20 条：raw len_p50 = 38.5，去括号 = 33.0
+  全批　　：raw len_p50 = 54.0，去括号 = 41.0
+  A0 前 34 回合子集（D6 同窗口口径）：raw len_p50 = 48.0
+  ⇒ 若你算到 47/48/54/38.5 中某个数，先确认「全批还是前N条」「原始还是去括号」，再比。
+"""
+    ap = argparse.ArgumentParser(epilog=epilog, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--run", required=True)
     ap.add_argument("--tree-expectation", default=None, help="JSON 或指向 .json 文件")
     ap.add_argument("--expect-struct", default=None, help="JSON：msgs/threads/ge3")
@@ -180,7 +193,8 @@ def main(argv=None) -> int:
             if not ok:
                 bad_.append(f"{k}({m[k]:.4f} vs {v})")
         add("C1 首N指标", "FAIL" if bad_ else "PASS",
-            "；".join(rows) + (f" ⇒ 超差：{bad_}" if bad_ else ""))
+            f"[前 {len(bodies)} 条；len 为原始长度] " + "；".join(rows)
+            + (f" ⇒ 超差：{bad_}" if bad_ else ""))
 
     # ---- C2 seals / WORLD_INIT ----
     seals = [(r.get("round"), r.get("seq")) for r in recs if r.get("type") == "TURN_SEAL"]
