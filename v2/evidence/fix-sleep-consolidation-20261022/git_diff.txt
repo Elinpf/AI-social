@@ -1,0 +1,85 @@
+diff --git a/code/life/agent.py b/code/life/agent.py
+index cc60951..96f4da9 100644
+--- a/code/life/agent.py
++++ b/code/life/agent.py
+@@ -1462,10 +1462,27 @@ class LifeLayerAgent:
+                     "day": day, "slot": slot})).ok:
+                 n += 1
+         for g in out["consolidate"]:
++            mid = f"M-{self.agent_id}-SM-{g['subject']}"
++            # R18：固化摘要落成**真语义记忆**（先 MEMORY_WRITE，再 MEMORY_CONSOLIDATE）。
++            # 修前只发 consolidate ⇒ 派生记忆在账本里只有一条索引、没有正文/向量，
++            # 也永远没有 MEMORY_WRITE 事件（R10 §5.3 实测 SM 写入=0）。
++            # 顺序必须是 write 在前：`_do_memory(write)` 对已存在的 mem_id 拒绝写入（append-only L5）。
++            vec = self.memory.embedding.embed(g["text"])
++            body_ref, embed_ref = self.memory.side.write(
++                self.agent_id, mid, g["text"], vec)
++            wpayload = {
++                "op": "write", "mem_id": mid, "kind": "semantic", "importance": 6,
++                "day": day, "slot": slot, "tick": int(wv.round),
++                "subject": g["subject"], "body_ref": body_ref, "embed_ref": embed_ref,
++                "refs": list(g["source_mem_ids"]), "source_event_seq": None,
++            }
++            if self.kernel.submit_intent(self.agent_id, Intent(INTENT_MEMORY, self.agent_id, wpayload)).ok:
++                self.memory.commit_write(wpayload)
++                n += 1
+             if self.kernel.submit_intent(self.agent_id, Intent(INTENT_MEMORY, self.agent_id, {
+                     "op": "consolidate", "subject": g["subject"],
+                     "source_mem_ids": g["source_mem_ids"],
+-                    "produced_mem_id": f"M-{self.agent_id}-SM-{g['subject']}",
++                    "produced_mem_id": mid,
+                     "text": g["text"], "day": day, "slot": slot})).ok:
+                 n += 1
+         # T244 W2b: 把 run_sleep_window 产出的 PERSONA_DRIFT 待发事件提交为 intent
+@@ -1477,8 +1494,14 @@ class LifeLayerAgent:
+             p["op"] = "drift"
+             if self.kernel.submit_intent(self.agent_id, Intent(INTENT_MEMORY, self.agent_id, p)).ok:
+                 n += 1
++        # R18：睡眠收尾必须带上本次睡眠窗的人格指纹/漂移（`run_sleep_window` 的
++        # `out["persona"]`）。修前只发 day/slot/actual_ticks ⇒ `SLEEP_COMPLETED` 的
++        # `pf0/pf_t/drift_permille` 恒 null，人格漂移在睡眠收尾侧不可观测（R10 §5.3 缺陷②）。
++        _p = out.get("persona") or {}
+         self.kernel.submit_intent(self.agent_id, Intent(INTENT_MEMORY, self.agent_id, {
+-            "op": "sleep_end", "day": day, "slot": slot, "actual_ticks": planned}))
++            "op": "sleep_end", "day": day, "slot": slot, "actual_ticks": planned,
++            "pf0": _p.get("pf0"), "pf_t": _p.get("pf_t"),
++            "drift_permille": _p.get("drift_permille")}))
+         return n
+ 
+     def _current_goal(self) -> str:
+diff --git a/code/life/memory.py b/code/life/memory.py
+index 552f90d..737c794 100644
+--- a/code/life/memory.py
++++ b/code/life/memory.py
+@@ -437,7 +437,11 @@ class AssociativeMemory:
+             node.text = ""
+         self.nodes[mem_id] = node
+         self._register(node)
+-        self._next_seq = max(self._next_seq, int(mem_id.rsplit("-", 1)[-1]) + 1)
++        # R18：派生记忆（`M-Pxxx-SM-<subject>`）尾段是 subject 不是序号，
++        # 与 `sync_from_refs` 同一容错口径：只有数字尾段才推进 `_next_seq`。
++        tail = mem_id.rsplit("-", 1)[-1]
++        if tail.isdigit():
++            self._next_seq = max(self._next_seq, int(tail) + 1)
+         if node.kind == "observation" and not node.reflected:
+             self._unreflected_importance += node.importance
+         return node
+diff --git a/code/orchestration/integration.py b/code/orchestration/integration.py
+index 34776ae..5b105ef 100644
+--- a/code/orchestration/integration.py
++++ b/code/orchestration/integration.py
+@@ -205,6 +205,10 @@ _ASSEMBLY_CONTROL = frozenset({"op", "act", "scope", "channel"})
+ _PASSTHROUGH = {
+     "MEMORY_RETRIEVE": ("vec_available", "retrieval_mode", "query_digest"),
+     "MEMORY_REFLECT": ("produced_mem_ids",),
++    # R18：固化摘要正文（EM→SM 的 `text`，由 life 睡眠窗提交）。
++    # 修前不在此表 ⇒ 每条固化都落 DROPPED{unknown_intent_field,keys=["text"]}，
++    # 摘要正文在日志侧不可审计（R10 §5.3 缺陷①；实测丢弃数 == 固化数）。
++    "MEMORY_CONSOLIDATE": ("text",),
+     "OFFER_CREATED": ("enforceable",),
+ }
+ # 事件类型 -> 合法的 intent-only 路由/提示键（非事件字段，允许不入 payload，不算"丢失"）
+ code/life/agent.py                | 27 +++++++++++++++++++++++++--
+ code/life/memory.py               |  6 +++++-
+ code/orchestration/integration.py |  4 ++++
+ 3 files changed, 34 insertions(+), 3 deletions(-)

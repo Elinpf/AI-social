@@ -1,0 +1,24 @@
+# R10 缺陷【修前】基线（只读取数，生成于 2026-10-22T18:19:52+08:00）
+# repo HEAD = 46e43808f28a891c26234703a48440bd0ceb9d4a ｜ 脚本 = v2/evidence/fix-sleep-consolidation-20261022/r10_defect_baseline.sh
+# 口径：全部计数由 json.loads 取顶层 type / payload 字段得出，**无任何子串匹配**（见脚本头部坑①②）
+
+| batch | consolidate_count | discard_count | discard_rate | sm_should_count | SM_write_count | drift_null/null_total | events | run.jsonl bytes | meta.json |
+|---|---|---|---|---|---|---|---|---|---|
+| `run_worldline_c1_ctrl_n16r84_seed42` | 1779 | 1779 | 100.00% | 1779 | 0 | 112/112 | 194057 | 91390751 | **无（⇒ d5 判 probe）** |
+| `run_worldline_c1_a1_n16r84_seed42` | 1779 | 1779 | 100.00% | 1779 | 0 | 112/112 | 194047 | 91397526 | **无（⇒ d5 判 probe）** |
+| `run_a5_real_n16r42_seed42` | 755 | 755 | 100.00% | 755 | 0 | 48/48 | 62027 | 30303995 | **无（⇒ d5 判 probe）** |
+
+## 判据（修后合格线）
+
+- 缺陷①：`discard_count` **→ 0**；`SM_write_count` **→ > 0** 且 ≥ 修前 `consolidate_count`（ctrl/a1 = 1779，a5 = 755）
+- 缺陷②：`drift_null/null_total` **→ 0/112**（ctrl/a1）、**0/48**（a5）；非 null 值域参照同批 PERSONA_DRIFT 事件量级（≤10‰）
+- 以上均为计数型判据，**不依赖 bootstrap 噪声带**
+
+## 交叉核验（jq 1.7，可选；同样只取顶层 type，避免子串歧义）
+
+```bash
+F=v2/evidence/run_worldline_c1_ctrl_n16r84_seed42/run.jsonl
+jq -r 'select(.type=="SLEEP_COMPLETED") | .payload.drift_permille' $F | sort | uniq -c   # 期望仅 112 null
+jq -r 'select(.type=="MEMORY_CONSOLIDATE") | 1' $F | wc -l                              # 期望 1779
+jq -r 'select(.type=="DROPPED" and .payload.type=="MEMORY_CONSOLIDATE") | 1' $F | wc -l # 期望 1779
+```

@@ -1,0 +1,21 @@
+# R18 · A/B 时序复跑（基线树与分支树**物理隔离**，不在主树 stash 来回切）
+run_at_start=2026-10-22T18:20:16+08:00 | epoch=1792664416.067003118
+
+== BEFORE（基线树 = git archive 46e4380 解出到 /tmp/r10-before-tree）==
+baseline_sha=46e43808f28a891c26234703a48440bd0ceb9d4a
+主树 46e4380:code/life/agent.py sha256 = 221e9f61c035a40de6f819dc3c8bc6e453b77f1455fc732f1ee1693728adf092
+基线树 code/life/agent.py sha256        = 221e9f61c035a40de6f819dc3c8bc6e453b77f1455fc732f1ee1693728adf092
+主树 46e4380:code/orchestration/integration.py sha256 = de496dd32dfb76c2d155d594b7f72db2ac90c8815b35d981d54a1a0b3f351d6f
+基线树 code/orchestration/integration.py sha256       = de496dd32dfb76c2d155d594b7f72db2ac90c8815b35d981d54a1a0b3f351d6f
+cmd: cd /tmp/r10-before-tree/code && PYTHONPATH=. python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/f2/verify_sleep_consolidation.py
+start=2026-10-22T18:20:16+08:00 | epoch=1792664416.082640074
+rc=1
+end=2026-10-22T18:20:16+08:00 | epoch=1792664416.281374651
+
+== AFTER（分支工作树，HEAD 如下）==
+after_head=c01f6dd278cae3d6109f4dee154fa49bd208676b
+after_branch=feat/life-memory-fix-20261022
+cmd: cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code && PYTHONPATH=. python3 ../tools/f2/verify_sleep_consolidation.py
+start=2026-10-22T18:20:16+08:00 | epoch=1792664416.289581712
+rc=0
+end=2026-10-22T18:20:16+08:00 | epoch=1792664416.488382243

@@ -1,0 +1,31 @@
+{
+  "agent": "P001",
+  "dropped_unknown_intent_field": [
+    {
+      "keys": [
+        "text"
+      ],
+      "type": "MEMORY_CONSOLIDATE"
+    }
+  ],
+  "intents_submitted": 1,
+  "memory_consolidate": {
+    "has_text": false,
+    "n_events": 1,
+    "produced_mem_id": "M-P001-SM-MARKET",
+    "text": null
+  },
+  "sleep_completed": {
+    "drift_permille": null,
+    "n_events": 1,
+    "pf0": null,
+    "pf_t": null
+  },
+  "sm_memory_write": {
+    "body_ref": null,
+    "body_text": null,
+    "body_text_matches_summary": false,
+    "mem_id": null,
+    "n_events": 0
+  }
+}

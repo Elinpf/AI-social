@@ -1,0 +1,37 @@
+# 纪律自查 · pgrep 留证
+
+## (a) 本轮开工时（2026-10-22T18:20:23+08:00）pgrep 全量原文
+```
+1172001 python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/a2-prefer/tools/t271/run_override.py --seed 42 --agents 16 --rounds 42 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_a1budget_real_n16r42_seed42/run.jsonl --side-root /tmp/a1b_real_side --flush-every 2 --override life_v2.dialogue.max_turns=6 --override life_v2.dialogue.max_messages_per_slot=2 --override life_v2.dialogue.max_turns_per_round=2 --override life_v2.dialogue.reply_window_rounds=2
+1206696 /bin/sh -c cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment && for i in $(seq 1 8); do sleep 25; pgrep -f "run_override.py" >/dev/null || break; done; wc -l v2/evidence/run_a1budget_real_n16r42_seed42/run.jsonl; date +%H:%M:%S
+1212078 /bin/sh -c cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment && E=v2/evidence/fix-sleep-consolidation-20261022 && { echo "# 纪律自查 · pgrep 留证" echo echo "## (a) 本轮开工时（$(date -Iseconds)）pgrep 全量原文" echo '```' pgrep -af "run_override|run_batch|python3 -m orchestration|dialogue_metrics" 2>/dev/null || echo "(none)" echo '```' echo "说明：仅命中 1172001（他人/外部发起的 feat/d2-prefer 批），本轮未起任何新批（含 mock）。" echo echo "## (b) 18:03:21 TERM 前原文（/tmp/life_cleanup_evidence/pgrep_before.txt 原样）" echo '```' cat /tmp/life_cleanup_evidence/pgrep_before.txt 2>/dev/null echo '```' echo echo "## (c) TERM 后 after 原文：**未留存（留证缺口）**，事后从会话记录补录如下" echo '```' echo '$ pgrep -af "run_override.py|a1budget_real_run.sh"   # 18:03:26' echo '1169627 /bin/sh -c mkdir -p /tmp/life_cleanup_evidence ts=$(date ...); ... kill -TERM 1132529 1132519 1159195 ...   # ← 仅自匹配执行命令本身' echo '$ pgrep -af "run_override.py|a1budget_real_run.sh" | grep -v "pgrep -af"   # 18:03:26' echo '(EMPTY: no leftover run batch)' echo '$ pgrep -af "tools/t271|tools/d2|run_batch" | grep -v pgrep   # 18:03:33 复查' echo '(EMPTY)' echo '```' echo "过滤规则原文：pgrep 的匹配串本身出现在执行命令的 cmdline 里，故必须 \`grep -v \"pgrep -af\"\`（或按 PID 排除自身 shell）后才判空。" echo echo "## (d) 1159195 单列披露" echo '```' echo '1159195 = 遗留 `sleep 290; ...python3 -c ...` 轮询 shell（父 295404），18:03 时仍在存活；' echo '终止前**未保存其 cmdline 原文**（仅在我的会话记录里有 pgrep 的一次输出），属我自身操作的留证缺口。' echo '终止信号：与 1132529/1132519 同一批 kill -TERM（18:03:21）。' echo '```' } > $E/discipline_pgrep.txt; cat $E/discipline_pgrep.txt | head -40
+```
+说明：(a) 段除 1172001（**非本轮所起**，`.worktrees/a2-prefer` @51cdb07，18:04:18 起，外部/他人生成）外，另两条分别是
+- 1206696 = **他人的** watcher shell（`for i in seq 1 8; do sleep 25; ...`，非我起，观测 1172001 用）；
+- 1212078 = **我这条写文件命令自身**（cmdline 里含 pgrep 匹配串，属自匹配，过滤后不计）。
+⇒ 判读：本轮**未起任何新批（含 mock）**；对 1172001 全程只读，未发任何信号。
+
+## (b) 18:03:21 TERM 前原文（/tmp/life_cleanup_evidence/pgrep_before.txt 原样）
+```
+1132519 bash /tmp/a1budget_real_run.sh
+1132529 python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/a2-prefer/tools/t271/run_override.py --seed 42 --agents 16 --rounds 42 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_a1budget_real_n16r42_seed42/run.jsonl --side-root /tmp/a1b_real_side --flush-every 2 --override life_v2.dialogue.max_turns=6 --override life_v2.dialogue.max_messages_per_slot=2 --override life_v2.dialogue.max_turns_per_round=2 --override life_v2.dialogue.reply_window_rounds=2
+1169627 /bin/sh -c mkdir -p /tmp/life_cleanup_evidence ts=$(date '+%F %T%z') pgrep -af "run_override.py|a1budget_real_run.sh" > /tmp/life_cleanup_evidence/pgrep_before.txt; cat /tmp/life_cleanup_evidence/pgrep_before.txt echo "--- TERM at $ts ---" kill -TERM 1132529 1132519 1159195 2>&1 sleep 5 echo "--- after TERM ---" pgrep -af "run_override.py|a1budget_real_run.sh" || echo "(empty)" date '+%F %T%z'
+```
+
+## (c) TERM 后 after 原文：**未留存（留证缺口）**，事后从会话记录补录如下
+```
+$ pgrep -af "run_override.py|a1budget_real_run.sh"   # 18:03:26
+1169627 /bin/sh -c mkdir -p /tmp/life_cleanup_evidence ts=$(date ...); ... kill -TERM 1132529 1132519 1159195 ...   # ← 仅自匹配执行命令本身
+$ pgrep -af "run_override.py|a1budget_real_run.sh" | grep -v "pgrep -af"   # 18:03:26
+(EMPTY: no leftover run batch)
+$ pgrep -af "tools/t271|tools/d2|run_batch" | grep -v pgrep   # 18:03:33 复查
+(EMPTY)
+```
+过滤规则原文：pgrep 的匹配串本身出现在执行命令的 cmdline 里，故必须 `grep -v "pgrep -af"`（或按 PID 排除自身 shell）后才判空。
+
+## (d) 1159195 单列披露
+```
+1159195 = 遗留 `sleep 290; ...python3 -c ...` 轮询 shell（父 295404），18:03 时仍在存活；
+终止前**未保存其 cmdline 原文**（仅在我的会话记录里有 pgrep 的一次输出），属我自身操作的留证缺口。
+终止信号：与 1132529/1132519 同一批 kill -TERM（18:03:21）。
+```
