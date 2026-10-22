@@ -1,6 +1,6 @@
 {
-  "version": "f8-lexicon-v2",
-  "frozen_at": "2026-10-23T02:40:00+0800",
+  "version": "f8-lexicon-v3",
+  "frozen_at": "2026-10-23T02:32:38+0800",
   "frozen_by": "metrics-dev",
   "_readme": [
     "F-8「处境锚定率」判定输入（唯一真源）。代码 tools/d5/dialogue_metrics.py 只读本文件，仓内不内联任何语义词表。",
@@ -20,7 +20,7 @@
   "time": {
     "narrow": {
       "role": "F-8t 判定唯一口径（Amendment 1 合规：不含 刚/早上/下午/晚上/昨晚/今天/今儿 等高自发词）",
-      "rule": "scope = 本人当回合 slot（prereg §2『本人当回合处境词表』）；渲染的每个时段措辞在对应档至少有一个语义等价项可命中",
+      "rule": "scope = 本人当回合 slot（prereg §2『本人当回合处境词表』）；渲染的每个时段措辞在对应档至少有一个语义等价项可命中。**Amendment 2 已生效**：afternoon 档含渲染词「下午」（档内限定匹配，不产生宽表效应）",
       "slot_agnostic": [
         "这会儿"
       ],
@@ -39,7 +39,8 @@
           "晌午刚过",
           "晌午头上",
           "正午",
-          "午后"
+          "午后",
+          "下午"
         ],
         "evening": [
           "天快黑",
@@ -68,7 +69,10 @@
           "早上"
         ],
         "why": "这三个是渲染词（afternoon/morning 档候选措辞之一），但属 Amendment 1 明文排除的高自发词，未进主判定口径",
-        "disposition": "不静默丢：已实装 slot_scoped_broad 通道（按本回合 slot 限定；实测该批增量为 0），并向 report-release 提 Amendment 2 建议升为判定项；未批准前在报告局限显式登记"
+        "disposition": "不静默丢：已实装 slot_scoped_broad 通道（按本回合 slot 限定；实测该批增量为 0），并向 report-release 提 Amendment 2 建议升为判定项；未批准前在报告局限显式登记",
+        "status": "已按 Amendment 2 补上（条目保留，体现「曾有缺口→按程序补上」）",
+        "closed_by": "Amendment-2（team-leader 2026-10-23 02:31:05 +0800 批准）",
+        "residual": "上午/早上/晚上 仍未进主判定：前两者在渲染值域里只以「上午这会儿」出现（已被 这会儿 覆盖），后者不是渲染措辞；故无需再扩"
       },
       "excluded_by_quality_check": {
         "tokens": [
@@ -76,6 +80,36 @@
         ],
         "why": "冻结前逐词核验（非看结果调词）：『半晌』在正文里是**时长**义（『铁锤抡了半晌』『练了半晌』），不是时段义，计入会把时长表述误判成时段锚定 ⇒ 移出判定词表",
         "checked_on": "v2/evidence/run_d12a_q_a_{off,on}_seed7_n16r24，narrow 全词逐词命中核验，其余词命中均为时段义"
+      },
+      "amendments_added": {
+        "role": "本词表经历的程序性增补；跑前落定、记时间戳，跑后不得再改",
+        "Amendment-2": {
+          "approved_by": "team-leader",
+          "approved_at": "2026-10-23 02:31:05 +0800",
+          "effective_at": "2026-10-23 02:31:30 +0800",
+          "slot": "afternoon",
+          "tokens_added": [
+            "下午"
+          ],
+          "why": "「下午」是渲染词（afternoon 档 3 措辞之一），若不收则覆盖矩阵缺 1/12；slot 限定匹配下不产生宽表 38.7% 效应",
+          "evidence": "run_d12a_q_a_off_seed7_n16r24：broad 与 narrow 同为 5/191，增量 0；加入后主口径与 pre-am2 口径数值相同",
+          "sensitivity_required": "报告必须并列 narrow(不含下午) 与 narrow+下午 两组分子/分母（对应输出 F-8t_time_pre_am2 与 F-8t_time）",
+          "contains": [
+            "主判据 = slot 限定版 F-8t（leader 2026-10-23 02:31:30 +0800 裁定：定义优先于数值；7/191 不限定版会把「谈别的时间」算成锚定，属系统性高估）",
+            "afternoon 档升入渲染词「下午」为档内判定词（leader 02:31:05 批准）",
+            "敏感性子口径并列：narrow-不限定（F-8t_open_any）、宽表（F-8t_wide_reference）、pre-am2（F-8t_time_pre_am2）——均标「不参与判定」",
+            "F-8 总用与主判据同源的 slot 限定口径，不混用两个口径拼总数"
+          ],
+          "leader_ruling_at": "2026-10-23 02:31:30 +0800",
+          "one_shot": "本轮一次性记录；跑后不得再改（含主判据口径、词表、敏感性子口径列表）"
+        }
+      },
+      "jinr_exclusion_basis": {
+        "question": "「今儿」是否在 life-dev 的渲染词表 12 个时段措辞里？",
+        "answer": "不在。渲染值域 12 措辞 = 一大早 / 这会儿天刚亮 / 上午这会儿 / 午后这会儿 / 下午 / 晌午刚过 / 这会儿天快黑了 / 傍晚 / 擦黑这会儿 / 夜里 / 这会儿夜深了 / 灯都点上了（来源 rounds/20261023-0202/scene-render-lexicon.json::slot_words，sha=3f12e5b8…），无「今儿」",
+        "conclusion": "该词从未被渲染 ⇒ 排除无害，不会造成 ON 臂判漏；也不存在「提示词说今儿而尺子不认」的风险",
+        "where_it_lives": "仅在 time.ckpt_reference.narrow_tokens 与 time.narrow_sensitivity_add 里，用于逐字复现跑前 checkpoint 的 7/191，不参与判定",
+        "narrow_word_count": "主判定词表 = slot_agnostic(1) + by_slot(morning 7 / afternoon 6 / evening 8 / night 7) = 29 词；不含「今儿」"
       }
     },
     "slot_scoped_broad": {
@@ -398,5 +432,7 @@
     "degenerate_off_num_le": 2,
     "D2_min_abs_effect_X": 0.15,
     "wilson_z_95_two_sided": 1.959964
-  }
+  },
+  "frozen_at_source": "generated_at_write_time：与本文件 mtime 同刻（允许 <2s 偏差），非手填、非估算",
+  "frozen_at_note": "历史更正：v2 的 frozen_at 是手填占位 02:40:00，超前真实 mtime 约 9 分钟，被 batch-runner/leader 02:31 核验指出；v3 起由程序 datetime.now() 取值。若需严格对齐，请以 mtime + 整文件 sha256 为冻结凭据（本字段仅作可读标注）。"
 }

@@ -348,6 +348,9 @@ def compute_f8(msgs: List[dict], f8: Dict[str, Any]) -> Dict[str, Any]:
     agn = list(tn.get("slot_agnostic") or [])
     by_slot = {k: list(v) for k, v in (tn.get("by_slot") or {}).items()}
     narrow_flat = list(dict.fromkeys(agn + [t for v in by_slot.values() for t in v]))
+    # Amendment 2 等程序性增补：主口径含这些词；pre_am2 口径把它们剔掉，用于"结论不依赖该词取舍"的敏感性对照
+    am2 = [t for t in (((tn.get("amendments_added") or {}).get("Amendment-2") or {}).get("tokens_added") or [])]
+    by_slot_pre = {k: [t for t in v if t not in am2] for k, v in by_slot.items()}
     broad_slot = {k: list(v) for k, v in ((raw["time"].get("slot_scoped_broad") or {}).get("by_slot") or {}).items()}
     sf = raw["time"].get("slot_words_full") or {}
     echo = list(sf.get("echo_tokens") or [])
@@ -370,7 +373,7 @@ def compute_f8(msgs: List[dict], f8: Dict[str, Any]) -> Dict[str, Any]:
         return any(t and t in body for t in toks)
 
     keys = ("F-8t_own_slot", "F-8t_broad_scoped", "F-8t_open_any", "F-8t_sens_add", "F-8t_wide",
-            "F-8t_ckpt_narrow", "F-8t_ckpt_wide", "F-8t_echo", "F-8p_own_place", "F-8p_short_only",
+            "F-8t_pre_am2", "F-8t_ckpt_narrow", "F-8t_ckpt_wide", "F-8t_echo", "F-8p_own_place", "F-8p_short_only",
             "F-8p_public_cn", "F-8p_open_any_cn", "F-8a", "F-8a_render_only",
             "F-8a_exact", "F-8t_exact", "place_id_in_body", "place_alias_hit", "F-8_union")
     hits = {k: 0 for k in keys}
@@ -393,11 +396,12 @@ def compute_f8(msgs: List[dict], f8: Dict[str, Any]) -> Dict[str, Any]:
             per_slot_den[slot] += 1
             t_judge = anyhit(body, agn + (by_slot.get(slot) or []))
             t_broad = anyhit(body, agn + (broad_slot.get(slot) or []))
+            t_pre_am2 = anyhit(body, agn + (by_slot_pre.get(slot) or []))
             if t_judge:
                 per_slot_hits[slot] += 1
         else:
             n_slot_missing += 1
-            t_judge = t_broad = False
+            t_judge = t_broad = t_pre_am2 = False
         t_open = anyhit(body, narrow_flat)
         t_sens = anyhit(body, narrow_flat + sens_add)
         t_echo = anyhit(body, echo)
@@ -435,6 +439,7 @@ def compute_f8(msgs: List[dict], f8: Dict[str, Any]) -> Dict[str, Any]:
         # ---- 记账
         hits["F-8t_own_slot"] += int(t_judge)
         hits["F-8t_broad_scoped"] += int(t_broad)
+        hits["F-8t_pre_am2"] += int(t_pre_am2)
         hits["F-8t_open_any"] += int(t_open)
         hits["F-8t_sens_add"] += int(t_sens)
         hits["F-8t_echo"] += int(t_echo)
@@ -487,6 +492,11 @@ def compute_f8(msgs: List[dict], f8: Dict[str, Any]) -> Dict[str, Any]:
                          lexicon="narrow", scope="own_slot", n_slot_missing=n_slot_missing,
                          hits_by_slot=dict(sorted(per_slot_hits.items())),
                          den_by_slot=dict(sorted(per_slot_den.items()))),
+        "F-8t_time_pre_am2": blk(hits["F-8t_pre_am2"], den["F-8t_own_slot"],
+                                  "敏感性对照（Amendment 2 前口径）：同一 onset 下剔除 %s，仍按本回合 slot 限定；"
+                                  "den 与 F-8t_time 完全相同，供报告并列证明结论不依赖该词取舍" % (am2 or "[]"),
+                                  lexicon="narrow_pre_am2", scope="own_slot",
+                                  amendment_excluded=am2),
         "F-8p_place": blk(hits["F-8p_own_place"], den["F-8p_own_place"],
                           "只认 places.json::name_cn（含 place.short_names 可接受简称）；"
                           "num=正文含「本人 place」名称的条数；den=有 payload.place 的 MSG_*"),
@@ -1449,6 +1459,7 @@ def to_markdown(res: Dict[str, Any], log_path: str) -> str:
         A("|---|---|---|")
         for name, b in (("F-8（总：任一项命中）", f8["F-8"]),
                         ("F-8t 时段词（narrow，本回合 slot）", f8["F-8t_time"]),
+                        ("F-8t 时段词·Amendment 2 前口径（敏感性对照）", f8["F-8t_time_pre_am2"]),
                         ("F-8p 地点中文名（本人 place）", f8["F-8p_place"]),
                         ("F-8a 活动人话名", f8["F-8a_activity"]),
                         ("F-8p_public（仅覆盖说明，不判定）", f8["F-8p_public"]),
