@@ -63,8 +63,9 @@
 
 ## 2. 链条证明（分子/分母 + 命令）
 
-复算脚本：`v2/evidence/f6_chain_20261022/verify_chain.py`（sha256 `f09cf257193cfaef5de1fad784517db98b18ec063096acbd5511658b742cf711`，只读，不跑批）
-输出：`v2/evidence/f6_chain_20261022/chain_out.txt`（sha256 `8c61dbf0b7ec3f6664adc0a00d7db7852fcf42c93511b224a70acc64a7c53457`）
+复算脚本：`v2/evidence/f6_chain_20261022/verify_chain.py`（sha256 `393923f5619f697b896b3cde3c6b4bc09507bc2f3d3dad4f3620a79d6ff364af`，只读，不跑批）
+输出：`v2/evidence/f6_chain_20261022/chain_out.txt`（sha256 `672e2eb070c6cf8d19e4ea60eb3a8af09428339852ac2d8671859bc5cf81968e`）
+> 这两个 sha 与 §7 指纹表、§附录为**同一组（22:15 定稿版）**；此前 `f09cf257…` / `8c61dbf0…` 为修订前版本，已作废、勿引。
 
 命令（仓库根目录，**任何人可重跑**）：
 
@@ -157,7 +158,7 @@ print(len(a),len(b),a==b,len(a-b),len(b-a))"
 
 ---
 
-## 4. 读数表（本体 = 无新批 ⇒ 无新截图 / 无新 llm-cost）
+## 4. 读数表（本体 = 无新批 ⇒ 无新截图 / 无新批的 llm-cost）
 
 ### 4.1 本轮读数性质说明
 
@@ -167,7 +168,7 @@ print(len(a),len(b),a==b,len(a-b),len(b-a))"
 |---|---|---|
 | 新批 `run.jsonl` / `switch_proof.txt` | **无**（不适用） | 未跑批 |
 | 新批 `meta.json` | **无**（不适用） | 未跑批；**不补写、不伪造** |
-| 新批真 LLM `obs llm-cost` | **无**（不适用） | 未跑批（`obs` 不在 PATH，但以 `python3 -m obs` 可用——**已有两批日志已由审计用 `llm-cost` 硬门禁验真 rc=0**，见本表下一行） |
+| 新批真 LLM `obs llm-cost` | **无新批读数**（不适用） | 未跑批；但**对已有 A5 / D12-A 两批日志补跑了** `obs llm-cost`（`obs` 不在 PATH，以 `python3 -m obs` 调用），**rc=0**，原始输出已入库（`llmcost_a5.json` / `llmcost_d12a.json`），详见本表下一行 |
 | 新截图 | **无** | 预登记 C 路径条款写的是"**若有跑批**才需真截图"；本轮不跑批 ⇒ 不出图，**不伪造、不以示意图冒充实拍** |
 | 已有日志真 LLM 验真 | **已硬验真** | **`obs llm-cost` 硬门禁 rc=0（审计于 22:1x 亲跑）**：A5 `by_provider={"openai_compat":2705}`、tokens `499,212`；D12-A `{"openai_compat":2252}`、tokens `304,871`；两批 `degraded=0`、`provider_guard.ok=true`。旁证：d5 `B-11_real_calls` / `B-19_provider_distribution` / `B-20_model_no_mock` / `B-12_degraded_ratio` 均 pass。⚠ **但 d5 准入仍 `REJECTED` / `evidence_level=probe`**（`B-7_files` 无 meta、`B-9_event_count` `meta.events=null`、`B-2b_manifest_effective`、`B-10_provider` 明细空 ⇒ 四项不过）——**"缺 meta"与"是否 mock"是两件事，不混写** |
 
@@ -190,7 +191,8 @@ print(len(a),len(b),a==b,len(a-b),len(b-a))"
 
 审计产出：`v2/evidence/f6_audit_20261022.md`（独立核验者 `evidence-auditor`，未参与 F-6 设计与实现，只读、未跑新批、未改代码）。
 
-**审计总结论：有条件通过**——机制层读数可信（C1–C4 与实现者汇报**逐位一致**，脚本输出 `diff` 逐字节相同）；归因链**三条独立证据**成立；真 LLM 由审计 `obs llm-cost` **亲跑 rc=0** 验真；但措辞需三处收紧、两处漏报需补写。**上述收紧已全部落在本报告定稿文本里**（详见下表 G 列）。
+**审计总结论：有条件通过**——机制层读数可信（C1–C4 与实现者汇报**逐位一致**，脚本输出 `diff` 逐字节相同）；归因链**三条独立证据**成立；真 LLM 由审计 `obs llm-cost` **亲跑 rc=0** 验真；但措辞需三处收紧、两处漏报需补写。
+> 计数口径（按审计复核订正）：审计**真正要求降级的是 4 条**（G-1 obs 说法 / 两条静态推断 → 条件性表述 / A5 亦 probe），另 **1 条确认无需降级（keep）**、**2 处小瑕疵**（`params=` 解析、R18"夹具级"表述需加限定）。本报告 §5.2 的 G 表已逐条列明，标题里的"5 条"是历史口径，**以本注为准**。**上述收紧已全部落在本报告定稿文本里**（详见下表 G 列）。
 
 ### 5.1 审计逐项结果
 
@@ -211,6 +213,7 @@ print(len(a),len(b),a==b,len(a-b),len(b-a))"
 | N/A 项 | 本轮无新批 ⇒ `v2/evidence/f6_shots/` **不存在**，按规不判 FAIL，作废理由成立 | 见 §4.1 |
 
 ### 5.2 审计要求降级/收紧的断言（**已全部落定，无一条以原样保留**）
+> 分为 **4 条降级 + 1 条确认无需降级（G-5 keep，实为加限定）+ 2 处小瑕疵**；下表 G-1…G-5 即全量。
 
 | # | 原断言 | 审计处置 | 本报告定稿写法 |
 |---|---|---|---|
