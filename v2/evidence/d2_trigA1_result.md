@@ -1,12 +1,12 @@
-# D2.1-A1 结果：**回复不占发起配额**（`HITT_REPLY_BUDGET=1`）
+# D2.1 **A1-回复预算** 结果：**回复不占发起配额**（`HITT_REPLY_BUDGET=1`）
 
 > 预登记：`v2/evidence/d2_prereg_trigger.md`（首次提交 `629a289`，11:53，**早于代码改动与起跑**）
 > 代码：分支 `feat/d2-trigger`，commit **`22e3056`**（只改 `_communicate` 配额判定 + slot 计数 + `restore()` 重建；默认关）
-> 臂：baseline `mock_slots_2_n16r84_seed42` / A1-ON `mock_trigA1_n16r84_seed42` / A1-OFF 回归 `mock_trigA1_off_n16r84_seed42`
+> 臂：baseline `mock_slots_2_n16r84_seed42` / A1-回复预算-ON `mock_trigA1_n16r84_seed42` / A1-回复预算-OFF 回归 `mock_trigA1_off_n16r84_seed42`
 
 ## 0. 配置同参（逐项，不是"据说"）
 
-| 参数 | baseline | A1（ON） | A1（OFF 回归） |
+| 参数 | baseline | A1-回复预算（ON） | A1-回复预算（OFF 回归） |
 |---|---|---|---|
 | `max_turns` | 6 | 6 | 6 |
 | `max_messages_per_slot` | 2 | 2 | 2 |
@@ -16,12 +16,12 @@
 | 代码树 | `45ddc7d` | **`22e3056`** | **`22e3056`** |
 | 差异 | — | **+ `HITT_REPLY_BUDGET=1`** | 无（开关关） |
 
-**开关回归证据（关掉=回到基线）**：A1-OFF 与 baseline **结构逐项相同** —— 事件数均 **193,364**、结构事件 `(type,round,actor)` 序列**零差异**、**666 条 MSG 的 payload 逐条完全相同**。
-唯一差异是 `WORLD_INIT.payload.config_digest`（含运行期 override 摘要）⇒ 自第 0 条起哈希链不同，**内容无差异**。（`sha256`：baseline `c17eb0fa…` / A1-OFF `75656524…`）
+**开关回归证据（关掉=回到基线）**：A1-回复预算-OFF 与 baseline **结构逐项相同** —— 事件数均 **193,364**、结构事件 `(type,round,actor)` 序列**零差异**、**666 条 MSG 的 payload 逐条完全相同**。
+唯一差异是 `WORLD_INIT.payload.config_digest`（含运行期 override 摘要）⇒ 自第 0 条起哈希链不同，**内容无差异**。（`sha256`：baseline `c17eb0fa…` / A1-回复预算-OFF `75656524…`）
 
 ## 1. 四列 + 分母
 
-| 列 | baseline | A1（ON） | 变化 |
+| 列 | baseline | A1-回复预算（ON） | 变化 |
 |---|---|---|---|
 | **发起条数**（`reply_to is null`） | 228 | **266** | **+16.7%** |
 | **回复条数**（`reply_to` 非空） | 438 | **663** | **+51.4%** |
@@ -41,6 +41,8 @@
 
 ### 判定：**无效但成本上升**（严格按预登记；但机制本身确实生效，见下）
 
+> **命名**：本臂名 = **`A1-回复预算`**（给回复开独立配额）；另有 **`A1-措辞`**（`a637371`，改两条收尾提示词，probe 级）。两者不可混称。
+
 **为什么"机制有效、结论仍无效"**（必须一起写，否则会误读）：
 - **机制确实生效**：转化率 **+13.2pp**（73.5%→86.7%，分母 321→345）、≥3 轮占比 **+9.58pp**、`mean` +0.42 ⇒ 「该回的能回了」；
 - **但中位没动**：`p50` 仍 1 —— 因为**回复不占额度后，agent 省下的额度被用来"再发起一条新线程"**（发起 228→266，+16.7%），于是新增消息里既有回复、也有新发起，中位数被新发起的单发线程"拉回" 1；
@@ -48,14 +50,14 @@
 
 ## 3. 对 A2 的直接指示
 
-A1 把「回复」从配额里解绑后，**省下的额度被"发起"吃掉** ⇒ 下一步 **A2（对未回对端不再发起新话题）正是针对这一点**：
+**A1-回复预算** 把「回复」从配额里解绑后，**省下的额度被"发起"吃掉** ⇒ 下一步 **A2（对未回对端不再发起新话题）正是针对这一点**：
 - A2 预期：发起条数回落、`p50` 抬升、MSG 总量下降；
-- A2 必须**在 A1 之上**再开一次预登记（组合臂），并沿用同一四列 + 分母口径。
+- A2 必须**在 A1-回复预算 之上**再开一次预登记（组合臂），并沿用同一四列 + 分母口径。
 
 ## 4. 日志 sha256
 
 | 臂 | 文件 | sha256 |
 |---|---|---|
 | baseline | `v2/evidence/mock_slots_2_n16r84_seed42/run.jsonl` | `c17eb0fabd82ca009adb39590b449b7d105fae094de89e21f3027b895f884d8d` |
-| A1-ON | `v2/evidence/mock_trigA1_n16r84_seed42/run.jsonl` | `d101c89ad361a1adbe577ef4e524e43df149f48a11dd9937cb777adf7098a7cf` |
-| A1-OFF 回归 | `v2/evidence/mock_trigA1_off_n16r84_seed42/run.jsonl` | `75656524a8d2868c31c3eeaf362d6b9d8f8f20b8dbd94362ef1ef95343664bdb` |
+| A1-回复预算-ON | `v2/evidence/mock_trigA1_n16r84_seed42/run.jsonl` | `d101c89ad361a1adbe577ef4e524e43df149f48a11dd9937cb777adf7098a7cf` |
+| A1-回复预算-OFF 回归 | `v2/evidence/mock_trigA1_off_n16r84_seed42/run.jsonl` | `75656524a8d2868c31c3eeaf362d6b9d8f8f20b8dbd94362ef1ef95343664bdb` |
