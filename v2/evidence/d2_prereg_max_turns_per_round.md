@@ -66,4 +66,4 @@ done
 ## 锚点
 
 - 本文件**首次提交**即预登记锚点；`max_turns_per_round` 扫描的任何起跑时间必须**晚于**该提交。
-- 首次提交 sha：（由紧随其后的补记提交填写，见 `git log --follow v2/evidence/d2_prereg_max_turns_per_round.md`）
+- **首次提交 sha = `75fd6ad`**（本文件即该提交引入；扫描起跑时间必须晚于此提交）
