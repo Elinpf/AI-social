@@ -1,0 +1,97 @@
+# R19 人工 precision 抽样（tag 追加 = 「话题展开」事件）
+
+> 抽样规则：按 seq 升序**等间隔**取（不按质量挑选），共 13 条 / 总 13 条。
+> 判定标准：这句台词是否**接着上一句对话**自然带出第二个话题线索（不是硬拐、不是答非所问、不是把内部 token 念出来）。逐条填 `judgement`（真展开 / 假展开 / 存疑）。
+> 判定者须是**未参与实现代码编写**的人；本目录只提供抽样与原文。
+
+## 1. seq=1508 round=6 agent=P002 thread=TH-P002-P008-3 turn=2
+- base 话题（本线程原有）：`scarce_buy`
+- shift 话题（下发给模型的相邻话题）：`rel_maintain`
+- 记入日志的 tag_hints：`['scarce_buy', 'rel_maintain']`
+- 正文：哦，王木匠那话我捎，手里正给李家小子上最后一道漆呢。人情走动走动也好。漆没干。
+- judgement：【待人工填】
+
+## 2. seq=1736 round=7 agent=P001 thread=TH-P007-P001-3 turn=3
+- base 话题（本线程原有）：`scarce_buy`
+- shift 话题（下发给模型的相邻话题）：`savings`
+- 记入日志的 tag_hints：`['scarce_buy', 'savings']`
+- 正文：你那两匹布先别急着压，我这儿还欠着王木匠家半袋谷子，等卖了再攒几个铜板。
+- judgement：【待人工填】
+
+## 3. seq=2420 round=9 agent=P007 thread=TH-P007-P001-3 turn=4
+- base 话题（本线程原有）：`scarce_buy`
+- shift 话题（下发给模型的相邻话题）：`gift`
+- 记入日志的 tag_hints：`['scarce_buy', 'savings']`
+- 正文：我刚把灶上那半块干饼掰开泡进热水里，肚子叫得比驴还响，王木匠家那半袋谷子你慢慢攒，我这儿还有一小包从南边捎来的陈皮，回头给你送两片泡水喝。
+- judgement：【待人工填】
+
+## 4. seq=2449 round=9 agent=P008 thread=TH-P002-P008-4 turn=3
+- base 话题（本线程原有）：`scarce_buy`
+- shift 话题（下发给模型的相邻话题）：`savings`
+- 记入日志的 tag_hints：`['scarce_buy', 'savings']`
+- 正文：哎，我这户籍底册还摊在桌上没装订，陈家小儿子那页刚核完。攒钱也得先顾眼前。先干活。
+- judgement：【待人工填】
+
+## 5. seq=2939 round=10 agent=P001 thread=TH-P007-P001-3 turn=5
+- base 话题（本线程原有）：`scarce_buy`
+- shift 话题（下发给模型的相邻话题）：`rel_maintain`
+- 记入日志的 tag_hints：`['scarce_buy', 'savings', 'rel_maintain']`
+- 正文：陈皮你留着自个儿泡吧，我这儿正给西头老刘家修那半截篱笆呢，回头你路过就进来坐坐嘛。
+- judgement：【待人工填】
+
+## 6. seq=3135 round=10 agent=P002 thread=TH-P002-P008-4 turn=4
+- base 话题（本线程原有）：`scarce_buy`
+- shift 话题（下发给模型的相邻话题）：`rel_maintain`
+- 记入日志的 tag_hints：`['scarce_buy', 'savings', 'rel_maintain']`
+- 正文：哦，我这正给陈家小儿子那页打孔穿线呢，线头还捏在手里。你说这走动人情，是不是也得等手头这册子装完再说？
+- judgement：【待人工填】
+
+## 7. seq=3991 round=10 agent=P006 thread=TH-P003-P006-6 turn=3
+- base 话题（本线程原有）：`gift`
+- shift 话题（下发给模型的相邻话题）：`rel_maintain`
+- 记入日志的 tag_hints：`['gift', 'rel_maintain']`
+- 正文：灶上这锅汤正滚着，你拔萝卜那会儿手没冻着吧？东西搁着，人常来就行。
+- judgement：【待人工填】
+
+## 8. seq=4637 round=11 agent=P003 thread=TH-P003-P006-6 turn=4
+- base 话题（本线程原有）：`gift`
+- shift 话题（下发给模型的相邻话题）：`rel_accept`
+- 记入日志的 tag_hints：`['gift', 'rel_maintain', 'rel_accept']`
+- 正文：这风刮得人耳朵疼，我手里还攥着半截萝卜缨子呢。你上回给的那包盐，我记着。先回了。
+- judgement：【待人工填】
+
+## 9. seq=4975 round=12 agent=P001 thread=TH-P007-P001-4 turn=5
+- base 话题（本线程原有）：`scarce_buy`
+- shift 话题（下发给模型的相邻话题）：`savings`
+- 记入日志的 tag_hints：`['scarce_buy', 'savings']`
+- 正文：阿林，我这手头正给老李家的犁头换铆钉呢，他媳妇那两把青菜换不来我这一身汗，攒钱才是正经事吧。
+- judgement：【待人工填】
+
+## 10. seq=6223 round=16 agent=P004 thread=TH-P004-P005-13 turn=2
+- base 话题（本线程原有）：`mentorship`
+- shift 话题（下发给模型的相邻话题）：`skill_practice`
+- 记入日志的 tag_hints：`['mentorship', 'skill_practice']`
+- 正文：药末子沾手还得顾着王家小孙子，你这会儿忙得过来吗？我那边一屉枣泥酥还等着上色，正想问问你，像你这样一边抓药一边带徒弟练手艺，是怎么顾得上的？
+- judgement：【待人工填】
+
+## 11. seq=6592 round=18 agent=P005 thread=TH-P004-P005-13 turn=3
+- base 话题（本线程原有）：`mentorship`
+- shift 话题（下发给模型的相邻话题）：`academic_collab`
+- 记入日志的 tag_hints：`['mentorship', 'skill_practice']`
+- 正文：刚给李家小孙子包完三副退热的药，秤杆还没搁下呢，你那边枣泥酥上色可离不了人。带徒弟这事我也不敢说顾得上，就是抓药时让他站旁边认，认错了当场说，比事后讲十遍都强。你揉面那手劲是跟谁学的？
+- judgement：【待人工填】
+
+## 12. seq=6964 round=19 agent=P004 thread=TH-P004-P005-13 turn=4
+- base 话题（本线程原有）：`mentorship`
+- shift 话题（下发给模型的相邻话题）：`skill_practice`
+- 记入日志的 tag_hints：`['mentorship', 'skill_practice']`
+- 正文：我这炉枣泥酥刚出炉，正拿筷子一个个点红点呢，手一抖就歪，倒想起你抓药那秤杆子稳当。我这揉面是跟我娘学的，她当年在灶前站一天也不喊累，就是老嫌我手劲太死。你说这带徒弟，是不是也得先让他自己上手，错了再点？
+- judgement：【待人工填】
+
+## 13. seq=9167 round=23 agent=P007 thread=TH-P007-P006-19 turn=4
+- base 话题（本线程原有）：`gift`
+- shift 话题（下发给模型的相邻话题）：`rel_accept`
+- 记入日志的 tag_hints：`['gift', 'rel_accept']`
+- 正文：哎，我正给你那盆薄荷掐尖呢，顺手把窗台底下那层枯叶也扒拉干净了，你瞅着精神多了吧；红枣我收下，回头我娘煮粥时我给她搁两颗，这人情我记着呀。
+- judgement：【待人工填】
+

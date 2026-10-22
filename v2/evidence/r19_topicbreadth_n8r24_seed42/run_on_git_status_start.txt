@@ -1,0 +1,9 @@
+ M v2/evidence/d4_judge_run.py
+?? code/frontend/sample/dialogue_cycle03_ctrl/
+?? v2/evidence/judge_v2_selfcheck.py
+?? v2/evidence/mock_trigA2_INVALID_switch_not_applied_n16r84_seed42/
+?? v2/evidence/mock_trigA2_n16r84_seed42/
+?? v2/evidence/r19_topicbreadth_n8r24_seed42/
+?? v2/evidence/r19_topicbreadth_pilot_n8r24_seed42/
+?? v2/evidence/run_worldline_c1_a1_n16r84_seed42/
+?? v2/evidence/run_worldline_c1_ctrl_n16r84_seed42/

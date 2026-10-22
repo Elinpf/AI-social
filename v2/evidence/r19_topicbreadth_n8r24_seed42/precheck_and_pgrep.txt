@@ -1,0 +1,13 @@
+# R19 起跑前串行纪律留证
+2026-10-22T20:15:10+08:00
+$ pgrep -af "orchestration run|run_batch|run_override|d4_judge"
+(空)
+
+## 起跑前 llm-cost 基线（两个目标目录均不存在 run.jsonl ⇒ 本批 0 调用）
+ls: cannot access 'v2/evidence/r19_topicbreadth_n8r24_seed42/run_off/run.jsonl': No such file or directory
+ls: cannot access 'v2/evidence/r19_topicbreadth_n8r24_seed42/run_on/run.jsonl': No such file or directory
+
+code_sha=dd0c2bcda007992b9ac26209449df28992e9aefd  branch=feat/r19-topic-breadth
+git status --short（code/ 必须干净）:
+?? code/frontend/sample/dialogue_cycle03_ctrl/
+(end)

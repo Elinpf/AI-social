@@ -1,0 +1,7 @@
+# R19 两臂 code_sha 差异说明（跑批期间他人对本分支的 evidence 提交）
+off 臂 code_sha（meta）= dd0c2bcda007992b9ac26209449df28992e9aefd
+on  臂 code_sha（meta）= cf0b9404bd8b681cf6b7c136412f9bf12860cd5e
+两臂之间的差异提交：aece50c、cf0b9404 —— 只改 v2/evidence/d4_judge_run.py（判据脚本），不触碰 code/ 四子树
+$ git diff dd0c2bc cf0b9404 -- code/life code/orchestration code/config code/engine ⇒ 输出为空（逐字节相同）
+四子树聚合指纹：off=f1645dcfa9cb06cd / on=f1645dcfa9cb06cd（110 文件，逐位相同）
+⇒ 「两臂跑同一份运行代码」由指纹 + 空 diff 双重证明；code_sha 不同是因为共享分支上有他人的 evidence 提交。

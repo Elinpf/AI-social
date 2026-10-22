@@ -1,0 +1,117 @@
+{
+  "assertions": {
+    "code_unchanged_during_run": true,
+    "msg_uid_unique": true,
+    "participants_consistent": true,
+    "participants_violations": 0,
+    "ptr_cross_thread": 0,
+    "ptr_dangling": 0,
+    "reply_to_same_thread": true,
+    "turn_index_dense": true,
+    "turn_index_gap_threads": 0
+  },
+  "code_identity_note": "代码身份硬证据 = code_sha + WORLD_INIT.config_components；git_dirty_code_files 为空表示 code/ 无未提交改动",
+  "code_sha": "dd0c2bcda007992b9ac26209449df28992e9aefd",
+  "code_sha_end": "dd0c2bcda007992b9ac26209449df28992e9aefd",
+  "degraded_calls": 0,
+  "derived_from_log_sha256": "4dfc26e12dba102422c0306a6d53efb806bdb9f5efc87528fc56a42fe5e46ca8",
+  "dropped_counts": {
+    "insufficient_goods|None": 6,
+    "offer_exhausted|None": 7
+  },
+  "duration_sec": 461,
+  "endpoint_host": "172.16.3.41:31809",
+  "events": 9282,
+  "fallback_detected": false,
+  "finished_at": "2026-10-22T20:22:55+08:00",
+  "generated_after_run": true,
+  "generated_at": "2026-10-22T20:23:03",
+  "git_dirty_code_files": [
+    "?? code/frontend/sample/dialogue_cycle03_ctrl/"
+  ],
+  "git_dirty_files": [
+    "M v2/evidence/d4_judge_run.py",
+    "?? code/frontend/sample/dialogue_cycle03_ctrl/",
+    "?? v2/evidence/judge_v2_selfcheck.py",
+    "?? v2/evidence/mock_trigA2_INVALID_switch_not_applied_n16r84_seed42/",
+    "?? v2/evidence/mock_trigA2_n16r84_seed42/",
+    "?? v2/evidence/r19_topicbreadth_n8r24_seed42/",
+    "?? v2/evidence/r19_topicbreadth_pilot_n8r24_seed42/",
+    "?? v2/evidence/run_worldline_c1_a1_n16r84_seed42/",
+    "?? v2/evidence/run_worldline_c1_ctrl_n16r84_seed42/"
+  ],
+  "git_status_end": [
+    "M v2/evidence/d4_judge_run.py",
+    "?? code/frontend/sample/dialogue_cycle03_ctrl/",
+    "?? v2/evidence/judge_v2_selfcheck.py",
+    "?? v2/evidence/mock_trigA2_INVALID_switch_not_applied_n16r84_seed42/",
+    "?? v2/evidence/mock_trigA2_n16r84_seed42/",
+    "?? v2/evidence/r19_topicbreadth_n8r24_seed42/",
+    "?? v2/evidence/r19_topicbreadth_pilot_n8r24_seed42/",
+    "?? v2/evidence/run_worldline_c1_a1_n16r84_seed42/",
+    "?? v2/evidence/run_worldline_c1_ctrl_n16r84_seed42/"
+  ],
+  "git_status_start": [
+    " M v2/evidence/d4_judge_run.py",
+    "?? code/frontend/sample/dialogue_cycle03_ctrl/",
+    "?? v2/evidence/judge_v2_selfcheck.py",
+    "?? v2/evidence/mock_trigA2_INVALID_switch_not_applied_n16r84_seed42/",
+    "?? v2/evidence/mock_trigA2_n16r84_seed42/",
+    "?? v2/evidence/r19_topicbreadth_n8r24_seed42/",
+    "?? v2/evidence/r19_topicbreadth_pilot_n8r24_seed42/",
+    "?? v2/evidence/run_worldline_c1_a1_n16r84_seed42/",
+    "?? v2/evidence/run_worldline_c1_ctrl_n16r84_seed42/"
+  ],
+  "git_status_start_source": "实拍：起跑时留存的 git status --porcelain 快照文件；跑后由 finalize_arm.sh 传入单一真源工具重生成 meta",
+  "llm_cached": 195,
+  "llm_cached_ratio": 0.3809,
+  "llm_calls": 512,
+  "llm_model_in_events": {
+    "DeepSeek-Flash": 512
+  },
+  "llm_provider_in_events": {
+    "openai_compat": 512
+  },
+  "llm_purposes": {
+    "dialogue": 97,
+    "importance": 231,
+    "judge": 144,
+    "negotiation": 4,
+    "plan": 8,
+    "reflect": 28
+  },
+  "mock_precalib_msg_count": 0,
+  "mock_precalib_note": "mock 预校准（同 n/rounds、MockProvider）的 MSG 总条数，仅用于跑前估规模；其日志另存 v2/evidence/run_d2_mock_precalib_*.jsonl，不混入本臂任何统计",
+  "model": "DeepSeek-Flash",
+  "model_reported": [
+    "DeepSeek-Flash"
+  ],
+  "model_requested": "DeepSeek-Flash",
+  "msg_counts": {
+    "MSG_DM": 87,
+    "MSG_PUBLIC": 10
+  },
+  "msg_dropped_unknown_intent_field": 0,
+  "n": 8,
+  "n_declared": 8,
+  "n_in_log": 8,
+  "provider": "openai_compat",
+  "rounds": 24,
+  "rounds_contiguous": true,
+  "rounds_declared": 24,
+  "rounds_effective": 24,
+  "rounds_per_slot_effective": 3,
+  "rounds_seen_max": 23,
+  "rounds_seen_min": 0,
+  "run_bytes": 4656433,
+  "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r19_topicbreadth_n8r24_seed42/run_off",
+  "run_file": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r19_topicbreadth_n8r24_seed42/run_off/run.jsonl",
+  "run_sha256": "4dfc26e12dba102422c0306a6d53efb806bdb9f5efc87528fc56a42fe5e46ca8",
+  "seed": 42,
+  "seed_declared": 42,
+  "seed_in_log": 42,
+  "side_root": null,
+  "side_root_note": "命令行声明值（非硬证据）；cache 隔离的硬证据见两臂 freeze_cache 目录 mtime/inode 不同 + 按 purpose 的 cached 率",
+  "started_at": "2026-10-22T20:15:14+08:00",
+  "wc_l": 9282
+}

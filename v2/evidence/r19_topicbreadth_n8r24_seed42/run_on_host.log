@@ -1,0 +1,13 @@
+[d2] run: python3 -m orchestration run --life --seed 42 --agents 8 --rounds 24 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r19_topicbreadth_n8r24_seed42/run_on/run.jsonl --flush-every 2 --side-root /tmp/r19_tb_on_side
+[life] n_agents=8 rounds=24 events=9286 seconds=507.4592 log_bytes=4664468
+  unknown_event_types=[]
+  chain_ok=True replay_parity=True first_run_equals_replay=True
+  conservation_ok=True final_state_hash=sha256:151e9b20e6af960b97ab0fb7a690c5c942ce022a26eeea895bf99b92f97abff9
+  log written: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r19_topicbreadth_n8r24_seed42/run_on/run.jsonl
+[meta] /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r19_topicbreadth_n8r24_seed42/run_on/meta.json
+[meta] events=9286 llm_calls=512 cached_ratio=0.3809 provider={'openai_compat': 512} model={'DeepSeek-Flash': 512}
+[meta] seed_in_log=42 n_in_log=8 rounds_effective=24
+[meta] OK: 真跑判定通过
+[d2] self-check wc -l=9286 meta.events=9286
+{"engine_log":{"by_provider":{"openai_compat":512},"by_purpose":{"dialogue":{"cached":0,"calls":97,"degraded":0,"thinking":0,"tokens_in":30148,"tokens_out":3902},"importance":{"cached":195,"calls":231,"degraded":0,"thinking":0,"tokens_in":612,"tokens_out":8283},"judge":{"cached":0,"calls":144,"degraded":0,"thinking":144,"tokens_in":17694,"tokens_out":31878},"negotiation":{"cached":0,"calls":4,"degraded":0,"thinking":0,"tokens_in":470,"tokens_out":132},"plan":{"cached":0,"calls":8,"degraded":0,"thinking":0,"tokens_in":708,"tokens_out":724},"reflect":{"cached":0,"calls":28,"degraded":0,"thinking":0,"tokens_in":12364,"tokens_out":1631}},"llm_judgment_by_dimension":{"affection":43,"rel_affinity":7,"respect":43,"stance":43,"weekly_focus":8},"source":"engine_log(LLM_CALL)","total":{"cached":195,"calls":512,"degraded":0,"thinking":144,"tokens_in":61996,"tokens_out":46550,"tokens_total":108546}},"provider_guard":{"by_provider":{"openai_compat":512},"expected":"openai_compat","ok":true,"policy":"计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。","problems":[]}}
+[d2] OK
