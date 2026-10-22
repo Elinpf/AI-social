@@ -32,6 +32,7 @@ from . import dialogue_threads as DT
 from . import dialogue_repair as DR
 from . import sleep_window as _sleep
 from . import anti_repeat as AR   # R12：L-7 去重臂（env LIFE_PROMPT_MEMORY_F6_DEQUP，默认 OFF）
+from . import l7_structural as L7S  # L-7 结构臂（env LIFE_PROMPT_L7_STRUCT，**默认 ON**）
 from .policy import (social_enabled, exchange_enabled, m2b_judge_mode, m2b_importance_mode,
                      narrative_persist_enabled)
 from .ports import (
@@ -960,6 +961,12 @@ class LifeLayerAgent:
             # R12 去重臂审计（additive）：本条生成时去重机制的累计行为。
             # 默认 OFF ⇒ 该键不出现 ⇒ payload 与接入前逐字节一致。
             ctx["dequp"] = AR.audit()
+        if L7S.enabled():
+            # L-7 结构臂审计（additive）：本条生成前实际下发的结构约束。
+            # 关闭（LIFE_PROMPT_L7_STRUCT=0）⇒ `_l7s` 为 None ⇒ 该键不出现。
+            _l7a = L7S.audit(getattr(self, "_l7s", None))
+            if _l7a is not None:
+                ctx["l7struct"] = _l7a
         if echo is not None:
             # F-3 审计（additive）：本条回复接的是谁的哪种情绪、多强（确定性推导，可复算）。
             # 默认 OFF / 不产 ⇒ 该键不出现 ⇒ payload 与接入前逐字节一致。
@@ -974,7 +981,13 @@ class LifeLayerAgent:
         默认 OFF ⇒ `AR.collide()` 恒 None、`AR.remember()` 不记账，本方法等于
         `return body`（零额外 LLM 调用、提示词与 payload 与接入前一致）。
         开启时最多多花 1 次 `purpose="dialogue"` 调用（有界，不级联）。
+
+        L-7 结构臂（`LIFE_PROMPT_L7_STRUCT`，默认 ON）优先接管：约束已经在
+        `_dialogue_prompt` / `_reply_prompt` 里**生成前**下发，这里**不再重试**
+        （零额外 LLM 调用，也不留任何进程级状态 ⇒ 同 seed 两次跑逐字节一致）。
         """
+        if L7S.enabled():
+            return body
         hit = AR.collide(body)
         if hit is None:
             AR.remember(body)
@@ -1031,7 +1044,8 @@ class LifeLayerAgent:
         # F-3：接住对方情绪（默认 OFF ⇒ (None, None)，下面两处都退化为"什么都不加"）
         echo_line, echo_audit = self._emotion_echo(ctx_in, p.get("body"), partner)
         prompt = self._reply_prompt(partner, topic, history, cfg, rift_line=rift_line,
-                                    repair_line=repair_line, echo_line=echo_line, wv=wv)
+                                    repair_line=repair_line, echo_line=echo_line, wv=wv,
+                                    turn=turn)
         meta = {"agent_id": self.agent_id, "round": wv.round,
                 "thread": tid, "turn": turn}
         res = self.llm.call("dialogue", prompt, meta=meta)
@@ -1272,6 +1286,31 @@ class LifeLayerAgent:
         return (f"\n你想起的事：{items}"
                 "\n（这些话跟你眼下说的事有关，就顺口提一句；无关就别硬提，也别编没记过的事。）")
 
+    def _l7_struct_line(self, wv, partners, turn: int, mode: str) -> str:
+        """L-7 结构臂：生成**前**下发「开口方式 / 收束方式 / 禁忌开头」三条结构约束。
+
+        单变量约束（沿用 F-4/F-6/G-1 的插入先例，但**默认 ON**）：
+          - 关闭（`LIFE_PROMPT_L7_STRUCT=0`）⇒ `self._l7s=None`、返回空串，
+            两个提示词与接入前**逐字节一致**，payload 不出现 `ctx.l7struct`；
+          - 开启 ⇒ 只在提示词中**插入一段**，并把本条实际下发的约束写进
+            `ctx.l7struct`（additive，`ctx` 已整体透传，与 `ctx.dequp`/`ctx.echo` 同一先例）。
+        指派完全确定性（`L7S.assign` = sha256(agent|对象|day|slot|round|turn|mode)），
+        不含墙钟/随机/网络 ⇒ 同一 run 可复现。
+        """
+        self._l7s = None
+        if wv is None or not L7S.enabled():
+            return ""
+        try:
+            day = int(getattr(wv, "day", 0))
+            slot = f"{wv.time.day_of_week}-{wv.time.slot}"
+            rnd = int(wv.round)
+        except Exception:      # 世界视图字段缺失 ⇒ 退化为「不加约束」，不打断对话
+            return ""
+        # 取材**只读可见事件**（不放进程状态）⇒ 续跑/replay 逐字节可复现
+        self._l7s = L7S.plan(self.agent_id, partners, day, slot, rnd, int(turn), mode,
+                             recent=L7S.recent_bodies(wv))
+        return L7S.render(self._l7s)
+
     def _dialogue_prompt(self, tid: str, parts: list, cfg: dict | None = None,
                          rift_line: str | None = None, wv=None) -> str:
         cfg = cfg or self._dlg_cfg()
@@ -1283,13 +1322,14 @@ class LifeLayerAgent:
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + self._gossip_hint(partners)  # G系列A1臂：可引用真人名单（默认OFF ⇒ 空串）
                 + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
+                + self._l7_struct_line(wv, partners, 0, "initiate")  # L-7 结构臂：开口/收束/禁忌开头（默认ON）
                 + AR.prompt_line()           # R12 去重臂：最近说过的话（默认OFF ⇒ 空串）
                 + "\n只写台词本身（一句家常话）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（零 config/结构改动）
 
     def _reply_prompt(self, partner: str | None, topic: str, history: list,
                       cfg: dict | None = None, rift_line: str | None = None,
                       wv=None, repair_line: str | None = None,
-                      echo_line: str | None = None) -> str:
+                      echo_line: str | None = None, turn: int | None = None) -> str:
         cfg = cfg or self._dlg_cfg()
         lines = "\n".join(line for _, line in history) or "(还没说什么)"
         who = self._name(partner) if partner else "在场的人"
@@ -1302,6 +1342,9 @@ class LifeLayerAgent:
                 + f"\n刚才的对话：\n{lines}"
                 + self._gossip_hint([partner] if partner else [])  # G系列A1臂：可引用真人名单（默认OFF ⇒ 空串）
                 + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
+                + self._l7_struct_line(wv, [partner] if partner else [],
+                                       len(history) if turn is None else turn,
+                                       "reply")  # L-7 结构臂：开口/收束/禁忌开头（默认ON）
                 + AR.prompt_line()           # R12 去重臂：最近说过的话（默认OFF ⇒ 空串）
                 + "\n只写台词本身（接着刚才的话往下说一句）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（承载「承接上一轮」结构不变）
 

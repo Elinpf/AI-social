@@ -17,6 +17,7 @@ from pathlib import Path
 import pytest
 
 from life import anti_repeat as AR
+from life import l7_structural as L7S
 from life.agent import LifeLayerAgent
 from life.llm import LLMResult
 from life.memory import HashEmbeddingModel, SideStore
@@ -32,6 +33,16 @@ PARTNER_ID = "P002"
 class _StubKernel:
     def submit_intent(self, *a, **kw):  # pragma: no cover - 本测试不落事件
         pass
+
+
+@pytest.fixture(autouse=True)
+def _isolate_dequp_arm(monkeypatch):
+    """R17 起 L-7 **结构臂**（`life/l7_structural.py`，默认 ON）在 `_dequp_body`
+    里接管「生成前约束、不重试」。本文件测的是 DEQUP 臂自身的撞车重试行为，
+    必须把结构臂显式关掉才是单变量（与 `test_l7_structural.py` 互不干扰）。
+    """
+    monkeypatch.setenv(L7S.STRUCT_ENV, "0")
+    yield
 
 
 def _agent(tmp_path: Path) -> LifeLayerAgent:

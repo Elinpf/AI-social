@@ -1,0 +1,22 @@
+{
+  "env": "LIFE_PROMPT_L7_STRUCT",
+  "checks": {
+    "1_off_enabled_false": true,
+    "1_off_plan_none": true,
+    "1_off_render_empty": true,
+    "1_off_no_process_state": true,
+    "2_off_prompt_has_no_struct_seg": true,
+    "3_off_ctx_has_no_l7struct": true,
+    "4_off_dequp_body_passthrough": true,
+    "5_on_enabled_true": true,
+    "5_on_prompt_has_struct_seg": true,
+    "5_on_ctx_has_l7struct": true,
+    "6_on_is_off_plus_one_insert": true
+  },
+  "diff_chars": {
+    "dialogue": 143,
+    "reply": 143
+  },
+  "on_segment_dialogue": "\n这一句换个说法：开口先说一句短的感慨，随即落到一件具体的事上；最后落在一件具体的小事上收住（不总结、不感叹、不问问题）。\n（句子里要有一件具体的东西——你正做着的活、手里的东西、谁家的谁——不要只讲空泛的感受。）\n这几个开头镇上最近已经有人用过了，别再用：「唉这天气」、「秀娘你家」。",
+  "all_pass": true
+}
