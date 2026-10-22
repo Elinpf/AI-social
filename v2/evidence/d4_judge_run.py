@@ -50,17 +50,21 @@ def build_prompt(sample: dict, arm_msgs: dict) -> str:
             + f"\n待评台词：{sample.get('body')}")
 
 
-def call(endpoint, key, model, prompt, temperature=0.0, timeout=90):
+def call(endpoint, key, model, prompt, temperature=0.0, timeout=90, thinking: bool | None = False):
+    """thinking（协议 v2）：**显式发送** thinking=false，不依赖 provider 默认。"""
     import urllib.request
-    body = json.dumps({"model": model, "temperature": temperature,
-                       "messages": [{"role": "system", "content": SYSTEM},
-                                    {"role": "user", "content": prompt}]}).encode()
+    payload = {"model": model, "temperature": temperature,
+               "messages": [{"role": "system", "content": SYSTEM},
+                            {"role": "user", "content": prompt}]}
+    if thinking is not None:
+        payload["thinking"] = bool(thinking)
+    body = json.dumps(payload).encode()
     req = urllib.request.Request(endpoint.rstrip("/") + "/chat/completions", data=body,
                                  headers={"Content-Type": "application/json",
                                           "Authorization": f"Bearer {key}"})
     with urllib.request.urlopen(req, timeout=timeout) as r:
         d = json.loads(r.read().decode())
-    return d["choices"][0]["message"]["content"], d.get("model")
+    return d["choices"][0]["message"]["content"], d.get("model"), payload
 
 
 def parse(text):
@@ -88,6 +92,7 @@ def main() -> int:
     ap.add_argument("--key", default=os.environ.get("LLM_API_KEY", ""))
     ap.add_argument("--model", default=os.environ.get("LLM_MODEL", "DeepSeek-Flash"))
     ap.add_argument("--repeats", type=int, default=2)
+    ap.add_argument("--thinking", default="false", help="协议 v2：显式 thinking=false（默认）")
     a = ap.parse_args()
     if not a.endpoint or not a.key:
         print("[FAIL] 缺 endpoint/key：请先 source code/.env.local", file=sys.stderr)
@@ -121,16 +126,18 @@ def main() -> int:
             prompt = build_prompt(s, msgs)
             for rep in range(a.repeats):
                 t0 = time.time()
+                think = None if str(a.thinking).lower() in ("none", "off-none") else (str(a.thinking).lower() == "true")
                 try:
-                    text, model = call(a.endpoint, a.key, a.model, prompt)
+                    text, model, req_params = call(a.endpoint, a.key, a.model, prompt, thinking=think)
                     parsed = parse(text)
                     err = None if parsed else "unparsable"
                 except Exception as ex:  # noqa: BLE001
-                    text, model, parsed, err = "", a.model, None, f"{type(ex).__name__}:{ex}"
+                    text, model, req_params, parsed, err = "", a.model, {}, None, f"{type(ex).__name__}:{ex}"
                 out.write(json.dumps({"arm": arm, "msg_uid": s.get("msg_uid"), "thread_id": s.get("thread_id"),
                                       "round": s.get("round"), "turn_index": s.get("turn_index"),
                                       "rep": rep, "model": model, "template_sha256": template_sha,
                                       "prompt": prompt, "raw": text, "parsed": parsed, "error": err,
+                                      "request_params": {k: v for k, v in req_params.items() if k != "messages"},
                                       "latency_s": round(time.time() - t0, 2)}, ensure_ascii=False) + "\n")
                 n += 1
                 out.flush()
