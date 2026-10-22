@@ -13,7 +13,15 @@
 | **4** | 262 | 626 | **1** | **4** | **4** | 2.21 | **38.2%** | 51.9% |
 | **6** | 228 | 666 | **1** | **6** | **6** | 2.67 | **35.5%** | 56.1% |
 
-（原始：`d2_maxturns_sweep_n16r84_seed42.json`；各档日志 `mock_maxturns_{2,4,6}_n16r84_seed42/run.jsonl`）
+（原始汇总：`d2_maxturns_sweep_n16r84_seed42.json`，sha8 `511ec503`）
+
+**各档日志 sha256**（`~87MB/档`，被 `.gitignore` 排除未入库；可用下方命令 7 分钟内逐字节复现）：
+
+| `max_turns` | 文件 | sha256 |
+|---|---|---|
+| 2 | `v2/evidence/mock_maxturns_2_n16r84_seed42/run.jsonl` | `c21a009384c4df2a93b1eccc68fd6c074200a8644fe0e5ed90e05b94a9fa07bc` |
+| 4 | `v2/evidence/mock_maxturns_4_n16r84_seed42/run.jsonl` | `f5f3d08f6e9dfff5dfac81c9fdb3eaa8da308bb3d42e64f9c4db70b95d65a30c` |
+| 6 | `v2/evidence/mock_maxturns_6_n16r84_seed42/run.jsonl` | `a343d86813cc9f81ee61ada468dd835af2014f528c5d21bd99d2a9f2fec077d9` |
 
 ## 判据核对（按预登记）
 
