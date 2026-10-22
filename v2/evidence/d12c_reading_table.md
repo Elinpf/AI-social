@@ -19,7 +19,7 @@
 ## 5. 登记记录（commit 锚点）
 
 - 登记时间：**2026-10-23 06:00 (+08:00)**，**早于任何 D12-C 读数**（两臂目录尚未生成）
-- 登记 commit：`<见下一条提交后回填>`（本表在该 commit 中的 blob sha 另行回填）
+- 登记 commit：**`b6cdefd`**；本表在该 commit 中的 blob sha256 = **`04a7196377a95c78b56747aeaddb0032f6f1f2e3148229b93bd3ec934df7f92c`**（复核：`git show b6cdefd:v2/evidence/d12c_reading_table.md | sha256sum`）
 
 ---
 
