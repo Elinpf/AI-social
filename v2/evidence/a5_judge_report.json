@@ -1,0 +1,439 @@
+{
+  "by_arm": {
+    "A5": {
+      "consistency": {
+        "is_reply": {
+          "exact": 0.5455,
+          "kappa": 1.0,
+          "n_pairs": 11,
+          "rho": 0.8091
+        },
+        "naturalness": {
+          "exact": 0.5625,
+          "kappa": 0.0,
+          "n_pairs": 16,
+          "rho": 0.7
+        },
+        "persona_fit": {
+          "exact": 0.8125,
+          "kappa": null,
+          "n_pairs": 16,
+          "rho": 0.8441
+        },
+        "specificity": {
+          "exact": 0.875,
+          "kappa": null,
+          "n_pairs": 16,
+          "rho": 0.8941
+        }
+      },
+      "dims": {
+        "is_reply": {
+          "dist": {
+            "1": 8,
+            "2": 1,
+            "3": 2,
+            "5": 3,
+            "6": 2,
+            "7": 7
+          },
+          "mean": 4,
+          "median": 5,
+          "n": 23
+        },
+        "naturalness": {
+          "dist": {
+            "3": 1,
+            "5": 5,
+            "6": 23,
+            "7": 3
+          },
+          "mean": 5.84,
+          "median": 6.0,
+          "n": 32
+        },
+        "persona_fit": {
+          "dist": {
+            "5": 1,
+            "6": 15,
+            "7": 16
+          },
+          "mean": 6.47,
+          "median": 6.5,
+          "n": 32
+        },
+        "specificity": {
+          "dist": {
+            "4": 2,
+            "6": 8,
+            "7": 22
+          },
+          "mean": 6.56,
+          "median": 7.0,
+          "n": 32
+        }
+      }
+    },
+    "CTRL": {
+      "consistency": {
+        "is_reply": {
+          "exact": 0.7273,
+          "kappa": 1.0,
+          "n_pairs": 11,
+          "rho": 0.9727
+        },
+        "naturalness": {
+          "exact": 0.5,
+          "kappa": null,
+          "n_pairs": 16,
+          "rho": 0.5618
+        },
+        "persona_fit": {
+          "exact": 0.6875,
+          "kappa": 0.0,
+          "n_pairs": 16,
+          "rho": 0.7059
+        },
+        "specificity": {
+          "exact": 0.875,
+          "kappa": null,
+          "n_pairs": 16,
+          "rho": 0.7912
+        }
+      },
+      "dims": {
+        "is_reply": {
+          "dist": {
+            "1": 5,
+            "2": 2,
+            "5": 1,
+            "6": 1,
+            "7": 14
+          },
+          "mean": 5.13,
+          "median": 7,
+          "n": 23
+        },
+        "naturalness": {
+          "dist": {
+            "4": 1,
+            "5": 3,
+            "6": 16,
+            "7": 12
+          },
+          "mean": 6.22,
+          "median": 6.0,
+          "n": 32
+        },
+        "persona_fit": {
+          "dist": {
+            "2": 1,
+            "5": 1,
+            "6": 6,
+            "7": 24
+          },
+          "mean": 6.59,
+          "median": 7.0,
+          "n": 32
+        },
+        "specificity": {
+          "dist": {
+            "6": 4,
+            "7": 28
+          },
+          "mean": 6.88,
+          "median": 7.0,
+          "n": 32
+        }
+      }
+    }
+  },
+  "by_layer": {
+    "A5|t2_3": {
+      "consistency": {
+        "is_reply": {
+          "exact": 0.6667,
+          "kappa": 1.0,
+          "n_pairs": 6,
+          "rho": 0.6571
+        },
+        "naturalness": {
+          "exact": 0.625,
+          "kappa": 0.0,
+          "n_pairs": 8,
+          "rho": 0.9524
+        },
+        "persona_fit": {
+          "exact": 0.75,
+          "kappa": null,
+          "n_pairs": 8,
+          "rho": 0.8571
+        },
+        "specificity": {
+          "exact": 0.875,
+          "kappa": null,
+          "n_pairs": 8,
+          "rho": 0.7619
+        }
+      },
+      "dims": {
+        "is_reply": {
+          "dist": {
+            "1": 4,
+            "5": 1,
+            "6": 1,
+            "7": 6
+          },
+          "mean": 4.75,
+          "median": 6.5,
+          "n": 12
+        },
+        "naturalness": {
+          "dist": {
+            "3": 1,
+            "5": 3,
+            "6": 11,
+            "7": 1
+          },
+          "mean": 5.69,
+          "median": 6.0,
+          "n": 16
+        },
+        "persona_fit": {
+          "dist": {
+            "5": 1,
+            "6": 10,
+            "7": 5
+          },
+          "mean": 6.25,
+          "median": 6.0,
+          "n": 16
+        },
+        "specificity": {
+          "dist": {
+            "4": 2,
+            "6": 5,
+            "7": 9
+          },
+          "mean": 6.31,
+          "median": 7.0,
+          "n": 16
+        }
+      }
+    },
+    "A5|t4_6": {
+      "consistency": {
+        "is_reply": {
+          "exact": 0.4,
+          "kappa": 1.0,
+          "n_pairs": 5,
+          "rho": 0.7
+        },
+        "naturalness": {
+          "exact": 0.5,
+          "kappa": null,
+          "n_pairs": 8,
+          "rho": 0.7619
+        },
+        "persona_fit": {
+          "exact": 0.875,
+          "kappa": null,
+          "n_pairs": 8,
+          "rho": 0.6429
+        },
+        "specificity": {
+          "exact": 0.875,
+          "kappa": null,
+          "n_pairs": 8,
+          "rho": 0.9762
+        }
+      },
+      "dims": {
+        "is_reply": {
+          "dist": {
+            "1": 4,
+            "2": 1,
+            "3": 2,
+            "5": 2,
+            "6": 1,
+            "7": 1
+          },
+          "mean": 3.18,
+          "median": 3,
+          "n": 11
+        },
+        "naturalness": {
+          "dist": {
+            "5": 2,
+            "6": 12,
+            "7": 2
+          },
+          "mean": 6,
+          "median": 6.0,
+          "n": 16
+        },
+        "persona_fit": {
+          "dist": {
+            "6": 5,
+            "7": 11
+          },
+          "mean": 6.69,
+          "median": 7.0,
+          "n": 16
+        },
+        "specificity": {
+          "dist": {
+            "6": 3,
+            "7": 13
+          },
+          "mean": 6.81,
+          "median": 7.0,
+          "n": 16
+        }
+      }
+    },
+    "CTRL|t2_3": {
+      "consistency": {
+        "is_reply": {
+          "exact": 0.7143,
+          "kappa": 1.0,
+          "n_pairs": 7,
+          "rho": 0.8929
+        },
+        "naturalness": {
+          "exact": 0.375,
+          "kappa": null,
+          "n_pairs": 8,
+          "rho": 0.5
+        },
+        "persona_fit": {
+          "exact": 0.75,
+          "kappa": null,
+          "n_pairs": 8,
+          "rho": 0.9048
+        },
+        "specificity": {
+          "exact": 1.0,
+          "kappa": null,
+          "n_pairs": 8,
+          "rho": 1.0
+        }
+      },
+      "dims": {
+        "is_reply": {
+          "dist": {
+            "1": 4,
+            "2": 2,
+            "7": 8
+          },
+          "mean": 4.57,
+          "median": 7.0,
+          "n": 14
+        },
+        "naturalness": {
+          "dist": {
+            "4": 1,
+            "5": 1,
+            "6": 9,
+            "7": 5
+          },
+          "mean": 6.12,
+          "median": 6.0,
+          "n": 16
+        },
+        "persona_fit": {
+          "dist": {
+            "6": 4,
+            "7": 12
+          },
+          "mean": 6.75,
+          "median": 7.0,
+          "n": 16
+        },
+        "specificity": {
+          "dist": {
+            "6": 2,
+            "7": 14
+          },
+          "mean": 6.88,
+          "median": 7.0,
+          "n": 16
+        }
+      }
+    },
+    "CTRL|t4_6": {
+      "consistency": {
+        "is_reply": {
+          "exact": 0.75,
+          "kappa": null,
+          "n_pairs": 4,
+          "rho": 1.0
+        },
+        "naturalness": {
+          "exact": 0.625,
+          "kappa": null,
+          "n_pairs": 8,
+          "rho": 0.2381
+        },
+        "persona_fit": {
+          "exact": 0.625,
+          "kappa": 0.0,
+          "n_pairs": 8,
+          "rho": 0.6429
+        },
+        "specificity": {
+          "exact": 0.75,
+          "kappa": null,
+          "n_pairs": 8,
+          "rho": 0.9762
+        }
+      },
+      "dims": {
+        "is_reply": {
+          "dist": {
+            "1": 1,
+            "5": 1,
+            "6": 1,
+            "7": 6
+          },
+          "mean": 6,
+          "median": 7,
+          "n": 9
+        },
+        "naturalness": {
+          "dist": {
+            "5": 2,
+            "6": 7,
+            "7": 7
+          },
+          "mean": 6.31,
+          "median": 6.0,
+          "n": 16
+        },
+        "persona_fit": {
+          "dist": {
+            "2": 1,
+            "5": 1,
+            "6": 2,
+            "7": 12
+          },
+          "mean": 6.44,
+          "median": 7.0,
+          "n": 16
+        },
+        "specificity": {
+          "dist": {
+            "6": 2,
+            "7": 14
+          },
+          "mean": 6.88,
+          "median": 7.0,
+          "n": 16
+        }
+      }
+    }
+  },
+  "n_calls": 64,
+  "n_parsed": 64,
+  "source": "v2/evidence/a5_judge_runs.jsonl"
+}

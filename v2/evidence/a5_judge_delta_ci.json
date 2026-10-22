@@ -1,0 +1,59 @@
+{
+  "delta": "CTRL - A5",
+  "dims": {
+    "is_reply": {
+      "ci95": [
+        -1.0,
+        3.208
+      ],
+      "ci_contains_0": true,
+      "delta": 1.083,
+      "mean_a5": 3.875,
+      "mean_ctrl": 4.958,
+      "mwu_p": 0.1659,
+      "n_a5": 12,
+      "n_ctrl": 12
+    },
+    "naturalness": {
+      "ci95": [
+        0.0,
+        0.75
+      ],
+      "ci_contains_0": true,
+      "delta": 0.375,
+      "mean_a5": 5.844,
+      "mean_ctrl": 6.219,
+      "mwu_p": 0.0621,
+      "n_a5": 16,
+      "n_ctrl": 16
+    },
+    "persona_fit": {
+      "ci95": [
+        -0.375,
+        0.562
+      ],
+      "ci_contains_0": true,
+      "delta": 0.125,
+      "mean_a5": 6.469,
+      "mean_ctrl": 6.594,
+      "mwu_p": 0.2136,
+      "n_a5": 16,
+      "n_ctrl": 16
+    },
+    "specificity": {
+      "ci95": [
+        -0.031,
+        0.75
+      ],
+      "ci_contains_0": true,
+      "delta": 0.312,
+      "mean_a5": 6.562,
+      "mean_ctrl": 6.875,
+      "mwu_p": 0.3,
+      "n_a5": 16,
+      "n_ctrl": 16
+    }
+  },
+  "source": "v2/evidence/a5_judge_runs.jsonl",
+  "unit": "message(mean of 2 reps)"
+}
