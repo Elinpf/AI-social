@@ -1,0 +1,33 @@
+# cycle05 render log (wrapper 写入，含开始/结束时刻)
+RENDER_START 2026-10-23T00:32:06+0800
+batch=cycle05_d12a_off  log_sha256=252a5b42cab70b3784c6b6812453f9a2d3e4e8ffee3f10bd115ff1cdfc3cefa5  sha8=252a5b42
+→ ../v2/evidence/cycle05_shots/cycle05_d12a_off-chat-252a5b42.png
+SHOT OK: ../v2/evidence/cycle05_shots/cycle05_d12a_off-chat-252a5b42.png  elapsed=3.77s  mean_brightness=33.0(gray601,0-255,黑<8)  max_color_frac=32.68%  blank_retries=0/2
+  blank_cumulative=7/224 次空白/总取证（T282 观察哨，仅留痕）
+→ ../v2/evidence/cycle05_shots/cycle05_d12a_off-rhythm-252a5b42.png
+SHOT OK: ../v2/evidence/cycle05_shots/cycle05_d12a_off-rhythm-252a5b42.png  elapsed=1.75s  mean_brightness=30.6(gray601,0-255,黑<8)  max_color_frac=39.98%  blank_retries=0/2
+  blank_cumulative=7/225 次空白/总取证（T282 观察哨，仅留痕）
+→ ../v2/evidence/cycle05_shots/cycle05_d12a_off-spread-252a5b42.png
+SHOT OK: ../v2/evidence/cycle05_shots/cycle05_d12a_off-spread-252a5b42.png  elapsed=1.68s  mean_brightness=23.1(gray601,0-255,黑<8)  max_color_frac=71.20%  blank_retries=0/2
+  blank_cumulative=7/226 次空白/总取证（T282 观察哨，仅留痕）
+→ ../v2/evidence/cycle05_shots/cycle05_d12a_off-600-252a5b42.png
+SHOT OK: ../v2/evidence/cycle05_shots/cycle05_d12a_off-600-252a5b42.png  elapsed=1.65s  mean_brightness=39.9(gray601,0-255,黑<8)  max_color_frac=32.41%  blank_retries=0/2
+  blank_cumulative=7/227 次空白/总取证（T282 观察哨，仅留痕）
+OK: ../v2/evidence/cycle05_shots/cycle05_d12a_off-{chat,rhythm,spread,600}-252a5b42.png
+RENDER_END_OFF 2026-10-23T00:32:16+0800
+RENDER_START_ON 2026-10-23T00:32:18+0800
+batch=cycle05_d12a_on  log_sha256=a1d1b4cb92432ff045dd03bd4fc1fd2b20804b6121e6e18e1dd4d29437da1fc2  sha8=a1d1b4cb
+→ ../v2/evidence/cycle05_shots/cycle05_d12a_on-chat-a1d1b4cb.png
+SHOT OK: ../v2/evidence/cycle05_shots/cycle05_d12a_on-chat-a1d1b4cb.png  elapsed=1.73s  mean_brightness=33.7(gray601,0-255,黑<8)  max_color_frac=30.56%  blank_retries=0/2
+  blank_cumulative=7/228 次空白/总取证（T282 观察哨，仅留痕）
+→ ../v2/evidence/cycle05_shots/cycle05_d12a_on-rhythm-a1d1b4cb.png
+SHOT OK: ../v2/evidence/cycle05_shots/cycle05_d12a_on-rhythm-a1d1b4cb.png  elapsed=1.74s  mean_brightness=30.6(gray601,0-255,黑<8)  max_color_frac=39.99%  blank_retries=0/2
+  blank_cumulative=7/229 次空白/总取证（T282 观察哨，仅留痕）
+→ ../v2/evidence/cycle05_shots/cycle05_d12a_on-spread-a1d1b4cb.png
+SHOT OK: ../v2/evidence/cycle05_shots/cycle05_d12a_on-spread-a1d1b4cb.png  elapsed=1.65s  mean_brightness=23.1(gray601,0-255,黑<8)  max_color_frac=71.21%  blank_retries=0/2
+  blank_cumulative=7/230 次空白/总取证（T282 观察哨，仅留痕）
+→ ../v2/evidence/cycle05_shots/cycle05_d12a_on-600-a1d1b4cb.png
+SHOT OK: ../v2/evidence/cycle05_shots/cycle05_d12a_on-600-a1d1b4cb.png  elapsed=1.69s  mean_brightness=40.8(gray601,0-255,黑<8)  max_color_frac=31.75%  blank_retries=0/2
+  blank_cumulative=7/231 次空白/总取证（T282 观察哨，仅留痕）
+OK: ../v2/evidence/cycle05_shots/cycle05_d12a_on-{chat,rhythm,spread,600}-a1d1b4cb.png
+RENDER_END_ON 2026-10-23T00:32:25+0800
