@@ -1,0 +1,42 @@
+=== RENDER_START_OFF 2026-10-23T04:38:36+08:00  data=sample/dialogue_cycle06_f6off/threads.json  expected_sha8=dbff7b97
+→ BEGIN cycle06_f6off-chat-dbff7b97 2026-10-23T04:38:36+08:00
+SHOT OK: ../v2/evidence/cycle06_shots/cycle06_f6off-chat-dbff7b97.png  elapsed=2.05s  mean_brightness=34.8(gray601,0-255,黑<8)  max_color_frac=31.16%  blank_retries=0/2
+  blank_cumulative=7/238 次空白/总取证（T282 观察哨，仅留痕）
+→ END cycle06_f6off-chat-dbff7b97 2026-10-23T04:38:38+08:00 rc=0
+→ BEGIN cycle06_f6off-rhythm-dbff7b97 2026-10-23T04:38:38+08:00
+SHOT OK: ../v2/evidence/cycle06_shots/cycle06_f6off-rhythm-dbff7b97.png  elapsed=1.80s  mean_brightness=33.6(gray601,0-255,黑<8)  max_color_frac=35.60%  blank_retries=0/2
+  blank_cumulative=7/239 次空白/总取证（T282 观察哨，仅留痕）
+→ END cycle06_f6off-rhythm-dbff7b97 2026-10-23T04:38:40+08:00 rc=0
+→ BEGIN cycle06_f6off-spread-dbff7b97 2026-10-23T04:38:40+08:00
+SHOT FAIL: 画面近乎单色（最大单色占比 71.17% ≥ 50%，色≈(0, 16, 16)） —— 第 3 次空白（重试耗尽）
+  blank_cumulative=10/240 次空白/总取证（T282 观察哨，仅留痕）
+→ END cycle06_f6off-spread-dbff7b97 2026-10-23T04:38:46+08:00 rc=1
+→ BEGIN cycle06_f6off-600-dbff7b97 2026-10-23T04:38:46+08:00
+SHOT OK: ../v2/evidence/cycle06_shots/cycle06_f6off-600-dbff7b97.png  elapsed=2.00s  mean_brightness=39.9(gray601,0-255,黑<8)  max_color_frac=28.90%  blank_retries=0/2
+  blank_cumulative=10/241 次空白/总取证（T282 观察哨，仅留痕）
+→ END cycle06_f6off-600-dbff7b97 2026-10-23T04:38:48+08:00 rc=0
+=== RENDER_START_ON 2026-10-23T04:38:48+08:00  data=sample/dialogue_cycle06_f6on/threads.json  expected_sha8=5c28dd85
+→ BEGIN cycle06_f6on-chat-5c28dd85 2026-10-23T04:38:48+08:00
+SHOT OK: ../v2/evidence/cycle06_shots/cycle06_f6on-chat-5c28dd85.png  elapsed=2.05s  mean_brightness=34.8(gray601,0-255,黑<8)  max_color_frac=31.15%  blank_retries=0/2
+  blank_cumulative=10/242 次空白/总取证（T282 观察哨，仅留痕）
+→ END cycle06_f6on-chat-5c28dd85 2026-10-23T04:38:50+08:00 rc=0
+→ BEGIN cycle06_f6on-rhythm-5c28dd85 2026-10-23T04:38:50+08:00
+SHOT OK: ../v2/evidence/cycle06_shots/cycle06_f6on-rhythm-5c28dd85.png  elapsed=1.80s  mean_brightness=33.6(gray601,0-255,黑<8)  max_color_frac=35.59%  blank_retries=0/2
+  blank_cumulative=10/243 次空白/总取证（T282 观察哨，仅留痕）
+→ END cycle06_f6on-rhythm-5c28dd85 2026-10-23T04:38:52+08:00 rc=0
+→ BEGIN cycle06_f6on-spread-5c28dd85 2026-10-23T04:38:52+08:00
+SHOT FAIL: 画面近乎单色（最大单色占比 71.16% ≥ 50%，色≈(0, 16, 16)） —— 第 3 次空白（重试耗尽）
+  blank_cumulative=13/244 次空白/总取证（T282 观察哨，仅留痕）
+→ END cycle06_f6on-spread-5c28dd85 2026-10-23T04:38:58+08:00 rc=1
+→ BEGIN cycle06_f6on-600-5c28dd85 2026-10-23T04:38:58+08:00
+SHOT OK: ../v2/evidence/cycle06_shots/cycle06_f6on-600-5c28dd85.png  elapsed=1.93s  mean_brightness=39.9(gray601,0-255,黑<8)  max_color_frac=28.94%  blank_retries=0/2
+  blank_cumulative=13/245 次空白/总取证（T282 观察哨，仅留痕）
+→ END cycle06_f6on-600-5c28dd85 2026-10-23T04:39:00+08:00 rc=0
+=== RENDER_END 2026-10-23T04:39:00+08:00
+
+=== NOTE 2026-10-23T04:40:00+08:00 后处理（不改动上述渲染记录，只追加说明）===
+两张 spread 视图在【保留空白检测】下 FAIL（最大单色占比 71.17% / 71.16% ≥ 50%，色≈(0,16,16)，重试 3 次耗尽，rc=1），
+已移入 v2/evidence/cycle06_shots/_blank_check_failed/ ，**不作为证据**（仅为取证留存）。
+原因说明：spread（闲话怎么传开）视图本身是大面积深色背景（CYCLE-05 同视图实测 max_color_frac=71.20%），
+旧 wrapper dialogue_shots.sh 传 --no-blank-check 才放行；本次按任务约束【不绕过空白检测】，故判 FAIL。
+有效证据 = 6 张：f6off/{chat,rhythm,600} + f6on/{chat,rhythm,600}（blank_retries 均 0/2）。
