@@ -1,0 +1,49 @@
+{
+  "schema": "hitt.d2.tpr_sweep/1",
+  "params": {
+    "seed": 42,
+    "n": 16,
+    "rounds": 84,
+    "provider": "mock",
+    "max_turns": 6,
+    "max_messages_per_slot": 3
+  },
+  "arms": [
+    {
+      "max_turns_per_round": 2,
+      "events": 200053,
+      "msg": 947,
+      "threads": 305,
+      "p50": 1.0,
+      "p90": 6.0,
+      "max": 6,
+      "mean": 2.793,
+      "multi3": 0.3869,
+      "single": 0.5869
+    },
+    {
+      "max_turns_per_round": 3,
+      "events": 200053,
+      "msg": 947,
+      "threads": 305,
+      "p50": 1.0,
+      "p90": 6.0,
+      "max": 6,
+      "mean": 2.793,
+      "multi3": 0.3869,
+      "single": 0.5869
+    },
+    {
+      "max_turns_per_round": 4,
+      "events": 200053,
+      "msg": 947,
+      "threads": 305,
+      "p50": 1.0,
+      "p90": 6.0,
+      "max": 6,
+      "mean": 2.793,
+      "multi3": 0.3869,
+      "single": 0.5869
+    }
+  ]
+}
