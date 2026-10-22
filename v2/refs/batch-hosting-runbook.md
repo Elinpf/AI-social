@@ -93,6 +93,40 @@ Leader 裁决：本轮判定值取**保守的 +2.09pp（= 不成立）**，+3.14
 
 **为什么重要**：能被实现差异翻转的结论，本来就不该写进结论。**"指标"和"阈值"必须同时冻结，否则等于没有阈值。**
 
+## 3.98 【硬规则】证据必须来自「被执行的那一层」，不能来自「写命令的那一层」
+
+**规则**：任何记录"这次跑批用了什么开关/什么环境"的凭据（`switch_proof` 等），
+**必须由真正执行该批的那一层产生**（unit 属性 / `bash -c` 内联 env / 被测进程自己 dump），
+**不得**用"写脚本那个 shell"的 `printenv` 值代替。
+
+**两次事故（2026-10-22/23）都在这条线上**：
+1. **父 shell 的值被继承**（D12-A seed=7）：上一批 `export HITT_D12_DETAIL=1` 残留，baseline 臂实际按 ON 跑；
+2. **父 shell 的值被当成子进程的值**（D12-B ON 臂）：`systemd-run` 已用 `--property=Environment=...` 注入 1，
+   但写 `switch_proof` 的 `printf` 在我自己的 shell 里执行 ⇒ 记成 `<unset>`，与事实相反。
+
+**正确写法（已验证）**：
+```bash
+# 1) 起跑：开关既进 unit 属性、又在 bash -c 内联（双保险，且都可审计）
+systemd-run --unit=t271-<batch>-$TS --collect \
+  --property=EnvironmentFile=<repo>/code/.env.local \
+  --property=Environment=HITT_<SWITCH>=1 \
+  --working-directory=<worktree>/code \
+  /bin/bash -c "cd <worktree>/code && HITT_<SWITCH>=1 python3 -m orchestration run --life ... --out <dir>/run.jsonl ..."
+
+# 2) switch_proof：记**起跑值**，并附 launch_cmd 原文（不要写 printenv 的父 shell 值）
+cat > <dir>/switch_proof.txt <<EOF
+unit=t271-<batch>-$TS
+code_sha=$(git -C <worktree> rev-parse --short HEAD)
+env_HITT_<SWITCH>=1        # 起跑真实值：unit 属性 + bash -c 内联
+env_HITT_LLM_PROVIDER=openai_compat   # 来自 EnvironmentFile
+params seed=<s> n=<n> rounds=<r>
+prompt_fn_sha256=<该臂实际 prompt 的 sha>
+launch_cmd=<上面那条命令原文>
+EOF
+```
+- 若确需"关"的臂：**用 `env -u HITT_<SWITCH>` 显式清空**，并在 proof 里写 `<unset>`（此时 `<unset>` 才是事实）；
+- **更强做法**（可选）：让被测进程自己把 `os.environ` 相关键 dump 到 run 目录（"被执行层"自证）。
+
 ## 4. 启动清单（复制粘贴；一批一跑）
 > 约定：`REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`；批次名 `<B>`（如 `A`）；跑批产物落 `RUN=/root/t271/runs/<B>`。
 

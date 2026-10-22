@@ -1,0 +1,17 @@
+{
+  "OFF": {
+    "H_mean": 1.95109,
+    "n_agents": 16,
+    "n_messages": 191
+  },
+  "ON": {
+    "H_mean": 1.969962,
+    "n_agents": 16,
+    "n_messages": 191
+  },
+  "delta_H": 0.018872,
+  "rise_ratio": 0.0097,
+  "threshold": 0.1,
+  "verdict": "机制未生效(FAIL：模型没按自己的脾气起句)",
+  "impl_sha256": "0e685f1f13c97e1897b3df0c9776cf6ec3743bf0adf01dc66004ff7d3806fab8"
+}

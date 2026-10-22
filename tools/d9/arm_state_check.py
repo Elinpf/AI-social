@@ -125,7 +125,8 @@ def near(actual: float, expect: float, tol: float) -> bool:
 
 def main(argv=None) -> int:
     epilog = """指标口径（务必看清，避免两个数对不上）：
-  * C1 全部指标基于 **前 --first-n 条消息（默认 20）**，不是全批；
+  * C1 的比较范围由 `--expect-scope` 决定：**默认 `full`（全 run）**；`first20` 为历史行为（仅前 --first-n 条）。
+    **期望值必须与 scope 同源**——全 run 的 `len_p50` 喂给 `first20` 会造成「假红」（正常臂被误判 FAIL）。
   * `len_p50` = **原始 body 字符数**中位数（**不去括号**）；
   * `len_p50_excl` = 去括号块后的中位数；
   * `paren_rate` = 含括号块消息 / 消息数；`id_leak_rate` = 命中 P\\d{3} 的消息占比；
@@ -146,6 +147,9 @@ def main(argv=None) -> int:
     ap.add_argument("--expect-behavior", default=None, help="JSON：metric -> {min|max|eq}")
     ap.add_argument("--tolerance", type=float, default=0.05)
     ap.add_argument("--first-n", type=int, default=20)
+    ap.add_argument("--expect-scope", choices=["first20", "full"], default="full",
+                    help="C1 的比较范围：full=全 run（默认，与常见期望值同源）；first20=仅前 --first-n 条"
+                         "（历史行为）。**期望值必须与 scope 同源**：全 run 的期望值不能喂给 first20。")
     a = ap.parse_args(argv)
 
     def as_json(s):
@@ -163,10 +167,14 @@ def main(argv=None) -> int:
     recs, bad = load(run)
     add("解析完整性", "FAIL" if bad else "PASS", f"坏行={bad}，记录={len(recs)}")
 
-    bodies = msg_bodies(recs, a.first_n)
+    bodies_first = msg_bodies(recs, a.first_n)
+    bodies_full = msg_bodies(recs, None)
+    bodies = bodies_full if a.expect_scope == "full" else bodies_first
     m = metrics(bodies)
-    add("样本量", "PASS" if len(bodies) >= min(a.first_n, 1) else "FAIL",
-        f"前 {a.first_n} 条取到 {len(bodies)} 条（不足则 C1 结论不可信）")
+    m_first = metrics(bodies_first)
+    add("样本量", "PASS" if len(bodies_first) >= min(a.first_n, 1) else "FAIL",
+        f"前 {a.first_n} 条取到 {len(bodies_first)} 条；全 run {len(bodies_full)} 条"
+        f"（C1 比较范围 = {a.expect_scope}）")
 
     # ---- C0 provider ----
     prov = collections.Counter((r.get("payload") or {}).get("provider")
@@ -181,7 +189,8 @@ def main(argv=None) -> int:
     # ---- C1 前 N 条指标 ----
     exp = as_json(a.tree_expectation)
     if not exp:
-        add("C1 首N指标", "CANNOT-VERIFY", f"未给 --tree-expectation；实测={ {k: round(v,4) for k,v in m.items()} }")
+        add("C1 指标", "CANNOT-VERIFY",
+            f"未给 --tree-expectation；scope={a.expect_scope} 实测={ {k: round(v,4) for k,v in m.items()} }")
     else:
         rows, bad_ = [], []
         for k, v in exp.items():
@@ -192,9 +201,11 @@ def main(argv=None) -> int:
             rows.append(f"{k} 实测={m[k]:.4f} 期望={v} {'ok' if ok else 'FAIL'}")
             if not ok:
                 bad_.append(f"{k}({m[k]:.4f} vs {v})")
-        add("C1 首N指标", "FAIL" if bad_ else "PASS",
-            f"[前 {len(bodies)} 条；len 为原始长度] " + "；".join(rows)
-            + (f" ⇒ 超差：{bad_}" if bad_ else ""))
+        add(f"C1 指标(scope={a.expect_scope})", "FAIL" if bad_ else "PASS",
+            f"[比较范围={a.expect_scope}，n={len(bodies)}；len 为原始长度] " + "；".join(rows)
+            + (f" ⇒ 超差：{bad_}" if bad_ else "")
+            + f" ｜ 参考：前{a.first_n}条实测={ {k: round(v,4) for k,v in m_first.items()} }，"
+              f"全run实测={ {k: round(v,4) for k,v in metrics(bodies_full).items()} }")
 
     # ---- C2 seals / WORLD_INIT ----
     seals = [(r.get("round"), r.get("seq")) for r in recs if r.get("type") == "TURN_SEAL"]
