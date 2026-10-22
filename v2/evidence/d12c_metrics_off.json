@@ -1,0 +1,12 @@
+{
+  "OFF": {
+    "P1_specificity_rate": 88.63,
+    "P2_thirdparty_rate": 61.18,
+    "len_p50": 40.0,
+    "n_msgs": 510,
+    "n_threads": 169,
+    "paren_rate": 79.41,
+    "threads_p50": 2,
+    "turns_A_p50": 2
+  }
+}
