@@ -35,6 +35,11 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 [[ -n "$OUT_DIR" ]] || { echo "--out-dir required" >&2; exit 2; }
+
+# --- 串行纪律代码闸（tools/d5/preflight.sh）：并发跑批 / 冻结区脏树 → exit 9 ---
+# 说明：preflight.sh 会排除自身祖先链，因此这里不会把本 run_batch 判成并发。
+bash "$ROOT/tools/d5/preflight.sh" --tag run_batch || exit 9
+
 mkdir -p "$OUT_DIR"
 OUT_ABS="$(cd "$OUT_DIR" && pwd)"
 RUN="$OUT_ABS/run.jsonl"
