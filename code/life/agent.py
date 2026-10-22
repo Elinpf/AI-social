@@ -1393,11 +1393,19 @@ class LifeLayerAgent:
 
     # ---- R19 话题宽度臂（TB）：人话化 topic + 岔题提示 + 内容门控 ----------
     def _topic_label(self, topic: str | None) -> str:
-        """TB 臂：模板/话题 id → 人话（关闭时原样返回 ⇒ 提示词逐字节不变）。
+        """L-13：模板/话题 id → 人话，**默认生效**（不再依赖话题宽度臂）。
 
-        L-13 的正解：`whisper` / `combat_training` 这类内部 token 不再直接递给模型。
+        默认（`LIFE_PROMPT_TOPIC_LABEL` 未设或为 `on/1/true/yes`）：无条件走
+        `TB.label`（未知 id 原样返回 ⇒ 不臆造中文、不丢信息），
+        `whisper` / `combat_training` 这类内部 token 不再递给模型。
+
+        回退臂（`LIFE_PROMPT_TOPIC_LABEL=off/0/false/no`）：**逐字节复刻旧实现**
+        `TB.label(topic) if TB.enabled() else (topic or "")` ⇒ 话题宽度臂关闭（默认）时
+        与改造前提示词完全相同，用于同树 OFF/ON 两臂可复现对照。
         """
-        return TB.label(topic) if TB.enabled() else (topic or "")
+        if TB.label_enabled() or TB.enabled():
+            return TB.label(topic)
+        return topic or ""
 
     def _topic_shift_line(self, wv, partner: str | None, tid: str | None,
                           topic: str | None, turn: int | None) -> str:

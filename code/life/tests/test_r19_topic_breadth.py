@@ -164,6 +164,7 @@ def test_keywords_no_low_information_phrases():
 # ---------------------------------------------------------------- 接线：OFF / ON
 def test_off_path_prompt_and_payload_unchanged(tmp_path, monkeypatch):
     monkeypatch.delenv(TB.BREADTH_ENV, raising=False)
+    monkeypatch.setenv(TB.LABEL_ENV, "off")   # L-13 补丁：人话化默认 ON，故此处显式回退
     _, agent = _build(tmp_path)
     wv = _wv(_dm_event())
     prompt, payload = _reply(agent, wv, "我这心里也堵着事，先听你说。")
@@ -184,6 +185,7 @@ def _first_shifting_turn(agent_id: str = "P003", thread: str = "TH-P007-P003-4",
 
 def test_on_path_humanizes_topic(tmp_path, monkeypatch):
     monkeypatch.delenv(TB.BREADTH_ENV, raising=False)
+    monkeypatch.setenv(TB.LABEL_ENV, "off")   # L-13 补丁：基准臂 = 旧字节（原样 token）
     _, agent = _build(tmp_path)
     turn = _first_shifting_turn()
     # 让 _thread_max_turn 返回 turn-1 ⇒ 本条 turn_index = turn（L-7 结构臂与 turn 有关，两臂必须同 turn）
@@ -192,6 +194,7 @@ def test_on_path_humanizes_topic(tmp_path, monkeypatch):
     prompt_off, _ = _reply(agent, wv, "嗯。")
 
     monkeypatch.setenv(TB.BREADTH_ENV, "1")
+    monkeypatch.delenv(TB.LABEL_ENV, raising=False)   # 人话化默认 ON
     prompt_on, payload = _reply(agent, wv, "嗯。")
     assert "说悄悄话" in prompt_on, "ON 必须人话化"
     assert "whisper" not in prompt_on, "ON 不得再出现内部 token"

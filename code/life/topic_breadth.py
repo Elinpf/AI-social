@@ -33,6 +33,9 @@ CYCLE-03 的两条 F 维读数是**结构性的 0**，不是噪声：
   * 开关：env `LIFE_PROMPT_TOPIC_BREADTH`，**默认 OFF**；关闭时
     `label()` 原样返回、`render()` 空串、`plan()` 不参与、`tag_hints` 与提示词
     **逐字节不变**。
+  * **L-13 补丁（与上面的宽度臂解耦）**：env `LIFE_PROMPT_TOPIC_LABEL`，**默认 ON**
+    ⇒ `agent._topic_label` 无条件走 `label()`（人话化不再依赖宽度臂）；
+    显式 `off` 时回退为旧实现（宽度臂关闭 ⇒ 原样 token），仅用于两臂对照。
   * 确定性：岔题指派只由 sha256 与 (agent, thread, round, turn, base) 决定；
     门控只读生成的正文 ⇒ 同一 run replay 逐字节可复现。
   * 不改 `engine_version` 指纹、不进 `state_hash`、不产生世界态后果；
@@ -50,6 +53,12 @@ import re
 #: 话题宽度臂开关（**默认 OFF**；`1/true/yes/on` 打开）
 BREADTH_ENV = "LIFE_PROMPT_TOPIC_BREADTH"
 _ON = {"1", "true", "yes", "on"}
+
+#: L-13 补丁：人话化开关（**默认 ON**；`0/false/no/off` 回退到旧行为 = 原样 token）。
+#: 与 `BREADTH_ENV` 解耦：话题宽度臂默认 OFF，但「不把内部 token 递给模型」应当是默认行为。
+#: 保留本开关的唯一理由 = 同一棵树上做 OFF/ON 两臂可复现对照（OFF 必须逐字节等于旧提示词）。
+LABEL_ENV = "LIFE_PROMPT_TOPIC_LABEL"
+_OFF = {"0", "false", "no", "off"}
 
 #: 模板/话题 id → 人话（用于提示词，替代原样 token；L-13 的正解）
 TOPIC_LABELS = {
@@ -72,6 +81,8 @@ TOPIC_LABELS = {
     "contest": "比试高下",
     "group_proposal": "张罗大家办点事",
     "select_location": "商量去哪儿",
+    # L-13 补丁：activity_templates.json 的 20 个 template_id 里唯一缺失的一条
+    "burnout_event": "累过头想歇口气",
 }
 
 #: 话题 → 可用于内容门控的关键词（正文命中 ≥1 才算「真的岔过去了」）
@@ -157,6 +168,11 @@ _TRANSACTIONAL = {"scarce_buy", "counter_propose", "polite_reject", "select_loca
 def enabled() -> bool:
     """开关是否为开（默认 OFF）。"""
     return os.environ.get(BREADTH_ENV, "").strip().lower() in _ON
+
+
+def label_enabled() -> bool:
+    """人话化是否生效（**默认 ON**；仅显式 `0/false/no/off` 才回退为旧行为）。"""
+    return os.environ.get(LABEL_ENV, "").strip().lower() not in _OFF
 
 
 def label(topic: str | None) -> str:
