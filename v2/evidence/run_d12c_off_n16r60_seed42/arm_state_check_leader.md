@@ -42,4 +42,17 @@
 1. **OFF 臂身份判据（可放行）**：`paren_rate≈0.78` + `provider=openai_compat` + `seals` 连续 + `id_leak=0` + `LIFE_PROMPT_D12C_SPECIFIC` 在执行层不存在；
 2. **`len_p50` 不比**：跨规模禁用（本条写入后续 runbook）；
 3. 终态核验须补：`--expect-struct` 用**同规模**（n16×60）基线 `run_f6_off_n16r60_seed42` 现算，不得再用 24 轮期望值；
-4. **观察项（不作判定）**：`dup_exact_rate = 0.0723`（7.2% 完全重复句）——与 A5 人工抽检发现的「中段复述」同源，若 ON 臂该值不降而 P1 升，则「具体物要求被写成套话」的反事实解释力增强（§10.5 ③）。
+4. **观察项（不作判定）**：完全重复句率——与 A5 人工抽检发现的「中段复述」同源，若 ON 臂该值不降而 P1 升，则「具体物要求被写成套话」的反事实解释力增强（§10.5 ③）。
+
+### 4.1 重复率的口径更正（**两种口径，值不同，不许混用**）
+
+`arm_state_check.py` 报的 `dup_exact_rate = 0.0723` 是**原始正文逐字节完全相同**（`Counter(body)`），**不是** house 的冻结口径。用冻结实现 `tools/d5/dialogue_metrics.py` 在同一快照（332 MSG）重算：
+
+| 口径 | 值 | 实现 |
+|---|---|---|
+| **D5 `L-6_dup_exact_rate`（**冻结口径，以此为准**）** | **0.069277** | `tools/d5/dialogue_metrics.py`（`--log <run>` 直接出，无需自写代码） |
+| `arm_state_check` 字面完全相同（本工具内部） | 0.0723 | `Counter(payload.body)`，**仅本工具的快速判定用** |
+
+⇒ **后续所有报告一律引 `L-6_dup_exact_rate`（冻结实现）**；本文件 §2 转录里的 `0.0723` 保留原样（那是工具原输出，不可改），但**引用时必须用 0.069277**。
+
+同快照的其余冻结读数（供 ON 臂对照，均 `tools/d5/dialogue_metrics.py` 出）：`L-1_len_excl_paren.p50 = 41.0`（n=332）、**`L-3_paren_block_any = 0.819277`**、`L-7_dup_ngram8_rate = 0.364458`、`L-8b_paren_only_id_rate = 0.0`、`S-2 multi_turn_thread_ratio = 0.394958`、`S-5_orphan_msg_rate = 0.0`、`n_threads = 119`。
