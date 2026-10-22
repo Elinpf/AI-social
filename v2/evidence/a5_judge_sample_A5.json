@@ -1,0 +1,235 @@
+{
+  "arm": "A5",
+  "source": "v2/evidence/run_a5_real_n16r42_seed42/run.jsonl",
+  "seed": 42,
+  "k_per_layer": 4,
+  "thread_count": 140,
+  "layer_distribution_all_threads": {
+    "t4_6": 77,
+    "t2_3": 8
+  },
+  "layers": [
+    {
+      "layer": "t2_3",
+      "range": [
+        2,
+        3
+      ],
+      "n_threads_in_pool": 8,
+      "n_threads_chosen": 4
+    },
+    {
+      "layer": "t4_6",
+      "range": [
+        4,
+        6
+      ],
+      "n_threads_in_pool": 77,
+      "n_threads_chosen": 4
+    },
+    {
+      "layer": "t7p",
+      "range": [
+        7,
+        1000000000
+      ],
+      "n_threads_in_pool": 0,
+      "n_threads_chosen": 0
+    }
+  ],
+  "n_samples": 16,
+  "samples": [
+    {
+      "thread_id": "TH-P001-P009-18",
+      "msg_uid": "42:24158",
+      "round": 18,
+      "turn_index": 0,
+      "from": "P001",
+      "to": "P009",
+      "topic": "whisper",
+      "body": "金先生，我这会儿在院里补那辆旧板车，轱辘歪了，推着费劲。你那边咋样？得空来坐坐。",
+      "thread_len": 2,
+      "layer": "t2_3"
+    },
+    {
+      "thread_id": "TH-P001-P009-18",
+      "msg_uid": "42:25729",
+      "round": 19,
+      "turn_index": 1,
+      "from": "P009",
+      "to": "P001",
+      "topic": "whisper",
+      "body": "这日子过得，账本翻到一半，笔尖都钝了。你补板车，我这儿对不上数。肚子还空着。",
+      "thread_len": 2,
+      "layer": "t2_3"
+    },
+    {
+      "thread_id": "TH-P011-P012-0",
+      "msg_uid": "42:145",
+      "round": 0,
+      "turn_index": 0,
+      "from": "P011",
+      "to": "P012",
+      "topic": "combat_training",
+      "body": "你这会儿练得还顺当吧，我手里这木剑都快握不住了呀",
+      "thread_len": 2,
+      "layer": "t2_3"
+    },
+    {
+      "thread_id": "TH-P011-P012-0",
+      "msg_uid": "42:1264",
+      "round": 1,
+      "turn_index": 1,
+      "from": "P012",
+      "to": "P011",
+      "topic": "combat_training",
+      "body": "小满啊，我正给村东头老赵家缝那面练武用的沙袋呢，针脚得扎密实点才经得住你们打，你那边木剑握不住就歇口气呗，回头我帮你缠个布条在剑柄上防滑，你说这样成不成？",
+      "thread_len": 2,
+      "layer": "t2_3"
+    },
+    {
+      "thread_id": "TH-P002-P007-39",
+      "msg_uid": "42:59962",
+      "round": 39,
+      "turn_index": 0,
+      "from": "P002",
+      "to": "P007",
+      "topic": "scarce_buy",
+      "body": "阿林，给赵家打的柜子还差一道榫没合上呢。",
+      "thread_len": 3,
+      "layer": "t2_3"
+    },
+    {
+      "thread_id": "TH-P002-P007-39",
+      "msg_uid": "42:61725",
+      "round": 41,
+      "turn_index": 2,
+      "from": "P002",
+      "to": "P007",
+      "topic": "scarce_buy",
+      "body": "哎，赵家柜子那道榫我拿木楔试了三回，还差半指宽。",
+      "thread_len": 3,
+      "layer": "t2_3"
+    },
+    {
+      "thread_id": "TH-P015-P011-40",
+      "msg_uid": "42:61533",
+      "round": 40,
+      "turn_index": 0,
+      "from": "P015",
+      "to": "P011",
+      "topic": "polite_reject",
+      "body": "哎，我这正给李家那锅红烧肉收汁呢，小满你上回说想学改菜谱的事，要不先搁搁，等我把这勺糖色熬明白了再喊你过来搭把手，成不？",
+      "thread_len": 2,
+      "layer": "t2_3"
+    },
+    {
+      "thread_id": "TH-P015-P011-40",
+      "msg_uid": "42:61908",
+      "round": 41,
+      "turn_index": 1,
+      "from": "P011",
+      "to": "P015",
+      "topic": "polite_reject",
+      "body": "哦我这正给赵家小卖部点货呢，你那红烧肉先别急着喊我搭手吧",
+      "thread_len": 2,
+      "layer": "t2_3"
+    },
+    {
+      "thread_id": "TH-P010-P009-13",
+      "msg_uid": "42:21171",
+      "round": 13,
+      "turn_index": 0,
+      "from": "P010",
+      "to": "P009",
+      "topic": "job_choice",
+      "body": "哎，金先生，我刚把月牙那首新歌的谱子摊在咖啡馆桌上改到一半，肚子饿得直打鼓，你说我是不是该先顾着填饱肚子再谈什么意义吧。",
+      "thread_len": 6,
+      "layer": "t4_6"
+    },
+    {
+      "thread_id": "TH-P010-P009-13",
+      "msg_uid": "42:24323",
+      "round": 18,
+      "turn_index": 5,
+      "from": "P009",
+      "to": "P010",
+      "topic": "job_choice",
+      "body": "月牙，我把算盘珠子归了位，你帮我把灶台上那半块凉馒头掰开，我这就去添把柴。",
+      "thread_len": 6,
+      "layer": "t4_6"
+    },
+    {
+      "thread_id": "TH-P015-P002-19",
+      "msg_uid": "42:26361",
+      "round": 19,
+      "turn_index": 0,
+      "from": "P015",
+      "to": "P002",
+      "topic": "gift",
+      "body": "我这儿正把灶上那锅萝卜牛腩又添了勺豆瓣酱，你上回说咸淡刚好，这回倒让我自己先尝糊涂了，老石你待会儿帮我抿一口定个准吧。",
+      "thread_len": 6,
+      "layer": "t4_6"
+    },
+    {
+      "thread_id": "TH-P015-P002-19",
+      "msg_uid": "42:34589",
+      "round": 24,
+      "turn_index": 5,
+      "from": "P002",
+      "to": "P015",
+      "topic": "gift",
+      "body": "你那牛腩先搁着，我这刨子卡在木纹里正较劲呢，等我把这寸半的榫头修完再吃吧。",
+      "thread_len": 6,
+      "layer": "t4_6"
+    },
+    {
+      "thread_id": "TH-P015-P005-30",
+      "msg_uid": "42:39479",
+      "round": 30,
+      "turn_index": 0,
+      "from": "P015",
+      "to": "P005",
+      "topic": "gift",
+      "body": "陈医，你刚说“补”，我正把山药削皮切段，想着炖锅汤给你端过去，可我这肚子先叫了。先尝一口？",
+      "thread_len": 6,
+      "layer": "t4_6"
+    },
+    {
+      "thread_id": "TH-P015-P005-30",
+      "msg_uid": "42:55659",
+      "round": 35,
+      "turn_index": 5,
+      "from": "P005",
+      "to": "P015",
+      "topic": "gift",
+      "body": "这药粉细得跟面似的，一喘气就飞。我把李家小孙子的纸包折上口，顺手拿秤杆压住，省得风一吹散了。",
+      "thread_len": 6,
+      "layer": "t4_6"
+    },
+    {
+      "thread_id": "TH-P004-P002-6",
+      "msg_uid": "42:5020",
+      "round": 6,
+      "turn_index": 0,
+      "from": "P004",
+      "to": "P002",
+      "topic": "gift",
+      "body": "日子过得真快，我这刚把桂花糖糕上了笼，就想起你家小满上回说爱吃甜的，回头我给她留两块。你今儿个是路过，还是专程来拿上回订的那袋面粉？",
+      "thread_len": 6,
+      "layer": "t4_6"
+    },
+    {
+      "thread_id": "TH-P004-P002-6",
+      "msg_uid": "42:17685",
+      "round": 11,
+      "turn_index": 5,
+      "from": "P002",
+      "to": "P004",
+      "topic": "gift",
+      "body": "秀娘，陀螺底槽还剩两刀，削完我拿块枣泥酥走。",
+      "thread_len": 6,
+      "layer": "t4_6"
+    }
+  ]
+}

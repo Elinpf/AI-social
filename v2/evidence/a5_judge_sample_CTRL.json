@@ -1,0 +1,235 @@
+{
+  "arm": "CTRL",
+  "source": "v2/evidence/run_a1budget_real_n16r42_seed42/run.jsonl",
+  "seed": 42,
+  "k_per_layer": 4,
+  "thread_count": 154,
+  "layer_distribution_all_threads": {
+    "t4_6": 64,
+    "t2_3": 20
+  },
+  "layers": [
+    {
+      "layer": "t2_3",
+      "range": [
+        2,
+        3
+      ],
+      "n_threads_in_pool": 20,
+      "n_threads_chosen": 4
+    },
+    {
+      "layer": "t4_6",
+      "range": [
+        4,
+        6
+      ],
+      "n_threads_in_pool": 64,
+      "n_threads_chosen": 4
+    },
+    {
+      "layer": "t7p",
+      "range": [
+        7,
+        1000000000
+      ],
+      "n_threads_in_pool": 0,
+      "n_threads_chosen": 0
+    }
+  ],
+  "n_samples": 16,
+  "samples": [
+    {
+      "thread_id": "TH-P004-P001-39",
+      "msg_uid": "42:60350",
+      "round": 39,
+      "turn_index": 0,
+      "from": "P004",
+      "to": "P001",
+      "topic": "scarce_buy",
+      "body": "老周，我这刚出炉的枣泥酥还烫手呢，先给你跟老石一人拿一个垫垫，回头你帮我问问桂婶家那口子要不要也捎两块？",
+      "thread_len": 3,
+      "layer": "t2_3"
+    },
+    {
+      "thread_id": "TH-P004-P001-39",
+      "msg_uid": "42:62105",
+      "round": 41,
+      "turn_index": 2,
+      "from": "P004",
+      "to": "P001",
+      "topic": "scarce_buy",
+      "body": "枣泥酥搁着就搁着，我把烤盘里那几块翻个面，回头给桂婶家那口子留两块，他上回说爱吃甜的。",
+      "thread_len": 3,
+      "layer": "t2_3"
+    },
+    {
+      "thread_id": "TH-P009-P006-40",
+      "msg_uid": "42:61525",
+      "round": 40,
+      "turn_index": 0,
+      "from": "P009",
+      "to": "P006",
+      "topic": "counter_propose",
+      "body": "这年头钱不经花。方老师，你上回说的那笔修缮款，我核到第三遍了，还差着两块七。",
+      "thread_len": 2,
+      "layer": "t2_3"
+    },
+    {
+      "thread_id": "TH-P009-P006-40",
+      "msg_uid": "42:62131",
+      "round": 41,
+      "turn_index": 1,
+      "from": "P006",
+      "to": "P009",
+      "topic": "counter_propose",
+      "body": "金先生，我手里这摞作业本刚批到一半，你说的两块七我记着呢，等放学我去总务那儿再对一遍账。先别急。",
+      "thread_len": 2,
+      "layer": "t2_3"
+    },
+    {
+      "thread_id": "TH-P002-P007-40",
+      "msg_uid": "42:61030",
+      "round": 40,
+      "turn_index": 0,
+      "from": "P002",
+      "to": "P007",
+      "topic": "scarce_buy",
+      "body": "周家那扇窗棂还等着上最后一道榫，你这阵子忙得过来吧",
+      "thread_len": 2,
+      "layer": "t2_3"
+    },
+    {
+      "thread_id": "TH-P002-P007-40",
+      "msg_uid": "42:62168",
+      "round": 41,
+      "turn_index": 1,
+      "from": "P007",
+      "to": "P002",
+      "topic": "scarce_buy",
+      "body": "刚把南街收来的那批旧铜锁挨个擦完，手指头都黑了，老石你说的周家窗棂我记着呢，就是这两天镇上缺木料，我跑了两趟都没凑齐，你那边榫头备好了没？",
+      "thread_len": 2,
+      "layer": "t2_3"
+    },
+    {
+      "thread_id": "TH-P016-P002-6",
+      "msg_uid": "42:5250",
+      "round": 6,
+      "turn_index": 0,
+      "from": "P016",
+      "to": "P002",
+      "topic": "gift",
+      "body": "老石，你来得正好，我这正给王家小孙子挑两斤新到的红枣，个个肉厚核小，你拿一包回去尝尝。别客气。",
+      "thread_len": 2,
+      "layer": "t2_3"
+    },
+    {
+      "thread_id": "TH-P016-P002-6",
+      "msg_uid": "42:5712",
+      "round": 7,
+      "turn_index": 1,
+      "from": "P002",
+      "to": "P016",
+      "topic": "gift",
+      "body": "我正给李家修那扇榆木门，榫头松了，得重打一根。红枣你留着给王家小孙子吧，我灶上还温着半锅粥。",
+      "thread_len": 2,
+      "layer": "t2_3"
+    },
+    {
+      "thread_id": "TH-P007-P005-19",
+      "msg_uid": "42:25555",
+      "round": 19,
+      "turn_index": 0,
+      "from": "P007",
+      "to": "P005",
+      "topic": "gift",
+      "body": "陈医，刚在街口称了半斤陈皮，手还沾着碎屑呢——你这两天忙得过来不？",
+      "thread_len": 6,
+      "layer": "t4_6"
+    },
+    {
+      "thread_id": "TH-P007-P005-19",
+      "msg_uid": "42:34842",
+      "round": 24,
+      "turn_index": 5,
+      "from": "P005",
+      "to": "P007",
+      "topic": "gift",
+      "body": "锅里还温着半碗粥，你从柳河镇赶过来，路上吃没吃？先垫一口。",
+      "thread_len": 6,
+      "layer": "t4_6"
+    },
+    {
+      "thread_id": "TH-P010-P004-28",
+      "msg_uid": "42:38867",
+      "round": 28,
+      "turn_index": 0,
+      "from": "P010",
+      "to": "P004",
+      "topic": "scarce_buy",
+      "body": "月牙，你刚说“饿”这个字，我手里这半块冷馍就咽不下去了——阿林家灶上还温着一碗粥，我端来给你。",
+      "thread_len": 4,
+      "layer": "t4_6"
+    },
+    {
+      "thread_id": "TH-P010-P004-28",
+      "msg_uid": "42:40628",
+      "round": 31,
+      "turn_index": 3,
+      "from": "P004",
+      "to": "P010",
+      "topic": "scarce_buy",
+      "body": "竹罩子我掀开看过了，粥还温着，就是碗沿上落了点灰，我拿笼布给你擦干净了。阿林他娘那会儿忙着去后院抱柴，粥搁那儿就没再动过。你先坐下喘口气，我把枣糕从灶上端下来，顺手给你掰一块垫垫。你今儿是打哪儿过来的，怎么嗓子都紧成这样了？",
+      "thread_len": 4,
+      "layer": "t4_6"
+    },
+    {
+      "thread_id": "TH-P014-P010-32",
+      "msg_uid": "42:42960",
+      "round": 32,
+      "turn_index": 0,
+      "from": "P014",
+      "to": "P010",
+      "topic": "gift",
+      "body": "饿得手都抖了，刚给月牙家小柱子削的那只木陀螺差点飞出去呢。",
+      "thread_len": 6,
+      "layer": "t4_6"
+    },
+    {
+      "thread_id": "TH-P014-P010-32",
+      "msg_uid": "42:59338",
+      "round": 37,
+      "turn_index": 5,
+      "from": "P010",
+      "to": "P014",
+      "topic": "gift",
+      "body": "我这正给月牙家小柱子削陀螺尖呢，刀一歪木屑飞了一脸，你那边饭先扒着，我顺手把窗台上那半块砂纸摸过来再蹭两下。",
+      "thread_len": 6,
+      "layer": "t4_6"
+    },
+    {
+      "thread_id": "TH-P011-P008-14",
+      "msg_uid": "42:21893",
+      "round": 14,
+      "turn_index": 0,
+      "from": "P011",
+      "to": "P008",
+      "topic": "combat_training",
+      "body": "周公文，我这木剑都挥得手酸了，你家灶上那锅红薯能分我一口不？饿得慌。",
+      "thread_len": 6,
+      "layer": "t4_6"
+    },
+    {
+      "thread_id": "TH-P011-P008-14",
+      "msg_uid": "42:25680",
+      "round": 19,
+      "turn_index": 5,
+      "from": "P008",
+      "to": "P011",
+      "topic": "combat_training",
+      "body": "哦，李主簿那三行字我拿尺子比着描，你先把灶上那碗红薯挪到窗台凉着。",
+      "thread_len": 6,
+      "layer": "t4_6"
+    }
+  ]
+}
