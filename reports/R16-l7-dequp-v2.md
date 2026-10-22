@@ -361,7 +361,7 @@ rc=2
 
 | # | 结论 | 层级 | 来源 | sha256 | sha8 | 复现 |
 |---|---|---|---|---|---|---|
-| 0 | **本报告自身**（自锚项，复审 F2 补） | 【事实】 | `reports/R16-l7-dequp-v2.md` | **`git show <commit>:reports/R16-l7-dequp-v2.md \| sha256sum`**（自指无法内嵌，见下方「自锚说明」） | 同上取前 8 位 | `git show <commit>:reports/R16-l7-dequp-v2.md \| sha256sum` |
+| 0 | **本报告自身**（自锚项，复审 F2 补） | 【事实】 | `reports/R16-l7-dequp-v2.md` | 在 commit **`b74a54d`** 的树中实算 = `14e19e755e07e06dd2e332cefbd0f0ba2865131a92dd4fcd708441d708c17a86`（自指无法内嵌，见「自锚说明」） | `14e19e75` | `git show b74a54d:reports/R16-l7-dequp-v2.md \| sha256sum` |
 | 1 | R16 日志 510 消息 / 116,498 事件，raw8 = 111/510 | 【事实】 | `v2/evidence/run_l7v2_on_n16r60_seed42/run.jsonl` | `ee3d28bc9606f2c2ee6609af7c5272673e54db674d5268878aa5d99e477f11b8` | `ee3d28bc` | `recompute_r16.txt` §2 |
 | 2 | R16 复算回执（16 项逐项比对 + 差异说明） | 【事实】 | `v2/evidence/run_l7v2_on_n16r60_seed42/recompute_r16.txt` | `4703575e5558f89e6a2b0332495e9539764aa83842e756bee3609a6ec06cb835` | `4703575e` | §7 命令块 |
 | 3 | 复算器（自写，不 import 既有判定器） | 【事实】 | `v2/evidence/recompute_l7_indep.py` | `ae50620d3b9bdd3add9d81cdd47186b87936d15a56eca58d76dbd44686b952f0` | `ae50620d` | `python3 v2/evidence/recompute_l7_indep.py --log <log>` |
@@ -382,9 +382,11 @@ rc=2
 | 16 | 旧读数 JSON（对照用） | 【对照】 | `v2/evidence/run_l7v2_on_n16r60_seed42/l7v2_readings.json` | `cbaaa39e3fa2a3508326f98958bfd3b4343f325871196024b6f0a75b9c2cdffd` | `cbaaa39e` | — |
 | 17 | 噪声带 `[−4.31,+5.88]`（逐侧取严）的仓内出处 | 【对照】 | `reports/R15-g1-gossip.md:334`、`:455` | —（文本行，见该文件） | — | 读该文件两行 |
 
-> **自锚说明（F2）**：报告不能把自身的 sha256 内嵌进自己——写入哈希会改变文件、进而改变哈希（不定点）。
-> 因此第 0 行登记的是**方法**：读者用 `git show <commit>:reports/R16-l7-dequp-v2.md | sha256sum` 即可得到本文件在该 commit 树中的**唯一确定值**，且该值可被独立复核。
-> 参考值（不作为登记值）：本文件在**上一 commit `a4fcf19`** 中的 sha256 为 `21e1ac59a6bb01b29fbbe5396f8e87f1a586700d24856ebc77c2841b67585afc`；本轮返工后必然改变，**以 `git show <返工后 commit>:` 实算为准**。
+> **自锚说明（F2）**：报告不能把自身的 sha256 内嵌进自己——写入哈希会改变文件、进而改变哈希（不定点），因此任何「内嵌自身 sha」都**不可能**同时成立。
+> 本报告采用的口径是「**锚定到指定 commit + 给方法**」，两条都可独立复核：
+> 1. **定值**：`git show b74a54d:reports/R16-l7-dequp-v2.md | sha256sum` ⇒ `14e19e755e07e06dd2e332cefbd0f0ba2865131a92dd4fcd708441d708c17a86`（该 commit 即 F1–F5 返工稿的入库 commit；本行文字本身是在其后的 commit 中追加的，故**当前 HEAD 树中的本文件哈希必然不同**，属预期）。
+> 2. **方法（适用于任何后续 commit）**：`git show <commit>:reports/R16-l7-dequp-v2.md | sha256sum`。
+> 历史参考：本文件在 `a4fcf19`（首版）中的 sha256 为 `21e1ac59a6bb01b29fbbe5396f8e87f1a586700d24856ebc77c2841b67585afc`。
 > 其余 16 行（#1–#17）都是**他物**，sha256 可内嵌且已逐位实算登记。
 
 > 「层级」列语义：【事实】= 可从日志/文件复算或直接读到；【对照】= 只作对照、不是本报告数值来源；【判断】= 本报告的推理结论（在正文明确标注）；【未验证】= §9 列出的缺口。
