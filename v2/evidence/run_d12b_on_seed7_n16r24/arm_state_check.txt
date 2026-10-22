@@ -1,0 +1,16 @@
+[PASS          ] 解析完整性
+    坏行=0，记录=33868
+[PASS          ] 样本量
+    前 20 条取到 20 条；全 run 191 条（C1 比较范围 = full）
+[PASS          ] C0 provider
+    期望 {openai_compat}；实测={'openai_compat': 2252}
+[PASS          ] C1 指标(scope=full)
+    [比较范围=full，n=191；len 为原始长度] paren_rate 实测=0.3927 期望=0.39 ok；len_p50 实测=46.0000 期望=46 ok ｜ 参考：前20条实测={'paren_rate': 0.5, 'len_p50': 45.0, 'len_p50_excl': 36.5, 'id_leak_rate': 0.0, 'dup_exact_rate': 0.0}，全run实测={'paren_rate': 0.3927, 'len_p50': 46, 'len_p50_excl': 41, 'id_leak_rate': 0.0, 'dup_exact_rate': 0.0105}
+[PASS          ] C2 seals/初始化
+    seals=24 覆盖=0..23；WORLD_INIT=1；问题=无
+[PASS          ] C3 开关↔行为
+    本批未声明开关（不涉及 env↔行为耦合检查）
+[PASS          ] C4 结构
+    实测={'msgs': 191, 'threads': 66, 'ge3': 28} 期望={'msgs': 191, 'threads': 66, 'ge3': 28} ⇒ 一致
+
+[汇总] PASS  PASS=7 FAIL=0 CANNOT-VERIFY=0（CANNOT-VERIFY ≠ PASS：未给期望的判据不放行）

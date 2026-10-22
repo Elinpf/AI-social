@@ -1,0 +1,6 @@
+unit=t271-d12boff-015358
+code_sha=76bb2d0
+env_HITT_D12_PREFWORD=<unset>
+env_HITT_LLM_PROVIDER=openai_compat
+params seed=7 n=16 rounds=24
+prompt_fn_sha256=ae858c2854aea7f3541d4e97e88aafd8f3f74e0946582466893f0db4f874a5ad

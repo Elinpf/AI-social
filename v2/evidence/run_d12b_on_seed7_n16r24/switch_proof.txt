@@ -1,0 +1,8 @@
+unit=t271-d12bon-022455
+code_sha=76bb2d0
+env_HITT_D12_PREFWORD=1   # 起跑真实值：unit 属性 --property=Environment=HITT_D12_PREFWORD=1 且 bash -c 内联 HITT_D12_PREFWORD=1
+env_HITT_LLM_PROVIDER=openai_compat   # 来自 --property=EnvironmentFile
+params seed=7 n=16 rounds=24
+prompt_fn_sha256=70dd5072ef19bd9a38894e177bb0085992b391d21a227e4a7a95e1df229da7b5
+launch_cmd=systemd-run --unit=t271-d12bon-022455 --collect --property=MemoryMax=4G --property=EnvironmentFile=<repo>/code/.env.local --property=Environment=HITT_D12_PREFWORD=1 --working-directory=<worktree>/code /bin/bash -c "HITT_D12_PREFWORD=1 python3 -m orchestration run --life --seed 7 --agents 16 --rounds 24 ..."
+note=外层 shell 的 printenv 为 <unset>（与本臂无关）；本臂真实开关值来自上面的 unit 属性 + 内联 env。
