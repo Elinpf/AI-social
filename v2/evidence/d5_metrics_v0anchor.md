@@ -2,7 +2,7 @@
 
 - 输入日志: `v2/evidence/run_d2_before_n16_seed42/run.jsonl`
 - run.jsonl sha256: `sha256:c1f86bf61f62b3a0ce8e17e0c2312791cf0262381cd2120c2a63c9b6258963cf`
-- 脚本 sha256: `sha256:ac1a3886cc2d65588b0a030a168f93e2cfa25b82fd6dadd6ceb72e58a11751aa`
+- 脚本 sha256: `sha256:288d713f75291273508872e48852625fdac8cae3cd9779eb0cf6428d0b7ddc4f`
 - 口径版本: `d5-metrics/1.0` / thread_schema=`legacy`
 - 准入结论: **ADMITTED** / evidence_level=`evidence`
 

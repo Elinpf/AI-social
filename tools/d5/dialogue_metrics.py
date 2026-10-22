@@ -1123,6 +1123,9 @@ def main(argv=None) -> int:
             "personas": pinfo,
             "f_lexicons": {k: v for k, v in extra.items() if k.endswith("_sha")},
             "log_parse": parse,
+            "rounds_max": (max((r.get("round") or 0) for r in recs) + 1) if recs else None,
+            "seed": next((int((r.get("payload") or {}).get("seed")) for r in recs
+                          if r.get("type") == "WORLD_INIT"), None),
             "chain": chain,
         },
     }

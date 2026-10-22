@@ -207,7 +207,11 @@ def main(argv=None) -> int:
                 }
         rows.append(row)
 
+    scales = {n: (arms[n].get("inputs", {}).get("rounds_max"), arms[n].get("inputs", {}).get("seed")) for n in names}
+    same_scale = len({v[0] for v in scales.values()}) == 1
     res = {"schema_version": SCHEMA, "mode": ("single-arm-facts" if single else "compare"),
+           "scale_check": {"per_arm": scales, "same_rounds": same_scale,
+                           "note": "不同 rounds 属不同规模：比率差不可判定（分母差>30% 同样进不可比）"},
            "arms": {n: {"path": p} for n, p in (s.split(":", 1) for s in args.roles)},
            "rules": {"threshold": "B2 同分母上界（B1 与 2pp 已作废）",
                      "degenerate": "两臂恒 0/恒 1 ⇒ rule-of-three(3/n)"
@@ -224,7 +228,9 @@ def main(argv=None) -> int:
              "> **口径声明**：轮数一律用 `S-1C 轮数(turn_index 去重)`，`S-1A` 是「说话人交替段数」（不等于轮数）；"
              "L-12 判定用 **L-12b 称呼**，L-12a 提及为描述列。**旧版曾把 `L-12=49.8%` 写入本表，该值作废**（成因：GROUP 的 `to` 是 group_id，不可命中项仍留在分母）。\n",
              "- 臂：" + " / ".join(f"`{n}`" for n in names),
-             "- 阈值：B2 同分母上界；退化用 rule-of-three；无可用带只作描述\n"]
+             "- 阈值：B2 同分母上界；退化用 rule-of-three；无可用带只作描述",
+             ("- **规模检查**：各臂 rounds = " + ", ".join(f"{n}:{v[0]}" for n, v in scales.items())
+              + ("；**同规模 ✔**" if same_scale else "；**⚠️ 不同规模 ⇒ 本表所有 Δ 与判定仅作事实对照，不得据此宣称改善**")) + "\n"]
     for kind, title in (("struct", "结构层 + 生活气息（S/K/F）"), ("wording", "措辞层（L）")):
         subset = [r for r in rows if r["kind"] == kind]
         if not subset:
