@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import re
 import statistics as st
@@ -42,6 +43,8 @@ DEFAULT_EMOTION = os.path.join(HERE, "emotion_lexicon.txt")
 DEFAULT_REPAIR = os.path.join(HERE, "repair_lexicon.txt")
 DEFAULT_TIMEREF = os.path.join(HERE, "timeref_lexicon.txt")
 DEFAULT_TASK_TAGS = os.path.join(HERE, "task_tags.txt")
+DEFAULT_F8_LEXICON = os.path.join(HERE, "f8_lexicon.json")
+DEFAULT_PLACES = os.path.join(HERE, "..", "..", "code", "config", "places.json")
 EMPATHY_MARKERS = ("我懂", "我也", "别难过", "恭喜", "辛苦", "真惨", "太好了", "确实", "是啊", "可不是")
 
 PAREN_LEAD_RE = re.compile(r"^\s*(?:（[^）]{0,120}）|\([^)]{0,120}\))")
@@ -200,6 +203,7 @@ def extract_messages(recs: List[dict]) -> List[dict]:
             continue
         p = r.get("payload") or {}
         body = p.get("body") or p.get("text") or ""
+        ctx = p.get("ctx") if isinstance(p.get("ctx"), dict) else {}
         msgs.append({
             "seq": r.get("seq"),
             "round": r.get("round"),
@@ -217,6 +221,7 @@ def extract_messages(recs: List[dict]) -> List[dict]:
             "turn_index": p.get("turn_index"),
             "participants": p.get("participants"),
             "ctx_topic": (p.get("ctx") or {}).get("topic") if isinstance(p.get("ctx"), dict) else None,
+            "scene": ctx.get("scene") if isinstance(ctx.get("scene"), dict) else None,
             "day": p.get("day"),
             "slot": p.get("slot"),
             "place": p.get("place"),
@@ -252,6 +257,333 @@ def pointer_of(m: dict) -> Tuple[Optional[str], int]:
     if refs:
         return str(refs[0]), len(refs)
     return None, 0
+
+
+# ------------------------------------------------- F-8 处境锚定率（尺子）
+
+SCENE_TAIL = ("\n你眼下的光景：", "（这些只是你眼下的底子：顺口带一句就够，别生硬地报地名，也别在这上面多解释；说不着就不提。）")
+
+
+def wilson_ci(x: int, n: int, z: float) -> Optional[Dict[str, Any]]:
+    """标准 Wilson score interval（双侧、不做连续性修正）。n=0 ⇒ None（不填 0）。"""
+    if n <= 0:
+        return None
+    p = x / n
+    denom = 1.0 + z * z / n
+    center = (p + z * z / (2 * n)) / denom
+    half = (z / denom) * math.sqrt(p * (1 - p) / n + z * z / (4.0 * n * n))
+    lo = max(0.0, center - half)
+    hi = min(1.0, center + half)
+    return {"method": "wilson_score_no_cc", "z": z, "confidence": 0.95, "two_sided": True,
+            "x": x, "n": n, "p": r6(p), "lo": r6(lo), "hi": r6(hi)}
+
+
+def load_f8_inputs(lex_path: str, places_path: str) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    """读外部化词表（唯一真源）+ places.json；含一致性断言，漂移即报错。"""
+    lex = json.load(open(lex_path, encoding="utf-8"))
+    narrow = lex["time"]["narrow"]
+    # 自洽性：narrow 至少要有 slot_agnostic 或 by_slot 之一；两版都不得为空
+    if not narrow.get("slot_agnostic") and not narrow.get("by_slot"):
+        raise SystemExit("[FAIL] f8_lexicon.json: time.narrow 既无 slot_agnostic 也无 by_slot（词表为空 ⇒ 判定无意义）")
+    for key in ("slot_words_full", "wide_reference"):
+        if not (lex["time"].get(key) or {}):
+            raise SystemExit("[FAIL] f8_lexicon.json: time.%s 缺失（宽版/渲染镜像必须可复算）" % key)
+    places = {"path": places_path, "exists": os.path.exists(places_path),
+              "id2name": {}, "names": [], "short_map": {}, "sha256": None}
+    if places["exists"]:
+        raw = json.load(open(places_path, encoding="utf-8"))
+        items = raw.get("places", raw) if isinstance(raw, dict) else raw
+        for it in items:
+            pid, nm = it.get("place_id") or it.get("id"), it.get("name_cn")
+            if pid and nm:
+                places["id2name"][str(pid)] = str(nm)
+        places["names"] = list(dict.fromkeys(places["id2name"].values()))
+        places["sha256"] = sha256_file(places_path)
+    short_map = dict(((lex.get("place") or {}).get("short_names") or {}).get("map") or {})
+    places["short_map"] = {k: list(v) for k, v in short_map.items()}
+    f8 = {"lexicon": {"path": os.path.abspath(lex_path), "sha256": sha256_file(lex_path),
+                      "version": lex.get("version"), "frozen_at": lex.get("frozen_at"),
+                      "sources": lex.get("sources", {})},
+          "places": places, "raw": lex}
+    return f8, lex
+
+
+def _recover_injected_line(scene: Dict[str, Any], lex: Dict[str, Any],
+                           id2name: Dict[str, str]) -> Optional[Dict[str, Any]]:
+    """反解 ctx.scene.line_sha256 ⇒ 模型实际看到的措辞（slot 措辞 / 活动措辞）。
+
+    只在开关 ON 时 ctx.scene 才有 line_sha256；反解不出就返回 None（不猜）。
+    """
+    want = scene.get("line_sha256")
+    if not want:
+        return None
+    slot = str(scene.get("slot") or "")
+    act = str(scene.get("activity") or "")
+    name = id2name.get(str(scene.get("place") or ""), "")
+    slot_words = lex["time"]["slot_words_full"]["by_slot"].get(slot, [])
+    act_words = (lex["activity"].get("render_by_type") or {}).get(act, [])
+    for sw in (slot_words or [""]):
+        for aw in (act_words or [""]):
+            bits = [x for x in (sw, ("你在" + name) if name else "", aw) if x]
+            if not bits:
+                continue
+            line = SCENE_TAIL[0] + "，".join(bits) + "。" + SCENE_TAIL[1]
+            if sha256_text(line.strip()) == want or sha256_text(line.strip()) == "sha256:" + want:
+                return {"slot_word": sw, "activity_word": aw, "place_name": name,
+                        "line": line.strip()}
+    return None
+
+
+def compute_f8(msgs: List[dict], f8: Dict[str, Any]) -> Dict[str, Any]:
+    """F-8 处境锚定率（per-message）+ 三分解，分子/分母/率/CI 逐项分列。
+
+    判定口径（prereg §2 + Amendment 1 + leader 02:22 覆盖矩阵方法论）：
+      * F-8t 时段：判定词表 = time.narrow，scope = 本人当回合 slot（泛词只在本档生效，避免全局膨胀）
+      * F-8p 地点：只认 places.json::name_cn（含可接受简称），分子要求「本人 place」；内部 id 命中走守卫
+      * F-8a 活动：渲染措辞 ∪ 语义等价项，且只在 ctx.scene.activity 存在时可算；缺失 ⇒ not_applicable（不填 0）
+    """
+    raw = f8["raw"]
+    z = float(raw["thresholds"]["wilson_z_95_two_sided"])
+    tn = raw["time"]["narrow"]
+    agn = list(tn.get("slot_agnostic") or [])
+    by_slot = {k: list(v) for k, v in (tn.get("by_slot") or {}).items()}
+    narrow_flat = list(dict.fromkeys(agn + [t for v in by_slot.values() for t in v]))
+    broad_slot = {k: list(v) for k, v in ((raw["time"].get("slot_scoped_broad") or {}).get("by_slot") or {}).items()}
+    sf = raw["time"].get("slot_words_full") or {}
+    echo = list(sf.get("echo_tokens") or [])
+    sens_add = list((raw["time"].get("narrow_sensitivity_add") or {}).get("tokens") or [])
+    wr = raw["time"].get("wide_reference") or {}
+    wide = list(wr.get("tokens") or [])
+    ck = raw["time"].get("ckpt_reference") or {}
+    ckpt_narrow = list(ck.get("narrow_tokens") or [])
+    ckpt_wide = list(dict.fromkeys(ckpt_narrow + list(ck.get("wide_extra_tokens") or [])))
+    act = raw.get("activity") or {}
+    act_render = {k: list(v) for k, v in (act.get("render_by_type") or {}).items()}
+    act_sem = {k: list(v) for k, v in ((act.get("semantic_equivalents") or {}).get("by_type") or {}).items()}
+    id2name = f8["places"]["id2name"]
+    place_names = f8["places"]["names"]
+    short_map = f8["places"].get("short_map") or {}
+    aliases = list(((raw.get("place") or {}).get("alias_provisional") or {}).get("tokens") or [])
+    th = raw["thresholds"]
+
+    def anyhit(body: str, toks: List[str]) -> bool:
+        return any(t and t in body for t in toks)
+
+    keys = ("F-8t_own_slot", "F-8t_broad_scoped", "F-8t_open_any", "F-8t_sens_add", "F-8t_wide",
+            "F-8t_ckpt_narrow", "F-8t_ckpt_wide", "F-8t_echo", "F-8p_own_place", "F-8p_short_only",
+            "F-8p_public_cn", "F-8p_open_any_cn", "F-8a", "F-8a_render_only",
+            "F-8a_exact", "F-8t_exact", "place_id_in_body", "place_alias_hit", "F-8_union")
+    hits = {k: 0 for k in keys}
+    den = {"F-8t_own_slot": 0, "F-8p_own_place": 0, "F-8p_public_cn": 0, "F-8a": 0}
+    n_slot_missing = n_scene_present = n_scene_activity = n_line_recovered = 0
+    per_slot_hits = Counter()
+    per_slot_den = Counter()
+    act_den_by_type = Counter()
+    samples: List[Dict[str, Any]] = []
+
+    for m in msgs:
+        body = m.get("body") or ""
+        slot = str(m.get("slot") or "")
+        scene = m.get("scene") or {}
+        if scene:
+            n_scene_present += 1
+        # ---- 时段（F-8t）：一律按本人当回合 slot 限定
+        if slot:
+            den["F-8t_own_slot"] += 1
+            per_slot_den[slot] += 1
+            t_judge = anyhit(body, agn + (by_slot.get(slot) or []))
+            t_broad = anyhit(body, agn + (broad_slot.get(slot) or []))
+            if t_judge:
+                per_slot_hits[slot] += 1
+        else:
+            n_slot_missing += 1
+            t_judge = t_broad = False
+        t_open = anyhit(body, narrow_flat)
+        t_sens = anyhit(body, narrow_flat + sens_add)
+        t_echo = anyhit(body, echo)
+        # ---- 地点（F-8p）
+        pl = m.get("place")
+        own_name = id2name.get(str(pl)) if pl else None
+        own_toks = ([own_name] if own_name else []) + list(short_map.get(own_name or "", []))
+        p_hit = anyhit(body, own_toks)
+        p_canonical = bool(own_name) and own_name in body
+        if own_name:
+            den["F-8p_own_place"] += 1
+        if m.get("channel") == "public":
+            den["F-8p_public_cn"] += 1
+            if anyhit(body, place_names):
+                hits["F-8p_public_cn"] += 1
+        id_leak = any(re.search(r"(?<![A-Za-z_])" + re.escape(pid) + r"(?![A-Za-z_])", body)
+                      for pid in id2name) if id2name else False
+        alias_hit = anyhit(body, aliases)
+        # ---- 活动（F-8a）
+        act_type = str(scene.get("activity") or "") if scene else ""
+        a_hit = a_render = False
+        if act_type and (act_type in act_render or act_type in act_sem):
+            den["F-8a"] += 1
+            n_scene_activity += 1
+            act_den_by_type[act_type] += 1
+            a_render = anyhit(body, act_render.get(act_type) or [])
+            a_hit = a_render or anyhit(body, act_sem.get(act_type) or [])
+        # ---- 精确通道（反解 line_sha256）
+        rec = _recover_injected_line(scene, raw, id2name) if scene else None
+        t_exact = a_exact = False
+        if rec:
+            n_line_recovered += 1
+            t_exact = bool(rec["slot_word"]) and rec["slot_word"] in body
+            a_exact = bool(rec["activity_word"]) and rec["activity_word"] in body
+        # ---- 记账
+        hits["F-8t_own_slot"] += int(t_judge)
+        hits["F-8t_broad_scoped"] += int(t_broad)
+        hits["F-8t_open_any"] += int(t_open)
+        hits["F-8t_sens_add"] += int(t_sens)
+        hits["F-8t_echo"] += int(t_echo)
+        hits["F-8t_wide"] += int(anyhit(body, wide))
+        hits["F-8t_ckpt_narrow"] += int(anyhit(body, ckpt_narrow))
+        hits["F-8t_ckpt_wide"] += int(anyhit(body, ckpt_wide))
+        hits["F-8p_own_place"] += int(p_hit)
+        hits["F-8p_short_only"] += int(p_hit and not p_canonical)
+        hits["F-8p_open_any_cn"] += int(anyhit(body, place_names))
+        hits["F-8a"] += int(a_hit)
+        hits["F-8a_render_only"] += int(a_render)
+        hits["F-8a_exact"] += int(a_exact)
+        hits["F-8t_exact"] += int(t_exact)
+        hits["place_id_in_body"] += int(id_leak)
+        hits["place_alias_hit"] += int(alias_hit)
+        if t_judge or p_hit or a_hit:
+            hits["F-8_union"] += 1
+        if (t_judge or p_hit or a_hit) and len(samples) < 8:
+            samples.append({"seq": m.get("seq"), "round": m.get("round"),
+                            "type": m.get("event_type"), "slot": slot or None, "place": pl,
+                            "time_hit": t_judge, "place_hit": p_hit, "activity_hit": a_hit,
+                            "body": body[:60]})
+
+    def blk(num, d, rule: str, not_applicable_if_zero: str = None,
+            reason_code: str = None, reason: str = None, **kw: Any) -> Dict[str, Any]:
+        is_na = (not_applicable_if_zero is not None) and d == 0
+        out = {"numerator": (None if is_na else num), "denominator": (None if is_na else d),
+               "num": (None if is_na else num), "den": (None if is_na else d),
+               "ratio": None if is_na else rate(num, d),
+               "rate": None if is_na else rate(num, d),
+               "rate_pct": (None if is_na or d == 0 else r6(100.0 * num / d)),
+               "wilson95": (None if is_na else wilson_ci(num, d, z)),
+               "denominator_rule": rule}
+        if is_na:
+            out.update({"status": "not_applicable", "reason": reason_code or not_applicable_if_zero,
+                        "reason_detail": reason or "分母为 0 ⇒ 该指标无从计算（不填 0、不出率）"})
+        out.update(kw)
+        return out
+
+    n_msg = len(msgs)
+    out: Dict[str, Any] = {
+        "unit": "per-message",
+        "arm": None,
+        "F-8": blk(hits["F-8_union"], n_msg,
+                   "num=命中本人当回合处境（时段/自身地点/活动 任一）的 MSG_* 条数；den=全部 MSG_*；"
+                   "各分项按自己的分母计入（F-8p 用有 place 的 167、F-8a 用有 activity 的 n）"),
+        "F-8t_time": blk(hits["F-8t_own_slot"], den["F-8t_own_slot"],
+                         "判定词表=time.narrow（Amendment 1：不含 刚/早上/下午/晚上/昨晚/今天/今儿）；"
+                         "scope=本人当回合 slot；den=有 slot 的 MSG_*",
+                         lexicon="narrow", scope="own_slot", n_slot_missing=n_slot_missing,
+                         hits_by_slot=dict(sorted(per_slot_hits.items())),
+                         den_by_slot=dict(sorted(per_slot_den.items()))),
+        "F-8p_place": blk(hits["F-8p_own_place"], den["F-8p_own_place"],
+                          "只认 places.json::name_cn（含 place.short_names 可接受简称）；"
+                          "num=正文含「本人 place」名称的条数；den=有 payload.place 的 MSG_*"),
+        "F-8p_public": blk(hits["F-8p_public_cn"], den["F-8p_public_cn"],
+                           "仅覆盖说明、不作判定：MSG_PUBLIC 无 place 字段，den=MSG_PUBLIC 条数，"
+                           "num=正文命中任一 name_cn 条数"),
+        "F-8a_activity": blk(hits["F-8a"], den["F-8a"],
+                             "num=正文命中「本人 ctx.scene.activity」的渲染措辞或语义等价项；"
+                             "den=含 ctx.scene.activity 的 MSG_*",
+                             not_applicable_if_zero="no_ctx_scene",
+                             reason=("本臂 MSG payload 无 ctx.scene.activity（%d/%d 条缺该键）⇒ 分母不适用；"
+                                     "不等于『模型没做活动锚定』" % (n_msg - n_scene_activity, n_msg)),
+                             hits_by_activity=dict(sorted(act_den_by_type.items())),
+                             activity_lexicon="render ∪ semantic_equivalents"),
+        "guard": {
+            "place_id_in_body": blk(hits["place_id_in_body"], n_msg,
+                                    "守卫（对应 L-8c）：正文出现 places.json::place_id 内部 id 的条数；>0 ⇒ 硬失败"),
+            "place_alias_hit": blk(hits["place_alias_hit"], n_msg,
+                                   "归因抽样用（provisional 别名），不参与判定"),
+        },
+        "diagnostics": {
+            "F-8a_render_only": blk(hits["F-8a_render_only"], den["F-8a"],
+                                    "严格口径：只认渲染措辞原文（不认语义等价项）；den 同 F-8a",
+                                    not_applicable_if_zero="no_ctx_scene",
+                                    reason="本臂无 ctx.scene.activity ⇒ 无从计算"),
+            "F-8p_short_only": blk(hits["F-8p_short_only"], den["F-8p_own_place"],
+                                   "其中只靠简称命中（如 广场/面包铺）的条数，用于说明简称扩表的贡献"),
+            "F-8t_broad_scoped": blk(hits["F-8t_broad_scoped"], den["F-8t_own_slot"],
+                                     "Amendment 2 候选（未批准，仅敏感性）：把渲染词 下午/上午/早上/晚上 加进对应档，仍按本回合 slot 限定",
+                                     lexicon="slot_scoped_broad", scope="own_slot"),
+            "F-8t_open_any": blk(hits["F-8t_open_any"], n_msg,
+                                 "敏感性：narrow 词表不按 slot 限定；den=全部 MSG_*"),
+            "F-8t_render_echo": blk(hits["F-8t_echo"], n_msg,
+                                    "回声通道（防系统性判漏）：命中渲染词表 SLOT_WORDS 的可指认词元任一（含 下午/上午/午后）；不参与判定"),
+            "F-8t_ckpt_narrow": blk(hits["F-8t_ckpt_narrow"], n_msg,
+                                    "复现跑前 checkpoint 窄表读数（time.ckpt_reference.narrow_tokens，不按 slot 限定）；"
+                                    "仅核对工具一致性，不参与判定"),
+            "F-8t_narrow_plus_jinr": blk(hits["F-8t_sens_add"], n_msg,
+                                         "敏感性：当前 narrow 词表 ∪ {今儿}，不按 slot 限定；不参与判定"),
+            "F-8t_wide_reference": blk(hits["F-8t_wide"], n_msg,
+                                       "仅参考、不参与判定（Amendment 1）"),
+            "F-8t_ckpt_wide": blk(hits["F-8t_ckpt_wide"], n_msg,
+                                  "复现跑前 checkpoint 宽表读数（ckpt_reference.narrow_tokens ∪ {刚}，不按 slot 限定）；"
+                                  "仅核对工具一致性，不参与判定"),
+            "F-8p_open_any_cn": blk(hits["F-8p_open_any_cn"], n_msg,
+                                    "敏感性：正文命中任一 name_cn（不看本人位置）；den=全部 MSG_*"),
+            "F-8t_exact_injected_word": blk(hits["F-8t_exact"], n_line_recovered,
+                                            "仅当 ctx.scene.line_sha256 可反解：num=正文含「模型实际看到的那一 slot 措辞」",
+                                            not_applicable_if_zero="no_line_sha256",
+                                            reason="本臂无 ctx.scene.line_sha256（OFF 臂/老批预期）⇒ 无从反解"),
+            "F-8a_exact_injected_word": blk(hits["F-8a_exact"], n_line_recovered,
+                                            "同上口径的活动措辞",
+                                            not_applicable_if_zero="no_line_sha256",
+                                            reason="本臂无 ctx.scene.line_sha256 ⇒ 无从反解"),
+        },
+        "coverage": {"n_msg": n_msg, "n_scene_present": n_scene_present,
+                     "n_scene_activity": n_scene_activity, "n_line_sha_recovered": n_line_recovered,
+                     "n_slot_missing": n_slot_missing,
+                     "note": "ctx.scene 只在开关 ON 时出现 ⇒ OFF 臂/老批 n_scene_present=0 属预期，非实现缺陷"},
+        "denominator_ledger": {
+            "F-8": n_msg, "F-8t_time": den["F-8t_own_slot"], "F-8p_place": den["F-8p_own_place"],
+            "F-8p_public": den["F-8p_public_cn"], "F-8a_activity": den["F-8a"],
+            "note": "四个分项分母互不相同，逐个标明；不得共用总分母",
+        },
+        "unavailable_ledger": [],
+        "lexicon": f8["lexicon"],
+        "places": {"path": f8["places"]["path"], "sha256": f8["places"]["sha256"],
+                   "n_places": len(id2name), "names": place_names,
+                   "short_names": short_map},
+        "known_gap": (raw["time"].get("narrow") or {}).get("known_gap"),
+        "thresholds": th,
+        "samples": samples,
+    }
+    if den["F-8a"] == 0:
+        out["unavailable_ledger"].append({"item": "F-8a_activity", "status": "not_applicable",
+                                          "reason": "no_ctx_scene",
+                                          "detail": out["F-8a_activity"].get("reason_detail"),
+                                          "den": None, "num": None})
+    if den["F-8t_own_slot"] < n_msg:
+        out["unavailable_ledger"].append({"item": "F-8t_time",
+                                          "reason": "%d 条 MSG 无 slot 字段，已从该分项分母剔除（未填 0）"
+                                                    % n_slot_missing,
+                                          "den": den["F-8t_own_slot"], "num": hits["F-8t_own_slot"]})
+    if den["F-8p_own_place"] < n_msg:
+        out["unavailable_ledger"].append({"item": "F-8p_place",
+                                          "reason": "%d 条 MSG（MSG_PUBLIC）无 payload.place，已从分母剔除，"
+                                                    "另在 F-8p_public 单列覆盖（不作判定）"
+                                                    % (n_msg - den["F-8p_own_place"]),
+                                          "den": den["F-8p_own_place"], "num": hits["F-8p_own_place"]})
+    out["degenerate_d1"] = {
+        "rule": ("OFF 臂 F-8 分子 ≤ %s ⇒ C1/两比例检验不适用，只报 ON 臂 x/n + 标准 Wilson 95%% CI"
+                 % th.get("degenerate_off_num_le")),
+        "off_num_le": th.get("degenerate_off_num_le"),
+        "d2_min_abs_effect_X": th.get("D2_min_abs_effect_X"),
+        "note": "单臂输出只给数值；退化判定需两臂 json 对照",
+    }
+    return out
 
 
 def compute(msgs: List[dict], lexicon: List[str], templates: List[re.Pattern],
@@ -856,6 +1188,12 @@ def compute(msgs: List[dict], lexicon: List[str], templates: List[re.Pattern],
         "timeref_sha256": ex.get("timeref_sha"), "task_tags_sha256": ex.get("task_tags_sha"),
     }
 
+    # ---------------- F-8 处境锚定率（三分解并列；词表来自外部文件）
+    if ex.get("f8"):
+        f8blk = compute_f8(msgs, ex["f8"])
+        f8blk["arm"] = ex.get("arm")
+        out["F-8_scene_anchor"] = f8blk
+
     return out
 
 
@@ -1092,6 +1430,51 @@ def to_markdown(res: Dict[str, Any], log_path: str) -> str:
             ("F-6 跨天记忆引用率", F["F-6_crossday_memory"]["timeref_rate"]),
             ("F-7a 越界提及率", F.get("F-7a_offscreen_mention", {}).get("offscreen_mention_rate")),
         ])
+    f8 = res.get("F-8_scene_anchor")
+    if f8:
+        def fx(b: Dict[str, Any]) -> str:
+            if not b:
+                return "-"
+            if b.get("status") == "not_applicable":
+                return "not_applicable（%s）" % (b.get("reason") or "-")
+            ci = b.get("wilson95") or {}
+            return "%d/%d = %s%%  Wilson95[%s%%, %s%%]" % (
+                b["num"], b["den"],
+                ("%.2f" % b["rate_pct"]) if b.get("rate_pct") is not None else "-",
+                ("%.2f" % (100 * ci["lo"])) if ci else "-",
+                ("%.2f" % (100 * ci["hi"])) if ci else "-")
+        A("### F-8 处境锚定率（per-message，三分项并列；词表外部冻结 sha256=%s）\n"
+          % f8["lexicon"]["sha256"])
+        A("| 项 | 分子/分母/率 | 分母口径 |")
+        A("|---|---|---|")
+        for name, b in (("F-8（总：任一项命中）", f8["F-8"]),
+                        ("F-8t 时段词（narrow，本回合 slot）", f8["F-8t_time"]),
+                        ("F-8p 地点中文名（本人 place）", f8["F-8p_place"]),
+                        ("F-8a 活动人话名", f8["F-8a_activity"]),
+                        ("F-8p_public（仅覆盖说明，不判定）", f8["F-8p_public"]),
+                        ("守卫：正文出现内部 place_id", f8["guard"]["place_id_in_body"])):
+            A("| %s | %s | %s |" % (name, fx(b), b.get("denominator_rule", "")))
+        A("")
+        A("**仅参考、不参与判定 / 敏感性通道**\n")
+        A("| 项 | 分子/分母/率 |")
+        A("|---|---|")
+        D = f8["diagnostics"]
+        for name, b in (("F-8t 宽版词表", D["F-8t_wide_reference"]),
+                        ("F-8t 复现 checkpoint 窄表(7/191)", D["F-8t_ckpt_narrow"]),
+                        ("F-8t 复现 checkpoint 宽表(74/191)", D["F-8t_ckpt_wide"]),
+                        ("F-8t narrow∪{今儿}（不按 slot 限定）", D["F-8t_narrow_plus_jinr"]),
+                        ("F-8t slot-scoped broad（Amendment 2 候选）", D["F-8t_broad_scoped"]),
+                        ("F-8t 渲染词表回声通道", D["F-8t_render_echo"]),
+                        ("F-8t 不限本回合 slot", D["F-8t_open_any"]),
+                        ("F-8p 任一中文地名", D["F-8p_open_any_cn"]),
+                        ("F-8p 其中只靠简称命中", D["F-8p_short_only"]),
+                        ("F-8a 严格口径（只认渲染原文）", D["F-8a_render_only"]),
+                        ("F-8t 命中模型实际看到的措辞", D["F-8t_exact_injected_word"]),
+                        ("F-8a 命中模型实际看到的措辞", D["F-8a_exact_injected_word"])):
+            A("| %s | %s |" % (name, fx(b)))
+        A("")
+        A("**分母不适用清单**：%s\n" % (json.dumps(f8["unavailable_ledger"], ensure_ascii=False)
+                                        if f8["unavailable_ledger"] else "无"))
     e = res["E_efficiency"]
     tbl("E 效率层", [
         ("E-1_msg_per_agent_round", e["E-1_msg_per_agent_round"]),
@@ -1122,6 +1505,10 @@ def main(argv=None) -> int:
     ap.add_argument("--repair", default=DEFAULT_REPAIR)
     ap.add_argument("--timeref", default=DEFAULT_TIMEREF)
     ap.add_argument("--task-tags", default=DEFAULT_TASK_TAGS)
+    ap.add_argument("--f8-lexicon", default=DEFAULT_F8_LEXICON,
+                    help="F-8 词表（外部化唯一真源；缺则该块不输出）")
+    ap.add_argument("--places", default=DEFAULT_PLACES, help="places.json（F-8p 词源）")
+    ap.add_argument("--arm", default=None, help="臂标签（OFF/ON），写进 F-8 块便于两臂对照")
     ap.add_argument("--prefix-rounds", type=int, default=None,
                     help="只统计 round < N 的前缀子集（用于同窗口对照；此时准入按子集标注）")
     args = ap.parse_args(argv)
@@ -1172,6 +1559,11 @@ def main(argv=None) -> int:
         "timeref_sha": sha256_file(args.timeref) if os.path.exists(args.timeref) else None,
         "task_tags_sha": sha256_file(args.task_tags) if os.path.exists(args.task_tags) else None,
     }
+    f8_inputs = None
+    if args.f8_lexicon and os.path.exists(args.f8_lexicon):
+        f8_inputs, _ = load_f8_inputs(args.f8_lexicon, args.places)
+        extra["f8"] = f8_inputs
+        extra["arm"] = args.arm
     meta = json.load(open(args.meta, encoding="utf-8")) if args.meta and os.path.exists(args.meta) else None
 
     chain = check_chain(recs)
@@ -1192,6 +1584,10 @@ def main(argv=None) -> int:
                           "n": len(templates)},
             "personas": pinfo,
             "f_lexicons": {k: v for k, v in extra.items() if k.endswith("_sha")},
+            "f8_lexicon": ({"path": f8_inputs["lexicon"]["path"], "sha256": f8_inputs["lexicon"]["sha256"],
+                            "version": f8_inputs["lexicon"]["version"]} if f8_inputs else None),
+            "f8_places": ({"path": f8_inputs["places"]["path"], "sha256": f8_inputs["places"]["sha256"],
+                           "n": len(f8_inputs["places"]["id2name"])} if f8_inputs else None),
             "log_parse": parse,
             "subset": subset_note,
             "rounds_max": (max((r.get("round") or 0) for r in recs) + 1) if recs else None,
@@ -1226,6 +1622,14 @@ def main(argv=None) -> int:
         "admission": res["admission"]["verdict"],
         "out_json": args.out_json, "out_md": args.out_md,
     }
+    if res.get("F-8_scene_anchor"):
+        g = res["F-8_scene_anchor"]
+        summary["F-8"] = {"arm": g.get("arm"), "total": "%d/%d" % (g["F-8"]["num"], g["F-8"]["den"]),
+                          "F-8t": "%d/%d" % (g["F-8t_time"]["num"], g["F-8t_time"]["den"]),
+                          "F-8p": "%d/%d" % (g["F-8p_place"]["num"], g["F-8p_place"]["den"]),
+                          "F-8a": ("not_applicable" if g["F-8a_activity"].get("status") == "not_applicable"
+                                   else "%d/%d" % (g["F-8a_activity"]["num"], g["F-8a_activity"]["den"])),
+                          "lexicon_sha256": g["lexicon"]["sha256"]}
     print(json.dumps(summary, ensure_ascii=False, indent=1))
     return 0
 

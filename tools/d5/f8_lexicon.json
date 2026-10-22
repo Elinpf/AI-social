@@ -1,0 +1,402 @@
+{
+  "version": "f8-lexicon-v2",
+  "frozen_at": "2026-10-23T02:40:00+0800",
+  "frozen_by": "metrics-dev",
+  "_readme": [
+    "F-8「处境锚定率」判定输入（唯一真源）。代码 tools/d5/dialogue_metrics.py 只读本文件，仓内不内联任何语义词表。",
+    "权威来源：prereg-r21-scene-anchor.md §2（词表三源）+ §9 Amendment 1（两版词表、判定只用窄版）+ leader 02:22 覆盖矩阵方法论修正（『每个渲染词至少有一个语义等价表达在判定表里』，不是逐字比对）+ batch-runner 02:23 输出形状要求。",
+    "渲染值域（判定对象）来自 life-dev 冻结的 code/life/scene_anchor.py + rounds/.../scene-render-lexicon.json（lexicon_sha256=3f12e5b8…，本轮不变）。",
+    "冻结后不得因结果调整；任何改动须走 Amend 并重报 sha256。"
+  ],
+  "sources": {
+    "render_lexicon_json": "rounds/20261023-0202/scene-render-lexicon.json",
+    "render_lexicon_md": "rounds/20261023-0202/scene-render-lexicon.md",
+    "code": "code/life/scene_anchor.py::SLOT_WORDS / ACTIVITY_WORDS",
+    "place_names": "code/config/places.json::places[].name_cn",
+    "scene_anchor_LEXICON_VERSION": "scene-anchor-v1",
+    "scene_anchor_lexicon_sha256": "3f12e5b8d2e3088e48a72333b65da13b8219bed5a068d6d3d4a4a963a7866fbf",
+    "scene_anchor_lexicon_sha256_scope": "只覆盖 SLOT_WORDS + ACTIVITY_WORDS + 版本号，不含 places.json；地点词由 places.json 的 sha256 单独冻结"
+  },
+  "time": {
+    "narrow": {
+      "role": "F-8t 判定唯一口径（Amendment 1 合规：不含 刚/早上/下午/晚上/昨晚/今天/今儿 等高自发词）",
+      "rule": "scope = 本人当回合 slot（prereg §2『本人当回合处境词表』）；渲染的每个时段措辞在对应档至少有一个语义等价项可命中",
+      "slot_agnostic": [
+        "这会儿"
+      ],
+      "by_slot": {
+        "morning": [
+          "一大早",
+          "一早",
+          "清早",
+          "早晨",
+          "天刚亮",
+          "天刚蒙蒙亮",
+          "天蒙蒙亮"
+        ],
+        "afternoon": [
+          "晌午",
+          "晌午刚过",
+          "晌午头上",
+          "正午",
+          "午后"
+        ],
+        "evening": [
+          "天快黑",
+          "天说黑就黑",
+          "天黑",
+          "擦黑",
+          "傍晚",
+          "日头落",
+          "太阳落山",
+          "日头偏西"
+        ],
+        "night": [
+          "夜里",
+          "夜深",
+          "入夜",
+          "半夜",
+          "深夜",
+          "灯都点上了",
+          "点灯时分"
+        ]
+      },
+      "known_gap": {
+        "tokens": [
+          "下午",
+          "上午",
+          "早上"
+        ],
+        "why": "这三个是渲染词（afternoon/morning 档候选措辞之一），但属 Amendment 1 明文排除的高自发词，未进主判定口径",
+        "disposition": "不静默丢：已实装 slot_scoped_broad 通道（按本回合 slot 限定；实测该批增量为 0），并向 report-release 提 Amendment 2 建议升为判定项；未批准前在报告局限显式登记"
+      },
+      "excluded_by_quality_check": {
+        "tokens": [
+          "半晌"
+        ],
+        "why": "冻结前逐词核验（非看结果调词）：『半晌』在正文里是**时长**义（『铁锤抡了半晌』『练了半晌』），不是时段义，计入会把时长表述误判成时段锚定 ⇒ 移出判定词表",
+        "checked_on": "v2/evidence/run_d12a_q_a_{off,on}_seed7_n16r24，narrow 全词逐词命中核验，其余词命中均为时段义"
+      }
+    },
+    "slot_scoped_broad": {
+      "role": "Amendment 2 候选（未批准前只作敏感性读数）：把渲染词 下午/上午/早上/晚上 加进对应档。因为按本回合 slot 限定匹配，不会出现宽表 38.7% 那种全局膨胀",
+      "by_slot": {
+        "morning": [
+          "一大早",
+          "一早",
+          "清早",
+          "早晨",
+          "天刚亮",
+          "天刚蒙蒙亮",
+          "天蒙蒙亮",
+          "上午",
+          "早上"
+        ],
+        "afternoon": [
+          "晌午",
+          "晌午刚过",
+          "晌午头上",
+          "正午",
+          "午后",
+          "下午"
+        ],
+        "evening": [
+          "天快黑",
+          "天说黑就黑",
+          "天黑",
+          "擦黑",
+          "傍晚",
+          "日头落",
+          "太阳落山",
+          "日头偏西",
+          "晚上"
+        ],
+        "night": [
+          "夜里",
+          "夜深",
+          "入夜",
+          "半夜",
+          "深夜",
+          "灯都点上了",
+          "点灯时分",
+          "晚上"
+        ]
+      }
+    },
+    "slot_words_full": {
+      "role": "镜像 scene_anchor.SLOT_WORDS（渲染措辞原文，仅用于反解 ctx.scene.line_sha256，定位『模型实际看到的那一句』）",
+      "by_slot": {
+        "morning": [
+          "一大早",
+          "这会儿天刚亮",
+          "上午这会儿"
+        ],
+        "afternoon": [
+          "午后这会儿",
+          "下午",
+          "晌午刚过"
+        ],
+        "evening": [
+          "这会儿天快黑了",
+          "傍晚",
+          "擦黑这会儿"
+        ],
+        "night": [
+          "夜里",
+          "这会儿夜深了",
+          "灯都点上了"
+        ]
+      },
+      "echo_tokens": [
+        "一大早",
+        "天刚亮",
+        "这会儿",
+        "上午",
+        "午后",
+        "下午",
+        "晌午",
+        "天快黑",
+        "傍晚",
+        "擦黑",
+        "夜里",
+        "夜深",
+        "灯都点上了"
+      ],
+      "echo_tokens_role": "渲染词表的可指认最小词元全集（覆盖 12 条渲染措辞的每一处可被回声的字面），用于 F-8t_render_echo 通道，保证 ON 臂不被系统性判漏；不参与 narrow 判定"
+    },
+    "narrow_sensitivity_add": {
+      "role": "仅用于复现跑前 checkpoint 的 7/191=3.7% 读数；不参与判定（今儿 属日历-当日词，与 今天 同类，Amendment 1 排除）",
+      "tokens": [
+        "今儿"
+      ]
+    },
+    "wide_reference": {
+      "role": "仅参考、不参与判定（Amendment 1）",
+      "extra_high_spontaneous": [
+        "刚",
+        "早上",
+        "下午",
+        "晚上",
+        "昨晚"
+      ],
+      "tokens": [
+        "这会儿",
+        "一大早",
+        "一早",
+        "清早",
+        "早晨",
+        "天刚亮",
+        "天刚蒙蒙亮",
+        "天蒙蒙亮",
+        "晌午",
+        "晌午刚过",
+        "晌午头上",
+        "正午",
+        "午后",
+        "天快黑",
+        "天说黑就黑",
+        "天黑",
+        "擦黑",
+        "傍晚",
+        "日头落",
+        "太阳落山",
+        "日头偏西",
+        "夜里",
+        "夜深",
+        "入夜",
+        "半夜",
+        "深夜",
+        "灯都点上了",
+        "点灯时分",
+        "今儿",
+        "刚",
+        "早上",
+        "下午",
+        "晚上",
+        "昨晚"
+      ],
+      "tokens_note": "= narrow(slot_agnostic ∪ by_slot) ∪ narrow_sensitivity_add ∪ extra_high_spontaneous；只加时段类高自发词（今天/明天 属日历-当日词，归 F-6 timeref 域，不进本表）",
+      "ckpt_reproduction": {
+        "role": "仅用于复现跑前 checkpoint 的『宽表 74/191=38.7%』读数；不参与判定",
+        "extra_tokens": [
+          "刚"
+        ],
+        "tokens_note": "= narrow ∪ narrow_sensitivity_add ∪ {刚}",
+        "expected_on_run_d12a_q_a_off_seed7_n16r24": "74/191 = 38.70%"
+      }
+    },
+    "ckpt_reference": {
+      "role": "仅用于复现跑前 checkpoint 的两条读数（窄 7/191、宽 74/191，均不按 slot 限定）；不参与判定",
+      "narrow_tokens": [
+        "这会儿",
+        "天快黑",
+        "晌午",
+        "夜里",
+        "傍晚",
+        "今儿",
+        "天黑",
+        "擦黑"
+      ],
+      "wide_extra_tokens": [
+        "刚"
+      ],
+      "origin": "batch-runner 02:15 预检 + leader 转述的 checkpoint 口径（窄表含 今儿；宽表 = 窄表 + 刚）",
+      "expected_narrow": "7/191 = 3.66%",
+      "expected_wide": "74/191 = 38.74%"
+    }
+  },
+  "activity": {
+    "role": "F-8a 判定口径：正文命中『本人当回合进行中活动』的措辞（渲染原文 ∪ 语义等价项）。activity 内部 id 不进正文判定",
+    "render_by_type": {
+      "work": [
+        "正忙着手上的活",
+        "还在赶活",
+        "手头的事正到劲儿上"
+      ],
+      "learn": [
+        "在看书琢磨",
+        "正学着东西",
+        "手上摊着书"
+      ],
+      "socialize": [
+        "正跟人搭话",
+        "在外头和人唠着",
+        "跟邻居凑在一处"
+      ],
+      "leisure": [
+        "正闲逛",
+        "在松快松快",
+        "出来透口气"
+      ],
+      "self_care": [
+        "正拾掇自己",
+        "刚收拾利索",
+        "在照看自己"
+      ],
+      "civic": [
+        "正张罗镇上的事",
+        "在忙公事",
+        "替大伙跑腿"
+      ],
+      "trade": [
+        "正张罗买卖",
+        "守着摊子",
+        "在盘算价钱"
+      ],
+      "rest": [
+        "正歇着",
+        "刚坐下歇口气",
+        "在缓一缓"
+      ]
+    },
+    "semantic_equivalents": {
+      "role": "按 leader 02:22 方法论：模型不照抄渲染措辞，故每类给语义等价项（只收该类活动的核心动作词，避免过泛虚高）",
+      "by_type": {
+        "work": [
+          "干活",
+          "干着活",
+          "做活",
+          "活计",
+          "手上的活",
+          "手头这点活",
+          "忙着"
+        ],
+        "learn": [
+          "看书",
+          "读书",
+          "念书",
+          "翻书",
+          "学着",
+          "在学",
+          "琢磨书"
+        ],
+        "socialize": [
+          "唠",
+          "唠嗑",
+          "搭话",
+          "聊天",
+          "拉家常",
+          "凑在一处",
+          "说话"
+        ],
+        "leisure": [
+          "闲逛",
+          "逛",
+          "溜达",
+          "散步",
+          "松快",
+          "透气"
+        ],
+        "self_care": [
+          "拾掇",
+          "收拾自己",
+          "梳洗",
+          "洗澡",
+          "利索",
+          "照看自己"
+        ],
+        "civic": [
+          "张罗镇上",
+          "公事",
+          "跑腿",
+          "镇上的事",
+          "办公事"
+        ],
+        "trade": [
+          "摊子",
+          "摊儿",
+          "守摊",
+          "买卖",
+          "生意",
+          "价钱",
+          "算账",
+          "卖"
+        ],
+        "rest": [
+          "歇",
+          "歇着",
+          "歇口气",
+          "缓一缓",
+          "躺"
+        ]
+      }
+    }
+  },
+  "place": {
+    "role": "F-8p 只认 places.json::name_cn 的规范中文名或其可接受简称；内部 place_id（plaza/farm/...）命中不计入 F-8p，另记守卫 place_id_in_body",
+    "short_names": {
+      "role": "规范名 → 可接受简称/同义（leader 02:22 采纳『两列』建议；provisional，只收高置信项）",
+      "map": {
+        "中央广场": [
+          "广场"
+        ],
+        "面包房": [
+          "面包铺",
+          "面包坊"
+        ],
+        "市集": [
+          "集市"
+        ],
+        "社区中心": [
+          "活动中心"
+        ]
+      }
+    },
+    "alias_provisional": {
+      "role": "仅用于报告归因抽样分类（规范名/内部 id/别名 三类计数），不参与判定",
+      "tokens": [
+        "市集口",
+        "老地方"
+      ]
+    }
+  },
+  "thresholds": {
+    "F8_unit": "per-message",
+    "F8t_denominator": "全部 MSG_*（MSG_PUBLIC 也计；slot 缺失另计并从该分项分母剔除）",
+    "F8p_denominator": "有 payload.place 的 MSG_*（MSG_PUBLIC 无该字段 ⇒ 不进分母，另单列 *_public 覆盖说明）",
+    "F8a_denominator": "含 payload.ctx.scene.activity 的 MSG_*（缺失 ⇒ status=not_applicable / reason=no_ctx_scene，不填 0 不出率）",
+    "degenerate_off_num_le": 2,
+    "D2_min_abs_effect_X": 0.15,
+    "wilson_z_95_two_sided": 1.959964
+  }
+}
