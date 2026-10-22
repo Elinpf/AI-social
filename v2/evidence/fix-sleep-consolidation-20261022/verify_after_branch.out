@@ -1,0 +1,25 @@
+{
+  "agent": "P001",
+  "dropped_unknown_intent_field": [],
+  "intents_submitted": 2,
+  "memory_consolidate": {
+    "has_text": true,
+    "n_events": 1,
+    "produced_mem_id": "M-P001-SM-MARKET",
+    "text": "关于MARKET的印象（由4条经历聚合）"
+  },
+  "sleep_completed": {
+    "drift_permille": 0,
+    "n_events": 1,
+    "pf0": "0fd62513d08c4f6dcba7dc4769eed553ac4d8fec7a97e19c755dba674519ea78",
+    "pf_t": "c74d29bf72d998757629d5a6ef51b50990a2b1c49b621ba280bd7f446b619fe0"
+  },
+  "sm_memory_write": {
+    "body_ref": "side://mem/P001/M-P001-SM-MARKET.txt",
+    "body_text": "关于MARKET的印象（由4条经历聚合）",
+    "body_text_matches_summary": true,
+    "mem_id": "M-P001-SM-MARKET",
+    "n_events": 1
+  }
+}
+[PASS] text 到达 MEMORY_CONSOLIDATE payload、SM 记忆有可读正文、漂移三字段到达 SLEEP_COMPLETED、无 MEMORY_CONSOLIDATE 的 unknown_intent_field

@@ -1,0 +1,1 @@
+[FAIL] MEMORY_CONSOLIDATE payload 缺 text；MEMORY_CONSOLIDATE.text 落 unknown_intent_field；未产出 SM 语义记忆的 MEMORY_WRITE（SM 写入=0）；SM 记忆正文不可读或与固化摘要不一致；SLEEP_COMPLETED.drift_permille 为 null
