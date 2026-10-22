@@ -78,7 +78,7 @@
 |---|---|---|---|---|---|
 | v0-anchor | 旧结构 / 原提示词 | 待填 | 待填 | 待填 | 待填 |
 | A0 | 新结构 / 必要适配提示词 | **运行期树 `3ec85a0`**（可复算证据：`v2/evidence/d5_s0a_a0.json` 的 `batch_landing.batch_landing_sha` + `meta.git_status_start_source`；⚠️ 该 `meta.json` **无 `code_sha_start` 字段**，勿按其复算）；`884f4541` 仅为 meta 写入时刻 HEAD，**不代表跑批代码** | `643f13a5` | `openai_compat` / DeepSeek-Flash | `ADMITTED / evidence` |
-| A1 | A0 + 措辞层优化 | 待填 | 待填 | 待填 | 待填 |
+| A1-措辞 | A0 + 措辞层优化 | 待填 | 待填 | 待填 | 待填 |
 
 > **⚠️ A0 的「树干净」证明方式已被 D9 降级（必须写明）**：A0 `meta.git_dirty_files` 含 `code/life/agent.py`、`code/orchestration/integration.py`、`code/config/dialogue_repair.json`、`code/life/dialogue_repair.py`，且该字段是**跑完时刻快照**，不能证明「起跑时树干净」；`fcf42bf9..HEAD` 在四代码路径亦非空。**但**三条独立证据表明**实际执行代码仍是 landing 版**：① 运行期无 `importlib.reload`；② A0 日志中 F4 才引入的 `dialogue_rift` 0 命中；③ `WORLD_INIT` 四项指纹与 before 臂**逐字相同**。D9 结论：**降级的是该条的证明方式，不作废整臂**（A0 数据可用）。
 
@@ -155,7 +155,7 @@
 
 ### 5.1 改造后的线程形状（描述，不做检验）
 
-**【未完成】** v0-anchor 列已填（锁定批），A0/A1 待跑。表头已固定，禁止事后加列：
+**【未完成】** v0-anchor 列已填（锁定批），A0/A1-措辞 待跑。表头已固定，禁止事后加列：
 
 | 指标 | v0-anchor（`legacy`） | **A0（`explicit`）** | 分母（v0 / A0） | band_source | 判定 |
 |---|---|---|---|---|---|
@@ -280,7 +280,7 @@
    | **早收敛 ⇒ 模型/提示词是瓶颈** | 三档 `p50` **相同（差 ≤1 轮）且** `p90` **不随上限变化** |
    | **部分受钳制** | 以上两者之外：须写明**从哪一档开始不涨**（例：2→4 涨、4→6 不涨 ⇒ 瓶颈在 4 轮附近） |
 
-   三条边界同样写死：① mock **不读语义**，只谈「深度是否被配置钳住」，**不谈「多轮内容是否自然」**（后者需真 LLM + R3 措辞指标）；② 三档必须同 seed / n / rounds，否则不可比；③ 零真钱成本，不占用 A1 的真 LLM 预算。
+   三条边界同样写死：① mock **不读语义**，只谈「深度是否被配置钳住」，**不谈「多轮内容是否自然」**（后者需真 LLM + R3 措辞指标）；② 三档必须同 seed / n / rounds，否则不可比；③ 零真钱成本，不占用 A1-措辞 的真 LLM 预算。
 
 ---
 

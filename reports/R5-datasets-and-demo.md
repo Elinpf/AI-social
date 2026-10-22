@@ -1,6 +1,6 @@
 # R5 · 数据集与演示：数据在哪、字段怎么读、页面怎么看
 
-> **状态**：**骨架版（数据形态与页面入口已写实；本轮语料与截图待填）**。当前写实的是"已有数据的结构与入口"，本轮 after 臂/A1 臂的数据与截图在锁 sha 后补。
+> **状态**：**骨架版（数据形态与页面入口已写实；本轮语料与截图待填）**。当前写实的是"已有数据的结构与入口"，本轮 after 臂/A1-措辞 臂的数据与截图在锁 sha 后补。
 > **报告族**：R5｜可信边界见 **R1 §3**｜全族纪律见 `reports/README.md`
 > **署名**：AI 小镇 · 对话体验与研究发布小队（JiuwenSwarm 多智能体团队）
 > **锚点**：本文件首版提交见 `git log --format=%H -- reports/R5-datasets-and-demo.md`｜仓库 `social-experiment`
@@ -15,7 +15,7 @@
 |---|---|---|---|---|---|
 | D-1 | **v0-anchor** 语料（旧结构 + 原提示词） | `v2/evidence/run_d2_before_n16_seed42/run.jsonl` (c1f86bf6) | 真 LLM 跑批（`openai_compat`/`DeepSeek-Flash`，16×84，seed=42） | **87.5 MB / 186,972 行** | **已交付**（`max_round=83`；准入 ADMITTED/strict/evidence） |
 | D-2 | **A0** 语料（新结构 + 必要适配提示词） | `v2/evidence/run_d2_after_n16_seed42/run.jsonl` (643f13a5) | 真 LLM 跑批（`openai_compat`/`DeepSeek-Flash`，16×84，seed=42） | **194,108 行** | **已交付**（`code_sha` fcf42bf9；消息 686 = DM497/PUB63/GRP126；`thread_schema=explicit`） |
-| D-3 | **A1** 语料（A0 + 措辞层优化） | `v2/evidence/run_a1_wording_n4r60_seed42/`（`run.jsonl` **被 .gitignore 排除、未入库**；`meta.json` / llmcost / host.log 已落） | 真 LLM 跑批（`openai_compat`/`DeepSeek-Flash`，**4×60**，seed=42） | 9,940 事件 / MSG **124**（DM 111 / PUB 13） | **probe（准入 REJECTED：B-15 MSG 124<150）**；日志 sha256 `ae969198…`，`code_sha` `a637371` |
+| D-3 | **A1-措辞** 语料（A0 + 措辞层优化） | `v2/evidence/run_a1_wording_n4r60_seed42/`（`run.jsonl` **被 .gitignore 排除、未入库**；`meta.json` / llmcost / host.log 已落） | 真 LLM 跑批（`openai_compat`/`DeepSeek-Flash`，**4×60**，seed=42） | 9,940 事件 / MSG **124**（DM 111 / PUB 13） | **probe（准入 REJECTED：B-15 MSG 124<150）**；日志 sha256 `ae969198…`，`code_sha` `a637371` |
 | D-4 | 评测读数（各臂指标） | `v2/evidence/d5_metrics_*.json` / `.md` | `tools/d5/dialogue_metrics.py` | 每份数 KB–数十 KB | 部分已有（历史批） |
 | D-5 | 线程视图数据 · v0-anchor | `code/frontend/sample/dialogue_v0anchor_n16_seed42/threads.json` (**34368061**) | `code/frontend/tools/gen_threads.py` | 187 条线程（legacy 口径） | **已交付**（自带 `source.run_sha256=c1f86bf6…`、`generator_sha256`） |
 | D-5A | 线程视图数据 · A0 | `code/frontend/sample/dialogue_run_d2_after_n16_seed42/threads.json` (**920dbd3a**) | `code/frontend/tools/gen_threads.py` | 206 条线程（`explicit`） | **已交付**（自带 `source.run_sha256=643f13a5…`、194,108 事件） |
@@ -76,7 +76,7 @@ cd code && python frontend/tools/serve.py     # 静态服务，端口 8848；原
 |---|---|---|---|
 | 改造前 v0-anchor | `sample/dialogue_v0anchor_n16_seed42/threads.json` | `run_d2_before_n16_seed42-c1f86bf6` | `c1f86bf61f62b3a0ce8e17e0c2312791cf0262381cd2120c2a63c9b6258963cf` |
 | 改造后 A0 | `sample/dialogue_run_d2_after_n16_seed42/threads.json` | `run_d2_after_n16_seed42-643f13a5` | `643f13a528c288d3e9677cb8ac100139224afbd0b46c0f7da0c3a5ed85b13141` |
-| 措辞臂 A1（**probe**） | `sample/dialogue_a1_wording_n4r60_seed42/threads.json` | `run_a1_wording_n4r60_seed42-ae969198` | `ae969198feaefd1f69147001e027394d55527bd1a0e460ff654697bdc3b1559b` |
+| 措辞臂 A1-措辞（**probe**） | `sample/dialogue_a1_wording_n4r60_seed42/threads.json` | `run_a1_wording_n4r60_seed42-ae969198` | `ae969198feaefd1f69147001e027394d55527bd1a0e460ff654697bdc3b1559b` |
 
 示例 URL：
 ```text
@@ -85,7 +85,7 @@ http://127.0.0.1:8848/dialogue.html?data=sample/dialogue_v0anchor_n16_seed42/thr
 http://127.0.0.1:8848/dialogue.html?data=sample/dialogue_a1_wording_n4r60_seed42/threads.json&sort=turns
 ```
 
-> ⚠️ **一处标注错误必须在此纠正（我自算核实过）**：另有批次 `run_d9_a1_n16r84_seed42`（日志 `abefdf73`）曾被称为"A1 措辞后"，但其 `code_sha = 05636bc`（**A0 基线树**），且正文**首字符括号 556/686 = 81.0%**（A0 为 562/686 = 81.9%，probe-A1 为 **0/124**）⇒ **它是 A0 同树重跑，不是措辞臂**。本报告一律以 **`run_a1_wording_n4r60_seed42`（`a637371`，probe）** 作 A1 入口与读数来源；`d9_a1` 只作为 A0 同树复跑记录，**不得标为"措辞改造后"**。
+> ⚠️ **一处标注错误必须在此纠正（我自算核实过）**：另有批次 `run_d9_a1_n16r84_seed42`（日志 `abefdf73`）曾被称为"A1-措辞 措辞后"，但其 `code_sha = 05636bc`（**A0 基线树**），且正文**首字符括号 556/686 = 81.0%**（A0 为 562/686 = 81.9%，probe-A1-措辞 为 **0/124**）⇒ **它是 A0 同树重跑，不是措辞臂**。本报告一律以 **`run_a1_wording_n4r60_seed42`（`a637371`，probe）** 作 A1-措辞 入口与读数来源；`d9_a1` 只作为 A0 同树复跑记录，**不得标为"措辞改造后"**。
 
 ## 4. 截图清单
 
@@ -146,7 +146,7 @@ cd code && python3 frontend/tools/serve.py            # 浏览器打开 http://1
 
 > ⚠️ 该组**不是**「措辞改造后」，也**不是** A0 复跑：整树不同（`05636bc` vs A0 `884f4541`），只把 `reply_window_rounds` 2→4。**结构指标与 A0 逐项相同 ⇒ 阴性结果**（回复窗口不是多轮结构瓶颈），**不得作为结构改造有效的证据**。
 
-**A1（措辞臂）四张：已交付**，来源 `v2/evidence/a1_shots/`，均按 `<batch>-<视图>-<sha8>.png` 命名（`sha8` = 源日志 `ae969198`）：
+**A1-措辞（措辞臂）四张：已交付**，来源 `v2/evidence/a1_shots/`，均按 `<batch>-<视图>-<sha8>.png` 命名（`sha8` = 源日志 `ae969198`）：
 
 | # | 截图文件（`v2/evidence/a1_shots/`） | 视图 | 来源 run | sha256（sha8） |
 |---|---|---|---|---|
@@ -155,7 +155,7 @@ cd code && python3 frontend/tools/serve.py            # 浏览器打开 http://1
 | S-11 | `run_a1_wording_n4r60_seed42-spread-ae969198.png` | 闲话怎么传开（1300×900） | 同上 | `c3fc91ec…`（`c3fc91ec`） |
 | S-12 | `run_a1_wording_n4r60_seed42-600-ae969198.png` | 600px 窄屏（600×900） | 同上 | `13ce8b19…`（`13ce8b19`） |
 
-> ⚠️ **A1 图的引用边界（必须一起写）**：A1 为 **4 agents × 60 回合、MSG 124**、`admission.verdict = REJECTED`（`B-15_msg_volume`）、`evidence_level = probe` ⇒ **A1 与 A0（16×84 / 686）不可比**。这四张图**只用于看"规则禁令生效后的对话形态"**（无括号旁白、句更短），**不得与 A0 图并列做"改善"判断**；两者并置时须标注各自规模与准入结论。
+> ⚠️ **A1-措辞 图的引用边界（必须一起写）**：A1-措辞 为 **4 agents × 60 回合、MSG 124**、`admission.verdict = REJECTED`（`B-15_msg_volume`）、`evidence_level = probe` ⇒ **A1-措辞 与 A0（16×84 / 686）不可比**。这四张图**只用于看"规则禁令生效后的对话形态"**（无括号旁白、句更短），**不得与 A0 图并列做"改善"判断**；两者并置时须标注各自规模与准入结论。
 > 渲染与复现命令见 `v2/evidence/a1_shots/README.md`（生产形态 `dialogue_shots.sh` 与复现形态 `shot.py --url` 参数一致）。
 
 ---
