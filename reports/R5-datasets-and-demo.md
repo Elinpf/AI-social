@@ -17,9 +17,9 @@
 | D-2 | **A0** 语料（新结构 + 必要适配提示词） | `v2/evidence/run_d2_after_n16_seed42/run.jsonl` (643f13a5) | 真 LLM 跑批（`openai_compat`/`DeepSeek-Flash`，16×84，seed=42） | **194,108 行** | **已交付**（`code_sha` fcf42bf9；消息 686 = DM497/PUB63/GRP126；`thread_schema=explicit`） |
 | D-3 | **A1** 语料（A0 + 措辞层优化） | `v2/evidence/run_a1_wording_n4r60_seed42/`（`run.jsonl` **被 .gitignore 排除、未入库**；`meta.json` / llmcost / host.log 已落） | 真 LLM 跑批（`openai_compat`/`DeepSeek-Flash`，**4×60**，seed=42） | 9,940 事件 / MSG **124**（DM 111 / PUB 13） | **probe（准入 REJECTED：B-15 MSG 124<150）**；日志 sha256 `ae969198…`，`code_sha` `a637371` |
 | D-4 | 评测读数（各臂指标） | `v2/evidence/d5_metrics_*.json` / `.md` | `tools/d5/dialogue_metrics.py` | 每份数 KB–数十 KB | 部分已有（历史批） |
-| D-5 | 线程视图数据 · v0-anchor | `code/frontend/sample/dialogue_v0anchor_n16_seed42/threads.json` (e39168ea) | `code/frontend/tools/gen_threads.py` | 187 条线程（legacy 口径） | **已交付**（自带 `source.run_sha256=c1f86bf6…`、`generator_sha256`） |
-| D-5A | 线程视图数据 · A0 | `code/frontend/sample/dialogue_run_d2_after_n16_seed42/threads.json` (d6d89bda) | `code/frontend/tools/gen_threads.py` | 206 条线程（`explicit`） | **已交付**（自带 `source.run_sha256=643f13a5…`、194,108 事件） |
-| D-5b | 线程视图数据 · 历史样例 | `code/frontend/sample/dialogue_demo/threads.json` (0bfb6288) | 同上 | 543 KB，231 条线程 | 历史（**不作本轮结果**） |
+| D-5 | 线程视图数据 · v0-anchor | `code/frontend/sample/dialogue_v0anchor_n16_seed42/threads.json` (**34368061**) | `code/frontend/tools/gen_threads.py` | 187 条线程（legacy 口径） | **已交付**（自带 `source.run_sha256=c1f86bf6…`、`generator_sha256`） |
+| D-5A | 线程视图数据 · A0 | `code/frontend/sample/dialogue_run_d2_after_n16_seed42/threads.json` (**920dbd3a**) | `code/frontend/tools/gen_threads.py` | 206 条线程（`explicit`） | **已交付**（自带 `source.run_sha256=643f13a5…`、194,108 事件） |
+| D-5b | 线程视图数据 · 历史样例 | `code/frontend/sample/dialogue_demo/threads.json` (**4a6eb572**) | 同上 | 543 KB，231 条线程 | 历史（**不作本轮结果**） |
 | D-6 | judge 原始输出（全量） | `judge_raw.jsonl`（不入库，给 sha） | `tools/d5/dialogue_judge.py` | 待填 | 待交付 |
 | D-7 | judge 抽样版（可核验用） | `v2/evidence/judge_raw_sample_n24x2.jsonl` | 同上（前缀子集） | 每臂 24 线程（≤72 条消息） | 待交付 |
 
