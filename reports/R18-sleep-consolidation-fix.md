@@ -298,7 +298,9 @@ ea252a3b0f6317d31f0902210fec219e25fa90a2	refs/heads/feat/life-memory-fix-2026102
 cd8f02439480298a17a93cd3460ee108e495af16	refs/heads/master
 ```
 
-⇒ **远端 master 已前进**：`46e4380` → `cd8f024`（本仓库该次 push 未出现 GnuTLS -110；`git fetch` 的问题不影响 push）。
+⇒ **远端 master 已前进**：`46e4380` → `cd8f024` → 本报告自身提交（`cd8f024` 之后的 docs-only 提交）。
+复核时以 `git ls-remote origin refs/heads/master` 为准——**本报告每补一次文字，master head 就会再前进一格**，因此不写死 head，只固定「核心合并提交 = `cd8f02439480298a17a93cd3460ee108e495af16`」。
+本仓库该次 push 未出现 GnuTLS -110（`git fetch` 的问题不影响 push）。
 
 ---
 
