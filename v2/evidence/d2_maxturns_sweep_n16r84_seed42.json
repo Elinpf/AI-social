@@ -1,0 +1,66 @@
+{
+  "schema": "hitt.d2.maxturns_sweep/1",
+  "params": {
+    "seed": 42,
+    "n": 16,
+    "rounds": 84,
+    "provider": "mock"
+  },
+  "metric_note": "turns = 每线程 max(turn_index)+1（turn_index 才是 max_turns 的钳制对象；消息条数在群聊里会 >轮次）",
+  "arms": [
+    {
+      "max_turns": 2,
+      "events": 192935,
+      "msg": 504,
+      "threads": 306,
+      "turns_p50": 2.0,
+      "turns_p90": 2.0,
+      "turns_max": 2,
+      "turns_mean": 1.572,
+      "multi_turn_ratio_ge3": 0.0,
+      "single_msg_thread_ratio": 0.4281,
+      "turns_dist": {
+        "1": 131,
+        "2": 175
+      }
+    },
+    {
+      "max_turns": 4,
+      "events": 193693,
+      "msg": 626,
+      "threads": 262,
+      "turns_p50": 1.0,
+      "turns_p90": 4.0,
+      "turns_max": 4,
+      "turns_mean": 2.21,
+      "multi_turn_ratio_ge3": 0.3817,
+      "single_msg_thread_ratio": 0.5191,
+      "turns_dist": {
+        "1": 136,
+        "2": 26,
+        "3": 9,
+        "4": 91
+      }
+    },
+    {
+      "max_turns": 6,
+      "events": 193364,
+      "msg": 666,
+      "threads": 228,
+      "turns_p50": 1.0,
+      "turns_p90": 6.0,
+      "turns_max": 6,
+      "turns_mean": 2.671,
+      "multi_turn_ratio_ge3": 0.3553,
+      "single_msg_thread_ratio": 0.5614,
+      "turns_dist": {
+        "1": 128,
+        "2": 19,
+        "3": 5,
+        "4": 13,
+        "5": 2,
+        "6": 61
+      }
+    }
+  ]
+}
