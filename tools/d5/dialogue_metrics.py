@@ -375,11 +375,19 @@ def compute_f8(msgs: List[dict], f8: Dict[str, Any]) -> Dict[str, Any]:
     keys = ("F-8t_own_slot", "F-8t_broad_scoped", "F-8t_open_any", "F-8t_sens_add", "F-8t_wide",
             "F-8t_pre_am2", "F-8t_ckpt_narrow", "F-8t_ckpt_wide", "F-8t_echo", "F-8p_own_place", "F-8p_short_only",
             "F-8p_public_cn", "F-8p_open_any_cn", "F-8a", "F-8a_render_only",
-            "F-8a_exact", "F-8t_exact", "place_id_in_body", "place_alias_hit", "F-8_union")
+            "F-8a_exact", "F-8t_exact", "place_id_in_body", "place_alias_hit", "F-8_union",
+            "F-8_union_all")
     hits = {k: 0 for k in keys}
     den = {"F-8t_own_slot": 0, "F-8p_own_place": 0, "F-8p_public_cn": 0, "F-8a": 0}
     n_slot_missing = n_scene_present = n_scene_activity = n_line_recovered = 0
     per_slot_hits = Counter()
+    tok_multi = Counter()      # 非互斥：该词命中条数（一条可命中多词）
+    tok_primary = Counter()    # 互斥：该条命中归到"最长匹配词"（和 == 分子）
+    tok_onslot = Counter()     # 其中"档内词"（非 slot_agnostic）命中的条数
+    js_core = js_all = 0       # 构念分离：core=仅档内词（排除通用指示词）；all=含通用指示词
+    core_multi = Counter()     # core 通道逐词（非互斥）
+    core_primary = Counter()   # core 通道逐词（互斥，归到最长匹配）
+    tok_msgs: Dict[str, List[str]] = {}   # {msg_uid: [命中词]}，供 life-dev 抽查正文
     per_slot_den = Counter()
     act_den_by_type = Counter()
     samples: List[Dict[str, Any]] = []
@@ -394,7 +402,23 @@ def compute_f8(msgs: List[dict], f8: Dict[str, Any]) -> Dict[str, Any]:
         if slot:
             den["F-8t_own_slot"] += 1
             per_slot_den[slot] += 1
-            t_judge = anyhit(body, agn + (by_slot.get(slot) or []))
+            allowed = agn + (by_slot.get(slot) or [])
+            t_judge = anyhit(body, allowed)
+            if t_judge:
+                matched = [t for t in allowed if t and t in body]
+                js_all += 1
+                tok_msgs[str(m.get("msg_uid") or m.get("msg_id") or m.get("seq"))] = matched
+                onslot = [t for t in matched if t not in agn]
+                if onslot:
+                    js_core += 1
+                    for t in onslot:
+                        core_multi[t] += 1
+                    core_primary[max(onslot, key=len)] += 1
+                for t in matched:
+                    tok_multi[t] += 1
+                tok_primary[max(matched, key=len)] += 1
+                if any(t not in agn for t in matched):
+                    tok_onslot["_onslot_hit_msgs"] += 1
             t_broad = anyhit(body, agn + (broad_slot.get(slot) or []))
             t_pre_am2 = anyhit(body, agn + (by_slot_pre.get(slot) or []))
             if t_judge:
@@ -457,6 +481,8 @@ def compute_f8(msgs: List[dict], f8: Dict[str, Any]) -> Dict[str, Any]:
         hits["place_alias_hit"] += int(alias_hit)
         if t_judge or p_hit or a_hit:
             hits["F-8_union"] += 1
+        if js_all or p_hit or a_hit:
+            hits["F-8_union_all"] += 1
         if (t_judge or p_hit or a_hit) and len(samples) < 8:
             samples.append({"seq": m.get("seq"), "round": m.get("round"),
                             "type": m.get("event_type"), "slot": slot or None, "place": pl,
@@ -483,15 +509,51 @@ def compute_f8(msgs: List[dict], f8: Dict[str, Any]) -> Dict[str, Any]:
     out: Dict[str, Any] = {
         "unit": "per-message",
         "arm": None,
+        "F-8t_core": blk(js_core, den["F-8t_own_slot"],
+                         "构念口径：num=正文命中**档内时段词**（排除 slot_agnostic「这会儿」类通用指示词）的 MSG_*；"
+                         "den=有 slot 的 MSG_*。**唯一可用于『处境锚定』结论的时段通道**",
+                         lexicon="narrow_onslot", scope="own_slot", label="core",
+                         excluded_agnostic_tokens=agn,
+                         hits_by_token=dict(sorted(core_multi.items())),
+                         hits_by_token_primary=dict(sorted(core_primary.items())),
+                         hits_by_token_msgs={k: tok_msgs[k] for k in sorted(tok_msgs)
+                                             if any(t not in agn for t in tok_msgs[k])},
+                         degenerate=(js_core == 0),
+                         degenerate_note=("numerator=0 ⇒ 按 D-1：本通道不出两比例检验/不报 p 值，"
+                                          "报告只写 ON 臂绝对发生率 + 标准 Wilson 95% CI（上限已给出，不是只写 0）")
+                         if js_core == 0 else None,
+                         note="排除的通用指示词见 excluded_agnostic_tokens；本通道与 F-8t_all 分母相同，可直接相减看「这会儿」贡献"),
+        "F-8t_all": blk(js_all, den["F-8t_own_slot"],
+                        "词汇口径：num=含通用指示词「这会儿」在内的 narrow 命中条数；den=有 slot 的 MSG_*。"
+                        "**只能用于『词汇使用』结论，不得用于处境锚定裁定**",
+                        lexicon="narrow", scope="own_slot", label="all",
+                        hits_by_slot=dict(sorted(per_slot_hits.items())),
+                        hits_by_token=dict(sorted(tok_multi.items())),
+                        hits_by_token_primary=dict(sorted(tok_primary.items())),
+                        hits_by_token_note=("hits_by_token=非互斥（一条可命中多词，和可能 > 分子）；"
+                                            "hits_by_token_primary=互斥（每条归到最长匹配词，和 == 分子）；"
+                                            "A2-4 判「这会儿是否戴功」请用 primary"),
+                        onslot_word_hit_msgs=tok_onslot.get("_onslot_hit_msgs", 0),
+                        hits_by_token_msgs={k: tok_msgs[k] for k in sorted(tok_msgs)}),
         "F-8": blk(hits["F-8_union"], n_msg,
-                   "num=命中本人当回合处境（时段/自身地点/活动 任一）的 MSG_* 条数；den=全部 MSG_*；"
+                   "num=命中本人当回合处境（时段**仅档内词** / 自身地点 / 活动 任一）的 MSG_* 条数；den=全部 MSG_*；"
+                   "时段侧用 F-8t_core（不含通用指示词「这会儿」），故与 F-8_with_all_time 可能不同；"
                    "各分项按自己的分母计入（F-8p 用有 place 的 167、F-8a 用有 activity 的 n）"),
         "F-8t_time": blk(hits["F-8t_own_slot"], den["F-8t_own_slot"],
                          "判定词表=time.narrow（Amendment 1：不含 刚/早上/下午/晚上/昨晚/今天/今儿）；"
                          "scope=本人当回合 slot；den=有 slot 的 MSG_*",
                          lexicon="narrow", scope="own_slot", n_slot_missing=n_slot_missing,
                          hits_by_slot=dict(sorted(per_slot_hits.items())),
-                         den_by_slot=dict(sorted(per_slot_den.items()))),
+                         den_by_slot=dict(sorted(per_slot_den.items())),
+                         hits_by_token=dict(sorted(tok_multi.items())),
+                         hits_by_token_primary=dict(sorted(tok_primary.items())),
+                         hits_by_token_note=("hits_by_token=非互斥（一条可命中多词，和可能 > 分子）；"
+                                             "hits_by_token_primary=互斥（每条归到最长匹配词，和 == 分子）。"
+                                             "报告做 A2-4 有效性判定时用 primary 计「该词为主的命中条数」"),
+                         onslot_word_hit_msgs=tok_onslot.get("_onslot_hit_msgs", 0),
+                         onslot_word_note=("档内词（非 slot_agnostic 的时段词）命中的消息条数；"
+                                           "若该值在 ON 臂相对 OFF 增量主要来自 slot_agnostic「这会儿」，"
+                                           "按 A2-4 只能写「短指示词使用上升」")),
         "F-8t_time_pre_am2": blk(hits["F-8t_pre_am2"], den["F-8t_own_slot"],
                                   "敏感性对照（Amendment 2 前口径）：同一 onset 下剔除 %s，仍按本回合 slot 限定；"
                                   "den 与 F-8t_time 完全相同，供报告并列证明结论不依赖该词取舍" % (am2 or "[]"),
@@ -518,6 +580,10 @@ def compute_f8(msgs: List[dict], f8: Dict[str, Any]) -> Dict[str, Any]:
                                    "归因抽样用（provisional 别名），不参与判定"),
         },
         "diagnostics": {
+            "F-8_with_all_time": blk(hits["F-8_union_all"], n_msg,
+                                     "对照：把时段侧换成 F-8t_all 后的 F-8 总数；仅说明构念选择影响多大，不作判定"),
+            "F-8t_broad": blk(hits["F-8t_wide"], n_msg,
+                              "宽表敏感性（wide_reference 词表，不按 slot 限定）；不参与判定"),
             "F-8a_render_only": blk(hits["F-8a_render_only"], den["F-8a"],
                                     "严格口径：只认渲染措辞原文（不认语义等价项）；den 同 F-8a",
                                     not_applicable_if_zero="no_ctx_scene",

@@ -1,6 +1,6 @@
 {
   "version": "f8-lexicon-v3",
-  "frozen_at": "2026-10-23T02:32:38+0800",
+  "frozen_at": "2026-10-23T02:34:40+0800",
   "frozen_by": "metrics-dev",
   "_readme": [
     "F-8「处境锚定率」判定输入（唯一真源）。代码 tools/d5/dialogue_metrics.py 只读本文件，仓内不内联任何语义词表。",
@@ -64,14 +64,13 @@
       },
       "known_gap": {
         "tokens": [
-          "下午",
           "上午",
           "早上"
         ],
-        "why": "这三个是渲染词（afternoon/morning 档候选措辞之一），但属 Amendment 1 明文排除的高自发词，未进主判定口径",
-        "disposition": "不静默丢：已实装 slot_scoped_broad 通道（按本回合 slot 限定；实测该批增量为 0），并向 report-release 提 Amendment 2 建议升为判定项；未批准前在报告局限显式登记",
+        "why": "这两个是渲染值域里的词形（morning 档以「上午这会儿」出现，已被 slot_agnostic「这会儿」覆盖），但作为裸词属 Amendment 1 排除的高自发词，故不进主判定口径",
+        "disposition": "其中 `下午` 已于 Amendment 2（2026-10-23 02:32:25 +0800，report-release 落 prereg §10；team-leader 02:31:30 裁定）升为 afternoon 档内判定词；`上午/早上/晚上` 本次不升，留在 `slot_scoped_broad`。条目保留以体现「曾有缺口→按程序补上」，不删除",
         "status": "已按 Amendment 2 补上（条目保留，体现「曾有缺口→按程序补上」）",
-        "closed_by": "Amendment-2（team-leader 2026-10-23 02:31:05 +0800 批准）",
+        "closed_by": "Amendment-2（仅 `下午` 一项；`上午/早上/晚上` 明确不升）",
         "residual": "上午/早上/晚上 仍未进主判定：前两者在渲染值域里只以「上午这会儿」出现（已被 这会儿 覆盖），后者不是渲染措辞；故无需再扩"
       },
       "excluded_by_quality_check": {
