@@ -371,7 +371,7 @@ rc=0
 
 【事实】两条独立的注入量都落在预期量级（一行"眼下在X"≈12 tokens、窗口内再加"气氛有点紧/东西有点紧俏"≈19 tokens）。**这条比正文字面命中更硬**：它不依赖任何词表，直接读 LLM 调用的 `tokens_in`。
 
-【口径限制（必须写死）】a1 当前是 **partial 批**（`a1(partial, round≤55)`）：窗内 n=48 已完整，但**窗外分母 437 是快照**（ctrl 为 666，合计 714 —— 485 vs 714 不是臂间差异，是 a1 只跑到 round 55/84）。定稿时 DiD 用**全程数据重算**；若全程值与本次 partial 值差异 **>20%**，报告同时给出两个数并说明。
+【口径限制（必须写死；2026-10-22 注：a1 已收批，本节数字为 partial 快照，全程重算结果与差异 >20% 的两数并列见 §5.9）】a1 当时是 **partial 批**（`a1(partial, round≤55)`）：窗内 n=48 已完整，但**窗外分母 437 是快照**（ctrl 为 666，合计 714 —— 485 vs 714 不是臂间差异，是 a1 只跑到 round 55/84）。定稿时 DiD 用**全程数据重算**；若全程值与本次 partial 值差异 **>20%**，报告同时给出两个数并说明。
 另：DiD 的"窗外"= 窗口前后的全部轮次。**收批后必须确认 a1 里 `WORLD_*` 事件仍只有 round 30 一次**；若窗口后再落一次，"窗内/窗外"的二分就不成立，必须改成按事件窗口逐段切分。
 
 ### 5.6 【佐证·弱代理】窗口正文层字面命中（主读数：线程级）
@@ -439,27 +439,83 @@ Fisher 线程级 p = 0.0008157211716722285
 |---|---|---|---|---|---|
 | L-7（8-gram dup，`round<40` 同 cut，MSG 各 332） | **21.99%**（73/332） | **22.59%**（75/332） | **+0.60pp** | 27.99% | **未击穿** |
 | L-7（`round<36` 对照口径，MSG 各 294） | 18.71%（55/294） | 20.41%（60/294） | +1.70pp | — | 附注 |
-| L-13（内部 token 泄漏，全批 ctrl） | 6/686 = 0.87% | 见 §5.9 | — | ≤1.42% 且 ≤7 条 | 待收批 |
+| L-13（内部 token 泄漏，**全批两臂**） | 6/686 = 0.87% | **9/686 = 1.312%** | +3 条 / +0.437pp | ≤1.42% 且 ≤7 条 | **比率侧未超；条数侧 9 > 7 ⇒ 若「≤7 条」为硬守卫则击穿**（守卫行出处见下注） |
 
 > 来源：`run_worldline_c1_a1_n16r84_seed42/stats_and_replay_check_partial.txt` Part C；本报告未独立重算 L-7（该指标需仓库 `tools/d5` 的 8-gram 实现，见 §9 复现命令）。
 
-【判断】与本轮其它臂（R13 L-13 击穿、R14 L-7 +9.72pp、R15 +11.18pp）相比，本臂**没有踩守卫**——因为它是纯提示词插入，不改取样/多样性/话题 token。
+【判断】**（2026-10-22 R19 收口修订：原判断只基于 L-7 与 partial 期 L-13，收批后 L-13 全批读数推翻了「完全没踩守卫」的表述）** 与本轮其它臂（R13 L-13 击穿、R14 L-7 +9.72pp、R15 +11.18pp）相比，本臂在 **L-7 侧未击穿**（+0.60pp，§5.8 首行）；**L-13 侧**全批为 9/686（ctrl 6/686），比率 1.312% 低于 1.42% 线、但条数 9 高于同表并列的「≤7 条」⇒ **结论改写为：L-7 未击穿；L-13 比率侧未超、条数侧可能击穿**。⚠️ 该守卫行「≤1.42% 且 ≤7 条」在 `v2/evidence/D8-preregistration-world-director.md` 中**查无原文出处**（全文件无 L-13 行），只有本报告 §5.8 自述 ⇒ 是否构成硬守卫需 Leader 裁决；本轮**不据此改判 R17 主结论**（C-1 已因剂量不足判「不可判」，L-13 条数侧即便击穿也只加一条「不可判」理由），仅如实登记。
 
-### 5.9 a1 臂全批终值（**收批后填，未填即不可引用**）
+> 口径声明（L-13 全批读数来源）：`python3 tools/d5/dialogue_metrics.py --log <run.jsonl> --out-json <out>` 的 `L-13_token_leak`（分子 = `ctx.topic` 原始 token 直接出现在 body 的消息数，分母 = 全部 MSG），两臂同脚本同口径；但两臂均**无 `meta.json`** ⇒ d5 准入 `REJECTED`、`evidence_level=probe`，该读数**只能是过程记录，不入结论**（同 §5.9）。
 
-| 项 | 状态 |
-|---|---|
-| `host.log` 收尾（`[life] n_agents=… rounds=84 events=…`） | 【未完成】 |
-| `obs llm-cost` 真跑门禁（本轮复跑） | 【未完成】 |
-| 全批消息 / 线程 / 多轮线程 | 【未完成】 |
-| 窗口内 dialogue `tokens_in` 的"窗外"分母（全批版） | 【未完成】（现为 round≤55 快照 437） |
-| L-13 全批 | 【未完成】 |
+### 5.9 a1 臂全批终值（**2026-10-22 R19 收口回填；因两臂均无 `meta.json`，全部读数按「过程记录、不入结论」**）
+
+> **修订说明（证据日期 2026-10-22）**：本节原为「收批后填」空表，且正文别处仍写「a1 未收批」——该表述**已过期**：`run_worldline_c1_a1_n16r84_seed42/host.log` 早有收尾行。本轮（R19 收口，零成本、未起任何跑批）用盘上现成日志补齐，并给出逐条复算命令。
+> **准入结论（先读这条）**：两臂目录**均无 `meta.json`**（`ls ... | grep -c meta.json` → 0）⇒ `tools/d5/dialogue_metrics.py` 判 `verdict=REJECTED`、`evidence_level=probe`（`B-7_files: 无 meta.json → 非证据级`、`B-9_event_count: meta.events=None`）。故**本节所有数字仅供过程记录与后续轮次对照，不得作为任何效果结论的锚点**；R17 主结论（接线成立 / 世界近乎没发生事 / 效果不可判）**不变**。
+
+| 项 | 填充值（2026-10-22 复算） | 复算命令 |
+|---|---|---|
+| `host.log` 收尾 | `n_agents=16 rounds=84 events=194047 seconds=3492.0673 log_bytes=91397526`；`chain_ok=True replay_parity=True first_run_equals_replay=True conservation_ok=True`；`final_state_hash=sha256:96de5c628103420b40904b372a9471c285603e816c1930787e877d5bd0129faf` | `tail -6 v2/evidence/run_worldline_c1_a1_n16r84_seed42/host.log` |
+| `obs llm-cost` 真跑门禁 | **rc=0**；`by_provider={"openai_compat":3403}`；`degraded=0`；`calls=3403`（`cached=1666` = 批内去重，非 mock）；`thinking=733`；`tokens_in=387046 / tokens_out=317196 / total=704242`；分 purpose：`dialogue 714/233188/30408`、`judge 717`、`importance 1747`(cached 1597)、`reflect 112`、`describe 16`、`negotiation 81`、`plan 16` | `cd code && python3 -m obs llm-cost --log ../v2/evidence/run_worldline_c1_a1_n16r84_seed42/run.jsonl --require-provider openai_compat; echo rc=$?` |
+| 全批消息 / 线程 / 多轮线程 | **686**(DM 497 / PUBLIC 63 / GROUP 126) / **206**（`thread_schema=explicit`）/ **≥3 轮 90/206 = 43.69%**、单消息线程 102/206 = 49.51%、轮数（`turn_index` 去重）`p50=2 p90=6 max=6` | `python3 tools/d5/dialogue_metrics.py --log v2/evidence/run_worldline_c1_a1_n16r84_seed42/run.jsonl --out-json /tmp/d5_a1.json` |
+| 窗口内 dialogue `tokens_in` 的"窗外"分母（**全批版**） | 窗外 **n=666，均值 326.02**；窗内 n=48，均值 334.56；**窗内−窗外 = +8.54**（partial 快照为 437 / 313.56 / +21.00） | 见本节末「tokens_in 分窗脚本」 |
+| L-13 全批 | **9/686 = 1.312%**（`by_topic: whisper 4 / contest 3 / combat_training 1 / mentorship 1`）；ctrl 同口径 6/686 = 0.87% | 同「全批消息/线程」命令的 `L-13_token_leak` 字段 |
+| 附注：世界事件落点（全批确认） | 全批仍**只有 round 30 的 2 条**（`WORLD_DIRECTIVE` + `WORLD_GROUP_EVENT`，`kind=tension`，`[30,36)`）⇒ §5.5 的「窗内/窗外」二分**在全程数据上依然成立** | `python3 v2/evidence/run_worldline_c1_a1_n16r84_seed42/window_probe.py`（在 `v2/evidence/` 下执行） |
+| 附注：全批 L-7（**未分层，不与 §5.8 同 cut 结果可比**） | a1 **34.69%**（238/686）vs ctrl **30.90%**（212/686） | 同上 d5 命令的 `L_wording.L-7_dup_ngram8_rate` |
+
+**两臂同口径对读（均无 meta，仅过程记录）**
+
+| 读数 | ctrl（OFF） | a1（ON） | Δ |
+|---|---|---|---|
+| 消息 / 线程 | 686 / 206 | 686 / 206 | 0 / 0 |
+| ≥3 轮线程（d5 口径） | 90/206 = 43.69% | 90/206 = 43.69% | 0 |
+| L-13 条数 | 6/686 = 0.87% | 9/686 = 1.312% | **+3 条** |
+| `dialogue.tokens_in` 总量 | 215,500 | 233,188 | **+17,688（+8.21%）** |
+| 全量 `tokens_in` | 368,419 | 387,046 | +18,627（+5.06%） |
+| 窗外 `tokens_in` 均值 | 301.71（n=666） | 326.02（n=666） | **+24.31**（= 全程注入行 + 内容长度差，未分离） |
+| 窗内−窗外 | +1.64 | +8.54 | **+6.90**（= 窗口额外注入的 DiD 全程版） |
+
+**【必须并列的两个数】§5.5 的 partial 版 DiD（a1 窗外 313.56/437、窗内−窗外 +21.00）与本次全程重算（326.02/666、+8.54）差异 >20%**（§5.5 预先写死的规则要求此时两数并列并说明）：a1 的 partial 期只跑到 round 55，后段 prompt 更长却未计入窗外均值，**低估了窗外基线**；全程重算后「窗内额外增量」从 +19.36 降到 **+6.90**。⇒ token 侧注入的**方向**仍为正（与「窗口内多注两小截」一致），但**量级不稳定**，只能作方向性旁证，不得当剂量证据；这也再次说明本轮「不可判」的判定不必修改。
+
+<details>
+<summary>tokens_in 分窗脚本（照抄可复算；口径 = `LLM_CALL.purpose=dialogue`，窗口 `round∈[30,35]`）</summary>
+
+```bash
+cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+python3 - <<'PY'
+import json, statistics
+def scan(path):
+    win, out = [], []
+    for line in open(path, encoding='utf-8'):
+        line = line.strip()
+        if not line: continue
+        e = json.loads(line)
+        if e.get('type') != 'LLM_CALL': continue
+        p = e.get('payload') or {}
+        if p.get('purpose') != 'dialogue': continue
+        tin = p.get('tokens_in')
+        if tin is None: continue
+        r = e.get('round')
+        (win if (r is not None and 30 <= r <= 35) else out).append(tin)
+    return win, out
+for tag, path in (("ctrl","v2/evidence/run_worldline_c1_ctrl_n16r84_seed42/run.jsonl"),
+                  ("a1","v2/evidence/run_worldline_c1_a1_n16r84_seed42/run.jsonl")):
+    w, o = scan(path)
+    print(tag, "window n=%d mean=%.2f" % (len(w), statistics.mean(w)),
+          "outside n=%d mean=%.2f" % (len(o), statistics.mean(o)),
+          "diff=%.2f" % (statistics.mean(w) - statistics.mean(o)))
+PY
+# 期望输出（2026-10-22 实跑）：
+# ctrl window n=48 mean=303.35 outside n=666 mean=301.71 diff=1.64
+# a1   window n=48 mean=334.56 outside n=666 mean=326.02 diff=8.54
+# ctrl 一侧与 §5.5 原表逐位一致 ⇒ 脚本口径与原报告同源（可作为自校验）
+```
+</details>
 
 ---
 
 ## 6. 截图（真图三件套）
 
-【未完成】正式图必须从**本轮选定批次**重新渲染（预检期的临时图已删，不得顶替）。跑批期间不向 `code/frontend/sample/` 写任何文件；收批后按下列命令出图，并回填路径 / 图 sha256 / 渲染命令 / 来源日志 sha256。
+**【本轮无正式图（2026-10-22 修订确认）】**：a1 侧正式图从未产出，ctrl 侧已有 `v2/evidence/cycle03_shots/` 四张（属 ctrl 批）；按报告族纪律，本节写明「无图 + 渲染命令」，**不以任何其它批次图或示意图顶替**。若要补 a1 正式图，必须从**本轮选定批次**重新渲染（预检期的临时图已删，不得顶替），且渲染时记录 HEAD 与图 sha256。跑批期间不向 `code/frontend/sample/` 写任何文件；收批后按下列命令出图，并回填路径 / 图 sha256 / 渲染命令 / 来源日志 sha256。
 
 ```bash
 # ① 生成页面数据（从真源 run.jsonl 派生，不写世界）
@@ -493,7 +549,7 @@ sha256sum ../v2/evidence/r17_shots/*.png
 | 4 | 派生参数**剂量被双重计数**（1000→2000） | **成立（缺陷，已登记未修）** | §3.5 隔离实验 |
 | 5 | 世界事件→居民**只有一条路径**（C1 提示词行）；记忆/感知侧未接入 | **成立（静态事实）** | §4.1/§4.2 |
 | 6 | 本批世界事件**供给极低**：1 次/84 回合，覆盖 6/84 = 7.14% | **成立（读数）** | §3.4 |
-| 7 | C-1 **让对话更生活气息** | **不可判** | 剂量不足 + 窗口分母 48 条（<68）；两臂对照未完成（a1 未收批） |
+| 7 | C-1 **让对话更生活气息** | **不可判** | 剂量不足 + 窗口分母 48 条（<68）；**a1 已收批（2026-10-22 回填 §5.9），但两臂均无 `meta.json` ⇒ 对照读数只到 `probe`，仍不足以判效果** |
 | 8 | C-1 **无效** | **不可判（不得写）** | 同上；「不可判」≠「无效」 |
 
 > 唯一允许的对外表述：**「接线成立、世界近乎没有发生什么事、效果不可判；并登记一处剂量口径缺陷。」**
@@ -505,7 +561,7 @@ sha256sum ../v2/evidence/r17_shots/*.png
 1. **剂量过低是第一限制**：1.15%/回合 ⇒ 84 回合期望 0.966 次。即使效果真实存在，本批也几乎不可能观测到（统计功效≈0）。任何基于本批的"没变化"都不能解释为"机制无效"。
 2. **窗口分母 48 条 < 68**：低于报告族常用的判读下限，按纪律**只报事件数/条数，不报比率**。
 3. **双重计数使"强度"口径不确定**（§3.5）：本轮 scarcity 实际 2000 vs 配置 1000 ⇒ 即使有差异也无法归因到"世界情境"本身。
-4. **a1 臂未收批**（成稿时刻）：两臂对照缺失，因此 §5.5 的 DiD 只有 ctrl 侧基线，**不构成对照结论**。
+4. **a1 臂已收批，但两臂均无 `meta.json`**（2026-10-22 修订）：§5.9 已回填 a1 全批读数与 `obs llm-cost`，DiD 已用全程数据重算（窗外 +24.31 / 窗内额外 +6.90）；但因 `meta.json` 缺失，d5 准入 `REJECTED`（`probe`），这些对照**只能作过程记录、不入结论**。
 5. **`affected_scope_count` 不可用**（§4.3）：任何"影响面"读数都缺一个可信来源；若下游有分析引用它，需要一并作废。
 6. **无 `meta.json`（ctrl 臂）**：按团队纪律"缺 meta 一律判批次不可用"，本报告**只用它做读数来源，不用它做判据锚点**；这一条请 Leader 裁定是否接受（同理适用于 `run_g1_b0` / `run_l7struct_on` / `run_a1wording`）。
 7. **单变量证明基于合成夹具**：证明的是机制形状，不是本批剂量；两者不可混引。
@@ -601,4 +657,6 @@ python3 /root/.jiuwenswarm/.agent_teams/jiuwen_team_cron___1a1629fc475_615c029c3
 
 ### 10.4 填写记录
 
-- 【未完成】a1 臂读数（§5.7）、正式截图（§6）、绑定 commit sha 待收批/提交后回填。
+- 【已完成 2026-10-22】a1 臂读数（§5.7/§5.8/§5.9）已按收批后日志回填，并注明「两臂无 `meta.json` ⇒ 过程记录、不入结论」；L-13 全批 9/686 已登记（条数侧可能击穿，待 Leader 裁决守卫线出处）。
+- 【仍未完成】正式截图（§6）：本臂 ctrl 侧已有 `cycle03_shots/` 四张，a1 侧正式图未出；按纪律写「无图 + 渲染命令」，不得以其它批次图顶替。
+- 【仍未完成】绑定 commit sha：待本轮（R19）提交后回填。
