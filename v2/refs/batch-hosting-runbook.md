@@ -156,6 +156,14 @@ systemd-run --unit=t271-<batch>-$TS --collect \
 | 2b | `systemctl show <unit> --property=ControlGroup` | `/system.slice/t271-smoke-222412.service`（与 `/proc` 一致） |
 | 3 | 日志/产物 | `/tmp/smoke_run_222412.jsonl` **285 行**；日志尾部 `chain_ok=True replay_parity=True conservation_ok=True` + `log written:` |
 
+**两条普适判据（先记住，再读下面的注意）**：
+> **判「跑完没跑完」，看产物与日志尾部；判「跑在哪个 cgroup」，看存活期的 `/proc/<pid>/cgroup`。两者不能互相替代。**
+
+**为什么密钥必须走 `EnvironmentFile`、不能用 `--setenv`**：
+`systemd-run --setenv=KEY=value` 会把该值写进单元属性，`systemctl show <unit> --property=Environment` **任何人都能读到**，
+等于把凭据登记进了系统日志/审计链。用 `--property=EnvironmentFile=<file>` 时，systemd 只读文件内容、**不把值放进可查询属性**。
+（同理：日志里不要 `echo` 密钥；`.env.local` 已在 `.gitignore`。）
+
 **两条注意（本次实测发现）**：
 1. **mock 2 回合跑得太快**（~2–3 秒）⇒ 用 `--collect` 时 unit 会在你 `systemctl status` 之前就消失；**要抓 cgroup 证据，须在命令前加 `sleep 8` 当"观察窗"**（本次即如此）或跑更长规模。
 2. `MainPID` 只在单元存活期间可取；**拿不到 PID 就说明已完成并清理**，此时以"产物 + 日志尾部"为完成证据。
