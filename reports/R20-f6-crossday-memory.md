@@ -456,4 +456,36 @@ git log --all --since="2026-10-22T20:24:36+08:00" --until="2026-10-22T20:47:29+0
 
 ## 11. 交付回执（commit + push 实跑输出）
 
-<!-- DELIVERY_RECEIPT -->
+**推送前纪律检查（实跑，2026-10-22T22:16 +08:00）**
+
+```
+$ pgrep -af "[r]un_batch|[h]itt|[o]rchestration run|[c]li.py run"
+NO_BATCH_RUNNING            # 无在跑批次 ⇒ 允许 push
+$ git status --short | grep -v '^??'
+                            # 无已暂存/已修改但未提交的源码改动
+```
+
+**提交范围**（严格按任务书，未裹带别人的未跟踪产物 `code/frontend/sample/*`、`v2/evidence/r19_topicbreadth_pilot_*`、两个 `*_INVALID_*` 的 `switch_proof.txt`）：
+
+| commit | 内容 |
+|---|---|
+| `ae863fc` | `reports/R20-f6-crossday-memory.md` + `reports/README.md` + `v2/evidence/f6_prereg_20261022.md` + `v2/evidence/f6_chain_20261022/`（6 文件）+ `v2/evidence/f6_audit_20261022.md` + `v2/evidence/evidence_ledger_20261022.md`，共 **11 files, +1292** |
+| `810dc00` | 按审计/实现者只读复算补强 A5 缺陷定性（目标集合相同 256 / 落账 0 vs 256） |
+
+**push 实跑输出**
+
+```
+$ git push origin master
+To https://github.com/Elinpf/AI-social.git
+   84ed6b1..810dc00  master -> master
+
+$ git log -1 --format='%h %cI %s'
+810dc00 2026-10-22T22:16:43+08:00 docs(R20): 补强 A5 缺陷定性——目标集合相同(256)、落账结果不同(0 vs 256)
+
+$ git rev-list --left-right --count origin/master...master
+0	0
+```
+
+⇒ **master 与 origin/master 齐平（`0 0`）**；交付 HEAD = `810dc0077bffe48f1a52daf34fd6355d35983cf6`；本报告取数时刻 HEAD 为 `84ed6b1`（§0），两者之差即本轮 R20 的两个交付提交。
+
+> 未使用 `git push --force`；推送前已按 `.gitignore` 核对，**未提交任何 `run.jsonl` / 证据大文件 / 敏感内容**（提交文件最大 44K，全在 `reports/` 与 `v2/evidence/` 下）。
