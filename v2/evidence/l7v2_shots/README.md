@@ -51,5 +51,10 @@ pkill -f 'serve.p[y] --port 8948'
 `ref_edges=0`），页面在真源无记录时**照实显示空态**并写明「不用相似度硬凑」。这**不是渲染失败**，
 也不是「传播为零」的结论——该口径需要日志本身记录消息引用关系才可测，本批不具备。
 
-chat 图内自证标签：`数据源 l7v2`、`sha ee3d28bc`、`事件 116498`、`消息 510`、`线程 169`、
-`线程格式 explicit`、`meta 已派生`（页面自己把派生 meta 标出来了，与本目录 §命令 0 一致）。
+chat 图内自证标签：`数据源 l7v2`、`sha ee3d28bc`、`事件 116498`、`消息 510`、`线程 169`、`线程格式 explicit`、`meta 已对齐`。
+
+> **⚠️ 勘误（R16 收口复审 F3 后修正，2026-10-22）**：本 README 与报告曾写「页面芯片显示 meta 已派生」——**该陈述不实**。
+> OCR 实测芯片为 `· meta 已对齐`；`code/frontend/src/dialogue.js:512` 全仓只有 `note.textContent = "· meta 已对齐"` 这一个字符串，
+> **没有「已派生」分支**（判据：`grep -rn "已派生" code/frontend/` 零命中）。
+> ⇒ 该芯片的口径是「meta 字段/ provider 存在即点亮」，**前端无法区分原始 meta 与派生 meta**。
+> **派生关系只能由本 README、报告 §4.2 与 `meta.derived.json` 的 `_meta_kind=derived` 字段自证，不能由页面自证。**

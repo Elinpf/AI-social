@@ -25,7 +25,7 @@
 | 判定项 | 结论 | 一句话理由 |
 |---|---|---|
 | **① R16 读数是否可复算复现** | **PASS** | 自写复算器（不 import 既有判定器）从 `run.jsonl` 重算 **16 项逐项一致**；`n_msg=510`、`raw8=111`、`norm8=74`、S1 412 / S2 0 / S3 0 / S3b 6、成本 674/3042/733601 全部对上 |
-| **② R16 的 M1 判定是什么** | **BELOW_BAND（带外·下侧）** | `Δ = −16.0784pp`，噪声带 `[−4.31, +5.88]pp`，**下界 −4.31 被越过**；Wilson95 `[18.40, 25.55]%`，Newcombe Δ CI `[−21.53, −10.50]pp` **不含 0** |
+| **② R16 的 M1 判定是什么** | **BELOW_BAND（带外·下侧）**（判定口径 Δ = −16.0784pp，基线 F-6=OFF；单变量口径另为 ≈ −45.29pp，见 §3.1） | `Δ = −16.0784pp`，噪声带 `[−4.31, +5.88]pp`，**下界 −4.31 被越过**；Wilson95 `[18.40, 25.55]%`，Newcombe Δ CI `[−21.53, −10.50]pp` **不含 0** |
 | **③ 能否宣称「生活气息改善」** | **BLOCK** | L-7 下降**由机制构造直接决定**（v2 就是「撞了就重写，直到不撞」），且代价是 dialogue `tokens_in` **+216,678（+243.8%）**、`calls` **+164**；`collisions_after_retry=58` 说明还有 35.4% 重写后照样撞。**读数与「改善」之间没有链条。** |
 
 ### 0.1 本轮做了什么（零跑批，只算/只拍/只写）
@@ -34,7 +34,10 @@
 2. **R17 读数**：绕开 `run_batch_eval.sh` 的 `meta.json` 门禁（并**先把门禁复现出来**证明它确实会拒），直调官方指标器 + 自写复算器，落 `recompute_r17.txt`。
 3. **R16 真截图三件套**：`gen_threads.py`（用**派生** meta）→ `serve.py`（setsid，8948）→ `dialogue_shots.sh` 四视图，落 `v2/evidence/l7v2_shots/`，`blank_retries=0/2`。
 4. **本报告** + 证据索引（sha256 实算）+ 可复算命令块 + 边界声明。
-5. 环境清理：`serve.py` 拍完 `pkill` 收回，无遗留进程；`pgrep` 双闸全程 `rc=1`（无跑批在跑）。
+5. 环境清理：`serve.py` 拍完 `pkill` 收回，无遗留进程。
+   **纪律陈述（已按复审 F4 降级改写，不再说「双闸全程 rc=1」）**：本轮真实判据是 **`pgrep -af 'orchestration ru[n]'` 闸 —— 全程 `rc=1`（无命中）**；
+   第二闸 `pgrep -af 'run_batc[h]'` **出现过一次 `rc=0`**，经核为**自匹配伪命中**（我生成 `recompute_r17.txt` 的外层 shell 命令行里含 `run_batch_eval.sh` 字样，见该回执 §0 如实留痕的超长 cmdline），**不含 `-m orchestration run` ⇒ 不是真实跑批**。
+   **判别法**：真跑批的 cmdline 必含 `-m orchestration run`；伪命中的 cmdline 必含 `run_batch_eval.sh` 或 `pgrep` 自身。字符类 `[h]` 只能避开 `pgrep` 自身，避不开外层 shell 的整串，须靠 cmdline 复核。
 
 ### 0.2 必须最先说的两条口径事实（它们改变读法）
 
@@ -54,6 +57,7 @@
 - ✅ 可以说：R16 的 L-7（raw8）**已不再高于 OFF 基线噪声带上界**（不是「击穿」）；机制侧构造存在且可审计（`dequp2 v=l7-dequp/2`，510/510 条消息带契约行，`preventive_hits=283`）。
 - ✅ 可以说：S1–S3b 四条守卫全 PASS、S4 成本在门限内、G1–G5 契约自检全 PASS、`H**` 检验 PASS（58/164 = 35.4% ≤ 50%）。
 - ⛔ **不可以说**：「L-7 改善」「生活气息提升」「居民对话更自然」「R16 过带 ⇒ 后续机制可以放开」。
+- ⛔ **不可以说**：把 `Δ = −16.0784pp` 说成「v2 的单变量效应」。判定基线 `run_f6_off` 是 **F-6 OFF**、R16 是 **F-6 ON + DEQUP_V2 ON** ⇒ 该 Δ 是**净值**（含 F-6 0→1 的反向贡献，F-6 把 L-7 从 193 推到 342）。**v2 单变量口径 ≈ −45.29pp**，两数并存、禁混用（§1.1 末注 / §3.1）。
 - ⛔ **不可以说**：把 R16 与 R17 的 `111 vs 163` 当作「结构臂 vs 重试臂」的净效果对比——两批 `code_sha` 不同、不在同一分支（`a851a8fc` 与 `3730240` 是兄弟关系，不是祖先关系），**不是单变量对照**。
 
 ---
@@ -69,10 +73,16 @@
 | 明确未设 | `LIFE_PROMPT_MEMORY_F6_DEQUP`（v1 关）、`LIFE_PROMPT_GOSSIP_G1`、`HITT_DIALOGUE_REPAIR`、`HITT_DIALOGUE_EMOTION_ECHO`、`LIFE_PROMPT_L7_STRUCT` | `env_dump.txt` 只列 4 行（provider/凭据/F6/DEQUP_V2） |
 | provider | `HITT_LLM_PROVIDER=openai_compat` | `env_dump.txt`；并与 run.jsonl 内 LLM_CALL `payload.provider` 交叉一致 |
 | 模型（批内自报） | `DeepSeek-Flash` | run.jsonl LLM_CALL `payload.model` |
+| ⚠️ **判定基线的 F-6 状态** | 判定基线 `run_f6_off_n16r60_seed42` 的 `LIFE_PROMPT_MEMORY_F6` 是 **OFF**（该臂 `ctx.memory_refs = 0/510`），而 R16 臂是 `=1`（`412/510`） | 自写复算器；`recompute_r16.txt` §7（三臂 `ctx.memory_refs` 逐批实测） |
 
 > **一个必须说的取证瑕疵**：R16 目录**没有原始 `meta.json`**（`meta_gate.txt`：`meta.json 不可读 ⇒ 批次 VOID`）。
 > 因此本报告的「批身份」由 `host.log` + `launch_evidence.txt` + `env_dump.txt` + `four_dir_integrity.txt` 四份旁证拼成，
 > 并另写 `meta.derived.json`（逐字段标注派生来源，见 §4.2）。**这不等于原版 meta，也不能用于准入判定**。
+
+> **⚠️ 单变量声明的重要限定（本报告头条 Δ 的读法）**：R16 相对**判定基线**并非只差一个变量。
+> 基线 `run_f6_off` 是 **F-6 = OFF**，R16 是 **F-6 = ON + DEQUP_V2 = ON** ⇒
+> **`Δ = −16.0784pp` 是「vs F-6-OFF 冻结锚」的净值，含 F-6 0→1 的反向贡献，不是 v2 的单变量效应。**
+> 单变量口径的对照值另给（§3.1 第二行）：**v2 单变量 Δ ≈ −45.29pp**。**两个数并存、禁混用。**
 
 ### 1.2 分母
 
@@ -138,7 +148,7 @@ BELOW_BAND 的字面含义是「比基线还好到了带外」。必须排除三
 
 | 可能的平凡解释 | 实测 | 判定 |
 |---|---|---|
-| **消息变短了**（短句 shingle 少 ⇒ 撞车天然变少） | R16 平均正文长 **36.87** 字 > OFF **32.38** 字；p50 33 > 29；p90 58 > 54 | **排除**：消息**更长**，撞车机会本应更高 |
+| **消息变短了**（短句 shingle 少 ⇒ 撞车天然变少） | R16 平均正文长 **36.87** 字 > OFF **32.38** 字；p50 33 > 29；p90 58 > 54 | **排除**（**仅此一项结论**）：消息没有变短，所以「撞车减少」不能由「句子变短」解释。⚠️ 但**正文变长不能归因于 v2**——F-6 记忆进提示词本身即会加长正文（两臂 F-6 状态不同，§1.1 末注）。**本条只作排除，不作机制归因。** |
 | **线程结构变了**（线程被拆碎 ⇒ 跨线程不互撞） | 线程 169 = OFF 169；单消息线程比 0.47929 = OFF 0.47929；消息 510 = 510 | **排除**：结构逐位未变 |
 | **模板命中被清零挤掉了重复** | L-5 模板命中率 OFF 1.176% → R16 **0%**；L-6 精确重复 OFF 10.20% → R16 **0%** | **部分成立但非主因**：这两项归零说明「套路句」被重写机制清掉了，仍属机制构造，不是自然多样性 |
 
@@ -156,11 +166,25 @@ BELOW_BAND 的字面含义是「比基线还好到了带外」。必须排除三
 | raw8 dup | **111 / 510** |
 | 率 | **21.7647%**（Wilson95 `[18.402%, 25.55%]`） |
 | OFF 基线 raw8 | 193 / 510 = 37.8431% |
-| **Δ** | **−16.0784pp**（= −82 条） |
-| Newcombe95 Δ | **`[−21.526, −10.496]pp`**（不含 0 ⇒ 方向可检测，但**不等价于改善**） |
+| **Δ（判定口径：vs F-6-OFF 冻结锚 193）** | **−16.0784pp**（= −82 条）。⚠️ 该基线 **F-6 = OFF** ⇒ 此 Δ 是**净值**，含 F-6 0→1 的反向贡献 |
+| **Δ（v2 单变量口径，补充对照）** | **≈ −45.2941pp**（= **−231 条**/510）：对照臂 `run_f6_on_n16r60_seed42`（**F-6=ON 且无 v2**）raw8 = **342/510 = 67.0588%**（norm8 332/510 = 65.0980%，与 R12 ON 臂一致）⇒ `111 − 342 = −231 条`。**两数并存、禁混用**；单变量口径**未经策略包判据裁定**（带是按 OFF/DEQUP 臂标定的，对 F-6=ON 锚是否适用未检验）⇒ **只作对照，不作判定** |
+| Newcombe95 Δ | **`[−21.526, −10.496]pp`**（不含 0 ⇒ 方向可检测，但**不等价于改善**）；此为**判定口径**的 CI，**不是** −45.29pp 那个数的 CI |
 | 冻结带（逐侧取严） | `[−4.31, +5.88]pp` |
 | **判定** | **BELOW_BAND**（`Δ < −4.31`，落带外·下侧） |
 | 预注册目标区间对照 | `target_check`：`dup ≤ 223` ✔ 但 `dup ≥ 171` ✘ ⇒ **111 也低于目标下界** |
+
+**F-6 对照臂的复现命令**（我亲跑，输出见 `recompute_r16.txt` §7）：
+
+```bash
+python3 v2/evidence/recompute_l7_indep.py --log v2/evidence/run_f6_on_n16r60_seed42/run.jsonl --tag 'RUN_F6_ON (F-6=1, 无 v2)'
+# → raw8 = 342/510 = 67.058824%｜norm8 = 332/510｜S1 F-6 412/510｜S3b L-13 14/510（>9，破 v1.1）
+```
+
+**怎么读这两个 Δ（必须同时出现，不许只引一个）**：
+| 读法 | 数 | 能说明什么 | 不能说明什么 |
+|---|---|---|---|
+| **判定口径**（vs F-6-OFF 锚） | **−16.0784pp** | 「相对仓库现有的 F-6-OFF 冻结锚，R16 臂的 L-7 更低」 ⇒ 这是 M1 档位所依赖的那一个数 | **不能**说明「这是 v2 的功劳」——F-6 打开本身把 L-7 从 193 推到 342 |
+| **v2 单变量口径**（vs F-6=ON 无 v2） | **−45.2941pp** | 「在 F-6 已开的前提下，v2 把 L-7 从 342 压到 111」 ⇒ 量级远大于 −16.08pp | **不能**当 M1 判定数（该锚未经策略包登记，带是否适用未检验） |
 
 > **写法纪律**：`BELOW_BAND` **不是**「IN_BAND」，也**不是**「OUT_OF_BAND（击穿）」。三者在策略包里是不同档：
 > 只有 `IN_BAND` / `IN_BAND_AND_DIR_NEG` 才是「回到带内」。本报告**不把它写成「过带」**。
@@ -256,7 +280,11 @@ R16 目录没有原始 `meta.json`。按任务纪律**不伪造**，改写出 `m
 | `started_at` / `finished_at` | `launch_evidence.txt` 采集时刻 `06:16:52` + `host.log seconds=2500.5991` ≈ `06:58:33`（本批无批内墙钟戳，只有 `mono_ts`） |
 | `weeks` | **故意留空**（无旁证，argv 未传 `--weeks`） |
 
-> 页面自己也把这件事标出来了：chat 图右上角芯片 **「meta 已派生」**。这不是我加的注释，是前端读到 `meta.derived.json` 的 `_meta_kind=derived` 后的渲染结果 ⇒ 读者看图和看报告拿到的是同一条信息。
+> **⚠️ 勘误（复审 F3，2026-10-22）**：本报告与 `l7v2_shots/README.md` 早前写过「页面芯片显示 **meta 已派生**」——**该陈述不实，已删除**。
+> OCR 实测 chat 图右上角芯片是 **`· meta 已对齐`**；`code/frontend/src/dialogue.js:512` 全仓只有 `note.textContent = "· meta 已对齐"` 这一个字符串，
+> **不存在「已派生」分支**（判据：`grep -rn "已派生" code/frontend/` 零命中）。
+> ⇒ 该芯片的口径是「meta/provider 字段存在即点亮」，**前端无法区分原始 meta 与派生 meta**。
+> **「本批 meta 是派生的」这件事只能由本报告 §4.2 表格与 `meta.derived.json` 的 `_meta_kind=derived` 字段自证，不能由页面自证。**
 
 ### 4.3 四张图（sha256 实算）
 
@@ -333,24 +361,31 @@ rc=2
 
 | # | 结论 | 层级 | 来源 | sha256 | sha8 | 复现 |
 |---|---|---|---|---|---|---|
+| 0 | **本报告自身**（自锚项，复审 F2 补） | 【事实】 | `reports/R16-l7-dequp-v2.md` | **`git show <commit>:reports/R16-l7-dequp-v2.md \| sha256sum`**（自指无法内嵌，见下方「自锚说明」） | 同上取前 8 位 | `git show <commit>:reports/R16-l7-dequp-v2.md \| sha256sum` |
 | 1 | R16 日志 510 消息 / 116,498 事件，raw8 = 111/510 | 【事实】 | `v2/evidence/run_l7v2_on_n16r60_seed42/run.jsonl` | `ee3d28bc9606f2c2ee6609af7c5272673e54db674d5268878aa5d99e477f11b8` | `ee3d28bc` | `recompute_r16.txt` §2 |
-| 2 | R16 复算回执（16 项逐项比对 + 差异说明） | 【事实】 | `v2/evidence/run_l7v2_on_n16r60_seed42/recompute_r16.txt` | `c3166d63e8ded519e50c55f5ba3780f17173f27152123e3aa138462c59dd6355` | `c3166d63` | §7 命令块 |
+| 2 | R16 复算回执（16 项逐项比对 + 差异说明） | 【事实】 | `v2/evidence/run_l7v2_on_n16r60_seed42/recompute_r16.txt` | `4703575e5558f89e6a2b0332495e9539764aa83842e756bee3609a6ec06cb835` | `4703575e` | §7 命令块 |
 | 3 | 复算器（自写，不 import 既有判定器） | 【事实】 | `v2/evidence/recompute_l7_indep.py` | `ae50620d3b9bdd3add9d81cdd47186b87936d15a56eca58d76dbd44686b952f0` | `ae50620d` | `python3 v2/evidence/recompute_l7_indep.py --log <log>` |
 | 4 | R16 派生 meta（**非原始**，逐字段标源） | 【事实】 | `v2/evidence/run_l7v2_on_n16r60_seed42/meta.derived.json` | `cf91b9fed7f979e7bd260b9df8932d9514ea3b926ea747e655b590f6512d3f80` | `cf91b9fe` | 读文件即见 `_derivation` |
 | 5 | 官方口径读数（L-7 = norm8 = 74/510、L-1 长度、L-5/L-6、L-13） | 【事实】 | `v2/evidence/metrics_r16_official.json` | `9cb19f7be2d3b4548dc9a7a31bc53fad226295bdbeccb04666ee3ebbbae7a6a1` | `9cb19f7b` | `python3 tools/d5/dialogue_metrics.py --log <R16 log> --out-json <同路径>` |
 | 6 | OFF 臂 raw8 = **193/510**（判定基线口径确认）；同批 norm8 = 181/510 | 【事实】 | `v2/evidence/run_f6_off_n16r60_seed42/run.jsonl`（gitignored，sha256 记于回执内） | `c73bead61a440db789f6d6ba1de555fe326a203ee27d1219690174e3d9483642` | `c73bead6` | `recompute_r16.txt` §4 |
 | 6′ | R12 DEQUP 臂 **norm8 = 193/510**（raw8 = 268/510）——「193 巧合」的另一半 | 【事实】 | `v2/evidence/run_f6_dequp_n16r60_seed42/run.jsonl` | `6bf3ec88700fa1a7451b18c63678d0904c69b9de39896739190e7e674db8fdbd` | `6bf3ec88` | `recompute_r16.txt` §4 |
+| 6″ | **F-6=ON 且无 v2** 对照臂：raw8 = 342/510 = 67.0588%（norm8 332/510）——§3.1「v2 单变量口径」的对照臂 | 【事实】 | `v2/evidence/run_f6_on_n16r60_seed42/run.jsonl`（gitignored，sha256 记于回执内） | `7de6a7be5adff276f1e42c065a708c271f870f2bf8daa930cf0cdfc983f7434d` | `7de6a7be` | `recompute_r16.txt` §7 |
 | 7 | OFF 臂官方口径（线程 169 / 单消息比 0.47929 / L-1 32.384） | 【事实】 | `v2/evidence/d5_run_f6_off_n16r60_seed42_r13close.json` | `cb757208249dd9fc02bbd712d70070c1d998d018aab3b89e84a3721502fc355c` | `cb757208` | 读 JSON 即得 |
 | 8 | 四张真截图 | 【事实】 | `v2/evidence/l7v2_shots/*.png`（见 §4.3 逐张 sha256） | — | `ee3d28bc`（数据源 sha8） | §4.1 命令块 |
 | 9 | 渲染日志（`batch=`/`SHOT OK`/`blank_retries`） | 【事实】 | `v2/evidence/l7v2_shots/render.log` | `8b56486dfeb51525299f1e836238e988578789e1ab0ab9f935003d923698f791` | `8b56486d` | 同上 |
-| 10 | 截图目录三件套说明与命令 | 【事实】 | `v2/evidence/l7v2_shots/README.md` | `452d08e17603e946bf9515e2fac2a0c2257b165e4805068273ec5facb1312ec3` | `452d08e1` | 读文件 |
+| 10 | 截图目录三件套说明与命令 | 【事实】 | `v2/evidence/l7v2_shots/README.md` | `538ab898ca0c0ddf73ca08890ff0a5894ab057622cd8ef95b0eba243daa7f2d8` | `538ab898` | 读文件 |
 | 11 | `threads.json`（510 消息 / 169 线程 / 60/60 TURN_SEAL） | 【事实】 | `code/frontend/sample/dialogue_l7v2/threads.json` | `ed0ebff959ffa4789e9e8da38525bea16c0865077dfe0420700c9e75bea5b115` | `ed0ebff9` | §4.1 命令块 |
-| 12 | R17 读数回执（含门禁 exit 2 复现） | 【事实】 | `v2/evidence/run_l7struct_on_n16r60_seed42/recompute_r17.txt` | `cc158a37ad6462c0f0a7ac9d586b39c63703c5de749d3491ba868c86ed1c64ed` | `cc158a37` | §7 命令块 |
+| 12 | R17 读数回执（含门禁 exit 2 复现） | 【事实】 | `v2/evidence/run_l7struct_on_n16r60_seed42/recompute_r17.txt` | `341e4c26a436a66d50f967875f60e55c73d2895677f2ea11a93580d1a70b3f42` | `341e4c26` | §7 命令块 |
 | 13 | R17 日志（510 消息 / 163 raw8 / 128 norm8） | 【事实】 | `v2/evidence/run_l7struct_on_n16r60_seed42/run.jsonl` | `4df89f4ac1dac1a8df00766b538f4fe12c9e9999664bcf6a606054438446fb5e` | `4df89f4a` | `recompute_r17.txt` §4 |
 | 14 | R17 官方口径读数 | 【事实】 | `v2/evidence/metrics_r17_official.json` | `d1597e2d3ad0cb1316638d875d8a959ea0dc79d5d65b361f166fdee08d3f9a5f` | `d1597e2d` | `recompute_r17.txt` §3 |
 | 15 | 旧读数原件（对照用，非本报告数值来源） | 【对照】 | `v2/evidence/run_l7v2_on_n16r60_seed42/l7v2_readings.md` | `324d86b737f3446d3aca931e203f272b42f4cb8cea41916d1e7e6951bdc3ce9c` | `324d86b7` | — |
 | 16 | 旧读数 JSON（对照用） | 【对照】 | `v2/evidence/run_l7v2_on_n16r60_seed42/l7v2_readings.json` | `cbaaa39e3fa2a3508326f98958bfd3b4343f325871196024b6f0a75b9c2cdffd` | `cbaaa39e` | — |
 | 17 | 噪声带 `[−4.31,+5.88]`（逐侧取严）的仓内出处 | 【对照】 | `reports/R15-g1-gossip.md:334`、`:455` | —（文本行，见该文件） | — | 读该文件两行 |
+
+> **自锚说明（F2）**：报告不能把自身的 sha256 内嵌进自己——写入哈希会改变文件、进而改变哈希（不定点）。
+> 因此第 0 行登记的是**方法**：读者用 `git show <commit>:reports/R16-l7-dequp-v2.md | sha256sum` 即可得到本文件在该 commit 树中的**唯一确定值**，且该值可被独立复核。
+> 参考值（不作为登记值）：本文件在**上一 commit `a4fcf19`** 中的 sha256 为 `21e1ac59a6bb01b29fbbe5396f8e87f1a586700d24856ebc77c2841b67585afc`；本轮返工后必然改变，**以 `git show <返工后 commit>:` 实算为准**。
+> 其余 16 行（#1–#17）都是**他物**，sha256 可内嵌且已逐位实算登记。
 
 > 「层级」列语义：【事实】= 可从日志/文件复算或直接读到；【对照】= 只作对照、不是本报告数值来源；【判断】= 本报告的推理结论（在正文明确标注）；【未验证】= §9 列出的缺口。
 
@@ -368,6 +403,11 @@ pgrep -af 'run_batc[h]';        echo rc=$?      # 期望 rc=1
 # 1) R16 独立复算（raw8 / norm8 / 守卫分子）
 python3 v2/evidence/recompute_l7_indep.py \
   --log v2/evidence/run_l7v2_on_n16r60_seed42/run.jsonl --tag 'R16 L-7v2 ON'
+
+# 1b) F-6 对照臂（§3.1「v2 单变量口径 −45.29pp」的来源；F-6=ON 且无 v2）
+python3 v2/evidence/recompute_l7_indep.py \
+  --log v2/evidence/run_f6_on_n16r60_seed42/run.jsonl --tag 'RUN_F6_ON (F-6=1, 无 v2)'
+# → raw8 = 342/510 = 67.058824%
 
 # 2) 官方口径（其 L-7 = norm8 = 74/510）
 python3 tools/d5/dialogue_metrics.py \
@@ -421,7 +461,9 @@ sha256sum v2/evidence/l7v2_shots/*.png v2/evidence/l7v2_shots/render.log
 | U5 | **`L-13` 从 2/510 升到 6/510 的成因** | 未破门限（≤9），但方向是**升**；需看这 6 条的 `ctx.topic` 与 body 才能定性 |
 | U6 | **`preventive_hits=283` 的语义** | 该字段出现于 `dequp2` 末行（v2 新增），未在策略包里登记口径；本轮只登记数值，不当判据 |
 | U7 | **R17 的效果判定** | 缺 `meta.json` + 无 dequp 契约行 ⇒ 契约自检不完整；需补 meta 或另立结构臂判据 |
-| U8 | **`reports/README.md` 总索引未加 R16 行** | 本轮交付范围被限定为「报告 + 新建证据产物」，故**未改** `README.md`（改它属于另一类变更）；收尾/复核任务确认后建议补一行指向本文件 |
+| U9 | **v2 单变量口径 −45.29pp 未经判据裁定** | 该数的锚是 `run_f6_on`（F-6=ON 无 v2），**未在策略包里登记**；噪声带按 OFF/DEQUP 臂标定，对 F-6=ON 锚是否同分布**未检验** ⇒ 只作对照，不作判定（复审 F1 后明确降级） |
+| U10 | **F-6 对 L-7 的独立效应** | 本报告只登记「F-6 OFF→ON 时 raw8 193→342（+29.2pp）」这一事实；**F-6 本身对 L-7 的因果量级未做单变量实验**（需 F-6 单开臂，属新跑批） |
+| ~~U8~~ | **`reports/README.md` 总索引 R16 行** | **已在返工 commit 中补上**（按 Leader 指示纳入本次 commit，状态词 `BELOW_BAND（带外下侧，非改善结论）`）⇒ 本项**已关闭**，不再列为缺口 |
 
 ---
 
@@ -446,5 +488,13 @@ sha256sum v2/evidence/l7v2_shots/*.png v2/evidence/l7v2_shots/render.log
 | 4 | `reports/R16-l7-dequp-v2.md`（本文件） | ✅ |
 | 5 | 本地 commit（**不 push**） | ✅ sha 见任务汇报与 `git log -1`（commit 提交后无法回填本文件，以汇报为准） |
 
-> 本报告的入库 commit 只含：本文件 + 上述新建证据产物（`recompute_*.txt`、`meta.derived.json`、`recompute_l7_indep.py`、`l7v2_shots/` 四 PNG + `render.log` + `README.md`）。
-> **未 add**：`run.jsonl`（gitignored）、31 项无关 untracked、`docs/` 全目录、`_tmp/`（中间副本，已提炼为 `metrics_r*_official.*` 入库）。
+> **入库 commit 的完整文件清单（复审 F5 后补全，共 17 个）**：
+> ① `reports/R16-l7-dequp-v2.md`（本文件）；
+> ② `v2/evidence/recompute_l7_indep.py`（复算器）；
+> ③ `v2/evidence/run_l7v2_on_n16r60_seed42/recompute_r16.txt`、④ `v2/evidence/run_l7struct_on_n16r60_seed42/recompute_r17.txt`（复算回执）；
+> ⑤ `v2/evidence/run_l7v2_on_n16r60_seed42/meta.derived.json`（**派生** meta）；
+> ⑥ `v2/evidence/metrics_r16_official.json`、⑦ `metrics_r16_official.md`、⑧ `metrics_r17_official.json`、⑨ `metrics_r17_official.md`（官方口径读数，`dialogue_metrics.py` 产物）；
+> ⑩ `v2/evidence/l7v2_shots/l7v2-chat-ee3d28bc.png`、⑪ `-rhythm-`、⑫ `-spread-`、⑬ `-600-`（四张真截图）、⑭ `render.log`、⑮ `README.md`；
+> ⑯ `code/frontend/sample/dialogue_l7v2/threads.json`（**截图渲染输入**，由 `gen_threads.py` 从 R16 `run.jsonl` 派生）；
+> ⑰ `reports/README.md`（总索引补 R16 行，复核后按 Leader 指示追加）。
+> 全部与本轮证据直接相关，**不含** `run.jsonl`（gitignored）、无关 untracked、`docs/` 全目录。

@@ -165,3 +165,48 @@ rc=0
 唯一需要「纠正表述」的是**两处口径注解**（不影响任何数值）：
 1. 官方 `dialogue_metrics.py:588` 的 L-7 实现是 **norm8**（74/510），判定用的 raw8（111/510）来自 `l7v2_judge.py:53`，任务书把二者都称作「L-7」；报告必须逐处标注口径。
 2. `l7v2_readings.md` 表格把 193 标为「OFF 基线 raw8（冻死）」并把脚注写成「R12 的 193/510 属 norm8」——两句话指向**两个不同的 193**（OFF raw8 = 193、R12 DEQUP norm8 = 193）。判定取的是前者，配对同口径，结论不变，但脚注应改写。
+
+## 7. F-6=ON 对照臂：补「v2 单变量」口径（R16 收口复审 F1 后补）
+
+> 起因：判定基线 `run_f6_off` 的 `LIFE_PROMPT_MEMORY_F6` 是 **OFF**（该臂 `ctx.memory_refs = 0/510`），
+> 而 R16 臂 `LIFE_PROMPT_MEMORY_F6=1`（`ctx.memory_refs = 412/510`）⇒ §2/§3 的 Δ=−16.0784pp 是
+> **「vs F-6-OFF 冻结锚」的净值**，含 F-6 0→1 的反向贡献，**不是 v2 的单变量效应**。
+> 本节用同代码系的 `run_f6_on`（F-6=ON、无 v2）算出单变量对照。
+```text
+$ python3 v2/evidence/recompute_l7_indep.py --log v2/evidence/run_f6_on_n16r60_seed42/run.jsonl --tag 'RUN_F6_ON (F-6=1, 无 v2)'
+=== 独立复算 RUN_F6_ON (F-6=1, 无 v2)（脚本 v2/evidence/recompute_l7_indep.py）
+日志: v2/evidence/run_f6_on_n16r60_seed42/run.jsonl
+日志 sha256: sha256:7de6a7be5adff276f1e42c065a708c271f870f2bf8daa930cf0cdfc983f7434d
+解析: 非空行 116261，JSON 解析失败 0，MSG_* 消息数 n_msg = 510
+MSG 类型分布: {"MSG_DM": 455, "MSG_PUBLIC": 55}
+
+[raw8 · 判定口径] dup = 342 / 510 = 67.058824%
+[norm8 · 辅助口径] dup = 332 / 510 = 65.098039%
+[集合交集] raw8∩norm8 dup = 328（raw8 独有 14，norm8 独有 4）
+[OFF 基线 raw8] 193 / 510 = 37.843137%
+[M1] Δ(raw8 vs OFF) = +29.2157pp，噪声带 [-4.31, +5.88]pp ⇒ OUT_OF_BAND
+[wilson95 raw8] [62.865, 70.997]
+[newcombe95 Δpp] [23.219, 34.903]
+[逐频道] {"MSG_DM": {"n": 455, "dup_raw8": 295, "dup_norm8": 287}, "MSG_PUBLIC": {"n": 55, "dup_raw8": 47, "dup_norm8": 45}, "MSG_GROUP": {"n": 0, "dup_raw8": 0, "dup_norm8": 0}}
+
+[守卫独立重算] S1 F-6 memory_refs = 412/510（floor 32 ⇒ PASS）
+                S2 L-2 旁白头 = 0/510（==0 ⇒ PASS）
+                S3 L-8 裸ID = 0/510（==0 ⇒ PASS）
+                S3b L-13 token泄漏 = 14/510（<=9 v1.1 ⇒ FAIL）
+```
+
+```text
+$ python3 - <<'EOF'  # 三臂 F-6 开关状态 + 单变量 Δ
+OFF: ctx.memory_refs = 0/510
+F6ON: ctx.memory_refs = 412/510
+R16 v2: ctx.memory_refs = 412/510
+v2 单变量口径: 111-342 = -231 条 = -45.2941pp
+判定口径(vs F-6-OFF 锚): 111-193 = -82 条 = -16.0784pp
+```
+
+> **两个数并存、禁混用**：
+> - **判定口径（报告 §3.1 用的、M1 判定所依赖的）**：`111 vs OFF raw8 193` ⇒ **−16.0784pp**（−82 条/510）。基线是 F-6-OFF 冻结锚，**Δ 含 F-6 0→1 的反向贡献**。
+> - **v2 单变量口径（补充对照）**：`111 vs F-6=ON 且无 v2 的 342` ⇒ **−45.2941pp**（−231 条/510）。
+> - 两者都不是「改善」结论；单变量口径更大，说明 F-6 本身把 L-7 推高（193→342），v2 把它压回来。
+> - ⚠️ 单变量口径**未经策略包判据裁定**（噪声带是按 OFF/DEQUP 臂标定的，对 F-6=ON 锚是否适用未检验）⇒ 只作对照，不作判定。
+> - 三臂 L-13 供参考：OFF 2/510、F6ON **14/510（>9，破 v1.1 门限）**、R16 6/510 ⇒ F-6=ON 本身会带来 token 泄漏，这也是 v2 臂守卫生效的背景。
