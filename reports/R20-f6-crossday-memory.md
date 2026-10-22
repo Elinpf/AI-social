@@ -449,7 +449,7 @@ git log --all --since="2026-10-22T20:24:36+08:00" --until="2026-10-22T20:47:29+0
 | E11 | 5 批无 meta；**真 LLM 缺 meta 共 10 批**；`code_sha` 重建红线 | 缺口 | `v2/evidence/evidence_ledger_20261022.md` §0–§5 | `20077ca7…` | §7-4/§7-9 |
 | E12 | R19 precision 10 条未填 **且** n=10<15 双重阻塞 | 缺口 | `v2/evidence/r19_topicbreadth_n8r24_seed42/precision_sample.md` | — | §7-5 |
 | E13 | 5 批规模/身份：`seed=42`、`n=16`、`rounds` 42/42/24/84/84 连续、`run.jsonl` sha8、`config_components` 12/12 | 机制 `probe` | 台账 §2（`obs llm-cost` 逐批 rc=0） | `20077ca7…` | §7-8 |
-| E14 | 审计结论「有条件通过」+ 5 条降级 + 白名单/缺口清单 | 审计 | `v2/evidence/f6_audit_20261022.md` | `64923856…` | §5 |
+| E14 | 审计结论「有条件通过」+ **4 条降级 + 1 条确认无需降级（keep）+ 2 处小瑕疵**（逐条见 §5.2 G 表）+ 白名单/缺口清单 | 审计 | `v2/evidence/f6_audit_20261022.md` | `64923856…` | §5 |
 | E15 | 归因链三条（git 祖先 / 代码树 diff / 批内签名） | 机制 `probe` | `f6_audit_20261022.md` §3 + 本报告 §2.1 | `64923856…` | §7-11 |
 
 > 源码类引用按报告族纪律写「臂 commit + 文件:行号」，并给出**该 commit 上的 blob sha8**（`git rev-parse <commit>:<path>`，对某一 commit 恒为定值，故本表不留占位符）；本表 E7 即此例（`8f1a492` 上的 `forgetting.py` / `agent.py` blob）。
