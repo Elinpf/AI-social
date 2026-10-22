@@ -205,6 +205,10 @@ _ASSEMBLY_CONTROL = frozenset({"op", "act", "scope", "channel"})
 _PASSTHROUGH = {
     "MEMORY_RETRIEVE": ("vec_available", "retrieval_mode", "query_digest"),
     "MEMORY_REFLECT": ("produced_mem_ids",),
+    # R18：固化摘要正文（EM→SM 的 `text`，由 life 睡眠窗提交）。
+    # 修前不在此表 ⇒ 每条固化都落 DROPPED{unknown_intent_field,keys=["text"]}，
+    # 摘要正文在日志侧不可审计（R10 §5.3 缺陷①；实测丢弃数 == 固化数）。
+    "MEMORY_CONSOLIDATE": ("text",),
     "OFFER_CREATED": ("enforceable",),
 }
 # 事件类型 -> 合法的 intent-only 路由/提示键（非事件字段，允许不入 payload，不算"丢失"）

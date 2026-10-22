@@ -437,7 +437,11 @@ class AssociativeMemory:
             node.text = ""
         self.nodes[mem_id] = node
         self._register(node)
-        self._next_seq = max(self._next_seq, int(mem_id.rsplit("-", 1)[-1]) + 1)
+        # R18：派生记忆（`M-Pxxx-SM-<subject>`）尾段是 subject 不是序号，
+        # 与 `sync_from_refs` 同一容错口径：只有数字尾段才推进 `_next_seq`。
+        tail = mem_id.rsplit("-", 1)[-1]
+        if tail.isdigit():
+            self._next_seq = max(self._next_seq, int(tail) + 1)
         if node.kind == "observation" and not node.reflected:
             self._unreflected_importance += node.importance
         return node
