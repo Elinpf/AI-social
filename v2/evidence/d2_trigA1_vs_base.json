@@ -1,0 +1,32 @@
+{
+  "baseline": {
+    "msg": 666,
+    "inits": 228,
+    "replies": 438,
+    "threads": 228,
+    "p50": 1.0,
+    "p90": 6.0,
+    "max": 6,
+    "mean": 2.671,
+    "multi3": 0.3553,
+    "single": 0.5614,
+    "conv_agentslot": 0.7352,
+    "denom": 321,
+    "conv_msg": 0.2338
+  },
+  "a1": {
+    "msg": 929,
+    "inits": 266,
+    "replies": 663,
+    "threads": 266,
+    "p50": 1.0,
+    "p90": 6.0,
+    "max": 6,
+    "mean": 3.094,
+    "multi3": 0.4511,
+    "single": 0.5226,
+    "conv_agentslot": 0.8667,
+    "denom": 345,
+    "conv_msg": 0.2687
+  }
+}
