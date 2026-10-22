@@ -261,7 +261,7 @@ print(len(a),len(b),a==b,len(a-b),len(b-a))"
 | 1 | `run_a5_real_n16r42_seed42` | **NO** | 部分可（`.worktrees/a2-prefer@51cdb07` 仍在）；`assertions.code_unchanged_during_run` **不可**（无起跑 porcelain 快照） | 不重建 ⇒ `probe` | `probe` |
 | 2 | `run_a1budget_real_n16r42_seed42` | **NO** | 同上（同一 worktree） | 同上 | `probe` |
 | 3 | `run_d12a_real_n16r24_seed42` | **NO** | 部分可（`.worktrees/d12-detail@a6ae5e5` 仍在） | 同上 | `probe` |
-| 4 | `run_worldline_c1_ctrl_n16r84_seed42` | **NO** | 部分可，但 worktree **已删**，需先建 | 同上 | `probe` |
+| 4 | `run_worldline_c1_ctrl_n16r84_seed42` | **NO** | 部分可；**跑批 worktree 仍在**（`.worktrees/worldline-c1-n16r84` @ `af1dffc [feat/world-line-c1]`，`rev-parse HEAD` = `af1dffc61040…` 与两臂 `host.log` 的 `code_sha` 逐位一致）⇒ **环境不阻塞、可原地重建**；但 ctrl 臂**无起跑 porcelain 快照** ⇒ `code_unchanged_during_run` 只能 `null` ⇒ **重建后仍 `probe`** | 同上 | `probe` |
 | 5 | `run_worldline_c1_a1_n16r84_seed42` | **NO** | **最全**（起跑 `git_status_start.txt` 在库） | 重建前仍 `probe` | `probe` |
 
 > **关键判定（台账 §3–§4，决定"不能随手补 meta"）**：`tools/d2/emit_run_meta.py` 的 `code_sha` 取的是**执行时刻** `git rev-parse HEAD` ⇒ 在当前主树（`84ed6b1`）补 meta 会把 `84ed6b1` 写成跑批 `code_sha` = **伪造代码身份**，禁止（台账 §4-C）。且 S1 门禁要求 `code_unchanged_during_run == true`，而 a5/a1budget/d12a 三批**没有起跑 snapshot**、该字段只能为 `null` ⇒ **即使重建也升不到 `evidence` 级**。⇒ 本报告一律按 `probe` 处理。
@@ -280,6 +280,8 @@ print(len(a),len(b),a==b,len(a-b),len(b-a))"
 | `run_l7v2_on_n16r60_seed42` | 60 | rc=0，`3042/3042` | `meta.derived.json`（先例，明示不得用于准入） | 同上 |
 | `run_dr_round1_arm-ctrl_n16r60_seed42` | 60 | rc=0，`2878/2878` | **仅 `run.jsonl`** | 同上 |
 
+> **勘误（审计自行更正，2026-10-22 22:24）**：本报告 22:15 版曾按审计初版台账写「worldline 两臂 worktree 已删」，**该断言错误** —— `git worktree list` 实为 11 行、该 worktree 恰在第 11 行，被初版命令的管道截断而误判为「不存在」。已按台账 §0.1 勘误段改为「**worktree 仍在 @ `af1dffc`**」。复算：`git worktree list | grep worldline`；`git -C .worktrees/worldline-c1-n16r84 rev-parse HEAD` → `af1dffc61040adc97c828b4927ac3935dbef2d1b`。
+>
 > 口径：**不得写"仅 5 个批缺 meta"**，正确表述为 **10 个真 LLM 批缺 meta**（含任务书列的 5 批 + 审计补登的 5 批）。
 > 缺 meta 的批次**只能记 `probe`**，不得作为 `evidence` 级引用进入结论。本报告 §2 的链条证明只读 `run.jsonl` 事件与字段，**不依赖 meta**，故不受此限；但 §4.2 的 F-6 率读数因此仍标 `probe`。
 
@@ -391,7 +393,7 @@ git log --all --since="2026-10-22T20:24:36+08:00" --until="2026-10-22T20:47:29+0
 | `v2/evidence/f6_chain_20261022/llmcost_a5.json` | `02f58d29c2f9560842ec3050d68e2f306c3c51cd1477157a13b40dde0faa1a85` |
 | `v2/evidence/f6_chain_20261022/llmcost_d12a.json` | `dc4d7be2e86b0b856416e07e99d7ab5e58eb7932181fe496f43c360f0bc9676f` |
 | `v2/evidence/f6_audit_20261022.md` | `649238566057a4f75002cd207cbca4a980676122a58b2eb2beebe144acda4e5b` |
-| `v2/evidence/evidence_ledger_20261022.md` | `20077ca7a8d4efb8fddf357e344f2abd893d06448966a584ff8d39fa704e70a8` |
+| `v2/evidence/evidence_ledger_20261022.md` | `99450aa8c9628af128d3192f9f1c96f706d27e05677f498d440fbf6ed98748ab` |
 | `tools/d5/timeref_lexicon.txt`（11 项） | `9357b4c91aad8584e6d845e311eed289b1f58179ccbfdc3a49588641978b7d5d` |
 
 > 指纹口径：以上为**报告定稿时刻（commit 前，22:15 版）**实测值。实现者于 22:13/22:15 按审计意见更新过 `verify_chain.py` / `chain_out.txt` / `README.md`（补 `llmcost_*.json`、修 `params=` 解析、并把两条推断措辞降级为「按代码结构推断、未实测」），**旧版 sha 已作废、勿引**；判据数字未变（`verify_chain.py` 重跑与 `chain_out.txt` diff **IDENTICAL**）。commit 后 `git log --format=%H -- <file>` 可定位同名文件所在提交。
@@ -446,9 +448,9 @@ git log --all --since="2026-10-22T20:24:36+08:00" --until="2026-10-22T20:47:29+0
 | E8 | F-6 `52/523`、`18/191`（**仅信息性**） | `probe` | `f6_chain_20261022/d12a_dialogue_metrics.json` | `c379953a…` | §7-3 |
 | E9 | 真 LLM：`openai_compat 2705/2705`、`2252/2252`、`degraded=0` | 机制 `probe` | `f6_chain_20261022/llmcost_a5.json` / `llmcost_d12a.json` | `02f58d29…` / `dc4d7be2…` | §7-8 |
 | E10 | 词表指纹 `9357b4c9…`（11 项） | 口径 | `tools/d5/timeref_lexicon.txt` | `9357b4c9…` | §7-6 |
-| E11 | 5 批无 meta；**真 LLM 缺 meta 共 10 批**；`code_sha` 重建红线 | 缺口 | `v2/evidence/evidence_ledger_20261022.md` §0–§5 | `20077ca7…` | §7-4/§7-9 |
+| E11 | 5 批无 meta；**真 LLM 缺 meta 共 10 批**；`code_sha` 重建红线 | 缺口 | `v2/evidence/evidence_ledger_20261022.md` §0–§5 | `99450aa8…` | §7-4/§7-9 |
 | E12 | R19 precision 10 条未填 **且** n=10<15 双重阻塞 | 缺口 | `v2/evidence/r19_topicbreadth_n8r24_seed42/precision_sample.md` | — | §7-5 |
-| E13 | 5 批规模/身份：`seed=42`、`n=16`、`rounds` 42/42/24/84/84 连续、`run.jsonl` sha8、`config_components` 12/12 | 机制 `probe` | 台账 §2（`obs llm-cost` 逐批 rc=0） | `20077ca7…` | §7-8 |
+| E13 | 5 批规模/身份：`seed=42`、`n=16`、`rounds` 42/42/24/84/84 连续、`run.jsonl` sha8、`config_components` 12/12 | 机制 `probe` | 台账 §2（`obs llm-cost` 逐批 rc=0） | `99450aa8…` | §7-8 |
 | E14 | 审计结论「有条件通过」+ **4 条降级 + 1 条确认无需降级（keep）+ 2 处小瑕疵**（逐条见 §5.2 G 表）+ 白名单/缺口清单 | 审计 | `v2/evidence/f6_audit_20261022.md` | `64923856…` | §5 |
 | E15 | 归因链三条（git 祖先 / 代码树 diff / 批内签名） | 机制 `probe` | `f6_audit_20261022.md` §3 + 本报告 §2.1 | `64923856…` | §7-11 |
 
