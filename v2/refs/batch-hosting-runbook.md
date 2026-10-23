@@ -192,7 +192,7 @@ picked = {0: 191}（全选第 1 条）；scores 三列均值 = 0 / 0 / 0；三�
 
 **规则**：
 1. 报告里**不得**把两者写成一个"rc=0"；无 `END` 时只能写「以 `meta.finished_at` + `seals` 完整 + 末行 `TURN_SEAL` + `events` 与 meta 一致判定为正常结束；**进程 rc 无直接证据**」；
-2. **生产 `END` 的正确姿势**：`run.sh` 内 `echo "$rc" > "$OUT/END"` 必须**在 unit 进程内**完成，且**同时**把 `rc` 写进 `run_summary.md` 的显式字段；不要依赖 `systemd-run --collect` 事后回收；
+2. **生产 `rc` 的正确姿势（已实现，`tools/d2/run_batch.sh` `193cd63`）**：用 **EXIT trap** 写 `run_batch.rc` + `run_batch.end`，且 trap **必须装在参数解析之前**（否则"参数错 `exit 2`"这类最常见失败会漏记）；此时 `OUT_DIR` 未解析，落兜底目录 `${RUN_BATCH_FALLBACK_DIR:-/tmp/run_batch_unknown}`；`run_batch.end` 里带 `out_dir=` 便于事后对账。自测四例（A 未知参数 / B 缺 `--out-dir` / C 兜底目录可改 / D mock 正常跑）见 `v2/refs/run_batch_rc_selftest.md`；
 3. **门禁命令与日志不同源时须写明**：如本树无 `python3 -m orchestration obs`（rc=2）而改用主树 `python3 -m obs`，报告须写「门禁命令来自主树、被解析日志来自本臂」。
 
 ## 4. 启动清单（复制粘贴；一批一跑）
