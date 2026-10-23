@@ -12,7 +12,7 @@
 > 附带产出：① 登记 1 处**预登记结构性缺陷**（§5.1 否决条恒真 ⇒「成立」在数学上不可达，与 `R15` 的「F1/F2 结构互斥」同型）；② 登记 1 处**工具字段缺陷**（`meta.code_sha` 语义，§2.2）。两处均**只登记、本轮不改**。
 >
 > **写作口径**：照 `reports/CYCLE-06-20261023.md` 的六元组 —— 数值 + 分母（口径）+ 判据编号 + 来源路径 + sha + 证据状态（`已验证` / `仅观察` / `未对账` / `不可判`）。
-> **用词纪律**：不使用「提升 / 改善 / 显著 / 更自然 / 生活气息提升」。所有结论绑定本文件所在提交的 commit sha（见 §0 与文末回填）。
+> **用词纪律**：不使用「提升 / 改善 / 显著 / 更自然 / 生活气息提升」。所有结论绑 commit `e88f9b238e646588dada691fabef902950078352`（见 §0 与文末「报告绑定 sha」）。
 
 ---
 
@@ -22,10 +22,10 @@
 |---|---|---|
 | 报告文件 | `reports/R21-scene-pair.md` | 命名依据：`R<n>-<slug>.md`（`reports/README.md` 族索引，R1–R20 为既有序列） |
 | 交付分支 | `feat/r21-scene-pair` | `git branch --show-current` |
-| **报告绑定 sha（本文件首次入库 commit）** | `git log --diff-filter=A -1 --format=%H -- reports/R21-scene-pair.md`；该 sha 即本报告全部读数对应的提交（分支 `feat/r21-scene-pair`） | git |
+| **报告绑定 sha** | **本报告结论绑 commit `e88f9b238e646588dada691fabef902950078352`（2026-10-23T08:40:42+08:00，分支 `feat/r21-scene-pair`）**；本报告全部读数出自该 commit。其后的文档修正（本附录 D 与审计修正）由**后续 commit** 承载，**代码与读数未变**。复现手段：`git log --diff-filter=A -1 --format=%H -- reports/R21-scene-pair.md` | git |
 | 两臂跑批代码身份 pin | ON `3bb44308291c8ea61d71ae0c595ff2e8b09b5502` / OFF `e878a6e5da57e5661d07ec2c3fbed91ea91b10a0`；两者 `code/` 树对象同为 `4e8727499a589b13a2972577090d71490e047883`（详见 §2.2） | `switch_proof.txt` / `host.log` |
 | 取数时刻 | 2026-10-23 08:33–08:37 +0800 | `date '+%F %T %z'` |
-| 预登记 | `v2/refs/prereg-r21-scene-anchor.md`，sha256 `0fc9107042735c726a3efc527d2d37d1fd5df81f31824fc29d29dbfaeb8c6670`（12614 B / 161 行） | `sha256sum` |
+| 预登记 | `v2/refs/prereg-r21-scene-anchor.md`，sha256 `0fc9107042735c726a3efc527d2d37d1fd5df81f31824fc29d29dbfaeb8c6670`（12614 B / 161 行）。**披露**：该文件在 OFF 臂起跑（08:08:28）后约 **47 s** 被编辑一次（`44e3710`，08:09:15），内容仅 §9/§10 **章节位对调 + Amendment 1 登记表**，`git diff --stat e878a6e..44e3710` → `9 insertions(+), 3 deletions(-)`，**判据档/守卫阈值/词表零改动**，diff 可核 | `sha256sum` / `git diff` |
 | 指标真源 | `tools/d5/dialogue_metrics.py` sha256 `1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271`（与 `v2/evidence/f8_metrics_selfcheck.txt` 的 `METRICS_GATE=PASS` 同一 sha） | `sha256sum` |
 | F-8 词表 | `tools/d5/f8_lexicon.json` sha256 `004f3bca138e7800a0fc0ac7e0f1c0f0bdb9b0a862432fa53f65b152bdb2ddd3`（`f8-lexicon-v3`） | 同上 |
 
@@ -189,8 +189,8 @@ cd code && bash frontend/tools/dialogue_shots.sh http://127.0.0.1:8848 sample/di
 
 | 臂 | 目录（`v2/evidence/…`） | 关键文件 | 说明 |
 |---|---|---|---|
-| ON | `run_scene_anchor_on_seed42_n16r24/` | `meta.json`（events **33828**、`duration_sec` **1177**）、`host.log`、`switch_proof.txt`、`launch.sh`、`llm_cost.txt`（本轮补落） | `run.jsonl` **17,180,516 B**，sha256 `8a5a88ac1e57c1e692d90221dfdc794acc6f8e49ca212b6c233b684f95b6c1a9`（**不入库**，`.gitignore:8 **/*.jsonl`） |
-| OFF | `run_scene_anchor_off_seed42_n16r24/` | `meta.json`（events **33846**、`duration_sec` **1289**）、`host.log`、`switch_proof.txt`、`launch_worktree.sh`、`llm_cost.txt` | `run.jsonl` **17,161,028 B**，sha256 `4d70674e0be7dcf24b92ecd73ed01062f03cf41d483464dc85ec538a2060c7e6`（**不入库**；正本在 worktree，主树未复制） |
+| ON | `run_scene_anchor_on_seed42_n16r24/` | `meta.json`（events **33828**、`duration_sec` **1177**）、**`host.log`（本轮补入库，含 `[d2] OK` 与 chain/replay/conservation 原文）**、`switch_proof.txt`、`launch.sh`、`llm_cost.txt`（本轮补落） | `run.jsonl` **17,180,516 B**，sha256 `8a5a88ac1e57c1e692d90221dfdc794acc6f8e49ca212b6c233b684f95b6c1a9`（**不入库**，`.gitignore:8 **/*.jsonl`） |
+| OFF | `run_scene_anchor_off_seed42_n16r24/` | `meta.json`（events **33846**、`duration_sec` **1289**）、**`host.log`（本轮补入库，含 `[d2] OK` 与 events/seconds/conservation 原文）**、`switch_proof.txt`、`launch_worktree.sh`、`llm_cost.txt` | `run.jsonl` **17,161,028 B**，sha256 `4d70674e0be7dcf24b92ecd73ed01062f03cf41d483464dc85ec538a2060c7e6`（**不入库**，`.gitignore:8 **/*.jsonl` 排除）；**主树另有同 sha 副本**（与 worktree 正本 `sha256sum` 逐位相同），**未入库** |
 | 指标 | `d5_metrics_r21_scene_{on,off}.{json,md}` | sha256：on `65b40c8a…d0296` / `d2f8996c…a4e88`；off `54c04a59…682f7` / `eb6fe57a…1b6e` | — |
 | 交叉复算 | `r21_f8_crosscheck_{on,off}.json` | 两臂均 `MATCH` | — |
 | 截图 | `r21_scene_shots/` | 8 PNG + `render.log` | 见 §7.1 |
@@ -205,7 +205,7 @@ cd code && bash frontend/tools/dialogue_shots.sh http://127.0.0.1:8848 sample/di
 | 指标 | OFF 臂 | ON 臂 | Δ（pp） | 判据（预登记 §5.1） | 判定 | 证据状态 |
 |---|---|---|---|---|---|---|
 | **`F-8t_core`**（时段·判定） | **1/191 = 0.5236%**，Wilson [0.0925%, 2.9056%] | **16/191 = 8.3770%**，[5.2219%, 13.1732%] | **+7.8534** | `Δ ≥ +3.0pp` 且 CI 不重叠 | **该条满足** | `已验证`（交叉复算 MATCH） |
-| **`F-8p_place`**（地点·判定） | **0/167 = 0%**，[0%, 2.2486%] | **9/167 = 5.3892%**，[2.8609%, 9.9238%] | **+5.3892** | 同上 | **该条满足** | `已验证` |
+| **`F-8p_place`**（地点·判定） | **0/167 = 0%**，[0%, 2.2486%] | **9/167 = 5.3892%**，[2.8609%, 9.9238%] | **+5.3892** | 同上 | **该条满足** | `已验证`（**同工具、同词表复算一致；无独立交叉校验**——`tools/d9/f8_crosscheck.py` 只复算 `F-8t_all`/`F-8t_core`，其源码中 `place` 出现 **0** 次） |
 | `F-8a_activity`（活动） | **`not_applicable(no_ctx_scene)`**（分母 0：191/191 条无 `ctx.scene.activity`） | 12/179 = 6.7039%，[3.8762%, 11.3509%] | — | — | **不可算**（原样写，**不填 0、不译作「0%」**） | `不可判` |
 | `F-8t_all`（宽口径，**只登记**） | 5/191 = 2.6178%，[1.1232%, 5.9807%] | 25/191 = 13.0890%，[9.0253%, 18.6082%] | +10.4712 | **不得用于裁定** | 登记项 | `仅观察` |
 | `F-8`（综合，信息性） | 5/191 = 2.6178% | 38/191 = 19.8953% | +17.28 | 不进判定 | 登记项 | `仅观察` |
@@ -219,7 +219,7 @@ cd code && bash frontend/tools/dialogue_shots.sh http://127.0.0.1:8848 sample/di
 | 编号 | 守卫 | 阈值（预登记 §6 原文） | OFF | ON | 结论 | 证据状态 |
 |---|---|---|---|---|---|---|
 | **G1** | L-13 内部 token 泄漏（事件数） | ON **>** OFF 即击穿 | **2**（1.0471%） | **1**（0.5236%） | **不击穿** | `已验证` |
-| **G2** | L-7 8-gram 重复率 | `Δ > +9.043pp`（冻结带 `item:L-7` **denom=188 档** `hi_97.5`；本轮分母 191 ⇒ 取**最接近档 188**） | 14.6597% | 13.6126% | **Δ = −1.047pp，不击穿** | `已验证` |
+| **G2** | L-7 8-gram 重复率 | `Δ > +9.043pp`（阈值出处：`v2/evidence/d5_noiseband_bootstrap_t300_t355.json` → `B2_band_by_denom["item:L-7"]["188"]["hi_97.5"] = 9.043`；本轮分母 191 ⇒ 取**最接近档 188**） | 14.6597% | 13.6126% | **Δ = −1.047pp，不击穿** | `已验证` |
 | **G3** | L-1 长度 | `len_p50(ON) < 0.90 × len_p50(OFF)` 即击穿 | `p50` **43**（mean 44.97，p90 67） | `p50` **43**（mean 45.75，p90 64） | **不击穿**（0.90×43 = 38.7 ≤ 43） | `已验证` |
 | **G4** | 结构三项 | 两臂差 `> ±5%` 即击穿 | 191 消息 / 66 线程 / 28 个 ≥3 轮线程 | **同值** | **不击穿（0% 差）** | `已验证` |
 | **G5** | 真跑 | `rc≠0` / `provider_guard.ok≠true` / `degraded≠0` | rc=0 | rc=0 | **不击穿** | `已验证` |
@@ -294,14 +294,14 @@ cd code && bash frontend/tools/dialogue_shots.sh http://127.0.0.1:8848 sample/di
 
 ## 7. 未取到 / 未验证（逐项登记）
 
-### 7.1 截图（8 项，全部取到）
+### 7.1 截图（**8 张全部已取到**；其中**仅 2 张做过内容级核对**）
 
 | 项 | 状态 | 证据 |
 |---|---|---|
 | OFF chat / rhythm / spread / 600 | **已取到** | `r21_scene_shots/run_scene_anchor_off_seed42_n16r24-{chat,rhythm,spread,600}-4d70674e.png`；`blank_retries=0/2`（逐张三行 `SHOT OK` 在 `render.log`） |
 | ON chat / rhythm / spread / 600 | **已取到** | `…-{chat,rhythm,spread,600}-8a5a88ac.png`；`blank_retries=0/2` |
 | 生成命令 | `bash frontend/tools/dialogue_shots.sh http://127.0.0.1:8848 sample/dialogue_r21_scene_{on,off}/threads.json "" "" ../v2/evidence/r21_scene_shots` | 生成时刻 **2026-10-23 08:36**；`render.log` 65 行 |
-| 真伪复核 | **已用视觉模型复核 ON-chat 图**：确为真实渲染（可见标题「青溪镇·对话观看台」、线程 66/多轮 32/消息 191、以及「天刚亮，手就闲不住。给老周家修的那把椅子，榫头还得再磨磨。」等台词），非空白/黑屏/报错页 | 未对 8 张逐一复核（只抽 1 张），其余 7 张仅凭 `blank_retries=0/2` 与亮度指标 |
+| 真伪复核（内容级，**仅 2 张**） | **本报告作者复核 1 张（ON-chat）**：确为真实渲染（可见标题「青溪镇·对话观看台」、线程 66/多轮 32/消息 191、以及「天刚亮，手就闲不住。给老周家修的那把椅子，榫头还得再磨磨。」等台词），非空白/黑屏/报错页 | 未对 8 张逐一复核（只抽 1 张），其余 7 张仅凭 `blank_retries=0/2` 与亮度指标 |
 
 ### 7.2 真 LLM 验真
 
@@ -397,3 +397,54 @@ PY
 ```
 
 > 意义：这是**一次独立复现**（不同人、不同树、同工具、同一份 ON 日志）⇒ 数值层可复现；也说明本报告的读数不是单点结论。
+
+## 报告绑定 sha（文末复述）
+
+> 本报告 §5/§6 的全部读数与判定绑 commit **`e88f9b238e646588dada691fabef902950078352`**（2026-10-23T08:40:42+08:00，分支 `feat/r21-scene-pair`）。
+> 本附录 D 与审计修正（F1/F2/C1–C5）由**其后 commit** 承载，**代码与读数未变**；三层关系为：读数 commit `e88f9b2` → 文档修正 commit（其 sha 见该 commit 本身）。
+
+---
+
+## 附录 D · 共享主树并发写入事故与核验留痕
+
+> **本附录为纯文档追加，不触及 §5/§6 任何读数与判定，主判定仍为「不可判」（触发条 `F-8a = not_applicable`）。**
+
+本轮交付期间，**同一工作树的 `.git` 被另一个并发会话同时操作**（该会话在做 D12-C / D12-D 的工作），造成一次分支拓扑异常。此节完整留痕，不含内部措辞。
+
+**（1）发生了什么（按时间）**
+
+| 时刻 | 事件 |
+|---|---|
+| 08:07:47 | 本报告预登记首版 `e878a6e` 提交（跑批树） |
+| 08:08:28 | OFF 臂起跑（pid 3188090） |
+| 08:09:15 | 预登记章节位对齐 `44e3710`（跑批中途，只动 §9/§10） |
+| 08:29:57 | OFF 臂收批（`[d2] OK`，33846 行） |
+| 约 08:26–08:37 | **并发会话把共享主树 HEAD 从 `feat/r21-scene-pair` 切到 `master`**，并在 master 上连续提交 `da0cb91 → e9e609f → b558004 → fa955a9 → 2619ad8 → c3baa39` |
+| 08:40:42 | 本报告的提交因此**一度落在 master 顶端**（`e88f9b2` 的父提交为 `c3baa39`） |
+| 08:41 | 首次 push 后，远端同名分支一度回到 `b558004`（并发侧对同名分支的推送）；期间遇到 `.git/index.lock` 争用（`git checkout` 报 "Another git process seems to be running"），可确认并发提交正在进行 |
+| 08:41:43 | 修复：把提交只归属到 `feat/r21-scene-pair`，并把 master 指针还原到并发会话自己的顶端 |
+
+**（2）修复动作（只动指针/索引，未触碰他人文件内容；未 force、未 rebase、未改远端 master）**
+
+1. `git branch -f feat/r21-scene-pair e88f9b2`（让提交只归属交付分支）
+2. `git update-ref refs/heads/master c3baa39`（把 master 还原到并发会话顶端；**此动作属高危，已由 leader 复核确认无提交丢失**）
+3. `git reset -q` + `git checkout -- reports/README.md`（清索引、还原在 master 侧留下的工作树改动；该改动已在交付 commit 内）
+4. 重推 `refs/heads/feat/r21-scene-pair` → **快进** `b558004..e88f9b2`，rc=0
+
+**（3）三方核验结论（leader 独立复核，非仅听汇报）**
+
+- `e88f9b2^ = c3baa39`；`master` reflog：`c3baa39(08:37:08) → e88f9b2(08:40:42 commit) → c3baa39(08:41:43 update-ref)` ⇒ 并发会话的 3 个提交（`fa955a9` / `2619ad8` / `c3baa39`）**全部完好挂于 master，一个没丢**；
+- `git branch --contains e88f9b2` → 仅 `feat/r21-scene-pair`；`git rev-parse e88f9b2^` → `c3baa39` ⇒ R21 **建立在并发会话最新提交之上**，不是孤立挂枝；
+- 远端 `refs/heads/feat/r21-scene-pair = e88f9b238e646588dada691fabef902950078352`，与本地一致；**远端 master 未被本轮触碰**（`c3baa39`）。
+
+**（4）教训与纪律（写入本轮交付说明）**
+
+- **共享主树上多会话并发 git 是结构性的坑**：`git` 无会话隔离，分支切换/提交/索引锁会互相踩，任何一次 `switch`/`commit` 都可能改变另一个会话的 HEAD。
+- **今后遇到并发冲突，一律先停下报 leader**，由 leader 核验后再动手；**不自行修改任何分支指针**（本轮 `update-ref` 虽经复核无丢失，但属越界动作，不作先例）。
+- 建议：需要并行时各自用独立 worktree，或在团队层约定「跑批/提交窗口互斥」。
+
+**（5）遗留（非本轮造成，未提交、不还原）**
+
+`v2/evidence/d3_noiseband_bootstrap.json`、`v2/refs/D12D-prereg-dedup-on-detail.md` 处于已跟踪修改态（mtime 2026-10-23 08:28:56–08:28:59，OFF 臂跑批期间），属并发会话 D12-C/D12-D 的在途产物，留由其自行收口。
+
+> 本节仅记录**仓库操作层面**的事实，不改变 §5/§6 的任何读数与判定；主判定仍为「不可判」（触发条 `F-8a = not_applicable`）。

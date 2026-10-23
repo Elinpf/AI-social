@@ -1,0 +1,19 @@
+[scene-anchor] arm=on
+[scene-anchor] launcher=tools/d2/run_batch.sh（走封装脚本 ⇒ 产出 meta.json + '[d2] OK' 收尾标记 + 内建 obs llm-cost 门禁）
+[scene-anchor] run: env bash tools/d2/run_batch.sh --out-dir /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_scene_anchor_on_seed42_n16r24 --seed 42 --agents 16 --rounds 24 --flush-every 2 --side-root /tmp/scene_anchor_on_side
+[scene-anchor] env: LIFE_PROMPT_SCENE=SET（值='1'）
+[scene-anchor] code_sha=3bb44308291c8ea61d71ae0c595ff2e8b09b5502 code_dir=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code
+[scene-anchor] started_at=2026-10-23T02:47:32+08:00
+[d2] run: python3 -m orchestration run --life --seed 42 --agents 16 --rounds 24 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_scene_anchor_on_seed42_n16r24/run.jsonl --flush-every 2 --side-root /tmp/scene_anchor_on_side
+[life] n_agents=16 rounds=24 events=33828 seconds=1173.8554 log_bytes=17180516
+  unknown_event_types=[]
+  chain_ok=True replay_parity=True first_run_equals_replay=True
+  conservation_ok=True final_state_hash=sha256:65ba12a1073c026d527a39daa97d133e8e48a2c786b352a665c59d4a7a92ecb5
+  log written: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_scene_anchor_on_seed42_n16r24/run.jsonl
+[meta] /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_scene_anchor_on_seed42_n16r24/meta.json
+[meta] events=33828 llm_calls=2252 cached_ratio=0.6159 provider={'openai_compat': 2252} model={'DeepSeek-Flash': 2252}
+[meta] seed_in_log=42 n_in_log=16 rounds_effective=24
+[meta] OK: 真跑判定通过
+[d2] self-check wc -l=33828 meta.events=33828
+{"engine_log":{"by_provider":{"openai_compat":2252},"by_purpose":{"dialogue":{"cached":0,"calls":191,"degraded":0,"thinking":0,"tokens_in":65422,"tokens_out":7456},"importance":{"cached":1387,"calls":1523,"degraded":0,"thinking":0,"tokens_in":2312,"tokens_out":36989},"judge":{"cached":0,"calls":425,"degraded":0,"thinking":425,"tokens_in":51730,"tokens_out":97630},"negotiation":{"cached":0,"calls":7,"degraded":0,"thinking":0,"tokens_in":839,"tokens_out":288},"plan":{"cached":0,"calls":16,"degraded":0,"thinking":0,"tokens_in":1447,"tokens_out":903},"reflect":{"cached":0,"calls":90,"degraded":0,"thinking":0,"tokens_in":41064,"tokens_out":6100}},"llm_judgment_by_dimension":{"affection":132,"rel_affinity":13,"respect":132,"stance":132,"weekly_focus":16},"source":"engine_log(LLM_CALL)","total":{"cached":1387,"calls":2252,"degraded":0,"thinking":425,"tokens_in":162814,"tokens_out":149366,"tokens_total":312180}},"provider_guard":{"by_provider":{"openai_compat":2252},"expected":"openai_compat","ok":true,"policy":"计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。","problems":[]}}
+[d2] OK
