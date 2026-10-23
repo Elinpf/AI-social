@@ -1,0 +1,48 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>R23 日历臂真实输出渲染图</title>
+<style>
+body{font-family:"Noto Sans CJK SC","WenQuanYi Zen Hei",sans-serif;background:#f6f7f9;color:#1d2330;margin:0;padding:28px 34px;width:1430px}
+h1{font-size:25px;margin:0 0 6px} .sub{color:#5b6474;font-size:14px;margin-bottom:6px}
+.warn{background:#fff4e5;border-left:5px solid #e8a33d;padding:9px 13px;font-size:13.5px;margin:14px 0 20px;line-height:1.6}
+h2{font-size:17px;margin:22px 0 8px;padding-bottom:5px;border-bottom:2px solid #d8dde6}
+table{border-collapse:collapse;width:100%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08);font-size:13.5px}
+th,td{border:1px solid #e2e6ed;padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#eef1f6;font-weight:600} td.k{width:250px;font-weight:600} td.out{width:520px}
+.mono{font-family:"DejaVu Sans Mono",monospace;font-size:12.5px} .sha{color:#7b8494;width:150px}
+.cmp{display:flex;gap:16px} .box{flex:1;background:#fff;border:1px solid #e2e6ed;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.bt{font-weight:700;font-size:14px;margin-bottom:8px} .tag{font-size:12px;padding:1px 7px;border-radius:9px;color:#fff;margin-left:6px}
+.off .tag{background:#8b94a5} .on .tag{background:#2f7d4f}
+.pline{font-size:12.3px;line-height:1.55;white-space:pre-wrap;word-break:break-all;color:#2a3140;border-bottom:1px dotted #f0f2f6}
+.insert{background:#e6f6ea;border-left:3px solid #2f7d4f;font-weight:600}
+.meta{font-size:12px;color:#5b6474;margin-top:7px;font-family:"DejaVu Sans Mono",monospace}
+</style></head><body>
+<h1>R23 · 日历臂「今天是什么日子」真实输出渲染图</h1>
+<div class="sub">对象：<span class="mono">code/life/calendar.py::render()</span> 与 <span class="mono">LifeLayerAgent._dialogue_prompt()</span> 的**真实装配输出**｜生成时刻 2026-10-23 12:2x (+08:00)</div>
+<div class="warn"><b>图注（请勿误读）</b>：本图是<b>纯函数 / 提示词装配输出的渲染图，不是居民真实对话截图</b>。本轮<b>未跑批、未调用任何 LLM</b>，因此不存在"跑出来的台词"；本图只证明「日历事实今天能被写进哪一行、写成什么人话」，<b>不构成任何效果读数</b>。</div>
+
+<h2>1 · 三态渲染：同一 (agent=P003, round=62) 下的真实输出</h2>
+<table><thead><tr><th>输入状态</th><th>render() 入参</th><th>真实输出（人话行）</th><th>sha256(前16)</th></tr></thead>
+<tbody><tr><td class='k'>OFF（env 未设）</td><td class='mono'>dow=5, day_type=&quot;weekend&quot;</td><td class='out'>（空串——OFF 不插任何行）</td><td class='mono sha'>e3b0c44298fc1c14…</td></tr>
+<tr><td class='k'>workday · dow=2（周三，上工日）</td><td class='mono'>dow=2, day_type=&#x27;workday&#x27;</td><td class='out'>今儿是什么日子：周三，今天得干活。（这只是你心里有数的一件事：顺口带一句就够，别当成报日期，也别每条都提；说不着就不提。）</td><td class='mono sha'>158dcd96e169c759…</td></tr>
+<tr><td class='k'>weekend · dow=5（周六，歇日）</td><td class='mono'>dow=5, day_type=&#x27;weekend&#x27;</td><td class='out'>今儿是什么日子：周六，今天不用上工。（这只是你心里有数的一件事：顺口带一句就够，别当成报日期，也别每条都提；说不着就不提。）</td><td class='mono sha'>01a01a0214dc221e…</td></tr>
+<tr><td class='k'>weekend · dow=6（周日，歇日）</td><td class='mono'>dow=6, day_type=&#x27;weekend&#x27;</td><td class='out'>今儿是什么日子：周日，今天不用上工。（这只是你心里有数的一件事：顺口带一句就够，别当成报日期，也别每条都提；说不着就不提。）</td><td class='mono sha'>9b9ffeccd4ca3a19…</td></tr>
+<tr><td class='k'>day_type 未知 · dow=4（只写周几）</td><td class='mono'>dow=4, day_type=&#x27;holiday&#x27;</td><td class='out'>今儿是什么日子：周五。（这只是你心里有数的一件事：顺口带一句就够，别当成报日期，也别每条都提；说不着就不提。）</td><td class='mono sha'>3732ff68ac64fc93…</td></tr>
+<tr><td class='k'>两者都缺（宁缺不写）</td><td class='mono'>dow=None, day_type=None</td><td class='out'>（空串）</td><td class='mono sha'>e3b0c44298fc1c14…</td></tr></tbody></table>
+
+<h2>2 · 两条提示词的差异：OFF 与 ON 只差「插入的那一行」</h2>
+<div class="cmp">
+  <div class="box off"><div class="bt">OFF <span class="tag">env 未设</span></div><div class='pline '>青溪镇·阿禾（P003，34岁，farmer）。背景：世代务农，性格内敛，重视邻里。性格：开放55/尽责70/外向40/宜人65/神经质35（0-100）。价值：自主60/仁爱70/成就55/安全65。语气：plain；长度：short。当前目标：security</div>
+<div class='pline '>场景：走动人情；对象：阿禾（熟悉度0/好感0）。情绪：平和；最紧的需求：mastery=50。</div>
+<div class='pline '>这一句换个说法：开口先说一句短的感慨，随即落到一件具体的事上；最后用一个问句收住，把话头递回给对方。</div>
+<div class='pline '>（句子里要有一件具体的东西——你正做着的活、手里的东西、谁家的谁——不要只讲空泛的感受。）</div>
+<div class='pline '>只写台词本身（一句家常话）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。</div>
+    <div class="meta">dialogue_sha256=b634752921de85824b795675549e63ae527989a4d3ff5930db4d53a02bce24a1<br>len=343（342→实为 343）</div></div>
+  <div class="box on"><div class="bt">ON <span class="tag">LIFE_PROMPT_CALENDAR=1</span></div><div class='pline '>青溪镇·阿禾（P003，34岁，farmer）。背景：世代务农，性格内敛，重视邻里。性格：开放55/尽责70/外向40/宜人65/神经质35（0-100）。价值：自主60/仁爱70/成就55/安全65。语气：plain；长度：short。当前目标：security</div>
+<div class='pline '>场景：走动人情；对象：阿禾（熟悉度0/好感0）。情绪：平和；最紧的需求：mastery=50。</div>
+<div class='pline insert'>今儿是什么日子：周六，今天不用上工。（这只是你心里有数的一件事：顺口带一句就够，别当成报日期，也别每条都提；说不着就不提。）</div>
+<div class='pline '>这一句换个说法：开口先说一句短的感慨，随即落到一件具体的事上；最后用一个问句收住，把话头递回给对方。</div>
+<div class='pline '>（句子里要有一件具体的东西——你正做着的活、手里的东西、谁家的谁——不要只讲空泛的感受。）</div>
+<div class='pline '>只写台词本身（一句家常话）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。</div>
+    <div class="meta">dialogue_sha256=8fe92eb39bfd9bbf26676e2014caf9250f8109bc3a39ec0df835c59f80d199ba<br>len=406（比 OFF +63 字符）</div></div>
+</div>
+<div class="sub" style="margin-top:10px">绿底行 = 本臂插入的唯一一行（同一提示词内仅出现 1 次）；把它原样减掉后，ON 与 OFF <b>逐字节相等</b>（复算脚本见报告 §3.2）。</div>
+</body></html>
