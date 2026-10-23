@@ -38,6 +38,19 @@ return digest({"cache_schema", "kind", "engine_version", "prompt_hash", "model",
 **规定（实现者必须照做）**：
 1. 每次采样把 **`sample_index = 0/1/2` 并入 `params`**（→ 进 `cache_key`），使三次调用是三次真实请求；
 2. `sample_index` 必须由**确定性输入**派生（直接取 k 即可），**禁止随机数** —— 否则 `FREEZE_MODE=replay` 时重算出的 `cache_key` 与日志里的不匹配，会触发"重放模式缓存未命中（禁止真实调用）"，直接毁掉 replay；
+### 1.2 三个"看起来一样"的东西必须分清（否则会做错实现）
+
+| 名字 | 由什么决定 | D12-E 开启后会不会变 | 与判据/接线的关系 |
+|---|---|---|---|
+| **`prompt` 文本**（`_dialogue_prompt` / `_reply_prompt` 渲染结果） | 提示词函数 + 世界状态 | **不变**（D12-E 只加采样与选择，**一个字都不改提示词**） | ⇒ `prompt_fn_sha256` **必须仍等于 T1 的 `effc14db…`** |
+| **`params`**（模型参数 dict） | 调用方传入 | **变**：三次分别为 `{…, "sample_index": 0/1/2}` | ⇒ 进 `cache_key`，使三次是三次真实请求 |
+| **`prompt_hash`**（`_prompt_hash(system, user, params, messages)`） | 含 `params` | **会变**（3 个值） | 只影响 `LLM_CALL` 日志字段，**不影响任何判据**；`prompt_hash ≠ prompt_fn_sha256` |
+
+**因此**：
+- **正确做法**：`sample_index` 只进 **`params`**，**绝不写进 prompt 文本**；
+- **不可取**：把采样序号/种子"写进 prompt 尾部改变 prompt_hash"——那会**同时改掉 `prompt_fn_sha256`**，等于**偷改提示词**，直接违反本臂的接线证明（sha 必须等于 T1），整臂作废；
+- **也不用**换 `cache_dir`：`cache_dir` 变化会破坏"同一 store 内 replay"的既有契约，而 `params` 加键是最小改动。
+
 3. 上述两条本身也构成**接线证明**：`LLM_CALL` 中对话 purpose 的 `cached` 必须为 **false**，且三条候选的 `cache_key` **两两不同**（跑后从日志核）。
 
 **与既有机制的区别（必须写进报告，防止被当成"又一个 anti_repeat"）**：
