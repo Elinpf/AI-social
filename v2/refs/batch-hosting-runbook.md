@@ -363,7 +363,14 @@ git show 9ae3eae -- v2/evidence/d12e_result.md v2/evidence/d12e_leader_terminal_
 
 ## 3.105b 候选重复：三采择优会静默退化成两采（同一批发现）
 D12-G 284 条里有 **1 条**（`seq=26894`）**候选 0 与候选 1 的 sha 完全相同** ⇒ 该条的"三采"实际是"两采"，M5 的最小值 0.3763 由此而来（不是机制下限）。
-⇒ **规则**：best-of-N 类机制必须检查**候选 sha 是否重复**，重复则**重采**（上限 K 次）并记账；`ctx` 里落 `picked_cand_sha` 与各候选交集数，否则"选中的那条是否更少重复"无法逐条验证。
+⇒ **规则**：best-of-N 类机制必须检查**候选 sha 是否重复**，重复则**重采**（上限 K 次）并记账。
+
+**§3.105b 补：想让"候选差异"事后可算，落什么才对**（2026-10-23 eval 校正，三条都采纳）
+1. **不能落"集合的 sha"** —— `sha256(shingle_set)` 是**32 字节摘要**，**摘要之间算不出交集大小**，归因照样不可补算。要逐条可算必须落二者之一：
+   - **排序后的 shingle hash 列表**（如 `candidate_shingle_hashes: [[h…],[h…],[h…]]`，每个 shingle 用 blake2b-8B、按值排序；体积 ≈ 每候选 30–80 项，可控）—— **推荐，精确可复算**；
+   - MinHash 签名（如 k=64，128B/候选）—— **只够估计** Jaccard；若用就**必须写成"MinHash 估计值"**，不得声称可算精确交集。
+2. **`scores` 已经是"候选与近期台词的 8-gram 交集数"**（argmin 依据）⇒ 不要再加 `inter_counts` 这类同量字段，否则"按 scores 归因"与"按 inter_counts 归因"会打架。正确做法：**在预登记里把 `scores` 的定义写死**（窗口 = 最近 N 条？跨线程还是仅本线程？N 多少？是否 `normalize_body` 后 8-window？），使 `scores` 本身可作归因依据。
+3. **`picked_cand_sha` 冗余** ⇒ 有 `picked`（索引）+ `candidate_shas` 就够；若担心错位，加断言 `candidate_shas[picked] == picked_cand_sha`，不必存两份。
 
 ## 4. 启动清单（复制粘贴；一批一跑）
 > 约定：`REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`；批次名 `<B>`（如 `A`）；跑批产物落 `RUN=/root/t271/runs/<B>`。
