@@ -1,0 +1,16 @@
+{
+ "bucket_days_histogram": {
+  "1": 68,
+  "2": 20
+ },
+ "buckets_ge3_days": 0,
+ "buckets_ge3_share": 0.0,
+ "diagnostic_only": true,
+ "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_scene_anchor_on_seed42_n16r24/run.jsonl",
+ "n_buckets": 88,
+ "n_messages_counted": 191,
+ "n_messages_with_day": 191,
+ "n_place_none_msgs": 24,
+ "note": "解释性诊断；F-5 指标值以 metrics_*.json 的 F-5_habit_repetition 为准",
+ "place_none_share_of_dayknown": 0.125654
+}

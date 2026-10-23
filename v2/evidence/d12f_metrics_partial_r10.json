@@ -1,0 +1,228 @@
+{
+ "M0_uncached": {
+  "by_purpose": {
+   "dialogue": {
+    "cached": 0,
+    "cached_false": 273,
+    "cached_rate_pct": 0.0,
+    "calls": 273,
+    "tokens_in_uncached": 61449,
+    "tokens_out_uncached": 15912
+   },
+   "importance": {
+    "cached": 247,
+    "cached_false": 60,
+    "cached_rate_pct": 80.456,
+    "calls": 307,
+    "tokens_in_uncached": 1020,
+    "tokens_out_uncached": 15147
+   },
+   "judge": {
+    "cached": 0,
+    "cached_false": 295,
+    "cached_rate_pct": 0.0,
+    "calls": 295,
+    "tokens_in_uncached": 35809,
+    "tokens_out_uncached": 59264
+   },
+   "plan": {
+    "cached": 0,
+    "cached_false": 16,
+    "cached_rate_pct": 0.0,
+    "calls": 16,
+    "tokens_in_uncached": 1447,
+    "tokens_out_uncached": 995
+   },
+   "reflect": {
+    "cached": 0,
+    "cached_false": 23,
+    "cached_rate_pct": 0.0,
+    "calls": 23,
+    "tokens_in_uncached": 11785,
+    "tokens_out_uncached": 1743
+   }
+  },
+  "cached_false": 667,
+  "cached_true": 247,
+  "degraded_calls": 0,
+  "llm_calls": 914,
+  "provider_counts": {
+   "openai_compat": 914
+  },
+  "rule": "分子 = LLM_CALL 中 payload.cached == false；分母 = 全部 LLM_CALL。门槛 >=50%（Leader 前置闸）：不达标即「效果不可判，先查缓存链路」",
+  "threshold_pct": 50.0,
+  "uncached_rate_pct": 72.9759
+ },
+ "M1_wiring": {
+  "msgs_with_ctx_d12e_as_well": 0,
+  "msgs_with_ctx_d12f_m3": 91,
+  "n_msgs": 91,
+  "rate_pct": 100.0,
+  "rule": "分子 = payload.ctx.d12f.m == 3 的 MSG；分母 = 全部 MSG_*",
+  "threshold_pct": 100.0
+ },
+ "M3_argmin": {
+  "definition_note": "分母 = **scores 非全同的样本数**（不是 n_msgs）；若 picked 全非 None 且 len(scores) 恒为 3，则『非全同』是唯一筛选条件。D12-E 实测 den=82、violations=0 —— 与 d12e_result.md 的 82/82 一致",
+  "den_non_uniform": 19,
+  "n_violations": 0,
+  "num_argmin_ok": 19,
+  "rate_pct": 100.0,
+  "rule": "分母 = scores 非全同的 MSG；分子 = scores[picked] == min(scores)",
+  "threshold_pct": 100.0,
+  "violations": []
+ },
+ "M4_separability": {
+  "ctx_msgs": 91,
+  "denominator_A_all_msgs_with_ctx": {
+   "definition": "分母 = 全部带 ctx.<ctxkey> 的 MSG_*（每一条 MSG 都有一条 ctx）",
+   "den": 91,
+   "num": 19,
+   "rate_pct": 20.8791
+  },
+  "denominator_B_excluding_picked_none": {
+   "definition": "分母 = 带 ctx.<ctxkey> 且 picked is not None 的 MSG",
+   "den": 91,
+   "num": 19,
+   "rate_pct": 20.8791
+  },
+  "legacy_flat_fields": {
+   "n_msgs": 91,
+   "non_uniform_samples": 19,
+   "rate_pct": 20.8791
+  },
+  "locked_ruling": "分母口径在终态读数之前锁定：**两种分母同时报出，任何一版都不得单独使用**；两种分母的裁决一致才算 M4 通过/不通过；不一致则 M4 判「口径不明、不可判」，并转「有条件通过：需补预登记分母定义」。严禁择分母。",
+  "picked_none_count": 0,
+  "rule": "分子 = scores 非全同的 MSG（len(set(scores))>1）",
+  "threshold_pct": 25.0
+ },
+ "ctx_key": "d12f",
+ "label": "D12F",
+ "n_msgs": 91,
+ "picked_dist": {
+  "0": 83,
+  "1": 8
+ },
+ "reader": "v2/evidence/d12f_gate_metrics.py",
+ "reader_sha256": "sha256:0fee51074ac85260bcab5e1eff5302796ff05e995909885afba7e45c2de5b787",
+ "scores_len_dist": {
+  "3": 91
+ },
+ "scores_samples_picked_nonzero": [
+  {
+   "body_head": "小满，你看我这木剑削得只剩半指宽了，要是老石在，准又念叨我上次把他刨子摔豁了口。",
+   "from": "P014",
+   "picked": 1,
+   "round": 1,
+   "scores": [
+    9,
+    0,
+    0
+   ],
+   "seq": 1491,
+   "type": "MSG_DM"
+  },
+  {
+   "body_head": "月牙，我这儿算盘上第三格珠子卡住了，拨了三下才归位。练这个嘛，跟平账一个理——阿岚上回在咖啡馆唱到有人哭，那是她的账；你",
+   "from": "P009",
+   "picked": 1,
+   "round": 3,
+   "scores": [
+    1,
+    0,
+    5
+   ],
+   "seq": 2203,
+   "type": "MSG_DM"
+  },
+  {
+   "body_head": "老石，我这锄头把儿裂了半指宽，得赶着修，上回老李借去用坏了也没说一声，今儿就不去镇上了。",
+   "from": "P001",
+   "picked": 1,
+   "round": 4,
+   "scores": [
+    10,
+    0,
+    0
+   ],
+   "seq": 2849,
+   "type": "MSG_DM"
+  },
+  {
+   "body_head": "周公文把存折翻到第三格，心里盘算着老陈上回借的那笔钱也该还了。",
+   "from": "P008",
+   "picked": 1,
+   "round": 4,
+   "scores": [
+    15,
+    0,
+    0
+   ],
+   "seq": 3687,
+   "type": "MSG_PUBLIC"
+  },
+  {
+   "body_head": "月牙，账要平——我这算盘第三格珠子卡了半颗，拨起来也像叹气。阿岚上回对账把七钱记成六钱，不是她眼拙，是那天她娘捎信来催她",
+   "from": "P009",
+   "picked": 1,
+   "round": 4,
+   "scores": [
+    1,
+    0,
+    2
+   ],
+   "seq": 3848,
+   "type": "MSG_DM"
+  },
+  {
+   "body_head": "金先生，您这算盘珠子卡得跟我那把缺了根弦的旧吉他一个脾气——我数了数，第三格到第五格之间，差着整整两拍半的沉默。阿岚那七",
+   "from": "P010",
+   "picked": 1,
+   "round": 6,
+   "scores": [
+    4,
+    0,
+    0
+   ],
+   "seq": 5140,
+   "type": "MSG_DM"
+  },
+  {
+   "body_head": "铁头哥，你先别急着算老陈头那七钱铁钉——我这炉里第二屉枣泥酥还差三分钟就得出锅，你闻闻这味儿，比上回给赵寡妇家送的还甜些",
+   "from": "P004",
+   "picked": 1,
+   "round": 7,
+   "scores": [
+    1,
+    0,
+    0
+   ],
+   "seq": 5872,
+   "type": "MSG_DM"
+  },
+  {
+   "body_head": "阿禾，你来得正好——我手上这半截粉笔刚写到第三格，正想着上回你同桌小满问的那个问题，她要是今天在，肯定又要追着我问到底了",
+   "from": "P006",
+   "picked": 1,
+   "round": 7,
+   "scores": [
+    4,
+    0,
+    0
+   ],
+   "seq": 6148,
+   "type": "MSG_DM"
+  }
+ ],
+ "snapshot": {
+  "last_seq": 9861,
+  "lines_total": 9862,
+  "lines_unparsable_or_partial": 0,
+  "max_round_seen": 9,
+  "note": "中途快照：partial=true，**不得**当作终态判读结论",
+  "partial": true,
+  "snapshot_rounds_seen": 10,
+  "turn_seals": 10
+ },
+ "source_run_jsonl": ".worktrees/d12f-diverse/v2/evidence/run_d12f_diverse_n16r60_seed42/run.jsonl",
+ "source_run_jsonl_sha256": "sha256:83480c204cb8697f15a45d428f06dcb151c4348aaa91346e04e3adeae5fac2a9"
+}

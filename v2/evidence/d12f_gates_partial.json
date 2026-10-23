@@ -1,0 +1,245 @@
+{
+ "M0_uncached": {
+  "by_purpose": {
+   "dialogue": {
+    "cached": 33,
+    "cached_false": 1098,
+    "cached_rate_pct": 2.9178,
+    "calls": 1131,
+    "tokens_in_uncached": 255495,
+    "tokens_out_uncached": 68304
+   },
+   "importance": {
+    "cached": 1387,
+    "cached_false": 136,
+    "cached_rate_pct": 91.0703,
+    "calls": 1523,
+    "tokens_in_uncached": 2312,
+    "tokens_out_uncached": 35055
+   },
+   "judge": {
+    "cached": 0,
+    "cached_false": 497,
+    "cached_rate_pct": 0.0,
+    "calls": 497,
+    "tokens_in_uncached": 62590,
+    "tokens_out_uncached": 136995
+   },
+   "negotiation": {
+    "cached": 19,
+    "cached_false": 15,
+    "cached_rate_pct": 55.8824,
+    "calls": 34,
+    "tokens_in_uncached": 1787,
+    "tokens_out_uncached": 568
+   },
+   "plan": {
+    "cached": 0,
+    "cached_false": 16,
+    "cached_rate_pct": 0.0,
+    "calls": 16,
+    "tokens_in_uncached": 1447,
+    "tokens_out_uncached": 995
+   },
+   "reflect": {
+    "cached": 4,
+    "cached_false": 108,
+    "cached_rate_pct": 3.5714,
+    "calls": 112,
+    "tokens_in_uncached": 50862,
+    "tokens_out_uncached": 8217
+   }
+  },
+  "cached_false": 1870,
+  "cached_true": 1443,
+  "degraded_calls": 0,
+  "llm_calls": 3313,
+  "provider_counts": {
+   "openai_compat": 3313
+  },
+  "rule": "分子 = LLM_CALL 中 payload.cached == false；分母 = 全部 LLM_CALL。门槛 >=50%（Leader 前置闸）：不达标即「效果不可判，先查缓存链路」",
+  "threshold_pct": 50.0,
+  "uncached_rate_pct": 56.4443
+ },
+ "M1_wiring": {
+  "msgs_with_ctx_d12e_as_well": 0,
+  "msgs_with_ctx_d12f_m3": 377,
+  "n_msgs": 377,
+  "rate_pct": 100.0,
+  "rule": "分子 = payload.ctx.d12f.m == 3 的 MSG；分母 = 全部 MSG_*",
+  "threshold_pct": 100.0
+ },
+ "M3_argmin": {
+  "argmin_index_dist": {
+   "0": 40,
+   "1": 36,
+   "2": 6
+  },
+  "definition_note": "分母 = **scores 非全同的样本数**（不是 n_msgs）；若 picked 全非 None 且 len(scores) 恒为 3，则『非全同』是唯一筛选条件。D12-E 实测 den=82、violations=0 —— 与 d12e_result.md 的 82/82 一致",
+  "den_non_uniform": 82,
+  "n_violations": 0,
+  "nonuniform_picked0_count": 40,
+  "num_argmin_ok": 82,
+  "picked0_interpretation_note": "若 `nonuniform_picked0_count` 很大且 `argmin_index_dist['0']` 也很大 ⇒ 候选 0 在多数非全同样本里本来就是最小分，择优正常；若 `nonuniform_picked0_count` 远大于 `argmin_index_dist['0']` ⇒ 择优偏向索引 0，属实现问题",
+  "rate_pct": 100.0,
+  "rule": "分母 = scores 非全同的 MSG；分子 = scores[picked] == min(scores)",
+  "threshold_pct": 100.0,
+  "violations": []
+ },
+ "M4_separability": {
+  "ctx_msgs": 377,
+  "denominator_A_all_msgs_with_ctx": {
+   "definition": "分母 = 全部带 ctx.<ctxkey> 的 MSG_*（每一条 MSG 都有一条 ctx）",
+   "den": 377,
+   "num": 82,
+   "rate_pct": 21.7507
+  },
+  "denominator_B_excluding_picked_none": {
+   "definition": "分母 = 带 ctx.<ctxkey> 且 picked is not None 的 MSG",
+   "den": 377,
+   "num": 82,
+   "rate_pct": 21.7507
+  },
+  "legacy_flat_fields": {
+   "n_msgs": 377,
+   "non_uniform_samples": 82,
+   "rate_pct": 21.7507
+  },
+  "locked_ruling": "分母口径在终态读数之前锁定：**两种分母同时报出，任何一版都不得单独使用**；两种分母的裁决一致才算 M4 通过/不通过；不一致则 M4 判「口径不明、不可判」，并转「有条件通过：需补预登记分母定义」。严禁择分母。",
+  "picked_none_count": 0,
+  "rule": "分子 = scores 非全同的 MSG（len(set(scores))>1）",
+  "threshold_pct": 25.0
+ },
+ "ctx_key": "d12f",
+ "label": "D12F",
+ "n_msgs": 377,
+ "picked_dist": {
+  "0": 335,
+  "1": 36,
+  "2": 6
+ },
+ "reader": "v2/evidence/d12f_gate_metrics.py",
+ "reader_sha256": "sha256:d0fa13299e16759a0810090c89a7817c6d7ed7cc0f83f7134fe1f72516cf9b50",
+ "scores_len_dist": {
+  "3": 377
+ },
+ "scores_samples_picked_nonzero": [
+  {
+   "body_head": "小满，你看我这木剑削得只剩半指宽了，要是老石在，准又念叨我上次把他刨子摔豁了口。",
+   "from": "P014",
+   "picked": 1,
+   "round": 1,
+   "scores": [
+    9,
+    0,
+    0
+   ],
+   "seq": 1491,
+   "type": "MSG_DM"
+  },
+  {
+   "body_head": "月牙，我这儿算盘上第三格珠子卡住了，拨了三下才归位。练这个嘛，跟平账一个理——阿岚上回在咖啡馆唱到有人哭，那是她的账；你",
+   "from": "P009",
+   "picked": 1,
+   "round": 3,
+   "scores": [
+    1,
+    0,
+    5
+   ],
+   "seq": 2203,
+   "type": "MSG_DM"
+  },
+  {
+   "body_head": "老石，我这锄头把儿裂了半指宽，得赶着修，上回老李借去用坏了也没说一声，今儿就不去镇上了。",
+   "from": "P001",
+   "picked": 1,
+   "round": 4,
+   "scores": [
+    10,
+    0,
+    0
+   ],
+   "seq": 2849,
+   "type": "MSG_DM"
+  },
+  {
+   "body_head": "周公文把存折翻到第三格，心里盘算着老陈上回借的那笔钱也该还了。",
+   "from": "P008",
+   "picked": 1,
+   "round": 4,
+   "scores": [
+    15,
+    0,
+    0
+   ],
+   "seq": 3687,
+   "type": "MSG_PUBLIC"
+  },
+  {
+   "body_head": "月牙，账要平——我这算盘第三格珠子卡了半颗，拨起来也像叹气。阿岚上回对账把七钱记成六钱，不是她眼拙，是那天她娘捎信来催她",
+   "from": "P009",
+   "picked": 1,
+   "round": 4,
+   "scores": [
+    1,
+    0,
+    2
+   ],
+   "seq": 3848,
+   "type": "MSG_DM"
+  },
+  {
+   "body_head": "金先生，您这算盘珠子卡得跟我那把缺了根弦的旧吉他一个脾气——我数了数，第三格到第五格之间，差着整整两拍半的沉默。阿岚那七",
+   "from": "P010",
+   "picked": 1,
+   "round": 6,
+   "scores": [
+    4,
+    0,
+    0
+   ],
+   "seq": 5140,
+   "type": "MSG_DM"
+  },
+  {
+   "body_head": "铁头哥，你先别急着算老陈头那七钱铁钉——我这炉里第二屉枣泥酥还差三分钟就得出锅，你闻闻这味儿，比上回给赵寡妇家送的还甜些",
+   "from": "P004",
+   "picked": 1,
+   "round": 7,
+   "scores": [
+    1,
+    0,
+    0
+   ],
+   "seq": 5872,
+   "type": "MSG_DM"
+  },
+  {
+   "body_head": "阿禾，你来得正好——我手上这半截粉笔刚写到第三格，正想着上回你同桌小满问的那个问题，她要是今天在，肯定又要追着我问到底了",
+   "from": "P006",
+   "picked": 1,
+   "round": 7,
+   "scores": [
+    4,
+    0,
+    0
+   ],
+   "seq": 6148,
+   "type": "MSG_DM"
+  }
+ ],
+ "snapshot": {
+  "last_seq": 63990,
+  "lines_total": 63991,
+  "lines_unparsable_or_partial": 0,
+  "max_round_seen": 43,
+  "note": "中途快照：partial=true，**不得**当作终态判读结论",
+  "partial": true,
+  "snapshot_at": "2026-10-23T16:57:40+08:00",
+  "snapshot_rounds_seen": 44,
+  "turn_seals": 44
+ },
+ "source_run_jsonl": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/d12f-diverse/v2/evidence/run_d12f_diverse_n16r60_seed42/run.jsonl",
+ "source_run_jsonl_sha256": "sha256:2f99e789862aeb42ca56ca0558e6f3f5dcb4d53b08d84f9826b01d6d2a949f19"
+}

@@ -1,0 +1,37 @@
+################ [0] 环境前置 ################
+$ pgrep -af 'orchestration run|run_batch|nightly.py'（真人视角）
+（以上若只出现本自证脚本自身的 outer shell，属正常；preflight 内部会排除祖先链与自身）
+
+################ [1] 正例：无并发 + 冻结区干净 ################
+PASS preflight sha=3bb698a9(feat/scene-anchor) ts=2026-10-23T04:06:59+08:00 concurrency=0 frozen_tree=clean log=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/preflight/preflight_20261022T200659Z_3bb698a9_selfproof_pass.log
+RC=0
+
+################ [2] 负例 A：并发（假 orchestration run + run_batch 进程）################
+$ ps -o pid=,args= -p 2597691 -p 2597692
+2597691 /bin/sh /tmp/pfself-11247/run_batch 60
+2597692 /bin/sh /tmp/pfself-11247/orchestration run 60
+[preflight] FAIL exit=9 reasons=concurrency:orchestration_run=1 concurrency:run_batch=1
+[preflight] log: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/preflight/preflight_20261022T200701Z_3bb698a9_selfproof_concurrency.log
+RC=9
+清理后残留: 0 个（期望 0）
+
+################ [3] 负例 B：nightly.py 并发 ################
+2597821 /bin/sh /tmp/pfself-11247/nightly.py 60
+[preflight] FAIL exit=9 reasons=concurrency:nightly_py=1
+[preflight] log: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/preflight/preflight_20261022T200703Z_3bb698a9_selfproof_nightly.log
+RC=9
+清理后残留: 0 个（期望 0）
+
+################ [4] 负例 C：冻结区脏（瞬时 .py 探针，即刻删除）################
+?? code/life/__preflight_dirt_probe.py
+  BLOCKING ?? code/life/__preflight_dirt_probe.py
+[preflight] FAIL exit=9 reasons=dirty_frozen_tree(rc=1)
+[preflight] log: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/preflight/preflight_20261022T200704Z_3bb698a9_selfproof_dirty.log
+RC=9
+$ git status --porcelain -- code/life code/orchestration code/config code/engine （清理后）
+（期望：空）
+
+################ [5] 正例复跑：上面全部清理后 ################
+PASS preflight sha=3bb698a9(feat/scene-anchor) ts=2026-10-23T04:07:04+08:00 concurrency=0 frozen_tree=clean log=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/preflight/preflight_20261022T200704Z_3bb698a9_selfproof_pass_again.log
+RC=0
+################ END ################

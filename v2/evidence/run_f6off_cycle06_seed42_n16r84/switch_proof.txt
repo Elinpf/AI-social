@@ -1,0 +1,16 @@
+=== [switch_proof] arm=off  chosen_at=2026-10-23T04:09:56+08:00 ===
+--- 1) env | grep -E '^LIFE_PROMPT_' | sort （原样输出）---
+(空：无任何 LIFE_PROMPT_* 变量被设置)
+--- 附加：HITT_LLM_PROVIDER ---
+HITT_LLM_PROVIDER=openai_compat
+--- 2) git 锚点 ---
+branch=feat/scene-anchor
+head_sha=f8d95f07518ae7c2cf31e77b896ad9aed55543da
+--- git status --short code/ （期望空）---
+?? code/frontend/sample/dialogue_cycle03_ctrl/
+?? code/frontend/sample/dialogue_cycle04_a5/
+?? code/v2/
+--- 跑后锚点 ---
+run_batch_rc=0
+finished_at=2026-10-23T04:56:52+08:00
+code_sha_now=8f4330e949a0e47a5cf8139248e19c03523f1592

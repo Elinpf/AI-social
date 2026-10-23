@@ -1,0 +1,40 @@
+{
+ "day_values": [
+  "0",
+  "1"
+ ],
+ "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_scene_anchor_off_seed42_n16r24/run.jsonl",
+ "msgs_per_day": {
+  "0": 98,
+  "1": 93
+ },
+ "n_days": 2,
+ "n_distinct_agents": 16,
+ "n_distinct_rounds": 22,
+ "n_messages": 191,
+ "note": "仅覆盖度事实；F-5 判定值不在此文件，见 metrics_*.json 的 F-5_habit_repetition",
+ "null_place_msgs": 24,
+ "null_place_rate": 0.125654,
+ "place_dist": {
+  "<None>": 24,
+  "bank": 7,
+  "cafe": 32,
+  "community_center": 8,
+  "farm": 7,
+  "kitchen": 3,
+  "library": 3,
+  "market": 22,
+  "park": 22,
+  "plaza": 15,
+  "residence": 32,
+  "school": 7,
+  "town_hall": 2,
+  "workshop": 7
+ },
+ "slot_dist": {
+  "afternoon": 51,
+  "evening": 55,
+  "morning": 53,
+  "night": 32
+ }
+}

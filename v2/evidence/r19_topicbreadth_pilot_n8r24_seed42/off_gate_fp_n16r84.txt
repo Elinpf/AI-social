@@ -1,0 +1,15 @@
+# R19 off-arm 内容门控假阳性率（改造关闭时同口径重算）
+
+> 生成脚本：`v2/evidence/r19_topicbreadth_pilot_n8r24_seed42/off_gate_fp.py`
+> 口径：对每条 MSG 用运行时同一个纯函数 `TB.plan` 指派岔题，再用 `confirm(body, shift, base)` 判定正文是否已命中；改造关闭时命中即假阳性。
+
+log = `v2/evidence/run_worldline_c1_ctrl_n16r84_seed42/run.jsonl`
+MSG 总数 = 686
+有岔题指派的分母（turn≥1 且未被 1/3 抽签跳过）= 342（0.498542）
+
+| 口径 | 命中条数 | 占全部 MSG | 占有指派的分母 | 主要误命中话题 |
+|---|---|---|---|---|
+| old（旧词表 + 单条件） | 11 | 0.016035 | 0.032164 | {'gift': 8, 'rel_maintain': 1, 'mentorship': 1, 'skill_practice': 1} |
+| new（收紧词表 + 双条件） | 3 | 0.004373 | 0.008772 | {'gift': 2, 'skill_practice': 1} |
+
+判读：`new` 这一行的「占全部 MSG」就是 on-arm 归因时必须扣掉的**基线白送率**；on-arm 的 tag 追加条数必须显著高于该基线，否则只能判「无结论」。

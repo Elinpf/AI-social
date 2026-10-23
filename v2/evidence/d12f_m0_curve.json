@@ -1,0 +1,232 @@
+{
+ "bucket_size_rounds": 10,
+ "buckets": [
+  {
+   "by_purpose": {
+    "dialogue": {
+     "cached": 0,
+     "cached_false": 273,
+     "cached_rate_pct": 0.0,
+     "calls": 273,
+     "uncached_rate_pct": 100.0
+    },
+    "importance": {
+     "cached": 247,
+     "cached_false": 60,
+     "cached_rate_pct": 80.456,
+     "calls": 307,
+     "uncached_rate_pct": 19.544
+    },
+    "judge": {
+     "cached": 0,
+     "cached_false": 295,
+     "cached_rate_pct": 0.0,
+     "calls": 295,
+     "uncached_rate_pct": 100.0
+    },
+    "plan": {
+     "cached": 0,
+     "cached_false": 16,
+     "cached_rate_pct": 0.0,
+     "calls": 16,
+     "uncached_rate_pct": 100.0
+    },
+    "reflect": {
+     "cached": 0,
+     "cached_false": 23,
+     "cached_rate_pct": 0.0,
+     "calls": 23,
+     "uncached_rate_pct": 100.0
+    }
+   },
+   "overall": {
+    "cached": 247,
+    "cached_false": 667,
+    "cached_rate_pct": 27.0241,
+    "calls": 914,
+    "uncached_rate_pct": 72.9759
+   },
+   "round_range": "0-9"
+  },
+  {
+   "by_purpose": {
+    "dialogue": {
+     "cached": 0,
+     "cached_false": 249,
+     "cached_rate_pct": 0.0,
+     "calls": 249,
+     "uncached_rate_pct": 100.0
+    },
+    "importance": {
+     "cached": 1140,
+     "cached_false": 76,
+     "cached_rate_pct": 93.75,
+     "calls": 1216,
+     "uncached_rate_pct": 6.25
+    },
+    "judge": {
+     "cached": 0,
+     "cached_false": 125,
+     "cached_rate_pct": 0.0,
+     "calls": 125,
+     "uncached_rate_pct": 100.0
+    },
+    "negotiation": {
+     "cached": 0,
+     "cached_false": 7,
+     "cached_rate_pct": 0.0,
+     "calls": 7,
+     "uncached_rate_pct": 100.0
+    },
+    "reflect": {
+     "cached": 0,
+     "cached_false": 49,
+     "cached_rate_pct": 0.0,
+     "calls": 49,
+     "uncached_rate_pct": 100.0
+    }
+   },
+   "overall": {
+    "cached": 1140,
+    "cached_false": 506,
+    "cached_rate_pct": 69.2588,
+    "calls": 1646,
+    "uncached_rate_pct": 30.7412
+   },
+   "round_range": "10-19"
+  },
+  {
+   "by_purpose": {
+    "dialogue": {
+     "cached": 12,
+     "cached_false": 204,
+     "cached_rate_pct": 5.5556,
+     "calls": 216,
+     "uncached_rate_pct": 94.4444
+    },
+    "judge": {
+     "cached": 0,
+     "cached_false": 9,
+     "cached_rate_pct": 0.0,
+     "calls": 9,
+     "uncached_rate_pct": 100.0
+    },
+    "negotiation": {
+     "cached": 7,
+     "cached_false": 5,
+     "cached_rate_pct": 58.3333,
+     "calls": 12,
+     "uncached_rate_pct": 41.6667
+    },
+    "reflect": {
+     "cached": 4,
+     "cached_false": 30,
+     "cached_rate_pct": 11.7647,
+     "calls": 34,
+     "uncached_rate_pct": 88.2353
+    }
+   },
+   "overall": {
+    "cached": 23,
+    "cached_false": 248,
+    "cached_rate_pct": 8.4871,
+    "calls": 271,
+    "uncached_rate_pct": 91.5129
+   },
+   "round_range": "20-29"
+  },
+  {
+   "by_purpose": {
+    "dialogue": {
+     "cached": 0,
+     "cached_false": 144,
+     "cached_rate_pct": 0.0,
+     "calls": 144,
+     "uncached_rate_pct": 100.0
+    },
+    "judge": {
+     "cached": 0,
+     "cached_false": 38,
+     "cached_rate_pct": 0.0,
+     "calls": 38,
+     "uncached_rate_pct": 100.0
+    },
+    "reflect": {
+     "cached": 0,
+     "cached_false": 6,
+     "cached_rate_pct": 0.0,
+     "calls": 6,
+     "uncached_rate_pct": 100.0
+    }
+   },
+   "overall": {
+    "cached": 0,
+    "cached_false": 188,
+    "cached_rate_pct": 0.0,
+    "calls": 188,
+    "uncached_rate_pct": 100.0
+   },
+   "round_range": "30-39"
+  }
+ ],
+ "by_purpose_summary": {
+  "dialogue": {
+   "cached": 12,
+   "cached_false": 870,
+   "cached_rate_pct": 1.3605,
+   "calls": 882,
+   "uncached_rate_pct": 98.6395
+  },
+  "importance": {
+   "cached": 1387,
+   "cached_false": 136,
+   "cached_rate_pct": 91.0703,
+   "calls": 1523,
+   "uncached_rate_pct": 8.9297
+  },
+  "judge": {
+   "cached": 0,
+   "cached_false": 467,
+   "cached_rate_pct": 0.0,
+   "calls": 467,
+   "uncached_rate_pct": 100.0
+  },
+  "negotiation": {
+   "cached": 7,
+   "cached_false": 12,
+   "cached_rate_pct": 36.8421,
+   "calls": 19,
+   "uncached_rate_pct": 63.1579
+  },
+  "plan": {
+   "cached": 0,
+   "cached_false": 16,
+   "cached_rate_pct": 0.0,
+   "calls": 16,
+   "uncached_rate_pct": 100.0
+  },
+  "reflect": {
+   "cached": 4,
+   "cached_false": 108,
+   "cached_rate_pct": 3.5714,
+   "calls": 112,
+   "uncached_rate_pct": 96.4286
+  }
+ },
+ "dialogue_uncached_rate_pct": 98.6395,
+ "importance_cached_rate_pct": 91.0703,
+ "locked_ruling": "判定只用 overall（cached 全算命中，不分层）；purpose 分层只披露。预登记四情形（写于 seals 34/60、未见终态）：overall>=50 且 dialogue>=50 ⇒ 通过；overall>=50 且 dialogue<50 ⇒ 通过但须披露对话层缓存；overall<50 且 dialogue>=50 ⇒ 判「口径分歧」，效果可计算但须写「在对话采样全新鲜前提下可判；overall 未过闸已披露」，禁止写「真 LLM 已验证」或「批次无效」；overall<50 且 dialogue<50 ⇒ 批次无效，五条效果判据不参与。",
+ "overall_uncached_rate_pct": 53.2958,
+ "partial": true,
+ "reader": "v2/evidence/d12f_m0_curve.py",
+ "reader_sha256": "sha256:141340c0455bcf58ca1329685736c5ce75fee5b338714f4323bf5ef4dc274c11",
+ "snapshot": {
+  "lines_total": 56634,
+  "lines_unparsable_or_partial": 0,
+  "max_round_seen": 35,
+  "rounds_seen": 35,
+  "turn_seals": 36
+ },
+ "source_run_jsonl": ".worktrees/d12f-diverse/v2/evidence/run_d12f_diverse_n16r60_seed42/run.jsonl",
+ "source_run_jsonl_sha256": "sha256:fb3106e8a681e06e96d08b4f4ddf38015a455db7d19ff2f59a7acad99a882272"
+}

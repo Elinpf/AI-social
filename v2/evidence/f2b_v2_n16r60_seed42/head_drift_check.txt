@@ -1,0 +1,12 @@
+# 跑批期间 HEAD 漂移的冻结区核查（T=2026-10-23T14:45:49+08:00）
+$ git rev-parse HEAD
+edf95266e2061367d89463255560c975842c42e9
+$ git diff --stat a9c74f5..HEAD
+ v2/evidence/d12e_leader_terminal_check.md  | 21 +++++++-
+ v2/refs/D12F-prereg-candidate-diversity.md | 85 ++++++++++++++++++++++++++++++
+ v2/refs/batch-hosting-runbook.md           | 14 +++++
+ 3 files changed, 118 insertions(+), 2 deletions(-)
+$ git diff --exit-code a9c74f5..HEAD -- code/life code/orchestration code/config code/engine
+rc=0 (0=冻结区零差异)
+$ git -C .worktrees/f2b-v2-n16r60 rev-parse --short HEAD
+a9c74f5

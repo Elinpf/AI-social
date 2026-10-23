@@ -1,0 +1,1 @@
+PASS preflight sha=f8d95f07(feat/scene-anchor) ts=2026-10-23T04:09:38+08:00 concurrency=0 frozen_tree=clean log=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/preflight/preflight_20261022T200938Z_f8d95f07_f6_off.log

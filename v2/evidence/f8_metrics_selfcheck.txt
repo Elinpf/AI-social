@@ -1,0 +1,8 @@
+METRICS_GATE=PASS
+checked_at=2026-10-23T02:47:23+08:00
+真源: tools/d5/dialogue_metrics.py sha256=1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271
+词表: tools/d5/f8_lexicon.json sha256=004f3bca138e7800a0fc0ac7e0f1c0f0bdb9b0a862432fa53f65b152bdb2ddd3 version=f8-lexicon-v3
+批次: v2/evidence/run_d12a_q_a_off_seed7_n16r24 (n16r24 seed7, OFF 基线, 191 MSG)
+F-8t_all=5/191  F-8t_core=0/191  F-8p_place=0/167  F-8a=not_applicable(no_ctx_scene)
+hits_by_token={"这会儿":5}
+交叉校验: tools/d9/f8_crosscheck.py 与真源 MATCH（F-8t_all / F-8t_core 分子分母一致，rc=0）

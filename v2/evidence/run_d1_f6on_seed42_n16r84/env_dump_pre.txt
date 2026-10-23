@@ -1,0 +1,1 @@
+LIFE_PROMPT_* unset (HITT_LLM_PROVIDER unset)

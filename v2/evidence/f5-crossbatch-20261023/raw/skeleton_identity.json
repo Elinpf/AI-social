@@ -1,0 +1,61 @@
+{
+ "identical_groups": {
+  "sha256:b00d20cc328d013c7000e4a5aba8986dc7325ca64f09711eeb266717ec3e5967": [
+   "d12b_off",
+   "d12b_on",
+   "scene_anchor_off",
+   "scene_anchor_on"
+  ],
+  "sha256:bcc6e28ecb8b54a41537e73506929b98d39a43ee78776e8455d044380ef0bfcf": [
+   "d12c_off",
+   "d12c_on",
+   "d12d_on"
+  ]
+ },
+ "note": "骨架相同 ⇒ 该组内 F-5/F-5b 逐位相同是结构性必然，不能作为开关效果证据",
+ "per_batch": [
+  {
+   "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12b_off_seed7_n16r24/run.jsonl",
+   "n_msgs": 191,
+   "skeleton_sha256": "sha256:b00d20cc328d013c7000e4a5aba8986dc7325ca64f09711eeb266717ec3e5967",
+   "tag": "d12b_off"
+  },
+  {
+   "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12b_on_seed7_n16r24/run.jsonl",
+   "n_msgs": 191,
+   "skeleton_sha256": "sha256:b00d20cc328d013c7000e4a5aba8986dc7325ca64f09711eeb266717ec3e5967",
+   "tag": "d12b_on"
+  },
+  {
+   "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12c_off_n16r60_seed42/run.jsonl",
+   "n_msgs": 510,
+   "skeleton_sha256": "sha256:bcc6e28ecb8b54a41537e73506929b98d39a43ee78776e8455d044380ef0bfcf",
+   "tag": "d12c_off"
+  },
+  {
+   "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12c_on_n16r60_seed42/run.jsonl",
+   "n_msgs": 510,
+   "skeleton_sha256": "sha256:bcc6e28ecb8b54a41537e73506929b98d39a43ee78776e8455d044380ef0bfcf",
+   "tag": "d12c_on"
+  },
+  {
+   "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12d_on_n16r60_seed42/run.jsonl",
+   "n_msgs": 510,
+   "skeleton_sha256": "sha256:bcc6e28ecb8b54a41537e73506929b98d39a43ee78776e8455d044380ef0bfcf",
+   "tag": "d12d_on"
+  },
+  {
+   "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_scene_anchor_off_seed42_n16r24/run.jsonl",
+   "n_msgs": 191,
+   "skeleton_sha256": "sha256:b00d20cc328d013c7000e4a5aba8986dc7325ca64f09711eeb266717ec3e5967",
+   "tag": "scene_anchor_off"
+  },
+  {
+   "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_scene_anchor_on_seed42_n16r24/run.jsonl",
+   "n_msgs": 191,
+   "skeleton_sha256": "sha256:b00d20cc328d013c7000e4a5aba8986dc7325ca64f09711eeb266717ec3e5967",
+   "tag": "scene_anchor_on"
+  }
+ ],
+ "skeleton_definition": "(round, from, day, slot, place, to, thread_id) of each MSG_DM/MSG_PUBLIC/MSG_GROUP"
+}

@@ -1,0 +1,28 @@
+{
+ "judger": "life-spearman（未参与 code/life/topic_breadth.py 与 agent.py 的话题展开实现）",
+ "blind": false,
+ "blind_note": "非盲：按构造 tag 追加只可能来自 on 臂，臂标签无法隐去；判定时已见臂名与 D/T/landed 读数",
+ "criteria": "预登记 v2/refs/prereg-f2b-v2-n16r60.md §2（真展开=true / 假展开=false / 存疑=undecidable）",
+ "samples": {
+  "a": {
+   "mode": "insufficient",
+   "N": 10,
+   "sample_n": 30,
+   "sampling_seed": 20261023,
+   "step": null,
+   "start": null,
+   "indices": [],
+   "seqs": [],
+   "bias_disclosed": null
+  },
+  "b": {
+   "mode": "insufficient",
+   "N": 10,
+   "sample_n": 30,
+   "step": null,
+   "indices": [],
+   "seqs": []
+  }
+ },
+ "items": []
+}

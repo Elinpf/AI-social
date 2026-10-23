@@ -1,0 +1,8 @@
+# sensitivity_power 字段自测（Leader 14:51 要求：N>=60 => real；30<=N<60 => structural_only）
+# 做法：monkeypatch arm_stats 造 landed=47/50/60/62 的合成事件，跑完整 verdict 生成路径（含 --judgements）
+N= 47 power=structural_only A_indices[:3]=[0, 1, 2] B_indices[:3]=[0, 1, 2]  <- 两方案取点恒同（step=1，均取前 30 条）
+N= 50 power=structural_only A_indices[:3]=[0, 1, 2] B_indices[:3]=[0, 1, 2]  <- 同上
+N= 60 power=real            A_indices[:3]=[1, 3, 5] B_indices[:3]=[0, 2, 4]  <- step=2，起点可偏移
+N= 62 power=real            A_indices[:3]=[1, 3, 5] B_indices[:3]=[0, 2, 4]  <- step=2
+# 结论：sensitivity_power 的取值与 (a)(b) 取点是否可能不同 严格对应；manufactured 全真判定下
+#       insensitive 在两档都出现，但只有 real 档的 insensitive 才构成「抽样方式不改变结论」的支持。

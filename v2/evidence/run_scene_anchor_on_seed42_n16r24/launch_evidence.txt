@@ -1,0 +1,122 @@
+================ scene-anchor 起批证据（臂 on） ================
+采集时刻: 2026-10-23T02:47:31+08:00
+repo:     /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+worktree: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+branch:   feat/scene-anchor
+HEAD:     3bb44308291c8ea61d71ae0c595ff2e8b09b5502
+out_dir:  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_scene_anchor_on_seed42_n16r24
+side_root: /tmp/scene_anchor_on_side
+params:   seed=42 agents=16 rounds=24 flush_every=2
+arm:      on （off=开关变量不存在 / on=开关=1，单变量 LIFE_PROMPT_SCENE）
+
+---- [闸门0a] 变量解析自证（固定段：只解析不执行，值不对就不起） ----
+  WT        = /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+  OUT_DIR   = /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_scene_anchor_on_seed42_n16r24
+  SIDE_ROOT = /tmp/scene_anchor_on_side
+  WT_HEAD   = 3bb44308291c8ea61d71ae0c595ff2e8b09b5502
+  WT_BRANCH = feat/scene-anchor
+  ARM=on SEED=42 AGENTS=16 ROUNDS=24 FLUSH=2
+  ORDER=on off  (解析于 2026-10-23T02:47:31+08:00)
+  RELEASE_TS(leader 放行时刻) = 2026-10-23T02:36:03+0800
+
+---- [闸门0] 开关可见性：git grep -c "LIFE_PROMPT_SCENE" -- code/life/ ----
+code/life/agent.py:2
+code/life/scene_anchor.py:4
+grep_rc=0
+---- [闸门0b] 模块可导入 ----
+import_rc=0
+
+---- [闸门1] 串行铁律：pgrep -af "[o]rchestration run"（期望无命中） ----
+pgrep_rc=1 (1=无命中=通过)
+
+---- [闸门2] git status 过滤 code/(life|orchestration|config|engine)（期望无输出） ----
+code_dirty_rc=1 (1=干净=通过)
+
+---- [闸门0c] worktree 分支/HEAD 一致性 ----
+worktree_branch=feat/scene-anchor (期望 feat/scene-anchor)
+worktree_HEAD=3bb44308291c8ea61d71ae0c595ff2e8b09b5502
+feat/scene-anchor=3bb44308291c8ea61d71ae0c595ff2e8b09b5502
+mock_gate: MOCK_GATE=PASS
+
+# 处境锚（scene-anchor）机制闸 · mock 复核记录
+metrics_gate: METRICS_GATE=PASS
+checked_at=2026-10-23T02:47:23+08:00
+真源: tools/d5/dialogue_metrics.py sha256=1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271
+闸门2b PASS：.env.local 中无 LIFE_PROMPT_*（变量名清单见下）
+  ENVFILE HITT_LLM_PROVIDER
+  ENVFILE LLM_API_KEY
+闸门0e PASS：显式六参数 seed=42 agents=16 rounds=24 flush=2 out=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_scene_anchor_on_seed42_n16r24 side=/tmp/scene_anchor_on_side
+闸门0f PASS：WT/OUT_DIR/SIDE_ROOT 三项解析值均与定稿一致
+---- [生效 env 快照 + 单变量存在性断言]（凭据脱敏） ----
+arm: on
+LIFE_PROMPT_SCENE = SET（值='1'）
+展开检验: ${LIFE_PROMPT_SCENE+x}=x
+存在性判定: YES （off 要求 NO；on 要求 YES 且值=1）
+开关断言: PASS
+HITT_LLM_PROVIDER=openai_compat
+LLM_API_KEY=<set:32 chars>
+  ENV LIFE_PROMPT_SCENE=1
+  (env grep 结束)
+cwd=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code  code_head=3bb44308291c8ea61d71ae0c595ff2e8b09b5502
+ORDER=on off （调度参数，非行为参数；列入两臂「允许差异清单」）
+允许差异清单（两臂只允许这两项不同）：
+  1) LIFE_PROMPT_SCENE        （off=不存在 / on=1）—— 被测单变量
+  2) ORDER          （臂序调度参数，不影响代码行为）
+  3) out_dir/side_root（两臂各自独立，路径不同）
+其余必须全等：code_head / config 文件 sha256 / HITT_* / LIFE_PROMPT_ 其它变量 / seed / agents / rounds / flush_every
+config sha256 清单：
+  CFG ff087e57e5ab3c97dd0ce338eb31b5ea7e959f81af9745cb051bf39f5032020b  activity_templates.json
+  CFG a94fba10e6d71ea0b9c12d2513e74fc0be2d3a70ad3d8468863e23e207e6ab8d  default.json
+  CFG f04355716d494f7b1a7236865c1bc3c6d3e13c9b250143a066bc1dd5ea8e9eec  dialogue_repair.json
+  CFG 83e24ae486e541d7d3066586f7979406fd655e8129729955271a225bc4499276  emotion_echo.json
+  CFG 11c569534b40a68269972cb8019cd5a3d4b99e569db1fb94e915a5ea56fdc5e7  engine_version.json
+  CFG 72b40de904069af4492b4a1acf484d9c4ccb20f8caade6e9ac112a1ace6d5197  life_v2.json
+  CFG 65fd915b1d4a3633dbdf9b2b72832c33be5ea724613821eedd79fe612d99fa44  llm.json
+  CFG c018d69f1e8a4a00c83b58787f139777836bca23b3f9beaddb773ce829df2bf7  narrative_weights.json
+  CFG c6306689eaf0081cf619f4238e434648d5df0b3df40c5384bb7f7c6ab24f8601  perception_scope.json
+  CFG 08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d  personas.json
+  CFG c36c0f8776372f4e36ec39126f0fd9546c1dadf5e814c294172f5e2e04bb66fa  places.json
+  CFG 609f22b679947fb418cb4f0db5fa2fd9d11d48d4ecf7c337fa8e8a13b4767008  policy.json
+  CFG 6cd105f5a2f44309ab2bf133111d47e117d9f46d922a1cbabcbd428da701ddd9  social.json
+  CFG 3a07a50123760381e93a62122ff683d9199ba38745261ea5a0349a6b924e0fbf  time.json
+  CFG 20f7e9790d0a828c79ae90c25972cea7de4dda245ad6f2360326d21b28d407ab  topology.json
+  CFG 5f9b7c16b8b94043a8f18bc444514e7b8ca4a9588fea96e593306097aa020038  world_director.json
+执行路径 sha256（脚本变了 = 实验条件变了）：
+  LAUNCHER 53fb7c079d93eccfb75a43fd1285077be38fab898ec59769b96c997e2b40c225  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d2/run_batch.sh
+  LAUNCHER feb8a78bf462726bf9c495d43fcab4789b4bea7dd0138eb6f2a913098bf2a2cc  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d2/emit_run_meta.py
+指标工具 sha256（冻结口径，收批前不得再变）：
+  FROZEN 1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/dialogue_metrics.py
+  FROZEN_MTIME 2026-10-23 02:35:09.813622133 +0800  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/dialogue_metrics.py
+  FROZEN 004f3bca138e7800a0fc0ac7e0f1c0f0bdb9b0a862432fa53f65b152bdb2ddd3  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/f8_lexicon.json
+  FROZEN_MTIME 2026-10-23 02:34:40.945486660 +0800  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/f8_lexicon.json
+  FROZEN 6088a40cc603d67eaba9577e2cafda606b0d2be3fbd952dd13ebb7834f336b70  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/life/scene_anchor.py
+  FROZEN_MTIME 2026-10-23 02:09:15.383806272 +0800  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/life/scene_anchor.py
+  FROZEN d08656c7dd38413af7410363e5e7acf64ea91fd42cc31357ec93ac4f8fe3e33d  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/life/agent.py
+  FROZEN_MTIME 2026-10-23 02:08:03.565379263 +0800  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/life/agent.py
+git status --short 快照（跑批前）：
+  GIT ?? code/frontend/sample/dialogue_cycle03_ctrl/
+  GIT ?? code/frontend/sample/dialogue_cycle04_a5/
+  GIT ?? code/v2/
+  GIT ?? v2/evidence/d5_llm_purpose_audit_d1_f6_off.json
+  GIT ?? v2/evidence/d5_llm_purpose_audit_d1_f6_off.md
+  GIT ?? v2/evidence/d5_llm_purpose_audit_d1_f6_on.json
+  GIT ?? v2/evidence/d5_llm_purpose_audit_d1_f6_on.md
+  GIT ?? v2/evidence/d5_metrics_d1_f6_off.json
+  GIT ?? v2/evidence/d5_metrics_d1_f6_off.md
+  GIT ?? v2/evidence/d5_metrics_d1_f6_on.json
+  GIT ?? v2/evidence/d5_metrics_d1_f6_on.md
+  GIT ?? v2/evidence/d5_s0a_d1_f6_off.json
+  GIT ?? v2/evidence/d5_s0a_d1_f6_on.json
+  GIT ?? v2/evidence/f8_metrics_selfcheck.txt
+  GIT ?? v2/evidence/r19_topicbreadth_pilot_n8r24_seed42/
+  GIT ?? v2/evidence/round_mock_ctx_scene_check.txt
+  GIT ?? v2/evidence/run_d12a_base_seed7_n16r24_INVALID_confounded/switch_proof.txt
+  GIT ?? v2/evidence/run_d12a_treat_seed7_n16r24_INVALID_incomplete/switch_proof.txt
+  GIT ?? v2/evidence/run_d12b_off_seed7_n16r24/
+  GIT ?? v2/evidence/run_d12b_off_seed7_n16r24_INVALID_concurrent/
+  GIT ?? v2/evidence/run_d12b_on_seed7_n16r24/
+  GIT ?? v2/evidence/run_d1_f6off_seed42_n16r84/
+  GIT ?? v2/evidence/run_d1_f6on_seed42_n16r84/
+  GIT ?? v2/evidence/run_scene_anchor_on_seed42_n16r24/
+  GIT ?? v2/evidence/samples_d1_f6_off/
+  GIT ?? v2/evidence/samples_d1_f6_on/

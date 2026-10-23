@@ -1,0 +1,113 @@
+MOCK_GATE=PASS
+
+# 处境锚（scene-anchor）机制闸 · mock 复核记录
+# 写入者：repo-scout（独立复核，未使用 life-dev 的 tools/d9/scene_prompt_proof.py 结论）
+# 时刻：2026-10-23 02:17:02–02:20:05 +0800
+# 性质：**非真 LLM（离线 MockProvider，零网络、零成本）**，仅为**机制验证**，不构成效果证据。
+
+## 0. 结论（先看这条）
+**OFF 臂（`LIFE_PROMPT_SCENE` 不存在）产出的 `run.jsonl` 与基线 `e8a9fd5` 逐字节相同**：
+sha256 `1b0106f2ba52fcde76c27f9cb7c46c45f2409be9ca58aac2862a29f8d519f298`、1,539,889 B（两边完全一致）。
+这不是"prompt 相同"，而是连事件流、文本与时序都逐字节相同 ⇒ **OFF 等价性是可复核的事实，不依赖推理**。
+在此之上，机制侧字段贯通成立：ON 臂 `payload.ctx.scene` 出现 37/37（= 该臂 MSG 总数），
+OFF 臂与基线臂 `ctx` 中 `scene` **整键不存在**（0/37，非 null 非 {}）。
+复现方式见 §1.5（照跑应得同一 sha）。
+
+## 1. 代码身份
+- 被测树：`59bad20b43ff96a36a6025d670e2e48efb0435e9`（`feat/scene-anchor`，主树 checkout）
+- 基线树：`e8a9fd5e3a889b556af12f2b8bdcfbf1c680f7c3`（`git archive e8a9fd5 code` → /tmp 解包，未建 worktree）
+- 差异面：`git diff --stat e8a9fd5..feat/scene-anchor` = 4 files, +608（agent.py +46 / scene_anchor.py +121 / tests +276 / tools +165）
+- 词表指纹：`scene_anchor.lexicon_sha256()` = `3f12e5b8d2e3088e48a72333b65da13b8219bed5a068d6d3d4a4a963a7866fbf`
+
+## 1.5 可复核方式（任何人照跑应得到同一 sha；本文件作者已实跑复现一次）
+
+```bash
+# ① 基线树：从 e8a9fd5 解包 code 树（不建 worktree、不改仓库）
+REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+D=/tmp/scene_mock_repro; rm -rf $D; mkdir -p $D/base_tree $D/out $D/side
+cd $REPO && git archive e8a9fd5 code | tar -x -C $D/base_tree
+
+# ② 跑基线臂（离线 MockProvider ⇒ 零网络零成本；必须 env -u 掉全部真 LLM 变量）
+cd $D/base_tree/code && env -u HITT_LLM_PROVIDER -u LLM_API_KEY -u LLM_ENDPOINT -u LLM_MODEL \
+  -u LIFE_PROMPT_SCENE PYTHONDONTWRITEBYTECODE=1 \
+  python3 -m orchestration run --life --seed 42 --agents 16 --rounds 4 \
+  --out $D/out/run.jsonl --flush-every 1 --side-root $D/side
+sha256sum $D/out/run.jsonl
+# 期望：1b0106f2ba52fcde76c27f9cb7c46c45f2409be9ca58aac2862a29f8d519f298  1,539,889 B
+
+# ③ 跑分支树 OFF 臂（开关"不存在"，不是空串）
+cd $REPO/code && env -u HITT_LLM_PROVIDER -u LLM_API_KEY -u LLM_ENDPOINT -u LLM_MODEL \
+  -u LIFE_PROMPT_SCENE PYTHONDONTWRITEBYTECODE=1 \
+  python3 -m orchestration run --life --seed 42 --agents 16 --rounds 4 \
+  --out $D/out/run_off.jsonl --flush-every 1 --side-root $D/side_off
+sha256sum $D/out/run_off.jsonl
+# 期望：与 ② **同一 sha**（即"与基线逐字节相同"）
+
+# ④ ON 臂（应换 sha，且新增 37 条 ctx.scene）
+cd $REPO/code && env -u HITT_LLM_PROVIDER -u LLM_API_KEY -u LLM_ENDPOINT -u LLM_MODEL \
+  LIFE_PROMPT_SCENE=1 PYTHONDONTWRITEBYTECODE=1 \
+  python3 -m orchestration run --life --seed 42 --agents 16 --rounds 4 \
+  --out $D/out/run_on.jsonl --flush-every 1 --side-root $D/side_on
+sha256sum $D/out/run_on.jsonl
+# 期望：/tmp/scene_mock_check/mock_scene_on/run.jsonl 的 sha = 18888a84131b18efd013b52bdb554dce04206dd67e8a4aa1a4db3850366e74a2
+# ⑤ 数 ctx.scene：ON 应 37/37，OFF 与 base 应 0/37（整键不存在）
+python3 - "$D/out/run.jsonl" "$D/out/run_off.jsonl" "$D/out/run_on.jsonl" <<'PY'
+import json, sys
+for p in sys.argv[1:]:
+    ms = [json.loads(l) for l in open(p, encoding="utf-8") if l.strip()]
+    ms = [r for r in ms if r.get("type") in ("MSG_DM", "MSG_PUBLIC", "MSG_GROUP")]
+    n = sum(1 for r in ms if "scene" in ((r.get("payload") or {}).get("ctx") or {}))
+    print(f"{p}: MSG={len(ms)} ctx_has_scene={n}")
+PY
+# 期望：base 0/37、off 0/37、on 37/37
+```
+
+作者实跑记录：按上述①②③在 `2026-10-23 02:21 +0800` 重跑一遍，基线臂与分支 OFF 臂**都得到**
+`1b0106f2…f298`（`/tmp/scene_mock_repro/out/run.jsonl` 与 `run_off.jsonl`），确认该 sha 可复现。
+
+## 2. 跑批（串行、前台、零成本）
+起跑前：`pgrep -af "[o]rchestration run"` → 无输出 rc=1（02:17:02）。
+命令模板（三臂同参，仅开关与侧根不同；`env -u` 掉一切真 LLM 变量）：
+  env -u HITT_LLM_PROVIDER -u LLM_API_KEY -u LLM_ENDPOINT -u LLM_MODEL [-u LIFE_PROMPT_SCENE] \
+    python3 -m orchestration run --life --seed 42 --agents 16 --rounds 4 \
+    --out <out>/run.jsonl --flush-every 1 --side-root <side>
+⚠ **mock 用 `--flush-every 1`；真批用 `--flush-every 2`**（勿用 mock 的落盘节奏推断真批行为）。
+
+| 臂 | out | exit | 耗时 | events | final_state_hash |
+|---|---|---|---|---|---|
+| base（e8a9fd5） | mock_scene_base | 0 | 1s | 2939 | sha256:226ecef0…6a44 |
+| off（59bad20，开关不存在） | mock_scene_off | 0 | 1s | 2939 | sha256:226ecef0…6a44 |
+| on（59bad20，LIFE_PROMPT_SCENE=1） | mock_scene_on | 0 | 1s | 2939 | sha256:226ecef0…6a44 |
+
+## 3. 判据一 · OFF 路径零副作用（逐字节）
+- `sha256sum`：base `1b0106f2ba52fcde76c27f9cb7c46c45f2409be9ca58aac2862a29f8d519f298`（1,539,889 B）
+  ＝ off `1b0106f2…f298`（1,539,889 B）⇒ **整个事件日志逐字节相同**（不只是 prompt）。
+- prompt 文本（运行时包一层 `_default_llm` 抓取，不改仓库代码）：
+  base 与 off 的 37 条 dialogue prompt **逐串相等**（`prompts_base.json` vs `prompts_off.json`，列表相等为 True）。
+- freeze 响应侧：base 与 off 的 `prompt_hash` **多重集完全相等**（223 = 223，集合与计数均相同）。
+
+## 4. 判据二 · ON 臂只插入一行且字段真贯通
+- 37 条 dialogue prompt 中，**每条恰好插入 1 行**（正则 `\n你眼下的光景：[^\n]*` 命中数集合 = {1}）。
+  样例：`你眼下的光景：这会儿天刚亮，你在住宅。（这些只是你眼下的底子：顺口带一句就够…）`
+- 剥离该行后与 OFF 对比：**前 12 条（round 0 起跑段）逐串相同**；第 13 条起分叉，
+  原因是 ON 臂台词变 → 线程历史变（实测差异为对方上一句不同），属**预期状态分叉**，round ≥2 不构成"同状态"。
+- freeze 侧：ON 与 OFF 的 `prompt_hash` 仅 **37 个**不同（其余 186 个相同）⇒ 新逻辑只触及 dialogue 调用。
+- `payload.ctx.scene`：ON **37/37 出现**，且确认落在 `payload.ctx` 段内（穿过 `integration._thread_fields` 白名单，未被吞）。
+  键集合：`{slot, place, activity, line_sha256}` 25 条 / `{slot, place, line_sha256}` 12 条（活动为空时省略，符合"宁缺不写"）。
+- `line_sha256` 可复算：用 `scene_anchor.render(actor, round, slot, name_cn, activity)` 重算 **37/37 一致**
+  （`places.json::name_cn` 映射；内部 id 只出现在 `ctx.scene.place`，未进提示词）。
+- OFF 臂 `ctx` 无 `scene` 键：0/37（`"scene" in ctx` 为 False，不是 null、不是 {}）；base 臂同为 0/37。
+
+## 5. 局限（必须与结论同读）
+1. **非真 LLM**：离线 MockProvider，零成本；`provider_guard` 必然不通过，属预期。本文件**不得**被引用为真 LLM 证据。
+2. 规模 n16×4、单 seed 42 ⇒ 只证明机制与字段贯通，**不证明任何效果**。
+3. prompt 文本抓取那次运行（`capture_prompts.py`）events=2369，与直跑版的 2939 不同（抓取层绕开了部分缓存路径），
+   故"prompt 逐串比对"只在**三臂同为抓取版**之间比较（base/off/on 都是 2369，互相可比）；与直跑版之间只用
+   `run.jsonl` 的 sha256 与 `prompt_hash` 多重集作对照。
+4. round ≥ 2 状态已分叉：本文件**不使用**"两臂同一状态"的表述；逐串对照的有效范围仅 round 0 起跑段（前 12 条）。
+
+## 6. 产物位置
+- 全部 mock 产物在 `/tmp/scene_mock_check/`（`mock_scene_{base,off,on}/`、`side_{base,off,on}/`、`prompts_*.json`、`capture_prompts.py`），**未入仓**。
+- 本文件是本轮唯一写入仓库的复核产物（`v2/evidence/round_mock_ctx_scene_check.txt`）。
+- 收跑时 `git status` 24 条：原 22 条未跟踪之外，新增 `M tools/d5/dialogue_metrics.py` 与 `?? tools/d5/f8_lexicon.json`，
+  系 **metrics-dev 的 F-8 指标实现**，与本 mock 无关（mock 未写仓库任何 code/ 文件）。

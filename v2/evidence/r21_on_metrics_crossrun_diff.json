@@ -1,0 +1,60 @@
+{
+  "generated_at": "2026-10-23T08:37+0800",
+  "sim_file": ".worktrees/scene-pair-r21/v2/evidence/d5_metrics_r21_scene_on.json",
+  "mine_file": "v2/evidence/d5_metrics_r21_scene_on.json",
+  "tool_sha256": "1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271",
+  "total_diffs": 8,
+  "by_kind": {
+    "PATH_PREFIX_ONLY": 8
+  },
+  "diffs": [
+    {
+      "path": "/F-8_scene_anchor/lexicon/path",
+      "kind": "PATH_PREFIX_ONLY",
+      "sim": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/tools/d5/f8_lexicon.json",
+      "mine": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/f8_lexicon.json"
+    },
+    {
+      "path": "/F-8_scene_anchor/places/path",
+      "kind": "PATH_PREFIX_ONLY",
+      "sim": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/tools/d5/../../code/config/places.json",
+      "mine": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/../../code/config/places.json"
+    },
+    {
+      "path": "/inputs/f8_lexicon/path",
+      "kind": "PATH_PREFIX_ONLY",
+      "sim": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/tools/d5/f8_lexicon.json",
+      "mine": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/f8_lexicon.json"
+    },
+    {
+      "path": "/inputs/f8_places/path",
+      "kind": "PATH_PREFIX_ONLY",
+      "sim": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/tools/d5/../../code/config/places.json",
+      "mine": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/../../code/config/places.json"
+    },
+    {
+      "path": "/inputs/lexicon/path",
+      "kind": "PATH_PREFIX_ONLY",
+      "sim": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/tools/d5/backref_lexicon.txt",
+      "mine": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/backref_lexicon.txt"
+    },
+    {
+      "path": "/inputs/personas/path",
+      "kind": "PATH_PREFIX_ONLY",
+      "sim": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/tools/d5/../../code/config/personas.json",
+      "mine": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/../../code/config/personas.json"
+    },
+    {
+      "path": "/inputs/script",
+      "kind": "PATH_PREFIX_ONLY",
+      "sim": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/tools/d5/dialogue_metrics.py",
+      "mine": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/dialogue_metrics.py"
+    },
+    {
+      "path": "/inputs/templates/path",
+      "kind": "PATH_PREFIX_ONLY",
+      "sim": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/tools/d5/template_patterns.txt",
+      "mine": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/template_patterns.txt"
+    }
+  ]
+}

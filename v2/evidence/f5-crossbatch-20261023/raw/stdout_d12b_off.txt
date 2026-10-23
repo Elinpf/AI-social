@@ -1,0 +1,19 @@
+{
+ "messages": 191,
+ "threads": 66,
+ "thread_schema": "explicit",
+ "v0_reply_pointer_rate": 1.0,
+ "v0_single_msg_thread_ratio": 0.515152,
+ "v0_agent_id_leak_rate": 0.0,
+ "admission": "REJECTED",
+ "out_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/f5-crossbatch-20261023/raw/metrics_d12b_off.json",
+ "out_md": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/f5-crossbatch-20261023/raw/metrics_d12b_off.md",
+ "F-8": {
+  "arm": null,
+  "total": "3/191",
+  "F-8t": "3/191",
+  "F-8p": "0/167",
+  "F-8a": "not_applicable",
+  "lexicon_sha256": "sha256:004f3bca138e7800a0fc0ac7e0f1c0f0bdb9b0a862432fa53f65b152bdb2ddd3"
+ }
+}

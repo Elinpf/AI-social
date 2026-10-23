@@ -1,0 +1,4 @@
+=== pgrep_pre 2026-10-23T04:09:56+08:00 ===
+2605218 /bin/sh -c cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment && git rev-parse HEAD && git rev-parse --abbrev-ref HEAD && git status --porcelain -- code/life code/orchestration code/config code/engine && echo "(frozen clean if empty)" && cat /tmp/preflight_off.txt && setsid bash /tmp/f6_launch.sh off > /tmp/f6_off.launch 2>&1 < /dev/null & sleep 8; echo "=== launch log:"; cat /tmp/f6_off.launch 2>/dev/null; echo "=== run log tail:"; tail -5 /tmp/f6_off.out 2>/dev/null; echo "=== procs:"; pgrep -af 'orchestration run' | head -3
+(none: run_batch)
+(none: nightly.py)

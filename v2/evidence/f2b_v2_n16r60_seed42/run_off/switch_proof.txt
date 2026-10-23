@@ -1,0 +1,4 @@
+# switch_proof（off 臂）：取自 /proc/<pid>/environ（运行期硬证据），T=2026-10-23T14:07:30+08:00
+pid=100637
+HITT_LLM_PROVIDER=openai_compat
+--- 结论：off 臂 = 不设该变量（代码默认 OFF）

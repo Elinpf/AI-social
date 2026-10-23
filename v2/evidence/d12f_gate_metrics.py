@@ -51,6 +51,8 @@ def main(argv=None) -> int:
     ap.add_argument("--partial", action="store_true")
     ap.add_argument("--out-json", required=True)
     ap.add_argument("--sample-scores", type=int, default=8)
+    ap.add_argument("--snapshot-at", default=None,
+                    help="采集时刻（由 wrapper 用 date -Iseconds 传入；禁止手写）")
     ap.add_argument("--ctx-key", default="d12f", choices=["d12f", "d12e"],
                     help="读哪个 ctx 子键（d12f=本臂；d12e=回归自检用）")
     args = ap.parse_args(argv)
@@ -169,6 +171,7 @@ def main(argv=None) -> int:
         "source_run_jsonl": args.run_jsonl,
         "source_run_jsonl_sha256": sha256_file(args.run_jsonl),
         "snapshot": {
+            "snapshot_at": args.snapshot_at,
             "partial": bool(args.partial),
             "snapshot_rounds_seen": len(rounds),
             "max_round_seen": max(rounds) if rounds else None,

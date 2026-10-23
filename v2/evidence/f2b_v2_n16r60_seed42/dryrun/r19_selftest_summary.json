@@ -1,0 +1,168 @@
+{
+ "off_arm": {
+  "D_dispatched": 0,
+  "F1_chatter": 0.628866,
+  "F2_content_drift": {
+   "denominator_adjacent_pairs": 67,
+   "drift_rate": 0.626866,
+   "jaccard_all": {
+    "max": 0.388889,
+    "mean": 0.087411,
+    "min": 0.0,
+    "n": 67,
+    "p10": 0.0,
+    "p50": 0.069767,
+    "p90": 0.186787,
+    "stdev": 0.077537
+   },
+   "jaccard_switched": {
+    "max": null,
+    "mean": null,
+    "min": null,
+    "n": 0,
+    "p10": null,
+    "p50": null,
+    "p90": null,
+    "stdev": null
+   },
+   "rule": "内容侧话题漂移：相邻消息 char-bigram Jaccard<0.10 记一次换话头；**不以 tag 作否决项**（tag 恒定是引擎构造，不是对话事实）"
+  },
+  "F2_tag_change_split": {
+   "denominator_adjacent_pairs": 67,
+   "rule": "R19 拆分（board-scout 要求）：「多挂一个 tag、原话题保留」记 tag_added（话题展开）；「两集合无交集」记 tag_replaced（真换话题，**主判据**）。两者互斥，和 = F-2_tag_switch.switch_pairs（仅当 prev 非空时；空 tag 集不计入任一侧）",
+   "tag_added": 0,
+   "tag_added_rate": 0.0,
+   "tag_replaced": 0,
+   "tag_replaced_rate": 0.0
+  },
+  "F2_tag_switch": {
+   "denominator_adjacent_pairs": 67,
+   "rule": "机制侧话题切换：相邻消息 tag 集合不相等即记一次（含「回复追加第二个 tag」）；本列测「引擎是否承认话题变了」，**不得单独作为效果判据**",
+   "switch_pairs": 0,
+   "switch_rate": 0.0
+  },
+  "F2b_multi_topic": {
+   "denominator_threads": 30,
+   "denominator_threads_group": 30,
+   "multi_topic_thread_ratio": 0.0,
+   "n_multi_topic_threads": 0,
+   "rule": "线程内 tag 种数≥2 的线程数 / 线程数；R19 起**分子分母统一到 mixed_key 线程口径**，并同时打印两个分母（旧版分子 mixed_key、分母 group_threads，v0 批 136 vs 172 不一致）"
+  },
+  "L13": {
+   "n": 0,
+   "rate": 0.0
+  },
+  "L5_template_hit": 0.0,
+  "L6_dup_exact": 0.0,
+  "L7_dup_ngram8": 0.257732,
+  "dir": "v2/evidence/r19_topicbreadth_n8r24_seed42/run_off",
+  "inherited_tag_msgs": 0,
+  "landed_events": 0,
+  "msgs": 97,
+  "tag_appended_events_len2plus": 0,
+  "through_landed": 0,
+  "through_over_D": null,
+  "through_over_msgs": 0.0
+ },
+ "on_arm": {
+  "D_dispatched": 47,
+  "F1_chatter": 0.628866,
+  "F2_content_drift": {
+   "denominator_adjacent_pairs": 67,
+   "drift_rate": 0.626866,
+   "jaccard_all": {
+    "max": 0.243243,
+    "mean": 0.085001,
+    "min": 0.0,
+    "n": 67,
+    "p10": 0.020173,
+    "p50": 0.085106,
+    "p90": 0.157619,
+    "stdev": 0.05765
+   },
+   "jaccard_switched": {
+    "max": 0.12963,
+    "mean": 0.072903,
+    "min": 0.025641,
+    "n": 10,
+    "p10": 0.029035,
+    "p50": 0.079403,
+    "p90": 0.127508,
+    "stdev": 0.038364
+   },
+   "rule": "内容侧话题漂移：相邻消息 char-bigram Jaccard<0.10 记一次换话头；**不以 tag 作否决项**（tag 恒定是引擎构造，不是对话事实）"
+  },
+  "F2_tag_change_split": {
+   "denominator_adjacent_pairs": 67,
+   "rule": "R19 拆分（board-scout 要求）：「多挂一个 tag、原话题保留」记 tag_added（话题展开）；「两集合无交集」记 tag_replaced（真换话题，**主判据**）。两者互斥，和 = F-2_tag_switch.switch_pairs（仅当 prev 非空时；空 tag 集不计入任一侧）",
+   "tag_added": 10,
+   "tag_added_rate": 0.149254,
+   "tag_replaced": 0,
+   "tag_replaced_rate": 0.0
+  },
+  "F2_tag_switch": {
+   "denominator_adjacent_pairs": 67,
+   "rule": "机制侧话题切换：相邻消息 tag 集合不相等即记一次（含「回复追加第二个 tag」）；本列测「引擎是否承认话题变了」，**不得单独作为效果判据**",
+   "switch_pairs": 10,
+   "switch_rate": 0.149254
+  },
+  "F2b_multi_topic": {
+   "denominator_threads": 30,
+   "denominator_threads_group": 30,
+   "multi_topic_thread_ratio": 0.233333,
+   "n_multi_topic_threads": 7,
+   "rule": "线程内 tag 种数≥2 的线程数 / 线程数；R19 起**分子分母统一到 mixed_key 线程口径**，并同时打印两个分母（旧版分子 mixed_key、分母 group_threads，v0 批 136 vs 172 不一致）"
+  },
+  "L13": {
+   "n": 0,
+   "rate": 0.0
+  },
+  "L5_template_hit": 0.0,
+  "L6_dup_exact": 0.0,
+  "L7_dup_ngram8": 0.185567,
+  "dir": "v2/evidence/r19_topicbreadth_n8r24_seed42/run_on",
+  "inherited_tag_msgs": 3,
+  "landed_events": 10,
+  "msgs": 97,
+  "tag_appended_events_len2plus": 13,
+  "through_landed": 10,
+  "through_over_D": 0.212766,
+  "through_over_msgs": 0.103093
+ },
+ "prereg": "v2/refs/prereg-f2b-v2-n16r60.md",
+ "rules": {
+  "guards": "L-6/L-5/L-7/F-1 基线 = 同批 off 臂；on > off 即 broken。任一 broken ⇒ 主判定降为不可判（与双取样并列、互不替代）",
+  "judged_object": "ctx.topic_breadth.landed = true 的消息（R19 §3.2 口径，不是 len(tag_hints)>=2）",
+  "main_judgement": "precision = 真展开条数 / 30 ≥ 20 ⇒ 达标；< 20 ⇒ 未达标；判定样本 < 30 ⇒ 不可判（样本不足）",
+  "no_retroactive": "不得用本批口径重判 R19 的 8/10（B.4-v2 不回溯）",
+  "sampling_control_b": "修订前首段方案：step=N//30，取 appends[0::step][:30]（seq 最小的 30 条）",
+  "sampling_main_a": "固定种子系统抽样：step=N//30；N>=60 时 start=Random(20261023).randrange(step)，index=start+i*step(i=0..29)；30<=N<60 时 step=1，退回首段 30 条并披露前段偏置",
+  "sampling_sensitivity": "a/b 结论一致 ⇒ 主判定按 (a)，sampling_sensitivity=insensitive；不一致 ⇒ 主判定必须为不可判，sampling_sensitivity=sensitive，不得择优取 (a)；N<30 ⇒ 不可判（样本不足）"
+ },
+ "sample_a": {
+  "meta": {
+   "N": 10,
+   "bias_disclosed": null,
+   "indices": [],
+   "mode": "insufficient",
+   "sample_n": 30,
+   "sampling_seed": 20261023,
+   "seqs": [],
+   "start": null,
+   "step": null
+  },
+  "rule": "(a) N=10 < 30 ⇒ **样本不足**（不得用更小分母凑判定）"
+ },
+ "sample_b": {
+  "meta": {
+   "N": 10,
+   "indices": [],
+   "mode": "insufficient",
+   "sample_n": 30,
+   "seqs": [],
+   "step": null
+  },
+  "rule": "(b) N=10 < 30 ⇒ 不产出对照样本"
+ },
+ "union_size": 0
+}

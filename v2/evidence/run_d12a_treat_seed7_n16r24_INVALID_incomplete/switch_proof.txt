@@ -1,0 +1,5 @@
+started_at=2026-10-22T21:15:53+08:00
+code_sha=a6ae5e5
+env_HITT_LLM_PROVIDER=openai_compat
+env_HITT_D12_DETAIL=1
+seed=7 n=16 rounds=24

@@ -1,0 +1,131 @@
+{
+ "batch_landing": null,
+ "blocking": [],
+ "head": "f8d95f07518ae7c2cf31e77b896ad9aed55543da",
+ "nonblocking": [
+  {
+   "path": "code/frontend/sample/dialogue_cycle03_ctrl/",
+   "status": "??"
+  },
+  {
+   "path": "code/frontend/sample/dialogue_cycle04_a5/",
+   "status": "??"
+  },
+  {
+   "note": "其它路径，按非阻断记注",
+   "path": "code/v2/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d5_llm_purpose_audit_d1_f6_off.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d5_llm_purpose_audit_d1_f6_off.md",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d5_llm_purpose_audit_d1_f6_on.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d5_llm_purpose_audit_d1_f6_on.md",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d5_metrics_d1_f6_off.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d5_metrics_d1_f6_off.md",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d5_metrics_d1_f6_on.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d5_metrics_d1_f6_on.md",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d5_s0a_d1_f6_off.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d5_s0a_d1_f6_on.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/f8_metrics_selfcheck.txt",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/preflight/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/r19_topicbreadth_pilot_n8r24_seed42/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/round_mock_ctx_scene_check.txt",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/run_d12a_base_seed7_n16r24_INVALID_confounded/switch_proof.txt",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/run_d12a_treat_seed7_n16r24_INVALID_incomplete/switch_proof.txt",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/run_d12b_off_seed7_n16r24_INVALID_concurrent/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/run_d1_f6off_seed42_n16r84/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/run_d1_f6on_seed42_n16r84/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/run_scene_anchor_on_seed42_n16r24/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/samples_d1_f6_off/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/samples_d1_f6_on/",
+   "status": "??"
+  }
+ ],
+ "nonblocking_count": 25,
+ "note": "tools/ 下无未跟踪 .py",
+ "repo": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment",
+ "rule": {
+  "hard_fail_prefixes": [
+   "code/life/",
+   "code/orchestration/",
+   "code/config/",
+   "code/engine/"
+  ],
+  "nonblocking_prefixes": [
+   "code/frontend/",
+   "reports/",
+   "v2/refs/",
+   "v2/evidence/",
+   "tools/",
+   "glossary/"
+  ],
+  "source": "leader 裁决 2026-10-20：A0 起跑的 S0a 放宽为「跑批代码树确定」"
+ },
+ "schema_version": "d5-s0a-clean-tree/1.0",
+ "tools_py_present": [],
+ "verdict": "PASS"
+}

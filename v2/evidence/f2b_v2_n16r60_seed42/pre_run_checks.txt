@@ -1,0 +1,24 @@
+# 起跑前串行纪律复核（T=2026-10-23T14:05:40+08:00）
+## A. pgrep -af（跑批三种形态；结果中的候选是否为本脚本/其祖先需逐个核对）
+$ pgrep -af "orchestration run|run_batch|nightly.py"
+pgrep_rc=1
+
+## A1. 祖先链（用于排除自身）
+98526 98525 3803847 3803840 3803792 1 
+
+## B. 遍历 /proc/*/cwd：cwd 落在 social-experiment 下且 cmdline 含 orchestration/run_batch/nightly.py
+(B 段为空 ⇒ 无双重复核发现的跑批进程)
+
+## C. 主树 / worktree 分支与状态
+main: master @ a9c74f5
+wt  : feat/f2b-v2-n16r60 @ a9c74f5
+wt git status --porcelain 行数: 0
+
+## D. 开关与默认值（代码内唯一出处 code/life/topic_breadth.py）
+54:BREADTH_ENV = "LIFE_PROMPT_TOPIC_BREADTH"
+55:_ON = {"1", "true", "yes", "on"}
+58:#: 与 `BREADTH_ENV` 解耦：话题宽度臂默认 OFF，但「不把内部 token 递给模型」应当是默认行为。
+170:    return os.environ.get(BREADTH_ENV, "").strip().lower() in _ON
+
+## E. run_batch.sh 自身不含 setsid（外层必须套）
+grep -c setsid tools/d2/run_batch.sh => 0

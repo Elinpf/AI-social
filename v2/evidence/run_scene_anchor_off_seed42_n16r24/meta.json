@@ -1,0 +1,95 @@
+{
+  "assertions": {
+    "code_unchanged_during_run": null,
+    "msg_uid_unique": true,
+    "participants_consistent": true,
+    "participants_violations": 0,
+    "ptr_cross_thread": 0,
+    "ptr_dangling": 0,
+    "reply_to_same_thread": true,
+    "turn_index_dense": true,
+    "turn_index_gap_threads": 0
+  },
+  "code_identity_note": "代码身份硬证据 = code_sha + WORLD_INIT.config_components；git_dirty_code_files 为空表示 code/ 无未提交改动",
+  "code_sha": "44e37103f3b0c1914749b0e2c8d2cdbb8fc15b42",
+  "code_sha_end": "44e37103f3b0c1914749b0e2c8d2cdbb8fc15b42",
+  "degraded_calls": 0,
+  "derived_from_log_sha256": "4d70674e0be7dcf24b92ecd73ed01062f03cf41d483464dc85ec538a2060c7e6",
+  "dropped_counts": {
+    "insufficient_goods|None": 14,
+    "offer_exhausted|None": 15
+  },
+  "duration_sec": 1289,
+  "endpoint_host": "172.16.3.41:31809",
+  "events": 33846,
+  "fallback_detected": false,
+  "finished_at": "2026-10-23T08:29:57+08:00",
+  "generated_after_run": true,
+  "generated_at": "2026-10-23T08:29:57",
+  "git_dirty_code_files": [],
+  "git_dirty_files": [
+    "?? v2/evidence/d5_metrics_r21_scene_on.json",
+    "?? v2/evidence/d5_metrics_r21_scene_on.md",
+    "?? v2/evidence/run_scene_anchor_off_seed42_n16r24/",
+    "?? v2/evidence/run_scene_anchor_on_seed42_n16r24/"
+  ],
+  "git_status_end": [
+    "?? v2/evidence/d5_metrics_r21_scene_on.json",
+    "?? v2/evidence/d5_metrics_r21_scene_on.md",
+    "?? v2/evidence/run_scene_anchor_off_seed42_n16r24/",
+    "?? v2/evidence/run_scene_anchor_on_seed42_n16r24/"
+  ],
+  "git_status_start": null,
+  "git_status_start_source": null,
+  "llm_cached": 1387,
+  "llm_cached_ratio": 0.6159,
+  "llm_calls": 2252,
+  "llm_model_in_events": {
+    "DeepSeek-Flash": 2252
+  },
+  "llm_provider_in_events": {
+    "openai_compat": 2252
+  },
+  "llm_purposes": {
+    "dialogue": 191,
+    "importance": 1523,
+    "judge": 425,
+    "negotiation": 7,
+    "plan": 16,
+    "reflect": 90
+  },
+  "mock_precalib_msg_count": 0,
+  "mock_precalib_note": "mock 预校准（同 n/rounds、MockProvider）的 MSG 总条数，仅用于跑前估规模；其日志另存 v2/evidence/run_d2_mock_precalib_*.jsonl，不混入本臂任何统计",
+  "model": "DeepSeek-Flash",
+  "model_reported": [
+    "DeepSeek-Flash"
+  ],
+  "model_requested": "DeepSeek-Flash",
+  "msg_counts": {
+    "MSG_DM": 167,
+    "MSG_PUBLIC": 24
+  },
+  "msg_dropped_unknown_intent_field": 0,
+  "n": 16,
+  "n_declared": 16,
+  "n_in_log": 16,
+  "provider": "openai_compat",
+  "rounds": 24,
+  "rounds_contiguous": true,
+  "rounds_declared": 24,
+  "rounds_effective": 24,
+  "rounds_per_slot_effective": 3,
+  "rounds_seen_max": 23,
+  "rounds_seen_min": 0,
+  "run_bytes": 17161028,
+  "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/v2/evidence/run_scene_anchor_off_seed42_n16r24",
+  "run_file": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/v2/evidence/run_scene_anchor_off_seed42_n16r24/run.jsonl",
+  "run_sha256": "4d70674e0be7dcf24b92ecd73ed01062f03cf41d483464dc85ec538a2060c7e6",
+  "seed": 42,
+  "seed_declared": 42,
+  "seed_in_log": 42,
+  "side_root": null,
+  "side_root_note": "命令行声明值（非硬证据）；cache 隔离的硬证据见两臂 freeze_cache 目录 mtime/inode 不同 + 按 purpose 的 cached 率",
+  "started_at": "2026-10-23T08:08:28+08:00",
+  "wc_l": 33846
+}
