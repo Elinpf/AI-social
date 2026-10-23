@@ -1,0 +1,22 @@
+{
+  "log": "v2/evidence/run_d12c_off_n16r60_seed42/run.jsonl",
+  "tau": 20.0,
+  "alpha": 2.0,
+  "round_scale": "e.get('round')  (0..59)",
+  "n_init": 114,
+  "self_check_orig_matches_actual_rate": 100.0,
+  "map_only_change_rate_C_vs_A": 92.98,
+  "weight_only_change_rate_B_vs_C": 53.51,
+  "total_change_rate_B_vs_A": 92.98,
+  "repeat_pair_rate_actual": 42.98,
+  "repeat_pair_rate_equalweight_C": 48.25,
+  "repeat_pair_rate_weighted_B": 46.49,
+  "delta_pp_weight_effect_B_minus_C": -1.76,
+  "delta_pp_total_B_minus_actual": 3.51,
+  "delta_round_p50": 12,
+  "delta_round_p10_p90": [
+    0,
+    36
+  ],
+  "caveat": "seed 已精确复现（`agent|day{dow}-{slot}|{tid}|p0`，自检须 100%）；Δ 取自**发起时刻**而非周初计划时刻（真实 Δ 偏大 ⇒ 权重更平 ⇒ 本表偏保守地高估权重效应）；**仅用于'值不值得跑'的预判，不作判定读数**。"
+}
