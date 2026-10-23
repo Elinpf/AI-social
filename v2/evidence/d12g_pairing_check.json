@@ -1,0 +1,78 @@
+{
+  "Q1_slot_exact_same": {
+    "exact_same": 14,
+    "pct": 2.745,
+    "shared_slots": 510
+  },
+  "Q2_same_rate_by_round_bucket": {
+    "0": {
+      "pct": 2.2,
+      "same": 2,
+      "slots": 91
+    },
+    "10": {
+      "pct": 1.2,
+      "same": 1,
+      "slots": 83
+    },
+    "20": {
+      "pct": 2.78,
+      "same": 2,
+      "slots": 72
+    },
+    "30": {
+      "pct": 2.33,
+      "same": 2,
+      "slots": 86
+    },
+    "40": {
+      "pct": 3.16,
+      "same": 3,
+      "slots": 95
+    },
+    "50": {
+      "pct": 4.82,
+      "same": 4,
+      "slots": 83
+    }
+  },
+  "Q3_ci": {
+    "dup_norm8": {
+      "n_slots": 510,
+      "paired_ci95": [
+        -9.4118,
+        1.3725
+      ],
+      "paired_mean_delta_pp": -3.9216
+    },
+    "dup_raw8": {
+      "n_slots": 510,
+      "paired_ci95": [
+        -10.0,
+        0.9804
+      ],
+      "paired_mean_delta_pp": -4.5098
+    }
+  },
+  "impl": {
+    "driver_sha256": "sha256:89c5d9f65ca666af855228f0c1063e5bbfe0b0b70c17bb245038ef3bcf28a623",
+    "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/recompute_l7_indep.py",
+    "sha256": "sha256:ae50620d3b9bdd3add9d81cdd47186b87936d15a56eca58d76dbd44686b952f0"
+  },
+  "logs": {
+    "arm_a": {
+      "path": ".worktrees/d12f-diverse/v2/evidence/run_d12f_diverse_n16r60_seed42/run.jsonl",
+      "sha256": "sha256:e24c54853688773550f0f5d72aa8c4da76f810b0c71696fb5353f0340a63cd50"
+    },
+    "arm_b": {
+      "path": ".worktrees/d12g-diverse2/v2/evidence/run_d12g_diverse2_n16r60_seed42/run.jsonl",
+      "sha256": "sha256:dd4ad73d5a21c7485c2afbfc9701e267c25da3150b10adade3b3819a3996ff36"
+    }
+  },
+  "policy": {
+    "B": 2000,
+    "note": "配对 bootstrap 按 slot 对齐有放回重采样；dup 标记先在各臂内全局计算",
+    "seed": 42,
+    "unit": "slot = (thread_id, turn_index, from)"
+  }
+}
