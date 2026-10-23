@@ -423,12 +423,28 @@ D12-G 284 条里有 **1 条**（`seq=26894`）**候选 0 与候选 1 的 sha 完
    ```
    `host.log` / `batch.log`（批次宿主日志，可再生、报告只引 `meta.json`/`run_batch.rc`）**保持忽略**，不开口子。
 3. **验证不能只看 `git check-ignore` 的 rc**（本轮踩到）：负向规则命中时 `git check-ignore -v` **也会 rc=0** 并打印 `!pattern`（实测），把它当"仍被忽略"就是误判；反过来 **tracked 文件默认不参与 ignore 判定**（`check-ignore` 对它们直接 rc=1），必须加 `--no-index` 才看得到规则本身。**唯一可信的验证是真实探针**：
+   **探针脚本（整段可直接复制执行；含事后自清，不留残留）**：
    ```bash
-   # 造真文件看 git 的分类：?? = 未被忽略（会入库）；!! = 被忽略
-   git status --porcelain --ignored <dir> | grep <probe>
-   git ls-files -o --exclude-standard <dir>      # 只列"未跟踪且未被忽略"
+   cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+   mkdir -p v2/evidence/_c11probe_shots v2/evidence/_c11probe_run v2/evidence/preflight
+   : > v2/evidence/_c11probe_shots/render_wrap.log     # 应放行（render*.log）
+   : > v2/evidence/_c11probe_run/host.log              # 应仍忽略（host.log 未开例外）
+   : > v2/evidence/preflight/_c11probe.log             # 应仍忽略（preflight 不在例外内）
+   git status --porcelain --ignored v2/evidence | grep _c11probe
+   git ls-files -o --exclude-standard v2/evidence | grep _c11probe
+   rm -rf v2/evidence/_c11probe_shots v2/evidence/_c11probe_run v2/evidence/preflight/_c11probe.log
+   git status --porcelain --ignored v2/evidence | grep -c _c11probe || echo "probe_cleaned"
    ```
-   实测（本轮改后）：`v2/evidence/_probe_shots/render_wrap.log` → `??`（放行成功）；`v2/evidence/_probe_run/host.log`、`v2/evidence/preflight/_probe.log` → `!!`（仍忽略，符合预期）。
+   **判读（`??` = 未被忽略会入库；`!!` = 被忽略）**，实测输出：
+   ```
+   ?? v2/evidence/_c11probe_shots/           ← 放行成功
+   !! v2/evidence/_c11probe_run/             ← 仍忽略，符合预期
+   !! v2/evidence/preflight/_c11probe.log    ← 仍忽略，符合预期
+   v2/evidence/_c11probe_shots/render_wrap.log   ← ls-files -o 只能看到这一个
+   0
+   probe_cleaned                             ← 清理干净
+   ```
+   ⚠ **探针文件名必须带唯一前缀**（本例 `_c11probe`）：仓内已有 `v2/evidence/side_probe_n{20,50}.tar.gz`，若用宽匹配 `grep _probe` 会把它们也匹配上，导致「清理后仍非 0」的假报警（本轮实测踩到，故改成 `_c11probe`）。
 4. **新增/修改 ignore 规则后必须跑一次全量核对并报数**：`git ls-files '*.log'` 逐个比对，确认「已入库 log 不因新规则变成只靠 tracked 状态苟活」，并给出**改前/改后的命中数**（本轮：规则层命中 35 → 18，18 份全是 `host.log`/`batch.log`，属有意保留忽略）。
 
 **边界**：本节只管 `.log`/`.pid`/`.tsv` 类副产物规则的**证据安全问题**；提交范围与并发 index 污染仍归 §3.106。
