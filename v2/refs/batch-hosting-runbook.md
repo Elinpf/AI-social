@@ -580,6 +580,28 @@ L-3 含括号块：T1 66.27% → T5 57.84% → D12-H 0.20%（1/510）
 4. **参照语料必须声明"是否含无信息部分"**：如 `S_ext` 本体恒 1.0 ⇒ 必须用**留出集/外部语料**；
 5. **凡"看起来同一个数"有两个版本，先查是不是两个量** —— 一晚 6 起事故，没有一次是"数值算错"，**全是"量选错"**。
 
+## 3.114 【硬规则】同一仓库多执行线并发：**禁止 `git reset`、提交必须带路径、提交后必须自查 sha**
+
+**事故实录（2026-10-24 04:57–05:05，本仓真实发生，非假设）**：
+1. 我提交 `cd7adf9`（D2.2 诊断，6 个新文件）后，**另一条执行线**执行了 `git reset: moving to 2a52123`（reflog 可见），
+   随后在该点重新提交 cycle14/15 系列 ⇒ **我的 commit 变成悬空、从 master 历史中消失**。`git ls-remote` 显示远程也从未有过它。
+2. 恢复时撞 `fatal: Unable to create '.git/index.lock': File exists` —— 另一线正在提交。
+3. `git status` 显示索引里**我的 6 个文件与另一线的 3 个文件（`reports/CYCLE-15-*.md`、`cycle15_verify.md`、`README.md`）混在一起**，
+   裸 `git commit` 会把别人未完成的产物一起带走。
+
+**规则（六条，全部可机械执行）**：
+1. **主树永不 `git reset`**（含 `--hard`/`--mixed`）。要撤自己的改动用 `git revert` 或再提交一次；
+   `reset` 在这个仓里等于**随机吞掉他不知道的别人的 commit**。
+2. **提交一律带路径**：`git commit -m "..." -- <path1> <path2> ...`；**禁止裸 `git commit`**（会把共索引里别人的 staged 条目一起提交）。
+3. 遇 `index.lock`：**先 `pgrep -a git`**。有进程 ⇒ 等；无进程且锁龄 >60s ⇒ 才可移除。**先删锁等于删别人正在写的索引。**
+4. **提交后立即自查**：`git merge-base --is-ancestor <my_sha> HEAD && echo yes` —— **不要相信 commit 命令的 rc，更不要相信 push 的返回码**。
+5. **汇报 sha 前先 `git log --oneline -8` 看它还在不在**；不在就 `git reflog` + `git cat-file -t <sha>` 找悬空对象重建。
+6. 重建方法（本次实测有效）：reset 后文件会变成 **untracked**，`cherry-pick` 会因"文件已存在"失败；
+   直接 `git add <自己的路径>` + `git commit -- <自己的路径>` 即可，**不要 `rm` 重建（会丢内容）**。
+
+**推论**：本项目同时有多条线（D12/D2.x 实验线、cycle 报告线、verify 线）写同一 master，
+**"我提交了" ≠ "它在 master 上"**。每次声称落库前，用规则 4/5 自查一次。
+
 ## 4. 启动清单（复制粘贴；一批一跑）
 > 约定：`REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`；批次名 `<B>`（如 `A`）；跑批产物落 `RUN=/root/t271/runs/<B>`。
 
