@@ -166,6 +166,21 @@ systemctl show -p Id <unit>
 ⇒ 任何"同 prompt 多次采样"的机制（best-of-N、多次自评、重采样去重），**必须让 `cache_key` 每次都不同**（如把 `sample_index` 并入 `params`），且该变化**必须确定性派生**（随机会毁 `FREEZE_MODE=replay`：`cache_key` 不匹配 → "重放模式缓存未命中（禁止真实调用）"）。
 ⇒ **反例（禁止）**：把采样序号/随机种子**写进 prompt 文本**去改 `prompt_hash` —— 那会同时改掉 `prompt_fn_sha256`，等于**偷改提示词**，`prompt_fn_sha256` 与开关一致性证明立刻失效。
 
+## 3.100 【硬规则】"接线对了"≠"取值对了"：静默兜底会把 bug 伪装成阴性结果（2026-10-23 D12-E 事故）
+
+### 事故
+D12-E（best-of-3 采样择优）起跑后 191/191 条 MSG 都带 `ctx.d12e`、三个 `cache_key` 两两不同、`cached=false` ——**三条例行接线闸全 PASS**。但中途核 M2 闸发现：
+```
+picked = {0: 191}（全选第 1 条）；scores 三列均值 = 0 / 0 / 0；三候选全同分 = 191/191
+```
+根因：`recent_bodies(wv, limit=16)` 被按 `recent_bodies(wv, self.agent_id)` 调用（**把 agent_id 当 limit**）⇒ 函数内 `len(out) >= "P002"` 抛 `TypeError` ⇒ 被调用处的 `except Exception: recent = []` **静默吞掉** ⇒ 交集集恒空 ⇒ `scores` 恒 0。
+若跑完，判定会是「机制未生效」——**看起来像阴性结果，实际是 bug**。
+
+### 规则（三条）
+1. **机制链路上禁止裸 `except: pass / except: []` 兜底**。异常要么不捕获（让它炸），要么写进审计字段（如 `ctx.<arm>.error`）**并计入接线闸**；
+2. **机制臂必须有"取值有效性"硬闸，不能只验"字段存在"**。例：`scores` 不得全为 0、`picked` 必须有分布、`scores` 三列不得恒等；这类闸要**与接线闸并列写进预登记**；
+3. **中途快照提前核闸**：本批在 **24/60 轮**就发现（省下 36 轮 ×3 倍成本）。凡"三倍成本"或"判定词可能被判死"的臂，**跑到 1/3 时必须手工核一次核心闸**，不等收尾。
+
 ## 4. 启动清单（复制粘贴；一批一跑）
 > 约定：`REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`；批次名 `<B>`（如 `A`）；跑批产物落 `RUN=/root/t271/runs/<B>`。
 
