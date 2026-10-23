@@ -1,0 +1,81 @@
+{
+  "H": {
+    "by_turn": {
+      "1": {
+        "n": 169,
+        "restate_rate": 0.0,
+        "restate_strong_rate": 0.0
+      },
+      "2": {
+        "n": 88,
+        "restate_rate": 1.14,
+        "restate_strong_rate": 1.14
+      },
+      "3": {
+        "n": 77,
+        "restate_rate": 9.09,
+        "restate_strong_rate": 1.3
+      },
+      "4": {
+        "n": 70,
+        "restate_rate": 15.71,
+        "restate_strong_rate": 5.71
+      },
+      "5": {
+        "n": 54,
+        "restate_rate": 22.22,
+        "restate_strong_rate": 9.26
+      },
+      "6": {
+        "n": 52,
+        "restate_rate": 30.77,
+        "restate_strong_rate": 21.15
+      }
+    },
+    "n_msgs": 510,
+    "restate_rate": 9.22,
+    "restate_strong_rate": 4.31,
+    "rule": {
+      "denominator": "全部 MSG_*",
+      "ngram": "normalize_body + 8-gram（与 L-7 同口径）",
+      "restate": "与本线程更早消息共享 ≥1 个 8-gram",
+      "restate_strong": "共享 ≥3 个 8-gram",
+      "scope": "同线程内前向引用（不跨线程）"
+    },
+    "thread_meta_missing": 0,
+    "top_shared": [
+      [
+        "这算盘第三格珠子",
+        5
+      ],
+      [
+        "算盘第三格珠子卡",
+        5
+      ],
+      [
+        "我这算盘第三格珠",
+        4
+      ],
+      [
+        "盘第三格珠子卡了",
+        3
+      ],
+      [
+        "金先生我手里这杯",
+        2
+      ],
+      [
+        "第三格珠子卡了半",
+        2
+      ],
+      [
+        "我这第三格抽屉里",
+        2
+      ],
+      [
+        "秀娘我这铁钳上还",
+        2
+      ]
+    ]
+  }
+}

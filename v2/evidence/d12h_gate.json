@@ -1,0 +1,94 @@
+{
+  "descriptive": {
+    "WARNING": "条件于 d≠0，含选择性偏差，不得作效应量",
+    "by_round_10": {
+      "0": {
+        "n": 91,
+        "off_mean": 0.007206,
+        "on_mean": 0.016215
+      },
+      "10": {
+        "n": 83,
+        "off_mean": 0.022588,
+        "on_mean": 0.05689
+      },
+      "20": {
+        "n": 72,
+        "off_mean": 0.018222,
+        "on_mean": 0.07481
+      },
+      "30": {
+        "n": 86,
+        "off_mean": 0.020991,
+        "on_mean": 0.081513
+      },
+      "40": {
+        "n": 95,
+        "off_mean": 0.034704,
+        "on_mean": 0.11894
+      },
+      "50": {
+        "n": 83,
+        "off_mean": 0.027806,
+        "on_mean": 0.08053
+      }
+    },
+    "nonzero_ci_slot": {
+      "ci95_hi": 0.122586,
+      "ci95_lo": 0.068254,
+      "contains_zero": false
+    },
+    "nonzero_mean_delta": 0.094495,
+    "nonzero_pairs": 268,
+    "off_frac": {
+      "gt0_share_pct": 28.039,
+      "mean": 0.022064,
+      "median": 0.0,
+      "p90": 0.069767
+    },
+    "on_frac": {
+      "gt0_share_pct": 42.157,
+      "mean": 0.07172,
+      "median": 0.0,
+      "p90": 0.194444
+    },
+    "split": {
+      "eq0": 242,
+      "gt0": 192,
+      "lt0": 76
+    }
+  },
+  "gate_items": {
+    "N/A_share_pct": 0.0,
+    "cand_shingle_counts_zero_rows": 0,
+    "ctx_hit_rate": 100.0,
+    "nonzero_pair_share_pct": 52.549,
+    "on_off_hashes_identical_rows": 0,
+    "overlap_frac_all_zero_pairs": 238,
+    "pairs_usable": 510
+  },
+  "impl_sha256": "sha256:7a7e3337de53030de720a37cd0999ebb3b7deafa81e2621a69af1a57a0d341d3",
+  "primary": {
+    "ci_slot": {
+      "ci95_hi": 0.064758,
+      "ci95_lo": 0.034613,
+      "contains_zero": false
+    },
+    "ci_thread": {
+      "ci95_hi": 0.066283,
+      "ci95_lo": 0.035118,
+      "contains_zero": false,
+      "n_threads": 169
+    },
+    "estimand": "全部对（含 d=0）的均值 —— 每条消息的平均效应",
+    "mean_delta_all_pairs": 0.049656,
+    "note": "两口径不得互代；CI 含 0 ⇒ 无结论"
+  },
+  "run": {
+    "n_ctx_d12h": 510,
+    "n_msgs_total": 510,
+    "path": ".worktrees/d12h-pairing/v2/evidence/run_d12h_pairing_n16r60_seed42/run.jsonl",
+    "sha256": "sha256:122b36e988267a396cfdd95b167bad92bf69beabc249c253b46555f2679c3207"
+  },
+  "verdict_hint": "GATE_OK"
+}

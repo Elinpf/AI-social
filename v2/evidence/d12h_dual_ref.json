@@ -1,0 +1,220 @@
+{
+  "amendment": "v2/refs/D12H-amendment-2-foreign-reference.md §2/§3",
+  "consistency_own_history": {
+    "WARNING": "含自亲和偏差（本 run 历史仅 ON 生成）、参照系偏向 OFF、**不得单独作判定**",
+    "absolute_hits_note": "绝对命中条数（不除以候选长度）——防比率被长度带偏（ON 候选短约 10.7%）",
+    "by_round_10": {
+      "0": {
+        "n": 91,
+        "off_mean": 0.007206,
+        "on_mean": 0.016215
+      },
+      "10": {
+        "n": 83,
+        "off_mean": 0.022588,
+        "on_mean": 0.05689
+      },
+      "20": {
+        "n": 72,
+        "off_mean": 0.018222,
+        "on_mean": 0.07481
+      },
+      "30": {
+        "n": 86,
+        "off_mean": 0.020991,
+        "on_mean": 0.081513
+      },
+      "40": {
+        "n": 95,
+        "off_mean": 0.034704,
+        "on_mean": 0.11894
+      },
+      "50": {
+        "n": 83,
+        "off_mean": 0.027806,
+        "on_mean": 0.08053
+      }
+    },
+    "ci_slot": {
+      "ci95_hi": -0.034613,
+      "ci95_lo": -0.064758,
+      "contains_zero": false
+    },
+    "ci_thread": {
+      "ci95_hi": -0.035118,
+      "ci95_lo": -0.066283,
+      "contains_zero": false,
+      "n_threads": 169
+    },
+    "gt0_eq0_lt0": [
+      76,
+      242,
+      192
+    ],
+    "mean_d_off_minus_on": -0.049656,
+    "n_pairs": 510,
+    "off_frac_mean": 0.022064,
+    "off_hits_mean": 1.0216,
+    "on_frac_mean": 0.07172,
+    "on_hits_mean": 2.6765
+  },
+  "direction_check": {
+    "external_refs_agree": true,
+    "note": "d = off_frac − on_frac（d>0 ⇒ ON 重叠更低）。两个外部参照须同向且 CI 均不含 0 才可判；自身历史若反向，报告必须并列写出，不得择一。",
+    "own_history_sign": "-",
+    "own_vs_external_reversed": true,
+    "signs": {
+      "T1_prefix": "+",
+      "T5_prefix": "+"
+    }
+  },
+  "gate": {
+    "N/A_rows": 0,
+    "ctx_hit_rate_pct": 100.0,
+    "pairs_usable": 510
+  },
+  "impl": {
+    "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d12h_dual_ref.py",
+    "sha256": "sha256:5b2397d7f993add4955206355b785497baea82641d99249881d292e6a50430a9"
+  },
+  "primary": {
+    "T1_prefix": {
+      "absolute_hits_note": "绝对命中条数（不除以候选长度）——防比率被长度带偏（ON 候选短约 10.7%）",
+      "by_round_10": {
+        "0": {
+          "n": 91,
+          "off_mean": 0.150694,
+          "on_mean": 0.032466
+        },
+        "10": {
+          "n": 83,
+          "off_mean": 0.113998,
+          "on_mean": 0.052522
+        },
+        "20": {
+          "n": 72,
+          "off_mean": 0.090458,
+          "on_mean": 0.035515
+        },
+        "30": {
+          "n": 86,
+          "off_mean": 0.121123,
+          "on_mean": 0.030149
+        },
+        "40": {
+          "n": 95,
+          "off_mean": 0.167361,
+          "on_mean": 0.049582
+        },
+        "50": {
+          "n": 83,
+          "off_mean": 0.134994,
+          "on_mean": 0.048704
+        }
+      },
+      "ci_slot": {
+        "ci95_hi": 0.110595,
+        "ci95_lo": 0.071664,
+        "contains_zero": false
+      },
+      "ci_thread": {
+        "ci95_hi": 0.111473,
+        "ci95_lo": 0.072283,
+        "contains_zero": false,
+        "n_threads": 169
+      },
+      "gt0_eq0_lt0": [
+        247,
+        161,
+        102
+      ],
+      "mean_d_off_minus_on": 0.090181,
+      "n_pairs": 510,
+      "off_frac_mean": 0.131781,
+      "off_hits_mean": 5.4529,
+      "on_frac_mean": 0.041601,
+      "on_hits_mean": 1.5725
+    },
+    "T5_prefix": {
+      "absolute_hits_note": "绝对命中条数（不除以候选长度）——防比率被长度带偏（ON 候选短约 10.7%）",
+      "by_round_10": {
+        "0": {
+          "n": 91,
+          "off_mean": 0.166325,
+          "on_mean": 0.074109
+        },
+        "10": {
+          "n": 83,
+          "off_mean": 0.112569,
+          "on_mean": 0.079179
+        },
+        "20": {
+          "n": 72,
+          "off_mean": 0.092559,
+          "on_mean": 0.092556
+        },
+        "30": {
+          "n": 86,
+          "off_mean": 0.128199,
+          "on_mean": 0.104367
+        },
+        "40": {
+          "n": 95,
+          "off_mean": 0.126115,
+          "on_mean": 0.100656
+        },
+        "50": {
+          "n": 83,
+          "off_mean": 0.170237,
+          "on_mean": 0.096665
+        }
+      },
+      "ci_slot": {
+        "ci95_hi": 0.063641,
+        "ci95_lo": 0.021928,
+        "contains_zero": false
+      },
+      "ci_thread": {
+        "ci95_hi": 0.062448,
+        "ci95_lo": 0.023078,
+        "contains_zero": false,
+        "n_threads": 169
+      },
+      "gt0_eq0_lt0": [
+        229,
+        128,
+        153
+      ],
+      "mean_d_off_minus_on": 0.042623,
+      "n_pairs": 510,
+      "off_frac_mean": 0.13388,
+      "off_hits_mean": 5.5,
+      "on_frac_mean": 0.091257,
+      "on_hits_mean": 3.2961
+    }
+  },
+  "references": {
+    "T1_prefix": {
+      "n_msgs_in_corpus": 510,
+      "n_shingles": 25752,
+      "path": "v2/evidence/run_d12c_on_n16r60_seed42/run.jsonl",
+      "rounds_lt": 60,
+      "sha256": "sha256:bd2df77fd125cc75c31f261cc05486bd7376d9a9fcd9334f083cf8897e496c87"
+    },
+    "T5_prefix": {
+      "n_msgs_in_corpus": 510,
+      "n_shingles": 27540,
+      "path": ".worktrees/d12g-diverse2/v2/evidence/run_d12g_diverse2_n16r60_seed42/run.jsonl",
+      "rounds_lt": 60,
+      "sha256": "sha256:dd4ad73d5a21c7485c2afbfc9701e267c25da3150b10adade3b3819a3996ff36"
+    }
+  },
+  "run": {
+    "n_ctx_d12h": 510,
+    "n_msgs": 510,
+    "path": ".worktrees/d12h-pairing/v2/evidence/run_d12h_pairing_n16r60_seed42/run.jsonl",
+    "rounds_present_max": 59,
+    "sha256": "sha256:122b36e988267a396cfdd95b167bad92bf69beabc249c253b46555f2679c3207",
+    "window_rounds_R": 60
+  }
+}

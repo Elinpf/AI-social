@@ -1,0 +1,12 @@
+{
+  "H": {
+    "P1_specificity_rate": 98.24,
+    "P2_thirdparty_rate": 95.69,
+    "len_p50": 56.0,
+    "n_msgs": 510,
+    "n_threads": 169,
+    "paren_rate": 0.2,
+    "threads_p50": 2,
+    "turns_A_p50": 2
+  }
+}
