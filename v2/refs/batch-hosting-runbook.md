@@ -148,6 +148,24 @@ systemctl show -p Id <unit>
 - 抓取时刻要记（`date -Is`），并在 60 秒硬闸时**再抓一次**（防止中途被重启成另一个进程）；
 - `printenv` 仍可用于**自查你自己 shell**（如 `env_pre_*.txt`），但**不得**作为 `switch_proof` 的字段。
 
+## 3.99 【硬规则】三件容易被"看起来对"骗过去的事（2026-10-23 三次实践后新增）
+
+### 3.99a 证据索引必须写「路径 + 全 64 位 sha256 + 入库 commit」
+只写 `sha8…`（或写成 `sha8…（全值见该件 §X）`）**不算可对拍**：
+- `sha8` 只有 32 bit，碰撞与"看错一个字符"都可能；
+- 「见该件 §X」经常**指向错地方**（该件的 §X 是别的表），2026-10-23 在 `R4` 上就发生过一次。
+⇒ 规范写法：`<路径>`（入库 commit `<sha7>`，<该 commit 是否已含本次改动>）+ **全 64 位 sha256**。
+任何人都能 `git show <commit>:<path> | sha256sum` 对拍。
+
+### 3.99b 指标对某批"不可算"时，必须显式返回 `NOT_APPLICABLE`，不得硬算
+2026-10-23 `L-15` 首版把 `thread_id` 缺失的消息按 `legacy-<msg_uid>` 归组，导致 **v0 全批被当成一条线程**，算出 **33.69%** 的假值（正确处置：187/187 缺 tid ⇒ 拒绝计算）。
+⇒ 规则：**指标先自检输入前提**（如"线程边界"必需 `thread_id`），前提不成立就**拒绝出数并写明原因**；**假值一旦进了报告，比"无数据"危害大得多**。
+
+### 3.99c 多次采样前必须确认「缓存键会变」，否则 N 次采样 = 1 次
+`code/freeze/llm_client.py::make_cache_key` = `digest({cache_schema, kind, engine_version, prompt_hash, model, tier, params})`，**命中即原样返回、不调模型**。
+⇒ 任何"同 prompt 多次采样"的机制（best-of-N、多次自评、重采样去重），**必须让 `cache_key` 每次都不同**（如把 `sample_index` 并入 `params`），且该变化**必须确定性派生**（随机会毁 `FREEZE_MODE=replay`：`cache_key` 不匹配 → "重放模式缓存未命中（禁止真实调用）"）。
+⇒ **反例（禁止）**：把采样序号/随机种子**写进 prompt 文本**去改 `prompt_hash` —— 那会同时改掉 `prompt_fn_sha256`，等于**偷改提示词**，`prompt_fn_sha256` 与开关一致性证明立刻失效。
+
 ## 4. 启动清单（复制粘贴；一批一跑）
 > 约定：`REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`；批次名 `<B>`（如 `A`）；跑批产物落 `RUN=/root/t271/runs/<B>`。
 
