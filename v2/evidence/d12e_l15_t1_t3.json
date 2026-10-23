@@ -1,0 +1,160 @@
+{
+  "T1": {
+    "by_turn": {
+      "1": {
+        "n": 169,
+        "restate_rate": 0.0,
+        "restate_strong_rate": 0.0
+      },
+      "2": {
+        "n": 88,
+        "restate_rate": 1.14,
+        "restate_strong_rate": 1.14
+      },
+      "3": {
+        "n": 77,
+        "restate_rate": 6.49,
+        "restate_strong_rate": 2.6
+      },
+      "4": {
+        "n": 70,
+        "restate_rate": 15.71,
+        "restate_strong_rate": 5.71
+      },
+      "5": {
+        "n": 54,
+        "restate_rate": 20.37,
+        "restate_strong_rate": 12.96
+      },
+      "6": {
+        "n": 52,
+        "restate_rate": 21.15,
+        "restate_strong_rate": 17.31
+      }
+    },
+    "n_msgs": 510,
+    "restate_rate": 7.65,
+    "restate_strong_rate": 4.51,
+    "rule": {
+      "denominator": "全部 MSG_*",
+      "ngram": "normalize_body + 8-gram（与 L-7 同口径）",
+      "restate": "与本线程更早消息共享 ≥1 个 8-gram",
+      "restate_strong": "共享 ≥3 个 8-gram",
+      "scope": "同线程内前向引用（不跨线程）"
+    },
+    "thread_meta_missing": 0,
+    "top_shared": [
+      [
+        "把锄头往地上一杵",
+        3
+      ],
+      [
+        "手里那根半指宽的",
+        2
+      ],
+      [
+        "这第七号卷宗还差",
+        2
+      ],
+      [
+        "七号卷宗还差两页",
+        2
+      ],
+      [
+        "第七号卷宗还差两",
+        2
+      ],
+      [
+        "老李那人上回借我",
+        2
+      ],
+      [
+        "把铁钳往砧上一搁",
+        2
+      ],
+      [
+        "往地上一杵手搭在",
+        2
+      ]
+    ]
+  },
+  "T3": {
+    "by_turn": {
+      "1": {
+        "n": 169,
+        "restate_rate": 0.0,
+        "restate_strong_rate": 0.0
+      },
+      "2": {
+        "n": 88,
+        "restate_rate": 0.0,
+        "restate_strong_rate": 0.0
+      },
+      "3": {
+        "n": 77,
+        "restate_rate": 3.9,
+        "restate_strong_rate": 0.0
+      },
+      "4": {
+        "n": 70,
+        "restate_rate": 20.0,
+        "restate_strong_rate": 11.43
+      },
+      "5": {
+        "n": 54,
+        "restate_rate": 14.81,
+        "restate_strong_rate": 9.26
+      },
+      "6": {
+        "n": 52,
+        "restate_rate": 25.0,
+        "restate_strong_rate": 15.38
+      }
+    },
+    "n_msgs": 510,
+    "restate_rate": 7.45,
+    "restate_strong_rate": 4.12,
+    "rule": {
+      "denominator": "全部 MSG_*",
+      "ngram": "normalize_body + 8-gram（与 L-7 同口径）",
+      "restate": "与本线程更早消息共享 ≥1 个 8-gram",
+      "restate_strong": "共享 ≥3 个 8-gram",
+      "scope": "同线程内前向引用（不跨线程）"
+    },
+    "thread_meta_missing": 0,
+    "top_shared": [
+      [
+        "把算盘往桌上一搁",
+        3
+      ],
+      [
+        "把戥子往桌上一搁",
+        3
+      ],
+      [
+        "戥子往桌上一搁秤",
+        3
+      ],
+      [
+        "擀面杖往案板上一",
+        3
+      ],
+      [
+        "阿岚上回在柜台前",
+        2
+      ],
+      [
+        "上回老周家那小子",
+        2
+      ],
+      [
+        "手里那根半指宽的",
+        2
+      ],
+      [
+        "方老师我手里这半",
+        2
+      ]
+    ]
+  }
+}
