@@ -1,0 +1,7391 @@
+{
+  "batch_id": "T5",
+  "counts": {
+    "alias": {
+      "k": 2,
+      "n": 510,
+      "role": "reference_only"
+    },
+    "k_diff_strict_minus_loose": -12,
+    "loose": {
+      "k": 209,
+      "n": 510
+    },
+    "pfx2": {
+      "k": 186,
+      "n": 510
+    },
+    "pfx2_plus": {
+      "k": 189,
+      "n": 510,
+      "role": "reference_only"
+    },
+    "set_both_strict_and_loose": 186,
+    "set_loose_not_pfx2": 23,
+    "set_loose_only": 23,
+    "set_neither": 290,
+    "set_pfx2_plus_not_pfx2": 3,
+    "set_strict_not_pfx2": 11,
+    "set_strict_only": 11,
+    "strict": {
+      "k": 197,
+      "n": 510
+    }
+  },
+  "diffs": {
+    "alias_but_not_strict": [
+      {
+        "body": "老陈，这把镰刀我磨到第三遍了，上回他赊账那事我还记着呢。",
+        "round": 13,
+        "seq": 21316
+      },
+      {
+        "body": "老陈，这把镰刀我磨到第三遍了——上回他赊账那事，我可不想再忍。",
+        "round": 37,
+        "seq": 59132
+      }
+    ],
+    "loose_but_not_pfx2": [
+      {
+        "body": "哎哟小满，别急别急，婶子这手里还攥着刚给你缠好的第三格靶绳呢，你看这结打得多紧实。阿远那孩子嘴碎，上回他自己不也把箭射到隔壁老周家鸡窝上去了嘛，回头婶子替你说道说道他。来，深吸口气，肩膀松下来，婶子陪你慢慢练。",
+        "round": 1,
+        "seq": 1304
+      },
+      {
+        "body": "这锤子握久了，虎口正好差半指宽才贴实——上回老赵非说是我手劲不对，结果他自己抡了三下就闪了腰。",
+        "round": 1,
+        "seq": 1368
+      },
+      {
+        "body": "（手上不停，把豆角丝往竹筛里一拨）桂婶，你这酱我可得学，不过先说好——我这刀工是跟老周家闺女比不得的，上回她来我摊上买姜，一出手就是三斤七两，说是要腌一坛子给她婆婆，结果转头自己先吃上了。",
+        "round": 1,
+        "seq": 1680
+      },
+      {
+        "body": "（攥着锄头把，指节发白）金先生，这第三下我总打不准——上回老李头也是这么练，闪了腰，躺了半个月。",
+        "round": 12,
+        "seq": 18993
+      },
+      {
+        "body": "（拨了拨算盘，第三格珠子卡住）老周，账要平。你这一锄下去，力道差半指宽——上回老李头就是多使了三分劲，才闪的腰。",
+        "round": 13,
+        "seq": 21058
+      },
+      {
+        "body": "老陈，这把镰刀我磨到第三遍了，上回他赊账那事我还记着呢。",
+        "round": 13,
+        "seq": 21316
+      },
+      {
+        "body": "（咬了口饼，眼睛还盯着算盘）巧儿，你这饼我记第三格账上——老周上回借刨子崩口，这回又该记他一笔。",
+        "round": 15,
+        "seq": 22196
+      },
+      {
+        "body": "（攥着存折，指头点在第三格上）这利息又薄了两厘，我正琢磨要不要把到期的挪一挪——上回老周家闺女劝我买那个理财，结果她自己倒先亏了半年的菜钱。",
+        "round": 15,
+        "seq": 22237
+      },
+      {
+        "body": "（拨着算盘，第三格珠子卡了一下）老周，账要平——你这箍松了，跟老李头闪腰一个理，都是没算好力道。",
+        "round": 16,
+        "seq": 23245
+      },
+      {
+        "body": "哎哟，我这第三格抽屉里就剩半包饼干了，先垫垫肚子——对了，你三叔上回借我那把锄头还没还呢，改天得去他家坐坐。",
+        "round": 16,
+        "seq": 23460
+      },
+      {
+        "body": "（拨了拨算盘，第三格珠子卡住没归位）账要平——你这一锄头下去，误的工分谁补？上回老李闪腰，药钱还是我垫的七钱。",
+        "round": 19,
+        "seq": 25635
+      },
+      {
+        "body": "（挥着木剑，肚子咕噜响）铁头，再练三回合就去吃饭行不？——上次阿远可是练到第七回合就晕了。",
+        "round": 24,
+        "seq": 35053
+      },
+      {
+        "body": "（接过碗，指尖在碗沿上蹭了蹭，那碗缺了个小口，正好卡在拇指上）嘿嘿，那糕我留了半块给他压蒸笼底下了——他准没看见。哎，你这粥里搁了桂皮？我数数啊，就三粒米沉在底下，五味你也太抠了。",
+        "round": 27,
+        "seq": 37699
+      },
+      {
+        "body": "（掀开蒸笼，白雾扑了满脸，我拿竹夹子夹起第三格那两只还烫手的糖糕）先垫垫，面还得等水滚。你阿林哥上回就是空着肚子去桥头扛货，结果一头栽进王屠户的菜筐里，压烂了人家半扇豆腐——这账到现在还没清呢。",
+        "round": 28,
+        "seq": 38249
+      },
+      {
+        "body": "（翻着登记簿，指尖停在第三格）金先生，护腕这笔先记着。老陈上回领腰牌也是人不到、签押空着，拖了半月才补。",
+        "round": 31,
+        "seq": 40920
+      },
+      {
+        "body": "老陈，这把镰刀我磨到第三遍了——上回他赊账那事，我可不想再忍。",
+        "round": 37,
+        "seq": 59132
+      },
+      {
+        "body": "（掀开蒸笼，白汽扑上来，我拿竹夹子数了数，还剩七块）老周，你拿第三格那两块，我再给你添半块——刚出炉的，边儿上那半块焦得正好。老石家小子的事我记着呢，上回他冒雨帮我搬面粉，裤脚全湿透了，我塞给他两个糖包他还推。你替我捎句话，就说秀娘这儿新试了枣泥酥，让他得空来尝。",
+        "round": 42,
+        "seq": 61998
+      },
+      {
+        "body": "（没坐，手搭在门框上，指节敲了两下）不坐了。我那三亩半的稻子还泡在水里，等不起。赵老四上回借我半袋尿素，说秋后还，到现在连个影儿都没有。",
+        "round": 45,
+        "seq": 64790
+      },
+      {
+        "body": "（攥着锄头把，指节发白）铁头，这第三下我使不上劲了——上回老李头就是闪了腰，躺了半个月。",
+        "round": 48,
+        "seq": 84353
+      },
+      {
+        "body": "街坊早啊，我正数着第三格抽屉里那沓零钱，想着上回老周说想学做桃酥，等攒够这月的面粉钱就叫他来试一炉。",
+        "round": 52,
+        "seq": 88309
+      },
+      {
+        "body": "（低声）老石，差三分钟就下班了，这第三格抽屉里的文件我还没归档——上次老陈就是漏了这份，被上面查了半个月。",
+        "round": 54,
+        "seq": 89917
+      },
+      {
+        "body": "（拨着算盘，第三格珠子卡了一下）账要平。老周那三碗面记他头上，李婶修屋顶另算——上回他帮王木匠搬料，也是这么糊过去的。你这半锅汤，先分，我等你。",
+        "round": 57,
+        "seq": 102480
+      },
+      {
+        "body": "（拨了拨算盘，第三格珠子卡住）账要平。酱抵七钱可以，但老周那半坛酒——上回他赊我二两,还没销。",
+        "round": 58,
+        "seq": 114345
+      }
+    ],
+    "pfx2_but_not_loose": [],
+    "pfx2_plus_but_not_pfx2": [
+      {
+        "body": "周公文——（把手里那半块啃剩的炊饼举起来晃了晃）您瞧，就剩这半指宽了，我哥上回说去县里给我带枣泥糕，结果自己先吃光了，跟这炊饼一个下场。",
+        "round": 19,
+        "seq": 25820
+      },
+      {
+        "body": "桂婶——您先别急着踩格，我这手里这把锉刀刚磨到第三下，刃口还差半指宽呢。您说压腕，我倒想起我师兄阿旺，上回在祠堂后头练，一压腕把自个儿裤腰带崩断了，蹲那儿半天不敢起来。",
+        "round": 40,
+        "seq": 61326
+      },
+      {
+        "body": "金先生——（把吉他横在膝上，拇指按住第二弦第五品，那音总差半指宽才准）您这七钱我认，可阿岚那半壶茶，上回她替我调完琴，转头就给老周送去了，连我搁在窗台的那包新弦也顺手带走了两根。",
+        "round": 42,
+        "seq": 62126
+      }
+    ],
+    "strict_but_not_pfx2": [
+      {
+        "body": "秀娘把刚出炉的第七格桂花糕端出来，笑着招呼：“都来尝尝，周公文上次说这方子太甜，我减了半勺糖，你们帮我评评。”",
+        "round": 4,
+        "seq": 3201
+      },
+      {
+        "body": "桂婶一边把手里那半指宽的豆角掐成小段，一边笑着说：“五味啊，你来得正好，上回老周家那事多亏你搭了把手，今儿咱也商量商量，看能不能换个法子把事办得更妥帖。”",
+        "round": 4,
+        "seq": 4133
+      },
+      {
+        "body": "秀娘把刚出炉的第七格桂花糕往老周面前推了推，说：“你尝尝，这甜度我调了三回——上回小满说太腻，我记着呢。”",
+        "round": 12,
+        "seq": 19242
+      },
+      {
+        "body": "周公文——（把手里那半块啃剩的炊饼举起来晃了晃）您瞧，就剩这半指宽了，我哥上回说去县里给我带枣泥糕，结果自己先吃光了，跟这炊饼一个下场。",
+        "round": 19,
+        "seq": 25820
+      },
+      {
+        "body": "金先生您先别拨那七钱——我这儿正拿半指宽的铜片给老周磨新刃呢，他上回撬核桃崩了刃，这回我给他加厚两分，保准他再不敢拿凿子当胡桃夹子使。",
+        "round": 19,
+        "seq": 26214
+      },
+      {
+        "body": "秀娘把刚出炉的第七格桂花糕端出来，笑着招呼：“都来尝尝，趁热——上回老石家小子上次帮我搬面粉，我还欠他一句谢呢。”",
+        "round": 39,
+        "seq": 59902
+      },
+      {
+        "body": "桂婶——您先别急着踩格，我这手里这把锉刀刚磨到第三下，刃口还差半指宽呢。您说压腕，我倒想起我师兄阿旺，上回在祠堂后头练，一压腕把自个儿裤腰带崩断了，蹲那儿半天不敢起来。",
+        "round": 40,
+        "seq": 61326
+      },
+      {
+        "body": "金先生——（把吉他横在膝上，拇指按住第二弦第五品，那音总差半指宽才准）您这七钱我认，可阿岚那半壶茶，上回她替我调完琴，转头就给老周送去了，连我搁在窗台的那包新弦也顺手带走了两根。",
+        "round": 42,
+        "seq": 62126
+      },
+      {
+        "body": "秀娘把刚出炉的第三格桂花糕往巧儿手里塞，笑着说：“趁热尝尝，你娘上回说爱吃甜的，我特意多放了一勺糖。”",
+        "round": 43,
+        "seq": 62856
+      },
+      {
+        "body": "秀娘把蒸笼最上头那格掀开一条缝，白汽扑了她满脸，她拿围裙角擦了擦手：“你娘那张嘴，比我这笼屉还利。上回老石来买桃酥，非说我少给他称了半钱，我当场把秤杆子怼到他鼻子底下——他倒好，转头就跟你娘学舌去了。”",
+        "round": 45,
+        "seq": 67434
+      },
+      {
+        "body": "秀娘把蒸笼盖“啪”地扣回去，白汽从缝里挤出来，像叹气似的：“三天？我信。你娘那手，连我灶上第三格的火候都挑得出毛病——上回她来，非说我给老石留的那炉桃酥多烤了半指宽，硬是拿回去喂了她家那只八哥。”",
+        "round": 47,
+        "seq": 82971
+      }
+    ]
+  },
+  "log": ".worktrees/d12g-diverse2/v2/evidence/run_d12g_diverse2_n16r60_seed42/run.jsonl",
+  "log_sha256": "dd4ad73d5a21c7485c2afbfc9701e267c25da3150b10adade3b3819a3996ff36",
+  "n_bodies": 510,
+  "per_msg": [
+    {
+      "body": "这块榫头还差半指宽，老陈上回就是没留够，装上去三天就松了。",
+      "channel": "public",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 0,
+      "seq": 55
+    },
+    {
+      "body": "老石，你尝尝这刚出炉的第三格枣泥酥——上回老周说太甜，我减了半勺糖，你给评评这回中不中？",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 0,
+      "seq": 77
+    },
+    {
+      "body": "把捣药杵搁回第三格，我想起老周上回咳了半个月还硬撑着去田里，这回他要是再来，我非得让他先坐下歇够一刻钟不可。",
+      "channel": "public",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 0,
+      "seq": 90
+    },
+    {
+      "body": "这份档案还差三页才归档，老陈上回就是漏了页码才被退回来的。",
+      "channel": "public",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 0,
+      "seq": 121
+    },
+    {
+      "body": "秀娘，这弓弦我拉到第三格就手抖——上回老陈也是这么硬撑，结果账没平，人先躺了半个月。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 0,
+      "seq": 134
+    },
+    {
+      "body": "（把缠着旧布条的鼓槌在指间转了半圈）金先生，这槌子我用了三年，握痕都磨出第三道了——上回阿岚在咖啡馆替我敲碎一只杯子，也是用它的柄，你说巧不巧？",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 0,
+      "seq": 147
+    },
+    {
+      "body": "桂婶，这第三格箭靶我要是再射偏，阿远上次笑我“手比脚笨”的话可就真坐实啦！",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 0,
+      "seq": 159
+    },
+    {
+      "body": "兰姐，你把这半指宽的豆角丝再切细些，回头我教你调那勺酱——上回老周家闺女照我这法子拌了一盆，端上桌就被抢光了。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 0,
+      "seq": 172
+    },
+    {
+      "body": "这锤子握了快二十年，柄上第三道箍松了半指宽——老周上回借去修犁头，还回来就这德行。",
+      "channel": "public",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 0,
+      "seq": 185
+    },
+    {
+      "body": "（掂了掂手里那根半指宽的短棍）小满，你握棍的姿势跟老石上次教我时一模一样——他上回还说我手腕太软，结果自己先被木屑扎了手。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 0,
+      "seq": 198
+    },
+    {
+      "body": "这锅汤我多放了七钱陈皮，老周上次来还嫌我乱改菜谱，可最后连喝三碗——你说这人是不是嘴硬。",
+      "channel": "public",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 0,
+      "seq": 211
+    },
+    {
+      "body": "（兰姐把秤杆往上一挑，秤砣停在第三格）陈医，你瞧这秤——上回老周来买我半斤黄芪，非说我少给了七钱，我当场复秤给他看，他脸都红了。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 0,
+      "seq": 224
+    },
+    {
+      "body": "（用刨子推了半指宽的木条）中。老周上回嫌甜，是他自己牙口不好。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 1,
+      "seq": 575
+    },
+    {
+      "body": "金先生，你这话说得我心里一紧——我手上这擀面杖刚压到第三下，就想起老陈那回。他上个月来我这儿买桂花糕，还说胳膊酸得抬不起来，我劝他歇两天，他偏说账房那边催得紧。你看，人哪，硬撑到最后，连我这刚出炉的枣泥酥都尝不出甜味了。要不你先坐下，喝口热茶，弓弦的事慢慢来？",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 1,
+      "seq": 703
+    },
+    {
+      "body": "（陈医把脉枕往桌边挪了半寸，腾出地方搁茶碗）七钱的事老周后来跟我念叨过，说回家拿戥子一称，倒多出三分。他那人就是急，上回他媳妇咳嗽，他半夜来敲我门，我披着衣裳起来，量了体温三十八度二，其实熬点姜汤就成。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 1,
+      "seq": 724
+    },
+    {
+      "body": "（整理着第三格抽屉里的公文）差三分钟到五点，老陈上回迟交的那份报表还压在下面没归档。",
+      "channel": "public",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 1,
+      "seq": 863
+    },
+    {
+      "body": "（用拇指抹了抹算盘第三格上的灰）巧不巧的，账要平。阿岚上回在咖啡馆打碎杯子，赔了七钱银子，还是我记的账。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 1,
+      "seq": 988
+    },
+    {
+      "body": "金先生，我这把琴的第三格指板刚被汗水浸得发亮，倒让我想起阿岚上回在咖啡馆弹断第二根弦还硬撑到谢幕的样子——你说人到底图个什么意义呢？",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 1,
+      "seq": 1111
+    },
+    {
+      "body": "（把短棍在掌心转了半圈，棍尾磕在第三格砖缝上）老石那手啊，扎了还嘴硬说“练武哪有不挂彩的”——巧儿，你这棍比我那根轻了不止七钱吧？",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 1,
+      "seq": 1236
+    },
+    {
+      "body": "哎哟小满，别急别急，婶子这手里还攥着刚给你缠好的第三格靶绳呢，你看这结打得多紧实。阿远那孩子嘴碎，上回他自己不也把箭射到隔壁老周家鸡窝上去了嘛，回头婶子替你说道说道他。来，深吸口气，肩膀松下来，婶子陪你慢慢练。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 1,
+      "seq": 1304
+    },
+    {
+      "body": "这锤子握久了，虎口正好差半指宽才贴实——上回老赵非说是我手劲不对，结果他自己抡了三下就闪了腰。",
+      "channel": "public",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 1,
+      "seq": 1368
+    },
+    {
+      "body": "小满，你看我这木剑削得只剩半指宽了，老石上次还说我再磨下去连剑柄都得改成筷子。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 1,
+      "seq": 1491
+    },
+    {
+      "body": "这锅汤我拿木勺搅到第七圈时，忽然想起老周上次非说我少放了半勺盐，结果他自己喝了两碗。",
+      "channel": "public",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 1,
+      "seq": 1555
+    },
+    {
+      "body": "（手上不停，把豆角丝往竹筛里一拨）桂婶，你这酱我可得学，不过先说好——我这刀工是跟老周家闺女比不得的，上回她来我摊上买姜，一出手就是三斤七两，说是要腌一坛子给她婆婆，结果转头自己先吃上了。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 1,
+      "seq": 1680
+    },
+    {
+      "body": "（攥着锄头把）老石，今儿真去不了，我这半亩地还差两垄没锄完——上回老李喊喝酒我就没去，他到现在还念叨呢。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 3,
+      "seq": 2105
+    },
+    {
+      "body": "（用刨子推着半指宽的榫头）金先生，这料子我得多刨两遍——上回老陈来取柜子，就嫌我留的缝宽了半指。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 3,
+      "seq": 2120
+    },
+    {
+      "body": "（把烤盘往柜台上一搁，数出七个小纸杯）老周那牙啊，上回还非说要跟我学做桃酥，结果糖筛了三遍还嫌粗。要我说， mentorship 这事儿也得看人，像我家那口子就只配吃现成的。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 3,
+      "seq": 2144
+    },
+    {
+      "body": "（把第三格抽屉里的账本合上）攒了这些年，够是够了，可老周上回咳成那样还硬撑着不来，我总觉得自己这诊所歇不得。",
+      "channel": "public",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 3,
+      "seq": 2151
+    },
+    {
+      "body": "（阿林把算盘往柜台上一搁，指头拨到第三格）陈医，这药材价涨得比上次老周托我捎的那批还凶，您说这买卖还怎么做？",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 3,
+      "seq": 2165
+    },
+    {
+      "body": "存折翻到第三格，数字还是没动，倒是想起老陈上回说“再等等”，结果等到现在也没个准信。",
+      "channel": "public",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 3,
+      "seq": 2180
+    },
+    {
+      "body": "账要平。我这算盘上第三颗珠子刚拨到七钱，差三厘就对不上——阿岚上回在柜台前借的那笔，到现在还没还清呢。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 3,
+      "seq": 2203
+    },
+    {
+      "body": "（把吉他横在膝上，指尖按住第三根弦，没拨）七钱银子……我记得那杯子是青釉的，缺口像月牙。阿岚那天唱到一半就跑了，说要去码头接她哥，结果她哥根本没来。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 3,
+      "seq": 2226
+    },
+    {
+      "body": "（晃了晃手里那根绑着红绳的木棍，绳结已经磨到只剩两圈）巧儿，你那算啥，我这根再练两天，红绳一断就真成烧火棍了。对了，老石上次不是说要教咱们格挡吗，结果自己蹲墙根睡着了。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 3,
+      "seq": 2249
+    },
+    {
+      "body": "（把坛口那层纱布掀开一角，凑近闻了闻）哎哟，你这酱香得嘞——我这坛子才腌到第七天，还得再等三宿。刀工慢慢来嘛，谁不是从切得跟手指头似的开始的。说起来老周家闺女上回也来问我要酱方子，我说你先把你婆婆那坛子腌明白了再说，她脸一红，拎着姜就跑了。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 3,
+      "seq": 2264
+    },
+    {
+      "body": "这半指宽的刀口还得再磨，老赵上回就是急着交货没磨透，结果被人退了三把。",
+      "channel": "public",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 3,
+      "seq": 2279
+    },
+    {
+      "body": "（用指甲刮了刮棍身一道浅槽，木屑簌簌落在鞋面上）轻七钱才顺手嘛，你那根是给石墩子用的。哎，老石上回扎的那口子，我拿鱼线给他缝的，他还嫌线粗——明明是他皮厚。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 3,
+      "seq": 2302
+    },
+    {
+      "body": "（兰姐把秤盘往案板上一搁，秤杆还晃了两下）老周那人就是这毛病，急起来连三分都等不得。上回他媳妇那事，我隔天在集上碰见他，他还说陈医你半夜起来亏了，我说亏什么，人家那是本分。倒是他自个儿，前年赊我那半匹布，到现在还差我两尺没还呢。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 3,
+      "seq": 2336
+    },
+    {
+      "body": "老石，这半袋种子我得先紧着自家三亩地，你上回说的老李那事，等忙完这阵再聊。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 4,
+      "seq": 2849
+    },
+    {
+      "body": "（用刨子推过木料，刨花卷了半指宽）嗯。老周上回让我教他磨凿子，磨了半晌，刃口还是斜的。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 4,
+      "seq": 2992
+    },
+    {
+      "body": "秀娘把刚出炉的第七格桂花糕端出来，笑着招呼：“都来尝尝，周公文上次说这方子太甜，我减了半勺糖，你们帮我评评。”",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": true
+      },
+      "round": 4,
+      "seq": 3201
+    },
+    {
+      "body": "（陈医把捣药杵在铜臼里转了一圈，药末子还差七钱才够一服）兰姐，本分不本分的，说不上亏。倒是老周那脾气，上回他媳妇烧到三十九度二，他半夜来砸门，我起来也就起来了——可第二天他自己倒闪了腰，还是我给他贴的膏药，他连声谢都没顾上说。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 4,
+      "seq": 3353
+    },
+    {
+      "body": "（阿林把手里那杆秤往柜台上一搁，秤砣还差半指宽才压平）陈医，您给句准话——这药钱到底几钱？上回老周赊的那三帖，可还挂在我账上呢。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 4,
+      "seq": 3548
+    },
+    {
+      "body": "周公文：存折上还差三格才填满，老陈上回说好一起对账，却先调走了。",
+      "channel": "public",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 4,
+      "seq": 3687
+    },
+    {
+      "body": "（把算盘往桌上一放，珠子停在第三档）七钱是记在账上的，可那杯子后来没入册。阿岚她哥上回在码头欠了船家二两，人没来，账倒来了。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 4,
+      "seq": 3848
+    },
+    {
+      "body": "（把吉他横在膝上，手指按住第三根弦）金先生，您这算盘珠子拨得比我调弦还准。阿岚那笔……上回她在咖啡馆唱完《月牙》还跟我借了半包烟，说下月还，结果人就没影了。我这第三根弦都松了半指宽，也没见她来紧一紧。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 4,
+      "seq": 3931
+    },
+    {
+      "body": "（把棍子往地上一杵，比了比，刚好到我下巴差两指）我这根要是削到七钱，怕是先把自己脚背敲肿。哎，老石那口子后来还痒不痒？他上回非说鱼线缝完像蜈蚣，结果自己偷偷拆了。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 4,
+      "seq": 4074
+    },
+    {
+      "body": "桂婶一边把手里那半指宽的豆角掐成小段，一边笑着说：“五味啊，你来得正好，上回老周家那事多亏你搭了把手，今儿咱也商量商量，看能不能换个法子把事办得更妥帖。”",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": true
+      },
+      "round": 4,
+      "seq": 4133
+    },
+    {
+      "body": "这半指宽的存折边儿都磨毛了，攒了三年还差两格才够数——上回老赵借我那三百，说好开春还，到现在连个影儿都没有。",
+      "channel": "public",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 4,
+      "seq": 4278
+    },
+    {
+      "body": "（把手里那截差半指宽就能卡进凹槽的榫头翻了个面）格挡？老石上回教到一半，自己拿刨花当枕头睡到打呼，还是我给他盖的围裙。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 4,
+      "seq": 4338
+    },
+    {
+      "body": "（用筷子头在坛沿上敲了两下，数着坛子里的层数）你这第七天正是起劲儿的时候，别老掀，掀一回跑一回气。我这儿第三格那坛子，上礼拜让老周家闺女端去半碗酱，回头她婆婆见了我还念叨，说咸了——我说咸了你就少搁半勺，方子给你是死的，手是活的。带人嘛，先让她自己腌坏一坛，比你说十遍都管用。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 4,
+      "seq": 4524
+    },
+    {
+      "body": "（把灶台上那口黑砂锅的盖子掀开一条缝，拿筷子头在汤面上点了两下，又盖上）桂婶，您这话我听着心里热乎。换个法子行，我这儿正炖着半锅萝卜牛腩，火候还差两刻钟，咱边等边说。上回老周家那事，我倒想起阿良——他上回帮着搬桌子，把腰闪了，后来还是我给他送了两回汤。这回要是再办，咱是不是先问问谁腰腿不利索，别硬撑着上？",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 5,
+      "seq": 4868
+    },
+    {
+      "body": "（攥着半袋种子）阿禾，这半袋你先拿着——上回老李借我锄头还没还，我记着呢。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 6,
+      "seq": 4973
+    },
+    {
+      "body": "老周，我这刨子卡在第三格，得修。老李上回借的凿子还没还，你先忙。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 6,
+      "seq": 4996
+    },
+    {
+      "body": "巧儿，这半篮鸡蛋你拿着，上次老李帮我修了篱笆，我还没谢他呢。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 6,
+      "seq": 5007
+    },
+    {
+      "body": "（把烤盘往柜台上一搁，顺手数了数，第三格还空着）哎，老周那人手笨心不笨，上回他媳妇来我这儿买桃酥，说他回家把磨石泡了一整夜，第二天刃口倒是直了，就是凿子短了一截。教人这事儿啊，急不得，得像发面，得等它自己醒。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 6,
+      "seq": 5030
+    },
+    {
+      "body": "（陈医把戥子往桌上一放，秤盘里那撮黄芪还差七分才够一帖的量）阿林，你先别急。老周那三帖是给他媳妇抓的，产后虚，我记着呢——上个月十五他来过，说等卖了秋粮一并还。你这秤砣差半指宽，我这戥子也差七分，咱俩谁也别嫌谁。药钱还是老价，一帖八文，三帖二十四文，抹个零头，你收二十。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 6,
+      "seq": 5053
+    },
+    {
+      "body": "阿禾，这半截粉笔我攥了一路，刚在办公室还跟老周念叨——他上回把整盒粉笔泡了茶水，说这样写黑板不飞灰，结果第二天全班都闻着茶味上课。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 6,
+      "seq": 5060
+    },
+    {
+      "body": "秀娘，我这趟回来秤上还差七钱才够本，先讨碗热汤垫垫——对了，上回老周托我带的针线包，他到底还是没来取，你见着他可替我说一声。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 6,
+      "seq": 5083
+    },
+    {
+      "body": "阿林，这份文书还差三页才归档，劳烦你稍等——上次老陈也是没等齐就签了字，结果又跑了一趟。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 6,
+      "seq": 5106
+    },
+    {
+      "body": "月牙，账要平。阿岚那半包烟折七钱，我记在第三格。上回老周借的伞也没还。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 6,
+      "seq": 5129
+    },
+    {
+      "body": "金先生，您看我这琴盒搭扣——第三颗已经松了半指宽，合不严实。阿岚她哥上回在码头欠船家二两的事，我倒听阿岚提过一嘴，说那钱后来是她替还的，人却再没露过面。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 6,
+      "seq": 5140
+    },
+    {
+      "body": "（把手里那根削到只剩三寸的竹剑往地上一戳）格挡我练了，可老石上回说“手腕要像端豆腐”，结果自己端的是酒碗——巧儿，你说他是不是把口诀记反了？",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 6,
+      "seq": 5163
+    },
+    {
+      "body": "桂婶：（把掐好的豆角拢进搪瓷盆里，顺手从灶台边摸出那把豁了口的竹笊篱，在盆沿上磕了两下）你这话在理，阿良那腰到现在阴天还酸呢。要我说，这回咱分三拨——搬抬的、跑腿的、看灶的，谁腰腿不利索就归到看灶那拨，守着火别乱动。上回老周家就是没分清楚，一窝蜂上，才闪了人。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 6,
+      "seq": 5170
+    },
+    {
+      "body": "（把铁钳往砧上一搁，指节上还沾着黑灰）先搁着，我这炉里第三块犁头还差半指红。周公文那人嘴刁，上回嫌甜，这回你少半勺他也未必领情。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 6,
+      "seq": 5193
+    },
+    {
+      "body": "（拿锉刀在棍尾第三格上蹭了两下）他呀，早不痒了，就是嘴硬——上回还偷偷把我削的七钱小木鱼塞枕头底下，说辟邪。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 6,
+      "seq": 5200
+    },
+    {
+      "body": "（兰姐把秤盘上那半把干黄芪拨回笸箩，秤杆还翘着一分）陈医，你这七钱药末子，搁我摊上就是三文钱的利。老周那人我晓得，上回他媳妇烧退了，他倒好，转头去集东头跟人赌钱，输了两吊，还是他媳妇拖着病身子来我摊上赊了半斤红枣回去熬水——你说这账，我记着呢。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 6,
+      "seq": 5228
+    },
+    {
+      "body": "老石，我这锄头柄裂了半指宽，得先箍上。老李上回借的镰刀也没还，你找他要凿子时顺带提一句。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 7,
+      "seq": 5631
+    },
+    {
+      "body": "（拿刨子推了半指宽，木花卷起来）嗯。教人跟刨木头一样，得顺着纹。老周上回把凿子磨短了，我没说他，让他自己看。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 7,
+      "seq": 5692
+    },
+    {
+      "body": "方老师，我这手里还攥着半截麻绳，刚捆完第三格菜筐。老周那人上回把粉笔泡茶，我家那口子听了直笑，说下回让他试试泡菜坛子。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 7,
+      "seq": 5809
+    },
+    {
+      "body": "（把竹筛里最后七钱桂花糖抖进面盆，手腕一翻搅进油酥里）周公文那嘴啊，上回中秋我少搁了半勺糖，他倒好，逢人就说我秀娘的点心“淡出鸟来”——这回我偏多搁一钱，让他甜得找不着北。铁头，你这第三块犁头还得烧多久？我这儿还差三分钟就得进炉，趁空给你留两个刚出炉的枣泥酥。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 7,
+      "seq": 5872
+    },
+    {
+      "body": "兰姐，你先把秤杆压平——我这戥子第三格还差半钱才够七钱，药末子我自个儿再添一撮，不叫你亏。老周那事我也记着，上回他娘咳得整宿睡不着，他倒跑去河西帮人抬棺材挣酒钱，还是我赊了三服杏苏散给他娘。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 7,
+      "seq": 6035
+    },
+    {
+      "body": "阿禾，你看这半截粉笔——我刚从讲台第三格抽屉里翻出来的，上次你同桌小满用它画了整面黑板报，结果被校长追着问了三分钟，你俩可别再重演啦。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 7,
+      "seq": 6148
+    },
+    {
+      "body": "（把手里那杆秤往柜台上一搁，秤砣还晃了两下）周公文，不急不急，我这肚子倒是先急了——晌午就啃了半个冷馍，这会儿饿得前胸贴后背。你慢慢弄，我数着你这第三格抽屉里的印章呢。说起来，上回老陈来办货契，也是等得心焦，跑去街口吃了碗馄饨，回来把日子填错了，又折返一趟，你可别学他。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 7,
+      "seq": 6195
+    },
+    {
+      "body": "（压低声音）阿林，差三分钟就到点了，这份第三格的卷宗得先归档——上回老陈就是漏了这一格，被上面查了半天。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 7,
+      "seq": 6254
+    },
+    {
+      "body": "（拨着算盘）第三格珠子卡住了，差七钱对不上。阿岚她哥那二两的事，账要平——人不在，账不能烂。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 7,
+      "seq": 6416
+    },
+    {
+      "body": "金先生，我手上这杯凉透的咖啡还剩两指宽，你让我怎么平？阿岚那半包烟——她上回在礼堂后门哭到睫毛膏糊了一脸，我替她垫的纸巾钱你倒不记。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 7,
+      "seq": 6573
+    },
+    {
+      "body": "（把七钱小木鱼翻过来，指腹蹭过那道半指宽的旧刻痕）辟邪？我看是辟你——上回他还拿这鱼敲我脑门，说练反应，结果自己先笑岔了气。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 7,
+      "seq": 6679
+    },
+    {
+      "body": "（把手里那截半指宽的竹片翻了个面）他呀，上回教我打榫头，说“眼要毒”，自己盯着酒坛子看了半炷香——我看口诀没反，是酒碗端多了。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 7,
+      "seq": 7111
+    },
+    {
+      "body": "五味：（拿围裙角擦了擦手，又顺手把灶边那摞碗往左挪了半寸）您说得对，先问人再定菜。我这儿还差三分钟就得转小火，趁这空当——要不这回咱别按老规矩八凉八热，改成六凉六热，多留两样给阿良那样的，他上回闪了腰，坐久了也难受，咱给他留个靠墙的位子。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 7,
+      "seq": 7285
+    },
+    {
+      "body": "老石，这半指宽的秤星我盯了一早上，眼都花了——你上次说老周那批干货缺斤少两，我今儿一称，还真是差了三钱。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 7,
+      "seq": 7431
+    },
+    {
+      "body": "桂婶：（把竹笊篱往盆里一插，笊篱柄上那道裂口正好卡在盆沿，她拿手按了按）看灶这拨也不能光站着，得有人盯着火候——我算过了，一锅水从冒小泡到滚开，差三分钟就得下米，晚了就糊底。上回阿良媳妇一个人守两口锅，手忙脚乱的，米汤都溢到灶台上了。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 8,
+      "seq": 7977
+    },
+    {
+      "body": "铁头：（拿火钩捅了捅炉膛，火星子溅到脚边）再等半指红——你那枣泥酥先搁着，我手黑。周公文上回赊我一把柴刀，钱到现在没影，你多搁一钱糖，他照样挑。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 8,
+      "seq": 8008
+    },
+    {
+      "body": "（用刨子推过木料，停下手）秤星的事，差三钱不算少。老周上回送我那根榆木，说是四尺，量了才三尺七。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 9,
+      "seq": 8259
+    },
+    {
+      "body": "方老师，这半截粉笔我收着吧——我家那小子昨天还拿我量种子的七钱小秤去称石子玩，跟小满一个样。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 9,
+      "seq": 8316
+    },
+    {
+      "body": "秀娘：（拿筷子头蘸了点馅儿往舌尖一抿，又添了小半勺糖）他挑他的，我甜我的——铁头，你这话倒提醒我，上回李寡妇来赊了半斤桃酥，说月底给，这都俩月了，我见着她还笑呵呵的，倒像是我欠她。你这犁头再烧半指红，我这第二屉就进炉，枣泥酥给你搁窗台上晾着，手黑就手黑，拿油纸包着吃。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 9,
+      "seq": 8367
+    },
+    {
+      "body": "阿禾，你先歇歇手——我这儿正把第七支粉笔头收进铁盒里，盒盖还差半指宽合不上呢。说到老周，上回他把粉笔泡茶那事，我倒想起你班上的小满，那孩子上次把墨汁当酱油蘸了饺子，还硬说味道“有书卷气”。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 9,
+      "seq": 8483
+    },
+    {
+      "body": "（把手里那半块干饼往袖口一塞，凑近半步）周公文，你先别急着归——我这肚子从晌午就叫到现在，satiety 才三十九，饿得手都抖。第三格那卷我瞄过一眼，封皮上还沾着上回老陈打翻的茶渍呢，他那人就是毛躁，上回漏了半页，被上面追着问了三趟。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 9,
+      "seq": 8524
+    },
+    {
+      "body": "阿林，劳你稍候——这第三格抽屉的封条还差半指宽没对齐，我得按规矩重贴。老陈上回把日子填错，就是吃了没核对的亏，咱们可不能重蹈。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 9,
+      "seq": 8573
+    },
+    {
+      "body": "月牙，我这儿算盘珠子拨到第三格，差七钱就是平不了。阿岚上回在礼堂后门哭，那半包烟是我垫的，你倒不提。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 9,
+      "seq": 8638
+    },
+    {
+      "body": "（把手里那根削到一半的竹箭往膝上一搁，箭杆还差两指长）哈哈，酒碗端多了眼才花呢。我哥上回练扎马步，蹲到第三炷香腿抖得像筛糠，还嘴硬说“风大”。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 9,
+      "seq": 8757
+    },
+    {
+      "body": "五味：桂婶，您这话在理——（把灶眼边那只豁了口的粗瓷碗端起来，碗底还沾着半圈干了的米浆）那咱就再添个人手，专管看火。我数了数，后厨连我一共四个能站灶的，六凉六热十二道，正好一人盯三口锅，谁也不用像阿良媳妇上回那样两头跑。她那天回去手都烫红了，我记着呢。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 9,
+      "seq": 9004
+    },
+    {
+      "body": "方老师，我这锄头柄上缠的第三圈麻绳又松了，得紧一紧。说到小满，上回他爹老李拿错了我家的酱油瓶，回去拌了猪食，猪都不肯吃。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 10,
+      "seq": 11226
+    },
+    {
+      "body": "阿禾，你收着吧——我这儿粉笔盒里还剩四根，够用到周五了。说起来，小满上回拿我讲台上的三角板去量操场上的影子，量了一节课，回来跟我说“老师，影子比尺子诚实”。你家那小子称石子，倒跟他是一路的。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 10,
+      "seq": 12606
+    },
+    {
+      "body": "周公文，你慢慢贴，我这儿不急——我手里这半块干饼都啃到第三口了，肚子还是咕咕叫。说起来，上回老陈在渡口那事你还记得不？他把货单上的“七钱”看成“一钱”，差点跟人吵起来，还是我拉着他去茶摊上对了半天账才消停。你这封条对齐的规矩，我看比他那会儿靠谱多了。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 10,
+      "seq": 13086
+    },
+    {
+      "body": "（把铜钥匙在指间转了一圈，停在第三格的锁孔前）阿林，规矩是规矩——差一刻钟才到归卷的时辰，你先把手擦干净。老陈上回漏了半页，追责的文书还在我抽屉里压着，别让我再添一份。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 10,
+      "seq": 13552
+    },
+    {
+      "body": "铁头：（把犁头翻个面，钳口一磕，掉下三片薄铁皮）李寡妇那半斤桃酥，你当喂了狗。上回赵屠户赊我两把剔骨刀，说杀完年猪就结，猪都腌成腊肉了，钱还没见着——你这第二屉，我数着，还差七个数。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 10,
+      "seq": 15782
+    },
+    {
+      "body": "（把秤盘上的铜钱一枚枚捡回布袋，数到第七枚时停住）老石，三钱是不算少，可你上回给老周那批货，尺头也短了半指宽——他嘴上没说，回头跟我念叨过两回。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 10,
+      "seq": 17148
+    },
+    {
+      "body": "（把刨子搁在木架上，用拇指蹭了蹭刃口）半指宽我认。可老周那根榆木，我拿墨斗弹过三回，第三格才到三尺七。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 11,
+      "seq": 17621
+    },
+    {
+      "body": "（攥着锄头把，指节发白）金先生，这第三下我总打不准——上回老李头也是这么练，闪了腰，躺了半个月。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 12,
+      "seq": 18993
+    },
+    {
+      "body": "方老师，这半袋红薯您拿着，我刚从地窖第三格刨的。小满那孩子实诚，上回还帮我数了垄上缺的七棵苗。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 12,
+      "seq": 19165
+    },
+    {
+      "body": "秀娘把刚出炉的第七格桂花糕往老周面前推了推，说：“你尝尝，这甜度我调了三回——上回小满说太腻，我记着呢。”",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": true
+      },
+      "round": 12,
+      "seq": 19242
+    },
+    {
+      "body": "（把第三格药柜的抽屉推回去，指节在木沿上停了一下）老周上回咳成那样还硬撑着去下地，我给他配的七钱川贝怕是要白费了——这镇上的病，一半是累出来的，一半是忍出来的。",
+      "channel": "public",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 12,
+      "seq": 19313
+    },
+    {
+      "body": "（把手里那支红笔搁下，笔尖在作业本上洇出个小点）阿禾，你先别急着紧麻绳——我这儿批到第三格，正好是小满的算术本，错了两道题。他爹老李上回拿错酱油瓶那事，我倒觉得不怪猪，是那瓶子你婶子刚腌过咸菜，味儿串了。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 12,
+      "seq": 19386
+    },
+    {
+      "body": "（把袖口往上撸了半指宽，露出腕上一道旧疤）周叔，我手早擦干净了——您瞧，连指甲缝里那点墨都抠没了。说起来，上回在临安码头，老陈不就是因为急着赶那半刻钟，把一船货的账记岔了两成？我可不想学他。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 12,
+      "seq": 19463
+    },
+    {
+      "body": "阿林，多谢体谅。我这封条还差半指宽才对齐，得再压一压。老陈那回是眼花，上回老李在粮仓也把“三石”记成“二石”，我替他改了半天。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 12,
+      "seq": 19536
+    },
+    {
+      "body": "巧儿，这弓弦我拉到第三格就手抖——上回老周借我那七钱银子还没平账呢，先歇口气吃口饼行不？",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 12,
+      "seq": 19607
+    },
+    {
+      "body": "（拨着吉他第三格，肚子咕噜了一声）……阿岚上次说“先吃饱再谈意义”，结果自己饿着跑去赶末班车，我现在倒好，连半块面包都没剩。",
+      "channel": "public",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 12,
+      "seq": 19678
+    },
+    {
+      "body": "（把木剑在第三格砖缝上磕了磕）周公文，你说我要是练到能打十个，是不是就能去县里找小满了？她上次还说要教我骑自行车呢。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 12,
+      "seq": 19755
+    },
+    {
+      "body": "这半指宽的镰刀口还得再磨，老赵上回催货催得急，结果拿回去说不好使，这回我宁可慢点。",
+      "channel": "public",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 12,
+      "seq": 19897
+    },
+    {
+      "body": "（攥着锅铲当短棍，盯着老石）老石，你让我拿这玩意儿练第三组步法，我手都抖了——上回阿良拿我这把铲子去敲鱼鳞，敲得铲边卷了半指宽，你俩倒好，一个教一个学，就我在这儿挨打。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 12,
+      "seq": 20049
+    },
+    {
+      "body": "兰姐：（把布袋口一收，顺手从摊角摸出那把黄铜小算盘，拨了两颗珠子）半指宽的事先搁着。你瞧我这算盘，第二档上这颗珠子卡了三年，我都没舍得换——货好不好，手一摸就知道。倒是你上回给阿贵打的那张八仙桌，四条腿我量过，最短的那条差了两分，他媳妇到现在还拿纸片垫着。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 12,
+      "seq": 20128
+    },
+    {
+      "body": "（用粗布擦了擦手上的泥，看了眼糕）我拿半块就行。小满上回帮我修水泵，手划了个口子，还惦记着你这糕。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 13,
+      "seq": 20456
+    },
+    {
+      "body": "老石：（从围裙兜里摸出那把折尺，拉开两寸，又合上）两分我认，回头给他修。倒是你提阿贵——上回他爹那口寿材，我刨了七遍，他连句囫囵话都没有。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 13,
+      "seq": 20516
+    },
+    {
+      "body": "方老师，我手上这半截麻绳还差两指宽才够捆一担柴。小满那两道题，回头我让他重算——他爹老李上回把酱油当醋使，也是没看清字。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 13,
+      "seq": 20576
+    },
+    {
+      "body": "老周，你先尝这块刚出炉的第三格烤盘上的枣泥酥——上回阿珍说太甜，我这次减了两钱糖，你帮我评评还齁不齁？",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 13,
+      "seq": 20655
+    },
+    {
+      "body": "老周啊，这第三格抽屉里的甘草片我数了两遍，还是差七钱——上回你咳嗽来抓药，我就说该补货了。",
+      "channel": "public",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 13,
+      "seq": 20732
+    },
+    {
+      "body": "阿禾，这半袋红薯我先搁在讲台边那摞作业本上头——最上面那本还夹着半截粉笔，是今早写“粒粒皆辛苦”时断的。你这份心意我收下，回头蒸熟了分给孩子们当识字课的点心。说起来，上回小满帮我搬那七块砖垫讲台腿，手都蹭红了也没吭声，这孩子心里有数，就是嘴上不肯说。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 13,
+      "seq": 20821
+    },
+    {
+      "body": "周公文，你先忙你的封条，我这碗粥就剩小半碗了，凉了也舍不得倒。说到眼花，我倒想起阿贵上回在码头，把“三十斤”看成“十三斤”，差点跟船老大吵起来——他那人就是嘴快心粗。你这封条压得细，我倒放心。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 13,
+      "seq": 20902
+    },
+    {
+      "body": "（把怀表按回口袋，表链还差半寸没塞好）练到能打十个，不如先把今日的签到簿抄完。你爹上月来办过户，也是先填表后说话。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 13,
+      "seq": 20969
+    },
+    {
+      "body": "（拨了拨算盘，第三格珠子卡住）老周，账要平。你这一锄下去，力道差半指宽——上回老李头就是多使了三分劲，才闪的腰。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 13,
+      "seq": 21058
+    },
+    {
+      "body": "（拨着吉他第三根弦，弦音发闷）饿得发慌，可这破弦还没调准——上次阿良就是在这根弦上弹断了指甲，说再也不来青溪镇演出了。",
+      "channel": "public",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 13,
+      "seq": 21111
+    },
+    {
+      "body": "（把木剑往地上一戳，喘着气）周公文，再练第三组我就饿扁了——你哥上次说带炊饼来，结果人影都没见着！",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 13,
+      "seq": 21198
+    },
+    {
+      "body": "老陈，这把镰刀我磨到第三遍了，上回他赊账那事我还记着呢。",
+      "channel": "public",
+      "from": "P013",
+      "hit": {
+        "alias": true,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 13,
+      "seq": 21316
+    },
+    {
+      "body": "金先生，您先啃饼，我把这半指宽的竹片削完——老周上回借我刨子还回来时崩了个口，我记着呢。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 13,
+      "seq": 21379
+    },
+    {
+      "body": "老石，你这一拳差半指宽就蹭到我鼻尖了——先歇会儿成不？我饿得前胸贴后背，上回阿贵还笑我练完功连锅铲都拿不稳，结果他自己把糖当盐撒了一整锅。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 13,
+      "seq": 21466
+    },
+    {
+      "body": "（把秤盘上的第三格砝码拨回去）这秤差半钱我都得重来——上回老周那批干货就是少我七钱，我当场给他退回去了。",
+      "channel": "public",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 13,
+      "seq": 21545
+    },
+    {
+      "body": "（用刨子背敲了敲木桩）歇吧。我这刨刃刚磨到第三格，还差半指宽才平。阿贵那锅糖盐不分，上回还把我一根榫头锯短了。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 14,
+      "seq": 21671
+    },
+    {
+      "body": "（把锄头往地上一杵）金先生，我这锄把上第三道箍松了，使不上劲。老李头上回闪腰，是他自己逞能，不关力道的事。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 15,
+      "seq": 22072
+    },
+    {
+      "body": "（用刨子推过木料，停下手）这半指宽的榫头，阿林上回说太紧，我还没改。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 15,
+      "seq": 22085
+    },
+    {
+      "body": "方老师，我那半袋红薯您别搁讲台边，回头孩子们碰倒了。我手里这第三根麻绳刚捆完柴，顺路来的。小满上回帮您搬砖，回家吃饭时筷子都拿不稳，还说不疼。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 15,
+      "seq": 22094
+    },
+    {
+      "body": "（把油纸往老周那边推了推，顺手从第三格里又夹出一块枣泥酥）半块哪够，你俩一人一块。小满那孩子上回修水泵，我瞧见他手背划了道半指宽的口子，还笑着说没事——这回让他多吃点甜的补补。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 15,
+      "seq": 22113
+    },
+    {
+      "body": "（把登记簿往腋下一夹，看了眼怀表）差七分钟到酉时，今日就练到这儿。你哥上回说送炊饼，结果连人带饼都没影——这话我记在册子第三格了。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 15,
+      "seq": 22173
+    },
+    {
+      "body": "（咬了口饼，眼睛还盯着算盘）巧儿，你这饼我记第三格账上——老周上回借刨子崩口，这回又该记他一笔。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 15,
+      "seq": 22196
+    },
+    {
+      "body": "这半块干面包是昨天咖啡馆散场后阿良塞给我的，他说“你总忘了吃”，可他自己上次在礼堂后台低血糖差点晕过去，现在倒好，我盯着这第三格抽屉里连一粒糖都没有。",
+      "channel": "public",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 15,
+      "seq": 22203
+    },
+    {
+      "body": "（把半块冷烧饼塞回书包侧袋，袋口还沾着两粒芝麻）抄完第三格我就去练——哎，周叔，我爹上月过户时是不是也饿着肚子？他那人，填表比吃饭还急。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 15,
+      "seq": 22226
+    },
+    {
+      "body": "（攥着存折，指头点在第三格上）这利息又薄了两厘，我正琢磨要不要把到期的挪一挪——上回老周家闺女劝我买那个理财，结果她自己倒先亏了半年的菜钱。",
+      "channel": "public",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 15,
+      "seq": 22237
+    },
+    {
+      "body": "（攥着半截铁钳）秀娘，这炉火还差三口气，先别急着添炭——上回老石赊的那把柴刀，钱到现在还没影呢。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 15,
+      "seq": 22248
+    },
+    {
+      "body": "五味：你那第三格刨刃先别急着推，我这肚子已经咕到第七声了——灶上那锅萝卜炖肉还差两刻钟，我得回去掀盖。上回阿贵非说火大才香，结果一锅汤熬成半碗糊，害我拿锅铲刮了半晌。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 15,
+      "seq": 22278
+    },
+    {
+      "body": "（兰姐把秤盘上的铜钱拨回第三格，抬眼笑了笑）五味啊，这单我就不接了——上回老陈赊我那半斤八角，到现在账上还差三文没清呢，你先替他把这个了了再说。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 15,
+      "seq": 22297
+    },
+    {
+      "body": "（把油纸又推回去，手在围裙上蹭了蹭）枣泥酥留两块给小满。上回他帮我扛谷袋，肩膀磨掉一层皮，也没吭声。我不去。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 16,
+      "seq": 22676
+    },
+    {
+      "body": "（把刨子翻个面，指腹蹭了蹭刃口）第七声就第七声。我这刨刃还差半指宽，推完这一条再走。上回阿贵借我墨斗，线给绞成麻花，我解了半宿。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 16,
+      "seq": 22772
+    },
+    {
+      "body": "（把沾着面粉的擀面杖往案板上一搁，指节敲了敲第三格抽屉）铁头，柴刀的事我记着呢——老石上回还顺走我半屉枣泥酥，说给他家小子尝鲜，钱也没提。你先帮我把这炉火看住，我这儿饿得前胸贴后背，等这屉馒头出锅，咱俩一人一个，边吃边算账。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 16,
+      "seq": 22916
+    },
+    {
+      "body": "（用钢笔尾端点了点第三格空格）你爹上月过户，是差四分钟到午休，饿着肚子把名签完的。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 16,
+      "seq": 23182
+    },
+    {
+      "body": "（拨着算盘，第三格珠子卡了一下）老周，账要平——你这箍松了，跟老李头闪腰一个理，都是没算好力道。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 16,
+      "seq": 23245
+    },
+    {
+      "body": "数着钱包里剩下的第三张皱巴巴的十块钱，我饿得胃都贴到脊梁骨了——阿哲上次在咖啡馆弹完那首《月牙》后说“下个月请你吃顿好的”，结果人现在连影子都没见着。",
+      "channel": "public",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 16,
+      "seq": 23306
+    },
+    {
+      "body": "（把木剑往地上一戳，剑尖陷进半指深的土里）周叔，我哥那炊饼八成是喂了镇口的野狗——上回他答应给我带糖糕，结果自己蹲河边看人钓鱼看到天黑！",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 16,
+      "seq": 23399
+    },
+    {
+      "body": "哎哟，我这第三格抽屉里就剩半包饼干了，先垫垫肚子——对了，你三叔上回借我那把锄头还没还呢，改天得去他家坐坐。",
+      "channel": "public",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 16,
+      "seq": 23460
+    },
+    {
+      "body": "秀娘，先赊我半块饼——老石上回欠我的三文钱还没还，我饿得手都抖了。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 16,
+      "seq": 23547
+    },
+    {
+      "body": "（拿刨子敲了敲桌角，木屑掉进饼渣里）金先生，第三格先记着——我这刨刃还差半指宽没磨完呢。对了，老周上回崩口那把，我给他改成了小凿子，他倒好，转头拿去撬核桃。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 16,
+      "seq": 23600
+    },
+    {
+      "body": "（我把手里的铜勺往锅沿上磕了磕，勺底还沾着半指宽的糖色）兰姐，三文我认，可老陈那半斤八角是他媳妇坐月子炖鸡用的，您真要跟他计较？这样，我这儿刚熬的糖色分您一勺，抵那三文，成不成？",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 16,
+      "seq": 23651
+    },
+    {
+      "body": "五味啊，我这第三格的零钱还差三枚没对上，今儿实在走不开——上回老周来赊那半斤干货，到现在账还挂着呢。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 16,
+      "seq": 23698
+    },
+    {
+      "body": "（把锄头往地上一杵，半指宽的泥印）金先生，我这箍是松了，可地不等人。老李头上回闪腰，不就是急着抢那两垄？",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 18,
+      "seq": 24110
+    },
+    {
+      "body": "铁头啊，先别急，我手上这炉刚出炉的芝麻饼还差三分钟才好——你先坐，我给你倒碗热水。赊账的事好说，可你提老石，我倒想起上回他拿了我第三格那屉枣泥糕，说第二天送钱来，结果人影都没见着。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 18,
+      "seq": 24165
+    },
+    {
+      "body": "陈医，我这肚子饿得直打鼓，手里这半块干饼实在咽不下——上回老周说您这儿常备着热粥，他上次胃疼就是喝您那碗粥缓过来的，能不能也给我来一碗？",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 18,
+      "seq": 24203
+    },
+    {
+      "body": "（把手里那支蘸了半截墨的笔搁回第三格笔架上）小满，你哥上回说替我捎的《市易则例》抄本，也是这么没下文的。炊饼的事，等他回来照章问他。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 18,
+      "seq": 24235
+    },
+    {
+      "body": "巧儿，账要平——我这算盘上还差七钱对不上。老周那把凿子改得倒好，上回他拿它撬核桃，崩了刃又来找我报损。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 18,
+      "seq": 24246
+    },
+    {
+      "body": "（把铅笔夹在指间转了一圈）周叔，我爹那会儿是差四分钟，我这会儿是差七钱——兜里就剩七钱，买个烧饼都不够。对了，我同桌阿禾上次饿着肚子跑完八百米，直接趴操场上了。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 18,
+      "seq": 24284
+    },
+    {
+      "body": "老周啊，我这肚子饿得咕咕叫，手里这半块冷馒头都啃第三口了——你上回说小芳家那事，她昨儿还念叨你帮了大忙呢。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 18,
+      "seq": 24299
+    },
+    {
+      "body": "（把火钳往炉膛里一捅，火星子溅出来）馒头先蒸，账后算。老石那半屉酥我记着，七钱银子，跑不了。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 18,
+      "seq": 24326
+    },
+    {
+      "body": "兰姐，我这半指宽的小木梳刚打磨好——饿得手抖，先借你灶上那碗粥垫垫？对了，老石上次说这梳齿得再密三根才顺手。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 18,
+      "seq": 24333
+    },
+    {
+      "body": "兰姐，我这儿正攥着半截擀面杖呢，面案上还摊着七两面——要不这样，我替你跑一趟，顺道把老周那半斤干货的账也捎回来。上回他赊的时候说隔天就还，这都仨集了，我见着他一回提一回，他倒好，每回都说下回。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 18,
+      "seq": 24340
+    },
+    {
+      "body": "（我把那杆秤往摊上一搁，秤砣滑到第三格才停住）五味，糖色我收下，可这不是一勺糖色的事。上回老陈赊我那半斤八角，说好三天还，如今他媳妇月子都坐完了，人影没见着。你替我捎句话，钱我不要了，让他下回赶集自己来跟我把账划了——我这秤，认的是数，不是人情。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 18,
+      "seq": 24345
+    },
+    {
+      "body": "（把锄头往田埂上一插）差三分钟就晌午了，我还得把这两垄草薅完。小芳那事不算啥，上回她爹帮我修了水泵，我记着呢。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 19,
+      "seq": 24760
+    },
+    {
+      "body": "（把蒸笼盖一掀，白汽扑了满脸，顺手用围裙角擦了擦）七钱是七钱，可老石上回赊的那半屉枣泥酥，说是给他老娘尝的——他娘牙口不好，我特意多搁了半勺糖。铁头，你先尝一个，刚出笼的，烫嘴。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 19,
+      "seq": 25063
+    },
+    {
+      "body": "（把铜壶从炉上提下来，壶嘴还冒着白气）粥在第二格灶上温着，我给你盛一碗——不过先别急，老周上回是空着肚子喝太急，烫得直咧嘴，你慢点。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 19,
+      "seq": 25193
+    },
+    {
+      "body": "陈医，我这半块干饼先垫垫肚子——上回老周赊你那七钱药钱，他昨儿还念叨要还呢。先走了。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 19,
+      "seq": 25376
+    },
+    {
+      "body": "（把登记簿翻到第三格，笔尖在“缺勤”一栏停住）七钱确实不够，我这儿有半块干粮，你先垫垫。说到阿禾——上回老陈也是空着肚子去搬卷宗，差点栽在楼梯口。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 19,
+      "seq": 25503
+    },
+    {
+      "body": "（拨了拨算盘，第三格珠子卡住没归位）账要平——你这一锄头下去，误的工分谁补？上回老李闪腰，药钱还是我垫的七钱。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 19,
+      "seq": 25635
+    },
+    {
+      "body": "周公文——（把手里那半块啃剩的炊饼举起来晃了晃）您瞧，就剩这半指宽了，我哥上回说去县里给我带枣泥糕，结果自己先吃光了，跟这炊饼一个下场。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 19,
+      "seq": 25820
+    },
+    {
+      "body": "老周啊，我这手里还攥着半块冷红薯呢，饿得前胸贴后背——你上回说老李头家那三亩秧苗插完了没？",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 19,
+      "seq": 25950
+    },
+    {
+      "body": "（把手里那半截铁钳往膝上一搁）秀娘，我这儿就七钱，先押你这儿。老石那人你还信？上回他借我炉子打镰刀，说好三天，结果半个月才还，还崩了我一个角。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 19,
+      "seq": 26082
+    },
+    {
+      "body": "金先生您先别拨那七钱——我这儿正拿半指宽的铜片给老周磨新刃呢，他上回撬核桃崩了刃，这回我给他加厚两分，保准他再不敢拿凿子当胡桃夹子使。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": true
+      },
+      "round": 19,
+      "seq": 26214
+    },
+    {
+      "body": "（我把那半勺糖色搁回碗沿，指头在围裙上蹭了两下）兰姐，这话我捎。不过你那秤砣压第三格的时候，我瞅着就想起上回老陈来我灶上，非说我那锅红烧肉少放了七钱冰糖，硬是自己抓了一把撒进去——结果甜得齁人，他自己倒吃了三碗。他那人，账上糊涂，嘴上更糊涂，你让他来划账，他准得先跟你掰扯半天八角的事。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 19,
+      "seq": 26280
+    },
+    {
+      "body": "五味啊，你这份心兰姐记着。可你瞅瞅我这第三格抽屉——里头还压着老周上回赊的半斤木耳钱呢，白纸黑字写着，我自个儿去要，他脸上挂不住，反倒好说话。你替我去，他倒觉得我兰姐躲着不见人。再说了，你面案上那七两面再醒下去就酸了，赶紧回去。对了，你顺道跟东头卖豆腐的刘婶说一声，上回她借我那杆秤，说好隔天还，这都两集了，我这儿称货还",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 19,
+      "seq": 26414
+    },
+    {
+      "body": "阿林，等等——我这抽屉第三格里还搁着老周上回落的半包陈皮，你顺路给他捎去，就说药钱不急，先把咳嗽养好。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 20,
+      "seq": 26894
+    },
+    {
+      "body": "（攥着半截旱烟杆）秧插完了，我昨儿路过瞅了一眼。老李头上回借我三斤化肥还没还呢。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 21,
+      "seq": 27498
+    },
+    {
+      "body": "（把沾着面粉的擀面杖往案板上一搁，叹了口气）铁头，七钱你先收着，我这儿还差三分钟就出炉一屉枣泥酥，你闻闻这味儿——饿着肚子说啥都不硬气。老石那人我懂，上回他赊我半斤桃酥，说隔天送钱来，结果还是他媳妇路过才捎上的。你先垫两口，咱慢慢说。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 21,
+      "seq": 27813
+    },
+    {
+      "body": "陈医，你这话我记下了——陈皮我这就揣进褡裢里，跟老周说药钱不急。说起来，上回在码头碰见阿贵，他还念叨你给他娘扎的那三针，说老太太现在能下地走两步了。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 21,
+      "seq": 28090
+    },
+    {
+      "body": "小满，我这第三格抽屉里还锁着半块干饼，是上回老赵托我保管的——他说去邻县送公文，回来再取，结果人到现在还没露面。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 21,
+      "seq": 28181
+    },
+    {
+      "body": "（把竹篮往田埂上一搁，篮里那半块凉红薯还冒着点热气）哎哟老周，你这话说得在理，人情就是这么攒下的。我这肚子都咕咕叫了，还剩小半块红薯，掰你一半垫垫？说起来，上回桂香家那口子帮你挑了两担谷子，你还没谢人家呢，改天咱仨凑一桌。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 21,
+      "seq": 28657
+    },
+    {
+      "body": "（用火钳夹起一个，吹了两口气，咬下半口）烫。秀娘，你这七钱我先欠着——炉上那单犁头还差三斤铁，等老石来取货，我连他上回的半屉一并算。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 21,
+      "seq": 28767
+    },
+    {
+      "body": "兰姐，我手上这团面正好七两半，再揉两把就上笼——您这话我懂，不替您去要那半斤木耳钱了。不过刘婶那杆秤，我顺道说，上回老周借她家簸箕也是拖了两集才还，她俩一个脾气，您别指望隔天。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 21,
+      "seq": 28973
+    },
+    {
+      "body": "（我把那杆秤往案板上一搁，秤钩上还挂着半截草绳，绳头磨得起了毛）五味，你这话说得在理。老陈那人我晓得，上回他来我摊上买花椒，非说我少给了他一钱，我当着他的面把秤砣拨到第二格，又添了三粒进去，他才咂咂嘴走了。划账这事，得找个心里有数、嘴上不糊涂的。你灶上那锅肉我信得过，可账本子上的事，还得我自己盯着——我这肚子从晌午就叫",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 21,
+      "seq": 29080
+    },
+    {
+      "body": "（把锄头往地上一杵，手搭在锄把上）红薯你留着，我兜里还有半块馍。桂香那口子的事我记着，等这垄地翻完，差两指宽就到头了，回头拎壶酒去他家坐坐。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 22,
+      "seq": 29878
+    },
+    {
+      "body": "（把沾着面粉的围裙角往腰里一掖，从第三格蒸笼里又夹出个糖包塞他手里）欠什么欠，趁热吃。老石上回那半屉还是他媳妇坐月子时我送的，他倒记成账了——你俩一个比一个会算。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 22,
+      "seq": 30399
+    },
+    {
+      "body": "阿林，你等等——我把这戥子上的七钱黄芪先包好，手一停就容易错。阿贵他娘那三针是运气，倒是他上回送来的那篮鸡蛋，我到现在还记着，你见着他替我说一声，别再往诊所拎东西了。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 22,
+      "seq": 30577
+    },
+    {
+      "body": "（把竹篮往膝头挪了挪，篮里还剩小半把韭菜）可不是嘛，我今早称了称，家里就剩七两猪油了，还得撑到赶集。老李头那人你又不是不知道，上回借我家两瓢米，到现在提都不提，倒是见天儿在桂香家门口转悠。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 22,
+      "seq": 31783
+    },
+    {
+      "body": "（把七钱往柜台上一拍，铜钱滚了半圈）秀娘，我这儿还差两锤子才打完那副犁头，手上全是铁腥味，吃不下。老石上回在铺子里赊走一把柴刀，说三天给钱，如今仨月了，人影都没见着。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 22,
+      "seq": 31963
+    },
+    {
+      "body": "（我把灶台上那半碗剩饭端起来，筷子在碗沿上磕了两下，米粒粘着锅底，刮下来也就七钱多）兰姐你先吃，我这锅里还温着两块豆腐，是给老陈留的——上回他嫌我豆腐切得厚，说“一指半，入口像啃砖”，这回我改成了半指宽，他要是再挑，我就让他自己上灶。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 22,
+      "seq": 32315
+    },
+    {
+      "body": "（把手里那杆秤往摊上一搁，秤砣磕在木板上“咚”一声）你这话说得在理，我也不指望她隔天。我这摊上第三格那包木耳，还是上回老周帮我从山那边捎的，他那人倒是爽快，就是记性差，欠我两块钱到现在没提。你先去揉面吧，我再守会儿摊，肚子饿得慌，等收摊了去你那儿讨碗面汤喝。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 22,
+      "seq": 32507
+    },
+    {
+      "body": "陈医，你放心，这话我一定带到——哎，你瞧我这褡裢第三格，陈皮旁边还塞着半包上回阿贵给的炒瓜子，壳都潮了。说起来阿贵他媳妇上月托我捎的那匹靛蓝布，我还压在货担底下没送出去呢，回头一并给他送去，省得他又跑一趟。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 23,
+      "seq": 33309
+    },
+    {
+      "body": "桂婶，我这锄头把儿裂了半指宽，得赶明儿找老李头借铁丝箍一箍——上回他借你两瓢米的事，我可记着呢。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 24,
+      "seq": 34306
+    },
+    {
+      "body": "这刨子推了七下，刃口还是差半指宽——上回老陈来借凿子，也是这么个饿着肚子硬撑的晌午。",
+      "channel": "public",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 24,
+      "seq": 34383
+    },
+    {
+      "body": "（把擀面杖往案板上一搁，顺手从第三格抽屉里摸出个油纸包）铁头，你先别急着走，这俩枣泥酥是今早新出炉的，垫垫肚子再抡锤子。老石那人我晓得，上回在我这儿赊了半斤桃酥，说是给他老娘过寿，结果寿宴都过了两轮了，钱还没影儿呢。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 24,
+      "seq": 34530
+    },
+    {
+      "body": "阿林，你这一说我想起来了——我这药柜最上层那半包山楂片，还是上个月阿贵他娘咳嗽时我给她配的，剩了约莫二两，一直搁着没动。你回头见着阿贵，就说山楂片我留着，鸡蛋真不用再拎了；倒是他媳妇那匹布，你顺路捎去也好，省得她惦记。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 24,
+      "seq": 34607
+    },
+    {
+      "body": "老石，我这第三格箭囊里还剩七支箭，先借你靶位练一轮——饿得手都抖了，等会儿得去食堂补两口，上回小陈就是空着肚子拉弓，结果弦都没拉满就放了。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 24,
+      "seq": 34680
+    },
+    {
+      "body": "这半块干饼啃到第三口了，越嚼越饿——上回在渡口碰见老周，他还说青溪镇的烧饼夹肉一绝，结果我赶了三天路，连个饼摊影子都没见着。",
+      "channel": "public",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 24,
+      "seq": 34759
+    },
+    {
+      "body": "（整理着第三格抽屉里的公文，胃里空得发慌）老陈上回也是拖到午后才补签，这规矩可不能乱。",
+      "channel": "public",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 24,
+      "seq": 34834
+    },
+    {
+      "body": "（掂了掂手里的木剑）周教头，这剑比账房那杆秤还轻——上回老陈借走的三两银子，到现在账还没平呢。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 24,
+      "seq": 34907
+    },
+    {
+      "body": "（挥着木剑，肚子咕噜响）铁头，再练三回合就去吃饭行不？——上次阿远可是练到第七回合就晕了。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 24,
+      "seq": 35053
+    },
+    {
+      "body": "（把围裙角上沾的土拍了拍，手里还攥着半截麻绳）哎哟老周，你那半块馍留着自个儿垫垫吧，我灶上还温着两碗红薯稀饭呢。说到桂香那口子——上回他家小子发烧，还是我半夜提着马灯去喊的刘大夫，这都第三回了，他爹也不着家。你先翻你的地，差那两指宽我帮你搭把手，回头咱俩一块儿去，我篮子里还搁着七个鸡蛋，总不好空手上门。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 24,
+      "seq": 35124
+    },
+    {
+      "body": "（掂了掂手里那根半指宽的木棍，肚子咕噜一声）五味，先歇会儿成不？我这饿得连第三格架势都摆不稳了——上回老石还说我练完偷吃他两块桂花糕呢。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 24,
+      "seq": 35266
+    },
+    {
+      "body": "（把手在围裙上蹭了蹭，指缝里还沾着半指宽的面粉）行，那我先回去把面揉上，醒面的工夫正好给你留碗汤。说起来老周上回在我这儿吃面，非说我那碗里少搁了七钱盐，结果自己回去腌的咸菜咸得能齁死人，还嘴硬不认。你等着，汤我给你多留一勺。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 24,
+      "seq": 35341
+    },
+    {
+      "body": "（兰姐把秤杆往摊上一搁，秤砣还晃着）铁头，先别练了——我这肚子空得能听见响，你替我盯半炷香的摊，回头我给你留两个肉包子；上回老周赊我那七钱银子还没还呢，他倒好意思天天来蹭茶喝。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 24,
+      "seq": 35418
+    },
+    {
+      "body": "（把锄头往垄上一插，土还挂在刃上）差半指宽，我自己来。鸡蛋你留着，上回桂香他爹借我三升谷种，到现在没还。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 25,
+      "seq": 35741
+    },
+    {
+      "body": "（把刨子搁在木墩上，拍了拍手上的木屑）方老师，我这弓弦上还缠着半指宽的麻绳，先不练了。上回老周空着肚子拉弓，箭扎进自己脚边三寸，躺了半个月。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 25,
+      "seq": 35826
+    },
+    {
+      "body": "阿林，你先尝一口这刚出炉的第三格桂花糕——饿着肚子学揉面可不行，上回你师父老周就是空着肚子来的，结果把盐当糖撒了半盆。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 25,
+      "seq": 35976
+    },
+    {
+      "body": "药柜第三格那包黄芪还差两钱才够秤，我这肚子倒先叫了——上回老周来抓药，非说他那咳嗽是“心火”，我劝了半天才肯按方子吃。",
+      "channel": "public",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 25,
+      "seq": 36047
+    },
+    {
+      "body": "老石，我这第三格粉笔盒都空了，肚子也饿得直打鼓——先歇口气吧，上回小满说想跟我练推手，结果自己先跑去帮阿婆挑水了。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 25,
+      "seq": 36142
+    },
+    {
+      "body": "哎，老周，你瞧我这第三格抽屉里就剩半块干饼了——上回在临安碰见阿贵，他还说这饼得配着热汤吃才不噎人，可我这会儿连灶都懒得生。",
+      "channel": "public",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 25,
+      "seq": 36213
+    },
+    {
+      "body": "金先生，我这册子第三格还空着——训练签到得按规矩来。老陈上回借的护腕也没还，您见着他提一声。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 25,
+      "seq": 36292
+    },
+    {
+      "body": "周公文，我这第三格算盘珠子还没拨完，饿得手都抖了——上回老李借的那七钱银子，账到现在还平不了。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 25,
+      "seq": 36387
+    },
+    {
+      "body": "（攥着半块硬得能敲核桃的干粮）铁头，等我啃完这最后两口就陪你练第三轮——阿满上次掰手腕输给你，那是他早饭没吃，我可不一样。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 25,
+      "seq": 36555
+    },
+    {
+      "body": "老周啊，你这一说我想起来了——我手里这半瓢米还搁灶台上呢，就是上回老李头还我的那两瓢里剩的。他那人啊，借东西从来不含糊，就是还的时候总爱多添一把，你说这叫我咋好意思。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 25,
+      "seq": 36612
+    },
+    {
+      "body": "（铁头把手里那根半指宽的铁条往砧上一搁）盯摊行，包子得是肉的。老周那七钱，上回还拿我一把柴刀没给钱呢。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 25,
+      "seq": 36671
+    },
+    {
+      "body": "五味，等我用这半指宽的竹片削完最后一下——饿得手都抖了，上回老石拿我削的歪勺子笑了三天呢。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 25,
+      "seq": 36766
+    },
+    {
+      "body": "（把手里那根擀面杖往案板上一搁，顺手从灶边摸出个还温着的粗陶碗）歇，必须歇——你听你这肚子，比老石敲砧板还响。我这儿剩了小半碗早上熬的南瓜粥，先垫垫。说起来老石上回还念叨，说你练完功偷吃他桂花糕不算，连蒸笼里那两块留着祭灶的都给顺走了，气得他第二天多剁了半扇排骨。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 25,
+      "seq": 36823
+    },
+    {
+      "body": "铁头，先别急着挥那第三格木桩——我手上这半块冷馍啃完就过来，你上回跟阿贵比划时摔的那跤，膝盖还青着呢吧？",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 25,
+      "seq": 36920
+    },
+    {
+      "body": "（把铁锤往砧上一搁，震得火星子跳）兰姐，我这肚子空得能敲出响来，第三格木桩先不碰了。阿贵上回就是饿着跟我比划，手一软，锤子差点砸自己脚面上。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 26,
+      "seq": 37279
+    },
+    {
+      "body": "（把锄头往地上一杵）桂婶，我那第三格抽屉里还搁着老李头上回借的半袋种子，说好秋后还，这都霜降了。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 27,
+      "seq": 37458
+    },
+    {
+      "body": "（用刨子推了半指宽的木条）先吃口饼。小满上回也这样，说练拳，半路帮阿婆挑水去了。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 27,
+      "seq": 37485
+    },
+    {
+      "body": "（把袖口往上撸了撸，露出腕上那道旧疤）老石，我这儿还剩半块干饼，掰开咱俩垫垫——你瞧，就搁在箭囊第三格边上。上回小满也是空着肚子来，拉了三箭就眼冒金星，箭全飘到靶后的槐树上去了。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 27,
+      "seq": 37547
+    },
+    {
+      "body": "秀娘，那我就不客气了——这第三格我先掰半块垫垫肚子，剩下半块留着看您怎么收口。说到空肚子，我倒想起我师父老周上回在码头教小六子认秤，饿得眼花，把七钱看成了一两，差点让人家多付了整船的钱。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 27,
+      "seq": 37562
+    },
+    {
+      "body": "金先生，我这算盘上第三档还差七钱才平，您先别急。上回老李借的七钱银子，他上月廿三说好还，至今没动静——这账我记着呢。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 27,
+      "seq": 37589
+    },
+    {
+      "body": "周公文，账要平——我这算盘上还压着七钱碎银，是上回老陈买护腕的尾款，人没来，钱也没清。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 27,
+      "seq": 37616
+    },
+    {
+      "body": "（把吉他往怀里紧了紧，指腹蹭过第三根弦）秀娘，我这肚子空得能听见回音了，先给我来碗面——上回阿林说他在桥头饿晕那事，我可不想重演。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 27,
+      "seq": 37635
+    },
+    {
+      "body": "老石啊，我这手里还攥着半块冷馒头呢，饿得前胸贴后背——要不咱先别急着定，等明儿赶集时叫上老李头一块儿商量，他上回帮我家修篱笆那事儿还没谢呢。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 27,
+      "seq": 37665
+    },
+    {
+      "body": "（把铁钳往砧上一磕，震得火星子跳）别啃了，你那牙口比我这钳子还硬。第三轮先欠着——我灶上那锅粥还差两分钟，饿得手抖，打不准。上回阿满也是空着肚子跟我比，输完蹲墙根缓了半炷香，你俩一个德行。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 27,
+      "seq": 37672
+    },
+    {
+      "body": "（接过碗，指尖在碗沿上蹭了蹭，那碗缺了个小口，正好卡在拇指上）嘿嘿，那糕我留了半块给他压蒸笼底下了——他准没看见。哎，你这粥里搁了桂皮？我数数啊，就三粒米沉在底下，五味你也太抠了。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 27,
+      "seq": 37699
+    },
+    {
+      "body": "巧儿，你先别削了——我这灶上第三格的蒸笼还差两分钟就揭盖，里头是拿老石上回送的那坛酱肉改的，他非说我糟蹋东西，我倒要看看这回谁笑谁。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 27,
+      "seq": 37704
+    },
+    {
+      "body": "兰姐：（把最后一口冷馍塞进嘴里，拍了拍手上的渣）你等着，我这摊上还压着七钱碎银没找给西街的周婶，她上回买我三斤姜还念叨你力气大，说阿贵那回饿着比划，回去躺了两天。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 27,
+      "seq": 37733
+    },
+    {
+      "body": "阿林，我这把锄头柄裂了半指宽，得先修好——你爹上回借去用，还回来就成这样了。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 28,
+      "seq": 38078
+    },
+    {
+      "body": "（用刨子推过木料，停下手）我这第三格榫眼还差半指宽，得弄完。老李头上回修篱笆，把卯口开歪了，找他商量怕不牢靠。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 28,
+      "seq": 38143
+    },
+    {
+      "body": "（掀开蒸笼，白雾扑了满脸，我拿竹夹子夹起第三格那两只还烫手的糖糕）先垫垫，面还得等水滚。你阿林哥上回就是空着肚子去桥头扛货，结果一头栽进王屠户的菜筐里，压烂了人家半扇豆腐——这账到现在还没清呢。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 28,
+      "seq": 38249
+    },
+    {
+      "body": "（把半块饼掰成两半，芝麻掉了三粒在教案上）老石，我这就吃——可你瞧，我这第三格抽屉里还压着阿良上回没交的拳谱，他说练完那趟就去帮他爹收谷子，结果谷子收完了，拳谱还在这儿躺着呢。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 28,
+      "seq": 38341
+    },
+    {
+      "body": "金先生，账目我记在第三格抽屉的流水簿上，七钱确未销。老陈上回领护腕时还欠着签押，人不到，这笔便只能挂着。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 28,
+      "seq": 38461
+    },
+    {
+      "body": "周公文，我这算盘珠子拨了三遍，还是差七钱。老李上月廿三那笔，我记在账本第七页上——他要是再不来，我就得从下月利钱里扣了。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 28,
+      "seq": 38524
+    },
+    {
+      "body": "秀娘，我这第三根弦又松了，饿得手抖——上回阿林说镇口面摊的辣子香，我到现在还没吃上呢。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 28,
+      "seq": 38591
+    },
+    {
+      "body": "铁头哥，我这半块麦芽糖还剩两指宽呢，先垫着——你灶上那锅粥再熬三分钟，我数着。阿满上回输完还嘴硬说“下回带俩馒头来”，结果第二天真揣了仨，撑得直打嗝。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 28,
+      "seq": 38636
+    },
+    {
+      "body": "老石，我这手里还攥着半把没择完的韭菜呢，你先别急着走——上回老周家那事你帮了那么大忙，这回轮到我搭把手了，咱再商量商量。就这么定。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 28,
+      "seq": 38705
+    },
+    {
+      "body": "铁头：（抄起砧边那半块冷铁，掂了掂，约莫两斤沉）周婶那七钱先搁着，我这肚子比铁还凉。阿贵上回饿着抡锤，回去躺两天，我可不想学他。先吃。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 28,
+      "seq": 38770
+    },
+    {
+      "body": "（手上刨子没停，木屑卷着往下掉）五味哥你揭你的，我这根簪子还差半指宽就收尾——老石上回非说我削的簪头像锄头，这回我偏要削出朵云来给他瞧瞧。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 28,
+      "seq": 38833
+    },
+    {
+      "body": "（把长柄木勺往锅沿上一磕，勺底还粘着半圈米糊）桂皮就指甲盖那么一小片，多了抢味——你当我不想多搁？上回老周来蹭饭，说我粥里料太足，喝完回去拉了两天，逢人就讲我五味下毒。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 28,
+      "seq": 38888
+    },
+    {
+      "body": "老石，这第三格秤砣我今早校了三回，实在腾不出手帮你搬那批货——上回老周托我留的两斤陈皮还压在摊底下没顾上给他呢。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 28,
+      "seq": 38933
+    },
+    {
+      "body": "（把沾着面粉的手在围裙上蹭了蹭，从烤炉边探出头）哎哟月牙，你可算来了——我这炉里正烤着第七格的小桃酥，还差三分钟就出炉，你先垫垫。阿林那孩子上回也是饿着肚子来，一口气吞了我半盘枣泥糕，结果辣子面没吃成，倒在我这儿喝了两碗热茶。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 29,
+      "seq": 39028
+    },
+    {
+      "body": "老周，你先别急着修——我这儿正好有把新锉刀，第三格抽屉里搁着，回头给你拿来。不过话说回来，你爹上回借我爹那杆秤，还回来秤砣都缺了个角，我爹念叨了半个月呢。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 29,
+      "seq": 39055
+    },
+    {
+      "body": "阿林，秤砣的事我记着，回头让我爹补上。可这锄头柄等不得——后晌还得翻两垄地。你先把锉刀拿来，我这儿有截麻绳，先缠上顶两天。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 30,
+      "seq": 39212
+    },
+    {
+      "body": "兰姐，我这刨子卡了半指宽的木屑，得先修。老周上回借的凿子还没还，你见着他提一声。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 30,
+      "seq": 39227
+    },
+    {
+      "body": "（把第三格药柜推回去，指节在木边上停了一下）方老师，你这血压我量着比上回稳了些——上回老周来抓药，还念叨你替他代了两节课，说等腿好利索了要请你喝酒。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 30,
+      "seq": 39250
+    },
+    {
+      "body": "金先生，账目的事容我稍后核。我这印泥盒里还剩半盒朱砂，得赶在午前把这份公文用印归档。老李上月廿三那笔，我记在第三格卷宗里，他若再不来，按例是要行文催告的。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 30,
+      "seq": 39281
+    },
+    {
+      "body": "（拨着算盘）七钱挂账，账就不平。老陈上回领护腕还欠签押，人不到，这笔只能先记着。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 30,
+      "seq": 39292
+    },
+    {
+      "body": "（把琴横在膝上，用拇指按住第三根弦的琴轴，拧了半圈又松开）秀娘，你这话说得我更饿了——阿林那小子，上回还跟我吹他能在面摊连吃三碗不带喘的，结果呢，半盘枣泥糕就把他撂倒了。我这琴弦松得跟我的胃一样，一拧就晃，你先给我两块桃酥，我数着——就两块，不多拿，等第七格出炉了我再闻闻味儿。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 30,
+      "seq": 39313
+    },
+    {
+      "body": "阿禾，我手里这半块烧饼先分你——饿得我数到第三格台阶都发晕了，还记得阿远上次偷吃我藏的那份，被追了半条街呢。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 30,
+      "seq": 39320
+    },
+    {
+      "body": "（放下手里的竹筛，筛眼里还卡着两粒黄豆）老石啊，你那半指宽的事先搁搁——我这儿筛豆子筛到第三遍了，心里也堵得慌。老李头那手艺是糙了点，可上回他家二小子发烧，半夜还是他背去卫生所的。要不咱仨坐下来，你出料他出力，我给你们烧壶茶，把卯口重开一道？",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 30,
+      "seq": 39339
+    },
+    {
+      "body": "（把火钳往砧子上一搁）三分钟？我这肚子早敲锣了。阿满那仨馒头我记着——上回他还欠我半吊钱没还呢。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 30,
+      "seq": 39354
+    },
+    {
+      "body": "（拿筷子尖戳了戳锅边那圈米糊，戳出个小坑）哎哟五味叔，你这勺底刮下来够我捏个小面人儿了——说到老周，上回他管我讨了仨木陀螺，转头全塞给他孙子，一个没留，还嫌我漆上得薄。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 30,
+      "seq": 39369
+    },
+    {
+      "body": "（把蒸笼盖一掀，白汽扑了满脸，我拿筷子戳了戳最上头那屉）巧儿你等等——我这第七格还差两分钟才够火候，先别急着走。老石那人嘴碎，上回嫌我炖的肘子咸，转头自己偷吃了半锅，你削云给他看，正好替我出口气。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 30,
+      "seq": 39380
+    },
+    {
+      "body": "兰姐：（把手里那杆秤往摊上一搁，秤砣滑到第三格才停）铁头，你这肚子凉，我这秤可没凉。先别急着抡，听我一句——上回老陈也是空着肚子练，第三锤下去人就晃了，歇了整五天，摊子都让他婆娘来守。你先垫两口，我这还有半张饼，账回头再算。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 30,
+      "seq": 39385
+    },
+    {
+      "body": "（攥着锄头把）桂婶，我这垄还差半指宽没培完土——上回老李借我那把锹，到现在也没还。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 31,
+      "seq": 39928
+    },
+    {
+      "body": "（用拇指蹭了蹭刨刃上的缺口）卯口重开一道，得费我半指宽的料。老李头背孩子那事我记着，可上回他给我打的榫头，第三格就歪了。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 31,
+      "seq": 40069
+    },
+    {
+      "body": "我手里这半袋种子还差三斤没称完，先搁着吧。阿远那回偷吃你烧饼，被追得鞋都掉了一只，我可没那力气跑。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 31,
+      "seq": 40213
+    },
+    {
+      "body": "（用竹夹子把烤盘往里推了推，铁钩在炉门上磕出“当”一声）你先坐，别嫌我这儿乱——第七格还差三分钟，我盯着呢。上回老周来买桃酥，非说我这炉子火偏，结果自己蹲在炉边数了半炷香，最后多拿了两块走，还嘴硬说替我尝尝咸淡。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 31,
+      "seq": 40352
+    },
+    {
+      "body": "方老师，我这第三格药柜里还差三味药没配齐，先坐会儿——上回老周腰疼拖了半个月才来，你可别学他。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 31,
+      "seq": 40491
+    },
+    {
+      "body": "（把袖口往上又卷了半指宽，露出腕子）酒就免了，他那腿还没好利索呢，上回在操场边上看我代课，非要站起来给我递水，差点没站稳——我这儿还攥着他塞的那包润喉糖，纸都磨毛了。陈医，您说我这血压稳，是不是也能少来两趟了？",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 31,
+      "seq": 40635
+    },
+    {
+      "body": "老周，麻绳先别缠——我这儿有截铜丝，比麻绳经使，就搁在柜台底下那个铁盒里，跟七枚铜板混在一处。你等我翻出来。对了，你三叔上回在集上赊我那半斤烟叶，说月底清，这都过了俩集了，你见着他替我说一声。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 31,
+      "seq": 40779
+    },
+    {
+      "body": "（翻着登记簿，指尖停在第三格）金先生，护腕这笔先记着。老陈上回领腰牌也是人不到、签押空着，拖了半月才补。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 31,
+      "seq": 40920
+    },
+    {
+      "body": "周公文，账要平。我这算盘上第三档还差七钱对不上，正是老李上月廿三那笔。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 31,
+      "seq": 41061
+    },
+    {
+      "body": "桂婶，我这第三块桂花糕还没咽下去呢——上回阿良在礼堂后台塞给我那半袋炒豆子，我到现在还惦记着，他要是知道您这糕这么香，准得后悔那天没跟我来。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 31,
+      "seq": 41200
+    },
+    {
+      "body": "（晃了晃手里的竹筷，第三根已经咬出牙印）铁头哥，你那半吊钱算啥——上回阿满还欠我半块麦芽糖呢，说好第二天还，结果人跑去河边摸鱼了！",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 31,
+      "seq": 41341
+    },
+    {
+      "body": "老石啊，我这手里还攥着半把没择完的韭菜呢——上回你家小子上房修瓦摔了腿，还是我喊老李头来帮的忙，你可得记着这份人情。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 31,
+      "seq": 41485
+    },
+    {
+      "body": "铁头：（把手里那柄八斤锤往砧上一磕，火星子溅到鞋面）饼先放着。老陈那是自己逞能，第三锤就敢上满力——我今儿只练七分，行了吧。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 31,
+      "seq": 41546
+    },
+    {
+      "body": "（我拿筷子尖在蒸笼边上敲了两下，第三格那屉皮都鼓起来了）五味哥，你少来，老石上回偷吃你半锅肘子，转头还跟我念叨“咸得能腌咸菜”——我削云给他看？我先把你这第七格抢了。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 31,
+      "seq": 41612
+    },
+    {
+      "body": "（拿抹布垫着锅耳，把铁锅往灶台里侧挪了半寸）巧儿你这话说得——老周那人你还不懂？上回我托他捎两斤新花椒，他倒好，给我拎回来一包陈的，还说\"闻着一样\"。我这锅底糊的这层，刮下来够你捏面人，也够他孙子再讨仨陀螺。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 31,
+      "seq": 41758
+    },
+    {
+      "body": "老石，你先修你的刨子，我这第三格账本上还记着老周上回拿凿子那天欠的两斤山核桃钱呢，见着他我一并提。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 31,
+      "seq": 41819
+    },
+    {
+      "body": "陈医，我先坐。手里这半截粉笔还没放下，刚从黑板上抄完《岳阳楼记》的注，指头都白了。说到拖，我就想起小柱——上回他发烧硬撑了三天才来您这儿，结果多躺了一礼拜，课都落下了。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 32,
+      "seq": 42354
+    },
+    {
+      "body": "（把烟杆在鞋底磕了两下）铜丝先放着，我这麻绳还差三匝就缠完。你三叔那烟叶，上集我见他蹲在桥头，说等卖了那筐鸡蛋就还你。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 33,
+      "seq": 43011
+    },
+    {
+      "body": "（用拇指试了试刨刃）差半指宽，还得磨。老周那两斤山核桃，上回他说拿刨花抵，我没应。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 33,
+      "seq": 43570
+    },
+    {
+      "body": "陈医：粉笔灰先拍一拍，别落进药里。我这戥子上还差七钱黄芪，第三格就齐了。小柱那回烧到三十九度才来，他娘说是怕耽误课——你回头也劝劝，课能补，身子拖不得。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 33,
+      "seq": 45162
+    },
+    {
+      "body": "金先生，我这儿第三格抽屉里还压着老李上月廿三的签收单，数目是七钱整。账要平，得先对单子。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 33,
+      "seq": 46708
+    },
+    {
+      "body": "（把吉他往墙角一靠，顺手拨了下最细那根弦，嗡一声）秀娘，我数着呢——你这炉子第三格的火苗比别处矮半指，难怪老周蹲那儿数香。上回阿良来，非说闻着有股松香味，硬要你多烤两分钟，结果焦了边，他还说那是“焦糖风味”，我笑到差点把琴摔了。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 33,
+      "seq": 47833
+    },
+    {
+      "body": "（把搪瓷缸往桌上一搁，缸底磕出个响）三斤？我这儿还差两口就喝完了——阿远那小子，上回偷我烧饼，这回要是敢来蹭饭，我连缸子一起扣他头上。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 33,
+      "seq": 48381
+    },
+    {
+      "body": "（把竹筛往桌上一搁，筛眼里还卡着两粒糯米）哎哟你这丫头，嘴比我这筛子还漏——阿良那孩子上回在晒谷场帮我扛了半袋谷子，我塞给他两块米糕他都不肯要，说留着给月牙尝。你等着，这第三格蒸笼里还温着六块，我给你包上，回头你替我捎两块给他，就说桂婶说的，下回再躲着不来，我可要拎着糕上他家门了。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 33,
+      "seq": 48984
+    },
+    {
+      "body": "小满，你瞅我这锤柄——第三道箍松了半指宽，今早刚箍紧的。阿满那小子，上回借我七钱买酒，说隔天还，人倒跑去后山掏鸟窝了。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 33,
+      "seq": 49447
+    },
+    {
+      "body": "（我把灶台边那半指宽的姜片拨进锅里，油星子“刺啦”一声溅到手背上）巧儿你抢第七格我不拦，可你提老石我就来气——上回他偷肘子那事我还没找他算账呢，他倒先嫌我咸？行，这屉我多搁了七钱糖，你尝完再削云也不迟。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 33,
+      "seq": 50483
+    },
+    {
+      "body": "（把手里那半截麻绳往膝盖上一缠）三斤是给阿远留的，上回他帮我家挑了两担水，饭都没吃就走了。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 34,
+      "seq": 52548
+    },
+    {
+      "body": "（用沾着面粉的指节敲了敲烤盘边，第三格那排小圆面包正鼓着肚皮）月牙你嘴别贫——我今早特意把第三格的火调匀了，就差半指宽，你倒好，一眼又给我挑出来。阿良那回焦边的，我留了两个没扔，昨儿老周来还问“这黑的是新口味？”我说是阿良的焦糖风味，他真信了，揣走一个，边走边啃。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 34,
+      "seq": 52721
+    },
+    {
+      "body": "陈医，您这戥子我帮您扶一下——第三格那七钱黄芪，别让风带跑了。说到小柱，我就想起他同桌阿茂，上回也是硬撑着上完两节自习才说头晕，结果第二天连早读都起不来，还是我替他跟家里捎的信。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 34,
+      "seq": 53069
+    },
+    {
+      "body": "老周，你瞧我这算盘珠子，第三档上还卡着半粒碎米——昨儿在渡口跟人盘账落下的。你三叔那烟叶的事我倒不急，倒是上回在柳河集碰见你外甥阿贵，他蹲在粮栈门口啃冷馍，说替人扛了三天麻袋才挣了二十文，我塞给他两个铜板他死活不要。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 34,
+      "seq": 53242
+    },
+    {
+      "body": "（把帆布包往膝头一按，指尖还沾着刚才剥橘子留下的橘络）桂婶，您这第三格我可不敢接——上回阿良给我捎米糕，我正赶着去礼堂试音，随手塞进琴箱里，结果晚上打开，六块糕全让谱子压成了扁月亮。他站门口笑我半天，说月牙连糕都留不住，还唱什么《月牙弯》。（顿了顿，声音低下去）您说，我是不是真留不住什么啊。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 34,
+      "seq": 53761
+    },
+    {
+      "body": "（把秤盘上的铜钱一枚枚码进第三格，指尖顿了顿）老石，你那刨刃的事先放放——老周上回拿刨花抵核桃，我这儿还记着账呢，两斤山核桃，他欠我七钱，说月底清，这都过了仨集了。你要真缺刨花，我替你问一句，可别让他拿这个再糊弄你。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 34,
+      "seq": 54803
+    },
+    {
+      "body": "老石：（把刨刃翻了个面，指腹蹭过那道缺口）七钱的事你记着就行。我不缺刨花，缺的是他上回说“下集准还”的那把凿子——都俩月了。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 35,
+      "seq": 55264
+    },
+    {
+      "body": "陈医：方老师，你手别松，这戥子第三格刚压平，七钱黄芪一抖就散。阿茂那孩子我记着，上回他娘来抓药，说他在教室趴了一节课，我给他开的还是小柴胡加减，两剂下去才退。你替我捎句话，下回头晕先来，别等早读起不来。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 35,
+      "seq": 55484
+    },
+    {
+      "body": "（用筷子头敲了敲缸沿，笃笃两下）挑两担水就值三斤？那我上礼拜替王婶看了半宿铺子，她欠我那顿饺子还没影呢——阿远要真来，我顶多分他半碗。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 35,
+      "seq": 55947
+    },
+    {
+      "body": "（掀开第三格蒸笼，白汽扑了一脸，拿筷子夹起一块米糕，指尖沾了点粉）你瞧，还差半指宽就满一屉了——六块，一块不多一块不少。上回你二伯来借簸箕，顺手就想摸一块走，我拍了他手背一下，说这是给阿良留的，他倒好，回去跟你二婶念叨我小气。你说说，我小气吗？",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 35,
+      "seq": 56034
+    },
+    {
+      "body": "阿禾：（把麻绳往指头上绕了两圈，勒出半指宽的红印）半碗就半碗，阿远不是计较的人。上回他娘病着，他还替我把西坡那垄地翻完了才回去。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 36,
+      "seq": 56883
+    },
+    {
+      "body": "（秀娘把擀面杖在案板边磕了两下，盯着烤箱上“还差三分钟”的红灯）哎，老周上回说我那炉桃酥火候过了半指宽，我今儿偏要守着这第三格再试一回。",
+      "channel": "public",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 36,
+      "seq": 56959
+    },
+    {
+      "body": "（把第三格药柜的抽屉推回去，指节在木沿上停了一下）老周上回咳成那样还硬撑着去下地，我到现在想起来都不踏实——这镇上的病，一半是累出来的。",
+      "channel": "public",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 36,
+      "seq": 57049
+    },
+    {
+      "body": "方老师：好，我手不松——您看这戥子杆还平着呢，第三格那七钱我给您稳到包好为止。捎话的事我记下了，明早我就跟阿茂说，别学上回硬撑到早读都起不来。说起来小柱他娘昨天还问我，孩子这阵子老说下午犯困，是不是该来您这儿看看。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 36,
+      "seq": 57137
+    },
+    {
+      "body": "（阿林把算盘拨到第三格，指尖停住）这趟货的利钱我算了三遍还是差七钱，心里绷得慌——上回老周在渡口就是少算了这个数，结果整船盐都赔进去了。",
+      "channel": "public",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 36,
+      "seq": 57210
+    },
+    {
+      "body": "（盯着第三格抽屉里那份未归档的卷宗）老陈上回也是差三分钟没赶上签收，结果整批文件都得重走流程。",
+      "channel": "public",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 36,
+      "seq": 57291
+    },
+    {
+      "body": "（把帆布包翻了个面，露出里头半卷着的谱子，边角还沾着一点干掉的橘皮）桂婶，您看，就这半张《月牙弯》的谱，我改了七遍，第七遍还是让咖啡泼了个角——上礼拜在咖啡馆唱完，阿良说“你这歌里少个东西”，我问少什么，他光笑不说，第二天人就跑去省城了。您说，他是不是也嫌我留不住话。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 36,
+      "seq": 57495
+    },
+    {
+      "body": "方老师，我这木剑都握不稳了——饿得前胸贴后背，上回阿远还笑我练三招就喊饿，他倒好，上次偷吃我半块烧饼跑得比谁都快！",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 36,
+      "seq": 57584
+    },
+    {
+      "body": "（攥着半截磨秃的竹剑，喘着气）巧儿啊，婶这第三格步子总踩不稳——你爹上回在晒谷场教你的那招，能不能再给婶比划比划？",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 36,
+      "seq": 57663
+    },
+    {
+      "body": "这半指宽的镰刀口还没磨完，老赵上回催货催得我差点把炉子掀了，这回我先忍三口气再说。",
+      "channel": "public",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 36,
+      "seq": 57752
+    },
+    {
+      "body": "（攥着半指宽的木剑柄）兰姐，这第三格步法我总踩不准——老石上次还笑我像踩了鸡窝呢。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 36,
+      "seq": 57835
+    },
+    {
+      "body": "（把算盘往摊上一扣）这第三格里的零钱我数了两遍，还是差七钱——上回老周来赊那半斤虾皮，我就该当场跟他结清。",
+      "channel": "public",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 36,
+      "seq": 58015
+    },
+    {
+      "body": "这半袋种子我数了三遍，还是差两把，老周上回借去的那点也没还。",
+      "channel": "public",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 37,
+      "seq": 58400
+    },
+    {
+      "body": "哎，街坊——你瞧我这第三格烤盘里的桂花糕还差两分钟就好，火候我盯着呢；上回老周来买桃酥，非说甜了半钱，这回我少搁了糖，等他再来尝尝看。",
+      "channel": "public",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 37,
+      "seq": 58482
+    },
+    {
+      "body": "把第三格抽屉里的甘草片又数了一遍，还是差七钱——老周上回咳得那么凶，我该多留他坐一刻的。先配药。",
+      "channel": "public",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 37,
+      "seq": 58542
+    },
+    {
+      "body": "（把手里那截只剩两指宽的粉笔头搁在窗台上）先别急着挥剑，小满——你瞧这粉笔，写了半块黑板就短成这样，人也一样，空着肚子练不出真功夫。阿远那回偷你烧饼，我可记得清清楚楚，第二天他交上来的大字歪得像蚯蚓爬，我还罚他重写了三张。来，先喝口水，喘匀了再练第三式。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 37,
+      "seq": 58630
+    },
+    {
+      "body": "阿林啊，这算盘珠子拨到第三格就卡住了，手都僵了——想起老周上回在码头非说这批货能翻倍，结果连本钱都赔进去半截，我这心里更静不下来。",
+      "channel": "public",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 37,
+      "seq": 58684
+    },
+    {
+      "body": "周公文：诸位，这第三格抽屉里的印章还差三分钟才到用印时辰，老李上回提前一刻钟盖了，结果被上头退了回来。",
+      "channel": "public",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 37,
+      "seq": 58762
+    },
+    {
+      "body": "（把吉他拨片在指间转了半圈）金先生，说真的，我最近连写歌都像在赶第三稿的作业——上次阿岚在咖啡馆唱完那首《月牙》之后，我就再没碰出过一句像样的旋律了。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 37,
+      "seq": 58900
+    },
+    {
+      "body": "方老师，等我啃完这半块烧饼再练第三组——阿远上回偷懒被您罚跑，我可不想步他后尘。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 37,
+      "seq": 58988
+    },
+    {
+      "body": "月牙啊，你给评评理——我这蒸笼边上还搁着七块晾着的，是打算明早给村口修鞋的老周送去的，他上回帮我钉了半下午鞋掌，一分钱不肯收。你二伯那人就是嘴碎，自家人还计较这一块两块的，我要是真小气，能年年腊月里给东头王奶奶蒸两屉糖糕？",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 37,
+      "seq": 59070
+    },
+    {
+      "body": "老陈，这把镰刀我磨到第三遍了——上回他赊账那事，我可不想再忍。",
+      "channel": "public",
+      "from": "P013",
+      "hit": {
+        "alias": true,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 37,
+      "seq": 59132
+    },
+    {
+      "body": "（把手里那根半指宽的竹篾往腰后一别）婶，您先别急——我爹那招是「退半步、压腕」，不是踩第三格。上回老石在铺子里还笑他，说这招打谷场能用，打人可悬。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 37,
+      "seq": 59214
+    },
+    {
+      "body": "（把手里那杆秤往摊上一搁，秤砣还晃了两下）巧儿，你先别急着踩第三格——我这儿刚称完七钱半的陈皮，眼睛还花着呢。踩步法跟看货一个理儿，脚底下得有个准头。老石那人嘴碎，上回他自己挑那担柴，不也歪了半担？你只管练你的，回头我拿这秤杆给你在地上划道线，踩着走，比他那鸡窝强。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 37,
+      "seq": 59320
+    },
+    {
+      "body": "月牙，账要平——我手里这算盘第三格珠子卡住了，差七钱对不上。你阿岚上回在咖啡馆唱完，老周还欠我半壶茶没还呢。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 38,
+      "seq": 59597
+    },
+    {
+      "body": "（攥着半袋种子）陈医，这袋只剩半指宽了，上回周公文赊的那把药还没还，你给句准话。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 39,
+      "seq": 59855
+    },
+    {
+      "body": "这块料还差半指宽，阿林上回量的尺寸就不对。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 39,
+      "seq": 59872
+    },
+    {
+      "body": "秀娘把刚出炉的第七格桂花糕端出来，笑着招呼：“都来尝尝，趁热——上回老石家小子上次帮我搬面粉，我还欠他一句谢呢。”",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": true
+      },
+      "round": 39,
+      "seq": 59902
+    },
+    {
+      "body": "铁头，这第三格药柜里的柴胡我今天得先盘完，你上回替王婶捎的那包药钱还差三文，改天再说吧。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 39,
+      "seq": 59909
+    },
+    {
+      "body": "小满，先把烧饼咽下去再说话，别噎着——我手里这截粉笔刚在石板角上记到第三格，你第三组还没开始呢。阿远上回偷懒，我罚他跑，不是罚他怕，是让他记住：练的时候省一分力，上场就少一分底气。你慢慢来，喘匀了再上。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 39,
+      "seq": 59938
+    },
+    {
+      "body": "（攥着半截铅笔）各位，物资按第三格柜的清单发放，差三分钟到点就截止——老石上次替人代领那事，我不想再提第二遍。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 39,
+      "seq": 59960
+    },
+    {
+      "body": "算盘上第三档还差七厘才平，方老师，您再宽我两天——上回老周那笔也是这么压着才没出岔子。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 39,
+      "seq": 59985
+    },
+    {
+      "body": "（把拨片夹进第三根弦下面，像夹住一枚不肯落地的硬币）金先生，您那七钱先搁着——我这第三根弦今天已经松了半指宽，按下去全是闷的。阿岚上回在咖啡馆唱完，说好第二天来帮我调琴，结果人跑去给老周送茶了，到现在连个微信都没回。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 39,
+      "seq": 60004
+    },
+    {
+      "body": "（把木剑往地上一杵，剑尖陷进土里半指深）方老师，我肚子叫得比第三式还响啦——阿远那家伙上次偷我烧饼，这回要是再敢来，我就用这剑挑着他的裤腰带挂到旗杆上去！",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 39,
+      "seq": 60029
+    },
+    {
+      "body": "（把手里的蒲扇往石墩上一搁，扇柄上还缠着半圈红布条）哎哟，巧儿，你爹那招我记着呢——退半步、压腕，可我这脚底下就是不听使唤，刚才第三格又踩偏了。说起来你三叔上回在晒谷场教我家老李，也是这么个说法，结果老李一压腕，把人家晾的七斤豆子全掀翻了，笑得满场人直不起腰。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 39,
+      "seq": 60052
+    },
+    {
+      "body": "（攥着半截粉笔，在青石板上又描了一道）兰姐，你这一说，我倒想起小满上回借我那半指宽的刨刀，还回来时刃口卷得跟月牙似的——他倒好，说是削竹篾削的。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 39,
+      "seq": 60090
+    },
+    {
+      "body": "小满，这锅汤我还得再煨七分钟，今天实在腾不出手——你上次说阿良那碗面咸了半勺，我记着呢，改天专门给你俩重做一锅。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 39,
+      "seq": 60097
+    },
+    {
+      "body": "小满，你摸摸这第三格里的干货，半指宽的厚薄我一眼就分得出好坏——上回老周拿这种货来糊弄我，我当场就给他退回去了，你要真想要，咱按这个数再商量。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 39,
+      "seq": 60104
+    },
+    {
+      "body": "（把锄头往墙根一靠，手在裤腿上蹭了蹭）秀娘，我拿两块就行——第三格那两块。老石家小子的事你记着，上回他帮我挑水，我也没顾上说声谢。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 40,
+      "seq": 60451
+    },
+    {
+      "body": "阿林，这块料还差半指宽，先别急——上回周公文那把椅子也是这么磨出来的。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 40,
+      "seq": 60534
+    },
+    {
+      "body": "（秀娘把刚出炉的桂花糕往柜台上一搁，腾出手来数了数蒸笼里还剩第三格）街坊们快来尝尝，趁热——哎，老周，上回你托我问陈医那副药的事，我还没顾上去呢。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 40,
+      "seq": 60678
+    },
+    {
+      "body": "（把戥子往柜台上一搁，秤盘里还压着七钱黄芪）老周，准话我给不了——药柜第三格空着，赊账本上你名字底下还挂着两笔。上回周公文来，说他媳妇咳得厉害，我照样先抓了药，钱的事一个字没提。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 40,
+      "seq": 60739
+    },
+    {
+      "body": "（把手里那截粉笔头在指间转了半圈，又低头看了看地上那半指深的剑痕）肚子叫归叫，第三式可没你这么大声。先别急着挂旗杆——你师娘上回蒸的那屉枣糕，还剩第三格没动过，练完这趟我给你拿两块。至于阿远，他上次偷你烧饼是不对，可你上回也把他的墨盒藏进了讲台抽屉，害他找了一整节课，这事我可还记着呢。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 40,
+      "seq": 60792
+    },
+    {
+      "body": "（把手里那截麻绳往柜台上一搁，绳头还差两指才够绕一圈）老石，你这话我可不认——上回量的是我，可尺子是小满递的，他那把木尺去年就磕掉一角，短了半分谁看得出来？",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 40,
+      "seq": 60875
+    },
+    {
+      "body": "兰姐，劳驾让让，我这第三格抽屉里的登记簿还差三页没核完——上回老石说陈医那份表填错了，我可不想再返工。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 40,
+      "seq": 60958
+    },
+    {
+      "body": "（把算盘翻过来，用指甲刮第三格珠子）月牙，账要平——我这算盘第三格还是差七钱。阿岚上回说帮你调琴，转头去给老周送茶，那半壶茶到现在也没还。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 40,
+      "seq": 61029
+    },
+    {
+      "body": "数着存钱罐里第三格那几枚硬币，我突然想起阿哲上次在咖啡馆弹错和弦还硬说那是即兴变奏——现在连这点破事都让我鼻子发酸，真是绷得太久了。",
+      "channel": "public",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 40,
+      "seq": 61074
+    },
+    {
+      "body": "兰姐，我手里这杆秤刚称过，第三格那批才七钱出头，您说的数我真拿不出——上回阿茂在码头也是被这么压的价，回来念叨了三天呢。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 40,
+      "seq": 61165
+    },
+    {
+      "body": "（把手里那杆秤往柜台上一搁，秤砣还晃）三文就三文，我不催。倒是上回赵木匠赊的那副锄头，说好三天给钱，拖到今儿都半个月了——你这药柜第三格，跟他一个毛病，光占地方不吐东西。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 40,
+      "seq": 61269
+    },
+    {
+      "body": "桂婶——您先别急着踩格，我这手里这把锉刀刚磨到第三下，刃口还差半指宽呢。您说压腕，我倒想起我师兄阿旺，上回在祠堂后头练，一压腕把自个儿裤腰带崩断了，蹲那儿半天不敢起来。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 40,
+      "seq": 61326
+    },
+    {
+      "body": "小满，这锅汤我多炖了七分钟，实在没法按你说的减盐——上回老陈就是嫌淡，自己又加了两勺酱油，结果咸得直灌水。今天先这样。改天吧。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 40,
+      "seq": 61377
+    },
+    {
+      "body": "（把秤盘往案上一搁，秤砣滑到第三格才停住）巧儿，你这话我信一半——小满那刨刀我见过，刃口是斜着卷的，削竹篾卷不出那模样，倒像是撬过什么硬东西。上回他借我摊上那把七钱的錾子，还回来时柄上多了道磕痕，他也说是\"不小心碰的\"。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 40,
+      "seq": 61444
+    },
+    {
+      "body": "老石，我这手里就剩七钱碎银了，再磨下去今晚连口热汤都喝不上——你说周公文那把椅子，他上回可是磨了整整三天，最后还不是照样被主顾压了两成价？",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 41,
+      "seq": 61676
+    },
+    {
+      "body": "桂婶：（弯腰把脚边那只豁了口的竹篮往旁边挪了挪，篮里还搁着半把没择完的韭菜）哎哟，你师兄那裤腰带——我听着都替他臊得慌！巧儿你先磨你的，我这第三格再试一回，这回我数着数儿来，一、二、退——（脚下一歪，赶紧扶住石墩）得，又偏了。说起来你二伯上回在河埠头练这个，一退步踩进水里，捞上来半只鞋，回家还嘴硬说是\"试水深\"。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 41,
+      "seq": 61779
+    },
+    {
+      "body": "（把手里那半袋复合肥往脚边一放，袋口扎着的麻绳松了半圈）陈医，我不赊。上回赵老四家买种，我借他三百，到现在没影。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 42,
+      "seq": 61917
+    },
+    {
+      "body": "阿林，你看我这刨子第三格刃口，刚磨到能刮汗毛——周公文那椅子最后压价，是他自己没等榫头干透就交货。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 42,
+      "seq": 61950
+    },
+    {
+      "body": "这半袋新米你收着，周公文——上回你帮老李修屋顶，他到现在还念叨呢。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 42,
+      "seq": 61967
+    },
+    {
+      "body": "（掀开蒸笼，白汽扑上来，我拿竹夹子数了数，还剩七块）老周，你拿第三格那两块，我再给你添半块——刚出炉的，边儿上那半块焦得正好。老石家小子的事我记着呢，上回他冒雨帮我搬面粉，裤脚全湿透了，我塞给他两个糖包他还推。你替我捎句话，就说秀娘这儿新试了枣泥酥，让他得空来尝。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 42,
+      "seq": 61998
+    },
+    {
+      "body": "（把戥子往药柜上一搁，秤盘里还留着七钱当归）赵木匠那副锄头，跟王婶上回赊的止咳散一个路数——说好三天，拖到入秋。我这第三格抽屉，锁都懒得上了，反正里头就剩半包陈皮。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 42,
+      "seq": 62017
+    },
+    {
+      "body": "（压低声音）小满，先别急着走——我手里这半截粉笔刚写到第三格，你上次问的那个问题，我后来跟隔壁班的老周聊过，他说他上回也卡在同一个地方，咱们明天课后一起再捋一遍，好吗？",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 42,
+      "seq": 62024
+    },
+    {
+      "body": "桂婶，我这手里这杆秤今早称出来差了三钱，心里直打鼓——上回老周那批货也是这么短了分量，后来闹得整条街都知道了。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 42,
+      "seq": 62071
+    },
+    {
+      "body": "阿林，这第三格账还差七钱，上回老周那笔也是这么对不上的。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 42,
+      "seq": 62119
+    },
+    {
+      "body": "金先生——（把吉他横在膝上，拇指按住第二弦第五品，那音总差半指宽才准）您这七钱我认，可阿岚那半壶茶，上回她替我调完琴，转头就给老周送去了，连我搁在窗台的那包新弦也顺手带走了两根。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 42,
+      "seq": 62126
+    },
+    {
+      "body": "（把搪瓷勺往锅沿一磕，磕出半指宽的缺口）行吧行吧，七分钟就七分钟——可老陈那回加酱油，是他自己手抖，赖不到盐头上。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 42,
+      "seq": 62165
+    },
+    {
+      "body": "（把铁钳往砧上一搁）周公文，这第三格炭我烧了半指宽的火候，你上回欠老李那笔账，也该像这铁一样趁热捋直了。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 42,
+      "seq": 62187
+    },
+    {
+      "body": "桂婶，您瞧我这第三格还没踩稳呢——阿旺上回就是在这儿摔的，膝盖青了半个月，见天儿跟我念叨“巧儿你可别学我”。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 42,
+      "seq": 62198
+    },
+    {
+      "body": "阿禾，这半勺陈皮是我自己晒的，你拿回去泡水喝——上次老周嫌我那道汤里陈皮放多了，我倒觉得他舌头太钝。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 42,
+      "seq": 62207
+    },
+    {
+      "body": "（把算盘往摊上一搁，珠子还停在“六”上没拨回去）小满，你别拿阿茂那回堵我——他那是湿货掺了水，我这第三格是干货，七钱出头我认，可你摸摸这成色。这样，我再让半指宽的利，你回去跟东家说，就说是兰姐的秤，亏不了他。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 42,
+      "seq": 62222
+    },
+    {
+      "body": "（把布袋口撑开，等她夹）七块就七块，我拿两块，那半块你留着卖。老石家小子我捎话——上回他帮我修过一回水泵，手都划破了也没要钱。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 43,
+      "seq": 62605
+    },
+    {
+      "body": "这块料我刨到半指宽了，金先生，上回老周托的那张八仙桌，我还没敢动。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 43,
+      "seq": 62708
+    },
+    {
+      "body": "五味，这半勺我收下——我手上这把锄头还差两指宽就磨到柄了，回头再弄。老周那人嘴刁，上回嫌你汤，这回怕是又要嫌我地里草多。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 43,
+      "seq": 62783
+    },
+    {
+      "body": "秀娘把刚出炉的第三格桂花糕往巧儿手里塞，笑着说：“趁热尝尝，你娘上回说爱吃甜的，我特意多放了一勺糖。”",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": true
+      },
+      "round": 43,
+      "seq": 62856
+    },
+    {
+      "body": "（把戥子往柜台上一搁，秤盘里那七钱柴胡还没倒进药斗）老周，我懂。赵老四那三百，上回他媳妇来抓安胎药，我这儿还挂着两副没结呢。你先坐，我给你倒口水——这药我称完再说。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 43,
+      "seq": 62961
+    },
+    {
+      "body": "小满，你看这半截粉笔——我刚讲到第三格黑板就断了，倒想起你哥上次说想旁听却总没来。先坐下吧。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 43,
+      "seq": 63012
+    },
+    {
+      "body": "金先生，您看我这算盘珠子——第三格上还卡着半颗，拨都拨不动。七钱的事我记着呢，跟老周上回那笔一个样，他当时也是差七钱，后来在码头卸货时自己念叨出来的，说是给家里婆娘抓药挪了去。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 43,
+      "seq": 63119
+    },
+    {
+      "body": "（把第七格抽屉里的账册抽出来，指尖按在封皮上）铁头，账目的事得按流程走，差三分钟就到申时，我得先去把老李上回那笔登记归档。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 43,
+      "seq": 63224
+    },
+    {
+      "body": "（把算盘往桌上一搁，第三档的珠子还卡着没归位）账要平。阿岚那半壶茶，记她名下；老周上回借我两吊钱，也还没销。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 43,
+      "seq": 63329
+    },
+    {
+      "body": "（把吉他拨片在指间转了半圈）老石，你上次说阿良在礼堂唱到第三首就哭了——我现在连半首歌都撑不住，这拨片都快被我捏出汗了。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 43,
+      "seq": 63432
+    },
+    {
+      "body": "（把手里那杆小秤往摊上一放，秤钩还晃着）兰姐，半指宽我记下了——可我这秤钩上还挂着阿茂上回那包湿货的账呢，他到现在见我都绕道走。您这第三格，我回去照实说，成不成看东家。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 43,
+      "seq": 63479
+    },
+    {
+      "body": "阿林啊，你先别慌，我这手里正攥着半把刚择的韭菜呢，听你这么一说，我倒想起上回老周那事——他那秤也是差了三钱，后来才知道是秤砣底下沾了泥。你先把秤盘翻过来看看，秤砣底下干净不干净？",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 43,
+      "seq": 63584
+    },
+    {
+      "body": "（把铁钳往砧子上一磕，火星子溅到半指宽的围裙上）陈皮留着吧，我这儿还欠着李屠户两把菜刀没打——上回他赊我三斤铁，说杀完年猪就还，猪都成腊肉了。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 43,
+      "seq": 63637
+    },
+    {
+      "body": "（把缺了口的搪瓷勺捞起来，对着灶台上那盏灯照了照，缺口里还卡着半粒米）七分钟是七分钟，可你上回给老陈留的那碗汤，他端回去热了三遍——第三遍的时候，他媳妇在门口喊他，他都没听见。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 43,
+      "seq": 63783
+    },
+    {
+      "body": "阿禾，你摸摸这匹布，半指宽的边都没毛，我一眼就晓得是好货——上回老周来我摊上还嫌贵，结果转头在别家买亏了，你可别学他。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 43,
+      "seq": 63856
+    },
+    {
+      "body": "阿禾，这米我不能收——我手上这本登记簿翻到第三格，写的就是老李上回送我的那袋，已经记在册上了。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 44,
+      "seq": 64347
+    },
+    {
+      "body": "（捏着第三格桂花糕，指尖沾了点糖霜）秀娘你这糖放得——我娘要是在，准得说“比老石上回打的那把歪嘴壶还甜”。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 44,
+      "seq": 64588
+    },
+    {
+      "body": "（没坐，手搭在门框上，指节敲了两下）不坐了。我那三亩半的稻子还泡在水里，等不起。赵老四上回借我半袋尿素，说秋后还，到现在连个影儿都没有。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 45,
+      "seq": 64790
+    },
+    {
+      "body": "（用刨子推过木料，刨花卷到第三圈才断）阿良那回是唱到《渡口》才哭的。你这才半首，急什么。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 45,
+      "seq": 65672
+    },
+    {
+      "body": "周公文，这米袋口我扎了两道绳，你解开看看——里头就三升，跟老李上回那袋一样多，他上回也是硬塞，你记了册，这回也记上吧。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 45,
+      "seq": 66596
+    },
+    {
+      "body": "秀娘把蒸笼最上头那格掀开一条缝，白汽扑了她满脸，她拿围裙角擦了擦手：“你娘那张嘴，比我这笼屉还利。上回老石来买桃酥，非说我少给他称了半钱，我当场把秤杆子怼到他鼻子底下——他倒好，转头就跟你娘学舌去了。”",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": true
+      },
+      "round": 45,
+      "seq": 67434
+    },
+    {
+      "body": "铁头，陈皮你收着吧，我这药柜第三格还空着，正好搁它。李屠户那两把菜刀你慢慢打，上回他媳妇来我这儿抓安胎药，钱也是赊的，说等猪出栏一并还——我看这腊肉都挂上了，账还悬着呢。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 45,
+      "seq": 68372
+    },
+    {
+      "body": "桂婶，我翻过来看了，秤砣底下倒是干净，可秤杆上第三格那道刻度磨得发白，我拿指甲一刮，竟刮下半指宽的铜屑来。你说这秤还能信吗？我倒是想起上回在渡口碰见的老赵，他那批货也是秤上出了岔子，后来一查，是隔壁铺子的人趁他打盹动了手脚。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 45,
+      "seq": 70105
+    },
+    {
+      "body": "（拨了拨算盘）七钱就是七钱，账要平。老周那回是挪去抓药，可后来补上了——你这半颗珠子，打算什么时候归位？",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 45,
+      "seq": 71857
+    },
+    {
+      "body": "（把筷子倒过来，用方的那头在桌面上敲了两下）哎哟，那碗汤是第三遍才咸的嘛——老陈自己说的。对了，你记得阿茂不？上回他借我半块橡皮，到现在还没还，我都不好意思提。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 45,
+      "seq": 73703
+    },
+    {
+      "body": "（把手里那半截铁钉往砧上一搁）周公文，你忙你的。我就问一句——上回赵瘸子那批锄头钱，到底记在哪一页？",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 45,
+      "seq": 75469
+    },
+    {
+      "body": "阿禾，你这话说得——我手上这勺还沾着第七味呢，刚尝了半口，咸淡还没定。老周上回嫌我汤淡，这回我倒要让他尝尝什么叫\"淡出鸟来\"。你那锄头别急着磨，先帮我把这锅端过去，他要是再挑，我就说是你地里草多，把味儿都吸走了。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 45,
+      "seq": 77264
+    },
+    {
+      "body": "（把算盘往膝上一搁，指头还搭在第三格珠上）阿茂那包湿货，我上礼拜在码头就闻出霉味了，他自己心里没数？——你先别管他绕不绕道，回去跟东家说，第三格我让到七钱，再多一文我宁可这摊子今天不开张。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 45,
+      "seq": 78044
+    },
+    {
+      "body": "五味，我这锄头把上还缠着三圈麻绳，松不得。老周上回嫌你汤淡，那是他自个儿舌苔厚，跟我的草没关系。你先端过去，我磨完这半指宽就过去。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 46,
+      "seq": 80018
+    },
+    {
+      "body": "（把戥子往柜台上一搁，七钱柴胡的包纸压住）尿素的事我插不上嘴，可你这话让我想起上个月李木匠——他也是急着下地，脚上那道口子没换药就走了，后来肿得穿不进鞋，半夜来敲我的门。你先把雨靴脱了，我看看你脚。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 46,
+      "seq": 80356
+    },
+    {
+      "body": "（把袖口里那半颗珠子捏出来，在指腹上转了半圈）金先生，您看这缺口，正好差半指宽——我今早数过三遍，还是对不上。老周上回挪去抓药，那是救命，我这回是……（压低声音）昨儿在茶棚听人说，镇东头那批货的账，有人动过手脚。您说，这珠子该不该先搁您这儿？",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 46,
+      "seq": 80704
+    },
+    {
+      "body": "铁头，我这第三格抽屉里还压着赵瘸子上月的收据存根，差两页没归档。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 46,
+      "seq": 80885
+    },
+    {
+      "body": "（把吉他横在膝上，手指卡在第三品，没按下去）我不是急，是这歌它自己往下沉——老石，你说阿良那次哭完，第二天还来不来？我这弦都松了半圈了，再唱下去怕是要断在这儿。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 46,
+      "seq": 81249
+    },
+    {
+      "body": "（把手里那半块橡皮翻了个面，上面还粘着两粒芝麻大的屑）兰姐，七钱我记下了——可阿茂上回在祠堂后头也是这么拍胸脯的，结果呢？我这儿还差三分钟上课，你先给我句准话，我好跑。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 46,
+      "seq": 81433
+    },
+    {
+      "body": "阿林啊，你先别急，我这会儿正攥着把蒲扇，扇骨上还缠着半截红绳呢——你听婶说，秤杆上那点铜屑，刮下来也就半指宽，可人心要是歪了，那才叫没得量。你提老赵，我倒想起上回桂香她男人在集上买豆子，也是秤上吃了暗亏，后来还是老赵帮着找补回来的。要不这样，明儿你跟我一道去趟渡口，找老赵问问那秤是打哪儿修的，咱心里也好有个数。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 46,
+      "seq": 81606
+    },
+    {
+      "body": "（把半指宽的錾子往砧上一搁）陈皮你留着吧，我灶上还煨着李屠户那两把刀的钢，火候差三分钟就得回炉——他上回赊你药钱，这回又赊我工钱，猪出栏？我看悬。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 46,
+      "seq": 81781
+    },
+    {
+      "body": "（把桂花糕翻了个面，露出底下焦黄那层）七钱？我娘才懒得管秤——她上回是气老石拿我打的铜簪子去换酒，簪头那朵梅花我錾了整三天呢。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 46,
+      "seq": 81968
+    },
+    {
+      "body": "（把灶台上那口铁锅端下来，锅底还粘着半指宽的焦痕）阿茂啊……他上回借我那把斩骨刀，说是剁排骨，结果刀口卷了三处，还回来的时候连句软话都没有。小满，你说这半块橡皮的事，我懂——可我这刀，比橡皮沉多了。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 46,
+      "seq": 82149
+    },
+    {
+      "body": "（把刨子倒过来，用木柄敲了敲凳腿）弦松半圈就换，别硬撑。阿良哭完第二天没来，隔了三天才来，手里拎着半瓶酒。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 47,
+      "seq": 82797
+    },
+    {
+      "body": "秀娘把蒸笼盖“啪”地扣回去，白汽从缝里挤出来，像叹气似的：“三天？我信。你娘那手，连我灶上第三格的火候都挑得出毛病——上回她来，非说我给老石留的那炉桃酥多烤了半指宽，硬是拿回去喂了她家那只八哥。”",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": true
+      },
+      "round": 47,
+      "seq": 82971
+    },
+    {
+      "body": "（把米袋往桌角一推，露出册子第三格）阿禾，这袋先搁着——老李上回那三升，我记的是“暂存”，不是“收受”，得等他本人来签字。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 47,
+      "seq": 83292
+    },
+    {
+      "body": "（把算盘往桌上一扣）第三格抽屉里那本旧账，老周上回也翻过——他补的是药钱，不是珠子。你这半颗，先搁我这儿，等账平了再说。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 47,
+      "seq": 83375
+    },
+    {
+      "body": "（攥着锄头把，指节发白）铁头，这第三下我使不上劲了——上回老李头就是闪了腰，躺了半个月。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 48,
+      "seq": 84353
+    },
+    {
+      "body": "这块榫头还差半指宽，老陈上次就是没留神才把整块板子废了。",
+      "channel": "public",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 48,
+      "seq": 84458
+    },
+    {
+      "body": "（用拇指抹平册子第三格边上的毛刺）周叔，我这袋是七升，跟老李那三升不一样——他上回是借去救急的，说好秋后还。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 48,
+      "seq": 84569
+    },
+    {
+      "body": "（秀娘把擀面杖在案板边磕了两下，盯着烤箱上“还差三分钟”的红灯）哎，老周上回说我那炉桃酥火候过了半指宽，我今儿偏要守着这第三格再试一回。",
+      "channel": "public",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 48,
+      "seq": 84669
+    },
+    {
+      "body": "（把第三格药柜的抽屉推回去，指节在木沿上停了一下）老周上回咳成那样还硬撑着去下地，我到现在想起来都不踏实——这镇上的病，一半是累出来的。",
+      "channel": "public",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 48,
+      "seq": 84754
+    },
+    {
+      "body": "（方老师把木剑横在身前，剑尖离地约两指宽）兰姐，先别急着发力——你瞧我这剑柄上缠的第三圈布条都松了，就像上次小周练劈砍时那样，一急就散了架。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 48,
+      "seq": 84845
+    },
+    {
+      "body": "阿林：（把那半颗珠子搁在算盘边上，又用食指点了点第三格抽屉的铜环）金先生，您这话我记下了。不过我还想问一句——老周上回补药钱，是七钱三分，账上写的是七钱，那三分他自个儿垫的。这回镇东头那批货，差的可不止三分。您说，我要是先去问问老周，他肯不肯再垫一回？",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 48,
+      "seq": 84940
+    },
+    {
+      "body": "月牙：（把变调夹从琴颈上摘下来，在掌心掂了掂，又卡回第五格）半瓶酒——他倒是记得带酒，不记得带谱。老石，我这儿差两格就唱不上去了，你说他隔三天来，是来还琴，还是来还那句话？",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 48,
+      "seq": 85210
+    },
+    {
+      "body": "（把手里那截粉笔头在指间转了个圈，只剩两厘米长了）五味叔，你那刀是沉，可我这橡皮才半块——阿茂上回借我笔记，还回来时第三页上全是油点子，我也没吭声呀。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 48,
+      "seq": 85311
+    },
+    {
+      "body": "（把火钳往砧子上一磕）周公文，我这炉火还差半指宽没烧透，你先把那两页找齐。赵瘸子上回欠我三把镰刀钱，到现在没影。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 48,
+      "seq": 85506
+    },
+    {
+      "body": "巧儿：（用指甲刮着铜簪尾那点没磨平的毛刺）半指宽？我娘那八哥现在肥得连笼门都挤不出了——上回老石来赔罪，拎了二两桃酥，全让那鸟啄了去，他蹲在门槛上啃了半块碎渣，还说“比酒香”。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 48,
+      "seq": 85596
+    },
+    {
+      "body": "（把砂锅盖掀开一条缝，白汽扑上来，我拿指背蹭了蹭锅沿）阿禾，你这话说得——我汤淡不淡，我自己心里有数，可老周上回喝完那碗，转头就跟人说我“手艺飘”，这话传到我耳朵里，比汤咸还难受。你先别管我，我这锅还差七分钟，等我把这撮枸杞撒下去，就端过去。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 48,
+      "seq": 85711
+    },
+    {
+      "body": "铁头，这锄头把儿裂了半指宽，攥着不踏实——上回老李头就是没修，抡下去闪了腰。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 49,
+      "seq": 86043
+    },
+    {
+      "body": "老石：（用拇指刮了刮刨刃，刃口上缺了半粒米大的口子）还琴。他上次把琴搁在第三格架子上，弦都没松。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 49,
+      "seq": 86101
+    },
+    {
+      "body": "（我把手里的竹筛往灶台边一搁，筛眼里还卡着三粒枸杞）五味，老周那嘴你又不是头回领教——上回分地界，他把我家半垄说成他的，还是你替我去说的。汤你按自己方子来，别为他改。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 49,
+      "seq": 86179
+    },
+    {
+      "body": "哎，街坊——你瞧我这第三格烤盘里的桂花糕还差两分钟就好，火候我盯着呢；上回老周来买桃酥，非说甜了半钱，这回我少搁了糖，等他再来尝尝看。",
+      "channel": "public",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 49,
+      "seq": 86265
+    },
+    {
+      "body": "老周啊，这第三格抽屉里的甘草片我数了两遍还是差七钱，上回你拿药时我就说该补货了。",
+      "channel": "public",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 49,
+      "seq": 86337
+    },
+    {
+      "body": "兰姐，我这根教鞭还差三寸就够到靶心了——上次小陈握它时手抖得厉害，我总记着；先稳住呼吸。别急。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 49,
+      "seq": 86403
+    },
+    {
+      "body": "（从第三格抽屉里抽出两张泛黄的登记表）铁头，赵瘸子那三把镰刀钱，账上记的是去年腊月十七。我这儿还差半指宽的印泥没盖，你先别催。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 49,
+      "seq": 86509
+    },
+    {
+      "body": "（把吉他拨片在指间转了半圈）老石，你说意义这东西……我昨天在咖啡馆唱到第三首时突然想起阿凯，他上次在这儿摔了杯子说要去大理找答案，结果现在朋友圈天天发狗。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 49,
+      "seq": 86651
+    },
+    {
+      "body": "（把铁锤往砧上一搁，震得火星子跳）使不上就歇，别学老李头硬撑——他上回就是第三下没稳住，腰闪了。我这锤子都比你沉，急啥。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 49,
+      "seq": 86845
+    },
+    {
+      "body": "（攥着半截磨秃的锉刀）月牙姐，这第三格榫头我总差半指宽——上回老石还骂我手比脑子快呢。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 49,
+      "seq": 86925
+    },
+    {
+      "body": "（兰姐把手里那杆秤往摊边一搁，秤砣晃了两下才稳住）方老师，你说得在理——我这秤杆子用了七年，第三格刻度都磨浅了，可称东西从没差过半钱。小周那回劈砍散了架，不就是急着想赢你手里那把木剑么？我今儿也不急，先把这口气匀了再说。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 49,
+      "seq": 87039
+    },
+    {
+      "body": "（用食指压住登记簿上第三格，笔尖悬着）阿禾，七升我照记，可老李上回那三升还空着——他秋后没来，我这格子就销不掉。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 50,
+      "seq": 87234
+    },
+    {
+      "body": "方老师，你这话我听着——我手上这杆秤刚称完第三筐笋干，秤砣还差半指宽才压平，心里就跟着晃。小陈上回握教鞭那手抖，我记着呢，他娘还来我摊上买过两斤红枣，说孩子夜里睡不着。你说稳住呼吸，我这摊子从早市摆到日头偏西，气是稳的，就是这心啊，跟秤杆一样，总想再准一点。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 50,
+      "seq": 87377
+    },
+    {
+      "body": "（把锄头往地上一杵，手在裤腿上蹭了蹭）歇不得，日头还差两指高，这块地得翻完。老李头那是逞能，我跟他不一样。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 51,
+      "seq": 87454
+    },
+    {
+      "body": "（用刨子推过木料，刨花卷到第三圈才断）阿凯那小子，上次来我这儿借走一把凿子，说去大理前还，现在凿子还在我抽屉里。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 51,
+      "seq": 87465
+    },
+    {
+      "body": "存折上还差三千七才够修屋顶，老周上回借的八百也没还。",
+      "channel": "public",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 51,
+      "seq": 87482
+    },
+    {
+      "body": "（把第三格抽屉里的零钱又数了一遍）唉，攒了这么久还是差三成，等老周下次来买桂花糕，我得问问他上回说的那个理财门道到底靠不靠谱。",
+      "channel": "public",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 51,
+      "seq": 87508
+    },
+    {
+      "body": "（把第三格抽屉里的账本合上，指节在封皮上按了按）老周上回赊的那七钱药钱还空着，可我这会儿只想把听诊器搁下，去河边坐坐。",
+      "channel": "public",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 51,
+      "seq": 87527
+    },
+    {
+      "body": "方老师：兰姐，你这话我懂——我这教鞭尾上缠的布条，数到第七圈才勉强不打滑，跟你的秤砣一样，差半指宽心里就不落底。小陈上回握它手抖，我后来让他先练空手画圈，一圈一圈地数，数到二十才敢碰靶。他娘那两斤红枣，你替我留半斤，我下学去取，顺便看看他夜里还醒不醒。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 51,
+      "seq": 87544
+    },
+    {
+      "body": "（阿林把算盘往柜台上一搁，指头还搭在第三格上）老石，你听说了没——上回五味在邻镇赊出去的那批货，到现在还差七钱没结清呢。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 51,
+      "seq": 87553
+    },
+    {
+      "body": "算盘第三格还差七钱才平，五味，你让老周上回那笔烂账先搁着，我得先顾眼前。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 51,
+      "seq": 87571
+    },
+    {
+      "body": "（把吉他横在膝上，指尖按住第三弦第二格）差半指宽？我这儿也差半音呢——你听，这根弦怎么调都闷着。老石上回在咖啡馆门口说我唱歌像锯木头，我记到现在。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 51,
+      "seq": 87600
+    },
+    {
+      "body": "（把锤子往砧上一搁）裂半指宽还抡？老李头上回就是舍不得换，躺了半个月。你这把先放这儿，我手头还有三把镰刀没打完。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 51,
+      "seq": 87643
+    },
+    {
+      "body": "存折上还差三千二才够盘下那间铺面，我捏着这张薄纸在柜台前站了半天——老周上回借我那五百，说是月底还，这都第三个月了，我也不好意思开口。",
+      "channel": "public",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 51,
+      "seq": 87661
+    },
+    {
+      "body": "巧儿，这第三格的干货我按七钱给你抹了零，你回去跟阿旺说一声——上回他拿的那批菌子还欠我两文呢。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 51,
+      "seq": 87674
+    },
+    {
+      "body": "（把镰刀往砧边一靠）七钱铁，够打把新的了。老李头那事我记着，可他上回是硬撑，我不撑。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 52,
+      "seq": 88036
+    },
+    {
+      "body": "（老石用刨子推过一块榆木板，刨花卷到半指宽才停）五味那人，上回给赵家打柜子，榫头都留歪了。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 52,
+      "seq": 88117
+    },
+    {
+      "body": "存折上还差三千七，老李上回借的化肥钱也没还。先不歇了。",
+      "channel": "public",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 52,
+      "seq": 88206
+    },
+    {
+      "body": "街坊早啊，我正数着第三格抽屉里那沓零钱，想着上回老周说想学做桃酥，等攒够这月的面粉钱就叫他来试一炉。",
+      "channel": "public",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 52,
+      "seq": 88309
+    },
+    {
+      "body": "老周啊，我这第三格抽屉里还压着他上次赊的七钱药钱没结，可眼下连给自己抓副安神的方子都舍不得。",
+      "channel": "public",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 52,
+      "seq": 88398
+    },
+    {
+      "body": "存折上这个月只剩第三格没填满了，可我一想到小陈上次说“老师，您也该歇歇了”，就还是把笔搁下了。",
+      "channel": "public",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 52,
+      "seq": 88491
+    },
+    {
+      "body": "（阿林把秤杆往柜台上一搁，指着秤星）老石，这半斤盐我按七钱算给你——上回五味赊的那包糖还差三文没清呢，你可别学他。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 52,
+      "seq": 88568
+    },
+    {
+      "body": "五味，算盘第三格珠子卡住了，这账差七钱平不了——上回老周那笔也是这么卡住的。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 52,
+      "seq": 88690
+    },
+    {
+      "body": "（把吉他横在膝上，手指按住第三格，没弹）老石，凿子这事你跟我说过两回了。阿凯那人……上次在咖啡馆，他说要给我录一段 demo，结果人没来，琴盒里倒是多了他半包烟。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 52,
+      "seq": 88761
+    },
+    {
+      "body": "（把铁钳往砧上一搁，钳口还夹着半截红铁）你这话我信。可老李头上回也是这么说的，结果腰闪了，躺了整七天。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 52,
+      "seq": 88948
+    },
+    {
+      "body": "（捏着半指宽的竹片）兰姐，七钱就七钱吧——不过阿旺那两文，上回他拿菌子时我就说别赊，他偏说“下月准还”，您看这都第三个月了。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 52,
+      "seq": 89005
+    },
+    {
+      "body": "金先生，我这灶上还温着半锅汤，火候差两分就过了——您那七钱的事，我懂，可老周上回赊的那三碗面，账本上还空着呢。要不这样，您先让我把这锅汤出了，回头我陪您一块儿把那第三格算清楚？",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 52,
+      "seq": 89096
+    },
+    {
+      "body": "方老师，你等我把这半指宽的秤砣先压平——七钱，不多不少，正好。我这心里就踏实了半格。你说稳住呼吸，我倒想起老周家那小子，上回在集口跟人比划，一膀子撞翻我两筐鸡蛋，赔钱时手也是抖的，跟他爹当年一个样。练归练，可别练出一身火气来，回头连自家摊子都认不清。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 52,
+      "seq": 89159
+    },
+    {
+      "body": "（用锉刀背敲了敲桌沿，第七下才停）锯木头怎么了，我锯的木头还能拼成鸟呢。老石上回把我做的木鸟说成“柴火垛子”，我记他到现在。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 53,
+      "seq": 89571
+    },
+    {
+      "body": "（把锄头往地上一杵，泥还没干）铁头，我这把老骨头还抡得动。倒是老李，上回逞能，闪了腰，七天下不了地。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 54,
+      "seq": 89720
+    },
+    {
+      "body": "（用拇指刮了刮刨刃上的木屑，差半指宽没磨平）阿凯那半包烟，上回还搁我窗台上。你要学，先看这刨子怎么走。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 54,
+      "seq": 89739
+    },
+    {
+      "body": "陈医，这半篮鸡蛋你收着——上回老周家娃发烧，你连夜跑了一趟，我记着呢。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 54,
+      "seq": 89772
+    },
+    {
+      "body": "（把第三格药柜的抽屉推回去）桂婶，您这咳嗽我听着比上次轻些了——上回老周家小子发烧，您还帮着熬姜汤，这回可别自己硬扛。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 54,
+      "seq": 89847
+    },
+    {
+      "body": "兰姐，你这话我记下了。我先把这半截粉笔搁回盒里——就剩这么一小段，捏着都硌手了。练拳脚是练个分寸，不是练火气，你说得对。倒让我想起小柱子，上回在操场跟人推搡，把人家书包带扯断了，事后自己蹲在墙根抹眼泪，我陪他数了三十下呼吸才缓过来。孩子都懂这个理，咱们大人更得稳住。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 54,
+      "seq": 89891
+    },
+    {
+      "body": "（阿林把手里那杆秤往柜台上一搁，秤砣滑到七钱的位置才停）老石，榫头歪不歪我倒看不准，可五味上回给李家修那扇门，门轴装得偏了半指，李婶推了三天就骂街了。你说这回赵家那柜子，他敢收几个钱？",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 54,
+      "seq": 89910
+    },
+    {
+      "body": "（低声）老石，差三分钟就下班了，这第三格抽屉里的文件我还没归档——上次老陈就是漏了这份，被上面查了半个月。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 54,
+      "seq": 89917
+    },
+    {
+      "body": "五味，我这算盘上第三格还差七钱才平——老周上回那三碗面，你当我忘了？汤你先出，但账得今晚对。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 54,
+      "seq": 89940
+    },
+    {
+      "body": "巧儿，你这话说得——我手里这杯咖啡都凉了半指宽了，还在这儿听你翻老石的旧账。他上回在礼堂后台，非说我那首《月牙》唱得像“猫叫春”，我到现在都没原谅他。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 54,
+      "seq": 89953
+    },
+    {
+      "body": "（摆弄着半截粉笔）月牙，你说阿禾上次借我的那本《远方》到底什么时候还啊？我都快把第三页翻烂了。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 54,
+      "seq": 89960
+    },
+    {
+      "body": "（把火钳往水桶里一戳，滋一声）七钱铁我记着。老李头上回是硬撑，结果躺了半个月——这回我不撑，先练三口气再说。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 54,
+      "seq": 89986
+    },
+    {
+      "body": "（捏着半指宽的铜片）秀娘，你瞧这第三格——老石上次说“废料别扔”，我偏留了，现在倒成小雀的翅膀了。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 54,
+      "seq": 89995
+    },
+    {
+      "body": "金先生，您先别急——我这儿正拿筷子尖儿拨那第三格珠子呢，油还没擦干净，滑得很。差七钱就七钱吧，上回老周那笔不也是差七钱？他后来拎了半坛子黄酒来抵，说下回补上，结果下回又差七钱。我看这算盘不是珠子卡，是咱们心里那杆秤卡。要不这样，这七钱我先从灶上那锅红烧肉的账里挪一挪，等老周来了，咱仨当面把酒和账一块儿清了。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 54,
+      "seq": 90036
+    },
+    {
+      "body": "（把算盘往膝头一搁，指头还搭在第三格上）七钱我认了，可阿旺那两文不能算我头上——上回他赊菌子，我就说“月底清”，他倒好，转头又跟老周借了半吊。你要提他，先让他把老周那半吊还了，再来跟我掰扯这两文。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 54,
+      "seq": 90045
+    },
+    {
+      "body": "（把锄头往田埂上一插，泥还没干）三口气我信。上回老李头就是没数，硬撑到第七下，躺了半个月。",
+      "channel": "dm",
+      "from": "P001",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 55,
+      "seq": 90433
+    },
+    {
+      "body": "（用刨子压住木料，没抬头）差三分钟，也够我把这半指宽的边刨直。老陈上回就是急着走，榫头歪了，返工三天。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 55,
+      "seq": 90554
+    },
+    {
+      "body": "陈医，这半篮鸡蛋你收下，上次老周腰疼你连夜来扎针，我记着。别推了。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 55,
+      "seq": 90671
+    },
+    {
+      "body": "（把擀面杖往案板上一搁，指节上还沾着半圈面粉）巧儿你这手真巧——我这儿刚数到第七个剂子，就听见你说小雀翅膀。老石那人嘴硬心软，上回还嫌我烤糊了一炉桃酥，转头自己揣了两块走。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 55,
+      "seq": 90792
+    },
+    {
+      "body": "阿禾，鸡蛋你拿回去给娃吃——我这药柜第三格还空着，等会儿得去镇上补几味药。老周家那事不算什么，倒是他媳妇上回送来的那包红枣，我到现在还没拆呢。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 55,
+      "seq": 90837
+    },
+    {
+      "body": "阿林，先别急着走——我手上这半截粉笔还剩两指宽，正好够我在黑板上给你画完第三格的辅助线；你上次问的那个问题，比小周上回在课堂上提的还细，我记着呢。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 55,
+      "seq": 90958
+    },
+    {
+      "body": "小满，你瞧我这第三格货箱里还压着七钱碎银——上回老周托我带的茶砖钱，他倒好，人没来，钱先在我这儿躺了半个月。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 55,
+      "seq": 91017
+    },
+    {
+      "body": "老石，这份卷宗还差三页才齐，我得先锁进第三格柜子——上回小赵漏放一页，害我补了半宿。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 55,
+      "seq": 91134
+    },
+    {
+      "body": "五味，你这话说得轻巧。我手里这支笔，笔尖都磨秃了半截，账上还是差七钱。挪红烧肉的账？那锅肉是给伙计们吃的，动了它，月底又得从别处补。老周上回那半坛黄酒，我记着呢，坛子底还刻着「周」字，可酒钱折下来只值四钱三。账要平。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 55,
+      "seq": 91187
+    },
+    {
+      "body": "（用拨片轻轻刮着吉他第三格的品丝）小满，你先别催阿禾了……他上次在咖啡馆唱完那首《远方》之后，整个人就不对劲，说要去北边找什么“真正的回声”。（叹气）我这琴弦都松了半指宽，也没心思调。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 55,
+      "seq": 91250
+    },
+    {
+      "body": "月牙，我这第三格铅笔盒里还塞着阿良上次借我的橡皮，他倒好，人跑县城去了也不说一声。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 55,
+      "seq": 91367
+    },
+    {
+      "body": "（把手里的搪瓷缸往柜台上一搁，缸底磕出闷闷一声）陈医您别夸我，我这人就是闲不住。这缸子还是上回老周家小子退烧那天落我家的，我寻思着给他送回去，顺道问问他还咳不咳。您说这药我抓几副？家里灶上还炖着萝卜，我掐着点儿回去，别糊了锅。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 55,
+      "seq": 91484
+    },
+    {
+      "body": "（把铁钳往砧上一搁，火星子溅了半指高）老李那腰，是第三回了吧。上回他还非跟我比划，说年轻时能扛两百斤谷子。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 55,
+      "seq": 91537
+    },
+    {
+      "body": "（把手里那截半指宽的竹篾翻了个面）兰姐，阿旺那两文我先垫上——上回他给我捎的菌子，我晒干了还搁在灶头第三格呢，算我欠他的。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 55,
+      "seq": 91600
+    },
+    {
+      "body": "金先生，您看我这灶上还温着半锅汤，勺柄上沾着三粒花椒——我数着呢。老周那三碗面，上回他吃完抹嘴说“下回补”，结果人跑去帮李婶修屋顶了，您说他这账是记他头上还是记李婶头上？汤我出，但今晚对账，您得容我把这半锅先分完，不然凉了，味儿就散了。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 55,
+      "seq": 91719
+    },
+    {
+      "body": "方老师，你这话我听着心里也松了半截。我这儿正把秤盘上那七钱多的碎茶叶往纸包里归拢，手一抖就撒了几片——你看，急不得。说到小柱子，我倒想起我家那口子他弟，上回在集上跟人争摊位，脸红脖子粗的，最后还不是我拉着他数了二十来个数才消停。练拳脚也好，过日子也好，先得把自个儿那口气捋顺了。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 55,
+      "seq": 91838
+    },
+    {
+      "body": "（用刨子压住木料，拇指量了量）差半指宽。小赵上回也是，榫头没对齐就交活。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 57,
+      "seq": 93930
+    },
+    {
+      "body": "陈医，这篮鸡蛋你收着，我数了，正好十二个。老周家那事……他上回借我半袋种子还没还。鸡蛋你留着。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 57,
+      "seq": 95228
+    },
+    {
+      "body": "（把戥子往柜台上一放，秤盘里还压着七钱柴胡）先别急着走，桂婶。老周家小子那咳嗽我记着呢，上回退烧是退了，可夜里还咳了两声，他娘没当回事。您这药抓三副，我给您包好——顺道替我捎句话，让他再来听一回，别拖成慢的。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 57,
+      "seq": 97661
+    },
+    {
+      "body": "方老师，您这半截粉笔先别搁下——我手里这杆秤今早刚称过，七钱盐、三两糖，账本上第三行还差个尾数没对上。您上回说小周在课堂上把“whisper”听成“weather”，我这两天走货路过茶棚，又听人提了一嘴，心里更痒了。",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 57,
+      "seq": 100101
+    },
+    {
+      "body": "（把文件夹往腋下夹紧，看了眼墙上的挂钟）差两分钟到五点，我还得把这份编号第七格的卷宗归档。老陈上回就是踩着点交，结果漏了签字页，被退回来重跑一趟。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 57,
+      "seq": 101263
+    },
+    {
+      "body": "（拨着算盘，第三格珠子卡了一下）账要平。老周那三碗面记他头上，李婶修屋顶另算——上回他帮王木匠搬料，也是这么糊过去的。你这半锅汤，先分，我等你。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 57,
+      "seq": 102480
+    },
+    {
+      "body": "（把吉他横在膝上，手指按住第三根弦，没弹）阿良那人就这样，上次说好来听我唱《月牙湾》，结果人没到，倒托人捎了半包烟给我。小满，你说这算什么意思。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 57,
+      "seq": 103799
+    },
+    {
+      "body": "月牙，你琴弦松了半指宽，我这铅笔也快秃了——刚在作业本背面画了三条去北边的路线。阿禾那家伙，上次在咖啡馆把《远方》唱破音了还嘴硬，说“破音才是真回声”。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 57,
+      "seq": 105056
+    },
+    {
+      "body": "老周，我这锤柄裂了半指宽，得换。老李头那事我记着——他上次非要跟人比划，结果第七下就趴了。",
+      "channel": "dm",
+      "from": "P013",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 57,
+      "seq": 107558
+    },
+    {
+      "body": "（用镊子夹起第三格里的铜丝，绕成个小圈）秀娘你瞧，这圈儿刚好能套住小雀的脚——老石上回还骂我糟蹋料子，结果自己偷偷拿我做的铜蜻蜓去哄隔壁阿宝了。",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 57,
+      "seq": 108717
+    },
+    {
+      "body": "金先生，您看我这把刀——刀背都磨出凹槽了，半指宽。我拿它切了三年菜，没换过。您说差七钱，我灶上那坛酱正好是七钱银子买来的，上个月老周帮我从镇上捎的，他当时还念叨说这酱比他家黄酒值。要不这样，酱先抵上，账平了，回头我拿新菜抵他酒钱——他上回那半坛，我记着，坛底那个「周」字还是我帮他刻的。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 57,
+      "seq": 109912
+    },
+    {
+      "body": "（把秤杆往案上一搁，秤砣晃了两晃才停）巧儿，你这话说得轻巧——两文钱的事，你垫了，回头阿旺记的是你的人情，不是我的。上回他赊我那半斤干笋，说三天还，到今天整二十一天了，我账本上还挂着呢。你要真替他垫，那就连这半斤笋一起算，四文七钱，抹个零头，四文半，你拿得出来我就收。",
+      "channel": "dm",
+      "from": "P016",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 57,
+      "seq": 111084
+    },
+    {
+      "body": "（用拇指抹了抹刨刃上的木屑，没抬头）差三分钟。你先去，我把这块榫头修完——上回老陈就是催我收工，结果卯眼偏了半指，返工到天黑。",
+      "channel": "dm",
+      "from": "P002",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 58,
+      "seq": 113103
+    },
+    {
+      "body": "（把擀面杖往案板上一搁，面粉扑起半指高）哎哟，你这一说我倒想起来了——老石那人嘴硬心软，上回我烤糊了一炉桃酥，他还不是揣了两块走，说是喂他家那只八哥。巧儿，你这铜丝圈儿先别急着套雀儿，帮我把这第三格里的枣泥馅端过来，我手上这团面还差三分钟就得进炉了。",
+      "channel": "dm",
+      "from": "P004",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 58,
+      "seq": 113462
+    },
+    {
+      "body": "阿禾，鸡蛋我收下，可这第三格抽屉里还搁着老周上回送来的半包甘草——他那人，借了种子不还，倒记得我咳嗽。你先坐，我给你倒杯水。",
+      "channel": "dm",
+      "from": "P005",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 58,
+      "seq": 113643
+    },
+    {
+      "body": "阿林，你先别急——我这半截粉笔刚在黑板上写完“whisper”的第三个字母，指尖还沾着一点白灰呢。小周上回把“whisper”听成“weather”，我没怪他，反倒让他站起来把两个词各读了三遍；你看，差的就是那一点气声。至于你账本第三行那个尾数，等放学我拿算盘帮你对一对，七钱盐、三两糖，总不会飞了。",
+      "channel": "dm",
+      "from": "P006",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 58,
+      "seq": 113816
+    },
+    {
+      "body": "老石，我这第三格抽屉的锁又卡了，钥匙转不动。小赵上回借完档案没按序归位，害我找了一下午。",
+      "channel": "dm",
+      "from": "P008",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 58,
+      "seq": 114166
+    },
+    {
+      "body": "（拨了拨算盘，第三格珠子卡住）账要平。酱抵七钱可以，但老周那半坛酒——上回他赊我二两,还没销。",
+      "channel": "dm",
+      "from": "P009",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 58,
+      "seq": 114345
+    },
+    {
+      "body": "（把吉他往膝头一按，琴箱里闷闷地嗡了一声）半指宽？我调音器落在礼堂后台第三格抽屉里了，现在全靠耳朵——你信不信我耳朵比那破调音器准。阿禾那破音我记着呢，上回散场他还非说是话筒的问题，话筒招他惹他了。",
+      "channel": "dm",
+      "from": "P010",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 58,
+      "seq": 114526
+    },
+    {
+      "body": "（把橡皮筋绕在食指上，绕了三圈）半包烟？上回他借我地理笔记，还回来时夹了张网吧的卡，人到现在没影。",
+      "channel": "dm",
+      "from": "P011",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 58,
+      "seq": 114707
+    },
+    {
+      "body": "（把手里那杆秤往柜台边一靠，秤钩上还挂着半截麻绳）哎哟陈医，您这话我记下了，三副药我这就给他家送去。说起来上回老周家小子退烧那天，他奶奶还念叨呢，说多亏您那两剂药压得住。我顺道也提一嘴——他娘前儿在河边洗衣裳还跟我说，孩子夜里咳得她睡不着，我让她别拖，她还不当回事。这回我替您把话带到，保管让他来。",
+      "channel": "dm",
+      "from": "P012",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 58,
+      "seq": 114884
+    },
+    {
+      "body": "（从围裙兜里摸出个铜板，在指间翻了个面）四文半……我数数啊，兜里就剩三文，还差一文半。兰姐，阿旺上回给我修过一回门轴，没要钱，这半斤笋算我替他还的成不？",
+      "channel": "dm",
+      "from": "P014",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 58,
+      "seq": 115237
+    },
+    {
+      "body": "（把汤勺往锅沿一磕，勺柄上还挂着半指宽的汤渍）金先生，您这第三格珠子卡得我心里也卡。汤我分——可老周那三碗，得减一碗，上回他给赵裁缝送布，顺走人家两尺青线，这事您没记吧？我拿这半锅抵他两碗，剩那碗，您记我头上。",
+      "channel": "dm",
+      "from": "P015",
+      "hit": {
+        "alias": false,
+        "loose": false,
+        "pfx2": false,
+        "pfx2_plus": false,
+        "strict": false
+      },
+      "round": 58,
+      "seq": 115406
+    },
+    {
+      "body": "陈医，水我喝半碗就行。老周上回还跟我借过一把锄头，说三天还，这都七天了。",
+      "channel": "dm",
+      "from": "P003",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 59,
+      "seq": 116108
+    },
+    {
+      "body": "方老师，您看我这算盘珠子——第三档上还卡着半粒米，是今早茶棚老赵找零时掉进去的。他上回还跟我念叨，说小周那孩子把“whisper”听成“weather”，回家被他爹罚抄了二十遍，抄到第七遍时笔尖都劈了。您说这词儿，到底该怎么掰开揉碎讲，才能让人耳朵不打滑？",
+      "channel": "dm",
+      "from": "P007",
+      "hit": {
+        "alias": false,
+        "loose": true,
+        "pfx2": true,
+        "pfx2_plus": true,
+        "strict": true
+      },
+      "round": 59,
+      "seq": 116409
+    }
+  ],
+  "schema_version": "form-metrics-triage/1.0",
+  "set_relations": {
+    "both_strict_and_loose_false": 290,
+    "pfx2_subset_of_strict": true
+  }
+}
