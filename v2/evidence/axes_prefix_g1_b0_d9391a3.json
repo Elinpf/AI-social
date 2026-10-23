@@ -1,0 +1,117 @@
+{
+  "reader": {
+    "script": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/f2/r10e2e_axes.py",
+    "script_sha256": "f2d2bad51bc6f49cf88191786c78b788a2527442e77590a30afcef6a71f3b94d"
+  },
+  "source": {
+    "run": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_g1_b0_n16r60_seed42/run.jsonl",
+    "run_sha256": "6db62e8a3b926af7755fe220a5e8361c851e195d94afff00d16c00e7e1d0c983",
+    "run_bytes": 55225513,
+    "label": "PRE-FIX:g1_b0(d9391a3)"
+  },
+  "axes": {
+    "mechanism": {
+      "MEMORY_CONSOLIDATE_total": 1267,
+      "text_KEPT": 0,
+      "text_DROPPED": 1267,
+      "note": "text 非空字符串=KEPT；c01f6dd 之前为整段丢弃"
+    },
+    "ledger": {
+      "semantic_writes": 0,
+      "distinct_produced_mem_id": 256,
+      "produced_mem_id_null": 0,
+      "gap_events_minus_distinct": 1011,
+      "INTENT_REJECTED_MEMORY_invalid_payload": 0,
+      "assert_gap_eq_rejected": false,
+      "assert_semantic_eq_distinct": false
+    },
+    "drift": {
+      "SLEEP_COMPLETED_total": 80,
+      "null_drift_permille": 80,
+      "null_pf0": 80,
+      "null_pf_t": 80,
+      "null_all_three": 80,
+      "denominator": 80
+    },
+    "behavior": {
+      "MSG_total": 510,
+      "MSG_ctx_memory_refs_nonzero": 0,
+      "MEMORY_RETRIEVE_total": 960,
+      "MEMORY_RETRIEVE_with_selected": 944,
+      "note": "只登记，不下效果结论"
+    }
+  },
+  "denominators": {
+    "MEMORY_WRITE_total": 27828,
+    "MEMORY_WRITE_by_kind": {
+      "observation": 27492,
+      "reflection": 336
+    },
+    "MEMORY_FORGET_total": 38976,
+    "forget_per_write": 1.4006,
+    "SLEEP_STARTED": 80,
+    "SLEEP_COMPLETED": 80,
+    "PERSONA_DRIFT": 105
+  },
+  "reject_breakdown": {},
+  "event_type_counts": {
+    "ACTIVITY_COMPLETED": 304,
+    "ACTIVITY_STARTED": 320,
+    "AGENT_BORN": 16,
+    "CONFLICT_RESOLVED": 23,
+    "CONFLICT_STARTED": 23,
+    "CONSUME": 118,
+    "DEPOSIT": 15,
+    "DROPPED": 1372,
+    "EXCHANGE_SETTLED": 23,
+    "GOAL_ACHIEVED": 10,
+    "GOAL_PROGRESS": 177,
+    "GOAL_SET": 31,
+    "GROUP_CREATED": 17,
+    "INIT_ENDOW": 16,
+    "LLM_CALL": 2878,
+    "LLM_JUDGMENT": 668,
+    "MARKET_TRADE": 17,
+    "MEMORY_CONSOLIDATE": 1267,
+    "MEMORY_FORGET": 38976,
+    "MEMORY_REFLECT": 112,
+    "MEMORY_RETRIEVE": 960,
+    "MEMORY_WRITE": 27828,
+    "METABOLISM": 960,
+    "MONEY_MINTED": 1,
+    "MSG_DM": 455,
+    "MSG_PUBLIC": 55,
+    "NEED_UPDATE": 2052,
+    "NORM_ADOPTED": 10,
+    "NORM_PROPOSED": 10,
+    "OBSERVATION": 27578,
+    "OFFER_ACCEPTED": 128,
+    "OFFER_COUNTERED": 8,
+    "OFFER_CREATED": 66,
+    "OFFER_EXPIRED": 42,
+    "OFFER_REJECTED": 9,
+    "PERSONA_DRIFT": 105,
+    "PERSONA_DRIFT_CANDIDATE": 238,
+    "PLACE_ARRIVED": 299,
+    "PLACE_MOVE": 299,
+    "PRODUCE": 118,
+    "RELATION_CHANGE": 7770,
+    "RELATION_ENCOUNTER": 136,
+    "ROLE_CHANGE": 6,
+    "SCHEDULE_PLANNED": 16,
+    "SERVICE_DELIVERED": 89,
+    "SKILL_LEVEL_UP": 49,
+    "SKILL_PRACTICE": 50,
+    "SLEEP_COMPLETED": 80,
+    "SLEEP_STARTED": 80,
+    "STATE_CHANGE": 2,
+    "TAG_EMITTED": 304,
+    "TAX_LEVIED": 38,
+    "TIME_MARK": 5,
+    "TRANSFER": 26,
+    "TURN_SEAL": 60,
+    "WORLD_DIRECTIVE": 1,
+    "WORLD_GROUP_EVENT": 1,
+    "WORLD_INIT": 1
+  }
+}
