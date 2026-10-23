@@ -23,6 +23,23 @@
 3. **确定性选优**：取交集数**最小**的那条；**平局取第 1 条**（保证 replay 可复现）；
 4. 落盘 `ctx.d12e = {"m":3, "scores":[a,b,c], "picked":i}`（additive，进日志不进 `state_hash`）。
 
+### 1.1 ⚠ 实现前提：**缓存键必须含采样序号**（否则三采一优会退化成"取同一条的三份拷贝"）
+
+已核对实现（`code/freeze/llm_client.py::make_cache_key`，2026-10-23 10:40）：
+
+```python
+return digest({"cache_schema", "kind", "engine_version", "prompt_hash", "model", "tier", "params"})
+# 命中逻辑：hit = self.store.get_response(cache_key)  ← 命中原样返回，不调模型
+```
+
+⇒ **同一个 prompt + 同 params ⇒ 同一个 `cache_key` ⇒ 第 2、3 次直接命中缓存、返回同一条文本**。
+⇒ 若不处理，**M=3 的三个候选完全相同**，`scores` 三项相等、`picked` 恒为 0 ⇒ **择优机制形同不存在**，`L-7` 自然也不会动。这正是"开关未生效"的第六种形态，必须在代码里堵死。
+
+**规定（实现者必须照做）**：
+1. 每次采样把 **`sample_index = 0/1/2` 并入 `params`**（→ 进 `cache_key`），使三次调用是三次真实请求；
+2. `sample_index` 必须由**确定性输入**派生（直接取 k 即可），**禁止随机数** —— 否则 `FREEZE_MODE=replay` 时重算出的 `cache_key` 与日志里的不匹配，会触发"重放模式缓存未命中（禁止真实调用）"，直接毁掉 replay；
+3. 上述两条本身也构成**接线证明**：`LLM_CALL` 中对话 purpose 的 `cached` 必须为 **false**，且三条候选的 `cache_key` **两两不同**（跑后从日志核）。
+
 **与既有机制的区别（必须写进报告，防止被当成"又一个 anti_repeat"）**：
 | 机制 | 触发时机 | 选择方式 | 已知效果 |
 |---|---|---|---|
