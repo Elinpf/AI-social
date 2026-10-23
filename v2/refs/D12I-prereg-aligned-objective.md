@@ -31,6 +31,15 @@ S_ext = T5（run_d12g_diverse2_n16r60_seed42）**前 40 轮**已落库消息的 
 | **F2 称呼起头率** | 相对 T5（41%）漂移 ≤15pp | 1/3 + 收尾 |
 | **F3 `len_p50`(excl)** | 相对 T5（53）漂移 ≤10% | 收尾 |
 
+> **形态闸已就绪**：`tools/d12h/shape_gate.py`（`feat/c12-d12h@371edb9`，脚本 sha256 `f7740b6d4c3052b7577b…`，复用 `tools/d9/arm_state_check.py::metrics`、运行时打印 `metrics_impl_sha256`）：
+> ```bash
+> python3 tools/d12h/shape_gate.py --log <run.jsonl> --rounds 20 --code-dir code   # 1/3
+> python3 tools/d12h/shape_gate.py --log <run.jsonl> --code-dir code               # 收尾
+> ```
+> `rc=0` 全过 / `rc=1` 有越界 / `rc=2` 无法判定（空日志）。
+> **它已在 D12-H 真跑日志上验证"闸确实在工作"**：前 20 轮（174 条）⇒ **F1 `paren_rate` 0.57%（−57.27pp）FAIL、F2 `addr_head_rate` 89.66%（+48.66pp）FAIL** ⇒ **`rc=1`，1/3 处即可判死**。
+> ⇒ **教训量化**：D12-H 若在 1/3 处核这两道闸，可**省下约 2/3 的调用（≈4,000 次）**。
+>
 > **形态闸必须是"一条命令"**：`tools/d12h/shape_gate.py --run <run.jsonl> --rounds 20` ⇒ 直接出 `paren_rate` / 括号起头率 / 称呼起头率 / `len_p50` 四项 + 与 T5 的漂移。
 > **⚠ mock 冒烟抓不到形态漂移**：mock 文本是模板、本来就没有旁白 ⇒ **§2 的所有闸必须对真跑日志核**（D12-H 的 22:07 mock 里 `paren` 类指标毫无意义）。
 
