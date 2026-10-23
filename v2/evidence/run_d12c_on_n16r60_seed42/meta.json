@@ -1,0 +1,12 @@
+{
+  "batch": "d12c-on",
+  "unit": "t271-d12c-on",
+  "started_at": "2026-10-23 07:00 (approx)",
+  "workdir": "/tmp/t271-d12c-br/code",
+  "sha": "a977cb0",
+  "switch": "LIFE_PROMPT_D12C_SPECIFIC=ON",
+  "rounds": "60",
+  "agents": "16",
+  "seed": "42",
+  "out": "v2/evidence/run_d12c_on_n16r60_seed42/run.jsonl"
+}

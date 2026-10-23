@@ -1,0 +1,9 @@
+unit=t271-d12c-off.service
+code_sha=a977cb0 (branch feat/d12c-specific, base 3ec85a0)
+arm=OFF
+=== env truth from /proc/2862341/environ (grep LIFE_PROMPT_D12C) ===
+<no such variable>  ← OFF 臂期望值
+=== cmdline ===
+/opt/openjiuwen/workswarm-venv/bin/python -m orchestration run --life --seed 42 --agents 16 --rounds 60 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12c_off_n16r60_seed42/run.jsonl --side-root /tmp/d12c_off_side --flush-every 2 
+captured_at=2026-10-23T06:24:17+08:00
+prompt_fn_sha256_OFF=5cf08593d562dc09fdd42ab289319a819481c4882701407b039fa514ff8293f7

@@ -1,0 +1,21 @@
+{
+  "batch": "d12c-off",
+  "unit": "t271-d12c-off",
+  "started_at": "2026-10-23 05:57:04",
+  "ended_at": "2026-10-23 06:47:03",
+  "workdir": "/tmp/t271-d12c-br/code",
+  "env_file": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/.env.local",
+  "out": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12c_off_n16r60_seed42/run.jsonl",
+  "heartbeat_file": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12c_off_n16r60_seed42/heartbeat.tsv",
+  "mem_high": "4G",
+  "mem_max": "6G",
+  "cmd": "/opt/openjiuwen/workswarm-venv/bin/python -m orchestration run --life --seed 42 --agents 16 --rounds 60 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12c_off_n16r60_seed42/run.jsonl --side-root /tmp/d12c_off_side --flush-every 2",
+  "sha": "a977cb0",
+  "worktree": null,
+  "switch": "LIFE_PROMPT_D12C_SPECIFIC=OFF",
+  "side_root": null,
+  "flush_every": null,
+  "engine_version_fingerprint": "sha256:a871e36c44acbda9ac4aadeebe829a821219b2fec22642ea2b372f6ec88f3b1c",
+  "rounds": "60",
+  "agents": "16"
+}

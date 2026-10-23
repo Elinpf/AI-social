@@ -1,0 +1,19 @@
+{
+  "marker_version": "T374-1",
+  "batch": "d12c-off",
+  "unit": "t271-d12c-off",
+  "rc": 0,
+  "started_at": "2026-10-23 05:57:04",
+  "ended_at": "2026-10-23 06:47:03",
+  "heartbeat_first": "2026-10-23 05:57:03",
+  "heartbeat_last": "2026-10-23 06:47:03",
+  "rounds_last": 59,
+  "events": 116365,
+  "final_state_hash": "sha256:1b7b6655d3c9ab336bc9fc205d20f6345e6d4085e144d76452031965a515e5b0",
+  "tree": "copy",
+  "sha": "a977cb0",
+  "workdir": "/tmp/t271-d12c-br/code",
+  "out": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12c_off_n16r60_seed42/run.jsonl",
+  "host_log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12c_off_n16r60_seed42/host.log",
+  "ended_marker_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12c_off_n16r60_seed42/END"
+}
