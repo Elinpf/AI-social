@@ -67,3 +67,13 @@ v2/evidence/mock_trigA2_*
 !v2/evidence/T270-motion-after.log
 # 例外②：t271 批次清单示例（模板/文档用，不是运行产物）
 !tools/t271/batches.example.tsv
+
+# ===== C11 补：ignore 规则不得静默吞掉证据件（2026-10-23，承 §3.106b）=====
+# 起因：上面 `**/*.log` 把证据目录里的渲染日志一并忽略了，渲图成员只能 `git add -f` 强推
+# （`5282032` 的 `v2/evidence/d12g_shots/render_wrap.log` 就是这样才进库的）。
+# 证据件被静默忽略比报告写错更阴：文件在磁盘上、报告也能引路径，但 clone 后不存在。
+# 范围刻意收窄（**不**写 `!**/*.log`，那等于把 `**/*.log` 规则作废）：
+# 只放行落在 `v2/evidence/` 下、且属渲染/取证（render*、shots/）与门禁复跑（ab_rerun）的日志。
+!v2/evidence/**/render*.log
+!v2/evidence/**/shots/**/*.log
+!v2/evidence/**/ab_rerun.log

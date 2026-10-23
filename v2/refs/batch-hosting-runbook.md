@@ -406,6 +406,33 @@ D12-G 284 条里有 **1 条**（`seq=26894`）**候选 0 与候选 1 的 sha 完
 
 **边界**：本款只管「提交范围」；预登记冻结件本身的并发写与 amend 禁令仍归 §3.103.6。两款的防线是叠加的：§3.103.6 第 8 款管「同一文件被掺入他人改动」，本款管「整个 index 被掺入他人文件」。
 
+## 3.106b 【硬规则】ignore 规则不得静默吞掉证据件：`git status` 看不到证据件就是缺陷（2026-10-23 自伤后新增）
+
+**缺陷（本轮实测，是 §3.106 之后发现的直接副作用）**：上一轮为收副产物加的 `**/*.log` 把**证据目录里的渲染日志也一并吞了**。
+- 实测（改动前，规则层）：`git ls-files '*.log'` = **36 份已入库 log**，其中 **35 份**在规则层面命中 `**/*.log`（只有 `T270-motion-after.log` 有例外）——即 35 份是**靠"已 tracked"才留在库里的**，规则本身一直在吞它们；
+- 直接后果：渲图成员写 `v2/evidence/d12g_shots/render_wrap.log` 后 `git status` 看不见，只能用 **`git add -f`** 强推（`5282032` 即如此入库）。
+- 为什么这类缺陷特别阴：**文件在磁盘上、报告也能引路径，但 clone 后不存在**——比报告写错更难发现，因为本地一切"看起来正常"。
+
+**规则（四条）**
+1. **判据**：任何情况下「`git status` 看不到一份被报告引用的证据件」都算缺陷，**不得用 `-f` 当日常手段**；`-f` 只作应急，**事后必须补 ignore 规则并在本节记账**（补了哪条、放行哪些路径、为什么范围这么收）。
+2. **例外必须按路径收窄，禁止 `!**/*.log` 这类全量反否定**（那等于把 `**/*.log` 规则作废，副产物又会回到 `git status` 里）。当前口径：**只有落在 `v2/evidence/` 下、且属渲染/取证或门禁复跑的日志放行**——
+   ```
+   !v2/evidence/**/render*.log      # 渲染取证日志（报告引用图的复现记录）
+   !v2/evidence/**/shots/**/*.log   # 同上，shots 目录内
+   !v2/evidence/**/ab_rerun.log     # 门禁复跑日志（fix-sleep-consolidation 证据引用）
+   ```
+   `host.log` / `batch.log`（批次宿主日志，可再生、报告只引 `meta.json`/`run_batch.rc`）**保持忽略**，不开口子。
+3. **验证不能只看 `git check-ignore` 的 rc**（本轮踩到）：负向规则命中时 `git check-ignore -v` **也会 rc=0** 并打印 `!pattern`（实测），把它当"仍被忽略"就是误判；反过来 **tracked 文件默认不参与 ignore 判定**（`check-ignore` 对它们直接 rc=1），必须加 `--no-index` 才看得到规则本身。**唯一可信的验证是真实探针**：
+   ```bash
+   # 造真文件看 git 的分类：?? = 未被忽略（会入库）；!! = 被忽略
+   git status --porcelain --ignored <dir> | grep <probe>
+   git ls-files -o --exclude-standard <dir>      # 只列"未跟踪且未被忽略"
+   ```
+   实测（本轮改后）：`v2/evidence/_probe_shots/render_wrap.log` → `??`（放行成功）；`v2/evidence/_probe_run/host.log`、`v2/evidence/preflight/_probe.log` → `!!`（仍忽略，符合预期）。
+4. **新增/修改 ignore 规则后必须跑一次全量核对并报数**：`git ls-files '*.log'` 逐个比对，确认「已入库 log 不因新规则变成只靠 tracked 状态苟活」，并给出**改前/改后的命中数**（本轮：规则层命中 35 → 18，18 份全是 `host.log`/`batch.log`，属有意保留忽略）。
+
+**边界**：本节只管 `.log`/`.pid`/`.tsv` 类副产物规则的**证据安全问题**；提交范围与并发 index 污染仍归 §3.106。
+
 ## 4. 启动清单（复制粘贴；一批一跑）
 > 约定：`REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`；批次名 `<B>`（如 `A`）；跑批产物落 `RUN=/root/t271/runs/<B>`。
 
