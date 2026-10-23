@@ -195,6 +195,20 @@ picked = {0: 191}（全选第 1 条）；scores 三列均值 = 0 / 0 / 0；三�
 2. **生产 `rc` 的正确姿势（已实现，`tools/d2/run_batch.sh` `193cd63`）**：用 **EXIT trap** 写 `run_batch.rc` + `run_batch.end`，且 trap **必须装在参数解析之前**（否则"参数错 `exit 2`"这类最常见失败会漏记）；此时 `OUT_DIR` 未解析，落兜底目录 `${RUN_BATCH_FALLBACK_DIR:-/tmp/run_batch_unknown}`；`run_batch.end` 里带 `out_dir=` 便于事后对账。自测四例（A 未知参数 / B 缺 `--out-dir` / C 兜底目录可改 / D mock 正常跑）见 `v2/refs/run_batch_rc_selftest.md`；
 3. **门禁命令与日志不同源时须写明**：如本树无 `python3 -m orchestration obs`（rc=2）而改用主树 `python3 -m obs`，报告须写「门禁命令来自主树、被解析日志来自本臂」。
 
+## 3.102 【硬规则】同一个 `F-2` 名字下有一个「死标尺」（LEGACY_DEAD_RULER，恒 0，会假 PASS）
+
+2026-10-23 D12-E 出数时发现：D5 的 `dialogue_metrics.py` 同时输出 **两个** F-2 键：
+
+| 键 | 口径 | 实测 | 可用性 |
+|---|---|---|---|
+| `F-2_topic_drift` | 相邻消息 **tag 无交集 且** jaccard<0.10 | **0.00% → 0.00%** | **`status = LEGACY_DEAD_RULER`**：新结构下 `tag_hints` 线程内恒定 ⇒ "tag 无交集"恒 False ⇒ **结构性恒 0**，误用会得到**假 PASS** |
+| `F-2_content_drift`（= **`F-2'`**） | 仅 char-bigram **jaccard<0.10**（不看 tag） | 70.09% → 73.61% | **唯一可用**，判据一律用它 |
+
+**规则**：
+1. 判定/报告涉及"内容漂移"时**必须写 `F-2'`** 并注明 `= F-2_content_drift.drift_rate`；**禁止**只写 `F-2`（读者无法知道是哪个键）；
+2. 凡是**结构性恒 0/恒 1** 的指标，一律**不得作为效果判据**（它只能证明"这个维度的结构不变"，不能证明"变好"）；
+3. 同类前例：`turns_A_p50`（实为线程消息条数）、`paren_rate` 两义、`L-7` raw8/norm8 两口径——**引指标前先确认"这个名字下有几个实现"**。
+
 ## 4. 启动清单（复制粘贴；一批一跑）
 > 约定：`REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`；批次名 `<B>`（如 `A`）；跑批产物落 `RUN=/root/t271/runs/<B>`。
 
