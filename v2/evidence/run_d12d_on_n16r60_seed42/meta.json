@@ -1,0 +1,10 @@
+{
+  "batch": "d12d-on",
+  "unit": "t271-d12d-on",
+  "code_sha": "5ca515d",
+  "switch": "LIFE_PROMPT_D12C_SPECIFIC=1 + LIFE_PROMPT_D12C_DEDUP=1",
+  "rounds": "60",
+  "agents": "16",
+  "seed": "42",
+  "out": "v2/evidence/run_d12d_on_n16r60_seed42/run.jsonl"
+}

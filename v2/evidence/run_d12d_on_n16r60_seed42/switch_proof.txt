@@ -1,0 +1,10 @@
+unit=t271-d12d-on.service
+code_sha=5ca515d (branch feat/d12c-dedup, parent a977cb0)
+arm=T2 (D12-C ON + D12-D ON)
+=== env truth from /proc/3500780/environ ===
+LIFE_PROMPT_D12C_DEDUP=1
+LIFE_PROMPT_D12C_SPECIFIC=1
+=== cmdline ===
+/opt/openjiuwen/workswarm-venv/bin/python -m orchestration run --life --seed 42 --agents 16 --rounds 60 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12d_on_n16r60_seed42/run.jsonl --side-root /tmp/d12d_on_side --flush-every 2 
+captured_at=2026-10-23T09:24:46+08:00
+prompt_fn_sha256_T2=ca61423cb60c3be5a500df7f1de0aeb691f65e68a4b417be0817f726315e51cf
