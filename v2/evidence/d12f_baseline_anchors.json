@@ -1,0 +1,146 @@
+{
+ "purpose": "D12-F 判读用的基线锚点（**引用**与**本轮重算**严格分栏）",
+ "generated_at": "2026-10-23T16:09:03+08:00",
+ "rule": "判定只与同尺子基线比；norm8/raw8 一律用 v2/evidence/recompute_l7_indep.py",
+ "tools": {
+  "norm8_raw8": {
+   "path": "v2/evidence/recompute_l7_indep.py",
+   "sha256": "sha256:ae50620d3b9bdd3add9d81cdd47186b87936d15a56eca58d76dbd44686b952f0",
+   "cmd": "python3 v2/evidence/recompute_l7_indep.py --log <run.jsonl> --tag <tag>"
+  },
+  "P1_len_structure": {
+   "path": "v2/evidence/d12c_metrics.py",
+   "sha256": "sha256:c41cb5aca03c9499fc47047d5acaeba8f4b33bef5298b69556b15d3da290ab58",
+   "cmd": "python3 v2/evidence/d12c_metrics.py --run <TAG>=<run.jsonl> --out-json <out>"
+  },
+  "L6_F2_L3": {
+   "path": "tools/d5/dialogue_metrics.py",
+   "sha256": "sha256:1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271",
+   "cmd": "python3 tools/d5/dialogue_metrics.py --log <run.jsonl> --out-json <out> --out-md <md>"
+  },
+  "L15": {
+   "path": "tools/d5/l15_restate_rate.py",
+   "sha256": "sha256:02d1299f2b6ee59f84dae7e693e8cd3495771f7dfc9e928bc2763b73318d3e5a",
+   "cmd": "python3 tools/d5/l15_restate_rate.py --run <TAG>=<run.jsonl> --out-json <out>"
+  },
+  "gates": {
+   "path": "v2/evidence/d12f_gate_metrics.py",
+   "sha256": "sha256:3602f55ce9b4313bc68e29362546e7918aab6f58ad0b00909616d8f67990f03c",
+   "cmd": "python3 v2/evidence/d12f_gate_metrics.py --run-jsonl <run.jsonl> --ctx-key <d12f|d12e> --out-json <out> [--partial]"
+  }
+ },
+ "arms": {
+  "T1_baseline": {
+   "run_jsonl": "v2/evidence/run_d12c_on_n16r60_seed42/run.jsonl",
+   "run_jsonl_sha256": "sha256:bd2df77fd125cc75c31f261cc05486bd7376d9a9fcd9334f083cf8897e496c87"
+  },
+  "D12E_arm": {
+   "run_jsonl": ".worktrees/d12e-bestof/v2/evidence/run_d12e_bestof3_n16r60_seed42/run.jsonl",
+   "run_jsonl_sha256": "sha256:d959db41c1fd8d2db75e4cc3d6f29d27adfe78d02f0d506f3ad5a35cbb60cd66"
+  }
+ },
+ "recomputed_by_me_not_quoted": {
+  "T1_baseline": {
+   "norm8_pct": 65.098,
+   "raw8_pct": 74.1176,
+   "n_msg": 510,
+   "P1_specificity_pct": 98.82,
+   "P2_thirdparty_pct": 77.25,
+   "len_p50": 52.0,
+   "n_threads": 169,
+   "L-6_dup_exact_pct": 9.6078,
+   "L-3_paren_block_any_pct": 66.2745,
+   "F-2_content_drift_pct": 70.088,
+   "F-2_topic_drift_pct": 0.0,
+   "F-2_topic_drift_status": "LEGACY_DEAD_RULER",
+   "L-15_restate_strong_pct": 4.51,
+   "L-15_restate_pct": 7.65,
+   "msg_type_split": {
+    "MSG_DM": 455,
+    "MSG_PUBLIC": 55
+   }
+  },
+  "D12E_arm": {
+   "norm8_pct": 55.8824,
+   "raw8_pct": 69.4118,
+   "n_msg": 510,
+   "M1_wiring": {
+    "num": 510,
+    "den": 510,
+    "pct": 100.0
+   },
+   "M3_argmin": {
+    "num": 82,
+    "den": 82,
+    "pct": 100.0
+   },
+   "M4_separability": {
+    "num": 82,
+    "den": 510,
+    "pct": 16.0784
+   },
+   "picked_dist": {
+    "0": 467,
+    "1": 28,
+    "2": 15
+   },
+   "M0_uncached": {
+    "num": 1105,
+    "den": 3898,
+    "pct": 28.3479,
+    "note": "D12-E dialogue cached 687/1530=44.9% ⇒ 按本轮 M0>=50% 前置闸不过（重放首跑）"
+   },
+   "msg_type_split": {
+    "MSG_DM": 455,
+    "MSG_PUBLIC": 55
+   }
+  }
+ },
+ "quoted_from_master_files_not_recomputed": {
+  "source_files": [
+   "v2/evidence/d12e_result.md",
+   "v2/evidence/d12e_metrics_t1_t3.json",
+   "v2/evidence/d12e_ci_t1_t3.json",
+   "v2/evidence/d12e_l15_t1_t3.json"
+  ],
+  "D12E_T3": {
+   "L-7_norm8_pct": 55.88,
+   "L-7_raw8_pct": 69.41,
+   "P1_pct": 99.02,
+   "F-2_content_drift_pct": 73.61,
+   "L-15_restate_strong_pct": 4.12,
+   "L-6_dup_exact_pct": 0.78,
+   "len_p50": 53,
+   "n_msgs": 510,
+   "n_threads": 169,
+   "verdict": "无效（效果不足）——L-7 norm8 55.88 > 55.10（差 0.78pp）；raw8 69.41 > 64.12（差 5.29pp）"
+  }
+ },
+ "thresholds_D12F": {
+  "M1_wiring_pct_min": 100.0,
+  "M3_argmin_pct_min": 100.0,
+  "M4_separability_pct_min": 25.0,
+  "M0_uncached_pct_min": 50.0,
+  "L-7_norm8_pct_max": 55.1,
+  "L-7_raw8_pct_max": 64.12,
+  "P1_pct_min": 93.82,
+  "F-2_content_drift_pct_max": 75.09,
+  "L-15_restate_strong_pct_max": 4.51,
+  "cost_gates": {
+   "len_p50_max": 57.2,
+   "structure": {
+    "n_msgs": 510,
+    "MSG_DM": 455,
+    "MSG_PUBLIC": 55,
+    "len_p50": 52,
+    "L-3_paren_block_any_pct": 66.27,
+    "tolerance": "±5%"
+   },
+   "L-6_dup_exact": "不得显著回升（D12-E 0.78%）"
+  },
+  "source": "v2/refs/D12F-prereg-candidate-diversity.md (e26234f) + Leader 口头增补 M0>=50% 与结构闸"
+ },
+ "legacy_dead_rulers": [
+  "F-2_topic_drift（tag 无交集 且 jaccard<0.10）——tag_hints 线程内恒定 ⇒ 结构性恒 0，status=LEGACY_DEAD_RULER，禁止用作判据"
+ ]
+}

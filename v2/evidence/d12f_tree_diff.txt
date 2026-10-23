@@ -1,0 +1,86 @@
+# D12-F 树证据（只读 git；生成时间 2026-10-23T16:05:05+08:00）
+
+## 0. 三个 sha 对照
+
+| 角色 | ref | sha |
+|---|---|---|
+| 本臂代码身份（判定绑定） | feat/d12f-diverse | 1a8a3b4b7aa69a4232b916e1e4d3af036da5c1c7 |
+| 本臂 worktree HEAD | .worktrees/d12f-diverse | 1a8a3b4b7aa69a4232b916e1e4d3af036da5c1c7 |
+| D12-E 臂树（对照） | commit 3582a6f | 3582a6f7bd8e9750e2688ecad20cd058d9cdfc10 |
+| 主工作区 master | master | 884d7c2aaf692f54893952b13d77ace5c93ea2df |
+| merge-base(feat/d12f-diverse, master) | — | 3ec85a0801b0c50a9ac84589fa79f3015dc3f924 |
+
+## 1. 命令与输出（可复制复算）
+
+```bash
+git merge-base feat/d12f-diverse master
+=> 3ec85a0801b0c50a9ac84589fa79f3015dc3f924
+
+git rev-list --count master..feat/d12f-diverse   # 本臂领先 master 的提交数
+=> 11
+git rev-list --count feat/d12f-diverse..master   # 本臂落后 master 的提交数
+=> 278
+git merge-base --is-ancestor 3582a6f feat/d12f-diverse && echo YES
+=> YES
+```
+
+## 2. 本臂相对 D12-E 臂树的改动清单（单变量证据）
+
+`git diff --name-status 3582a6f..feat/d12f-diverse`：
+
+```
+M	code/life/agent.py
+M	code/life/tests/test_d12e_pick.py
+A	code/life/tests/test_d12f_diverse.py
+A	tools/d12f/render_d12f_prompt.py
+A	tools/d12f/wiring_proof.py
+M	tools/d2/run_batch.sh
+A	v2/evidence/d12f_render_raw.json
+A	v2/evidence/d12f_wiring_proof.md
+A	v2/evidence/d12f_wiring_raw.json
+A	v2/evidence/run_d12e_bestof3_n16r60_seed42/llm_cost.json
+A	v2/evidence/run_d12e_bestof3_n16r60_seed42/meta.json
+A	v2/evidence/run_d12e_bestof3_n16r60_seed42/run_summary.md
+A	v2/evidence/run_d12e_bestof3_n16r60_seed42/switch_proof.md
+A	v2/evidence/run_d12e_bestof3_n16r60_seed42/unit_journal.meta.txt
+A	v2/evidence/run_d12e_bestof3_n16r60_seed42/unit_journal.txt
+A	v2/refs/run_batch_rc_selftest.md
+```
+
+`git diff --stat 3582a6f..feat/d12f-diverse`：
+
+```
+ code/life/agent.py                                 |  67 ++++++--
+ code/life/tests/test_d12e_pick.py                  |  14 +-
+ code/life/tests/test_d12f_diverse.py               | 169 +++++++++++++++++++++
+ tools/d12f/render_d12f_prompt.py                   |  92 +++++++++++
+ tools/d12f/wiring_proof.py                         | 126 +++++++++++++++
+ tools/d2/run_batch.sh                              |  15 ++
+ v2/evidence/d12f_render_raw.json                   |  44 ++++++
+ v2/evidence/d12f_wiring_proof.md                   | 125 +++++++++++++++
+ v2/evidence/d12f_wiring_raw.json                   |  66 ++++++++
+ .../run_d12e_bestof3_n16r60_seed42/llm_cost.json   |   1 +
+ .../run_d12e_bestof3_n16r60_seed42/meta.json       |  68 +++++++++
+ .../run_d12e_bestof3_n16r60_seed42/run_summary.md  |  92 +++++++++++
+ .../run_d12e_bestof3_n16r60_seed42/switch_proof.md |  21 +++
+ .../unit_journal.meta.txt                          |   1 +
+ .../unit_journal.txt                               |  16 ++
+ v2/refs/run_batch_rc_selftest.md                   |  10 ++
+ 16 files changed, 906 insertions(+), 21 deletions(-)
+```
+
+`git diff --stat 3582a6f..feat/d12f-diverse -- code/`（引擎面，单变量只看这一块）：
+
+```
+ code/life/agent.py                   |  67 ++++++++++----
+ code/life/tests/test_d12e_pick.py    |  14 +--
+ code/life/tests/test_d12f_diverse.py | 169 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 229 insertions(+), 21 deletions(-)
+```
+
+## 3. 复现性限制（必须同屏写出）
+
+1. 本臂代码身份只能绑 `feat/d12f-diverse @ 1a8a3b4`。
+2. 该分支**不在 master 演化线上**：与 master 的 merge-base 为 `3ec85a0801b0`，本臂领先 master 11 个提交、落后 master 278 个提交。
+3. **`d12e` / `d12f` 的实现均未进入 master**（`git ls-tree master code/life | grep d12` 无命中；master 的 code/life 内 `grep D12E_BESTOF` 为空）⇒ **拿 master 复算本臂会直接失败**，本臂不能在 master 上重跑。
+4. 因此 D12-E 基线读数一律**引自 master 上已入库的 `v2/evidence/d12e_*.json / d12e_result.md`**（只引数、不重算），与「本轮重算」严格区分。
