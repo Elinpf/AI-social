@@ -72,13 +72,36 @@ rc=0
 | 进程 | `batch.pid=3500780` 已退出 |
 | 日志完整性 | 两次探针间尺寸不变（55,316,353 B），mtime `10:08:18`；`run.jsonl` sha256 `ad0c939f…44ca0` |
 
-### 2.4 B2 噪声带（现算，不用 HEAD 版）
+### 2.4 B2 噪声带（现算；**真源是脚本+语料，不是某个 json 快照**）
 
-- 源文件：`v2/evidence/d3_noiseband_bootstrap.json`，**工作区版**，`sha256 = 3e920dddd0be2b798da0ebf7279e9af0a992e8124fc6b853eb6d6b36656cbde0`
-- **与 CYCLE-07 §S05 记录值逐字节一致（`3e920ddd…cbde0`），未被改动**；HEAD 版只有 `denom_480`（band `[−5.83, +6.25]`）⇒ **禁用**
-- 现算命令：`python3 v2/evidence/d3_noiseband_bootstrap.py --denom 510`（B=2000, seed=42）
-- 结果：`L-7 8gram_shared` = **`[−5.88, +5.88]pp`**，width **11.76pp**（落 `b2_band.json`、`b2_band_denom510.txt`）
-- 分母核验：T2 实测 **510 / 510**，与预登记 510 偏差 **0%（≪10%）** ⇒ 按 §4.1(b) **无需按实际分母重跑**
+**真源（可复算的唯一依据）**：
+- 脚本 `v2/evidence/d3_noiseband_bootstrap.py`，sha256 `d878ac64…2986`
+- 语料 `v2/evidence/d3_annotated_corpus.jsonl`，sha256 `2d06c184…4954`
+- 方法（脚本内写死）：B=2000、`random.Random(42)`、从 t300/t355 各按消息有放回重采样 `m=denom` 条，取 `rate_A−rate_B` 的 2.5%/97.5% 分位
+
+**现算命令与结果**：
+
+```bash
+python3 v2/evidence/d3_noiseband_bootstrap.py --denom 510   --out v2/evidence/d12d_t2_judge/d3_noiseband_bootstrap_denom510.json
+# == denom 510
+#   L-2  narration_proxy   [-5.69, 5.69] width=11.37pp
+#   L-8  agent_id_leak     [-5.49, 5.88] width=11.37pp
+#   L-11 no_second_person  [-6.17, 5.86] width=12.03pp
+#   L-7  8gram_shared      [-5.88, 5.88] width=11.76pp   ← 本报告用的带
+#   K-1  cont_backref      [-3.73, 3.53] width=7.25pp
+#   U1   template_opening  [-3.73, 3.53] width=7.25pp
+```
+
+- 复算产物：`v2/evidence/d12d_t2_judge/d3_noiseband_bootstrap_denom510.json`，sha256 **`3e920dddd0be2b798da0ebf7279e9af0a992e8124fc6b853eb6d6b36656cbde0`**
+- 该 sha256 **与 CYCLE-07 §S05 记录的「工作区版 denom_510」逐字节一致** ⇒ 本报告用的是同一份带，且它是**确定性可复现**的。
+- **分母核验**：T2 实测分母 **510 / 510**，与预登记 510 偏差 0%（≪10%）⇒ 按 §4.1(b) **无需按实际分母重跑**。
+
+> **⚠ 真源 / 副本 / 默认输出位（三段式，必须同写，否则下一轮会踩）**
+> 1. **内容真源＝`denom_510` 的输出内容本身**，其 sha256 = `3e920dddd0be2b798da0ebf7279e9af0a992e8124fc6b853eb6d6b36656cbde0`（即本报告判 L-7 用的那份带）。
+> 2. **可复现副本**（本轮 `--out` 重建，**与 10:11 取数版逐字节一致**）：`v2/evidence/d12d_t2_judge/d3_noiseband_bootstrap_denom510.json`，sha256 同上。**引用带时指这个文件**。
+> 3. **共享 `v2/evidence/d3_noiseband_bootstrap.json` 是「脚本默认输出位」，会被后跑者覆盖**：10:11 时它是 `denom_510`（sha `3e920ddd…`）；**10:11:52 被并发分析以 `--denom 341` 覆盖**（现 sha `2313c001…1f04`，键 `denom_341`，见 `4d8a583` 的 D12-E 记录）；HEAD 版（`cf7a8575…9ac`，自 `b21042b`）是 `denom_480 / 623 / 686`。**该默认输出位不可作跨时点真源引用。**
+>
+> ⇒ 因此：B2 带的**可复算性来自脚本**（`--denom 510`，B=2000/seed=42 写死），**不来自那个 json 的内容**；json 只是输出存档。文件被覆盖**不影响** `[−5.88, +5.88]pp` 的可复算性——本轮已用 `--out` 复原出**同 sha 副本**即为证明。长期约定：**每个 denom 独立文件，共享 JSON 只当默认输出位、不入判定引用**。
 
 ### 2.5 跨窗口批声明（按 CYCLE-07 §1.4 先例单列）
 
@@ -154,6 +177,8 @@ rc=0
 | 关键位置：仅开头撞 / 仅正文撞 / 两者都撞 的消息数 | 48 / 85 / 199 | 53 / 72 / 204 | +5 / −13 / +5 |
 | **开头被撞**的消息占全部撞车消息的比例 | **74.40%** | **78.12%** | **+3.72pp** |
 | **正文被撞**的消息占全部撞车消息的比例 | 85.54% | 83.89% | −1.65pp |
+
+**分母（必须同写）**：上表两行「开头被撞 / 正文被撞」的**分母都是「全部撞车消息」**（T1 332 条、T2 329 条），**不是**全部 510 条消息；且一条撞车消息可同时被开头与正文各撞一次 ⇒ **两者不是互补关系，绝不能相加当 100%**（T1 74.40% + 85.54% = 159.94%，正因为有 199 条消息两处都撞）。若要看占全体消息的比例，请读上面四格表的 `rate_pct` 列（分母 510）。
 
 读法：撞车 shingle 的**种类**减少了 19.1%（模型确实少用了不少固定串），但**被撞消息的比例结构更加偏向「开头」**（74.40% → 78.12%）⇒ 与「换开头反向」同向，也与 H1 一致。
 
@@ -272,9 +297,12 @@ python3 -c "import json;p='$T2/run.jsonl';rs=[json.loads(l)['round'] for l in op
 cd code && python3 -m obs llm-cost --log ../$T2/run.jsonl --require-provider openai_compat; cd ..
                                              # 期望 rc=0 / 仅 openai_compat / degraded=0
 
-# ③ B2 噪声带（工作区版，禁用 HEAD 版）
-sha256sum v2/evidence/d3_noiseband_bootstrap.json     # 期望 3e920ddd…cbde0
-python3 v2/evidence/d3_noiseband_bootstrap.py --denom 510   # 期望 L-7 [-5.88, 5.88]
+# ③ B2 噪声带（以脚本为核心真源，写到自己的输出文件，避免覆盖他人快照）
+sha256sum v2/evidence/d3_noiseband_bootstrap.py               # 期望 d878ac64…2986
+sha256sum v2/evidence/d3_annotated_corpus.jsonl               # 期望 2d06c184…4954
+python3 v2/evidence/d3_noiseband_bootstrap.py --denom 510 \
+  --out $E/d3_noiseband_bootstrap_denom510.json               # 期望 L-7 [-5.88, 5.88]
+sha256sum $E/d3_noiseband_bootstrap_denom510.json             # 期望 3e920ddd…cbde0
 
 # ④ D5 全量指标（两臂各一次）
 python3 tools/d5/dialogue_metrics.py --log $T1/run.jsonl --meta $T1/meta.json --arm T1 \
@@ -308,7 +336,8 @@ git diff --stat a977cb0 feat/d12c-dedup        # 期望仅 agent.py + render_d12
 |---|---|---|---|
 | D1 | 预登记 §3 只写「一条闸」（norm8），§4.1(a) 又给了 norm8/raw8 双门槛 | 本判读按**更严**的 §4.1(a) 读：两口径都要 ↓≥5pp 才算过闸 | **无**（两口径都没到 5pp，更严/更宽同结论） |
 | D2 | 预登记未定义「模板化代价归因」方法 | 维度 A 用已入库 `decompose_l7.py`；维度 B 是本判读新写的 `attribute_l7.py`，**预登记未授权其为判据** | 只作解释，不入判定 |
-| D3 | §4.1(b) 要求「T2 收尾后若实际分母偏差 >10% 须重跑带」 | 实测分母 **510/510**，偏差 0% ⇒ 未重跑，直接用 denom 510 的带 | 无 |
+| D3 | §4.1(b) 要求「T2 收尾后若实际分母偏差 >10% 须重跑带」 | 实测分母 **510/510**，偏差 0% ⇒ 未重跑；带已用 `--denom 510` 现算并落 `d3_noiseband_bootstrap_denom510.json`（sha256 `3e920ddd…`，与 CYCLE-07 §S05 逐字节一致） | 无 |
+| D8 | **共享默认输出位被覆盖**：`v2/evidence/d3_noiseband_bootstrap.json` 的 `denom_510`（10:11 时为 `3e920ddd…`）于 10:11:52 被并发分析以 `--denom 341` 覆盖为 `2313c001…` | 已用 `--out` 把 `--denom 510` 重算到独立文件 `v2/evidence/d12d_t2_judge/d3_noiseband_bootstrap_denom510.json`，**复原同 sha 副本（`3e920ddd…`，逐字节一致）**；报告改为「脚本 sha + 语料 sha + `--denom 510` + 副本 sha」引用，见 §2.4 三段式 | **无**（带值未变且可离线重算出同一字节串） |
 | D4 | `meta.code_sha` 字段的已知缺陷 | `meta.code_sha=5ca515d` 记的是「生成 meta 时刻的 HEAD」，不是起跑 pin；须与 `switch_proof.txt` 的 `parent a977cb0` 一起读。本报告已用 `git cat-file -t 5ca515d` 证其在本仓存在且 = `feat/d12c-dedup` tip | 无 |
 | D5 | **跨窗口批** | 本批 **09:24:36 起跑**，本轮窗口以 **10:00** 划界 ⇒ **跨窗口批**（按 CYCLE-07 §1.4 先例单列）；实际收批约 **10:06**，END rc=0 | 引用时须写明 |
 | D6 | `admission.verdict=REJECTED` | legacy manifest 的 `B-10_provider=<empty>` 结构性误判（T1 同状态）；真实验真以 `obs llm-cost` 为准 | 无 |
@@ -347,7 +376,7 @@ git diff --stat a977cb0 feat/d12c-dedup        # 期望仅 agent.py + render_d12
 | 类别 | 路径 |
 |---|---|
 | 判读摘要（团队内） | `team-workspace/judge/judgment.md` |
-| 复算证据包 | `v2/evidence/d12d_t2_judge/`（`llm_cost.txt`、`b2_band.json`、`b2_band_denom510.txt`、`judge_metrics.json`、`t1_metrics.json/.md`、`t2_metrics.json/.md`、`arms_d12c_metrics.json`、`t2_raw8_indep.txt`、`l7_decompose.json`、`l7_attribution.json/.txt`（含 `head_concentration` / `opening_pattern_ba_wang_yi`）、`attribute_l7.py`） |
+| 复算证据包 | `v2/evidence/d12d_t2_judge/`（`llm_cost.txt`、`b2_band.json`、`b2_band_denom510.txt`、`judge_metrics.json`、`t1_metrics.json/.md`、`t2_metrics.json/.md`、`arms_d12c_metrics.json`、`t2_raw8_indep.txt`、`l7_decompose.json`、`l7_attribution.json/.txt`（含 `head_concentration` / `opening_pattern_ba_wang_yi`）、`attribute_l7.py`、`d3_noiseband_bootstrap_denom510.json`（B2 带复算产物，sha256 `3e920ddd…`）、`b2_band_denom510_rerun.txt`） |
 | 截图清单（唯一来源） | `team-workspace/shots/index.md`；图片在 `v2/evidence/d12c_t1_shots/`、`v2/evidence/d12d_t2_shots/` |
 | 预登记 | `v2/refs/D12D-prereg-dedup-on-detail.md` |
 | 臂接线证明 | `v2/evidence/d12d_wiring_proof.md`、`v2/evidence/run_d12d_on_n16r60_seed42/switch_proof.txt` |
