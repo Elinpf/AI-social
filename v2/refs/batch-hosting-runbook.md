@@ -625,6 +625,28 @@ L-3 含括号块：T1 66.27% → T5 57.84% → D12-H 0.20%（1/510）
 （`seed = agent|day{round//12}-{SLOTS[(round%12)//3]}|{tid}|p0`，自检 114/114=100%），
 ⇒ 对端/模板层面的候选**一律先离线模拟再决定是否跑批**，不要拿 52 分钟去试一个能算出来的东西。
 
+## 3.116 【硬规则】参数类臂一律走 **runtime override**，不得改 `config/*.json`
+
+**事实（`code/life/dialogue_threads.py:61-84`）**：`load_params()` 读 `config/life_v2.json` 的 `dialogue`/`observe` 段，
+并支持运行时注入 hook：
+```
+from . import config as _lcfg
+ov = _lcfg.override_for("life_v2")      # run_override.py --override life_v2.dialogue.max_turns=8
+```
+**两者在指纹层面完全不同**：
+
+| 做法 | 是否改 `engine_version` | 后果 |
+|---|---|---|
+| 改 `config/life_v2.json` 文件 | **改**（该文件在 12 个 `config/*.json` 指纹集内） | **全部历史对照（T0/T5/D12-E…I）当场失效** |
+| `--override life_v2.*=...` | **不改**（不落盘） | 可与历史基线直接对照 |
+
+**规则**：
+1. 任何"调参数"的臂（上限、阈值、窗口、K、开关）**默认走 `--override`**，把 override 串**逐字**记进 evidence（可复算）；
+2. 若确实要改文件（例如永久改默认值），必须**同一批里重跑基线**，不得拿旧基线对照；
+3. 预登记里必须写明"改参数的方式是 override 还是改文件"，**事后不得从一种换成另一种**；
+4. 反例留档：D2.4 诊断中发现 `reply_window_rounds` **已经是 4**（D9 改过），若照待办再"2→4"会得到一个
+   与基线相同的臂，白跑 52 分钟 —— **改参数前先读当前值，不要读文档里的值**。
+
 ## 4. 启动清单（复制粘贴；一批一跑）
 > 约定：`REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`；批次名 `<B>`（如 `A`）；跑批产物落 `RUN=/root/t271/runs/<B>`。
 
