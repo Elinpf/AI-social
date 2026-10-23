@@ -1,0 +1,410 @@
+{
+  "A0": {
+    "by_turn": {
+      "1": {
+        "n": 206,
+        "restate_rate": 0.0,
+        "restate_strong_rate": 0.0
+      },
+      "2": {
+        "n": 119,
+        "restate_rate": 4.2,
+        "restate_strong_rate": 1.68
+      },
+      "3": {
+        "n": 108,
+        "restate_rate": 6.48,
+        "restate_strong_rate": 1.85
+      },
+      "4": {
+        "n": 97,
+        "restate_rate": 13.4,
+        "restate_strong_rate": 6.19
+      },
+      "5": {
+        "n": 78,
+        "restate_rate": 15.38,
+        "restate_strong_rate": 5.13
+      },
+      "6": {
+        "n": 78,
+        "restate_rate": 8.97,
+        "restate_strong_rate": 3.85
+      }
+    },
+    "n_msgs": 686,
+    "restate_rate": 6.41,
+    "restate_strong_rate": 2.48,
+    "rule": {
+      "denominator": "全部 MSG_*",
+      "ngram": "normalize_body + 8-gram（与 L-7 同口径）",
+      "restate": "与本线程更早消息共享 ≥1 个 8-gram",
+      "restate_strong": "共享 ≥3 个 8-gram",
+      "scope": "同线程内前向引用（不跨线程）"
+    },
+    "thread_meta_missing": 0,
+    "top_shared": [
+      [
+        "把铁锤往砧上一搁",
+        4
+      ],
+      [
+        "金先生我懂您的意",
+        4
+      ],
+      [
+        "先生我懂您的意思",
+        4
+      ],
+      [
+        "生我懂您的意思账",
+        4
+      ],
+      [
+        "了搓手上的泥嗯是",
+        2
+      ],
+      [
+        "搓手上的泥嗯是这",
+        2
+      ],
+      [
+        "搓了搓手上的泥嗯",
+        2
+      ],
+      [
+        "上的泥嗯是这个理",
+        2
+      ]
+    ]
+  },
+  "A5": {
+    "by_turn": {
+      "1": {
+        "n": 140,
+        "restate_rate": 0.0,
+        "restate_strong_rate": 0.0
+      },
+      "2": {
+        "n": 85,
+        "restate_rate": 3.53,
+        "restate_strong_rate": 1.18
+      },
+      "3": {
+        "n": 79,
+        "restate_rate": 6.33,
+        "restate_strong_rate": 1.27
+      },
+      "4": {
+        "n": 77,
+        "restate_rate": 9.09,
+        "restate_strong_rate": 3.9
+      },
+      "5": {
+        "n": 73,
+        "restate_rate": 16.44,
+        "restate_strong_rate": 8.22
+      },
+      "6": {
+        "n": 69,
+        "restate_rate": 11.59,
+        "restate_strong_rate": 5.8
+      }
+    },
+    "n_msgs": 523,
+    "restate_rate": 6.69,
+    "restate_strong_rate": 2.87,
+    "rule": {
+      "denominator": "全部 MSG_*",
+      "ngram": "normalize_body + 8-gram（与 L-7 同口径）",
+      "restate": "与本线程更早消息共享 ≥1 个 8-gram",
+      "restate_strong": "共享 ≥3 个 8-gram",
+      "scope": "同线程内前向引用（不跨线程）"
+    },
+    "thread_meta_missing": 0,
+    "top_shared": [
+      [
+        "王掌柜那本流水簿",
+        2
+      ],
+      [
+        "你灶上那锅红薯粥",
+        2
+      ],
+      [
+        "灶上那锅红薯粥再",
+        2
+      ],
+      [
+        "那锅红薯粥再搁就",
+        2
+      ],
+      [
+        "上那锅红薯粥再搁",
+        2
+      ],
+      [
+        "你师母娘家侄子那",
+        2
+      ],
+      [
+        "上那筐野山菌按大",
+        1
+      ],
+      [
+        "筐野山菌按大小分",
+        1
+      ]
+    ]
+  },
+  "D12C_OFF": {
+    "by_turn": {
+      "1": {
+        "n": 169,
+        "restate_rate": 0.0,
+        "restate_strong_rate": 0.0
+      },
+      "2": {
+        "n": 88,
+        "restate_rate": 0.0,
+        "restate_strong_rate": 0.0
+      },
+      "3": {
+        "n": 77,
+        "restate_rate": 5.19,
+        "restate_strong_rate": 1.3
+      },
+      "4": {
+        "n": 70,
+        "restate_rate": 7.14,
+        "restate_strong_rate": 0.0
+      },
+      "5": {
+        "n": 54,
+        "restate_rate": 7.41,
+        "restate_strong_rate": 3.7
+      },
+      "6": {
+        "n": 52,
+        "restate_rate": 17.31,
+        "restate_strong_rate": 1.92
+      }
+    },
+    "n_msgs": 510,
+    "restate_rate": 4.31,
+    "restate_strong_rate": 0.78,
+    "rule": {
+      "denominator": "全部 MSG_*",
+      "ngram": "normalize_body + 8-gram（与 L-7 同口径）",
+      "restate": "与本线程更早消息共享 ≥1 个 8-gram",
+      "restate_strong": "共享 ≥3 个 8-gram",
+      "scope": "同线程内前向引用（不跨线程）"
+    },
+    "thread_meta_missing": 0,
+    "top_shared": [
+      [
+        "肚子咕噜响了一声",
+        3
+      ],
+      [
+        "金先生规矩是规矩",
+        2
+      ],
+      [
+        "用围裙角擦了擦手",
+        2
+      ],
+      [
+        "揉着肚子眼睛却盯",
+        2
+      ],
+      [
+        "着肚子眼睛却盯着",
+        2
+      ],
+      [
+        "铁锤往砧子上一搁",
+        2
+      ],
+      [
+        "把铁锤往砧子上一",
+        2
+      ],
+      [
+        "手肚子咕噜响了一",
+        1
+      ]
+    ]
+  },
+  "D12C_ON": {
+    "by_turn": {
+      "1": {
+        "n": 169,
+        "restate_rate": 0.0,
+        "restate_strong_rate": 0.0
+      },
+      "2": {
+        "n": 88,
+        "restate_rate": 1.14,
+        "restate_strong_rate": 1.14
+      },
+      "3": {
+        "n": 77,
+        "restate_rate": 6.49,
+        "restate_strong_rate": 2.6
+      },
+      "4": {
+        "n": 70,
+        "restate_rate": 15.71,
+        "restate_strong_rate": 5.71
+      },
+      "5": {
+        "n": 54,
+        "restate_rate": 20.37,
+        "restate_strong_rate": 12.96
+      },
+      "6": {
+        "n": 52,
+        "restate_rate": 21.15,
+        "restate_strong_rate": 17.31
+      }
+    },
+    "n_msgs": 510,
+    "restate_rate": 7.65,
+    "restate_strong_rate": 4.51,
+    "rule": {
+      "denominator": "全部 MSG_*",
+      "ngram": "normalize_body + 8-gram（与 L-7 同口径）",
+      "restate": "与本线程更早消息共享 ≥1 个 8-gram",
+      "restate_strong": "共享 ≥3 个 8-gram",
+      "scope": "同线程内前向引用（不跨线程）"
+    },
+    "thread_meta_missing": 0,
+    "top_shared": [
+      [
+        "把锄头往地上一杵",
+        3
+      ],
+      [
+        "手里那根半指宽的",
+        2
+      ],
+      [
+        "七号卷宗还差两页",
+        2
+      ],
+      [
+        "第七号卷宗还差两",
+        2
+      ],
+      [
+        "这第七号卷宗还差",
+        2
+      ],
+      [
+        "老李那人上回借我",
+        2
+      ],
+      [
+        "把铁钳往砧上一搁",
+        2
+      ],
+      [
+        "一杵手搭在锄把上",
+        2
+      ]
+    ]
+  },
+  "D12D_T2": {
+    "by_turn": {
+      "1": {
+        "n": 169,
+        "restate_rate": 0.0,
+        "restate_strong_rate": 0.0
+      },
+      "2": {
+        "n": 88,
+        "restate_rate": 1.14,
+        "restate_strong_rate": 0.0
+      },
+      "3": {
+        "n": 77,
+        "restate_rate": 6.49,
+        "restate_strong_rate": 5.19
+      },
+      "4": {
+        "n": 70,
+        "restate_rate": 14.29,
+        "restate_strong_rate": 5.71
+      },
+      "5": {
+        "n": 54,
+        "restate_rate": 18.52,
+        "restate_strong_rate": 7.41
+      },
+      "6": {
+        "n": 52,
+        "restate_rate": 25.0,
+        "restate_strong_rate": 7.69
+      }
+    },
+    "n_msgs": 510,
+    "restate_rate": 7.65,
+    "restate_strong_rate": 3.14,
+    "rule": {
+      "denominator": "全部 MSG_*",
+      "ngram": "normalize_body + 8-gram（与 L-7 同口径）",
+      "restate": "与本线程更早消息共享 ≥1 个 8-gram",
+      "restate_strong": "共享 ≥3 个 8-gram",
+      "scope": "同线程内前向引用（不跨线程）"
+    },
+    "thread_meta_missing": 0,
+    "top_shared": [
+      [
+        "把火钳往砧子上一",
+        4
+      ],
+      [
+        "火钳往砧子上一磕",
+        4
+      ],
+      [
+        "把锄头往地上一杵",
+        3
+      ],
+      [
+        "我把这半指宽的竹",
+        2
+      ],
+      [
+        "把这半指宽的竹片",
+        2
+      ],
+      [
+        "这半指宽的竹片削",
+        2
+      ],
+      [
+        "等我把这半指宽的",
+        2
+      ],
+      [
+        "把搪瓷缸往桌上一",
+        2
+      ]
+    ]
+  },
+  "v0": {
+    "n_msgs": 187,
+    "reason": "187/187 条消息缺 thread_id ⇒ 无法确定线程边界，任何 restate 数值都会把跨线程共享误算成同线程复述 ⇒ 本批不可算",
+    "rule": {
+      "denominator": "全部 MSG_*",
+      "ngram": "normalize_body + 8-gram（与 L-7 同口径）",
+      "restate": "与本线程更早消息共享 ≥1 个 8-gram",
+      "restate_strong": "共享 ≥3 个 8-gram",
+      "scope": "同线程内前向引用（不跨线程）"
+    },
+    "thread_meta_missing": 187,
+    "verdict": "NOT_APPLICABLE"
+  }
+}
