@@ -1,0 +1,71 @@
+================ R21 处境锚起批证据（臂 off · worktree 版） ================
+采集时刻: 2026-10-23T08:08:28+08:00
+main_tree: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+worktree:  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21
+branch:    feat/scene-pair-r21
+HEAD:      e878a6e5da57e5661d07ec2c3fbed91ea91b10a0
+out_dir:   /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/v2/evidence/run_scene_anchor_off_seed42_n16r24
+side_root: /tmp/scene_anchor_off_side
+params:    seed=42 agents=16 rounds=24 flush_every=2
+arm:       off （off=开关变量不存在 / on=开关=1，单变量 LIFE_PROMPT_SCENE）
+ORDER=off
+
+---- [闸门0c] worktree 分支/HEAD ----
+worktree_branch=feat/scene-pair-r21 (期望 feat/scene-pair-r21)
+worktree_HEAD=e878a6e5da57e5661d07ec2c3fbed91ea91b10a0
+---- [闸门0d] 基线 sha 断言 ----
+branch=feat/scene-pair-r21  HEAD=e878a6e5da57e5661d07ec2c3fbed91ea91b10a0  父提交(基线)=3bb44308291c8ea61d71ae0c595ff2e8b09b5502
+---- [闸门1] pgrep -f '[o]rchestration run' 无命中（通过）
+---- [闸门1b] 本次为首臂（ORDER=off）⇒ 跳过上臂互斥检查（与 ON 臂起跑时同语义）
+mock_gate: MOCK_GATE=PASS
+
+# 处境锚（scene-anchor）机制闸 · mock 复核记录
+metrics_gate: METRICS_GATE=PASS
+checked_at=2026-10-23T02:47:23+08:00
+真源: tools/d5/dialogue_metrics.py sha256=1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271
+闸门2b PASS：.env.local 中无 LIFE_PROMPT_*
+闸门0e PASS：seed=42 agents=16 rounds=24 flush=2 out=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/v2/evidence/run_scene_anchor_off_seed42_n16r24 side=/tmp/scene_anchor_off_side
+闸门0f PASS：WT/OUT_DIR/SIDE_ROOT 三项解析值均与定稿一致
+---- [生效 env 快照 + 单变量存在性断言]（凭据脱敏） ----
+arm: off
+LIFE_PROMPT_SCENE = UNSET（变量不存在）
+展开检验: ${LIFE_PROMPT_SCENE+x}=
+存在性判定: NO （off 要求 NO；on 要求 YES 且值=1）
+开关断言: PASS
+HITT_LLM_PROVIDER=openai_compat
+LLM_API_KEY=<set:32 chars>
+  (env grep 结束)
+cwd=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/code  code_head=e878a6e5da57e5661d07ec2c3fbed91ea91b10a0
+允许差异清单（两臂只允许这三项不同）：LIFE_PROMPT_SCENE / ORDER / out_dir+side_root
+config sha256 清单：
+  CFG ff087e57e5ab3c97dd0ce338eb31b5ea7e959f81af9745cb051bf39f5032020b  activity_templates.json
+  CFG a94fba10e6d71ea0b9c12d2513e74fc0be2d3a70ad3d8468863e23e207e6ab8d  default.json
+  CFG f04355716d494f7b1a7236865c1bc3c6d3e13c9b250143a066bc1dd5ea8e9eec  dialogue_repair.json
+  CFG 83e24ae486e541d7d3066586f7979406fd655e8129729955271a225bc4499276  emotion_echo.json
+  CFG 11c569534b40a68269972cb8019cd5a3d4b99e569db1fb94e915a5ea56fdc5e7  engine_version.json
+  CFG 72b40de904069af4492b4a1acf484d9c4ccb20f8caade6e9ac112a1ace6d5197  life_v2.json
+  CFG 65fd915b1d4a3633dbdf9b2b72832c33be5ea724613821eedd79fe612d99fa44  llm.json
+  CFG c018d69f1e8a4a00c83b58787f139777836bca23b3f9beaddb773ce829df2bf7  narrative_weights.json
+  CFG c6306689eaf0081cf619f4238e434648d5df0b3df40c5384bb7f7c6ab24f8601  perception_scope.json
+  CFG 08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d  personas.json
+  CFG c36c0f8776372f4e36ec39126f0fd9546c1dadf5e814c294172f5e2e04bb66fa  places.json
+  CFG 609f22b679947fb418cb4f0db5fa2fd9d11d48d4ecf7c337fa8e8a13b4767008  policy.json
+  CFG 6cd105f5a2f44309ab2bf133111d47e117d9f46d922a1cbabcbd428da701ddd9  social.json
+  CFG 3a07a50123760381e93a62122ff683d9199ba38745261ea5a0349a6b924e0fbf  time.json
+  CFG 20f7e9790d0a828c79ae90c25972cea7de4dda245ad6f2360326d21b28d407ab  topology.json
+  CFG 5f9b7c16b8b94043a8f18bc444514e7b8ca4a9588fea96e593306097aa020038  world_director.json
+执行路径 sha256：
+  LAUNCHER 53fb7c079d93eccfb75a43fd1285077be38fab898ec59769b96c997e2b40c225  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/tools/d2/run_batch.sh
+  LAUNCHER feb8a78bf462726bf9c495d43fcab4789b4bea7dd0138eb6f2a913098bf2a2cc  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/tools/d2/emit_run_meta.py
+指标工具 sha256（冻结口径）：
+  FROZEN 1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/tools/d5/dialogue_metrics.py
+  FROZEN_MTIME 2026-10-23 08:05:20.426420221 +0800  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/tools/d5/dialogue_metrics.py
+  FROZEN 004f3bca138e7800a0fc0ac7e0f1c0f0bdb9b0a862432fa53f65b152bdb2ddd3  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/tools/d5/f8_lexicon.json
+  FROZEN_MTIME 2026-10-23 08:05:20.427420244 +0800  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/tools/d5/f8_lexicon.json
+  FROZEN 6088a40cc603d67eaba9577e2cafda606b0d2be3fbd952dd13ebb7834f336b70  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/code/life/scene_anchor.py
+  FROZEN_MTIME 2026-10-23 08:05:20.390419375 +0800  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/code/life/scene_anchor.py
+  FROZEN d08656c7dd38413af7410363e5e7acf64ea91fd42cc31357ec93ac4f8fe3e33d  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/code/life/agent.py
+  FROZEN_MTIME 2026-10-23 08:05:20.387940614 +0800  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/scene-pair-r21/code/life/agent.py
+git status --short 快照（跑批前）：
+  GIT ?? v2/evidence/run_scene_anchor_off_seed42_n16r24/
+  GIT ?? v2/evidence/run_scene_anchor_on_seed42_n16r24/

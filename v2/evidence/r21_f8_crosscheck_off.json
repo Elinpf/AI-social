@@ -1,0 +1,49 @@
+{
+  "source": "independent_crosscheck（非指标真源，仅交叉校验）",
+  "log": ".worktrees/scene-pair-r21/v2/evidence/run_scene_anchor_off_seed42_n16r24/run.jsonl",
+  "lexicon": "tools/d5/f8_lexicon.json",
+  "n_msg": 191,
+  "n_slot_missing": 0,
+  "F-8t_all": {
+    "num": 5,
+    "den": 191,
+    "rate_pct": 2.617801,
+    "lexicon": "narrow",
+    "scope": "own_slot"
+  },
+  "F-8t_core": {
+    "num": 1,
+    "den": 191,
+    "rate_pct": 0.52356,
+    "lexicon": "narrow_onslot",
+    "scope": "own_slot",
+    "excluded_agnostic_tokens": [
+      "这会儿"
+    ]
+  },
+  "hits_by_token": {
+    "下午": 1,
+    "这会儿": 4
+  },
+  "hits_by_token_primary": {
+    "下午": 1,
+    "这会儿": 4
+  },
+  "hits_by_token_msgs": {
+    "42:145": [
+      "这会儿"
+    ],
+    "42:156": [
+      "这会儿"
+    ],
+    "42:19467": [
+      "这会儿"
+    ],
+    "42:2162": [
+      "下午"
+    ],
+    "42:23167": [
+      "这会儿"
+    ]
+  }
+}
