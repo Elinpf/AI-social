@@ -1,0 +1,15 @@
+{
+  "log": "v2/evidence/run_d12c_off_n16r60_seed42/run.jsonl",
+  "pool": "all_others",
+  "B": 2000,
+  "seed": 42,
+  "n_inits": 114,
+  "n_agents": 16,
+  "observed_hhi_mean": 0.2877,
+  "null_hhi_mean": 0.2159,
+  "null_q025": 0.1938,
+  "null_q975": 0.2462,
+  "null_sd": 0.0137,
+  "p_value_one_sided_ge": 0.0,
+  "verdict": "显著比均匀随机更集中"
+}
