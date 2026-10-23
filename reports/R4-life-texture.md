@@ -221,8 +221,8 @@
 | 5 | 冻结读数器（判定定义的唯一来源） | 事实（口径） | `v2/evidence/d12c_metrics.py` | `c41cb5aca03c9499fc47047d5acaeba8f4b33bef5298b69556b15d3da290ab58` | `c41cb5ac` |
 | 6 | 真跑结束码与开关真值 | 事实 | `v2/evidence/run_d12c_{off,on}_n16r60_seed42/{END,switch_proof.txt,arm_state_check.txt}` | OFF：`44f35ce5…` / `4b37d0cf…` / `47268595…`；ON：`93ff7811…` / `ebb459a2…` / `2a203cdd…` | 同左 |
 | 7 | 预登记判据与判定词表 | 事实（口径） | `v2/refs/D12-L7-dedup-round3-prereg.md` §10.3–§10.5 | 见 R1 证据索引 | TODO（源码随提交变动） |
-| 8 | `L-15` 复述率定义、冻结时刻（10:30，**早于任何以 L-15 为判据的跑批**）、硬边界与 §6 收窄口径 | 事实（口径） | `v2/refs/L15-restate-rate-freeze.md` | `43388399…`（全值见该件 §3） | `43388399` |
-| 9 | `L-15` 四批基线读数（A0 / A5 / D12-C OFF / D12-C ON，含按轮分层） | 读数 | `v2/evidence/l15_restate_baselines.json` | `4864c796…` | `4864c796` |
+| 8 | `L-15` 复述率定义、冻结时刻（10:30，**早于任何以 L-15 为判据的跑批**）、硬边界与 §6 收窄口径 | 事实（口径） | `v2/refs/L15-restate-rate-freeze.md`（入库 commit `a394f7b`，**含 §6**） | `4338839924c425c75efe49aab1cef0b952c620cb2dcb0e353f2dbe0071154cab` | `43388399` |
+| 9 | `L-15` 四批基线读数（A0 / A5 / D12-C OFF / D12-C ON，含按轮分层） | 读数 | `v2/evidence/l15_restate_baselines.json`（入库 commit `de27ae8`） | `4864c796a3c99317407d23e07f115698b89c04b215cb196cd6ca1b28ed3615f1` | `4864c796` |
 | 10 | `L-15` 实现（口径依赖 `dialogue_metrics.py::normalize_body`，不自造） | 事实（实现） | `tools/d5/l15_restate_rate.py` | `02d1299f2b6ee59f84dae7e693e8cd3495771f7dfc9e928bc2763b73318d3e5a` | `02d1299f` |
 
 **复现命令（仓库根执行）**：
