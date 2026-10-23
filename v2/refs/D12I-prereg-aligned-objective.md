@@ -22,7 +22,8 @@
 **选优指标（run 内实时）** = 候选对**固定外部语料**的 8-gram 交集率：
 ```
 score(c) = |shingles_4(c) ∩ S_ext_4| / |shingles_4(c)|   （4-gram）
-S_ext = T5（run_d12g_diverse2_n16r60_seed42）**前 40 轮**已落库消息的 shingle 并集（**4-gram**，normalize_body；`d12i_external_shingles_4gram.json`）
+S_ext = T5（run_d12g_diverse2_n16r60_seed42）**前 40 轮**已落库消息的 shingle 并集（**4-gram**，normalize_body）
+  文件 `v2/evidence/d12i_external_shingles_4gram.json`：**file sha `f75ebb3e…`、content sha `16754109…`、16,973 个 shingle、332 条消息、来源日志 sha `dd4ad73d…ff36`（与 T5 meta 对账一致）**
 ```
 - `S_ext` 在起跑前**从 T5 日志一次性算出、落盘为 `v2/evidence/d12i_external_shingles.json`**（含 sha），run 内**只读**；
 - **为什么取前 40 轮**：与本臂 60 轮的前 2/3 同量级，且**固定不变**（不随本 run 生长）⇒ 参照系**与本 run 落库选择无关**；
@@ -78,9 +79,13 @@ S_ext = T5（run_d12g_diverse2_n16r60_seed42）**前 40 轮**已落库消息的 
 ## 5. 落盘字段（消歧义）
 
 ```
-ctx.d12i = {m:3, picked, scores[3], cand_shingle_hashes[3], cand_shingle_counts[3],
-            score_kind:"overlap_frac_ext", ext_ref_sha256, resampled_per_cand[3]}
+ctx.d12i = {m:3, picked, scores[3],
+            ngram: 4,                        # ← 必须显式标 n-gram（D12-H 教训：8-gram 落盘无法反推 4-gram）
+            cand_shingle_hashes_4g[3],       # ← 字段名带 n-gram 后缀，防混淆
+            cand_shingle_counts[3],          # ← |shingles| 分母；=0 ⇒ N/A，不得记 0
+            score_kind:"overlap_frac_ext_4g", ext_ref_content_sha256, resampled_per_cand[3]}
 ```
+**为什么必须标 n-gram**：D12-H 落的是 8-gram `cand_shingle_hashes`，而 **4-gram 不能由 8-gram 反推** ⇒ 上一臂的候选无法用于本臂的 4-gram 体检（`dialogue-core-dev` 已实测确认）。字段名与 `ngram` 双标注，避免下一个人再踩。
 - **`resampled_per_cand[3]`**：每候选各自的重采次数（D12-H 的 `resampled` 是合计，无法区分是哪一候选）；
 - `ext_ref_sha256`：`S_ext` 文件的 sha，保证参照系可追溯。
 
