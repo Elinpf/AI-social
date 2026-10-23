@@ -1,0 +1,64 @@
+{
+  "logs": {
+    "base": {
+      "path": "v2/evidence/run_d12c_on_n16r60_seed42/run.jsonl",
+      "sha256": "sha256:bd2df77fd125cc75c31f261cc05486bd7376d9a9fcd9334f083cf8897e496c87"
+    },
+    "test": {
+      "path": ".worktrees/d12g-diverse2/v2/evidence/run_d12g_diverse2_n16r60_seed42/run.jsonl",
+      "sha256": "sha256:dd4ad73d5a21c7485c2afbfc9701e267c25da3150b10adade3b3819a3996ff36"
+    }
+  },
+  "n_msgs": {
+    "base": 510,
+    "test": 510
+  },
+  "policy": {
+    "B": 2000,
+    "note": "消息级有放回重采样；dup 口径复用 recompute_l7_indep（任一 shingle 重合即 dup，分母=MSG 数）",
+    "rule": "CI 含 0 ⇒ 无结论",
+    "seed": 42
+  },
+  "rates": {
+    "L7_norm8": {
+      "base": {
+        "k": 332,
+        "n": 510,
+        "pct": 65.098
+      },
+      "delta_pp": -16.4706,
+      "diff": {
+        "ci95_hi": -10.5882,
+        "ci95_lo": -22.3529,
+        "contains_zero": false
+      },
+      "test": {
+        "k": 248,
+        "n": 510,
+        "pct": 48.6275
+      }
+    },
+    "L7_raw8": {
+      "base": {
+        "k": 378,
+        "n": 510,
+        "pct": 74.1176
+      },
+      "delta_pp": -13.5294,
+      "diff": {
+        "ci95_hi": -7.8431,
+        "ci95_lo": -19.2157,
+        "contains_zero": false
+      },
+      "test": {
+        "k": 309,
+        "n": 510,
+        "pct": 60.5882
+      }
+    }
+  },
+  "recompute_impl": {
+    "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/recompute_l7_indep.py",
+    "sha256": "sha256:ae50620d3b9bdd3add9d81cdd47186b87936d15a56eca58d76dbd44686b952f0"
+  }
+}
