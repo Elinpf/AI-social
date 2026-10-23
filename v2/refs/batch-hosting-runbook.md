@@ -218,7 +218,7 @@ picked = {0: 191}（全选第 1 条）；scores 三列均值 = 0 / 0 / 0；三�
 
 - **本轮实例（两条，都是真事故）**：
   1. `v2/refs/D12F-prereg-candidate-diversity.md` §3 的 **M4 只写「候选可分性（非全同分样本占比）≥ 25%」，没写分母是谁**；
-  2. 后果已经发生：`v2/evidence/d12e_leader_terminal_check.md:68`（修订前 `:54`）把 **79/497 = 15.90%** 当终态读数写进表里，而**497 在终态日志上根本不可达**——该文件 `:67` 同一张表自己写着这一列的来源：「**42/497 中途口径**」，即 497 是**跑批中途快照的分母**。
+  2. 后果已经发生：`v2/evidence/d12e_leader_terminal_check.md:68「79/497」（修订前 `:54`）把 **79/497 = 15.90%** 当终态读数写进表里，而**497 在终态日志上根本不可达**——该文件 `:67` 同一张表自己写着这一列的来源：「**42/497 中途口径**」，即 497 是**跑批中途快照的分母**。
 - **终态唯一可复现读数**：**82/510 = 16.0784%**。终态日志上任何筛选都回不到 497：`n_msgs=510`、`ctx.d12e` **510/510**、`len(scores)` 恒 3、`picked` 无 `None`、`sample_index==0` 467 条。生长链自洽：快照 497 条时非全同分 **79** → 终态 510 条时 **82**（后段新增样本落到非全同分），**不是**"剔除 `picked=None`"。
 - **为什么**：预登记的全部价值是「**阈值不可事后调**」。分母没写死 ⟺ 阈值可调 = 预登记作废。分母不是统计细节，是**判据定义的一部分**。
 
@@ -242,7 +242,7 @@ python3 v2/evidence/d12f_gate_metrics.py \
 
 ### 3.103.3 半成品读数必须**自证是半成品**，否则必被当终态引用
 
-- **本轮实例（已发生，非假设）**：`d12e_leader_terminal_check.md:68`（修订前 `:54`）的 **79/497 = 15.90%** 就是**把中途快照当终态**——497 只存在于跑批中途（该文件 `:67` 自述「42/497 中途口径」），终态 510 条上不可达，终态值应为 **82/510 = 16.0784%**。全量扫描见 `<team-workspace>/partial_as_terminal_scan.md`。
+- **本轮实例（已发生，非假设）**：`d12e_leader_terminal_check.md:68「79/497」（修订前 `:54`）的 **79/497 = 15.90%** 就是**把中途快照当终态**——497 只存在于跑批中途（该文件 `:67` 自述「42/497 中途口径」），终态 510 条上不可达，终态值应为 **82/510 = 16.0784%**。全量扫描见 `<team-workspace>/partial_as_terminal_scan.md`。
 - **规则（字段名以 `v2/evidence/d12f_gate_metrics.py` 的**实际实现**为准，实测见 3.103.5）**：
   - 文件名必须 `_partial_rNN.json`（`NN` = `snapshot.max_round_seen`）；**注意：当前脚本 `--out-json` 不校验文件名，此条靠人工遵守、待补断言**（见下）；
   - 体内必须带 `snapshot.partial = true`、`snapshot.snapshot_rounds_seen`、`snapshot.max_round_seen`、`snapshot.turn_seals`、`snapshot.lines_unparsable_or_partial`；
@@ -253,7 +253,7 @@ python3 v2/evidence/d12f_gate_metrics.py \
 
 ### 3.103.4 `pp` 与「倍」不得混写：差值一律 `Δ = X pp`，比值一律「倍（附计数比 a/b）」
 
-- **本轮实例**：D12-E 的 `L-6_dup_exact_rate` 由 **49/510 = 9.6078%** 降到 **4/510 = 0.7843%**；**pp 差 = 8.8235pp**、**倍数 = 12.2502 倍**。原报告写「降 **8.8 倍**」——把 **pp 值当成倍数**，**3 处 + 3 处（两个文件）**：`v2/evidence/d12e_result.md:84/:101/:104`、`v2/evidence/d12e_leader_terminal_check.md:84/:101/:109`（均 2026-10-23 更正并留文件头修订记录）。全量排查见 `<team-workspace>/unit_errata_scan.md`。
+- **本轮实例**：D12-E 的 `L-6_dup_exact_rate` 由 **49/510 = 9.6078%** 降到 **4/510 = 0.7843%**；**pp 差 = 8.8235pp**、**倍数 = 12.2502 倍**。原报告写「降 **8.8 倍**」——把 **pp 值当成倍数**，**3 处 + 3 处（两个文件）**：`v2/evidence/d12e_result.md:84/:101/:104`（片段锚：「降 8.83pp」）、`v2/evidence/d12e_leader_terminal_check.md:84/:101/:109`（片段锚：「降 8.83pp」/「8.83pp / 倍数 12.25 倍」）（均 2026-10-23 更正并留文件头修订记录）。全量排查见 `<team-workspace>/unit_errata_scan.md`。
 - **规则**：写差值只用 `pp`；写比值必须写「N 倍（a/b = 计数比）」，让读者一步复算。**两者不得互相顶替**，也不允许只写「降 N 倍」而隐藏被除关系。
 - **为什么**：8.83pp 与 12.25 倍差一个量级；混写让读者把"效果强度"判断反了，而且**错值可复算时看起来同样精确**（"8.8" 确实出现在数据里），最难被发现。
 
@@ -301,8 +301,13 @@ git show 9ae3eae -- v2/evidence/d12e_result.md v2/evidence/d12e_leader_terminal_
   3. **入库窗口**：从 `git add` 到 push 完成的整个窗口内，**任何成员不得再写该文件**（本轮 case：提交者 add 时 life-designer 正在改 §8-D）；
   4. **自核以 blob 为准，不以工作区为准**：`git add` 后用 `git show :<path> | sha256sum` 核**暂存区**；commit 后用 `git show <commit>:<path> | sha256sum` 核**提交内 blob**；两者都等于冻结记录里的值时才算成功。**只用工作区 `sha256sum` 自核是无效的**——add 之后工作区仍会变，核到的是错 blob，这正是本轮事故的发生机制；
   5. **已提交中间态 ⇒ 只能补 commit**，并在文件内登记「中间态 sha / 最终态 sha / 原因」；**不得用 amend 掩盖**；
-  6. **证据检索一律用前缀精确匹配**：`LIFE_PROMPT_COOP_E1`、`run_e1_`；**`e1_` 这类宽匹配会命中 `v2/evidence/event_cards_e1_e20_map.md`**（实测存在），会污染"是否已起跑"的判断。
-- **本轮"三态都早于任何一臂"的独立验真（auditor 复验，本人复核同值）**：`grep -rl LIFE_PROMPT_COOP_E1 --include=*.py --include=*.json --include=*.sh .`（排除 `.git`/`.worktrees`）= **0 命中**；`code/life/coop_e1.py`、`code/life/tests/test_coop_e1.py`、`tools/d5/f9_coop.py` **均不存在**；无 `*coop*` / `*run_e1*` 批次目录 ⇒ 三个版本都产生于**任何一臂起跑之前**，**不构成"看到结果再改口径"**（属流程违规，非发布事故：`origin/master` 仍为 `edf9526`，三 commit 均未推送）。
+  6. **冻结后不得回写冻结件**（leader 2026-10-23 16:32 批准，原文照录）：
+     > **冻结后不得回写冻结件。** 预登记一旦 `commit`（无论是否 push），即为冻结件：其 sha256 与内容不得再变。此后的一切修订只能落成 **`v2/refs/` 下的独立修订文件**（如 `E1-amendment-3.md`，注明「修订对象 + 修订对象 sha256 + 写于何时 + 是否已见读数」），并由后续 commit 引入。
+     > **正文内修订块仅在冻结前允许**：即「文件尚未 commit」阶段写进正文，且必须带时间戳早于起跑。冻结后在正文里追加 Amendment N，等同于事后触碰冻结件，一律不接受。
+     > 理由：冻结件的唯一价值是「内容未被事后改动」；允许在它里面追加段落，等于保留了"事后编辑"的合法通道，审计上无法区分「追加」与「篡改」。
+     **衔接说明（leader 已确认）**：本款与 runbook 既有口径「跑前修订只认两类（预登记正文修订块 / `v2/refs/` 独立修订文件）」**不冲突**，只是给第 ① 类加了前置条件——**必须在 `commit` 之前**。
+  7. **证据检索一律用前缀精确匹配**：`LIFE_PROMPT_COOP_E1`、`run_e1_`；**`e1_` 这类宽匹配会命中 `v2/evidence/event_cards_e1_e20_map.md`**（实测存在），会污染"是否已起跑"的判断。
+- **本轮"三态都早于任何一臂"的独立验真（auditor 复验，本人复核同值）**：`grep -rl LIFE_PROMPT_COOP_E1 --include=*.py --include=*.json --include=*.sh .`（排除 `.git`/`.worktrees`）= **0 命中**；`code/life/coop_e1.py`、`code/life/tests/test_coop_e1.py`、`tools/d5/f9_coop.py` **均不存在**；无 `*coop*` / `*run_e1*` 批次目录 ⇒ 三个版本都产生于**任何一臂起跑之前**，**不构成"看到结果再改口径"**（属流程违规，非发布事故。**推送状态按 3.103.5 要求带时点**：2026-10-23 16:33 复核 `origin/master` 已前移至 `4dab73d`，`9ae3eae` / `0520e1e` 已由他人推上远端；其后 `f052fa8` 及本次 commit 仍未推送——`timeout 20 git ls-remote origin master` rc=124）。
 - **为什么**：预登记的法律意义是「阈值不可事后调」。一旦同一次入库里出现两个字节数不同的预登记，"哪一版是跑前那版"就只能靠逐字比对去猜；而 **amend 会把凭据本身删掉**。补一个 commit 是成本，force push / amend 已推历史是把证据链毁掉。
 
 ## 3.104 【硬规则】别用"被缓存污染的观测"去设预期墙钟（2026-10-23 D12-F）
