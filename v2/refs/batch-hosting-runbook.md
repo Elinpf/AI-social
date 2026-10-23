@@ -372,6 +372,40 @@ D12-G 284 条里有 **1 条**（`seq=26894`）**候选 0 与候选 1 的 sha 完
 2. **`scores` 已经是"候选与近期台词的 8-gram 交集数"**（argmin 依据）⇒ 不要再加 `inter_counts` 这类同量字段，否则"按 scores 归因"与"按 inter_counts 归因"会打架。正确做法：**在预登记里把 `scores` 的定义写死**（窗口 = 最近 N 条？跨线程还是仅本线程？N 多少？是否 `normalize_body` 后 8-window？），使 `scores` 本身可作归因依据。
 3. **`picked_cand_sha` 冗余** ⇒ 有 `picked`（索引）+ `candidate_shas` 就够；若担心错位，加断言 `candidate_shas[picked] == picked_cand_sha`，不必存两份。
 
+## 3.106 【硬规则】提交必须限定 pathspec：`git add` 挡不住并发写者，`git commit` 默认提交**整个 index**（2026-10-23 第二次同类事故后新增）
+
+**事故（本轮实测，只描述机制，不追责）**：一次「先 `git add -- <我的 9 个路径>`，再裸 `git commit -m …`」的证据提交，**实际入库 12 个文件**——多出的 3 个是另一位写者在「我 `add` 之后、我 `commit` 之前」这一窗口内 `git add` 进**同一 index** 的未预期文件（`v2/evidence/d12g_l15.json`、`v2/evidence/d12g_leader_terminal_check.md`、`v2/evidence/d12g_metrics_t4_t5.json`），被我的裸 `commit` 一并带走（commit = `16111b6`）。内容无损，但**该 commit 的可归因性已破坏**：从 `git show --stat` 看不出哪些文件是提交者本意。
+> 这是**第二次**同类机制事故：§3.103.6 第 8 款已记过「`git add -- <path>` 只锁定"我放什么进暂存区"，不能阻止并发写者把同一文件的其它改动一并带走」。**本款的增量是：把提交动作本身从"整个 index"改成"限定 pathspec"，从机制上取消"掺入"这个可能性**，而不是靠事后自核去发现。
+
+**规则（三条，都可机械执行；不设例外）**
+
+1. **提交必须限定 pathspec，禁止「先 `add` 再裸 `commit`」**：
+   ```bash
+   # ✅ 正例：提交动作自己指定范围，index 里别人的东西带不走
+   git commit -m "<message>" -- <path1> <path2> <path3>
+   # ❌ 反例（本款针对的就是它）：提交的是整个 index
+   git add -- <path1> <path2>; git commit -m "<message>"
+   ```
+   注：`git commit -- <paths>` 等价于「只提交这些路径的当前工作区内容」，**不需要先 `add`**；若已 `add` 过，再带 pathspec 提交同样安全（pathspec 优先）。新增文件必须已 `git add`（或 `git add -N`）过才能被 pathspec 提交。
+2. **提交前强制核对（两步，缺一不可）**：
+   ```bash
+   git diff --cached --stat     # ① 看 index 实际内容，与你打算提交的清单逐行比对
+   git status --short           # ② 看工作区是否有人刚往 index 里塞东西
+   ```
+   **出现任何未预期文件 ⇒ 叫停本次提交**，先查清是谁在写、写到哪一步；**不得以"内容无损""反正也要进 master"为由放行**（本轮就是这条被放宽了）。
+3. **并发窗口的归因口径（判「这个 commit 能不能引用」）**：多成员共用一棵工作树时，任何「先 `add`、后 `commit`、中间隔了其他写者」的提交，**默认视为不可归因**；只有当 `git show --stat <commit>` 能证明差异**全部是提交者自己改的文件**时，才可归因。
+   ```bash
+   git show --stat <commit>          # 文件列表必须与你声明要提交的清单**逐行相等**
+   git log -1 --format='%an <%ae>' <commit>   # 身份仅供参考（默认 git 身份不可辨，见 §3.103.6 第 8 款）
+   ```
+   附带口径（沿用 §3.103.6 第 8 款）：**"他人未提交的改动"在提交后已不可见，不能拿来当判据**；判据只能对着 commit 本身跑。
+
+**处置规则（事故已发生时）**：**不改写历史**（`16111b6` 之后已有 `37a4fd3`，`reset`/`rebase`/`amend` 会把证据链与下游引用一起弄断）⇒ **留在库里 + 在后续 commit message 或本节登记里写清"哪些文件是本次被裹入的、为什么无损"**；`git add --amend` 类补救一律禁止（见 §3.103.6 第 2 款）。
+
+**正例（本款的自我执行）**：新增本节的提交本身就是按本款做的——`git add -- v2/refs/batch-hosting-runbook.md` 后，用 **`git commit -m "…" -- v2/refs/batch-hosting-runbook.md`**（限定 pathspec），并以 `git show --stat HEAD` 证明只动这一个文件。
+
+**边界**：本款只管「提交范围」；预登记冻结件本身的并发写与 amend 禁令仍归 §3.103.6。两款的防线是叠加的：§3.103.6 第 8 款管「同一文件被掺入他人改动」，本款管「整个 index 被掺入他人文件」。
+
 ## 4. 启动清单（复制粘贴；一批一跑）
 > 约定：`REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`；批次名 `<B>`（如 `A`）；跑批产物落 `RUN=/root/t271/runs/<B>`。
 
