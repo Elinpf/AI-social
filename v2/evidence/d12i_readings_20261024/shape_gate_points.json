@@ -1,0 +1,304 @@
+{
+  "log": ".worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl",
+  "mode": "points",
+  "points": [
+    {
+      "rounds": "<20",
+      "n_bodies": 174,
+      "rounds_covered": [
+        0,
+        19
+      ],
+      "metrics": {
+        "paren_rate": 0.6091954022988506,
+        "paren_head_rate": 0.5517241379310345,
+        "addr_head_strict": 0.26436781609195403,
+        "addr_head_upper_rate": 0.28160919540229884,
+        "len_p50": 65.5,
+        "len_p50_excl": 56.0,
+        "id_leak_rate": 0.0,
+        "dup_exact_rate": 0.0
+      },
+      "gate": {
+        "F1_paren": {
+          "t5": 0.5784,
+          "drift_pp": 3.0795402298850583,
+          "tol_pp": 5.0,
+          "verdict": "PASS"
+        },
+        "F2_addr_head": {
+          "t5": 0.3647,
+          "t5_label": "addr_head_strict",
+          "t5_upper_reference": 0.41,
+          "observed_label": "addr_head_strict",
+          "observed_upper_reference": 0.28160919540229884,
+          "drift_pp": -10.033218390804599,
+          "tol_pp": 15.0,
+          "verdict": "PASS"
+        },
+        "F3_len_p50_excl": {
+          "t5": 53.0,
+          "observed": 56.0,
+          "drift_rel": 0.05660377358490566,
+          "tol_rel": 0.1,
+          "verdict": "PASS",
+          "raw_len_p50_shown_only": 65.5
+        }
+      }
+    },
+    {
+      "rounds": "<30",
+      "n_bodies": 246,
+      "rounds_covered": [
+        0,
+        29
+      ],
+      "metrics": {
+        "paren_rate": 0.6788617886178862,
+        "paren_head_rate": 0.6138211382113821,
+        "addr_head_strict": 0.23170731707317074,
+        "addr_head_upper_rate": 0.24390243902439024,
+        "len_p50": 69.0,
+        "len_p50_excl": 59.0,
+        "id_leak_rate": 0.0,
+        "dup_exact_rate": 0.04065040650406504
+      },
+      "gate": {
+        "F1_paren": {
+          "t5": 0.5784,
+          "drift_pp": 10.046178861788613,
+          "tol_pp": 5.0,
+          "verdict": "FAIL"
+        },
+        "F2_addr_head": {
+          "t5": 0.3647,
+          "t5_label": "addr_head_strict",
+          "t5_upper_reference": 0.41,
+          "observed_label": "addr_head_strict",
+          "observed_upper_reference": 0.24390243902439024,
+          "drift_pp": -13.299268292682928,
+          "tol_pp": 15.0,
+          "verdict": "PASS"
+        },
+        "F3_len_p50_excl": {
+          "t5": 53.0,
+          "observed": 59.0,
+          "drift_rel": 0.11320754716981132,
+          "tol_rel": 0.1,
+          "verdict": "FAIL",
+          "raw_len_p50_shown_only": 69.0
+        }
+      }
+    },
+    {
+      "rounds": "<60",
+      "n_bodies": 510,
+      "rounds_covered": [
+        0,
+        59
+      ],
+      "metrics": {
+        "paren_rate": 0.7235294117647059,
+        "paren_head_rate": 0.6627450980392157,
+        "addr_head_strict": 0.22745098039215686,
+        "addr_head_upper_rate": 0.23529411764705882,
+        "len_p50": 70.0,
+        "len_p50_excl": 55.0,
+        "id_leak_rate": 0.00392156862745098,
+        "dup_exact_rate": 0.09215686274509804
+      },
+      "gate": {
+        "F1_paren": {
+          "t5": 0.5784,
+          "drift_pp": 14.512941176470584,
+          "tol_pp": 5.0,
+          "verdict": "FAIL"
+        },
+        "F2_addr_head": {
+          "t5": 0.3647,
+          "t5_label": "addr_head_strict",
+          "t5_upper_reference": 0.41,
+          "observed_label": "addr_head_strict",
+          "observed_upper_reference": 0.23529411764705882,
+          "drift_pp": -13.724901960784317,
+          "tol_pp": 15.0,
+          "verdict": "PASS"
+        },
+        "F3_len_p50_excl": {
+          "t5": 53.0,
+          "observed": 55.0,
+          "drift_rel": 0.03773584905660377,
+          "tol_rel": 0.1,
+          "verdict": "PASS",
+          "raw_len_p50_shown_only": 70.0
+        }
+      }
+    }
+  ],
+  "segments": [
+    {
+      "rounds": "[0,20)",
+      "n_bodies": 174,
+      "rounds_covered": [
+        0,
+        19
+      ],
+      "metrics": {
+        "paren_rate": 0.6091954022988506,
+        "paren_head_rate": 0.5517241379310345,
+        "addr_head_strict": 0.26436781609195403,
+        "addr_head_upper_rate": 0.28160919540229884,
+        "len_p50": 65.5,
+        "len_p50_excl": 56.0,
+        "id_leak_rate": 0.0,
+        "dup_exact_rate": 0.0
+      },
+      "gate": {
+        "F1_paren": {
+          "t5": 0.5784,
+          "drift_pp": 3.0795402298850583,
+          "tol_pp": 5.0,
+          "verdict": "PASS"
+        },
+        "F2_addr_head": {
+          "t5": 0.3647,
+          "t5_label": "addr_head_strict",
+          "t5_upper_reference": 0.41,
+          "observed_label": "addr_head_strict",
+          "observed_upper_reference": 0.28160919540229884,
+          "drift_pp": -10.033218390804599,
+          "tol_pp": 15.0,
+          "verdict": "PASS"
+        },
+        "F3_len_p50_excl": {
+          "t5": 53.0,
+          "observed": 56.0,
+          "drift_rel": 0.05660377358490566,
+          "tol_rel": 0.1,
+          "verdict": "PASS",
+          "raw_len_p50_shown_only": 65.5
+        }
+      }
+    },
+    {
+      "rounds": "[20,30)",
+      "n_bodies": 72,
+      "rounds_covered": [
+        20,
+        29
+      ],
+      "metrics": {
+        "paren_rate": 0.8472222222222222,
+        "paren_head_rate": 0.7638888888888888,
+        "addr_head_strict": 0.1527777777777778,
+        "addr_head_upper_rate": 0.1527777777777778,
+        "len_p50": 80.5,
+        "len_p50_excl": 62.5,
+        "id_leak_rate": 0.0,
+        "dup_exact_rate": 0.13888888888888884
+      },
+      "gate": {
+        "F1_paren": {
+          "t5": 0.5784,
+          "drift_pp": 26.882222222222218,
+          "tol_pp": 5.0,
+          "verdict": "FAIL"
+        },
+        "F2_addr_head": {
+          "t5": 0.3647,
+          "t5_label": "addr_head_strict",
+          "t5_upper_reference": 0.41,
+          "observed_label": "addr_head_strict",
+          "observed_upper_reference": 0.1527777777777778,
+          "drift_pp": -21.192222222222224,
+          "tol_pp": 15.0,
+          "verdict": "FAIL"
+        },
+        "F3_len_p50_excl": {
+          "t5": 53.0,
+          "observed": 62.5,
+          "drift_rel": 0.1792452830188679,
+          "tol_rel": 0.1,
+          "verdict": "FAIL",
+          "raw_len_p50_shown_only": 80.5
+        }
+      }
+    },
+    {
+      "rounds": "[30,60)",
+      "n_bodies": 264,
+      "rounds_covered": [
+        30,
+        59
+      ],
+      "metrics": {
+        "paren_rate": 0.7651515151515151,
+        "paren_head_rate": 0.7083333333333334,
+        "addr_head_strict": 0.22348484848484848,
+        "addr_head_upper_rate": 0.22727272727272727,
+        "len_p50": 71.0,
+        "len_p50_excl": 54.5,
+        "id_leak_rate": 0.007575757575757576,
+        "dup_exact_rate": 0.13257575757575757
+      },
+      "gate": {
+        "F1_paren": {
+          "t5": 0.5784,
+          "drift_pp": 18.675151515151512,
+          "tol_pp": 5.0,
+          "verdict": "FAIL"
+        },
+        "F2_addr_head": {
+          "t5": 0.3647,
+          "t5_label": "addr_head_strict",
+          "t5_upper_reference": 0.41,
+          "observed_label": "addr_head_strict",
+          "observed_upper_reference": 0.22727272727272727,
+          "drift_pp": -14.121515151515155,
+          "tol_pp": 15.0,
+          "verdict": "PASS"
+        },
+        "F3_len_p50_excl": {
+          "t5": 53.0,
+          "observed": 54.5,
+          "drift_rel": 0.02830188679245283,
+          "tol_rel": 0.1,
+          "verdict": "PASS",
+          "raw_len_p50_shown_only": 71.0
+        }
+      }
+    }
+  ],
+  "segment_jump": {
+    "threshold_pp": 10.0,
+    "largest": {
+      "from": "[0,20)",
+      "to": "[20,30)",
+      "delta_paren_pp": 23.80268199233716,
+      "delta_addr_pp": -11.159003831417625,
+      "jump": true
+    },
+    "any_jump": true,
+    "note": "段间（块级）跃变；只是提示，不参与 rc"
+  },
+  "jump": {
+    "pair": [
+      "<20",
+      "<30"
+    ],
+    "delta_paren_pp": 6.966638631903555,
+    "delta_addr_pp": -3.266049901878329,
+    "threshold_pp": 10.0,
+    "flagged": false,
+    "note": "跃变只是提示，不参与 rc；rc 只看各时点闸是否越界"
+  },
+  "impl": {
+    "metrics_from": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d9/arm_state_check.py",
+    "metrics_impl_sha256": "9e11701f60fcddefaff8e14001e57b056d7baf5c22534d88947df9d5d765dc85"
+  },
+  "names_source": {
+    "n_names": 16,
+    "error": null
+  },
+  "metrics_note": "F3 判据口径 = len_p50_excl；addr_head_strict 用显示名匹配（判据），addr_head_upper_rate 仅参照"
+}

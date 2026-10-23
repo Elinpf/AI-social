@@ -1,0 +1,350 @@
+{
+  "batch_id": "D12-I",
+  "caveats": [
+    "本工具零 LLM、零跑批：只读既有 run.jsonl 与 config，不产生新跑批数据。",
+    "L-3 / L-7 / len_p50 的数值直接读 tools/d5/dialogue_metrics.py::compute()，未在本文件另立口径。",
+    "addr_head 三口径只能有一个作判据：按 D12H-amendment3 §C 冻结为 addr_head_strict。",
+    "addr_head_pfx2_plus / addr_head_alias 标 role=reference_only：只作参照，不得进入任何判定（Leader 裁决 FM-5 / FM-4）。",
+    "L-7 带本批索引 sha256：跨批数值不可互译，不得据此写「更差/更好 N pp」。",
+    "addr_head_loose 的「≤6 字」下界（1 还是 2）在既有件里未写死，本文件取 2 以复现落盘 464/510；取 1 得 487/510。该点列为待裁决项（README §3）。"
+  ],
+  "inputs": {
+    "addr_head_sources": {
+      "amendment3_file": "d12h_verdict_amendment3.md",
+      "amendment3_sha256": "35c0c49ae092e9a31ab9f20f4d581ec577e5949c3aaeeb7de1ce2ddb8fd1d0bf",
+      "loose": {
+        "file": "v2/evidence/d12h_verdict_amendment3.md",
+        "section": "§C 行 48",
+        "text": "addr_head_loose 90.98%：首句 ≤6 字且以 ，/： 收尾（可能把「这块榫头，」误算称呼）"
+      },
+      "pfx2_def": {
+        "file": "v2/evidence/d12h_verdict_amendment3.md",
+        "section": "§C 行 49",
+        "text": "addr_head_pfx2 87.65%：名字在第 0 位、后缀 ≤2 字"
+      },
+      "pfx2_impl": {
+        "branch": "feat/c12-d12h",
+        "commit": "371edb99d2594406553742c66c7ce0a4f7487069",
+        "commit_date": "2026-10-24T00:28:50+08:00",
+        "commit_short": "371edb9",
+        "file": ".worktrees/d12h-pairing/tools/d12h/shape_gate.py",
+        "file_sha256": "f7740b6d4c3052b7577b5bf9d5c10c18039d2a87a1e2afb0697fb49691d70ea3",
+        "impl": "is_addr_head() 逐字引入（含 SUFFIX_CHARS 常量）",
+        "note": "master 的 `git ls-files tools/d12h` 为空（Q-19）⇒ 该文件仅存在于 worktree；本文件内嵌逐字副本，使 master 上的复算不依赖 worktree 是否还在。"
+      },
+      "strict": {
+        "file": "v2/evidence/d12h_verdict_amendment3.md",
+        "section": "§C 行 47",
+        "text": "addr_head_strict（冻结判据口径）92.55%：以 20 个 config/personas.json::display_name 之一起头"
+      }
+    },
+    "code_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/d12i-aligned/code",
+    "d5_impl": {
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/dialogue_metrics.py",
+      "sha256": "1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271"
+    },
+    "log": ".worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl",
+    "log_parse": {
+      "bad_lines": [],
+      "n_bad": 0
+    },
+    "log_records": 117724,
+    "log_sha256": "72c0ca97fe6e38632f67e3b2810c65126c0d15d296d068b521dfbb45c8f5d0c4",
+    "n": 16,
+    "n_bodies_nonempty": 510,
+    "n_msgs": 510,
+    "personas": {
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/config/personas.json",
+      "sha256": "08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d"
+    },
+    "rounds_filter": null,
+    "seed": 42,
+    "tool": {
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/metrics/form_metrics.py",
+      "sha256": "78913b6ff30ad3544a20a45d04f86c8cee474908b1e48b80451e72cbbcdd57d9"
+    }
+  },
+  "metrics": {
+    "L-1_len_p50": {
+      "criterion_basis": "全部 MSG 正文字数（含括号块）的 p50；d5 线性插值分位。CYCLE-12 §2.3 参照 T5 = 53（该 53 实为 excl_paren 口径，见 len_p50_excl）",
+      "criterion_id": "L-1（D5 指标 L-1_len.all.p50）",
+      "denominator": 510,
+      "denominator_definition": "分母 = 全部 MSG（p50 的分位分母）",
+      "impl_note": "直接读 d5 L_wording.L-1_len.all.p50",
+      "log_path": ".worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl",
+      "log_sha256": "72c0ca97fe6e38632f67e3b2810c65126c0d15d296d068b521dfbb45c8f5d0c4",
+      "numerator": null,
+      "recompute_cmd": "python3 tools/metrics/form_metrics.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --code-dir .worktrees/d12i-aligned/code --out v2/evidence/d12i_readings_20261024/form_metrics_full.json --batch-id D12-I",
+      "source_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/dialogue_metrics.py",
+      "source_sha256": "1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271",
+      "tuple": [
+        70.0,
+        510,
+        "L-1（D5 指标 L-1_len.all.p50）",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/dialogue_metrics.py",
+        "1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271",
+        "python3 tools/metrics/form_metrics.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --code-dir .worktrees/d12i-aligned/code --out v2/evidence/d12i_readings_20261024/form_metrics_full.json --batch-id D12-I"
+      ],
+      "value": 70.0
+    },
+    "L-1_len_p50_excl_paren": {
+      "criterion_basis": "去掉括号块后正文字数的 p50；CYCLE-12 §2.3 里与 D12-H 56.0 对比的 T5「53」即此口径",
+      "criterion_id": "L-1（D5 指标 L-1_len.excl_paren.p50）",
+      "denominator": 510,
+      "denominator_definition": "分母 = 全部 MSG（p50 的分位分母）",
+      "impl_note": "直接读 d5 L_wording.L-1_len.excl_paren.p50",
+      "log_path": ".worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl",
+      "log_sha256": "72c0ca97fe6e38632f67e3b2810c65126c0d15d296d068b521dfbb45c8f5d0c4",
+      "numerator": null,
+      "recompute_cmd": "python3 tools/metrics/form_metrics.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --code-dir .worktrees/d12i-aligned/code --out v2/evidence/d12i_readings_20261024/form_metrics_full.json --batch-id D12-I",
+      "source_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/dialogue_metrics.py",
+      "source_sha256": "1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271",
+      "tuple": [
+        55.0,
+        510,
+        "L-1（D5 指标 L-1_len.excl_paren.p50）",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/dialogue_metrics.py",
+        "1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271",
+        "python3 tools/metrics/form_metrics.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --code-dir .worktrees/d12i-aligned/code --out v2/evidence/d12i_readings_20261024/form_metrics_full.json --batch-id D12-I"
+      ],
+      "value": 55.0
+    },
+    "L-3_paren_block_any": {
+      "criterion_basis": "分子 = body 命中任一括号块（PAREN_ANY_RE）的消息数；分母 = 全部 MSG。D12-H 判据闸线 L-3 ≥ 55%（预登记 §4 反事实：低于即「无效（靠砍旁白换重复）」）",
+      "criterion_gate": "≥0.55（D12-H 预登记 §4 反事实）",
+      "criterion_id": "L-3（D5 指标 L-3_paren_block_any）",
+      "denominator": 510,
+      "denominator_definition": "分母 = 全部 MSG（d5 meta.n_messages）",
+      "impl_note": "数值直接读 tools/d5/dialogue_metrics.py::compute() 的 L_wording.L-3_paren_block_any",
+      "log_path": ".worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl",
+      "log_sha256": "72c0ca97fe6e38632f67e3b2810c65126c0d15d296d068b521dfbb45c8f5d0c4",
+      "numerator": 369,
+      "recompute_cmd": "python3 tools/metrics/form_metrics.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --code-dir .worktrees/d12i-aligned/code --out v2/evidence/d12i_readings_20261024/form_metrics_full.json --batch-id D12-I",
+      "source_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/dialogue_metrics.py",
+      "source_sha256": "1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271",
+      "tuple": [
+        0.723529,
+        510,
+        "L-3（D5 指标 L-3_paren_block_any）",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/dialogue_metrics.py",
+        "1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271",
+        "python3 tools/metrics/form_metrics.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --code-dir .worktrees/d12i-aligned/code --out v2/evidence/d12i_readings_20261024/form_metrics_full.json --batch-id D12-I"
+      ],
+      "value": 0.723529
+    },
+    "L-7_dup_ngram8_rate": {
+      "batch_index_dup_msgs": 317,
+      "batch_index_grams": 27639,
+      "batch_index_rule": "norm_i=d5.normalize_body(body_i); shingles_i={norm_i[k:k+8]}; index: gram→[msg 下标] 升序；序列化 `<gram>\\t<idx,...>\\n` 按 gram 字节序升序拼接后 sha256",
+      "batch_index_sha256": "37ca0729e439df75faaa97c42f38133a0e51c950261b9166515c23d125739869",
+      "consistency_with_d5": true,
+      "criterion_basis": "分子 = 与任一其他 MSG 共享 ≥1 个 normalize_body 后 8-gram 的消息数；分母 = 全部 MSG。**跨批不可互译**（CYCLE-12 §3.8 / §5.4）：各行按本批自身索引计算，跨批差值只能读作「各批内部去重程度」",
+      "criterion_id": "L-7（D5 指标 L-7_dup_ngram8_rate）",
+      "denominator": 510,
+      "denominator_definition": "分母 = 全部 MSG（d5 meta.n_messages）",
+      "index_note": "本批索引 sha256 是 L-7 的参照系指纹：**不同批的 index sha 必然不同**，因此两个 L-7 数值之差不得跨批解释为效果量",
+      "log_path": ".worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl",
+      "log_sha256": "72c0ca97fe6e38632f67e3b2810c65126c0d15d296d068b521dfbb45c8f5d0c4",
+      "numerator": 317,
+      "recompute_cmd": "python3 tools/metrics/form_metrics.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --code-dir .worktrees/d12i-aligned/code --out v2/evidence/d12i_readings_20261024/form_metrics_full.json --batch-id D12-I",
+      "source_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/dialogue_metrics.py",
+      "source_sha256": "1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271",
+      "tuple": [
+        0.621569,
+        510,
+        "L-7（D5 指标 L-7_dup_ngram8_rate）",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/dialogue_metrics.py",
+        "1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271",
+        "python3 tools/metrics/form_metrics.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --code-dir .worktrees/d12i-aligned/code --out v2/evidence/d12i_readings_20261024/form_metrics_full.json --batch-id D12-I"
+      ],
+      "value": 0.621569
+    },
+    "addr_head_alias": {
+      "criterion_basis": "首段以结构化别名/敬称形式出现且**不以任何 display_name 起头**（否则已归 strict，不重复计）：`(老|小|阿)+1–2字` 或 `1–3字+(先生|女士|老师|大夫|师傅|文书|掌柜)`，其后接 `，,：:`",
+      "criterion_id": "addr_head_alias（**只读指示量**，Leader 裁决 FM-4）",
+      "criterion_role": "只读指示量，**不得进入任何判定**",
+      "denominator": 510,
+      "denominator_definition": "分母 = body 非空的 MSG 条数",
+      "log_path": ".worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl",
+      "log_sha256": "72c0ca97fe6e38632f67e3b2810c65126c0d15d296d068b521dfbb45c8f5d0c4",
+      "note": "口径必须由冻结的 personas.json 决定，扩表会使本批与历史批不可比 ⇒ 别名不纳入判据口径（FM-4 裁决）；该指示量本身是「生活气息」的正面线索，报告里只能以「描述性读数」出现",
+      "numerator": 0,
+      "recompute_cmd": "python3 tools/metrics/form_metrics.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --code-dir .worktrees/d12i-aligned/code --out v2/evidence/d12i_readings_20261024/form_metrics_full.json --batch-id D12-I",
+      "regex": "^(?:(?:老|小|阿)[\\u4e00-\\u9fa5]{1,2}|[\\u4e00-\\u9fa5]{1,3}(?:先生|女士|老师|大夫|师傅|文书|掌柜|公|伯|叔|婶|哥|姐|爷|奶))[，,：:]",
+      "role": "reference_only",
+      "source_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/config/personas.json",
+      "source_sha256": "08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d",
+      "tuple": [
+        0.0,
+        510,
+        "addr_head_alias（**只读指示量**，Leader 裁决 FM-4）",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/config/personas.json",
+        "08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d",
+        "python3 tools/metrics/form_metrics.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --code-dir .worktrees/d12i-aligned/code --out v2/evidence/d12i_readings_20261024/form_metrics_full.json --batch-id D12-I"
+      ],
+      "value": 0.0
+    },
+    "addr_head_loose": {
+      "criterion_basis": "首句 2–6 字且以 ，/： 收尾（见文件头 口径说明与 README §3）；来源 v2/evidence/d12h_verdict_amendment3.md §C 行 48",
+      "criterion_id": "addr_head_loose（**上界参照**，D12H-amendment3 §C）",
+      "criterion_role": "上界参照，不作判据",
+      "denominator": 510,
+      "denominator_definition": "分母 = body 非空的 MSG 条数",
+      "frozen_constants": {
+        "LOOSE_MAX_CHARS": 6,
+        "LOOSE_MIN_CHARS": 2
+      },
+      "log_path": ".worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl",
+      "log_sha256": "72c0ca97fe6e38632f67e3b2810c65126c0d15d296d068b521dfbb45c8f5d0c4",
+      "note": "下界已由 Leader 2026-10-24 裁决 FM-1 冻结为 2（取 2 才与 CYCLE-12 prose 464/510=90.98% 可比；取 1 为 487/510=95.49%）。该常量不得再改；loose 不进入任何判定，冻结只为消灭口径漂移",
+      "numerator": 144,
+      "recompute_cmd": "python3 tools/metrics/form_metrics.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --code-dir .worktrees/d12i-aligned/code --out v2/evidence/d12i_readings_20261024/form_metrics_full.json --batch-id D12-I",
+      "regex": "^[^，,：:]{2,6}[，,：:]",
+      "role": "reference_only",
+      "source_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/config/personas.json",
+      "source_registry": {
+        "file": "v2/evidence/d12h_verdict_amendment3.md",
+        "section": "§C 行 48",
+        "text": "addr_head_loose 90.98%：首句 ≤6 字且以 ，/： 收尾（可能把「这块榫头，」误算称呼）"
+      },
+      "source_sha256": "08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d",
+      "tuple": [
+        0.2823529411764706,
+        510,
+        "addr_head_loose（**上界参照**，D12H-amendment3 §C）",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/config/personas.json",
+        "08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d",
+        "python3 tools/metrics/form_metrics.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --code-dir .worktrees/d12i-aligned/code --out v2/evidence/d12i_readings_20261024/form_metrics_full.json --batch-id D12-I"
+      ],
+      "value": 0.2823529411764706
+    },
+    "addr_head_pfx2": {
+      "criterion_basis": "名字在第 0 位、后缀 ≤2 字后接 ，/：：逐字复用 shape_gate.py::is_addr_head()；来源 v2/evidence/d12h_verdict_amendment3.md §C 行 49",
+      "criterion_id": "addr_head_pfx2（**下界参照**，D12H-amendment3 §C / dialogue-core-dev 87.65%）",
+      "criterion_role": "下界参照，不作判据",
+      "denominator": 510,
+      "denominator_definition": "分母 = body 非空的 MSG 条数",
+      "log_path": ".worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl",
+      "log_sha256": "72c0ca97fe6e38632f67e3b2810c65126c0d15d296d068b521dfbb45c8f5d0c4",
+      "n_world_names": 16,
+      "numerator": 116,
+      "recompute_cmd": "python3 tools/metrics/form_metrics.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --code-dir .worktrees/d12i-aligned/code --out v2/evidence/d12i_readings_20261024/form_metrics_full.json --batch-id D12-I",
+      "role": "reference_only",
+      "source_path": ".worktrees/d12h-pairing/tools/d12h/shape_gate.py",
+      "source_registry": {
+        "branch": "feat/c12-d12h",
+        "commit": "371edb99d2594406553742c66c7ce0a4f7487069",
+        "commit_date": "2026-10-24T00:28:50+08:00",
+        "commit_short": "371edb9",
+        "file": ".worktrees/d12h-pairing/tools/d12h/shape_gate.py",
+        "file_sha256": "f7740b6d4c3052b7577b5bf9d5c10c18039d2a87a1e2afb0697fb49691d70ea3",
+        "impl": "is_addr_head() 逐字引入（含 SUFFIX_CHARS 常量）",
+        "note": "master 的 `git ls-files tools/d12h` 为空（Q-19）⇒ 该文件仅存在于 worktree；本文件内嵌逐字副本，使 master 上的复算不依赖 worktree 是否还在。"
+      },
+      "source_registry_def": {
+        "file": "v2/evidence/d12h_verdict_amendment3.md",
+        "section": "§C 行 49",
+        "text": "addr_head_pfx2 87.65%：名字在第 0 位、后缀 ≤2 字"
+      },
+      "source_sha256": "f7740b6d4c3052b7577b5bf9d5c10c18039d2a87a1e2afb0697fb49691d70ea3",
+      "tuple": [
+        0.22745098039215686,
+        510,
+        "addr_head_pfx2（**下界参照**，D12H-amendment3 §C / dialogue-core-dev 87.65%）",
+        ".worktrees/d12h-pairing/tools/d12h/shape_gate.py",
+        "f7740b6d4c3052b7577b5bf9d5c10c18039d2a87a1e2afb0697fb49691d70ea3",
+        "python3 tools/metrics/form_metrics.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --code-dir .worktrees/d12i-aligned/code --out v2/evidence/d12i_readings_20261024/form_metrics_full.json --batch-id D12-I"
+      ],
+      "value": 0.22745098039215686,
+      "vendor_check": "identical",
+      "world_names_error": null
+    },
+    "addr_head_pfx2_plus": {
+      "criterion_basis": "pfx2 的标点集扩展变体：名字在第 0 位、后缀 ≤2 字，标点集 = `，,：:` ∪ `、` ∪ `——`。**只作参照，不作判据**；与 pfx2 的差集含义 = 「真称呼被判漏的那部分」（并列称呼 `、` + 破折号 `——`）",
+      "criterion_id": "addr_head_pfx2_plus（**参照量**，Leader 裁决 FM-5）",
+      "criterion_role": "参照量，不作判据",
+      "denominator": 510,
+      "denominator_definition": "分母 = body 非空的 MSG 条数",
+      "log_path": ".worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl",
+      "log_sha256": "72c0ca97fe6e38632f67e3b2810c65126c0d15d296d068b521dfbb45c8f5d0c4",
+      "n_world_names": 16,
+      "note": "shape_gate.py 本体不动（在 worktree、未入 master）；其标点集缺「、」「——」登记为下一周期修复项",
+      "numerator": 116,
+      "punct_set": [
+        "，",
+        ",",
+        "：",
+        ":",
+        "、",
+        "——"
+      ],
+      "punct_set_base_pfx2": [
+        "，",
+        ",",
+        "：",
+        ":"
+      ],
+      "recompute_cmd": "python3 tools/metrics/form_metrics.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --code-dir .worktrees/d12i-aligned/code --out v2/evidence/d12i_readings_20261024/form_metrics_full.json --batch-id D12-I",
+      "role": "reference_only",
+      "source_path": ".worktrees/d12h-pairing/tools/d12h/shape_gate.py",
+      "source_registry": {
+        "branch": "feat/c12-d12h",
+        "commit": "371edb99d2594406553742c66c7ce0a4f7487069",
+        "commit_date": "2026-10-24T00:28:50+08:00",
+        "commit_short": "371edb9",
+        "file": ".worktrees/d12h-pairing/tools/d12h/shape_gate.py",
+        "file_sha256": "f7740b6d4c3052b7577b5bf9d5c10c18039d2a87a1e2afb0697fb49691d70ea3",
+        "impl": "is_addr_head() 逐字引入（含 SUFFIX_CHARS 常量）",
+        "note": "master 的 `git ls-files tools/d12h` 为空（Q-19）⇒ 该文件仅存在于 worktree；本文件内嵌逐字副本，使 master 上的复算不依赖 worktree 是否还在。"
+      },
+      "source_sha256": "f7740b6d4c3052b7577b5bf9d5c10c18039d2a87a1e2afb0697fb49691d70ea3",
+      "tuple": [
+        0.22745098039215686,
+        510,
+        "addr_head_pfx2_plus（**参照量**，Leader 裁决 FM-5）",
+        ".worktrees/d12h-pairing/tools/d12h/shape_gate.py",
+        "f7740b6d4c3052b7577b5bf9d5c10c18039d2a87a1e2afb0697fb49691d70ea3",
+        "python3 tools/metrics/form_metrics.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --code-dir .worktrees/d12i-aligned/code --out v2/evidence/d12i_readings_20261024/form_metrics_full.json --batch-id D12-I"
+      ],
+      "value": 0.22745098039215686
+    },
+    "addr_head_strict": {
+      "criterion_basis": "正文以 config/personas.json 的 display_name（去「青溪镇·」前缀）之一起头；来源 v2/evidence/d12h_verdict_amendment3.md §C 行 47",
+      "criterion_id": "addr_head_strict（**判据唯一口径**，D12H-amendment3 §C）",
+      "criterion_role": "判据口径（D12-I 形态闸 F2 应改用此口径）",
+      "denominator": 510,
+      "denominator_definition": "分母 = body 非空的 MSG 条数",
+      "log_path": ".worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl",
+      "log_sha256": "72c0ca97fe6e38632f67e3b2810c65126c0d15d296d068b521dfbb45c8f5d0c4",
+      "n_display_names": 20,
+      "numerator": 134,
+      "recompute_cmd": "python3 tools/metrics/form_metrics.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --code-dir .worktrees/d12i-aligned/code --out v2/evidence/d12i_readings_20261024/form_metrics_full.json --batch-id D12-I",
+      "role": "criterion_primary",
+      "source_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/config/personas.json",
+      "source_registry": {
+        "file": "v2/evidence/d12h_verdict_amendment3.md",
+        "section": "§C 行 47",
+        "text": "addr_head_strict（冻结判据口径）92.55%：以 20 个 config/personas.json::display_name 之一起头"
+      },
+      "source_sha256": "08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d",
+      "tuple": [
+        0.2627450980392157,
+        510,
+        "addr_head_strict（**判据唯一口径**，D12H-amendment3 §C）",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/config/personas.json",
+        "08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d",
+        "python3 tools/metrics/form_metrics.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --code-dir .worktrees/d12i-aligned/code --out v2/evidence/d12i_readings_20261024/form_metrics_full.json --batch-id D12-I"
+      ],
+      "value": 0.2627450980392157
+    }
+  },
+  "schema_version": "form-metrics/1.0",
+  "tuple_layout": [
+    "value",
+    "denominator",
+    "criterion_id",
+    "source_path",
+    "source_sha256",
+    "recompute_cmd"
+  ]
+}

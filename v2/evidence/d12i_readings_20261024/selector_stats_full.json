@@ -1,0 +1,29 @@
+{
+  "log": ".worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl",
+  "key": "d12i",
+  "rounds_filter": null,
+  "n": 510,
+  "definitions": {
+    "argmin_unique": "最小值的索引唯一（scores=[1,1,2] ⇒ False）—— 判据用这个",
+    "not_all_equal": "分数不全同（scores=[1,1,2] ⇒ True）—— 只说明有区分度，不得当 argmin_unique 用"
+  },
+  "argmin_unique": 480,
+  "argmin_unique_rate": 0.9411764705882353,
+  "not_all_equal": 503,
+  "not_all_equal_rate": 0.9862745098039216,
+  "all_zero": 0,
+  "all_zero_rate": 0.0,
+  "contains_na": 0,
+  "three_candidates_shingle_identical": 3,
+  "three_candidates_shingle_identical_rate": 0.0058823529411764705,
+  "picked_distribution": {
+    "0": 167,
+    "1": 174,
+    "2": 169
+  },
+  "scores": {
+    "mean": 0.26182496209150324,
+    "median": 0.211268,
+    "max": 1.0
+  }
+}

@@ -1,0 +1,297 @@
+{
+ "schema_version": "f1-readings/1.0",
+ "caliber": "F-1 非功能性闲聊占比（R4-life-texture.md:34 定义，实现 = tools/d5/dialogue_metrics.py::compute()::F-1_chatter）",
+ "note": "任务卡原文写「嗟啥」为笔误，口径以 R4 定义为准（= 非功能性闲聊/废话占比）",
+ "arms": [
+  {
+   "arm": "D12-I",
+   "log_path": ".worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl",
+   "log_sha256": "72c0ca97fe6e38632f67e3b2810c65126c0d15d296d068b521dfbb45c8f5d0c4",
+   "log_lines": 117724,
+   "n_msg": 510,
+   "units": {
+    "n_msg_source": "d5 L_wording.denominators.per_message = len(extract_messages(recs))"
+   },
+   "functional_msgs": 147,
+   "chatter_numerator": 363,
+   "nonfunctional_chatter_rate": 0.711765,
+   "wilson95": {
+    "method": "wilson_score_no_cc",
+    "z": 1.959964,
+    "confidence": 0.95,
+    "two_sided": true,
+    "x": 363,
+    "n": 510,
+    "p": 0.711765,
+    "lo": 0.670987,
+    "hi": 0.749376
+   },
+   "decomposition": {
+    "func_by_tag_only": 113,
+    "func_by_trans_rx_only": 18,
+    "func_by_tag_and_rx": 16,
+    "tag_hit_msgs": 129,
+    "trans_rx_hit_msgs": 34,
+    "tag_hits_by_tag": {
+     "counter_propose": 41,
+     "polite_reject": 35,
+     "scarce_buy": 53
+    }
+   },
+   "cross_check": {
+    "d5_F1_rate": 0.711765,
+    "d5_L3": 0.723529,
+    "d5_n_messages_meta": 510,
+    "n_threads": 169
+   },
+   "ruler": {
+    "script": "tools/d5/dialogue_metrics.py",
+    "script_sha256": "1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271",
+    "task_tags_sha256": "a71c6c963279b28f6f9de3b44317b5c9bbf80498c594c98f9460ed79954aa69e",
+    "rule": "功能性 = tag_hints∩task_tags 非空 或 正文命中事务正则；闲聊率 = 1 − 功能性占比"
+   }
+  },
+  {
+   "arm": "T5",
+   "log_path": ".worktrees/d12g-diverse2/v2/evidence/run_d12g_diverse2_n16r60_seed42/run.jsonl",
+   "log_sha256": "dd4ad73d5a21c7485c2afbfc9701e267c25da3150b10adade3b3819a3996ff36",
+   "log_lines": 117393,
+   "n_msg": 510,
+   "units": {
+    "n_msg_source": "d5 L_wording.denominators.per_message = len(extract_messages(recs))"
+   },
+   "functional_msgs": 146,
+   "chatter_numerator": 364,
+   "nonfunctional_chatter_rate": 0.713725,
+   "wilson95": {
+    "method": "wilson_score_no_cc",
+    "z": 1.959964,
+    "confidence": 0.95,
+    "two_sided": true,
+    "x": 364,
+    "n": 510,
+    "p": 0.713725,
+    "lo": 0.673012,
+    "hi": 0.751244
+   },
+   "decomposition": {
+    "func_by_tag_only": 119,
+    "func_by_trans_rx_only": 17,
+    "func_by_tag_and_rx": 10,
+    "tag_hit_msgs": 129,
+    "trans_rx_hit_msgs": 27,
+    "tag_hits_by_tag": {
+     "counter_propose": 41,
+     "polite_reject": 35,
+     "scarce_buy": 53
+    }
+   },
+   "cross_check": {
+    "d5_F1_rate": 0.713725,
+    "d5_L3": 0.578431,
+    "d5_n_messages_meta": 510,
+    "n_threads": 169
+   },
+   "ruler": {
+    "script": "tools/d5/dialogue_metrics.py",
+    "script_sha256": "1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271",
+    "task_tags_sha256": "a71c6c963279b28f6f9de3b44317b5c9bbf80498c594c98f9460ed79954aa69e",
+    "rule": "功能性 = tag_hints∩task_tags 非空 或 正文命中事务正则；闲聊率 = 1 − 功能性占比"
+   }
+  },
+  {
+   "arm": "D12-H",
+   "log_path": ".worktrees/d12h-pairing/v2/evidence/run_d12h_pairing_n16r60_seed42/run.jsonl",
+   "log_sha256": "122b36e988267a396cfdd95b167bad92bf69beabc249c253b46555f2679c3207",
+   "log_lines": 119519,
+   "n_msg": 510,
+   "units": {
+    "n_msg_source": "d5 L_wording.denominators.per_message = len(extract_messages(recs))"
+   },
+   "functional_msgs": 150,
+   "chatter_numerator": 360,
+   "nonfunctional_chatter_rate": 0.705882,
+   "wilson95": {
+    "method": "wilson_score_no_cc",
+    "z": 1.959964,
+    "confidence": 0.95,
+    "two_sided": true,
+    "x": 360,
+    "n": 510,
+    "p": 0.705882,
+    "lo": 0.664916,
+    "hi": 0.74377
+   },
+   "decomposition": {
+    "func_by_tag_only": 123,
+    "func_by_trans_rx_only": 21,
+    "func_by_tag_and_rx": 6,
+    "tag_hit_msgs": 129,
+    "trans_rx_hit_msgs": 27,
+    "tag_hits_by_tag": {
+     "counter_propose": 41,
+     "polite_reject": 35,
+     "scarce_buy": 53
+    }
+   },
+   "cross_check": {
+    "d5_F1_rate": 0.705882,
+    "d5_L3": 0.001961,
+    "d5_n_messages_meta": 510,
+    "n_threads": 169
+   },
+   "ruler": {
+    "script": "tools/d5/dialogue_metrics.py",
+    "script_sha256": "1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271",
+    "task_tags_sha256": "a71c6c963279b28f6f9de3b44317b5c9bbf80498c594c98f9460ed79954aa69e",
+    "rule": "功能性 = tag_hints∩task_tags 非空 或 正文命中事务正则；闲聊率 = 1 − 功能性占比"
+   }
+  },
+  {
+   "arm": "v0-anchor",
+   "log_path": "v2/evidence/run_d2_before_n16_seed42/run.jsonl",
+   "log_sha256": "c1f86bf61f62b3a0ce8e17e0c2312791cf0262381cd2120c2a63c9b6258963cf",
+   "log_lines": 186972,
+   "n_msg": 187,
+   "units": {
+    "n_msg_source": "d5 L_wording.denominators.per_message = len(extract_messages(recs))"
+   },
+   "functional_msgs": 43,
+   "chatter_numerator": 144,
+   "nonfunctional_chatter_rate": 0.770053,
+   "wilson95": {
+    "method": "wilson_score_no_cc",
+    "z": 1.959964,
+    "confidence": 0.95,
+    "two_sided": true,
+    "x": 144,
+    "n": 187,
+    "p": 0.770053,
+    "lo": 0.704669,
+    "hi": 0.824566
+   },
+   "decomposition": {
+    "func_by_tag_only": 33,
+    "func_by_trans_rx_only": 4,
+    "func_by_tag_and_rx": 6,
+    "tag_hit_msgs": 39,
+    "trans_rx_hit_msgs": 10,
+    "tag_hits_by_tag": {
+     "counter_propose": 8,
+     "polite_reject": 9,
+     "scarce_buy": 17,
+     "select_location": 5
+    }
+   },
+   "cross_check": {
+    "d5_F1_rate": 0.770053,
+    "d5_L3": 0.647059,
+    "d5_n_messages_meta": 187,
+    "n_threads": 172
+   },
+   "ruler": {
+    "script": "tools/d5/dialogue_metrics.py",
+    "script_sha256": "1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271",
+    "task_tags_sha256": "a71c6c963279b28f6f9de3b44317b5c9bbf80498c594c98f9460ed79954aa69e",
+    "rule": "功能性 = tag_hints∩task_tags 非空 或 正文命中事务正则；闲聊率 = 1 − 功能性占比"
+   }
+  },
+  {
+   "arm": "A0",
+   "log_path": "v2/evidence/run_d2_after_n16_seed42/run.jsonl",
+   "log_sha256": "643f13a528c288d3e9677cb8ac100139224afbd0b46c0f7da0c3a5ed85b13141",
+   "log_lines": 194108,
+   "n_msg": 686,
+   "units": {
+    "n_msg_source": "d5 L_wording.denominators.per_message = len(extract_messages(recs))"
+   },
+   "functional_msgs": 164,
+   "chatter_numerator": 522,
+   "nonfunctional_chatter_rate": 0.760933,
+   "wilson95": {
+    "method": "wilson_score_no_cc",
+    "z": 1.959964,
+    "confidence": 0.95,
+    "two_sided": true,
+    "x": 522,
+    "n": 686,
+    "p": 0.760933,
+    "lo": 0.727619,
+    "hi": 0.791341
+   },
+   "decomposition": {
+    "func_by_tag_only": 123,
+    "func_by_trans_rx_only": 28,
+    "func_by_tag_and_rx": 13,
+    "tag_hit_msgs": 136,
+    "trans_rx_hit_msgs": 41,
+    "tag_hits_by_tag": {
+     "counter_propose": 42,
+     "polite_reject": 35,
+     "scarce_buy": 53,
+     "select_location": 6
+    }
+   },
+   "cross_check": {
+    "d5_F1_rate": 0.760933,
+    "d5_L3": 0.860058,
+    "d5_n_messages_meta": 686,
+    "n_threads": 206
+   },
+   "ruler": {
+    "script": "tools/d5/dialogue_metrics.py",
+    "script_sha256": "1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271",
+    "task_tags_sha256": "a71c6c963279b28f6f9de3b44317b5c9bbf80498c594c98f9460ed79954aa69e",
+    "rule": "功能性 = tag_hints∩task_tags 非空 或 正文命中事务正则；闲聊率 = 1 − 功能性占比"
+   }
+  },
+  {
+   "arm": "A1-措辞",
+   "log_path": "v2/evidence/run_a1_wording_n4r60_seed42/run.jsonl",
+   "log_sha256": "ae969198feaefd1f69147001e027394d55527bd1a0e460ff654697bdc3b1559b",
+   "log_lines": 9940,
+   "n_msg": 124,
+   "units": {
+    "n_msg_source": "d5 L_wording.denominators.per_message = len(extract_messages(recs))"
+   },
+   "functional_msgs": 31,
+   "chatter_numerator": 93,
+   "nonfunctional_chatter_rate": 0.75,
+   "wilson95": {
+    "method": "wilson_score_no_cc",
+    "z": 1.959964,
+    "confidence": 0.95,
+    "two_sided": true,
+    "x": 93,
+    "n": 124,
+    "p": 0.75,
+    "lo": 0.667052,
+    "hi": 0.817924
+   },
+   "decomposition": {
+    "func_by_tag_only": 28,
+    "func_by_trans_rx_only": 2,
+    "func_by_tag_and_rx": 1,
+    "tag_hit_msgs": 29,
+    "trans_rx_hit_msgs": 3,
+    "tag_hits_by_tag": {
+     "counter_propose": 3,
+     "polite_reject": 2,
+     "scarce_buy": 24
+    }
+   },
+   "cross_check": {
+    "d5_F1_rate": 0.75,
+    "d5_L3": 0.0,
+    "d5_n_messages_meta": 124,
+    "n_threads": 40
+   },
+   "ruler": {
+    "script": "tools/d5/dialogue_metrics.py",
+    "script_sha256": "1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271",
+    "task_tags_sha256": "a71c6c963279b28f6f9de3b44317b5c9bbf80498c594c98f9460ed79954aa69e",
+    "rule": "功能性 = tag_hints∩task_tags 非空 或 正文命中事务正则；闲聊率 = 1 − 功能性占比"
+   }
+  }
+ ]
+}
