@@ -1,4 +1,10 @@
-# D12-I 预登记 · **目标/判据/参照系三者同源**：run 内按"对外部语料的 `overlap_frac`"择优
+# D12-I 预登记 · **v2（判据/选优/参照系三者同源，改用 4-gram）**
+
+> **v2 变更（2026-10-24 00:35，Leader 裁决）**：v1 用 8-gram 作选优目标，但离线体检实测**目标严重退化**：
+> `S_ext`(8-gram, T5 round<40) 上，三候选**全 0 的占 42.5%**、**argmin 唯一仅 37.8%**、留出集零值占比 **63.5%**、median **0.000**。
+> 换 n-gram 后（留出集 T5 r40–59）：**3-gram 零值 0.0% / 4-gram 零值 0.0% / 5-gram 4.5% / 6-gram 20.2% / 8-gram 63.5%**。
+> ⇒ **裁决：选优、判据、参照系三者**全部改用 **4-gram**（若只换选优而判据仍 8-gram，就**又变回"目标≠判据"**，即 D12-H 的老毛病）。
+> **`L-7`（8-gram）降为"效果层仅记录"，不作判定**；**本臂的 4-gram `overlap_frac` 与历史 `L-7` 数值不可互译**。
 
 > 立此存照：**2026-10-24 00:30，在任何 D12-I 代码改动与跑批之前**。判据、闸、反事实先写死。
 > 依据：`v2/evidence/d12h_result.md`（判「无效（靠砍旁白换重复）」）、`v2/evidence/d12h_leader_terminal_check.md`、`v2/evidence/d12h_midpoint_reversal_finding.md`（自亲和偏差）、runbook §3.107–§3.112。
@@ -15,8 +21,8 @@
 
 **选优指标（run 内实时）** = 候选对**固定外部语料**的 8-gram 交集率：
 ```
-score(c) = |shingles(c) ∩ S_ext| / |shingles(c)|
-S_ext = T5（run_d12g_diverse2_n16r60_seed42）**前 40 轮**已落库消息的 shingle 并集（8-gram，normalize_body）
+score(c) = |shingles_4(c) ∩ S_ext_4| / |shingles_4(c)|   （4-gram）
+S_ext = T5（run_d12g_diverse2_n16r60_seed42）**前 40 轮**已落库消息的 shingle 并集（**4-gram**，normalize_body；`d12i_external_shingles_4gram.json`）
 ```
 - `S_ext` 在起跑前**从 T5 日志一次性算出、落盘为 `v2/evidence/d12i_external_shingles.json`**（含 sha），run 内**只读**；
 - **为什么取前 40 轮**：与本臂 60 轮的前 2/3 同量级，且**固定不变**（不随本 run 生长）⇒ 参照系**与本 run 落库选择无关**；
@@ -53,8 +59,9 @@ S_ext = T5（run_d12g_diverse2_n16r60_seed42）**前 40 轮**已落库消息的 
 | **1（主）** | 落库语料对 `S_ext` 的 **`overlap_frac` 均值**，与 T5 同窗对比 | **低于 T5 同窗前缀** 且 **配对/独立 CI 不含 0**（slot 级 + 线程级双口径，不得互代） |
 | 2（机制闸） | `ctx.d12i` 命中率 / 择优 argmin 命中 | 各 = 100% |
 | 3（实现闸） | **三候选必须 shingle 层互不相同**（重采上限 **5**） | `resampled` 后仍全同的条数占比 **<2%**（D12-H 为 4.1%） |
+| 3b（**目标非退化闸**） | **`argmin` 唯一率**（三候选 `score` 不全同分的占比） | **≥60%**（8-gram 实测仅 37.8%；4-gram 预期 ≫60%，若不达 ⇒ 判「机制未生效」） |
 | 4（形态闸） | F1/F2/F3（§2） | 见 §2 |
-| 5（效果层，仅记录） | `L-7`、`P1`、`F-2'`、`L-15` | 点估计，明写"不判显著性" |
+| 5（效果层，**仅记录**） | `L-7`（8-gram）、`P1`、`F-2'`、`L-15` | 点估计，明写"不判显著性"；**`L-7` 与 4-gram `overlap_frac` 不可互译** |
 
 > **判据 1 的对比方式**：本臂落库语料 vs **T5 同窗（前 40 轮）** 的 `overlap_frac` 均值。**两臂参照系相同（都用 `S_ext`）** ⇒ 这是本设计相对前几臂的关键改进。
 
