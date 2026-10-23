@@ -74,6 +74,24 @@ return digest({"cache_schema", "kind", "engine_version", "prompt_hash", "model",
 
 **纪律**：若 `group` 缺失，出数方**不得**回退到 `(thread_id, turn_index, from, round)` 归组"补救"（群聊同轮多人、同轮同人连发时会混组，产生假 PASS），而应**报"接线字段缺失"并按「机制未生效」处理**。
 
+### 1.4 单变量范围修订 + 禁止带入整份 L-7 模块（**跑前修订，2026-10-23 11:32，T3 尚未起跑；Leader 跑前审查后裁决**）
+
+**先纠正本预登记 §1 的一处事实错误**：原写"复用 `l7_structural.recent_bodies(wv, agent_id)`"——但 **`a977cb0` 这棵树没有 `code/life/l7_structural.py`**（L-7 结构臂 `3730240` 于 10-22 才加入，晚于 `a977cb0`）。实现者若照抄，只能整份复制该模块进来。
+
+**禁止整份复制**，因为该模块含：`_RECENT` 进程内状态、`remember()`、`plan()`、`enabled()`、禁忌开头清单，且 `STRUCT_ENV` **默认 ON**。整份带入会让本臂变成 **"L-7 结构臂 + best-of-3" 的双变量臂**，并给后续维护者造成"这是 L-7 的一部分"的误解。
+⇒ **改为自包含**：`agent.py` 内联 `normalize/shingles`（约 10 行），或新建 `code/life/d12e_shingles.py`（约 20 行，**无模块级状态、无 env、无 remember**）；"最近 16 条台词"从 `wv` **只读**取。
+
+**单变量文件范围（5 项，均须在接线证明里逐条说明）**：
+| # | 文件 | 允许的改动 |
+|---|---|---|
+| 1 | `code/life/agent.py` | D12-E 主体（采样循环、选优、`ctx.d12e`、开关） |
+| 2 | `code/life/d12e_shingles.py`（新增） | 无状态 `normalize`/`shingles`/只读取材 |
+| 3 | `code/freeze/llm_client.py` | **仅**新增可选参数 `params_extra`（不传则行为不变） |
+| 4 | `code/freeze/client.py` | 同上（转发） |
+| 5 | `code/life/llm.py` | `Protocol` 与 `RuleBasedLLM` 签名（同上） |
+
+**必须随证明提交的断言**：3/4/5 三处在**不传 `params_extra`** 时**逐字节等价** ⇒ T0/T1 的 `prompt_fn_sha256` 与行为不变；**证据 = 三态渲染 sha 对比（T0 `5cf08593…` / T1 `effc14db…` / D12-E 态 = T1）**。
+
 ## 2. 代价（**跑前先认账**）
 
 - **对话生成调用数 ×3**：D12-C/D12-D 两臂各 510 次对话调用 ⇒ 本臂约 **1,530** 次（+1,020 次网络调用）；**judge/importance 不变**；
