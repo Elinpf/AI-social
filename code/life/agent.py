@@ -35,6 +35,7 @@ from . import anti_repeat as AR   # R12：L-7 去重臂（env LIFE_PROMPT_MEMORY
 from . import l7_structural as L7S  # L-7 结构臂（env LIFE_PROMPT_L7_STRUCT，**默认 ON**）
 from . import topic_breadth as TB  # R19 话题宽度臂（env LIFE_PROMPT_TOPIC_BREADTH，**默认 OFF**）
 from . import scene_anchor as SA  # 处境锚臂（env LIFE_PROMPT_SCENE，**默认 OFF**）
+from . import calendar as CAL  # 日历臂（env LIFE_PROMPT_CALENDAR，**默认 OFF**）：day_type/day_of_week 进提示词
 from .policy import (social_enabled, exchange_enabled, m2b_judge_mode, m2b_importance_mode,
                      narrative_persist_enabled)
 from .ports import (
@@ -187,6 +188,10 @@ class LifeLayerAgent:
         # （**纯审计**，供 ctx 落盘追溯；不进 state_hash、不发事件、不参与决策；
         #  OFF 臂恒为 None ⇒ ctx.scene 不出现）。
         self._scene: dict | None = None
+        # 日历臂：本条消息生成时实际下发的那一行「今天是什么日子」的审计快照
+        # （**纯审计**，只进 ctx；不进 state_hash、不发事件、不参与决策；
+        #  OFF 臂恒为 None ⇒ ctx.calendar 不出现）。
+        self._calendar: dict | None = None
 
     # ---- T288 / T276: 从账本单一真源恢复「只前向累积」的内部态 ---------------
     def restore(self, state, records) -> None:
@@ -995,6 +1000,11 @@ class LifeLayerAgent:
             # （时段/场所 id/活动 id + 该行 sha256）。关闭（LIFE_PROMPT_SCENE 未设）⇒
             # `_scene` 恒 None ⇒ 该键不出现 ⇒ payload 与接入前逐字节一致。
             ctx["scene"] = self._scene
+        if CAL.enabled() and getattr(self, "_calendar", None) is not None:
+            # 日历臂审计（additive）：本条生成时提示词里实际下发的那一行「今天是什么日子」
+            # （day_of_week/day_type + 该行 sha256）。关闭（LIFE_PROMPT_CALENDAR 未设）⇒
+            # `_calendar` 恒 None ⇒ 该键不出现 ⇒ payload 与接入前逐字节一致。
+            ctx["calendar"] = self._calendar
         return ctx
 
     def _dequp_body(self, prompt: str, body: str, meta: dict) -> str:
@@ -1242,6 +1252,35 @@ class LifeLayerAgent:
         self._scene = SA.audit(slot, place or None, activity or None, line)
         return line
 
+    # ---- 日历臂（CAL）：今天是工作日还是周末 + 周几 ----------------------
+    def _calendar_line(self, wv) -> str:
+        """把「今天是什么日子」渲染成**一行**人话（如「今儿是什么日子：周六，今儿是歇着的日子。」）。
+
+        单变量约束（同 `_scene_line` 的开关先例）：
+          - 开关关闭（默认 OFF）⇒ `self._calendar=None`、返回空串 ⇒ 两条提示词**逐字节不变**、
+            `ctx.calendar` 键不出现（payload 亦逐字节不变）；
+          - 打开 ⇒ 只在提示词中**插入一行**，并把本条的日历快照写进 `ctx.calendar`（additive）。
+
+        素材**只读** `WorldView.time`：`day_of_week` / `day_type`（`engine/time.py::derive_time`
+        已确定性派生，`ports.TimeCoord` 已透传）。**不读墙钟、不新增真相源、不改 state_hash**。
+        字段缺失/非法 ⇒ 该片段省略；两者都缺 ⇒ 返回空串（退化为「不加日历」，不打断对话）。
+        """
+        self._calendar = None
+        if wv is None or not CAL.enabled():
+            return ""
+        try:
+            tc = getattr(wv, "time", None)
+            dow = getattr(tc, "day_of_week", None)
+            day_type = getattr(tc, "day_type", None)
+            rnd = int(getattr(wv, "round", 0))
+        except Exception:      # 世界视图字段缺失 ⇒ 退化为「不加日历」，不打断对话
+            return ""
+        line = CAL.render(self.agent_id, rnd, dow, day_type)
+        if not line:
+            return ""
+        self._calendar = CAL.audit(dow, day_type, line)
+        return line
+
     def _memory_line(self, wv, exclude: list | None = None) -> str:
         """F-6 臂（跨天记忆进对话）：把「**本人**前些天记下的事」原样接进提示词。
 
@@ -1445,6 +1484,7 @@ class LifeLayerAgent:
         return (self.persona.compressed_profile(self._current_goal())
                 + f"\n场景：{self._topic_label(tid)}；对象：{others}。{self._mood_line()}。"
                 + self._scene_line(wv)      # 处境锚臂：时段/场所/手上事（默认 OFF ⇒ 空串）
+                + self._calendar_line(wv)   # 日历臂：今天是工作日/周末 + 周几（默认 OFF ⇒ 空串）
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + self._gossip_hint(partners)  # G系列A1臂：可引用真人名单（默认OFF ⇒ 空串）
                 + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
@@ -1464,6 +1504,7 @@ class LifeLayerAgent:
         return (self.persona.compressed_profile(self._current_goal())
                 + f"\n你正在和{who}聊「{self._topic_label(topic)}」。{self._mood_line()}。"
                 + self._scene_line(wv)      # 处境锚臂：时段/场所/手上事（默认 OFF ⇒ 空串）
+                + self._calendar_line(wv)   # 日历臂：今天是工作日/周末 + 周几（默认 OFF ⇒ 空串）
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + (repair_line or "")        # R13：本线程旧账的「这一句把话说开」要求；关闭/无旧账为空串
                 + (echo_line or "")          # F-3：接住对方情绪的一句处境提示；关闭/不产为空串
