@@ -418,3 +418,39 @@ grep -n "^| \*\*N-7\*\*" reports/CYCLE-14-20261024.md   # → 287
 ---
 
 *定点复验：`independent-verifier`（非作者）｜被验字节 `aa2d4f3c…0908`（458 行 / 70,393 B，冻结 04:57:47）｜**分档 PASS（0 BLOCK / 0 必修未闭合 / 读数 0 变化）**｜第一版 `BLOCK（6 项）` 段落按 Leader 要求**原样保留**，未删未改｜本文件只读核验，未修改任何被核件字节、未 commit、未 push*
+
+---
+---
+
+# 第三段：发布后「未跟踪/未入库」表述失效的**最小定点确认**（README 时点补记）
+
+> **核验人**：`independent-verifier`｜**核验时刻**：2026-10-24 05:20 (+08:00)｜**触发**：Leader 05:20:06 动用待命职责第 2 条
+> **被核对象**：提交 **`3188eb3`**（`docs(cycle15): README 索引行追加时点口径补记…`，author `life-evidence-analyst`，`2026-10-24T05:20:20+08:00`）+ 其前后状态
+> **前两版结论不受影响**：第一段（V1）`BLOCK（6 项）`、第二段（V2）`PASS` 均**原样保留**；本段**不产生新分档**，只对「README 时点补记这一笔」出「成立 / 不成立」。
+
+## 三条判据（Leader 指定，逐条实跑）
+
+| # | 判据 | 实测输出 | 判定 |
+|---|---|---|---|
+| 1 | 报告字节未被改动 | `sha256sum reports/CYCLE-15-20261024.md` = **`aa2d4f3c33ef58ab3419579b3e3fc0913267992fa098047c1c416571f8260908`**（= V2 PASS 的被验锚；`git status --porcelain reports/CYCLE-15-20261024.md` → **无输出**，已 tracked 且 clean） | ✅ **成立** |
+| 2 | 该提交**只含 `reports/README.md` 一个路径** | `git show --name-only 3188eb3` → 仅 `reports/README.md`；`--numstat` = `1 1 reports/README.md`（1 增 1 删） | ✅ **成立**（未裹带 `d3_noiseband_bootstrap.json`、未裹带任何 `dialogue_*`、未裹带证据件） |
+| 3 | 改动**仅限 CYCLE-15 索引行内追加**，相邻行与 `Q-16` 留痕块未动 | diff hunk = 单 hunk `@@ -105,3 +105,3 @@`；`+`/`-` 行**各一条且均为「\| **CYCLE-15** \| …」**；`git show 3188eb3 \| grep -c "^[-+]\| \*\*CYCLE-14\*\*"` = **0**（CYCLE-14 行未动）；现文 L105 = CYCLE-14 行、L106 = CYCLE-15 行（**两行连续**）、L108 = `> **✏️ 更正留痕（2026-10-24，Q-16 收口）**…` **仍在**；README 现 sha = `c68e1d6c7ea6c49886414020ba5d59fdea54fe7c07688fff1a1181217de77d51` | ✅ **成立** |
+
+**⇒ 三条全部成立，本笔收口形态合规**（不改报告正文、由索引行承载现值，正是「提交字节 ≡ 复验字节」要求的做法）。
+
+## 附带核（我顺手做的，不属判据）
+
+- **22 个路径条目跨两笔提交的口径属实**：`git show --name-only 4e5af95` = **19** 条（`reports/CYCLE-15-20261024.md` + `reports/README.md` + `v2/evidence/cycle15_verify.md` + `v2/evidence/d22_partner_choice/` **16** 件）；`git show --name-only 2bfd10a` = **6** 条（`tools/d21/*.py` **3** 件 + 第一版读数 **3** 件）⇒ 白名单 **16 + 3 + 3 = 22** ✅；`git ls-files v2/evidence/d22_partner_choice \| wc -l` = **16** ✅。
+- **我的结论件入库正确**：`git show 4e5af95:v2/evidence/cycle15_verify.md \| sha256sum` = **`39f373d354add18ec3911faf20deae9f8663234e619f58b477cd75c4431dc887`** = 我落笔时的 sha（420 行；**第一段 BLOCK 与第二段 PASS 两版完整入库**），非「只入第一版」。
+- **README 索引行自陈的锚与我一致**：该行写「报告本体 sha256 = `aa2d4f3c…0908` = 独立复验 V1 定点复验 PASS 的被验字节」——与第二段 PASS 的锚逐字相符。
+- **`cycle15_commit_window.md §A.2` 未改**（按 Leader 裁决不批准改）：`sha256sum v2/evidence/d22_partner_choice/cycle15_commit_window.md` 仍 = `001314e7…c1d8`（未被本笔牵动，`SHA256SUMS` 无需重签）。
+
+## 边界（如实）
+
+1. 本段**只确认「README 时点补记这一笔」**，**未重核报告正文**；第二段 `PASS` 的适用范围仍**只对 `aa2d4f3c…0908`**，不因本段扩大。
+2. 本段**落笔即改变本文件字节**：追加后 `v2/evidence/cycle15_verify.md` 的新 sha 见文末签名行；**该文件已被 `4e5af95` 入库过一版**（`39f373d3…`），本段属**后续追加**，是否需要再提交由 Leader / `release-engineer` 裁决——我**不 commit、不 push**。
+3. 报告正文 §1.2 / §1.4 / §3 `N-10` 的「未跟踪 / 未入库」表述**在正文里仍为旧时点语**（Leader 已裁决不改正文），读者必须以 README 索引行的时点补记为现值来源；这是**已知且经裁决的时点差**，不是新缺陷。
+
+---
+
+*第三段：`independent-verifier`｜核验提交 `3188eb3`（仅 `reports/README.md`，1 增 1 删，改动限于 CYCLE-15 索引行）｜报告锚 `aa2d4f3c…0908` 未动｜**三条判据全部成立**｜未修改任何被核件字节、未 commit、未 push*
