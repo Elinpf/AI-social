@@ -71,6 +71,8 @@ def main(argv=None) -> int:
     seals = 0
     last_seq = None
     scores_len_dist = Counter()
+    argmin_idx_dist = Counter()      # 非全同样本中「最小值的（并列取最小）索引」分布
+    nonuniform_picked0 = 0           # 非全同样本中 picked==0 的条数
     llm_calls = 0
     cached_true = 0
     by_purpose = defaultdict(lambda: {"calls": 0, "cached": 0, "cached_false": 0,
@@ -137,6 +139,11 @@ def main(argv=None) -> int:
                 non_uniform += 1
                 if picked is not None:
                     non_uniform_excl_none += 1
+                if sset:
+                    mn = min(sset)
+                    argmin_idx_dist[str(sset.index(mn))] += 1
+                if picked is not None and int(picked) == 0:
+                    nonuniform_picked0 += 1
                 if picked is not None and 0 <= int(picked) < len(sset):
                     if sset[int(picked)] == min(sset):
                         argmin_ok += 1
@@ -207,6 +214,11 @@ def main(argv=None) -> int:
             "num_argmin_ok": argmin_ok,
             "rate_pct": r4(pct(argmin_ok, non_uniform)),
             "threshold_pct": 100.0,
+            "argmin_index_dist": {k: argmin_idx_dist[k] for k in sorted(argmin_idx_dist)},
+            "nonuniform_picked0_count": nonuniform_picked0,
+            "picked0_interpretation_note": ("若 `nonuniform_picked0_count` 很大且 `argmin_index_dist['0']` 也很大 ⇒ "
+                                            "候选 0 在多数非全同样本里本来就是最小分，择优正常；"
+                                            "若 `nonuniform_picked0_count` 远大于 `argmin_index_dist['0']` ⇒ 择优偏向索引 0，属实现问题"),
             "violations": argmin_viol[:20],
             "n_violations": len(argmin_viol),
             "rule": "分母 = scores 非全同的 MSG；分子 = scores[picked] == min(scores)",
