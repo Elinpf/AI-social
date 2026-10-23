@@ -181,6 +181,20 @@ picked = {0: 191}（全选第 1 条）；scores 三列均值 = 0 / 0 / 0；三�
 2. **机制臂必须有"取值有效性"硬闸，不能只验"字段存在"**。例：`scores` 不得全为 0、`picked` 必须有分布、`scores` 三列不得恒等；这类闸要**与接线闸并列写进预登记**；
 3. **中途快照提前核闸**：本批在 **24/60 轮**就发现（省下 36 轮 ×3 倍成本）。凡"三倍成本"或"判定词可能被判死"的臂，**跑到 1/3 时必须手工核一次核心闸**，不等收尾。
 
+## 3.101 【硬规则】两个 `rc` 别混：`llm-cost` 的 rc ≠ 跑批进程的 rc（2026-10-23 D12-E）
+
+**事故**：D12-E 收尾时执行者报「跑批 rc=0」，但其 `run_summary.md` 里那个 `rc=0` 是 **`obs llm-cost --require-provider` 的返回码**；产物目录里**既无 `END` 也无 `run_batch.rc`**（`systemd-run --collect` 在 unit 退出后连日志一起清理，`END` 没落盘）⇒ **跑批进程的 rc 根本没有证据**。
+
+| 名字 | 证据 | 能证明什么 |
+|---|---|---|
+| `obs llm-cost --require-provider` 的 rc | `llm_cost.json` + 调用记录 | 真 LLM、无 mock、`degraded=0` |
+| **跑批进程的 rc** | `END` / `run_batch.rc` | **进程正常退出**（无则**无证据**） |
+
+**规则**：
+1. 报告里**不得**把两者写成一个"rc=0"；无 `END` 时只能写「以 `meta.finished_at` + `seals` 完整 + 末行 `TURN_SEAL` + `events` 与 meta 一致判定为正常结束；**进程 rc 无直接证据**」；
+2. **生产 `END` 的正确姿势**：`run.sh` 内 `echo "$rc" > "$OUT/END"` 必须**在 unit 进程内**完成，且**同时**把 `rc` 写进 `run_summary.md` 的显式字段；不要依赖 `systemd-run --collect` 事后回收；
+3. **门禁命令与日志不同源时须写明**：如本树无 `python3 -m orchestration obs`（rc=2）而改用主树 `python3 -m obs`，报告须写「门禁命令来自主树、被解析日志来自本臂」。
+
 ## 4. 启动清单（复制粘贴；一批一跑）
 > 约定：`REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`；批次名 `<B>`（如 `A`）；跑批产物落 `RUN=/root/t271/runs/<B>`。
 
