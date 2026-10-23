@@ -209,6 +209,109 @@ picked = {0: 191}（全选第 1 条）；scores 三列均值 = 0 / 0 / 0；三�
 2. 凡是**结构性恒 0/恒 1** 的指标，一律**不得作为效果判据**（它只能证明"这个维度的结构不变"，不能证明"变好"）；
 3. 同类前例：`turns_A_p50`（实为线程消息条数）、`paren_rate` 两义、`L-7` raw8/norm8 两口径——**引指标前先确认"这个名字下有几个实现"**。
 
+## 3.103 【硬规则】比率型判据的六件事：分母写死 / 双口径 / 半成品自证 / `pp`≠倍 / 规则对实现实跑 / 预登记 freeze（2026-10-23 D12-F）
+
+> 来源：D12-F（候选结构多样化）跑批期间暴露的六类口径问题，全部出在**"判据怎么写、规则怎么落到实现"**这一层，不在算法层。
+> 复核：本节经 `auditor` 两轮复核（退回一次），复核意见在 `<team-workspace>/runbook_3.103_review.md`。
+
+### 3.103.1 比率型指标必须在**预登记**里写死分母（分子 / 分母 / 分母为何是这个）
+
+- **本轮实例（两条，都是真事故）**：
+  1. `v2/refs/D12F-prereg-candidate-diversity.md` §3 的 **M4 只写「候选可分性（非全同分样本占比）≥ 25%」，没写分母是谁**；
+  2. 后果已经发生：`v2/evidence/d12e_leader_terminal_check.md:54` 把 **79/497 = 15.90%** 当终态读数写进表里，而**497 在终态日志上根本不可达**——该文件 `:67` 同一张表自己写着这一列的来源：「**42/497 中途口径**」，即 497 是**跑批中途快照的分母**。
+- **终态唯一可复现读数**：**82/510 = 16.0784%**。终态日志上任何筛选都回不到 497：`n_msgs=510`、`ctx.d12e` **510/510**、`len(scores)` 恒 3、`picked` 无 `None`、`sample_index==0` 467 条。生长链自洽：快照 497 条时非全同分 **79** → 终态 510 条时 **82**（后段新增样本落到非全同分），**不是**"剔除 `picked=None`"。
+- **为什么**：预登记的全部价值是「**阈值不可事后调**」。分母没写死 ⟺ 阈值可调 = 预登记作废。分母不是统计细节，是**判据定义的一部分**。
+
+复算入口（口径写进命令，不用匿名片段；机制闸读数器同时也是 M4 的两种分母的权威实现）：
+```bash
+cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+python3 v2/evidence/d12f_gate_metrics.py \
+  --run-jsonl .worktrees/d12e-bestof/v2/evidence/run_d12e_bestof3_n16r60_seed42/run.jsonl \
+  --ctx-key d12e --label AUD_D12E_M4 --out-json /tmp/aud_m4_d12e.json
+# → n_msgs=510；M4_separability: A(全部带 ctx 的 MSG) 82/510=16.0784，B(剔除 picked=None) 82/510=16.0784 ⇒ A=B；497 不可达
+# 分子定义：len(set(scores))>1；分母：全部 MSG_DM/MSG_PUBLIC/MSG_GROUP
+```
+
+### 3.103.2 分母未写死时：**双口径并列**，裁决一致才有效；「出处」只认三处
+
+- **规则**：同一指标存在两种合理分母时，**两种都报**（各自写明分子/分母条数与出处），只有**两口径裁决一致**（同为达标或同为不达标）才能出结论；**不一致一律判「口径不明 · 不可判」**，**禁止择一**。
+- **「出处」只有三种**：① **预登记原文**；② **预登记正文内的跑前修订块**（带时间戳且**早于起跑**）；③ `v2/refs/` 下的**独立修订文件**。
+  **报告、终态核验文档、聊天消息里出现的分母一律不算出处**，只能记「待追项」，**不得**据此开启双口径通道。
+- **本轮实例**：M4 的两口径在终态上 **A = B = 82/510 = 16.0784%**（机制闸读数器 `locked_ruling` 字段写死「两种分母同时报、不得单独使用」）⇒ 裁决一致，对 25% 门槛**同侧（不达）**，可出「M4 未达」。
+- **为什么（失效模式）**：出处不限定 ⇒ 任何人都能在**结果已知后**从某份旧文档里翻出一个对自己有利的分母并声称"有出处"；`79/497` 就躺在报告文档里，**双口径条款会立刻异化成择一通道**——与 §3.100「静默兜底把 bug 伪装成阴性结果」同病。
+
+### 3.103.3 半成品读数必须**自证是半成品**，否则必被当终态引用
+
+- **本轮实例（已发生，非假设）**：`d12e_leader_terminal_check.md:54` 的 **79/497 = 15.90%** 就是**把中途快照当终态**——497 只存在于跑批中途（该文件 `:67` 自述「42/497 中途口径」），终态 510 条上不可达，终态值应为 **82/510 = 16.0784%**。全量扫描见 `<team-workspace>/partial_as_terminal_scan.md`。
+- **规则（字段名以 `v2/evidence/d12f_gate_metrics.py` 的**实际实现**为准，实测见 3.103.5）**：
+  - 文件名必须 `_partial_rNN.json`（`NN` = `snapshot.max_round_seen`）；**注意：当前脚本 `--out-json` 不校验文件名，此条靠人工遵守、待补断言**（见下）；
+  - 体内必须带 `snapshot.partial = true`、`snapshot.snapshot_rounds_seen`、`snapshot.max_round_seen`、`snapshot.turn_seals`、`snapshot.lines_unparsable_or_partial`；
+  - `snapshot.note` 在 `--partial` 时自动写「中途快照：partial=true，**不得**当作终态判读结论」；
+  - 报告/消息引用时必须带 `partial` 字样与 `snapshot.max_round_seen`，**禁止**写成"当前读数"。
+- **待补（登记，不在本节偷偷改实现）**：① `d12f_gate_metrics.py:16` 的 docstring 写「写 `partial=true` / `snapshot_at` / `snapshot_round` / `seals`」，而实现里**没有 `snapshot_at`**、键名是 `snapshot.partial` / `snapshot.turn_seals`、顶层无 `partial` ⇒ **docstring 与实现不符，另立修正项**；② `--partial` 应加文件名断言（不匹配 `_partial_r\d+` 直接 `exit 2`），让规则有执行力。**两项均在 D12-F 跑批结束后处理**（现改脚本会改动 `reader_sha256`，使本批 partial 前后读数不可比）。
+- **为什么**：批跑几十分钟到几小时，**中途数字会被别的成员、后续会话、甚至下一轮 agent 当成事实读走**；D12-E 已经真的发生过一次（79/497 进了终态核验表）。没有自证标记的半成品，事后**无法与终态区分**，只能靠人再追一轮分母。
+
+### 3.103.4 `pp` 与「倍」不得混写：差值一律 `Δ = X pp`，比值一律「倍（附计数比 a/b）」
+
+- **本轮实例**：D12-E 的 `L-6_dup_exact_rate` 由 **49/510 = 9.6078%** 降到 **4/510 = 0.7843%**；**pp 差 = 8.8235pp**、**倍数 = 12.2502 倍**。原报告写「降 **8.8 倍**」——把 **pp 值当成倍数**，**3 处 + 3 处（两个文件）**：`v2/evidence/d12e_result.md:84/:101/:104`、`v2/evidence/d12e_leader_terminal_check.md:84/:101/:109`（均 2026-10-23 更正并留文件头修订记录）。全量排查见 `<team-workspace>/unit_errata_scan.md`。
+- **规则**：写差值只用 `pp`；写比值必须写「N 倍（a/b = 计数比）」，让读者一步复算。**两者不得互相顶替**，也不允许只写「降 N 倍」而隐藏被除关系。
+- **为什么**：8.83pp 与 12.25 倍差一个量级；混写让读者把"效果强度"判断反了，而且**错值可复算时看起来同样精确**（"8.8" 确实出现在数据里），最难被发现。
+
+越界检查命令（机械复验"只改了该改的行"）：
+```bash
+cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+git show 9ae3eae -- v2/evidence/d12e_result.md v2/evidence/d12e_leader_terminal_check.md
+# 期望：每个文件只有「文件头修订记录块 + 3 行正文表述」变更；d12e_leader_terminal_check.md 的脚注¹(raw8) 与 §3.1「两实现分歧」段不得出现在 diff 中
+```
+
+### 3.103.5 【新增】写进 runbook 的**字段名 / 命令 / 文件名**，必须在提交前对着实现**实跑一次**，并把输出贴进修订记录
+
+- **本轮实例（本节自身的翻车）**：3.103.3 初稿把 `d12f_gate_metrics.py` 的 **docstring** 当成了实现，写成「输出 `partial:true` + `snapshot_round` + `snapshot_at` + `seals`」。实际跑一遍立刻暴露：顶层**没有** `partial`，字段是 `snapshot.partial` / `snapshot.snapshot_rounds_seen` / `snapshot.max_round_seen` / `snapshot.turn_seals` / `snapshot.note`，且**没有 `snapshot_at`**（全文件仅 docstring `:16-17` 提到）。被 `auditor` 以"规则与实现不一致"退回。
+- **规则**：
+  1. 凡 runbook 里出现**具体字段名、具体命令、具体文件名模式**，写作者必须**当场执行一次**，把命令 + 真实输出片段贴进该节（或修订记录）；
+  2. **以 docstring / 记忆 / 别人转述为准一律退回**——docstring 会漂移，实现不会说谎；
+  3. 若发现 docstring 与实现不符，**两者都要治**：规则按实现写，另立一条「docstring 修正项」，不得只改一边。
+- **为什么**：runbook 是后续每一批的执行依据，一条错字段名会让下一批的读数器输出错键、让复核方按错键验、让报告引用不存在的字段。**这次是复核方在入库前抓住的；如果不经复核，错的规则会当天生效并写进下一轮报告**（与 §3.102 的 `F-2` 死标尺同类：名字对不上，指标就废了）。
+
+### 3.103.6 【新增】预登记必须 **freeze → `sha256sum` → commit → 用 commit 内 blob 自核**，入库窗口内禁止再改文件，且**禁 `commit --amend`**
+
+- **本轮实例（三态，实测，非转述）**：E1 预登记在「提交者 `git add`」与「life-designer 继续编辑 §8-D」**并发**的情形下入库，同一天在本地历史里留下三个版本：
+
+  | commit | 文件 sha256（前 16） | 字节数 | 状态 |
+  |---|---|---|---|
+  | `78fdcb8` | `b97f99d5d729a70e…` | 36,569 | 中间态（有 §1.1 J-1…J-5、§6.1 两条硬声明，缺 §8-D 改写与 Amendment 1 行） |
+  | `9ae3eae` | `ef666ee29762332c…` | 38,618 | 中间态（补了 §8-D/Amendment 1 的前半，仍未定稿） |
+  | `0520e1e` | `17fc907574d0e750…` | 41,345 | **最终冻结态**（HEAD） |
+
+  复验命令：
+  ```bash
+  cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+  for c in 78fdcb8 9ae3eae 0520e1e; do
+    printf '%s ' $c; git show $c:v2/refs/E1-prereg-coop-closure.md | sha256sum | cut -c1-16
+    git show $c:v2/refs/E1-prereg-coop-closure.md | wc -c
+  done
+  git reflog -n 5      # 可见 9ae3eae HEAD@{1}: commit (amend)
+  ```
+- **已发生的违规（如实登记）**：本轮对 `78fdcb8` 执行过 **`commit --amend`**（reflog `9ae3eae HEAD@{1}: commit (amend)`），后果是 `78fdcb8` 里的中间态 blob `8262d583…` **已不能从任何 ref 到达**（`git cat-file -t` 仍返回 `blob`，但只在 reflog 与 dangling 对象里）⇒ **"保留中间态"在 git 层没有做到**，只能靠文件内 Amendment 2 的文字登记兜底。同时 `0520e1e` 的 commit message 写「中间态 → 最终冻结态」，**实际中间态已被 amend 抹掉，该表述失真**（不得再据此 message 复述版本谱系，请照上表三态讲）。
+- **规则（按可执行动作写，不设例外）**：
+  1. **冻结**：定稿后 `sha256sum` 一次，把 **commit 短 sha + 字节数 + sha256 前 8 位 + 时刻**写进**预登记文件内的冻结记录块**；
+  2. **提交**：**禁 `commit --amend`、禁 `push --force`，不设例外**（一旦 amend，前一版 blob 立即从 ref 图里消失，等于销毁证据）；
+  3. **入库窗口**：从 `git add` 到 push 完成的整个窗口内，**任何成员不得再写该文件**（本轮 case：提交者 add 时 life-designer 正在改 §8-D）；
+  4. **自核以 blob 为准，不以工作区为准**：`git add` 后用 `git show :<path> | sha256sum` 核**暂存区**；commit 后用 `git show <commit>:<path> | sha256sum` 核**提交内 blob**；两者都等于冻结记录里的值时才算成功。**只用工作区 `sha256sum` 自核是无效的**——add 之后工作区仍会变，核到的是错 blob，这正是本轮事故的发生机制；
+  5. **已提交中间态 ⇒ 只能补 commit**，并在文件内登记「中间态 sha / 最终态 sha / 原因」；**不得用 amend 掩盖**；
+  6. **证据检索一律用前缀精确匹配**：`LIFE_PROMPT_COOP_E1`、`run_e1_`；**`e1_` 这类宽匹配会命中 `v2/evidence/event_cards_e1_e20_map.md`**（实测存在），会污染"是否已起跑"的判断。
+- **本轮"三态都早于任何一臂"的独立验真（auditor 复验，本人复核同值）**：`grep -rl LIFE_PROMPT_COOP_E1 --include=*.py --include=*.json --include=*.sh .`（排除 `.git`/`.worktrees`）= **0 命中**；`code/life/coop_e1.py`、`code/life/tests/test_coop_e1.py`、`tools/d5/f9_coop.py` **均不存在**；无 `*coop*` / `*run_e1*` 批次目录 ⇒ 三个版本都产生于**任何一臂起跑之前**，**不构成"看到结果再改口径"**（属流程违规，非发布事故：`origin/master` 仍为 `edf9526`，三 commit 均未推送）。
+- **为什么**：预登记的法律意义是「阈值不可事后调」。一旦同一次入库里出现两个字节数不同的预登记，"哪一版是跑前那版"就只能靠逐字比对去猜；而 **amend 会把凭据本身删掉**。补一个 commit 是成本，force push / amend 已推历史是把证据链毁掉。
+
+## 3.103 【硬规则】别用"被缓存污染的观测"去设预期墙钟（2026-10-23 D12-F）
+
+**事故**：D12-E 只跑 **32 分钟**（因为 44.9% 的对话采样命中了历史缓存），我据此给 D12-F 设「超 120 分钟报我」。但 D12-F 的候选 prompt **全新** ⇒ `dialogue cached=0`（全 miss）⇒ 投影墙钟 **≈122 分钟**。**把正常当异常报了一次警**。
+
+**规则**：
+1. **设墙钟预期时用"无缓存命中"的基线**：`单采臂实测时间 × 采样倍数`（例：T1 49m59s × 2.4 ≈ 120 min），**不要用有高缓存命中率的批**；
+2. **报告里凡给墙钟，必须同时给该批的 `cached` 命中率** —— 否则读者会把"缓存让跑批变快"误读成"这个机制便宜"；
+3. **区分两个阈值**：「报我」的阈值（可以是软的、提前预警用）与「停」的阈值（要有明确异常判据）。**停的判据优先看"每轮耗时是否衰减/翻倍"，而不是绝对墙钟**——绝对墙钟会被缓存、端点、judge 比例同时扰动。
+
 ## 4. 启动清单（复制粘贴；一批一跑）
 > 约定：`REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`；批次名 `<B>`（如 `A`）；跑批产物落 `RUN=/root/t271/runs/<B>`。
 
