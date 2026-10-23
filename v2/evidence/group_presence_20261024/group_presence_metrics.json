@@ -1,0 +1,242 @@
+{
+  "meta": {
+    "script": "tools/f9/group_presence_metrics.py",
+    "input_run": "v2/evidence/run_f3_off_n16r60_seed42/run.jsonl",
+    "input_sha256": "19d5cb03de2f0203e3b8aa1c9160adfbef787a159f961713f40b88027931d305",
+    "input_lines": 116336,
+    "note": "确定性输出：无时间戳字段，同一输入重放应字节一致；只读，不写日志、不跑批。"
+  },
+  "universe": {
+    "agents_source": "AGENT_BORN.payload.agent_id 去重",
+    "agents_count": 16,
+    "days_source": "ACTIVITY_STARTED.payload.day 去重（与 TIME_MARK.payload.day 一致）",
+    "days_count": 5,
+    "days": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots_per_day_source": "code/life/constants.py TIME_CONFIG.SLOTS_PER_DAY",
+    "slots_per_day": [
+      "morning",
+      "afternoon",
+      "evening",
+      "night"
+    ],
+    "rounds_per_slot": 3,
+    "rounds_per_day": 12,
+    "turns_in_log": 60,
+    "derived_days_from_turns": 5.0,
+    "time_mark_count": 5,
+    "agent_day_slot_total": 320,
+    "activity_started_rows": 320,
+    "activity_started_unique_agent_day_slot": 320,
+    "universe_formula": "16 agents × 5 days × 4 slots = 320 = 60 turns / 12 rounds_per_day × 4 slots × 16 agents",
+    "self_check_no_activity_cells": 0
+  },
+  "gathering": {
+    "group_created": {
+      "total": 17,
+      "by_place": {
+        "market": 17
+      },
+      "by_place_source": "GROUP_CREATED.group_id 形如 'place:<name>'，取冒号后部分",
+      "by_slot": {
+        "afternoon": 17
+      },
+      "members_size_distribution": {
+        "8": 17
+      },
+      "distinct_member_sets": 17,
+      "denominator_note": "分母口径 = 该日志内 GROUP_CREATED 事件总数 17"
+    },
+    "activity_started": {
+      "total_rows": 320,
+      "total_rows_denominator": "ACTIVITY_STARTED 事件行数（每 (agent,day,slot) 一行）= 320",
+      "participants_size_distribution": {
+        "1": 204,
+        "2": 99,
+        "8": 17
+      },
+      "participants_buckets": {
+        "1": 204,
+        "2-4": 99,
+        "5+": 17
+      },
+      "multi_person_rows": 116,
+      "multi_person_ratio": {
+        "numerator": 116,
+        "denominator": 320,
+        "value": 0.3625
+      },
+      "multi_person_ratio_denominator_note": "分子 = participants 长度 >=2 的 ACTIVITY_STARTED 行数 116；分母 = 全部 ACTIVITY_STARTED 行数 320（按 agent-槽计，不按去重活动计）"
+    },
+    "place_arrived": {
+      "total": 299,
+      "by_place": {
+        "residence": 80,
+        "cafe": 53,
+        "park": 27,
+        "market": 26,
+        "farm": 21,
+        "plaza": 17,
+        "bank": 15,
+        "school": 13,
+        "library": 11,
+        "workshop": 11,
+        "community_center": 9,
+        "kitchen": 6,
+        "office": 4,
+        "town_hall": 4,
+        "clinic": 2
+      },
+      "agent_slots_without_arrival": 21,
+      "agent_slots_without_arrival_note": "这些 agent-槽 未发 PLACE_MOVE/PLACE_ARRIVED（原地未移动）；其地点仍由同槽 ACTIVITY_STARTED.place 表征",
+      "arrival_place_vs_activity_place_mismatch": 0,
+      "place_arrived_total_denominator": "PLACE_ARRIVED 事件行数 299（agent-槽 ×发生了移动）"
+    },
+    "per_agent_day_multi_involvement": {
+      "definition": "对每个 (agent, day)：其 ACTIVITY_STARTED 行中 participants 长度>=2 的行数",
+      "n_cells": 80,
+      "n_cells_denominator": "agents × days = 16 × 5",
+      "mean": 1.45,
+      "median": 1.0,
+      "p90_nearest_rank": 2.0,
+      "histogram": {
+        "0": 10,
+        "1": 32,
+        "2": 30,
+        "3": 8
+      },
+      "caveat": "participants 是各 agent 自己计划里的同伴列表，同一多人活动在不同 agent 行里同伴集合可能不同；本字段计的是「被列入多少人活动的次数」，不是实际同处人数"
+    }
+  },
+  "copresence": {
+    "definition": "以 ACTIVITY_STARTED.place 为「同处地点」（已核对：299 条 PLACE_ARRIVED 的 place 与同槽 ACTIVITY_STARTED.place 零不一致），按 (day, slot, place) 归组统计人数",
+    "cell_key": "(day, slot, place)",
+    "variant_including_residence": {
+      "place_groups_total": 92,
+      "place_groups_size_histogram": {
+        "1": 35,
+        "2": 17,
+        "3": 13,
+        "4": 8,
+        "5": 5,
+        "6": 4,
+        "7": 1,
+        "9": 1,
+        "10": 1,
+        "12": 1,
+        "13": 1,
+        "16": 5
+      },
+      "place_groups_ge2": 57,
+      "ratio_of_place_groups_ge2": {
+        "numerator": 57,
+        "denominator": 92,
+        "value": 0.6195652173913043
+      },
+      "persons_in_scope": 320,
+      "persons_in_ge2_group": 285,
+      "ratio_of_persons_in_ge2_group": {
+        "numerator": 285,
+        "denominator": 320,
+        "value": 0.890625
+      },
+      "day_slot_cells": 20,
+      "day_slot_cells_with_any_ge2": 20,
+      "ratio_of_day_slot_cells_with_any_ge2": {
+        "numerator": 20,
+        "denominator": 20,
+        "value": 1.0
+      }
+    },
+    "variant_excluding_residence": {
+      "place_groups_total": 87,
+      "place_groups_size_histogram": {
+        "1": 35,
+        "2": 17,
+        "3": 13,
+        "4": 8,
+        "5": 5,
+        "6": 4,
+        "7": 1,
+        "9": 1,
+        "10": 1,
+        "12": 1,
+        "13": 1
+      },
+      "place_groups_ge2": 52,
+      "ratio_of_place_groups_ge2": {
+        "numerator": 52,
+        "denominator": 87,
+        "value": 0.5977011494252874
+      },
+      "persons_in_scope": 240,
+      "persons_in_ge2_group": 205,
+      "ratio_of_persons_in_ge2_group": {
+        "numerator": 205,
+        "denominator": 240,
+        "value": 0.8541666666666666
+      },
+      "day_slot_cells": 15,
+      "day_slot_cells_with_any_ge2": 15,
+      "ratio_of_day_slot_cells_with_any_ge2": {
+        "numerator": 15,
+        "denominator": 15,
+        "value": 1.0
+      }
+    },
+    "variant_note": "residence 是家（私域），夜槽 rest 全部落在 residence，会把「同处」抬到 100%；因此主口径给出「含 residence」与「不含 residence」两版，均写明分母",
+    "denominators": {
+      "place_groups": "(day, slot, place) 三元组个数",
+      "persons": "该口径下纳入的 ACTIVITY_STARTED 行数（含 residence 版 = 320；不含 residence 版 = 240）",
+      "day_slot_cells": "(day, slot) 二元组个数（含 residence 版共 20 个；不含 residence 版仅统计有非 residence 活动的 cell）"
+    }
+  },
+  "solitude_idle": {
+    "universe": "对每个 (agent, day, slot) 交叉 ACTIVITY_STARTED；全域 = 16 × 5 × 4 = 320（见 universe 段）",
+    "idle_cells_no_activity": 0,
+    "idle_ratio_no_activity": {
+      "numerator": 0,
+      "denominator": 320,
+      "value": 0.0
+    },
+    "solo_activity_rows": 204,
+    "solo_activity_ratio": {
+      "numerator": 204,
+      "denominator": 320,
+      "value": 0.6375
+    },
+    "solo_activity_ratio_denominator_note": "分子 = participants 长度 <=1 的 ACTIVITY_STARTED 行 204；分母 = 全部行 320",
+    "solo_activity_ratio_excluding_night": {
+      "numerator": 124,
+      "denominator": 240,
+      "value": 0.5166666666666667
+    },
+    "solo_activity_ratio_excluding_night_note": "夜槽（night）16×5=80 行全部为 rest/residence 单人，会机械抬高独处占比，故另给白天三槽口径",
+    "self_check_planner_gate": {
+      "gate_rule": "code/life/planner.py:102-104：sha256(f'{agent}|{slot_id}|gate')[:2] % 3 == 0 时 plan_slot 返回 None",
+      "gate_effect": "planner.py 返回 None 后，agent.py:_weekly_slots 走 _choose_activity→_base_activity 兜底，仍然产出 (activity_type, place) 并照常发 ACTIVITY_STARTED",
+      "gated_cells_total": 111,
+      "gated_cells_non_night": 83,
+      "non_night_rows": 240,
+      "non_night_rows_without_template_field": 83,
+      "non_night_gate_vs_no_template_agreement": 240,
+      "non_night_gate_vs_no_template_agreement_denominator": 240,
+      "night_rows_all_no_template": 80,
+      "conclusion": "白天三槽 240 行中，门命中数(83)与无 template 字段行数(83)完全一致，逐格吻合 240/240：门跳过只改「计划来源」，不造成 ACTIVITY_STARTED 缺席；夜槽 80 行全部无 template 是因为 planner 无 night 规则，走 _base_activity→rest/residence。"
+    },
+    "unconfirmed": [
+      "「无活动安排 slot」在本日志中恒为 0（320/320 全部有 ACTIVITY_STARTED），因此该字段是结构下限（设计使然），不可当作「居民不空闲」的行为结论。",
+      "participants 列表是各 agent 计划里的同伴名单，并不保证被列名的同伴在同一槽也把自己的 participants 指向对方；「计划同伴」与「实际同处」是两个口径，本文件分别给出，未确认二者的一致率。",
+      "空闲/独处的行为语义（例如独处是否等于孤独）未确认，本文件不作任何价值判断。"
+    ]
+  },
+  "misc_counts": {
+    "place_move": 299,
+    "turn_seal": 60
+  }
+}
