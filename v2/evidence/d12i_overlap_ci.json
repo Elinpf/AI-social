@@ -1,0 +1,64 @@
+{
+  "diff": {
+    "ci_message_contains_zero": true,
+    "ci_message_pp": [
+      -4.9231,
+      0.044
+    ],
+    "ci_thread": {
+      "ci95_pp": [
+        -5.5243,
+        0.4132
+      ],
+      "n_threads": [
+        169,
+        59
+      ]
+    },
+    "ci_thread_contains_zero": true,
+    "median_pp": -3.4194,
+    "pp": -2.387,
+    "relative_pct": -10.76
+  },
+  "holdout_arm": {
+    "mean": 0.221812,
+    "median": 0.197222,
+    "n": 178,
+    "zero_share_pct": 0.0
+  },
+  "impl": {
+    "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d12i_overlap_ci.py",
+    "sha256": "sha256:0ea2751de21980684968314105e6a63deb1c0931567140404d2d99df55af0f59"
+  },
+  "inputs": {
+    "holdout": {
+      "path": ".worktrees/d12g-diverse2/v2/evidence/run_d12g_diverse2_n16r60_seed42/run.jsonl",
+      "sha256": "sha256:dd4ad73d5a21c7485c2afbfc9701e267c25da3150b10adade3b3819a3996ff36"
+    },
+    "run": {
+      "path": ".worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl",
+      "sha256": "sha256:72c0ca97fe6e38632f67e3b2810c65126c0d15d296d068b521dfbb45c8f5d0c4"
+    },
+    "sext": {
+      "content_sha256": "16754109244fbe490aafc85932fb580513b5b12b51133e6a94e9ceb17bbe246c",
+      "n_shingles": 16973,
+      "path": ".worktrees/d12i-aligned/v2/evidence/d12i_external_shingles_4gram.json",
+      "sha256": "sha256:f75ebb3eb4d81b85a29b6012226220d3020dd28d95859b1d17ce47ca0a1e12f0"
+    }
+  },
+  "policy": {
+    "B": 2000,
+    "compare": "T5 holdout round in [40,59]",
+    "hash": "blake2b digest_size=8 hex",
+    "metric": "|shingles(c) ∩ S_ext| / |shingles(c)|",
+    "ngram": 4,
+    "rule": "CI 含 0 ⇒ 不可分辨",
+    "seed": 42
+  },
+  "run_arm": {
+    "mean": 0.197942,
+    "median": 0.163028,
+    "n": 510,
+    "zero_share_pct": 0.392
+  }
+}
