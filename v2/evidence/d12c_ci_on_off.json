@@ -1,0 +1,136 @@
+{
+  "frozen_reader": {
+    "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d12c_metrics.py",
+    "sha256": "c41cb5aca03c9499fc47047d5acaeba8f4b33bef5298b69556b15d3da290ab58"
+  },
+  "limitation": "单 seed / 单规模 / 中性树；bootstrap 仅反映抽样不确定性，不含 run 间非确定性（见 D5 §5 同 seed 21.3% 逐条一致率）",
+  "medians": {
+    "len_p50": {
+      "diff": {
+        "ci95_hi": 16.0,
+        "ci95_lo": 9.5,
+        "contains_zero": false,
+        "delta": 12.0
+      },
+      "off": 40.0,
+      "on": 52.0
+    },
+    "turns_A_p50": {
+      "diff": {
+        "ci95_hi": 2.0,
+        "ci95_lo": -2.0,
+        "contains_zero": true,
+        "delta": 0
+      },
+      "off": 2,
+      "on": 2
+    }
+  },
+  "n_msgs": {
+    "off": 510,
+    "on": 510
+  },
+  "policy": {
+    "B": 2000,
+    "note": "仅补 CI；P1/P2/len/结构的定义与常量全部来自冻结读数器（import 其模块常量）",
+    "rule": "CI 含 0 ⇒ 无结论",
+    "seed": 42
+  },
+  "rates": {
+    "P1_specificity": {
+      "diff": {
+        "ci95_hi": 13.1373,
+        "ci95_lo": 7.2549,
+        "contains_zero": false,
+        "delta_pp": 10.1961
+      },
+      "off": {
+        "k": 452,
+        "n": 510,
+        "pct": 88.63,
+        "wilson95": [
+          85.58,
+          91.1
+        ]
+      },
+      "on": {
+        "k": 504,
+        "n": 510,
+        "pct": 98.82,
+        "wilson95": [
+          97.46,
+          99.46
+        ]
+      }
+    },
+    "P2_thirdparty": {
+      "diff": {
+        "ci95_hi": 21.7647,
+        "ci95_lo": 10.5882,
+        "contains_zero": false,
+        "delta_pp": 16.0784
+      },
+      "off": {
+        "k": 312,
+        "n": 510,
+        "pct": 61.18,
+        "wilson95": [
+          56.88,
+          65.31
+        ]
+      },
+      "on": {
+        "k": 394,
+        "n": 510,
+        "pct": 77.25,
+        "wilson95": [
+          73.42,
+          80.68
+        ]
+      }
+    },
+    "paren_rate_observe": {
+      "diff": {
+        "ci95_hi": -13.1373,
+        "ci95_lo": -24.1176,
+        "contains_zero": false,
+        "delta_pp": -18.4314
+      },
+      "off": {
+        "k": 405,
+        "n": 510,
+        "pct": 79.41,
+        "wilson95": [
+          75.69,
+          82.69
+        ]
+      },
+      "on": {
+        "k": 311,
+        "n": 510,
+        "pct": 60.98,
+        "wilson95": [
+          56.68,
+          65.12
+        ]
+      }
+    }
+  },
+  "structure": {
+    "n_msgs": {
+      "off": 510,
+      "on": 510,
+      "rel_pct": 0.0
+    },
+    "n_threads": {
+      "off": 169,
+      "on": 169,
+      "rel_pct": 0.0
+    },
+    "note": "n_threads / n_msgs 为确定性总数，比值直接给；turns_A_p50 的 CI 见 medians",
+    "threads_p50": {
+      "off": 2,
+      "on": 2
+    }
+  }
+}
