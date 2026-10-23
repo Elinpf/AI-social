@@ -1,0 +1,30 @@
+{
+  "T1": {
+    "L7_norm8_rate_pct": 65.098039,
+    "cells": {
+      "A_head_detail": {
+        "distinct_shingles": 254,
+        "msgs": 203,
+        "rate_pct": 39.8039
+      },
+      "B_head_nodetail": {
+        "distinct_shingles": 89,
+        "msgs": 84,
+        "rate_pct": 16.4706
+      },
+      "C_body_detail": {
+        "distinct_shingles": 1231,
+        "msgs": 234,
+        "rate_pct": 45.8824
+      },
+      "D_body_nodetail": {
+        "distinct_shingles": 1367,
+        "msgs": 203,
+        "rate_pct": 39.8039
+      }
+    },
+    "cells_msgs_sum": 724,
+    "dup_msgs": 332,
+    "n_msgs": 510
+  }
+}

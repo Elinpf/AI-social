@@ -1,0 +1,34 @@
+{
+  "T1": {
+    "L3_paren_block_any": 66.27,
+    "L7_noparen": {
+      "n_dup": 241,
+      "rate": 47.25
+    },
+    "L7_orig": {
+      "n_dup": 332,
+      "rate": 65.1
+    },
+    "dup_msgs_with_paren": 217,
+    "dup_msgs_without_paren": 115,
+    "dup_paren_share": 65.36,
+    "n_msgs": 510,
+    "n_paren_msgs": 338
+  },
+  "T2": {
+    "L3_paren_block_any": 50.2,
+    "L7_noparen": {
+      "n_dup": 246,
+      "rate": 48.24
+    },
+    "L7_orig": {
+      "n_dup": 329,
+      "rate": 64.51
+    },
+    "dup_msgs_with_paren": 157,
+    "dup_msgs_without_paren": 172,
+    "dup_paren_share": 47.72,
+    "n_msgs": 510,
+    "n_paren_msgs": 256
+  }
+}

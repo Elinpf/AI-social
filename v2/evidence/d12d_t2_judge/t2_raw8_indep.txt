@@ -1,0 +1,19 @@
+=== 独立复算 T2（脚本 v2/evidence/recompute_l7_indep.py）
+日志: v2/evidence/run_d12d_on_n16r60_seed42/run.jsonl
+日志 sha256: sha256:ad0c939f062d23553adeb42af52617d082395265ddb2f6fe12a11d3093144ca0
+解析: 非空行 116398，JSON 解析失败 0，MSG_* 消息数 n_msg = 510
+MSG 类型分布: {"MSG_DM": 455, "MSG_PUBLIC": 55}
+
+[raw8 · 判定口径] dup = 377 / 510 = 73.921569%
+[norm8 · 辅助口径] dup = 329 / 510 = 64.509804%
+[集合交集] raw8∩norm8 dup = 326（raw8 独有 51，norm8 独有 3）
+[OFF 基线 raw8] 193 / 510 = 37.843137%
+[M1] Δ(raw8 vs OFF) = +36.0784pp，噪声带 [-4.31, +5.88]pp ⇒ OUT_OF_BAND
+[wilson95 raw8] [69.942, 77.543]
+[newcombe95 Δpp] [30.23, 41.551]
+[逐频道] {"MSG_DM": {"n": 455, "dup_raw8": 331, "dup_norm8": 286}, "MSG_PUBLIC": {"n": 55, "dup_raw8": 46, "dup_norm8": 43}, "MSG_GROUP": {"n": 0, "dup_raw8": 0, "dup_norm8": 0}}
+
+[守卫独立重算] S1 F-6 memory_refs = 0/510（floor 32 ⇒ FAIL）
+                S2 L-2 旁白头 = 238/510（==0 ⇒ FAIL）
+                S3 L-8 裸ID = 2/510（==0 ⇒ FAIL）
+                S3b L-13 token泄漏 = 7/510（<=9 v1.1 ⇒ PASS）

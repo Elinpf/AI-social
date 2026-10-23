@@ -1,0 +1,18 @@
+RENDER_START 2026-10-23T10:09:33+08:00 arm=T2(d12d_on) sha8=ad0c939f
+HTTP/1.0 200 OK
+SHOT OK: ../v2/evidence/d12d_t2_shots/d12d_t2-chat-ad0c939f.png  elapsed=3.06s  mean_brightness=34.5(gray601,0-255,黑<8)  max_color_frac=30.33%  blank_retries=0/2
+  blank_cumulative=13/263 次空白/总取证（T282 观察哨，仅留痕）
+rc=0
+SHOT OK: ../v2/evidence/d12d_t2_shots/d12d_t2-rhythm-ad0c939f.png  elapsed=1.74s  mean_brightness=32.4(gray601,0-255,黑<8)  max_color_frac=34.45%  blank_retries=0/2
+  blank_cumulative=13/264 次空白/总取证（T282 观察哨，仅留痕）
+rc=0
+2026-10-23T10:09:39+08:00
+
+=== URL_PROVENANCE (事后补录 2026-10-23T10:13:37；shot.py 不回显 --url，以下按实际执行命令原样补录) ===
+[cmd] python3 frontend/tools/shot.py --url "http://127.0.0.1:8848/dialogue.html?still=1&multi=0&min=0&data=sample/dialogue_r_d12d_t2/threads.json" --out ../v2/evidence/d12d_t2_shots/d12d_t2-chat-ad0c939f.png --width 1400 --height 900 --timeout 180
+[cmd] python3 frontend/tools/shot.py --url "http://127.0.0.1:8848/dialogue.html?still=1&multi=0&min=0&view=rhythm&data=sample/dialogue_r_d12d_t2/threads.json" --out ../v2/evidence/d12d_t2_shots/d12d_t2-rhythm-ad0c939f.png --width 1300 --height 1050 --timeout 180
+[url] data=sample/dialogue_r_d12d_t2/threads.json
+[data_sha256_of_served_file] 73c97f7c69b06c43ec7469e640afe2de42c4db8ac06ed1475a3983059b04b27e
+[source.run_sha256_in_that_file] ad0c939f062d23553adeb42af52617d082395265ddb2f6fe12a11d3093144ca0
+[source.run_label] run_d12d_on_n16r60_seed42
+[verify_cmd] curl -s http://127.0.0.1:8848/sample/dialogue_r_d12d_t2/threads.json | sha256sum

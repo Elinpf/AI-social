@@ -1,0 +1,82 @@
+{
+  "T1": {
+    "L7_norm8_rate_pct": 65.098039,
+    "cells": {
+      "A_head_detail": {
+        "distinct_shingles": 254,
+        "msgs": 203,
+        "rate_pct": 39.8039
+      },
+      "B_head_nodetail": {
+        "distinct_shingles": 89,
+        "msgs": 84,
+        "rate_pct": 16.4706
+      },
+      "C_body_detail": {
+        "distinct_shingles": 1231,
+        "msgs": 234,
+        "rate_pct": 45.8824
+      },
+      "D_body_nodetail": {
+        "distinct_shingles": 1367,
+        "msgs": 203,
+        "rate_pct": 39.8039
+      }
+    },
+    "cells_msgs_sum": 724,
+    "dup_msgs": 332,
+    "head_concentration": {
+      "distinct_head_shingles": 343,
+      "top1_msgs": 8,
+      "top1_shingle": "手里那根半指宽的",
+      "top5_covers_msgs": 23,
+      "top5_share_pct": 4.5098
+    },
+    "n_msgs": 510,
+    "opening_pattern_ba_wang_yi": {
+      "msgs": 67,
+      "rate_pct": 13.1373,
+      "rule": "normalize_body 后以「把…往…上一」开头（句式模板代理，非判据）"
+    }
+  },
+  "T2": {
+    "L7_norm8_rate_pct": 64.509804,
+    "cells": {
+      "A_head_detail": {
+        "distinct_shingles": 261,
+        "msgs": 231,
+        "rate_pct": 45.2941
+      },
+      "B_head_nodetail": {
+        "distinct_shingles": 70,
+        "msgs": 78,
+        "rate_pct": 15.2941
+      },
+      "C_body_detail": {
+        "distinct_shingles": 936,
+        "msgs": 211,
+        "rate_pct": 41.3725
+      },
+      "D_body_nodetail": {
+        "distinct_shingles": 1109,
+        "msgs": 206,
+        "rate_pct": 40.3922
+      }
+    },
+    "cells_msgs_sum": 726,
+    "dup_msgs": 329,
+    "head_concentration": {
+      "distinct_head_shingles": 331,
+      "top1_msgs": 11,
+      "top1_shingle": "把火钳往砧子上一",
+      "top5_covers_msgs": 35,
+      "top5_share_pct": 6.8627
+    },
+    "n_msgs": 510,
+    "opening_pattern_ba_wang_yi": {
+      "msgs": 79,
+      "rate_pct": 15.4902,
+      "rule": "normalize_body 后以「把…往…上一」开头（句式模板代理，非判据）"
+    }
+  }
+}

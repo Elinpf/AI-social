@@ -1,0 +1,15 @@
+{
+  "method": "bootstrap resampling of message-level rates, B=2000, seed=42; band=2.5-97.5 pct of rate_A-rate_B",
+  "denom": 510,
+  "L-7 8gram_shared": {
+    "abs_p95_pp": 5.88,
+    "band_pp": [
+      -5.88,
+      5.88
+    ],
+    "width_pp": 11.76
+  },
+  "source_file": "v2/evidence/d3_noiseband_bootstrap.json",
+  "source_sha256": "3e920dddd0be2b798da0ebf7279e9af0a992e8124fc6b853eb6d6b36656cbde0",
+  "recomputed_cmd": "python3 v2/evidence/d3_noiseband_bootstrap.py --denom 510"
+}

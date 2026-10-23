@@ -1,0 +1,10 @@
+[T1] n=510 dup=332 L7=65.098039% sum_cells=724
+    A_head_detail      msgs= 203 rate=39.8039% shingles=254
+    B_head_nodetail    msgs=  84 rate=16.4706% shingles=89
+    C_body_detail      msgs= 234 rate=45.8824% shingles=1231
+    D_body_nodetail    msgs= 203 rate=39.8039% shingles=1367
+[T2] n=510 dup=329 L7=64.509804% sum_cells=726
+    A_head_detail      msgs= 231 rate=45.2941% shingles=261
+    B_head_nodetail    msgs=  78 rate=15.2941% shingles=70
+    C_body_detail      msgs= 211 rate=41.3725% shingles=936
+    D_body_nodetail    msgs= 206 rate=40.3922% shingles=1109
