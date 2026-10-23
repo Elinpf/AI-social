@@ -1,0 +1,24 @@
+{
+  "D12I_on": {
+    "init_owed_rate_any": 26.32,
+    "init_owed_rate_last_only": 26.32,
+    "init_owed_rate_thread": 2.63,
+    "log": ".worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl",
+    "n_init_owed_any": 30,
+    "n_init_owed_last_only": 30,
+    "n_init_owed_thread": 3,
+    "n_init_with_to": 114,
+    "n_msgs_total": 455
+  },
+  "OFF": {
+    "init_owed_rate_any": 26.32,
+    "init_owed_rate_last_only": 26.32,
+    "init_owed_rate_thread": 1.75,
+    "log": "v2/evidence/run_d12c_off_n16r60_seed42/run.jsonl",
+    "n_init_owed_any": 30,
+    "n_init_owed_last_only": 30,
+    "n_init_owed_thread": 2,
+    "n_init_with_to": 114,
+    "n_msgs_total": 455
+  }
+}
