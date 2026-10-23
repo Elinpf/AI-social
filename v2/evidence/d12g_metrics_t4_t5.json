@@ -1,0 +1,22 @@
+{
+  "T4": {
+    "P1_specificity_rate": 99.61,
+    "P2_thirdparty_rate": 82.75,
+    "len_p50": 54.0,
+    "n_msgs": 510,
+    "n_threads": 169,
+    "paren_rate": 54.51,
+    "threads_p50": 2,
+    "turns_A_p50": 2
+  },
+  "T5": {
+    "P1_specificity_rate": 99.22,
+    "P2_thirdparty_rate": 83.33,
+    "len_p50": 53.0,
+    "n_msgs": 510,
+    "n_threads": 169,
+    "paren_rate": 53.53,
+    "threads_p50": 2,
+    "turns_A_p50": 2
+  }
+}

@@ -55,3 +55,15 @@ freeze_cache/
 
 # R19：mock 臂产物（89MB 级，从不入库；只加规则不删磁盘文件）
 v2/evidence/mock_trigA2_*
+
+# ===== 运行副产物：log / pid / tsv（C11 证据卫生，2026-10-23）=====
+# 背景：跑批与渲染取证会产生大量可再生的 *.log / *.pid / *.tsv，入库只会让
+# `git status` 失真、并让"已引用证据"与"临时副产物"混在一个索引里。
+# 例外用**显式负向规则**逐条放行（不放行 = 已跟踪文件会被静默从索引消失，比漏忽略更危险）。
+**/*.log
+**/*.pid
+**/*.tsv
+# 例外①：T270 动效实测日志，已被报告引用（`git ls-files | grep '\.log$'` 仅此一条）
+!v2/evidence/T270-motion-after.log
+# 例外②：t271 批次清单示例（模板/文档用，不是运行产物）
+!tools/t271/batches.example.tsv

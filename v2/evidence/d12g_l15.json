@@ -1,0 +1,160 @@
+{
+  "T4": {
+    "by_turn": {
+      "1": {
+        "n": 169,
+        "restate_rate": 0.0,
+        "restate_strong_rate": 0.0
+      },
+      "2": {
+        "n": 88,
+        "restate_rate": 0.0,
+        "restate_strong_rate": 0.0
+      },
+      "3": {
+        "n": 77,
+        "restate_rate": 3.9,
+        "restate_strong_rate": 1.3
+      },
+      "4": {
+        "n": 70,
+        "restate_rate": 22.86,
+        "restate_strong_rate": 12.86
+      },
+      "5": {
+        "n": 54,
+        "restate_rate": 24.07,
+        "restate_strong_rate": 11.11
+      },
+      "6": {
+        "n": 52,
+        "restate_rate": 11.54,
+        "restate_strong_rate": 5.77
+      }
+    },
+    "n_msgs": 510,
+    "restate_rate": 7.45,
+    "restate_strong_rate": 3.73,
+    "rule": {
+      "denominator": "全部 MSG_*",
+      "ngram": "normalize_body + 8-gram（与 L-7 同口径）",
+      "restate": "与本线程更早消息共享 ≥1 个 8-gram",
+      "restate_strong": "共享 ≥3 个 8-gram",
+      "scope": "同线程内前向引用（不跨线程）"
+    },
+    "thread_meta_missing": 0,
+    "top_shared": [
+      [
+        "把锄头往地上一杵",
+        3
+      ],
+      [
+        "面杖往案板上一搁",
+        2
+      ],
+      [
+        "擀面杖往案板上一",
+        2
+      ],
+      [
+        "锄头柄裂了半指宽",
+        2
+      ],
+      [
+        "往柜台上一搁秤盘",
+        2
+      ],
+      [
+        "把戥子往柜台上一",
+        2
+      ],
+      [
+        "戥子往柜台上一搁",
+        2
+      ],
+      [
+        "柜台上一搁秤盘里",
+        2
+      ]
+    ]
+  },
+  "T5": {
+    "by_turn": {
+      "1": {
+        "n": 169,
+        "restate_rate": 0.0,
+        "restate_strong_rate": 0.0
+      },
+      "2": {
+        "n": 88,
+        "restate_rate": 0.0,
+        "restate_strong_rate": 0.0
+      },
+      "3": {
+        "n": 77,
+        "restate_rate": 7.79,
+        "restate_strong_rate": 3.9
+      },
+      "4": {
+        "n": 70,
+        "restate_rate": 10.0,
+        "restate_strong_rate": 8.57
+      },
+      "5": {
+        "n": 54,
+        "restate_rate": 14.81,
+        "restate_strong_rate": 3.7
+      },
+      "6": {
+        "n": 52,
+        "restate_rate": 13.46,
+        "restate_strong_rate": 1.92
+      }
+    },
+    "n_msgs": 510,
+    "restate_rate": 5.49,
+    "restate_strong_rate": 2.35,
+    "rule": {
+      "denominator": "全部 MSG_*",
+      "ngram": "normalize_body + 8-gram（与 L-7 同口径）",
+      "restate": "与本线程更早消息共享 ≥1 个 8-gram",
+      "restate_strong": "共享 ≥3 个 8-gram",
+      "scope": "同线程内前向引用（不跨线程）"
+    },
+    "thread_meta_missing": 0,
+    "top_shared": [
+      [
+        "算盘第三格珠子卡",
+        3
+      ],
+      [
+        "把锄头往地上一杵",
+        2
+      ],
+      [
+        "盘第三格珠子卡住",
+        2
+      ],
+      [
+        "面杖往案板上一搁",
+        2
+      ],
+      [
+        "擀面杖往案板上一",
+        2
+      ],
+      [
+        "老李上月廿三那笔",
+        2
+      ],
+      [
+        "把戥子往柜台上一",
+        2
+      ],
+      [
+        "戥子往柜台上一搁",
+        2
+      ]
+    ]
+  }
+}

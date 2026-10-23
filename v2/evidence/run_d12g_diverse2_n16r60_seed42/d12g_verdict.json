@@ -1,0 +1,153 @@
+{
+  "arm": "T5 (D12-G, feat/d12g-diverse2 @ 344d3da47f4217dd52b73749874d8660d0439939)",
+  "baseline": "T4 (run_d12f_diverse_n16r60_seed42)",
+  "run": {
+    "run_jsonl_lines": 117393,
+    "events": 117393,
+    "rounds_seen_max": 59,
+    "rc": 0,
+    "started_at": "2026-10-23T19:27:14+08:00",
+    "finished_at": "2026-10-23T20:16:25+08:00",
+    "duration_sec": 2951
+  },
+  "mechanism_gates": {
+    "M1_ctx_d12g_hit_rate": {
+      "value": "510/510 = 100.00%",
+      "threshold": "=100%",
+      "verdict": "PASS",
+      "note": "dialogue LLM_CALL=1530=3×510；每轮生成都挂 ctx.d12g"
+    },
+    "M3_picked_eq_argmin": {
+      "value": "510/510 = 100.00%",
+      "threshold": "=100%",
+      "verdict": "PASS"
+    },
+    "M5_cand_jaccard_dist_mean": {
+      "value": 0.970929,
+      "threshold": ">=0.05",
+      "verdict": "PASS",
+      "min": 0.376344,
+      "max": 1.0,
+      "min_is_degenerate": true,
+      "degenerate_note": "min 0.376344 = 退化值（seq=26894 候选0/候选1 同文），不得当作机制下限；剔除该条 mean=0.972097"
+    },
+    "picked_distribution": {
+      "0": 436,
+      "1": 63,
+      "2": 11,
+      "replaced_first_share": "74/510 = 14.51%",
+      "threshold": "只记录"
+    }
+  },
+  "effect_criteria": [
+    {
+      "n": 1,
+      "metric": "L-7 norm8",
+      "threshold_pct": 42.55,
+      "numerator": 248,
+      "denominator": 510,
+      "value_pct": 48.63,
+      "wilson95": [
+        44.32,
+        52.96
+      ],
+      "verdict": "FAIL",
+      "shortfall_pp": 6.08,
+      "t4_pct": 52.55,
+      "delta_pp": -3.92
+    },
+    {
+      "n": 2,
+      "metric": "L-7 raw8",
+      "threshold_pct": 55.1,
+      "numerator": 309,
+      "denominator": 510,
+      "value_pct": 60.59,
+      "wilson95": [
+        56.28,
+        64.74
+      ],
+      "verdict": "FAIL",
+      "shortfall_pp": 5.49,
+      "t4_pct": 65.1,
+      "delta_pp": -4.51
+    },
+    {
+      "n": 3,
+      "metric": "P1 specificity",
+      "threshold_pct": 94.61,
+      "value_pct": 99.22,
+      "verdict": "PASS",
+      "t4_pct": 99.61,
+      "delta_pp": -0.39
+    },
+    {
+      "n": 4,
+      "metric": "F-2' content drift (jaccard<0.10)",
+      "threshold_pct": 76.26,
+      "value_pct": 70.97,
+      "verdict": "PASS",
+      "t4_pct": 71.26,
+      "delta_pp": -0.29
+    },
+    {
+      "n": 5,
+      "metric": "L-15 restate_strong",
+      "threshold_pct": 3.73,
+      "value_pct": 2.35,
+      "verdict": "PASS",
+      "t4_pct": 3.73,
+      "delta_pp": -1.38
+    },
+    {
+      "n": 6,
+      "metric": "L-3 paren block rate (代价闸)",
+      "threshold_pct": 55.0,
+      "value_pct": 57.84,
+      "verdict": "PASS",
+      "t4_pct": 60.59,
+      "delta_pp": -2.75
+    }
+  ],
+  "secondary": {
+    "len_p50_excl_paren": {
+      "value": 53.0,
+      "t4": 54.0,
+      "threshold": "<=59.4",
+      "verdict": "PASS"
+    },
+    "structure": {
+      "n_msgs": 510,
+      "n_threads": 169,
+      "threads_p50": 2,
+      "t4": "510/169/2",
+      "verdict": "=== 全等"
+    },
+    "L-6_dup_exact_rate_pct": {
+      "value": 0.59,
+      "t4": 0.78
+    },
+    "tokens_total": {
+      "value": 831809,
+      "t4": 838471
+    },
+    "llm_calls": {
+      "value": 3898,
+      "cached": 1494,
+      "cached_ratio": 0.3833,
+      "degraded": 0,
+      "providers": {
+        "openai_compat": 3898
+      }
+    },
+    "wall_clock_min": {
+      "value": 49.2,
+      "prereg_estimate": "75-90"
+    }
+  },
+  "verdict": {
+    "per_prereg_5_mechanism": "机制生效（M1/M3/M5 全过）",
+    "per_prereg_5_effect": "六条中 4 条达标、L-7 双口径未达；最接近的登记判词为「无效（效果不足）」，但预登记 §5 只写「L-7 差 0–2pp 未达」，本臂实测差 6.08pp(norm8)/5.49pp(raw8) 超出该区间 ⇒ **预登记反事实表对该区间未写判词（登记缺口）**，判词由 Leader 裁定，本文件不擅自补写。",
+    "must_also_write": "M5 最小值 0.376344 为退化值；本臂有 1 条三采退化为两采（seq=26894, round 20, P005）"
+  }
+}
