@@ -1,0 +1,10 @@
+=== RENDER_START 2026-10-23T16:38:06+08:00  data=sample/dialogue_f2b_v2_off/threads.json  log_sha8=1f80d789
+CMD: python3 frontend/tools/shot.py --url http://127.0.0.1:8993/dialogue.html?still=1&multi=0&min=0&data=sample/dialogue_f2b_v2_off/threads.json --out ../v2/evidence/f2b_v2_n16r60_seed42/shots/f2b_v2_off-chat-1f80d789.png --width 1400 --height 900 --timeout 180
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+SHOT OK: ../v2/evidence/f2b_v2_n16r60_seed42/shots/f2b_v2_off-chat-1f80d789.png  elapsed=7.42s  mean_brightness=34.2(gray601,0-255,黑<8)  max_color_frac=30.31%  blank_retries=0/2
+  blank_cumulative=13/265 次空白/总取证（T282 观察哨，仅留痕）
+rc=0
+=== RENDER_END 2026-10-23T16:38:14+08:00
