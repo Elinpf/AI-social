@@ -1,0 +1,39 @@
+{
+  "schema_version": "d12i-dup-calibers/1.0",
+  "log": ".worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl",
+  "log_sha256": "72c0ca97fe6e38632f67e3b2810c65126c0d15d296d068b521dfbb45c8f5d0c4",
+  "denominator": 510,
+  "denominator_definition": "全部 MSG（MSG_* 事件的 body 非空与否都计入，与 d5 meta.n_messages 同口径）",
+  "calibers": {
+    "raw_exact": {
+      "definition": "原文 body 完全相同的消息数（未归一，sha/exact 语义）",
+      "numerator": 47,
+      "value": 0.092157,
+      "cross_batch_comparable": true,
+      "source": "同 tools/d9/arm_state_check.py::metrics() 的 dup_exact_rate 写法（1 - 唯一(body)/n）"
+    },
+    "norm_exact": {
+      "definition": "d5.normalize_body() 归一后完全相同的消息数",
+      "numerator": 47,
+      "value": 0.092157,
+      "cross_batch_comparable": true,
+      "source": "tools/d5/dialogue_metrics.py::normalize_body（sha256 1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271）"
+    },
+    "norm8_shingle": {
+      "definition": "与任一其他 MSG 共享 ≥1 个归一后 8-gram 的消息数（= d5 L-7 分子）",
+      "numerator": 317,
+      "value": 0.621569,
+      "cross_batch_comparable": false,
+      "source": "tools/d5/dialogue_metrics.py L-7_dup_ngram8_rate 的同构复算"
+    },
+    "raw8_shingle": {
+      "definition": "与任一其他 MSG 共享 ≥1 个**未归一**原文 8-gram 的消息数（仓内无现成出数器，本文件现算）",
+      "numerator": 368,
+      "value": 0.721569,
+      "cross_batch_comparable": false,
+      "source": "本文件按 norm8 同构写法在原文 body 上取 8-gram（口径**不**等于 d5 的 norm8）"
+    }
+  },
+  "note": "三个口径**分子不同、互不替代**：raw_exact ≤ norm_exact，norm8_shingle 因 8-gram 片断重合而显著更大；跨批只能比 raw_exact / norm_exact，norm8_shingle 的值只能与本批自身索引一起读。",
+  "recompute_cmd": "python3 tools/metrics/d12i_dup_calibers.py --log .worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl --out v2/evidence/d22_partner_choice/dup_calibers_D12-I_cycle15.json"
+}

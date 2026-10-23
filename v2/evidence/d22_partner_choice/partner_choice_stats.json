@@ -1,0 +1,32 @@
+{
+  "D12-I": {
+    "distinct_partners_mean": 4.5,
+    "herfindahl_mean": 0.2877,
+    "log": ".worktrees/d12i-aligned/v2/evidence/run_d12i_aligned_n16r60_seed42/run.jsonl",
+    "n_agents": 16,
+    "n_init": 114,
+    "n_initiators": 16,
+    "pair_coverage_rate": 54.17,
+    "pairs_observed": 65,
+    "pairs_possible": 120,
+    "repeat_pair_rate": 42.98,
+    "top1_partner_share_max": 66.67,
+    "top1_partner_share_mean": 36.49,
+    "uniform_expected_hhi_mean": 0.2522
+  },
+  "T0": {
+    "distinct_partners_mean": 4.5,
+    "herfindahl_mean": 0.2877,
+    "log": "v2/evidence/run_d12c_off_n16r60_seed42/run.jsonl",
+    "n_agents": 16,
+    "n_init": 114,
+    "n_initiators": 16,
+    "pair_coverage_rate": 54.17,
+    "pairs_observed": 65,
+    "pairs_possible": 120,
+    "repeat_pair_rate": 42.98,
+    "top1_partner_share_max": 66.67,
+    "top1_partner_share_mean": 36.49,
+    "uniform_expected_hhi_mean": 0.2522
+  }
+}
