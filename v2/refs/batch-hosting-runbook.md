@@ -307,11 +307,20 @@ git show 9ae3eae -- v2/evidence/d12e_result.md v2/evidence/d12e_leader_terminal_
      > 理由：冻结件的唯一价值是「内容未被事后改动」；允许在它里面追加段落，等于保留了"事后编辑"的合法通道，审计上无法区分「追加」与「篡改」。
      **衔接说明（leader 已确认）**：本款与 runbook 既有口径「跑前修订只认两类（预登记正文修订块 / `v2/refs/` 独立修订文件）」**不冲突**，只是给第 ① 类加了前置条件——**必须在 `commit` 之前**。
   7. **证据检索一律用前缀精确匹配**：`LIFE_PROMPT_COOP_E1`、`run_e1_`；**`e1_` 这类宽匹配会命中 `v2/evidence/event_cards_e1_e20_map.md`**（实测存在），会污染"是否已起跑"的判断。
-  8. **`git add -- <path>` 挡不住别人把同一文件的其他改动 add 进他自己的 commit**（因此上面第 3、4 款缺一不可）：
-     - `git add -- <path>` 只锁定「**我放什么进暂存区**」，它**不能**阻止并发写者在他自己的 `git add` / commit 里把**同一文件**的其它改动一并带走——本轮实例：`4dab73d`（作者 `life-evidence-analyst`，非本队成员）在提交其「墙钟/缓存」小节时，把当时尚未提交的 §3.103 全文 94 行一并 add 入库（`git show 4dab73d -- v2/refs/batch-hosting-runbook.md | grep -cE "^\+## 3\.103|^\+### 3\.103\.[1-6]"` = 8）。
+  8. **补：`git add -- <path>` 的边界 + 污染判据**（**这是第 3、4 款的判据，不是第四条并列规则**）：
+     - `git add -- <path>` 只锁定「**我放什么进暂存区**」，它**不能**阻止并发写者在他自己的 `git add` / commit 里把**同一文件**的其它改动一并带走——本轮实例：`4dab73d`（作者名为**仓库默认 git 身份** `life-evidence-analyst`——即 `git config user.name` 的默认值，任何不显式设 author 的提交都会记这个名 ⇒ **提交者身份不可辨**，不得据此判断成员归属）在提交其「墙钟/缓存」小节时，把当时尚未提交的 §3.103 全文 94 行一并 add 入库（`git show 4dab73d -- v2/refs/batch-hosting-runbook.md | grep -cE "^\+## 3\.103|^\+### 3\.103\.[1-6]"` = 8）。
      - ⇒ 真正的防线只有两条，**缺一不可**：①**入库窗口内不发生并发写同一文件**（第 3 款）；②**提交后立刻 `git show <commit>:<path>` 自核**（第 4 款）——被掺入时能第一时间定位，而不是几天后才发现作者与提交者不一致。
-     - **判据**：**提交后自核发现「该 commit 里的该文件内容」与「他人未提交的改动」相同 ⇒ 判为污染，按「不追溯、不改历史、另行登记」处理**（登记要写清：污染 commit、被掺入的内容、后续定稿 commit）。**禁止**用 amend / force push "修干净"——那只会把凭据一起删掉（见第 2 款与本轮 E1 三态实例）。
-- **本轮"三态都早于任何一臂"的独立验真（auditor 复验，本人复核同值）**：`grep -rl LIFE_PROMPT_COOP_E1 --include=*.py --include=*.json --include=*.sh .`（排除 `.git`/`.worktrees`）= **0 命中**；`code/life/coop_e1.py`、`code/life/tests/test_coop_e1.py`、`tools/d5/f9_coop.py` **均不存在**；无 `*coop*` / `*run_e1*` 批次目录 ⇒ 三个版本都产生于**任何一臂起跑之前**，**不构成"看到结果再改口径"**（属流程违规，非发布事故。**推送状态按 3.103.5 要求带时点**：2026-10-23 16:33 复核 `origin/master` 已前移至 `4dab73d`，`9ae3eae` / `0520e1e` 已由他人推上远端；其后 `f052fa8` 及本次 commit 仍未推送——`timeout 20 git ls-remote origin master` rc=124）。
+     - **判据（可机械执行；"他人未提交的改动"提交后已不可见，因此不能拿它作判据）**：三条命令对着**该 commit 本身**跑——
+       ```bash
+       git show --stat <commit>                          # 文件数/行数是否超出你本次应提交范围
+       git show <commit> -- <path> | grep -cE '^\+## '   # 同一 commit 里新增了几个一级节标题
+       git log -1 --format=%s <commit>                    # message 是否只提到其中一节
+       ```
+       **判定**：`^+## ` 命中 **≥2** 且 commit message **只描述其中一节** ⇒ **判污染**。
+       本轮实证（`4dab73d`）：`git show --stat` = 单文件 103 insertions；`grep -cE '^\+## '` = **2**（两个 `+## 3.103` 头）；
+       `git log -1 --format=%s` 只讲「墙钟/缓存」一节 ⇒ 命中判据。
+     - **处置**：按「**不追溯、不改历史、另行登记**」处理（登记写清：污染 commit、被掺入的内容与行数、后续定稿 commit）。**禁止**用 amend / force push "修干净"——那只会把凭据一起删掉（见第 2 款与本轮 E1 三态实例）。
+- **本轮"三态都早于任何一臂"的独立验真（auditor 复验，本人复核同值）**：`grep -rl LIFE_PROMPT_COOP_E1 --include=*.py --include=*.json --include=*.sh .`（排除 `.git`/`.worktrees`）= **0 命中**；`code/life/coop_e1.py`、`code/life/tests/test_coop_e1.py`、`tools/d5/f9_coop.py` **均不存在**；无 `*coop*` / `*run_e1*` 批次目录 ⇒ 三个版本都产生于**任何一臂起跑之前**，**不构成"看到结果再改口径"**（属流程违规，非发布事故。**推送状态按 3.103.5 要求带时点**：2026-10-23 16:33 复核 `origin/master` 已前移至 `4dab73d`，`9ae3eae` / `0520e1e` 已**随 `4dab73d` 一并上远端（推送者身份不可辨）**；其后 `f052fa8` 及本次 commit 当时仍未推送——`timeout 20 git ls-remote origin master` rc=124。**16:40 网络恢复后已全部推送**：16:41 复核 `HEAD = origin/master = cbaed944b85779be8bb12294d61f165232dcadbb`，`origin/master..HEAD` = 0）。
 - **为什么**：预登记的法律意义是「阈值不可事后调」。一旦同一次入库里出现两个字节数不同的预登记，"哪一版是跑前那版"就只能靠逐字比对去猜；而 **amend 会把凭据本身删掉**。补一个 commit 是成本，force push / amend 已推历史是把证据链毁掉。
 
 ## 3.104 【硬规则】别用"被缓存污染的观测"去设预期墙钟（2026-10-23 D12-F）
