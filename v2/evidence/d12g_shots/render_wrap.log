@@ -1,0 +1,70 @@
+=== RENDER_START 2026-10-23T20:29:40+08:00  data=sample/dialogue_d12g_diverse2/threads.json  label=run_d12g_diverse2_n16r60_seed42-dd4ad73d  run_sha256=dd4ad73d5a21c7485c2afbfc9701e267c25da3150b10adade3b3819a3996ff36  sha8=dd4ad73d
+→ BEGIN run_d12g_diverse2_n16r60_seed42-chat-dd4ad73d  2026-10-23T20:29:40+08:00
+   CMD: python3 code/frontend/tools/shot.py --url "http://127.0.0.1:8848/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_d12g_diverse2/threads.json" --out "v2/evidence/d12g_shots/run_d12g_diverse2_n16r60_seed42-chat-dd4ad73d.png" --width 1400 --height 900 --retry-blank 2
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+SHOT OK: v2/evidence/d12g_shots/run_d12g_diverse2_n16r60_seed42-chat-dd4ad73d.png  elapsed=1.88s  mean_brightness=35.6(gray601,0-255,黑<8)  max_color_frac=30.00%  blank_retries=0/2
+  blank_cumulative=13/273 次空白/总取证（T282 观察哨，仅留痕）
+→ END run_d12g_diverse2_n16r60_seed42-chat-dd4ad73d  2026-10-23T20:29:42+08:00  rc=0
+   SIZE: run_d12g_diverse2_n16r60_seed42-chat-dd4ad73d.png 290704 bytes
+   SELFCHK: OK
+→ BEGIN run_d12g_diverse2_n16r60_seed42-rhythm-dd4ad73d  2026-10-23T20:29:42+08:00
+   CMD: python3 code/frontend/tools/shot.py --url "http://127.0.0.1:8848/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_d12g_diverse2/threads.json" --out "v2/evidence/d12g_shots/run_d12g_diverse2_n16r60_seed42-rhythm-dd4ad73d.png" --width 1300 --height 1050 --retry-blank 2
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+SHOT OK: v2/evidence/d12g_shots/run_d12g_diverse2_n16r60_seed42-rhythm-dd4ad73d.png  elapsed=1.79s  mean_brightness=32.5(gray601,0-255,黑<8)  max_color_frac=34.47%  blank_retries=0/2
+  blank_cumulative=13/274 次空白/总取证（T282 观察哨，仅留痕）
+→ END run_d12g_diverse2_n16r60_seed42-rhythm-dd4ad73d  2026-10-23T20:29:44+08:00  rc=0
+   SIZE: run_d12g_diverse2_n16r60_seed42-rhythm-dd4ad73d.png 284919 bytes
+   SELFCHK: OK
+→ BEGIN run_d12g_diverse2_n16r60_seed42-thread-mkt-dd4ad73d  2026-10-23T20:29:44+08:00
+   CMD: python3 code/frontend/tools/shot.py --url "http://127.0.0.1:8848/dialogue.html?still=1&min=0&sort=turns&thread=TH-P004-P013-4&q=%E4%BD%A0%E4%BB%AC%E5%B8%AE%E6%88%91%E8%AF%84%E8%AF%84&data=sample/dialogue_d12g_diverse2/threads.json" --out "v2/evidence/d12g_shots/run_d12g_diverse2_n16r60_seed42-thread-mkt-dd4ad73d.png" --width 1400 --height 1000 --retry-blank 2
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+SHOT OK: v2/evidence/d12g_shots/run_d12g_diverse2_n16r60_seed42-thread-mkt-dd4ad73d.png  elapsed=1.77s  mean_brightness=37.5(gray601,0-255,黑<8)  max_color_frac=28.06%  blank_retries=0/2
+  blank_cumulative=13/275 次空白/总取证（T282 观察哨，仅留痕）
+→ END run_d12g_diverse2_n16r60_seed42-thread-mkt-dd4ad73d  2026-10-23T20:29:46+08:00  rc=0
+   SIZE: run_d12g_diverse2_n16r60_seed42-thread-mkt-dd4ad73d.png 338336 bytes
+   SELFCHK: OK
+→ BEGIN run_d12g_diverse2_n16r60_seed42-thread-cafe-dd4ad73d  2026-10-23T20:29:46+08:00
+   CMD: python3 code/frontend/tools/shot.py --url "http://127.0.0.1:8848/dialogue.html?still=1&min=0&sort=turns&thread=TH-P012-P015-4&q=%E8%B1%86%E8%A7%92%E6%8E%90%E6%88%90%E5%B0%8F%E6%AE%B5&data=sample/dialogue_d12g_diverse2/threads.json" --out "v2/evidence/d12g_shots/run_d12g_diverse2_n16r60_seed42-thread-cafe-dd4ad73d.png" --width 1400 --height 1000 --retry-blank 2
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+SHOT OK: v2/evidence/d12g_shots/run_d12g_diverse2_n16r60_seed42-thread-cafe-dd4ad73d.png  elapsed=1.70s  mean_brightness=38.4(gray601,0-255,黑<8)  max_color_frac=29.32%  blank_retries=0/2
+  blank_cumulative=13/276 次空白/总取证（T282 观察哨，仅留痕）
+→ END run_d12g_diverse2_n16r60_seed42-thread-cafe-dd4ad73d  2026-10-23T20:29:48+08:00  rc=0
+   SIZE: run_d12g_diverse2_n16r60_seed42-thread-cafe-dd4ad73d.png 350289 bytes
+   SELFCHK: OK
+→ BEGIN run_d12g_diverse2_n16r60_seed42-thread-park-dd4ad73d  2026-10-23T20:29:48+08:00
+   CMD: python3 code/frontend/tools/shot.py --url "http://127.0.0.1:8848/dialogue.html?still=1&min=0&sort=turns&thread=TH-P014-P011-1&q=%E8%BF%9E%E5%89%91%E6%9F%84%E9%83%BD%E5%BE%97%E6%94%B9%E6%88%90%E7%AD%B7%E5%AD%90&data=sample/dialogue_d12g_diverse2/threads.json" --out "v2/evidence/d12g_shots/run_d12g_diverse2_n16r60_seed42-thread-park-dd4ad73d.png" --width 1400 --height 1000 --retry-blank 2
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+SHOT OK: v2/evidence/d12g_shots/run_d12g_diverse2_n16r60_seed42-thread-park-dd4ad73d.png  elapsed=1.78s  mean_brightness=36.8(gray601,0-255,黑<8)  max_color_frac=29.33%  blank_retries=0/2
+  blank_cumulative=13/277 次空白/总取证（T282 观察哨，仅留痕）
+→ END run_d12g_diverse2_n16r60_seed42-thread-park-dd4ad73d  2026-10-23T20:29:50+08:00  rc=0
+   SIZE: run_d12g_diverse2_n16r60_seed42-thread-park-dd4ad73d.png 315216 bytes
+   SELFCHK: OK
+→ BEGIN run_d12g_diverse2_n16r60_seed42-thread-cc-dd4ad73d  2026-10-23T20:29:50+08:00
+   CMD: python3 code/frontend/tools/shot.py --url "http://127.0.0.1:8848/dialogue.html?still=1&min=0&sort=turns&thread=TH-P008-P007-6&q=%E8%BF%99%E4%BB%BD%E6%96%87%E4%B9%A6%E8%BF%98%E5%B7%AE%E4%B8%89%E9%A1%B5&data=sample/dialogue_d12g_diverse2/threads.json" --out "v2/evidence/d12g_shots/run_d12g_diverse2_n16r60_seed42-thread-cc-dd4ad73d.png" --width 1400 --height 1000 --retry-blank 2
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+SHOT OK: v2/evidence/d12g_shots/run_d12g_diverse2_n16r60_seed42-thread-cc-dd4ad73d.png  elapsed=1.72s  mean_brightness=37.8(gray601,0-255,黑<8)  max_color_frac=29.32%  blank_retries=0/2
+  blank_cumulative=13/278 次空白/总取证（T282 观察哨，仅留痕）
+→ END run_d12g_diverse2_n16r60_seed42-thread-cc-dd4ad73d  2026-10-23T20:29:52+08:00  rc=0
+   SIZE: run_d12g_diverse2_n16r60_seed42-thread-cc-dd4ad73d.png 339785 bytes
+   SELFCHK: OK
+=== RENDER_END 2026-10-23T20:29:52+08:00
+OK_COUNT=6
+FAIL_COUNT=0
