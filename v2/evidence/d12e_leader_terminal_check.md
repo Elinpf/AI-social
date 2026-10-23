@@ -17,8 +17,25 @@
 | `judge` / `importance` / `plan` / `reflect` | 668 / 1,523 / 16 / 112（与 T1 同量） | **未进采样循环** ✅ |
 | 代码身份 | `code_sha=3582a6f`、`git_dirty_code_files=[]` | 跑批树未被污染 |
 
-### 1.1 ⚠ 披露一：**`END` 文件缺失，`rc` 无法直接取得**
-`systemd-run --collect` 在 unit 退出后把 unit 与日志一起清理，`run_batch.sh` 的 `END` 未落盘。**替代证据**（须同写）：`meta.finished_at=13:58:41` + `seals=60` 完整覆盖 0..59 + 末行是 `TURN_SEAL round=59` + `events=117,389` 与 `meta.events` 一致 ⇒ **正常跑完**，但**"rc=0"这个字没有直接证据**，只能写"以 meta + seal 完整性判定正常结束"。
+### 1.1 披露一：**"进程退出码数值"无直接证据；但"正常结束"的证据链完整**（2026-10-23 14:35 按 `unit_journal.txt` 升级）
+
+**先说清两个 rc 不是一回事**（这是本节的重点）：
+| 名字 | 有没有证据 | 能证明什么 |
+|---|---|---|
+| **`obs llm-cost --require-provider` 的 rc** | ✅ `llm_cost.json` + 调用记录（**rc=0**） | 真 LLM、无 mock、`degraded=0` |
+| **跑批进程的退出码** | ❌ **无直接数值**（`run_batch.sh` 末行只 `echo "[d2] OK"`，不写 `END`/`rc`；`systemd-run --collect` 回收后无法补） | 本应证明"进程正常退出" |
+
+**"正常结束"的证据链（四层，均由执行者补证并经我核对）**：
+1. `meta.finished_at=13:58:41`、`seals` 覆盖 `0..59`（60 条 contiguous，末条 `TURN_SEAL round=59 seq=117388`）、`events=117,389 == meta.events`；
+2. **unit 层**：`unit_journal.txt`（sha8 `3c3b7180`）有 `Deactivated successfully`、**无** `Failed with result`；
+3. **journal 末行 `[d2] OK`（13:58:44）** —— 该行**只有在 `emit_run_meta` rc=0、`wc -l == meta.events`、`obs llm-cost --require-provider` rc=0 三道闸全过后才打印**（任一失败会先 `exit 3/4/6` 并打 `FAIL`）⇒ **间接证明三道闸全过**；
+4. 门禁命令与日志**同源同树**：`run_batch.sh` 内部即以 `python3 -m obs llm-cost` 作跑批内门禁（失败即 `exit 6`）。
+
+⇒ **规范写法**：「以 `meta` + seal 完整性 + unit `Deactivated successfully` + journal 末行 `[d2] OK` 判定为正常结束；**跑批进程退出码无直接数值证据**」。**不得**写成"跑批 rc=0"。
+
+### 1.1b 后续修法已落地（跑后补丁，不影响本臂结果）
+`89b4ae7` 给 `tools/d2/run_batch.sh` 加了 **EXIT trap**，任何退出路径都先写 `run_batch.rc` 与 `run_batch.end`。
+**不影响本臂**：①它只写两个退出文件，不参与引擎；②`tools/` **不在** `engine/version.py::FINGERPRINT_FILES`（该表只含 12 个 `config/*.json`）⇒ 不进指纹；③本臂 `run.jsonl` 用的是**补丁前**脚本（`run.jsonl` sha256 未变：`d959db41…60cd66`）。
 
 ### 1.2 ⚠ 披露二：**44.9% 的对话采样命中了缓存，前 24 轮文本来自首跑（确定性重放）**
 `by_purpose.dialogue`: calls 1,530、**cached 687（44.9%）**。原因是**缓存跨批共享**：首跑（`_INVALID_bug_recent_bodies`，191 条 ×3）与本跑前若干轮**同 seed / 同树 / 同 prompt / 同 `sample_index`** ⇒ `cache_key` 相同 ⇒ 命中。
