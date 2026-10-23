@@ -1,0 +1,48 @@
+{
+  "states": {
+    "T0": {
+      "env": {},
+      "state_on_d12c": false,
+      "sha256_dialogue": "d78e736266c322329e5f4b36ba2939a87b7957b6c4a30eceda081355fbbcb7c8",
+      "sha256_reply": "f390ca2730c674482007803743d9137f26d6b4c851e35b4042e106d3c21872bd",
+      "prompt_fn_sha256": "5cf08593d562dc09fdd42ab289319a819481c4882701407b039fa514ff8293f7",
+      "dialogue_tail": "00）。价值：自主40/仁爱60/成就45/安全85。语气：plain；长度：short。当前目标：security\n场景：gift；对象：老石（熟悉度0/好感0）。情绪：平和；最紧的需求：leisure=40。\n请用一句话自然地说点什么。"
+    },
+    "T1": {
+      "env": {
+        "LIFE_PROMPT_D12C_SPECIFIC": "1"
+      },
+      "state_on_d12c": true,
+      "sha256_dialogue": "b79786a6c7e962952f29014c7366367c9a5412c90b7a291bc97a7dec83d48189",
+      "sha256_reply": "745551f27df2c77fc75d066d6bb1c87099b18ef9fd178c17f1282dac20411f7d",
+      "prompt_fn_sha256": "effc14dbffdb6865aa52d9d8adab9db269ab3b92ae9a1a230a22cab6c0ed73f5",
+      "dialogue_tail": "；对象：老石（熟悉度0/好感0）。情绪：平和；最紧的需求：leisure=40。\n请用一句话自然地说点什么。\n这句里要有一个你此刻手上的具体器物或数（例：七钱、第三格、差三分钟、半指宽）。\n如果能顺带提一句某个不在场的人和他上次的事，就提。"
+    },
+    "T3": {
+      "env": {
+        "LIFE_PROMPT_D12C_SPECIFIC": "1",
+        "LIFE_PROMPT_D12E_BESTOF": "3"
+      },
+      "state_on_d12c": true,
+      "sha256_dialogue": "b79786a6c7e962952f29014c7366367c9a5412c90b7a291bc97a7dec83d48189",
+      "sha256_reply": "745551f27df2c77fc75d066d6bb1c87099b18ef9fd178c17f1282dac20411f7d",
+      "prompt_fn_sha256": "effc14dbffdb6865aa52d9d8adab9db269ab3b92ae9a1a230a22cab6c0ed73f5",
+      "dialogue_tail": "；对象：老石（熟悉度0/好感0）。情绪：平和；最紧的需求：leisure=40。\n请用一句话自然地说点什么。\n这句里要有一个你此刻手上的具体器物或数（例：七钱、第三格、差三分钟、半指宽）。\n如果能顺带提一句某个不在场的人和他上次的事，就提。"
+    }
+  },
+  "cache_selftest": {
+    "cache_keys": [
+      "sha256:adc14773b525ab090031e553c093b1219d62163304026d7036926587fd69b554",
+      "sha256:e85a8fb04753941b834d6a7fe1397b71cf72a39101f70716a59ed145d8fc6b01",
+      "sha256:224e3d7894bacbb8fc6ad2126e84d9604164585e096e2062689d4daa4c1d38b1"
+    ],
+    "n_unique_keys": 3,
+    "cached_flags": [
+      false,
+      false,
+      false
+    ],
+    "all_not_cached": true,
+    "m": 3
+  }
+}
