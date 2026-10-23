@@ -1,0 +1,35 @@
+RENDER_START 2026-10-23T08:32:55+08:00
+/usr/bin/chromium-browser
+→ BEGIN off-chat 2026-10-23T08:33:02+08:00
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+SHOT OK: ../v2/evidence/cycle07_shots/cycle07_d12c_off-chat-3c814121.png  elapsed=6.65s  mean_brightness=34.0(gray601,0-255,黑<8)  max_color_frac=30.31%  blank_retries=0/2
+  blank_cumulative=13/249 次空白/总取证（T282 观察哨，仅留痕）
+→ END off-chat rc=0 2026-10-23T08:33:09+08:00
+→ BEGIN off-rhythm 2026-10-23T08:33:09+08:00
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+SHOT OK: ../v2/evidence/cycle07_shots/cycle07_d12c_off-rhythm-3c814121.png  elapsed=1.75s  mean_brightness=32.4(gray601,0-255,黑<8)  max_color_frac=34.44%  blank_retries=0/2
+  blank_cumulative=13/250 次空白/总取证（T282 观察哨，仅留痕）
+→ END off-rhythm rc=0 2026-10-23T08:33:11+08:00
+→ BEGIN on-chat 2026-10-23T08:33:11+08:00
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+SHOT OK: ../v2/evidence/cycle07_shots/cycle07_d12c_on-chat-bd2df77f.png  elapsed=1.93s  mean_brightness=34.2(gray601,0-255,黑<8)  max_color_frac=30.31%  blank_retries=0/2
+  blank_cumulative=13/251 次空白/总取证（T282 观察哨，仅留痕）
+→ END on-chat rc=0 2026-10-23T08:33:13+08:00
+→ BEGIN on-rhythm 2026-10-23T08:33:13+08:00
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+SHOT OK: ../v2/evidence/cycle07_shots/cycle07_d12c_on-rhythm-bd2df77f.png  elapsed=1.91s  mean_brightness=32.4(gray601,0-255,黑<8)  max_color_frac=34.44%  blank_retries=0/2
+  blank_cumulative=13/252 次空白/总取证（T282 观察哨，仅留痕）
+→ END on-rhythm rc=0 2026-10-23T08:33:15+08:00
+RENDER_END 2026-10-23T08:33:15+08:00
