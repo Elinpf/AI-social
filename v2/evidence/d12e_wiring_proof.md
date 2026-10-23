@@ -27,6 +27,20 @@ git diff --stat a977cb0 HEAD
 > **等价性说明（第 3/4/5 项）**：三处都是**可选参数**，不传 `params_extra` 时 `params` 六个键与接入前**逐字相同** ⇒
 > `prompt_hash`、`cache_key`、渲染文本、行为**全部不变**。证据即下节 **T0/T1 三态 sha 与改前登记值逐字相同**（`5cf08593…` / `effc14db…`）。
 
+## 0.1 跑前审查 (A)(B) 两处更新的落实
+
+**(A) 不复制 `l7_structural.py`（已落实）**
+- 本臂树（`a977cb0`）**不含** `l7_structural.py`（L-7 结构臂是 `3730240` 才加入，晚于本树）；
+- 已改为**新增无状态模块** `code/life/d12e_shingles.py`（47 行，纯函数 `normalize` / `shingles`(8-gram) / `recent_bodies(wv, limit=16)`）：
+  **无模块级状态、无 env 开关、无 `remember()`/`plan()`/`enabled()`**；
+- 「最近 16 条台词」= 从 `wv.visible_events` **只读倒序**取该 agent 可见的 `MSG_*` body（天然按 `(round, seq)` 顺序），无状态、replay 安全；
+- 因此本臂**不存在**「L-7 + best-of-3」双变量的风险。
+
+**(B) 单变量文件范围 = 5 项（已落实，见 §0 表）**
+- 逐项对应：`agent.py`（主体）/ `d12e_shingles.py`（新增无状态）/ `freeze/llm_client.py`（仅新增可选 `params_extra`）/ `freeze/client.py`（仅转发）/ `life/llm.py`（Protocol + `RuleBasedLLM` 签名）；
+- **写死结论**：**3/4/5 三处在不传 `params_extra` 时逐字节等价 ⇒ T0/T1 的 `prompt_fn_sha256` 与行为不变**；
+- 证据：§1 三态渲染 sha（T0 `5cf08593…`、T1 `effc14db…` 与改前登记值**逐字相同**；T3 = T1）。
+
 ## 1. 三态渲染 `prompt_fn_sha256`（固定输入；本臂**不改提示词**）
 
 | 态 | 环境 | `prompt_fn_sha256` | 期望 | 判定 |
