@@ -1,0 +1,97 @@
+{
+  "batch_id": "CYCLE-17",
+  "fail_count": 0,
+  "generated_at": "2026-10-24T08:04:10+08:00",
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f3_off_n16r60_seed42/run.jsonl",
+  "log_sha256": "19d5cb03de2f0203e3b8aa1c9160adfbef787a159f961713f40b88027931d305",
+  "ok_count": 2,
+  "policy": {
+    "blank_check": "自行像素自检（distinct_colors/top_color_frac/non_bg_frac 逐张落盘）；未沿用 shot.py 的单色判据——该判据对深色 dialogue.html 会假红（实测 80.09% 误判）",
+    "code_untouched": "服务根为临时目录 + 符号链接；未在 code/frontend 下写入任何文件",
+    "no_reuse": "输出同名 PNG 若已存在则先删除，只认本次现截",
+    "no_stitching": "每张图独立截图，禁止拼图/跨批混拼"
+  },
+  "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f3_off_n16r60_seed42",
+  "run_sha256_in_threads": "19d5cb03de2f0203e3b8aa1c9160adfbef787a159f961713f40b88027931d305",
+  "schema_version": "render-shots/1.0",
+  "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle17_shots/threads_CYCLE-17.json",
+  "threads_json_sha256": "1ebc07ee6ea2f77a3b2ceaaff11748f9053d7063805217fab911355001774c25",
+  "views": [
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 23921,
+        "height": 900,
+        "non_bg_frac": 0.5823,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          12,
+          16,
+          21
+        ],
+        "top_color_frac": 0.1417,
+        "width": 1400
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle17_shots/CYCLE-17-chat-19d5cb03.png",
+      "png_bytes": 276265,
+      "png_mtime_iso": "2026-10-24T08:04:06+08:00",
+      "png_mtime_ns": 1792800246611096597,
+      "png_sha256": "4caf721632e73c21dc1d0cdbd88baa031934afa2f8728f97dc325a3f6fd8f9eb",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f3_off_n16r60_seed42/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f3_off_n16r60_seed42/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle17_shots/threads_CYCLE-17.json --label CYCLE-17",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f3_off_n16r60_seed42/run.jsonl",
+        "log_sha256": "19d5cb03de2f0203e3b8aa1c9160adfbef787a159f961713f40b88027931d305",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:35855/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_CYCLE-17/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle17_shots/CYCLE-17-chat-19d5cb03.png --width 1400 --height 900 --timeout 180.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f3_off_n16r60_seed42",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle17_shots/threads_CYCLE-17.json",
+        "threads_json_sha256": "1ebc07ee6ea2f77a3b2ceaaff11748f9053d7063805217fab911355001774c25"
+      },
+      "view": "chat"
+    },
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 22375,
+        "height": 1050,
+        "non_bg_frac": 0.4745,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.262,
+        "width": 1300
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle17_shots/CYCLE-17-rhythm-19d5cb03.png",
+      "png_bytes": 282876,
+      "png_mtime_iso": "2026-10-24T08:04:09+08:00",
+      "png_mtime_ns": 1792800249041029367,
+      "png_sha256": "2e245f28271dbe58595d8f2ec3490ef0b7f0e6275846b85f6900f240aea0f769",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f3_off_n16r60_seed42/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f3_off_n16r60_seed42/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle17_shots/threads_CYCLE-17.json --label CYCLE-17",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f3_off_n16r60_seed42/run.jsonl",
+        "log_sha256": "19d5cb03de2f0203e3b8aa1c9160adfbef787a159f961713f40b88027931d305",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:35855/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_CYCLE-17/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle17_shots/CYCLE-17-rhythm-19d5cb03.png --width 1300 --height 1050 --timeout 180.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f3_off_n16r60_seed42",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle17_shots/threads_CYCLE-17.json",
+        "threads_json_sha256": "1ebc07ee6ea2f77a3b2ceaaff11748f9053d7063805217fab911355001774c25"
+      },
+      "view": "rhythm"
+    }
+  ]
+}
