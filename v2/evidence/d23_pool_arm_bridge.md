@@ -83,7 +83,7 @@ evidence_reference 50.88 / 90.35 → match_offline_tool: true
 | 8 | 池可用性 | exact 103 / ±1 2 / **fallback_all 9（7.9%）** | 【已验证】 | — | 可接受 |
 | 9 | `place` 逐项不变（**非平凡**） | **448/448 = 100%**，同期换人 73.15% | `place_invariance_check.py`【已验证】 | 必须 100%（§7.2 作废线） | **达标** |
 | 10 | 池口径 → 生产函数等价 | 50.88% / 90.35%，**0pp 差** | `pool_arm_repro.py`【已验证】 | 必须逐项相同 | **达标** |
-| 11 | 单测 | D2.3 16 例 **passed**（权重 10 + 池 6） | `pytest code/life/tests/test_d23_place_*.py`【已验证】 | 全绿 | **达标** |
+| 11 | 单测 | D2.3 16 例 **passed**（权重 10 + 池 6）；全量 `code/life/tests` **195 passed in 172.84s** | `pytest code/life/tests/test_d23_place_*.py` / `PYTHONPATH=code pytest code/life/tests -q`【已验证】 | 全绿 | **达标** |
 | 12 | F1/F2/F3 形态闸 | **在 T1-OFF 基线上就三项全 FAIL**（F1 82.35% vs T5 57.84% 漂 +24.51pp；F2 0.147 vs 0.365 漂 −21.76pp；F3 40.0 vs 53 漂 −24.5%） | `tools/d12h/shape_gate.py`【已验证】 | 全 PASS | **不可判**（T5 常数属别的树） |
 | 13 | mock ON vs OFF 是否 no-op | **日志 sha256 逐字节相同** | `sha256sum`【已验证】 | — | **恒零（不可测）** |
 
