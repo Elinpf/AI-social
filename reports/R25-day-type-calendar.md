@@ -593,4 +593,6 @@ $ python3 tools/metrics/render_shots.py \
 | **S2**（建议，已采纳） | 给 `render_report` 加 `arm=OFF-era` 字段，避免图日后被误引为"日历臂截图" | `v2/evidence/r25_calendar/shots/render_report_R25CAL-d27C.json` 顶部新增两个字段：`"arm": "OFF-era"`、`"arm_note"`（说明图来自 `run_d27_C` 基线批、`code_sha f2bf606`、日历臂 OFF 时代、**不能证明日历臂效果**）。⚠ 该字段是**交付方手工追加**（非 `render_shots.py` 生成），故在同一文件里记 `"arm_field_provenance": "manual-by-life-engineer(2026-10-25 r-fix)"`，不冒充工具产出 | `python3 -c "import json;d=json.load(open('v2/evidence/r25_calendar/shots/render_report_R25CAL-d27C.json'));print(d['arm'],d['arm_field_provenance'])"` |
 
 **整改后仍未改变的边界**：本轮**无真 LLM 批次、无 `obs llm-cost`、无效果读数**；「机制接通 ≠ 生活气息改善」这条口径一字未松。
-**整改 commit sha**：见本轮 push 回报；上一轮三层 sha（`f338094` / `bfef816` / `b40f1d6`）作为**历史锚点保留**，本整改**在其之上追加**，不改写既有 sha。
+**整改 commit sha**：整改内容在 **`c666b7843b1198db9019ff9f5e5615c046adc745`**（父 `b40f1d6`，fast-forward 追加）；远端分支 `feat/day-type-calendar-r25` 已指向它（`git ls-remote --heads origin \| grep calendar` 可复算）。
+上一轮三层 sha（`f338094` / `bfef816` / `b40f1d6`）作为**历史锚点保留**，本整改**在其之上追加**，不改写既有 sha。
+> 自指说明：本行 sha 由**紧随其后的一笔**回填（提交标题 `docs(R25): §10 回填整改 sha`），因为一份文件无法写出包含自身的 commit sha；复算方式 `git log --oneline -- reports/R25-day-type-calendar.md`。
