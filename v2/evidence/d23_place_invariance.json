@@ -1,0 +1,42 @@
+{
+  "mode": "offline-plan-only (no LLM)",
+  "n_agents": 16,
+  "n_slots": 448,
+  "alpha": 3.0,
+  "place_identical_rate_pct": 100.0,
+  "place_diff_count": 0,
+  "place_hist_equal": true,
+  "place_hist_off": {
+    "market": 19,
+    "plaza": 28,
+    "park": 27,
+    "bank": 16,
+    "community_center": 18,
+    "farm": 8,
+    "cafe": 39,
+    "town_hall": 17,
+    "library": 20,
+    "office": 6,
+    "school": 11,
+    "hall": 3,
+    "workshop": 4
+  },
+  "place_hist_on": {
+    "market": 19,
+    "plaza": 28,
+    "park": 27,
+    "bank": 16,
+    "community_center": 18,
+    "farm": 8,
+    "cafe": 39,
+    "town_hall": 17,
+    "library": 20,
+    "office": 6,
+    "school": 11,
+    "hall": 3,
+    "workshop": 4
+  },
+  "comparable_slots": 216,
+  "participants_change_rate_pct": 73.15,
+  "verdict": "PASS（place 逐项不变 + 权重确实改了人）"
+}

@@ -1,0 +1,13 @@
+{
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12c_off_n16r60_seed42/run.jsonl",
+  "n_init": 114,
+  "pool_arm_repeat_pair_rate_pct": 50.88,
+  "pool_arm_same_place_hit_rate_pct": 90.35,
+  "evidence_reference": {
+    "repeat_pair_rate_B_same_place": 50.88,
+    "same_place_hit_rate_B": 90.35,
+    "source": "v2/evidence/d23_place_offline_verdict.md"
+  },
+  "caveat": "在场集合用'该 round 发过消息的 (agent,place)'近似（沿离线工具回退 r→r-1→r+1），非 plan 真值。",
+  "match_offline_tool": true
+}

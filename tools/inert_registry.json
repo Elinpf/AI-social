@@ -242,6 +242,20 @@
         "note": "实测 72/72 事件携带 vec_available（Leader 2026-10-12 转述 T235 结论）",
         "N": "72/72"
       }
+    },
+    {
+      "name": "place_pool_same_place_first",
+      "kind": "function",
+      "declared_in": [
+        "code/life/place_pool.py",
+        "code/life/tests/test_d23_place_pool.py",
+        "v2/refs/D23-prereg-place-affinity.md"
+      ],
+      "expected_status": "missing_wiring",
+      "owner": "life-dev（D2.3 池口径）",
+      "due_condition": "planner 能在计划期拿到同 slot 的 {peer: place} 快照（=先全城定 place 的两阶段计划，见 v2/evidence/d23_mock_verdict.md §4）；届时在 plan_slot 调用 pick_same_place_first 并接通，脚本应判为『已接线』",
+      "disposition": "该做没做",
+      "disposition_note": "口径已钉死并用 tools/d23/pool_arm_repro.py 证明与离线证据逐项一致（50.88% / 90.35%，n=114），但生产侧**没有任何 peer→place 来源**：planner 只有自己的 peers/places，peer 的 tid 依赖其私有 cash 与 LLM focus ⇒ 单变量不成立。inert 期**不得假装它有活**"
     }
   ],
   "assembly_points": {
