@@ -322,10 +322,11 @@
     "meta_run_sha256_matches_log": true,
     "meta_sha256": "e73acb4683fbafd322b0406e59f825ed5a6f8298db104f8333e4dcf431fcb793",
     "msg_public_type": "MSG_PUBLIC",
-    "repo_head_at_run": "009e95310c5221aef47c9c36f41ddad4f11e627b",
-    "repo_head_at_run_note": "当前工作树 HEAD，**不是**该批跑批身份，仅供对照；引用必须用 code_sha",
+    "repo_head_declared": "009e95310c5221aef47c9c36f41ddad4f11e627b",
+    "repo_head_declared_note": "**使用者声明的仓库 HEAD**（`--repo-head` 传入，缺省 null），**不是运行时实测值**、不参与任何计算；脚本内部不调用 git，故读数与当前 HEAD 无关（D8）。引用跑批身份请用 code_sha；本字段只用于人工声明对照。",
+    "repo_head_declared_valid": true,
     "script_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/public_talk/public_talk_metrics.py",
-    "script_sha256": "b2820d719236e43cdfe4f20282085336af005e783fad21bf02bd428803010edc"
+    "script_sha256": "15e7f0481c5ba307b8c7f39184dd7cbe747be3f9ac7d2777c443ea8ddba44a77"
   },
   "invariance_note": {
     "becomes_nonzero_after_wiring": true,
@@ -386,10 +387,12 @@
       "v2/evidence/run_d12c_on_n16r60_seed42/run.jsonl",
       "--extra-log",
       "v2/evidence/run_d2_before_n16_seed42/run.jsonl",
+      "--repo-head",
+      "009e95310c5221aef47c9c36f41ddad4f11e627b",
       "--out",
       "<OUT>"
     ],
-    "argv_joined": "tools/public_talk/public_talk_metrics.py --log v2/evidence/run_d27_C_n16r60_seed42/run.jsonl --meta v2/evidence/run_d27_C_n16r60_seed42/meta.json --extra-log v2/evidence/run_r10e2e_n16r60_seed42/run.jsonl --extra-log v2/evidence/run_d28_C_s43_n16r60_seed43/run.jsonl --extra-log v2/evidence/run_d12c_on_n16r60_seed42/run.jsonl --extra-log v2/evidence/run_d2_before_n16_seed42/run.jsonl --out <OUT>",
+    "argv_joined": "tools/public_talk/public_talk_metrics.py --log v2/evidence/run_d27_C_n16r60_seed42/run.jsonl --meta v2/evidence/run_d27_C_n16r60_seed42/meta.json --extra-log v2/evidence/run_r10e2e_n16r60_seed42/run.jsonl --extra-log v2/evidence/run_d28_C_s43_n16r60_seed43/run.jsonl --extra-log v2/evidence/run_d12c_on_n16r60_seed42/run.jsonl --extra-log v2/evidence/run_d2_before_n16_seed42/run.jsonl --repo-head 009e95310c5221aef47c9c36f41ddad4f11e627b --out <OUT>",
     "normalization": "D7：输出路径已归一化为占位符 <OUT>（`--out` 与 `--out=` 两种写法都处理），使读数 sha256 不依赖输出文件路径；其余参数（--log / --meta / 全部 --extra-log）原样保留，故 argv_joined 仍是可直接复制的命令，只是把 --out 换成你自己的路径即可。",
     "note": "本读数由该命令行产生；复算必须使用同一条命令（尤其 --meta，否则 inputs 会缺 3 个键）",
     "out_path_redacted": true
@@ -534,7 +537,7 @@
     "ratio_nonnull_reply_to": 0.0,
     "stat_unit": "M实例（MSG_PUBLIC 条）"
   },
-  "ruler": "public_talk/descriptive-3（描述性尺子；不发明编号，仅本文件内自解释命名）",
+  "ruler": "public_talk/descriptive-4（描述性尺子；不发明编号，仅本文件内自解释命名）",
   "scale": {
     "agents_n": 16,
     "complete": true,

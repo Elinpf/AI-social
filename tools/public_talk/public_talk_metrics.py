@@ -64,12 +64,16 @@
 四、跑批身份（v2 修 D1/D2）
 ==========================================================================
 * `inputs.code_sha` **一律取 meta.json 的 code_sha**（跑批时点的代码身份）；
-  `inputs.repo_head_at_run` 单列记录当前仓库 HEAD，**两者不得混用**。
+  `inputs.repo_head_declared` 是**使用者声明的仓库 HEAD**（来自 `--repo-head`，缺省 null），
+  **不是运行时实测值**，也不参与任何计算；两者不得混用。
 * `scale`（seed / agents_n / rounds / model / provider）**一律从 meta.json 读**；
   读不到的字段写 "UNKNOWN"，**不得硬编码**（v1 曾硬编码「单 seed 42、n16r60、C 臂」，
   在 seed43 批与 v0 r84 批上照样这么写，是假读数）。
 * 附带完整性交叉校验：meta.run_sha256 与实测 log sha256 是否一致 → `meta_run_sha256_matches_log`。
-* `invocation.argv` 记录本次极力原文，使读数自描述、可复算（v1 用法漏 --meta 会差 3 个 inputs 键）。
+* `invocation.argv` 记录本次调用原文，使读数自描述、可复算（v1 用法漏 --meta 会差 3 个 inputs 键）。
+* **D8 禁令**：读数**不得**在运行时读取任何外部可变状态（git HEAD、文件 mtime、时钟、随机数、环境变量）
+  并写进被哈希的字段——否则「换个 HEAD 就复算不出」的证据等于没有证据。
+  `--repo-head` 只接受显式传入，脚本自身**不调用 git**。
 
 ==========================================================================
 五、跨批不变性与消息图旁证（probe，非判据）
@@ -99,7 +103,11 @@
         --extra-log v2/evidence/run_d28_C_s43_n16r60_seed43/run.jsonl \
         --extra-log v2/evidence/run_d12c_on_n16r60_seed42/run.jsonl \
         --extra-log v2/evidence/run_d2_before_n16_seed42/run.jsonl \
+        --repo-head 009e95310c5221aef47c9c36f41ddad4f11e627b \
         --out v2/evidence/public_talk_readings_d27_C_n16r60_seed42.json
+
+    `--repo-head` 为**官方口径必带**项（显式钉住 40 位 sha）；省略时 inputs.repo_head_declared = null，
+    读数其余部分完全一致，sha 也一致——因为脚本不读取 git，本参数只作人工声明对照。
 
 退出码：0 正常 / 2 输入缺失或无法解析
 
@@ -112,6 +120,8 @@
     D7 (v3) invocation 中 --out 归一化为 <OUT>：读数 sha256 不再依赖输出文件路径，
        验收标准改为「不同 --out 路径两跑 sha256 相同」；inputs.log_path / meta_path 保持绝对路径（数据源身份）。
        semantics_note 措辞改为「线程参与者集合（同线程内一致）」，不再用「在场/可见」模糊词。
+    D8 (v4) `repo_head_at_run`（运行时 git rev-parse）改为 `repo_head_declared`（`--repo-head` 显式传入，
+       缺省 null）；脚本不再调用 git，读数与当前 HEAD 解耦。官方口径 = 显式钉住 40 位 sha。
     新增 schema_gate / cross_batch_invariance / invariance_note / thread_isolation /
        msg_graph_degree / pub_next_to_dm / author_topic_crosstab。
 """
@@ -124,7 +134,6 @@ sys.dont_write_bytecode = True
 import argparse
 import hashlib
 import json
-import subprocess
 from pathlib import Path
 
 MSG_PUBLIC = "MSG_PUBLIC"
@@ -236,19 +245,6 @@ def scale_from_meta(meta):
     return out
 
 
-def git_head(repo_hint: Path):
-    try:
-        out = subprocess.run(
-            ["git", "-C", str(repo_hint), "rev-parse", "HEAD"],
-            capture_output=True, text=True, timeout=10, check=False,
-        )
-        sha = out.stdout.strip()
-        if out.returncode == 0 and len(sha) == 40:
-            return sha
-    except Exception:  # noqa: BLE001
-        return None
-    return None
-
 
 def scan_extra_log(path: Path) -> dict:
     """额外批次：只算三项尺子量 + 键存在性，不保留全部 payload。"""
@@ -359,8 +355,27 @@ def main() -> int:
     ap.add_argument("--meta", default=None, help="meta.json（**必带**：code_sha 与 scale 的唯一来源）")
     ap.add_argument("--out", default=None, help="输出 json 路径；省略则写 stdout")
     ap.add_argument("--extra-log", action="append", default=[], help="额外批次 run.jsonl（跨批不变性自检，可重复）")
+    ap.add_argument(
+        "--repo-head",
+        default=None,
+        help="**使用者声明**的仓库 HEAD（40 位 sha，可缺省为 null）；脚本自身不调用 git，"
+             "该值只写入 inputs.repo_head_declared 供人工对照，不参与任何计算（D8）",
+    )
     ap.add_argument("--timestamp", action="store_true", help="追加生成时间戳（默认关闭以保证逐字节可复算）")
     args = ap.parse_args()
+
+    repo_head_declared = args.repo_head
+    repo_head_valid = bool(
+        isinstance(repo_head_declared, str)
+        and len(repo_head_declared) == 40
+        and all(c in "0123456789abcdef" for c in repo_head_declared.lower())
+    )
+    if repo_head_declared is not None and not repo_head_valid:
+        print(
+            f"[public_talk] 警告: --repo-head 不是 40 位 hex（得到 {repo_head_declared!r}），"
+            "仍按传入值原样记录并置 repo_head_declared_valid=false",
+            file=sys.stderr,
+        )
 
     log_path = Path(args.log)
     if not log_path.is_file():
@@ -856,9 +871,12 @@ def main() -> int:
         "script_sha256": sha256_file(Path(__file__).resolve()),
         "code_sha": code_sha,
         "code_sha_source": "meta.json:code_sha（跑批时点代码身份）" if meta else "meta.json 缺失 ⇒ null",
-        "repo_head_at_run": git_head(Path(__file__).resolve().parents[2]),
-        "repo_head_at_run_note": (
-            "当前工作树 HEAD，**不是**该批跑批身份，仅供对照；引用必须用 code_sha"
+        "repo_head_declared": repo_head_declared,
+        "repo_head_declared_valid": repo_head_valid,
+        "repo_head_declared_note": (
+            "**使用者声明的仓库 HEAD**（`--repo-head` 传入，缺省 null），**不是运行时实测值**、"
+            "不参与任何计算；脚本内部不调用 git，故读数与当前 HEAD 无关（D8）。"
+            "引用跑批身份请用 code_sha；本字段只用于人工声明对照。"
         ),
         "meta_path": str(Path(args.meta).resolve()) if args.meta else None,
         "meta_sha256": meta_sha256,
@@ -871,7 +889,7 @@ def main() -> int:
 
     invocation_argv = normalize_argv(list(sys.argv))
     readings = {
-        "ruler": "public_talk/descriptive-3（描述性尺子；不发明编号，仅本文件内自解释命名）",
+        "ruler": "public_talk/descriptive-4（描述性尺子；不发明编号，仅本文件内自解释命名）",
         "discipline": {
             "ratio_min_denominator": RATIO_MIN_DEN,
             "probe_threshold_denominator": PROBE_DEN,

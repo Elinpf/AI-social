@@ -20,15 +20,15 @@
 |---|---|---|---|
 | S1 | `v2/evidence/run_d27_C_n16r60_seed42/run.jsonl` | **唯一数据源**（C 基线批日志，116,308 行 / 56,531,099 B） | `1fbb9ef5161fd07aa68fcc9fc4038f104ff18b56383a2fc6b31bb3cb5486a188` |
 | S2 | `v2/evidence/run_d27_C_n16r60_seed42/meta.json` | 跑批身份与自洽断言（`run_sha256` / `derived_from_log_sha256` 均 = S1） | `e73acb4683fbafd322b0406e59f825ed5a6f8298db104f8333e4dcf431fcb793` |
-| S3 | `tools/public_talk/public_talk_metrics.py`（**v3 现行**） | **尺子**（确定性出数器，纯只读） | `b2820d719236e43cdfe4f20282085336af005e783fad21bf02bd428803010edc` |
-| S4 | `v2/evidence/public_talk_readings_d27_C_n16r60_seed42.json`（**v3 现行**） | **读数文件**，本报告 §2 全部数值的机器可读版 | `c1d8a54b2b454ef3e17b39742769dd273c664de03e4b237e0428aac0a58bb4d0` |
+| S3 | `tools/public_talk/public_talk_metrics.py`（**v4 现行**） | **尺子**（确定性出数器，纯只读；`--repo-head` 显式声明、不调 git） | `15e7f0481c5ba307b8c7f39184dd7cbe747be3f9ac7d2777c443ea8ddba44a77` |
+| S4 | `v2/evidence/public_talk_readings_d27_C_n16r60_seed42.json`（**v4 现行**） | **读数文件**，本报告 §2 全部数值的机器可读版 | `971dcb3b01359d21b7c6cad8742676f8a409816d67b99dc439a577b8734fce2b` |
 | S5 | `v2/evidence/public_talk_shots/`：`README.md` / `render_report_PUBTALK-C.json` / `PUBTALK-C-chat-1fbb9ef5.png` / `PUBTALK-C-rhythm-1fbb9ef5.png` / `threads_PUBTALK-C.json` | 截图物证（**不参与判据**，§4.2） | `088c063e56f583369b8b4b1d87122522faec392efe68cc3994f9f14a425ca73f` / `dfb5cef6838062793a57723c561c2c8224898e1ab103f15549a9dbbbaf5d03b8` / `31fd3ad0666ba22997de107614a50083de1312477ea8063c52b51e578d1a401b` / `2eb8c76b7a9bc54d3b3069ad5a812f7cf53d7a83e667690ed5f22cdb0b0633ab` / `15e9293bf5e443d423ea7fd2b063cc85bca7a8fe5af409aab62587cced6ad47c` |
 | S6 | `v2/evidence/preflight/preflight_20261024T160342Z_009e9531_survey_probe.log` / `clean_tree_20261024T160342Z_009e9531_survey_probe.json` | 串行闸 + 冻结区干净度实测留痕（证据链，随本报告入库） | `202bbb86b08ef7f0f98bba1689a777017e7ecaeb55ab716d831e1e4874b8c7b4` / `0fd2d0e1f44842769fb83af8b1f5181f28ca1818eb9722729b62d6248e225e61` |
 | S7 | 团队工作区 `round1-survey.md`（**不在仓库内**） | 仓库惯例与维度现状 | `b9b7b3d1d49039248bf1107caa1cffce86614ebdca1ebf4fd29b678ecd7cdb4d` |
 | S8 | 团队工作区 `round1-ruler-verify.md`（**不在仓库内**） | 尺子独立复核 + 反证（含 D1–D6 缺陷清单） | `1cd92bd592c47e7a800e5c23edda452b561cc079d3a516457297b2e3349de977` |
 
 > **S7/S8 边界**：两份都是团队工作区文件，不入仓库；引用处逐条标节号，且**凡进入 §2 表的数值都由本报告用附录 A 独立复算**（不是转抄）。
-> **S3/S4 的 sha256 为 v3 现行值**（`b2820d71…` / `c1d8a54b…`）。历史值只作留痕且**必须带限定词**：`ea845c40…`（v1 脚本）、`ad183d2b…`（**补丁前 / 缺陷 D1 时值**）、`7f2a8d38…`（**缺陷 D1 时值：省 `--meta` 的复算产物**）、`4371ca6a…`（**缺陷 D7 时值：`--out` 路径写入自身、换路径即变**）。**裸旧 sha 一律不得引用。**
+> **S3/S4 的 sha256 为 v4 现行值**（`15e7f048…` / `971dcb3b…`）。历史值只作留痕且**必须带限定词**：`ea845c40…`（v1 脚本）、`b2820d71…`（v3 脚本，**缺陷 D8 未修**）、`ad183d2b…`（**补丁前 / 缺陷 D1 时值**）、`7f2a8d38…`（**缺陷 D1 时值：省 `--meta` 的复算产物**）、`4371ca6a…`（**缺陷 D7 时值：`--out` 路径写入自身、换路径即变**）、`c1d8a54b…`（**缺陷 D8 时值：读数内含运行时 `git HEAD`，HEAD 前进即复算不出**；在 HEAD=`3869428` 下复算得 `fc985693…`，属**预期行为**）。**裸旧 sha 一律不得引用。**
 
 ### 0.2 数据源身份（`S2`，逐项照录）
 
@@ -52,8 +52,19 @@
 | `inputs.code_sha` | `009e953`（`git rev-parse HEAD`）⇒ 锚错 | **`f2bf606b…`**，`code_sha_source = "meta.json:code_sha（跑批时点代码身份）"`；HEAD 另单列为 `repo_head_at_run = 009e9531…`，附注「**不是**该批跑批身份」 |
 | `diagnostics.thread_id_reuse` | `true`，语义与名字相反 | **已删除，改名 `each_msg_owns_thread = true`**，附注「true = 无任何 `thread_id` 被复用」 |
 | `judgeability.scale`（硬编码串） | 跨批不随输入变化 | **已改为 `scale`**（从 `meta.json` 读 `agents_n/rounds/seed/provider/model`，读不到写 `UNKNOWN`） |
-| `invocation.argv_joined` | 无 | **已加**；v3 把 `--out` 记为占位 `<OUT>`（**D7 修复**），⇒ 换任何输出路径，读数 sha 都不变（§1.1 三路径实测同值） |
+| `invocation.argv_joined` | 无 | **已加**；v3 起 `--out` 记为占位 `<OUT>`（**D7 修复**）⇒ 换输出路径 sha 不变；v4 起命令含 `--repo-head` |
+| `inputs.repo_head_at_run`（**v3 及以前**） | 无 | **已删除**（**D8 修复**）：v3 该字段是运行时 `git_head(...)` 实测值 ⇒ HEAD 前进后复算即不可复现（§0.3a） |
+| `inputs.repo_head_declared`（**v4**） | — | **改为 `--repo-head` 显式声明**：`repo_head_declared = 009e95310c5221aef47c9c36f41ddad4f11e627b`、`repo_head_declared_valid = true`；附注「**不是运行时实测值**、不参与任何计算；脚本内部不调用 git，故读数与当前 HEAD 无关」 |
 | `participants` 语义 | 无说明 | **v3 `semantics_note` 原文**：「participants 为**线程参与者集合**（同一 thread_id 内取值恒定，本批实测 169 个线程中不一致者 0 个），**不是收件人**（DM 的收件人是 `to`），也不是消息级可见性开关；长度 > 1 不代表多人群聊、也不代表多人接话。」 |
+
+### 0.3a 中间提交留痕（**不删除、不改写**）：`3869428` 是 D8 未修时的中间提交
+
+按仓库「更正留痕、不删原文」惯例，此处把一次已进远端历史的中间状态讲清楚：
+
+1. **`38694283fe5ffda3a33e67a9a53e85ba6eff5b16`（简写 `3869428`）是 D8 未修时的中间提交**；该提交内读数 sha 为 `c1d8a54b…`（**缺陷 D8 时值**），其复算前提是 **仓库 HEAD = `009e95310c5221aef47c9c36f41ddad4f11e627b`**（因为 v3 读数把运行时 `git HEAD` 写进了自身）。
+2. **v4 之后读数与 git HEAD 解耦**：`--repo-head` 显式声明、脚本不调 git ⇒ **以 v4 提交的读数（`971dcb3b…`）为准**。
+3. 若有人检出 `3869428` 并按当时附录命令复算得 `fc985693…`，**那是预期行为**（差异仅 `inputs.repo_head_at_run` 一行），**不是数据被篡改**、也不是证据不可复现——只要把 HEAD 回到 `009e9531` 即得 `c1d8a54b…`。
+4. 本段留痕**不删除、不改写**；新提交一律为**前向修正**（不 `amend`、不 `rebase`、不 `force`）。
 
 ### 0.4 更正留痕（v1 → v2）：`participants` **不是可见性**，是**线程参与者**
 
@@ -71,10 +82,11 @@
 
 **读数文件的 sha256 不是日志的纯函数，而是「日志 + 调用参数」的函数**——`invocation` 段把 argv 原样记进 JSON。因此：
 
-- **R1（命令行完整）**：附录 A 的命令**一个参数不许省**——`--meta` **和 4 个 `--extra-log` 都要**。省 `--extra-log` 会得 `cross_batch_invariance: []`，**这不是尺子不确定，是命令没照抄**。
-- **R2（三元组同绑）**：`S4`（`c1d8a54b…`）的 sha256 成立前提是「`S1` + `S2` + 附录 A-1 的确切命令行」三元组；缺任一项即不可复现。
+- **R1（命令行完整）**：附录 A 的命令**一个参数不许省**——`--meta`、**4 个 `--extra-log`**、以及 v4 起的 **`--repo-head 009e95310c5221aef47c9c36f41ddad4f11e627b`（40 位完整）** 都要。省 `--extra-log` 会得 `cross_batch_invariance: []`；省 `--repo-head` 会得 `repo_head_declared: null`。**这都不是尺子不确定，是命令没照抄。**
+- **R2（三元组同绑）**：`S4`（`971dcb3b…`）的 sha256 成立前提是「`S1` + `S2` + 附录 A-1 的确切命令行（含 `--meta`、4×`--extra-log`、`--repo-head` 40 位）」三元组；缺任一项即不可复现。
 - **R3（执行前提：须在仓库根目录跑）**：`argv` 用**相对路径**（`tools/...`、`v2/evidence/...`），**换目录执行会找不到文件**；这是复算的隐性前提，必须写明。
-- **R4（v3 起路径无关）**：v3 把 `--out` 记为占位 `<OUT>` ⇒ **三处不同输出路径（`/tmp/pt_a.json`、`/tmp/pt_b.json`、仓库内正式路径）sha 全为 `c1d8a54b…`**（§1.1 实测）⇒「另一输出路径两跑一致」现在**字面成立**；此前（**缺陷 D7 时值**）换路径 sha 会变（`4371ca6a…`）。
+- **R4（v3 起路径无关）**：`--out` 记为占位 `<OUT>` ⇒ 换输出路径 sha 不变（§1.1 三路径实测同值）；此前（**缺陷 D7 时值**）换路径 sha 会变（`4371ca6a…`）。
+- **R5（v4 起 HEAD 无关）**：v4 用 `--repo-head` 显式声明、脚本**不调 git** ⇒ **在读日志时把仓库 HEAD 前进到任何位置，复算结果都不变**（本报告在 HEAD=`3869428` 下现跑，得到的仍是 `971dcb3b…`）。此前（**缺陷 D8 时值**）读数内含运行时 HEAD，HEAD 前进即复算不出（`c1d8a54b…` → `fc985693…`）。
 
 ---
 
@@ -91,7 +103,7 @@
 ### 1.1 确定性自证（本报告独立复跑）
 
 ```bash
-cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment   # 必须仓库根目录
 M=v2/evidence/run_d27_C_n16r60_seed42
 python3 tools/public_talk/public_talk_metrics.py \
   --log $M/run.jsonl --meta $M/meta.json \
@@ -99,14 +111,15 @@ python3 tools/public_talk/public_talk_metrics.py \
   --extra-log v2/evidence/run_d28_C_s43_n16r60_seed43/run.jsonl \
   --extra-log v2/evidence/run_d12c_on_n16r60_seed42/run.jsonl \
   --extra-log v2/evidence/run_d2_before_n16_seed42/run.jsonl \
+  --repo-head 009e95310c5221aef47c9c36f41ddad4f11e627b \
   --out /tmp/pt_a.json
-# 同一命令再来一次 → /tmp/pt_b.json
-sha256sum /tmp/pt_a.json /tmp/pt_b.json
+# 同一命令再来一次 → /tmp/pt_b.json；第三份写回仓库内正式路径
+sha256sum /tmp/pt_a.json /tmp/pt_b.json v2/evidence/public_talk_readings_d27_C_n16r60_seed42.json
 ```
 
-**实测（v3 重跑，本报告亲自执行）**：**三方同值 `c1d8a54b2b454ef3e17b39742769dd273c664de03e4b237e0428aac0a58bb4d0`** —— `/tmp/pt_a.json`（现跑第 1 次）+ `/tmp/pt_b.json`（现跑第 2 次，**另一输出路径**）+ 仓库内入库件，三者 `sha256sum` 全等。
+**实测（v4 重跑，本报告亲自执行，执行时仓库 HEAD 已是 `38694283…`）**：**三方同值 `971dcb3b01359d21b7c6cad8742676f8a409816d67b99dc439a577b8734fce2b`** —— `/tmp/pt_a.json`（现跑第 1 次）+ `/tmp/pt_b.json`（现跑第 2 次，**另一输出路径**）+ 仓库内正式路径（第 3 次），三者 `sha256sum` 全等，且**与入库件一致**（`git status` 对该文件无改动）。
 
-> **这一条把此前的两个缺陷同时证伪了**：① **缺陷 D1 时值** `7f2a8d38…` 是「省 `--meta` 的复算产物」，现已不再出现；② **缺陷 D7 时值** `4371ca6a…` 是「`--out` 路径被写进 JSON、换路径即变」的产物，v3 后换路径仍同值。**故本报告的确定性结论以 v3 实测为准，旧值仅作留痕。**
+> **这一条同时证伪了三个缺陷**：① **缺陷 D1 时值** `7f2a8d38…`（省 `--meta` 的产物）不再出现；② **缺陷 D7 时值** `4371ca6a…`（`--out` 写进 JSON、换路径即变）已被 v3 修掉；③ **缺陷 D8 时值** `c1d8a54b…`（运行时 `git HEAD` 写进 JSON、HEAD 前进即变）已被 v4 修掉——本段实测是在 **HEAD=`38694283…`** 下跑的，结果仍为 `971dcb3b…`，说明**读数已与 HEAD 解耦**。**故本报告的确定性结论以 v4 实测为准，旧值仅作留痕。**
 
 ---
 
@@ -264,6 +277,15 @@ sha256sum /tmp/pt_a.json /tmp/pt_b.json
 > **结论**：**感知已接线**（825 条他人感知事件、`{15: 55}`），**回应未接线**（`reply_to` 命中 PUB **0** 条，且 §2.7 M5/M6 说明结构上不可能）⇒ **「看得见，但不回应」**。**这两件事不可混写**：不能因「无人回应」说「看不见」，也不能因「看得见」说「已接话」。
 > **边界**：只报事件计数（`probe`，分母 55 < 68）；`OBSERVATION` 是内核感知层留痕，**不等于**该 agent 在对话里提到了这条消息（需另立判据，本轮未做）；**不推断**动机，**不预测**改造效果。
 
+### 2.9 「口径来源」与「第三方复算」必须分开（本报告的正当性不依赖任何成员）
+
+| 类别 | 写在哪 | 允许的内容 | **禁止的写法** |
+|---|---|---|---|
+| **口径来源** | §2 的定义 + `S4` 字段（`definition_official` / `raw_row_definition` / 各段 `stat_unit` / 分子 / 分母 / `probe`） | 「口径 = 什么单元、什么分子分母、什么档位」——**自带定义，读者不需要任何人背书** | 不写「经某人确认口径」 |
+| **第三方复算** | 只作**旁证** | 「同一台机器上用另一份实现从 `run.jsonl` 独立重算，与本报告数值零偏差」——说明**数值可被第三方重现** | **不许**写「经复核确认」「以复核为准」「复核方裁定」；**不许**把复核意见当作结论成立的前提 |
+
+> **理由（本报告的自我约束）**：若结论的正当性建立在某个成员身上，换人或犯错结论就塌。**口径必须自带定义**，复核只能证明「别人按定义重算也对」，不能替定义负责。因此本报告所有结论的成立条件只有两条：**① §2 的定义；② 附录 A 的命令能重算出 §2.1/§2.4/§2.8 的数**。
+
 ---
 
 ## 三、未达成与不可判（本节最重要）
@@ -272,7 +294,7 @@ sha256sum /tmp/pt_a.json /tmp/pt_b.json
 |---|---|---|---|
 | 1 | 量4「公开消息同 place 相邻对」 | **不可判（`UNVERIFIED`）** | `payload.place` 键存在但**值恒 `null`**（0/55）。**根因是源码写死 `"place": None`（`integration.py:850`）** ⇒ 机制决定，非样本缺失；不插补、不用 `slot`/`topic` 顶替。 |
 | 2 | 公开面「接话率」 | **不可判定** | 分母 `55 < 68` ⇒ `probe`；恒 0 只能给**未观测率上界 ≈3/55**，不得写成「0%」下结论。 |
-| 3 | 「多人群聊占比」类表述 | **禁止使用** | 53 条 `MSG_DM` 的 `participants` 长度为 8，但 `body` 是对**单个人**说的一句话（S8 §3.4(a)，`msg_uid 42:2068`）⇒ `participants` 是**线程参与者集合**（同一 `thread_id` 内恒定），**不是收件人**（DM 收件人是 `to`）、**也不是消息级可见性开关**；长度 > 1 **不代表**多人群聊、也**不代表**多人接话（v3 `semantics_note` 原文，§0.3/§2.2b）。 |
+| 3 | 「多人群聊占比」类表述 | **禁止使用** | 53 条 `MSG_DM` 的 `participants` 长度为 8，但 `body` 是对**单个人**说的一句话（**附录 A-13 复算**：物理行 2069、`msg_uid 42:2068`、`from P002 → to P009`、`participants` 8 人）⇒ `participants` 是**线程参与者集合**（同一 `thread_id` 内恒定），**不是收件人**（DM 收件人是 `to`）、**也不是消息级可见性开关**；长度 > 1 **不代表**多人群聊、也**不代表**多人接话（v3 `semantics_note` 原文，§0.3/§2.2b）。 |
 | 4 | 本轮任何**效果**结论 | **无（本轮未改代码，无效果判定）** | 零跑批、零冻结区改动 ⇒ 无对照臂、无前后差异。 |
 | 5 | 「基线会随改造变化」 | **不可假设** | 三项量是**结构常数**（§2.3）；`invariance_note.hard_constraint` 明令不得用于论证有效/无效。 |
 | 6 | `obs llm-cost` 真伪复核 | **转引、本轮未复跑** | `provider=openai_compat`/`degraded_calls=0` 由 `meta.json` 固定；CYCLE-24 曾实测 `dialogue.cached=0`；本轮未重跑。 |
@@ -338,9 +360,10 @@ sha256sum /tmp/pt_a.json /tmp/pt_b.json
 
 > **铁律 R1**：以下命令**一个参数都不许省**——`--meta` **与 4 个 `--extra-log` 都在**。省 `--extra-log` ⇒ `cross_batch_invariance: []`，复算不出 `S4`。
 > **执行前提（R3，隐性前提，必须写明）**：**必须在仓库根目录执行**（`cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`）。命令里的路径全是**相对路径**，换目录跑会「找不到文件」，不是尺子的问题。
-> **R2/R4**：`S4`（`c1d8a54b…`）成立前提是「`S1` + `S2` + 本附录命令」；v3 起 `--out` 记为 `<OUT>` 占位 ⇒ **换任何输出路径 sha 相同**（§1.1 三路径实测）。
-> **期望值**：`S3 = b2820d71…`、`S4 = c1d8a54b…`（§0.1 现行值）。
-> **抄命令**：A-1 与 `S4.invocation.argv_joined` 逐字一致，唯一差别是 `--out <OUT>` 占位需替换成真实路径（写回仓库内正式路径即得同一 sha）。
+> **R2/R4/R5**：`S4`（`971dcb3b…`）成立前提是「`S1` + `S2` + 本附录命令」；`--out` 记为 `<OUT>` 占位 ⇒ **换输出路径 sha 相同**；`--repo-head` 显式声明 ⇒ **HEAD 前进也不变**（§1.1 三路径 + HEAD=3869428 实测）。
+> **期望值**：`S3 = 15e7f048…`、`S4 = 971dcb3b…`（§0.1 现行值）。
+> **钉住 vs 不钉（抗「复算对不上」的说明）**：本报告**只采用钉住形态**（带 `--repo-head`）；省略该参数得到的未钉形态 sha 为 `606d883f39ebc846cbc04b782398dc654fa5dab170de0d372465e9a881750089`，与钉住形态的差别**仅** `inputs.repo_head_declared`（`null` vs `009e9531…`）与 `repo_head_declared_valid`（`false` vs `true`）**两行**（外加 `invocation.argv` 里的参数本身），**数值段逐项相同**。若你复算出 `606d883f…`，说明漏了 `--repo-head`，不是证据不一致。
+> **抄命令**：A-1 与 `S4.invocation.argv_joined` **逐字一致**（含 `--repo-head` 40 位完整），唯一差别是 `--out <OUT>` 占位需替换成真实路径；写回仓库内正式路径即得同一 sha。
 
 ```bash
 cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
@@ -353,8 +376,10 @@ python3 tools/public_talk/public_talk_metrics.py \
   --extra-log v2/evidence/run_d28_C_s43_n16r60_seed43/run.jsonl \
   --extra-log v2/evidence/run_d12c_on_n16r60_seed42/run.jsonl \
   --extra-log v2/evidence/run_d2_before_n16_seed42/run.jsonl \
+  --repo-head 009e95310c5221aef47c9c36f41ddad4f11e627b \
   --out v2/evidence/public_talk_readings_d27_C_n16r60_seed42.json
-sha256sum v2/evidence/public_talk_readings_d27_C_n16r60_seed42.json   # = §0.1 S4
+sha256sum v2/evidence/public_talk_readings_d27_C_n16r60_seed42.json
+# 期望 = §0.1 S4：971dcb3b01359d21b7c6cad8742676f8a409816d67b99dc439a577b8734fce2b
 
 # A-2 只比数值（输出到 /tmp，比较时排除 invocation 段）
 python3 tools/public_talk/public_talk_metrics.py \
@@ -363,12 +388,13 @@ python3 tools/public_talk/public_talk_metrics.py \
   --extra-log v2/evidence/run_d28_C_s43_n16r60_seed43/run.jsonl \
   --extra-log v2/evidence/run_d12c_on_n16r60_seed42/run.jsonl \
   --extra-log v2/evidence/run_d2_before_n16_seed42/run.jsonl \
+  --repo-head 009e95310c5221aef47c9c36f41ddad4f11e627b \
   --out /tmp/pt_check.json
 python3 - <<'EOF'
 import json
 a=json.load(open('/tmp/pt_check.json')); b=json.load(open('v2/evidence/public_talk_readings_d27_C_n16r60_seed42.json'))
 a.pop('invocation',None); b.pop('invocation',None)
-print('numerically_identical =', a==b)     # 期望 True
+print('numerically_identical =', a==b)     # 期望 True（v4 起换路径也应 sha 相同，见 A-1 注）
 EOF
 
 # A-3 结构事实（线程数 / turn_index / scope）
@@ -530,6 +556,19 @@ print('threads',len(parts_by_thread),
       'sender_in_participants',ok,'/',tot,
       'DM_author_based_false_alarms',fa)
 # 期望 threads 169 / inconsistent 0 / sender_in_participants 510 / 510 / false_alarms 455
+EOF
+
+# A-13 §3#3 的样例外推（物理行 2069 / msg_uid 42:2068）
+python3 - <<'EOF'
+import json
+p='v2/evidence/run_d27_C_n16r60_seed42/run.jsonl'
+for i,line in enumerate(open(p,encoding='utf-8'),1):
+    r=json.loads(line); pl=r.get('payload') or {}
+    if r.get('type')=='MSG_DM' and pl.get('msg_uid')=='42:2068':
+        print('line',i,'from',pl.get('from'),'to',pl.get('to'),
+              'len(participants)',len(pl.get('participants') or []),'body',(pl.get('body') or '')[:40])
+        break
+# 期望 line 2069 / from P002 / to P009 / len 8（body 是对单个人说的一句话）
 EOF
 ```
 
