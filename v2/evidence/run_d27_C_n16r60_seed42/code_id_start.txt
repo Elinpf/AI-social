@@ -1,0 +1,7 @@
+arm=C
+worktree=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+branch=master
+code_sha_start=9aaceee0c141dc7d3986cae9417547f3716f41d2
+started_at=2026-10-24T14:04:38+08:00
+launch_cmd=bash .worktrees/d27-narration/v2/evidence/d27_run_scripts/launch_arm_d27.sh --worktree /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment --out-dir /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d27_C_n16r60_seed42 --arm C
+-rw------- 1 root root 148 Oct 10 12:15 code/.env.local

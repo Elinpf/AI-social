@@ -1,0 +1,21 @@
+ M v2/evidence/d3_noiseband_bootstrap.json
+?? code/frontend/sample/dialogue_a5_full6/
+?? code/frontend/sample/dialogue_a5_multiturn/
+?? code/frontend/sample/dialogue_cycle03_ctrl/
+?? code/frontend/sample/dialogue_cycle04_a5/
+?? code/frontend/sample/dialogue_cycle06_f6off/
+?? code/frontend/sample/dialogue_cycle06_f6on/
+?? code/frontend/sample/dialogue_cycle07_d12c_off/
+?? code/frontend/sample/dialogue_cycle07_d12c_on/
+?? code/frontend/sample/dialogue_f2b_v2_off/
+?? code/frontend/sample/dialogue_r21_scene_off/
+?? code/frontend/sample/dialogue_r21_scene_on/
+?? tools/f2/r10e2e_forget_levels.py
+?? v2/evidence/cycle06_shots/_blank_check_failed/
+?? v2/evidence/d12h_shots/
+?? v2/evidence/d25a_gates.py
+?? v2/evidence/e1_run_scripts/
+?? v2/evidence/forget_levels_f2b_v2_off_a9c74f5.json
+?? v2/evidence/forget_levels_g1_b0_d9391a3.json
+?? v2/evidence/run_d27_C_n16r60_seed42/
+?? v2/evidence/run_r10e2e_n16r60_seed42/

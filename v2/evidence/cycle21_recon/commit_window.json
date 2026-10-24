@@ -1,0 +1,803 @@
+{
+  "recon_id": "CYCLE-21 commit window & D2.7 evidence recon",
+  "author": "evidence-auditor",
+  "generated_at": "2026-10-24T16:36+08:00",
+  "repo_root": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment",
+  "head": "dc02e06da5f0d17f251465bc92cab11b2e9a22e1",
+  "head_time": "2026-10-24 16:29:35 +0800",
+  "worktree_state_fingerprint_sha256": "251a7895cbddc8b46cafa779fc658d73be7e9b2ac6d8664d9e0d2fcc488450de",
+  "window": {
+    "left": "a0fb1ebcee133ab16d79d9700eca2ac0ac9878db",
+    "right": "dc02e06da5f0d17f251465bc92cab11b2e9a22e1",
+    "semantics": "left-open right-closed",
+    "rev_list_count": 11,
+    "task_card_claimed": 10,
+    "delta": "21b6738 (result(d25a), 12:58:48) 未被任务卡列出；leader 已于 16:33 确认更正",
+    "reverse_count": 0,
+    "merges": 0,
+    "first_parent_count": 11,
+    "left_in_range": false,
+    "right_in_range": true,
+    "linear": true
+  },
+  "commits": [
+    {
+      "sha": "21b6738",
+      "time": "2026-10-24 12:58:48",
+      "subject": "result(d25a): 判「无效(加长靠复述与重复)」",
+      "own_delivery": true,
+      "paths": [
+        "A v2/evidence/d25a_result.md",
+        "A v2/refs/D25a-amendment1-baseline-and-gates.md"
+      ]
+    },
+    {
+      "sha": "ac3d2b7",
+      "time": "2026-10-24 13:28:24",
+      "subject": "diag+prereg(D2.7): 旁白消失根因=agent.py:1453/1478",
+      "own_delivery": true,
+      "paths": [
+        "A v2/evidence/d27_paren_removal_root_cause.md",
+        "A v2/refs/D27-prereg-restore-paren.md"
+      ]
+    },
+    {
+      "sha": "9aaceee",
+      "time": "2026-10-24 13:58:18",
+      "subject": "prereg(D2.7): 立项放开旁白(第二份预登记)",
+      "own_delivery": true,
+      "paths": [
+        "A v2/evidence/d27_narration_ban_rootcause.md",
+        "A v2/refs/D27-prereg-narration.md"
+      ]
+    },
+    {
+      "sha": "d24e3fd",
+      "time": "2026-10-24 14:28:27",
+      "subject": "amend(D2.7-1): 合并两份预登记并定唯一判据",
+      "own_delivery": true,
+      "paths": [
+        "A v2/refs/D27-amendment1-merge-duplicate-prereg.md",
+        "M v2/refs/D27-prereg-restore-paren.md"
+      ]
+    },
+    {
+      "sha": "fa58a93",
+      "time": "2026-10-24 14:30:53",
+      "subject": "correct(d25a-2): P 读数分母漏 55 个匿名旁白线程",
+      "own_delivery": true,
+      "paths": [
+        "A v2/evidence/d25a_result_amendment2.md"
+      ]
+    },
+    {
+      "sha": "5f73676",
+      "time": "2026-10-24 14:30:53",
+      "subject": "runbook §3.119: 线程级比例分母须含匿名旁白线程",
+      "own_delivery": true,
+      "paths": [
+        "M v2/refs/batch-hosting-runbook.md"
+      ]
+    },
+    {
+      "sha": "4f70eeb",
+      "time": "2026-10-24 14:31:34",
+      "subject": "review(d27): 接线审查通过①②③被并发闸挡",
+      "own_delivery": true,
+      "paths": [
+        "A v2/evidence/d27_wiring_review.md"
+      ]
+    },
+    {
+      "sha": "f2bf606",
+      "time": "2026-10-24 14:58:18",
+      "subject": "review(d27): 前两项验收通过 mock 仍被挡",
+      "own_delivery": true,
+      "paths": [
+        "M v2/evidence/d27_wiring_review.md"
+      ]
+    },
+    {
+      "sha": "f8a9113",
+      "time": "2026-10-24 15:28:24",
+      "subject": "accept(d27-C): C 臂收批验收合法可用(rc=0/510MSG/169线程)",
+      "own_delivery": true,
+      "paths": [
+        "A v2/evidence/d27_C_arm_acceptance.md"
+      ]
+    },
+    {
+      "sha": "4d619b5",
+      "time": "2026-10-24 15:58:34",
+      "subject": "baseline(d27-C): C 臂完整基线 + P1 天花板预警",
+      "own_delivery": true,
+      "paths": [
+        "A v2/evidence/d27_C_baseline_readings.json",
+        "A v2/evidence/d27_C_baseline_readings.md"
+      ]
+    },
+    {
+      "sha": "dc02e06",
+      "time": "2026-10-24 16:29:35",
+      "subject": "result(d27): 判「作废(台词被旁白挤短)」",
+      "own_delivery": true,
+      "paths": [
+        "A v2/evidence/d27_result.md"
+      ]
+    }
+  ],
+  "commits_touching_code_dir": 0,
+  "evidence_files": {
+    "singles": [
+      {
+        "path": "v2/evidence/d27_paren_removal_root_cause.md",
+        "sha256_worktree": "4e2c8bf2bcd5a0201877bbad58ff9a0034b27dce73151f1f092fa38b750037de",
+        "tracked": true,
+        "last_commit": "ac3d2b7",
+        "blob": "0237f0d3290d320b9bb685fb726982b64f76d524",
+        "sha256_blob": "4e2c8bf2bcd5a0201877bbad58ff9a0034b27dce73151f1f092fa38b750037de",
+        "match": true
+      },
+      {
+        "path": "v2/evidence/d27_narration_ban_rootcause.md",
+        "sha256_worktree": "cde1837ddf98b2b37681a5a5ef26281ac718db906948a8c2ec6e8b55cfbc30ed",
+        "tracked": true,
+        "last_commit": "9aaceee",
+        "blob": "417c785a6e2def6430ef701590f1cc2b220e90e4",
+        "sha256_blob": "cde1837ddf98b2b37681a5a5ef26281ac718db906948a8c2ec6e8b55cfbc30ed",
+        "match": true
+      },
+      {
+        "path": "v2/evidence/d27_C_arm_acceptance.md",
+        "sha256_worktree": "c507392538541f553421666cfbca9f87d208cf93445b43c8ec744ae0c27450cd",
+        "tracked": true,
+        "last_commit": "f8a9113",
+        "blob": "a2109eed845710e7b54de14a2cf0be1c76f85cc2",
+        "sha256_blob": "c507392538541f553421666cfbca9f87d208cf93445b43c8ec744ae0c27450cd",
+        "match": true
+      },
+      {
+        "path": "v2/evidence/d27_C_baseline_readings.md",
+        "sha256_worktree": "674f7406bf6b1dd16fd7266227170207641bb6e1b79f01ee0f80a7772e4ef218",
+        "tracked": true,
+        "last_commit": "4d619b5",
+        "blob": "46ffd7e46771746c5629c04051ed489e333ad89d",
+        "sha256_blob": "f2166616554daaca0587dc9dac25db26d4350c89da798e01d86a4855de3d39ee",
+        "match": false
+      },
+      {
+        "path": "v2/evidence/d27_C_baseline_readings.json",
+        "sha256_worktree": "ffbd9a905d32d9573b50af6005d7c80f343f4ff404dc11d3f89b1f10b434758b",
+        "tracked": true,
+        "last_commit": "4d619b5",
+        "blob": "f17c656b5f84aedf5b4d15b4d2e05fef1598c834",
+        "sha256_blob": "ffbd9a905d32d9573b50af6005d7c80f343f4ff404dc11d3f89b1f10b434758b",
+        "match": true
+      },
+      {
+        "path": "v2/evidence/d27_gate_prediction_prereg.md",
+        "sha256_worktree": "bf1a657623a468222319f633421b79e967bb447d06a1e8c8fc6e14196f509f6a",
+        "tracked": false
+      },
+      {
+        "path": "v2/evidence/d27_gate_verification.md",
+        "sha256_worktree": "6622f4dddb58a4c693e86df391783d5f1d8399a39ef0d1387c721c58fae2b498",
+        "tracked": false
+      },
+      {
+        "path": "v2/evidence/d27_result.md",
+        "sha256_worktree": "51fadf0ef800be0dc1d5baf74baf204cf306490c1673f3b777aeae8bba6a94b3",
+        "tracked": true,
+        "last_commit": "dc02e06",
+        "blob": "3ee08a4cfc73e4c8d6671fbd6039ce5f6ae8b5fd",
+        "sha256_blob": "0fde7dcad5740bfca51b7518e4eb6604e3ecd32bd1edb9611b3114ecd1b45ba6",
+        "match": false
+      },
+      {
+        "path": "v2/evidence/d27_wiring_review.md",
+        "sha256_worktree": "fc4f62be3bfab8b65fb5d6d71e0b183a6c6d27bbd1951512b7af9aac5ae68abd",
+        "tracked": true,
+        "last_commit": "f2bf606",
+        "blob": "7e0eeb3063e331e598a4628430cae075f59973c5",
+        "sha256_blob": "fc4f62be3bfab8b65fb5d6d71e0b183a6c6d27bbd1951512b7af9aac5ae68abd",
+        "match": true
+      },
+      {
+        "path": "v2/evidence/d25a_result_amendment2.md",
+        "sha256_worktree": "c3e72913274b6b9a9203b9b9482e13fd20d466e2370e5d0b107eedf609253679",
+        "tracked": true,
+        "last_commit": "fa58a93",
+        "blob": "5d6390b7bbdd5255f4f68853fe7a5146dd8ac996",
+        "sha256_blob": "c3e72913274b6b9a9203b9b9482e13fd20d466e2370e5d0b107eedf609253679",
+        "match": true
+      },
+      {
+        "path": "v2/evidence/d25a_amendment1_Tgate_relative.md",
+        "sha256_worktree": "f1329974e8fd5a62c219c9bb114ad39433a28c091e87ced11bab79d282fec183",
+        "tracked": true,
+        "last_commit": "1aa57a1",
+        "blob": "8f4d77113444b0c35d0cd273153a7665ecc2d0fd",
+        "sha256_blob": "f1329974e8fd5a62c219c9bb114ad39433a28c091e87ced11bab79d282fec183",
+        "match": true
+      },
+      {
+        "path": "v2/evidence/d25a_gates.py",
+        "sha256_worktree": "3cf1b35f815e95777f8eadbae03f57050822ac767c36bbdfb5085d16093ed227",
+        "tracked": false
+      }
+    ],
+    "dirs": {
+      "v2/evidence/d27_harvest": {
+        "n_files": 26,
+        "files": [
+          {
+            "path": "v2/evidence/d27_harvest/HANDOFF-to-gate.md",
+            "bytes": 5039,
+            "sha256": "b1896c620b1a6e94feae9c7ed2d85abc16ba5dba322ee46595208ac0a833b470"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/_selftest_c_vs_c/d12c_c_b.json",
+            "bytes": 420,
+            "sha256": "544a08f3b69d7f849c0b6d94a08da3b55152210a635f46752a78e2b6124c4395"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/_selftest_c_vs_c/d27_gates.json",
+            "bytes": 7724,
+            "sha256": "d8f54c22006a5a5c24f79c5900293d9718f69241c1befcc42e09e03ab487f0ba"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/_selftest_c_vs_c/d27_metrics_c_b.json",
+            "bytes": 869,
+            "sha256": "5fb32d3ec1b957ef412539f34b314f630a0e17ab71f47078019d0711be3c4cc3"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/_selftest_c_vs_c/dm_B.json",
+            "bytes": 32630,
+            "sha256": "1c90b3f9dc4cb99f1902d9e3053d6991284874bd90cc72625846fc28f9047e4b"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/_selftest_c_vs_c/dm_B.md",
+            "bytes": 8601,
+            "sha256": "c0962d70de9915784d8ae1e8bb5f91491405782d566fdc43bbf6d80b86ae7be1"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/_selftest_c_vs_c/dm_C.json",
+            "bytes": 32630,
+            "sha256": "1c90b3f9dc4cb99f1902d9e3053d6991284874bd90cc72625846fc28f9047e4b"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/_selftest_c_vs_c/dm_C.md",
+            "bytes": 8601,
+            "sha256": "c0962d70de9915784d8ae1e8bb5f91491405782d566fdc43bbf6d80b86ae7be1"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/_selftest_c_vs_c/l15_c_b.json",
+            "bytes": 3204,
+            "sha256": "3a973e181fbe6287cf6540674931ae0c21aeb45eff416d578e7f7990cebd3ef6"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/_selftest_c_vs_c/p1_count_c_b.json",
+            "bytes": 439,
+            "sha256": "a48760d00da2d2a2743bf05060ccaac4ddc0c8c5704ab0403694dc2199aca003"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/_selftest_c_vs_c/shape_B.json",
+            "bytes": 1707,
+            "sha256": "0c47a50b3d51c44421817872d6c2ef8ab6b442732db275b38b73a0d635a33e82"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/_selftest_c_vs_c/shape_C.json",
+            "bytes": 1707,
+            "sha256": "0c47a50b3d51c44421817872d6c2ef8ab6b442732db275b38b73a0d635a33e82"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/d12c_c_b.json",
+            "bytes": 426,
+            "sha256": "77e45f5e887974dd636ed48ab801cdbcf996da22ac4fc615fe7664a7ac55295e"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/d27_gates.json",
+            "bytes": 9035,
+            "sha256": "878bb9f35e6ad87651a73ff6340d2542a07f29aeee15cc7552372389abecc19a"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/d27_gates.py",
+            "bytes": 20926,
+            "sha256": "55873500ebed5beed37a47917f8f67a21588bf2648c92ff733dc6034e28851bf"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/d27_metrics.py",
+            "bytes": 4067,
+            "sha256": "46d527d8e70164966f3bbfaf5e80248284966b727567279108e5907d5b589d65"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/d27_metrics_c_b.json",
+            "bytes": 873,
+            "sha256": "9e998027475b2ed76252e95db39144a86502b16f0070bf90833921a4cb5277fb"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/dm_B.json",
+            "bytes": 31506,
+            "sha256": "3d03efe9db6265239be5f21fc7d22515aac023aa3a91076bc51d7e2f06e65049"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/dm_B.md",
+            "bytes": 8618,
+            "sha256": "0f3e9a2382730ef8b053c85adbca2032a37915358c107c7b6fba121a6fa72bb0"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/dm_C.json",
+            "bytes": 32630,
+            "sha256": "1c90b3f9dc4cb99f1902d9e3053d6991284874bd90cc72625846fc28f9047e4b"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/dm_C.md",
+            "bytes": 8601,
+            "sha256": "c0962d70de9915784d8ae1e8bb5f91491405782d566fdc43bbf6d80b86ae7be1"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/l15_c_b.json",
+            "bytes": 3201,
+            "sha256": "8c1cdfc7d0f51790b980e3f180f4338ab321bb0f154ec717898cb9c53310d14c"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/p1_count.py",
+            "bytes": 3180,
+            "sha256": "b3f69142fb80bf2faf6fdeefb49412bcbc24ceea5dd6926bd3a07ee27f923a87"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/p1_count_c_b.json",
+            "bytes": 439,
+            "sha256": "a22778d0557fc3f01d45320ed2ff5156cd70f7a93b8e5049c1c77796c3b40c75"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/shape_B.json",
+            "bytes": 1669,
+            "sha256": "310f6eabb1276bc96566e3ddf8e6ae8492f7a2251522ac97adb57452a40d85e5"
+          },
+          {
+            "path": "v2/evidence/d27_harvest/shape_C.json",
+            "bytes": 1707,
+            "sha256": "0c47a50b3d51c44421817872d6c2ef8ab6b442732db275b38b73a0d635a33e82"
+          }
+        ],
+        "note": "26 件，含 16:35:48 新增 HANDOFF-to-gate.md（metric-recomputer 移交件）"
+      },
+      "v2/evidence/d27_shots": {
+        "n_files": 5,
+        "files": [
+          {
+            "path": "v2/evidence/d27_shots/d27-B-chat-multi-87e233c4.png",
+            "bytes": 289208,
+            "sha256": "3e97faf44841849ddaaa3345c3fdee0b64b53148b933aa04ef13d92f3cc9930f"
+          },
+          {
+            "path": "v2/evidence/d27_shots/d27-B-thread-focus-87e233c4.png",
+            "bytes": 277251,
+            "sha256": "d571311a2266c81d2312964a96b856e5d4d78f3db0207b0034d448ff0cad8e28"
+          },
+          {
+            "path": "v2/evidence/d27_shots/d27-C-thread-focus-1fbb9ef5.png",
+            "bytes": 300712,
+            "sha256": "3e2c0f01b729f345becd4af887f7116561fc930bf2750699e6096e0ab0943a66"
+          },
+          {
+            "path": "v2/evidence/d27_shots/render_d27_shots.sh",
+            "bytes": 2100,
+            "sha256": "b05a72afe21c3a1f2960d95797e9c2b0cb9edbe81938db7a90bdfeab815072e2"
+          },
+          {
+            "path": "v2/evidence/d27_shots/render_wrap.log",
+            "bytes": 3766,
+            "sha256": "2cd18fdca8489a2c8e103de4770d1e6682bd209f18fe7878b51ecc6663fa3796"
+          }
+        ]
+      },
+      "v2/evidence/run_d27_C_n16r60_seed42": {
+        "n_files": 9,
+        "files": [
+          {
+            "path": "v2/evidence/run_d27_C_n16r60_seed42/code_id_start.txt",
+            "bytes": 525,
+            "sha256": "60b96f3ab96a1d90ec7b13d102eb884419ad044875c23ab2f39449a66b18186c"
+          },
+          {
+            "path": "v2/evidence/run_d27_C_n16r60_seed42/frozen_diff_start.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "v2/evidence/run_d27_C_n16r60_seed42/git_status_start.txt",
+            "bytes": 916,
+            "sha256": "f2b1150e1c1ea84d16da9781635292f0d1276197fd72724ff110447dc75680b4"
+          },
+          {
+            "path": "v2/evidence/run_d27_C_n16r60_seed42/host.log",
+            "bytes": 3155,
+            "sha256": "52007c6631642f3d9b690b14d14d393589cf4ffbc426c2a9e18c42c0588ba474"
+          },
+          {
+            "path": "v2/evidence/run_d27_C_n16r60_seed42/meta.json",
+            "bytes": 5780,
+            "sha256": "e73acb4683fbafd322b0406e59f825ed5a6f8298db104f8333e4dcf431fcb793"
+          },
+          {
+            "path": "v2/evidence/run_d27_C_n16r60_seed42/run.jsonl",
+            "bytes": 56531099,
+            "sha256": "1fbb9ef5161fd07aa68fcc9fc4038f104ff18b56383a2fc6b31bb3cb5486a188"
+          },
+          {
+            "path": "v2/evidence/run_d27_C_n16r60_seed42/run_batch.end",
+            "bytes": 232,
+            "sha256": "8ffd25ec6ea51440d4efbafbd98a30f030edd5e8b55930b265a2e96eab2950e7"
+          },
+          {
+            "path": "v2/evidence/run_d27_C_n16r60_seed42/run_batch.log",
+            "bytes": 2425,
+            "sha256": "4ca235babe53cfac35427dec34a9c37d84b1b9a784458db798fb34c49cd4428e"
+          },
+          {
+            "path": "v2/evidence/run_d27_C_n16r60_seed42/run_batch.rc",
+            "bytes": 2,
+            "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+          }
+        ]
+      },
+      ".worktrees/d27-narration/v2/evidence/run_d27_B_n16r60_seed42": {
+        "n_files": 9,
+        "files": [
+          {
+            "path": ".worktrees/d27-narration/v2/evidence/run_d27_B_n16r60_seed42/code_id_start.txt",
+            "bytes": 760,
+            "sha256": "c86a87b1155892cae480f10a2ccda2ce9e251e4917e15a13aec0876434a73e91"
+          },
+          {
+            "path": ".worktrees/d27-narration/v2/evidence/run_d27_B_n16r60_seed42/frozen_diff_start.txt",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": ".worktrees/d27-narration/v2/evidence/run_d27_B_n16r60_seed42/git_status_start.txt",
+            "bytes": 163,
+            "sha256": "80fe561569fe290198ee800d67c6a9c0aba1a97b8c248fba2afd363b62e4fca7"
+          },
+          {
+            "path": ".worktrees/d27-narration/v2/evidence/run_d27_B_n16r60_seed42/host.log",
+            "bytes": 1200,
+            "sha256": "c842a0b321b9b7252308e3b95ff7087a1c89aa83fa578ca2abb731d65cf8a0e1"
+          },
+          {
+            "path": ".worktrees/d27-narration/v2/evidence/run_d27_B_n16r60_seed42/meta.json",
+            "bytes": 4317,
+            "sha256": "8ece4e15f5a9489230b115ca44f50b0fae9dbcb93b48d1725f7149fbc5b283f1"
+          },
+          {
+            "path": ".worktrees/d27-narration/v2/evidence/run_d27_B_n16r60_seed42/run.jsonl",
+            "bytes": 56148529,
+            "sha256": "87e233c421aebeb5ecf3d4f37c74ba721cd6829f3d7e55ec75042e76d350f2f4"
+          },
+          {
+            "path": ".worktrees/d27-narration/v2/evidence/run_d27_B_n16r60_seed42/run_batch.end",
+            "bytes": 282,
+            "sha256": "270d2868fbc59a78055ae15f63c007e6ec676cde62dff0b568c92dcb7b0643c8"
+          },
+          {
+            "path": ".worktrees/d27-narration/v2/evidence/run_d27_B_n16r60_seed42/run_batch.log",
+            "bytes": 235,
+            "sha256": "21b527fc44671368e4959e6291e659625f47a04da93be4e302dcb7823ce15ccc"
+          },
+          {
+            "path": ".worktrees/d27-narration/v2/evidence/run_d27_B_n16r60_seed42/run_batch.rc",
+            "bytes": 2,
+            "sha256": "2e6d31a5983a91251bfae5aefa1c0a19d8ba3cf601d0e8a706b4cfa9661a6b8a"
+          }
+        ]
+      },
+      "v2/evidence/cycle20_shots": {
+        "n_files": 5,
+        "files": [
+          {
+            "path": "v2/evidence/cycle20_shots/CYCLE-20C-chat-bd2b36d8.png",
+            "bytes": 285348,
+            "sha256": "56db297d9d2ee3d2204033e296fdc94f033fcd754cddd5eb2a511c860c7a8799"
+          },
+          {
+            "path": "v2/evidence/cycle20_shots/CYCLE-20C-rhythm-bd2b36d8.png",
+            "bytes": 283302,
+            "sha256": "78296263567a3b218080274f9e95227403a2595d123d36e0379379a2c53863db"
+          },
+          {
+            "path": "v2/evidence/cycle20_shots/README.md",
+            "bytes": 6192,
+            "sha256": "d858e18be45490ee890e187faf9a89a096c748c1c8058469340a3832b525e352"
+          },
+          {
+            "path": "v2/evidence/cycle20_shots/render_report_CYCLE-20C.json",
+            "bytes": 6490,
+            "sha256": "5c174a30a54de0e8424e458d167144a730e49067e959b4c956a816e44ca4927b"
+          },
+          {
+            "path": "v2/evidence/cycle20_shots/threads_CYCLE-20C.json",
+            "bytes": 2155478,
+            "sha256": "02b072fecd86d9b8418d0bd4d27c24c037d6974e26316554ca6d2067f943ebd9"
+          }
+        ]
+      }
+    }
+  },
+  "dirty": {
+    "modified": [
+      {
+        "path": "v2/evidence/d27_C_baseline_readings.md",
+        "mtime": "2026-10-24 16:28:04",
+        "kind": "substantive_correction",
+        "action": "commit_with_report",
+        "reason": "唯一更正载体：C 臂 4 项基线被证跨批污染(Q1 4.12->4.31/Q2 20.59->25.49/Q3 66.28->63.34/T 40->41)，阈值未改；不入库则 dc02e06 提交信息与该表互相矛盾"
+      },
+      {
+        "path": "v2/evidence/d3_noiseband_bootstrap.json",
+        "mtime": "2026-10-23 10:11:52",
+        "kind": "historical_dirty",
+        "action": "ignore",
+        "reason": "早于本区间起点(10-24 12:43)，属 D3 噪声带口径 denom_480->denom_341，与 D2.7 无关；裹带会污染本周期证据边界"
+      }
+    ],
+    "untracked_must_commit": [
+      "v2/evidence/d27_gate_prediction_prereg.md",
+      "v2/evidence/d27_gate_verification.md",
+      "v2/evidence/d27_harvest/",
+      "v2/evidence/d27_shots/",
+      "v2/evidence/run_d27_C_n16r60_seed42/ (6 non-ignored files)"
+    ],
+    "untracked_forbidden": {
+      "code_sample_dirs": [
+        "code/frontend/sample/dialogue_d27_B/",
+        "code/frontend/sample/dialogue_d27_C/"
+      ],
+      "historical": [
+        "code/frontend/sample/dialogue_a5_full6/",
+        "code/frontend/sample/dialogue_a5_multiturn/",
+        "code/frontend/sample/dialogue_cycle03_ctrl/",
+        "code/frontend/sample/dialogue_cycle04_a5/",
+        "code/frontend/sample/dialogue_cycle06_f6off/",
+        "code/frontend/sample/dialogue_cycle06_f6on/",
+        "code/frontend/sample/dialogue_cycle07_d12c_off/",
+        "code/frontend/sample/dialogue_cycle07_d12c_on/",
+        "code/frontend/sample/dialogue_f2b_v2_off/",
+        "code/frontend/sample/dialogue_r21_scene_off/",
+        "code/frontend/sample/dialogue_r21_scene_on/",
+        "tools/f2/r10e2e_forget_levels.py",
+        "v2/evidence/forget_levels_f2b_v2_off_a9c74f5.json",
+        "v2/evidence/forget_levels_g1_b0_d9391a3.json",
+        "v2/evidence/run_r10e2e_n16r60_seed42/",
+        "v2/evidence/e1_run_scripts/",
+        "v2/evidence/d12h_shots/",
+        "v2/evidence/cycle06_shots/_blank_check_failed/",
+        "v2/evidence/preflight/clean_tree_20261024T060438Z_9aaceee0_run_batch.json",
+        "v2/evidence/d25a_gates.py"
+      ],
+      "code_sample_dirs_detail": "见 shadows_in_code：属本轮产物但走旁路写在 code/，不入库"
+    },
+    "gitignore_verified": {
+      "v2/evidence/run_d27_C_n16r60_seed42/run.jsonl": ".gitignore:8:**/*.jsonl",
+      "v2/evidence/run_d27_C_n16r60_seed42/host.log": ".gitignore:63:**/*.log",
+      "v2/evidence/run_d27_C_n16r60_seed42/run_batch.log": ".gitignore:63:**/*.log"
+    }
+  },
+  "sha_layers": {
+    "analysis_baseline": {
+      "sha": "dc02e06da5f0d17f251465bc92cab11b2e9a22e1",
+      "short": "dc02e06",
+      "time": "2026-10-24 16:29:35 +0800",
+      "tree_fingerprint": "251a7895cbddc8b46cafa779fc658d73be7e9b2ac6d8664d9e0d2fcc488450de",
+      "verify": "git cat-file -t dc02e06; git status --porcelain | sha256sum"
+    },
+    "first_delivery": {
+      "lookup": "git log -1 --format=%H -- reports/CYCLE-21-20261024.md",
+      "expected_parent": [
+        "dc02e06 if evidence+report committed together",
+        "else the evidence commit: git log -1 --format=%H -- v2/evidence/d27_gate_verification.md"
+      ]
+    },
+    "correction": {
+      "lookup": "git log -1 --format=%H -- reports/CYCLE-21-20261024.md",
+      "expected_parent": "= first_delivery",
+      "null_if_none": true
+    },
+    "sha_backfill": {
+      "lookup": "git log --format='%H %ad %s' --date=iso -- reports/CYCLE-21-20261024.md (取第 2 新一条)"
+    }
+  },
+  "commit_message_vs_correction": [
+    {
+      "commit": "dc02e06",
+      "message_claims": "Q2 L-7 20.59->28.49 (+7.90pp); T len_p50_excl 40->26 (-35%); Q1 4.12->4.18; Q3 66.28->66.87",
+      "overturned_by": [
+        "v2/evidence/d27_C_baseline_readings.md (worktree M)",
+        "v2/evidence/d27_gate_verification.md §3",
+        "v2/evidence/d27_harvest/d27_gates.json appendix_legacy_baseline"
+      ],
+      "corrected": {
+        "Q1": "4.31 -> 4.18 (-0.13pp)",
+        "Q2": "25.49% -> 28.4861% = +2.9959pp (擦线过, margin 0.0041pp)",
+        "Q3": "63.34% -> 66.8675% = +3.5244pp (d27_gates.json pass=false)",
+        "T": "41.0 -> 26.0 = -36.59%"
+      },
+      "impact": "单闸判定词反转(Q2: 无效→擦线过; Q3: 件内判词冲突)，总判定「作废」不变"
+    },
+    {
+      "commit": "21b6738",
+      "message_claims": "P 差 0.61pp (+14.39 vs +15); Q2 L-7 +8.91pp",
+      "overturned_by": [
+        "fa58a93",
+        "5f73676"
+      ],
+      "corrected": {
+        "P": "30.77%->37.17% = +6.40pp，实差 8.60pp（\"差0.61pp\"作废）"
+      },
+      "impact": "判定不变(无效)，但\"差点就过\"叙事必须删"
+    }
+  ],
+  "internal_inconsistencies": [
+    "d27_gate_verification.md §2 判 Q3 ✅(+3.53pp, 写\"降≤2pp\")，而 d27_harvest/d27_gates.json 的 Q3.pass=false(rule 升<=2.0pp, 实测 +3.5244pp)；v2/refs/D27-amendment1-merge-duplicate-prereg.md:34 原文「F-2′ 降 ≤2.0pp ⇒ 否则无效(内容漂移)」⇒ 判词冲突，需 verifier 收口",
+    "d27_C_baseline_readings.md 入库版(4d619b5)=污染版，工作树版=更正版 ⇒ 同一路径两个互相矛盾的\"官方读数\""
+  ],
+  "audit_findings": {
+    "B_arm_run_dir_mixed": {
+      "fact": "run_batch.rc=9 / run_batch.end / run_batch.log / host.log / code_id_start / git_status_start / frozen_diff_start 全部 mtime=14:59:38（被 preflight 并发闸拒绝的尝试）；只有 meta.json(16:23:25) 与 run.jsonl(16:23:22) 属真批 15:32:28-16:23:24",
+      "rule": "可写「按等价清单判为正常结束」，禁写 rc=0，禁写 rc=9 失败",
+      "equivalent_evidence_6_ok": true
+    },
+    "treatment_code_not_in_master": {
+      "fact": "git log a0fb1eb..dc02e06 -- code/ 为空；4123628/c749850 不是 dc02e06 的祖先（merge-base --is-ancestor exit=1）；master code/life/agent.py:1453/1478 仍为旧版禁旁白文本",
+      "implication": "C 臂=旧提示词(paren 0.00%)，B 臂=worktree 新提示词(paren 100%)；本周期 master 无任何代码变更"
+    },
+    "B_run_identity": {
+      "dir": ".worktrees/d27-narration/v2/evidence/run_d27_B_n16r60_seed42",
+      "code_sha": "c74985050b86f31c21f4ab90da8d9244b3410251",
+      "run_sha256": "87e233c421aebeb5ecf3d4f37c74ba721cd6829f3d7e55ec75042e76d350f2f4",
+      "events": 115545,
+      "llm_calls": 2869,
+      "duration_sec": 3056,
+      "git_dirty_code_files": [],
+      "untracked_in_main_tree": true
+    },
+    "C_run_identity": {
+      "dir": "v2/evidence/run_d27_C_n16r60_seed42",
+      "code_sha": "f2bf606bf5f6c362a7d4d34b9177f3210d43aabf",
+      "rc": "0",
+      "run_sha256": "1fbb9ef5161fd07aa68fcc9fc4038f104ff18b56383a2fc6b31bb3cb5486a188",
+      "llm_calls": 2878,
+      "finished_at": "2026-10-24T14:59:23+08:00"
+    }
+  },
+  "moving_files": {
+    "v2/evidence/d27_gate_verification.md": {
+      "observed": [
+        {
+          "time": "16:30:27",
+          "bytes": 10926,
+          "sha256": "d23892f26194d7a5e670eeca43e520011453e494e750f222ada300b1eadeb8aa"
+        },
+        {
+          "time": "16:33:16",
+          "bytes": 13441,
+          "sha256": "b1f1f9a8d57c02c44168afee1cb0f72b4b957b735b3ab3144ea7177b2b983c78"
+        }
+      ],
+      "note": "入库前须重新 sha256 冻结"
+    }
+  },
+  "not_obtainable": {
+    "B_arm_true_batch_exit_code": "目录内 run_batch.rc=9 属 14:59 残留；真批未写 rc ⇒ 事实缺口，非遗漏"
+  },
+  "worktree_state_fingerprint_sha256_16_36": "251a7895cbddc8b46cafa779fc658d73be7e9b2ac6d8664d9e0d2fcc488450de",
+  "worktree_state_fingerprint_sha256_16_38": "fc001adb20e7501a56badbe1851d39bff221a3d2f9967528306eeb92b62624d6",
+  "worktree_fingerprint_note": "指纹随队友落盘变化（16:36: 2M+27??；16:38: 2M+32??，增量=cycle21_cases/cycle21_shots/cycle21_recon/）⇒ 报告落笔时须重测并就地冻结",
+  "shadows_in_code": {
+    "code/frontend/sample/dialogue_d27_C/threads.json": {
+      "mtime": "2026-10-24 16:30:28.225",
+      "bytes": 2153042,
+      "sha256": "7db1f75eaba74cc23dc8899f8f3b2ea1d4473b203e2ec079825816a57869fe8e"
+    },
+    "code/frontend/sample/dialogue_d27_B/threads.json": {
+      "mtime": "2026-10-24 16:30:29.153",
+      "bytes": 2093912,
+      "sha256": "fb96fdba778d781f80429d52df8dd7d257882496a3c30ac17a659098c756b5fd"
+    },
+    "generated_by": "code/frontend/tools/gen_threads.py (generator_sha256=1ab81778464d8bcd5f358e75adbe44159d0a62ec3da8e8af106e93e1a004776e)",
+    "provenance": {
+      "C": "source.run_sha256=1fbb9ef5161fd07aa68fcc9fc4038f104ff18b56383a2fc6b31bb3cb5486a188, code_sha=f2bf606, stats messages=510 threads=169",
+      "B": "source.run_sha256=87e233c421aebeb5ecf3d4f37c74ba721cd6829f3d7e55ec75042e76d350f2f4, code_sha=c749850, stats messages=502 threads=170"
+    },
+    "verdict": "NOT_COMMITTED (不删不移)：属本轮 D2.7 两臂日志的 gen_threads 派生件，但被写进 code/ 影子目录；污染 code_sha 口径 + 报告族纪律禁止 code/ 下建产物 ⇒ 报告 §1.4 登记为「不入库 + 原因」",
+    "operator_identity": "无法由文件证明（threads.json 不含 user/host 元数据）；不猜测、不写成具体人"
+  },
+  "final_sha256_16_40_44": {
+    "v2/evidence/d27_gate_verification.md": {
+      "sha256": "8cf511d15c16cadbdeb2745e7996db249a98fa99e3f105a79e9baf3be16ef575",
+      "mtime": "2026-10-24 16:39:03",
+      "bytes": 23131,
+      "history": [
+        {
+          "time": "16:30:27",
+          "bytes": 10926,
+          "sha256": "d23892f26194d7a5e670eeca43e520011453e494e750f222ada300b1eadeb8aa"
+        },
+        {
+          "time": "16:33:16",
+          "bytes": 13441,
+          "sha256": "b1f1f9a8d57c02c44168afee1cb0f72b4b957b735b3ab3144ea7177b2b983c78"
+        },
+        {
+          "time": "16:39:03",
+          "bytes": 23131,
+          "sha256": "8cf511d15c16cadbdeb2745e7996db249a98fa99e3f105a79e9baf3be16ef575"
+        }
+      ],
+      "caveat": "以 C21-F 提交内含版本为准；提交后用 git cat-file -p <blob> | sha256sum 回填"
+    },
+    "v2/evidence/d27_gate_prediction_prereg.md": {
+      "sha256": "bf1a657623a468222319f633421b79e967bb447d06a1e8c8fc6e14196f509f6a",
+      "mtime": "2026-10-24 16:13:20",
+      "bytes": 6003,
+      "history": "single version since 16:13:20"
+    }
+  },
+  "commit_whitelist": {
+    "n_paths": 43,
+    "paths": [
+      "reports/CYCLE-21-20261024.md",
+      "v2/evidence/cycle21_recon/commit_window.json",
+      "v2/evidence/cycle21_recon/commit_window.md",
+      "v2/evidence/d27_C_baseline_readings.md",
+      "v2/evidence/d27_gate_prediction_prereg.md",
+      "v2/evidence/d27_gate_verification.md",
+      "v2/evidence/d27_harvest/HANDOFF-to-gate.md",
+      "v2/evidence/d27_harvest/_selftest_c_vs_c/d12c_c_b.json",
+      "v2/evidence/d27_harvest/_selftest_c_vs_c/d27_gates.json",
+      "v2/evidence/d27_harvest/_selftest_c_vs_c/d27_metrics_c_b.json",
+      "v2/evidence/d27_harvest/_selftest_c_vs_c/dm_B.json",
+      "v2/evidence/d27_harvest/_selftest_c_vs_c/dm_B.md",
+      "v2/evidence/d27_harvest/_selftest_c_vs_c/dm_C.json",
+      "v2/evidence/d27_harvest/_selftest_c_vs_c/dm_C.md",
+      "v2/evidence/d27_harvest/_selftest_c_vs_c/l15_c_b.json",
+      "v2/evidence/d27_harvest/_selftest_c_vs_c/p1_count_c_b.json",
+      "v2/evidence/d27_harvest/_selftest_c_vs_c/shape_B.json",
+      "v2/evidence/d27_harvest/_selftest_c_vs_c/shape_C.json",
+      "v2/evidence/d27_harvest/d12c_c_b.json",
+      "v2/evidence/d27_harvest/d27_gates.json",
+      "v2/evidence/d27_harvest/d27_gates.py",
+      "v2/evidence/d27_harvest/d27_metrics.py",
+      "v2/evidence/d27_harvest/d27_metrics_c_b.json",
+      "v2/evidence/d27_harvest/dm_B.json",
+      "v2/evidence/d27_harvest/dm_B.md",
+      "v2/evidence/d27_harvest/dm_C.json",
+      "v2/evidence/d27_harvest/dm_C.md",
+      "v2/evidence/d27_harvest/l15_c_b.json",
+      "v2/evidence/d27_harvest/p1_count.py",
+      "v2/evidence/d27_harvest/p1_count_c_b.json",
+      "v2/evidence/d27_harvest/shape_B.json",
+      "v2/evidence/d27_harvest/shape_C.json",
+      "v2/evidence/d27_shots/d27-B-chat-multi-87e233c4.png",
+      "v2/evidence/d27_shots/d27-B-thread-focus-87e233c4.png",
+      "v2/evidence/d27_shots/d27-C-thread-focus-1fbb9ef5.png",
+      "v2/evidence/d27_shots/render_d27_shots.sh",
+      "v2/evidence/d27_shots/render_wrap.log",
+      "v2/evidence/run_d27_C_n16r60_seed42/code_id_start.txt",
+      "v2/evidence/run_d27_C_n16r60_seed42/frozen_diff_start.txt",
+      "v2/evidence/run_d27_C_n16r60_seed42/git_status_start.txt",
+      "v2/evidence/run_d27_C_n16r60_seed42/meta.json",
+      "v2/evidence/run_d27_C_n16r60_seed42/run_batch.end",
+      "v2/evidence/run_d27_C_n16r60_seed42/run_batch.rc"
+    ],
+    "ignored_check": "none ignored",
+    "rule": "逐条实路径，禁目录通配（run_d27_C 的 run.jsonl/.log 被 .gitignore 排除；d27_shots 的 render_wrap.log 反而被放行）；不含 d3_noiseband_bootstrap.json / d25a_gates.py / code/frontend/sample/dialogue_d27_{C,B}/ / 历史 ?? 项"
+  },
+  "leader_confirmations_mapping": {
+    "1_zero_code_change": "§2.1+§7.2：git log a0fb1eb..dc02e06 -- code/ 为空；4123628/c749850 非 dc02e06 祖先（merge-base --is-ancestor exit=1）；master code/life/agent.py:1453/1478 仍旧文本",
+    "2_B_arm_rc": "§7.1：按六项等价清单判为正常结束；真批 15:32:28-16:23:24 未写 rc（事实缺口）；禁 rc=0 / 禁 rc=9 失败；rc=9/end/log/host.log 均为 14:59:38 preflight 残留",
+    "3_Q3_conflict": "§6 末件内不一致第1条：只保留冲突记录，不自裁（leader 初裁 FAIL，转 verifier）",
+    "4_dirty_items": "d3_noiseband_bootstrap.json 不裹带；dialogue_d27_{C,B} 不入库不删不移（§4.1/§4.3/§8.2）"
+  }
+}

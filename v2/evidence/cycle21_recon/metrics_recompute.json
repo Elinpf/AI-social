@@ -1,0 +1,1076 @@
+{
+  "T0_reference": {
+    "n_msgs": 510,
+    "n_threads": 169,
+    "note": "T0 = run_d12c_off_n16r60_seed42；本项只核『历史 paren 79.41%』这一引用值可否重放",
+    "paren_lead_count": 405,
+    "paren_rate_pct": 79.41,
+    "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12c_off_n16r60_seed42/run.jsonl",
+    "sha256": "3c814121b5f8d4b053358c959c926f4e14b8a57bf2c6206dadc94d6695c81a74"
+  },
+  "arms": {
+    "B": {
+      "F2": {
+        "denominator_adjacent_pairs": 332,
+        "drift_pairs": 222,
+        "drift_rate_pct": 66.87,
+        "rule": "相邻消息 char-bigram Jaccard<0.10 记一次换话头；分组=mixed_key(thread_id 优先)；不看 tag"
+      },
+      "L15": {
+        "by_turn": {
+          "1": {
+            "n": 170,
+            "restate_rate_pct": 0.0,
+            "restate_strong_rate_pct": 0.0
+          },
+          "2": {
+            "n": 89,
+            "restate_rate_pct": 1.12,
+            "restate_strong_rate_pct": 0.0
+          },
+          "3": {
+            "n": 74,
+            "restate_rate_pct": 4.05,
+            "restate_strong_rate_pct": 0.0
+          },
+          "4": {
+            "n": 66,
+            "restate_rate_pct": 6.06,
+            "restate_strong_rate_pct": 0.0
+          },
+          "5": {
+            "n": 53,
+            "restate_rate_pct": 7.55,
+            "restate_strong_rate_pct": 1.89
+          },
+          "6": {
+            "n": 50,
+            "restate_rate_pct": 18.0,
+            "restate_strong_rate_pct": 6.0
+          }
+        },
+        "denominator": "全部 MSG_*；分子=与本线程更早消息共享 ≥1 个 8-gram 的消息数（同线程前向）",
+        "n_msgs": 502,
+        "restate_count": 21,
+        "restate_rate_pct": 4.18,
+        "restate_strong_count": 4,
+        "restate_strong_rate_pct": 0.8,
+        "top_shared": [
+          [
+            "把锄头往地上一杵",
+            2
+          ],
+          [
+            "上一搁方老师你这",
+            1
+          ],
+          [
+            "上那锅汤搅了搅金",
+            1
+          ],
+          [
+            "二婶托我捎的鞋样",
+            1
+          ],
+          [
+            "五那两袋肥记你名",
+            1
+          ]
+        ]
+      },
+      "L7": {
+        "L7_dup_ngram8_rate4": 28.4861,
+        "L7_dup_ngram8_rate_pct": 28.49,
+        "denominator": "全部 MSG_*（全批，不分组、无轮次窗口）",
+        "dup_msgs": 143,
+        "n_msgs": 502,
+        "note": "任务卡称『8 轮窗口复述率』与实现不符：实现为全批 8-gram 近重复率（任一 8-gram 与另一条消息共享即记 1），无窗口、无方向"
+      },
+      "P1P2": {
+        "P1_binary_count": 484,
+        "P1_binary_rate_pct": 96.41,
+        "P1_count_mean": 3.4024,
+        "P1_count_p50": 3.0,
+        "P1_count_sum": 1708,
+        "P1_count_zero_share_pct": 3.59,
+        "P2_count": 239,
+        "P2_thirdparty_rate_pct": 47.61,
+        "detail_patterns": 3,
+        "n_msgs": 502
+      },
+      "cost": {
+        "dialogue_cached": 0,
+        "dialogue_calls": 502,
+        "dialogue_tokens_in_mean_all": 310.8,
+        "dialogue_tokens_in_mean_uncached": 310.8,
+        "dialogue_tokens_in_sum": 156022,
+        "dialogue_tokens_out_mean": 34.53,
+        "dialogue_tokens_out_sum": 17332,
+        "dialogue_uncached": 502,
+        "llm_calls_total": 2869
+      },
+      "paren_len": {
+        "len_mean_excl": 28.01,
+        "len_p50_excl": 26.0,
+        "len_p50_excl_nostrip": 26.0,
+        "len_p50_raw": 36.0,
+        "len_p50_raw_strip": 36.0,
+        "n_msgs": 502,
+        "paren_any_count": 502,
+        "paren_any_rate_pct": 100.0,
+        "paren_head_rate_pct": 100.0,
+        "paren_inner_len_max": 15,
+        "paren_inner_len_p50": 8.0,
+        "paren_lead_count": 502,
+        "paren_mental_share_pct": 0.0,
+        "paren_rate_pct": 100.0,
+        "short_paren_denominator": 502,
+        "short_paren_share_pct": 99.4
+      },
+      "structure": {
+        "channels": {
+          "dm": 449,
+          "public": 53
+        },
+        "ge3_rate_pct_all": 43.53,
+        "ge6_rate_pct_all": 29.41,
+        "ge6_rate_pct_excluding_no_from_threads": 42.74,
+        "msg_types": {
+          "MSG_DM": 449,
+          "MSG_PUBLIC": 53
+        },
+        "msgs_without_from_key_by_event": {
+          "MSG_PUBLIC": 53
+        },
+        "n_agents_speaking": 16,
+        "n_ge3": 74,
+        "n_ge6": 50,
+        "n_ge6_excluding": 50,
+        "n_msgs": 502,
+        "n_msgs_without_from_and_author": 0,
+        "n_msgs_without_from_key": 53,
+        "n_rounds_with_msgs": 55,
+        "n_single_msg_threads": 81,
+        "n_threads_dm_schema": 170,
+        "n_threads_excluding": 117,
+        "n_threads_threadid": 170,
+        "n_threads_without_from_key": 53,
+        "rounds_span": [
+          0,
+          59
+        ],
+        "slot_dist_payload": {
+          "afternoon": 131,
+          "evening": 140,
+          "morning": 131,
+          "night": 100
+        },
+        "thread_size_dist_without_from_key": {
+          "1": 53
+        },
+        "threads_p50": 2.0
+      }
+    },
+    "C": {
+      "F2": {
+        "denominator_adjacent_pairs": 341,
+        "drift_pairs": 216,
+        "drift_rate_pct": 63.34,
+        "rule": "相邻消息 char-bigram Jaccard<0.10 记一次换话头；分组=mixed_key(thread_id 优先)；不看 tag"
+      },
+      "L15": {
+        "by_turn": {
+          "1": {
+            "n": 169,
+            "restate_rate_pct": 0.0,
+            "restate_strong_rate_pct": 0.0
+          },
+          "2": {
+            "n": 88,
+            "restate_rate_pct": 0.0,
+            "restate_strong_rate_pct": 0.0
+          },
+          "3": {
+            "n": 77,
+            "restate_rate_pct": 3.9,
+            "restate_strong_rate_pct": 1.3
+          },
+          "4": {
+            "n": 70,
+            "restate_rate_pct": 2.86,
+            "restate_strong_rate_pct": 1.43
+          },
+          "5": {
+            "n": 54,
+            "restate_rate_pct": 18.52,
+            "restate_strong_rate_pct": 9.26
+          },
+          "6": {
+            "n": 52,
+            "restate_rate_pct": 13.46,
+            "restate_strong_rate_pct": 3.85
+          }
+        },
+        "denominator": "全部 MSG_*；分子=与本线程更早消息共享 ≥1 个 8-gram 的消息数（同线程前向）",
+        "n_msgs": 510,
+        "restate_count": 22,
+        "restate_rate_pct": 4.31,
+        "restate_strong_count": 9,
+        "restate_strong_rate_pct": 1.76,
+        "top_shared": [
+          [
+            "你嫂子家那袋红薯",
+            2
+          ],
+          [
+            "嫂子家那袋红薯秧",
+            2
+          ],
+          [
+            "把老周家那筐青椒",
+            2
+          ],
+          [
+            "李木匠家小孙子那",
+            2
+          ],
+          [
+            "给桂英家小孙子剥",
+            2
+          ]
+        ]
+      },
+      "L7": {
+        "L7_dup_ngram8_rate4": 25.4902,
+        "L7_dup_ngram8_rate_pct": 25.49,
+        "denominator": "全部 MSG_*（全批，不分组、无轮次窗口）",
+        "dup_msgs": 130,
+        "n_msgs": 510,
+        "note": "任务卡称『8 轮窗口复述率』与实现不符：实现为全批 8-gram 近重复率（任一 8-gram 与另一条消息共享即记 1），无窗口、无方向"
+      },
+      "P1P2": {
+        "P1_binary_count": 477,
+        "P1_binary_rate_pct": 93.53,
+        "P1_count_mean": 3.1941,
+        "P1_count_p50": 3.0,
+        "P1_count_sum": 1629,
+        "P1_count_zero_share_pct": 6.47,
+        "P2_count": 206,
+        "P2_thirdparty_rate_pct": 40.39,
+        "detail_patterns": 3,
+        "n_msgs": 510
+      },
+      "cost": {
+        "dialogue_cached": 0,
+        "dialogue_calls": 510,
+        "dialogue_tokens_in_mean_all": 292.04,
+        "dialogue_tokens_in_mean_uncached": 292.04,
+        "dialogue_tokens_in_sum": 148940,
+        "dialogue_tokens_out_mean": 37.84,
+        "dialogue_tokens_out_sum": 19298,
+        "dialogue_uncached": 510,
+        "llm_calls_total": 2878
+      },
+      "paren_len": {
+        "len_mean_excl": 43.43,
+        "len_p50_excl": 41.0,
+        "len_p50_excl_nostrip": 41.0,
+        "len_p50_raw": 41.0,
+        "len_p50_raw_strip": 41.0,
+        "n_msgs": 510,
+        "paren_any_count": 0,
+        "paren_any_rate_pct": 0.0,
+        "paren_head_rate_pct": 0.0,
+        "paren_inner_len_max": null,
+        "paren_inner_len_p50": null,
+        "paren_lead_count": 0,
+        "paren_mental_share_pct": null,
+        "paren_rate_pct": 0.0,
+        "short_paren_denominator": 0,
+        "short_paren_share_pct": null
+      },
+      "structure": {
+        "channels": {
+          "dm": 455,
+          "public": 55
+        },
+        "ge3_rate_pct_all": 45.56,
+        "ge6_rate_pct_all": 30.77,
+        "ge6_rate_pct_excluding_no_from_threads": 45.61,
+        "msg_types": {
+          "MSG_DM": 455,
+          "MSG_PUBLIC": 55
+        },
+        "msgs_without_from_key_by_event": {
+          "MSG_PUBLIC": 55
+        },
+        "n_agents_speaking": 16,
+        "n_ge3": 77,
+        "n_ge6": 52,
+        "n_ge6_excluding": 52,
+        "n_msgs": 510,
+        "n_msgs_without_from_and_author": 0,
+        "n_msgs_without_from_key": 55,
+        "n_rounds_with_msgs": 57,
+        "n_single_msg_threads": 81,
+        "n_threads_dm_schema": 169,
+        "n_threads_excluding": 114,
+        "n_threads_threadid": 169,
+        "n_threads_without_from_key": 55,
+        "rounds_span": [
+          0,
+          59
+        ],
+        "slot_dist_payload": {
+          "afternoon": 133,
+          "evening": 145,
+          "morning": 131,
+          "night": 101
+        },
+        "thread_size_dist_without_from_key": {
+          "1": 55
+        },
+        "threads_p50": 2
+      }
+    }
+  },
+  "denominator_reconciliation": {
+    "B": {
+      "dm_meta_n_messages": 502,
+      "dm_meta_n_threads": 170,
+      "dm_thread_schema": "explicit",
+      "ge6_rate_pct_excluding_no_from_threads": 42.74,
+      "holds_msgs": true,
+      "holds_threads": true,
+      "n_msgs_without_from_key": 53,
+      "n_threads_without_from_key": 53,
+      "recomputed_n_msgs": 502,
+      "recomputed_n_threads_dm_schema": 170,
+      "recomputed_n_threads_threadid": 170,
+      "thread_size_dist_without_from_key": {
+        "1": 53
+      }
+    },
+    "C": {
+      "dm_meta_n_messages": 510,
+      "dm_meta_n_threads": 169,
+      "dm_thread_schema": "explicit",
+      "ge6_rate_pct_excluding_no_from_threads": 45.61,
+      "holds_msgs": true,
+      "holds_threads": true,
+      "n_msgs_without_from_key": 55,
+      "n_threads_without_from_key": 55,
+      "recomputed_n_msgs": 510,
+      "recomputed_n_threads_dm_schema": 169,
+      "recomputed_n_threads_threadid": 169,
+      "thread_size_dist_without_from_key": {
+        "1": 55
+      }
+    }
+  },
+  "gates": {
+    "M1": {
+      "adopt": {
+        "paren_inner_len_p50_B": 8.0,
+        "paren_rate_B": 100.0,
+        "paren_rate_C": 0.0,
+        "short_share_B": 99.4
+      },
+      "pass": true,
+      "rule": "paren 0.00%→>=30% 且 短旁白(<=80 字)占比>=80%",
+      "verdict": "达标"
+    },
+    "P1_binary": {
+      "B": 96.41,
+      "C": 93.53,
+      "ceiling_headroom_pp": 6.47,
+      "ceiling_note": "基线 93.53%，可用空间仅 6.47pp；+2.88pp 已用掉天花板空间的 44.5%，不得直接判『只是加花架子』，须并列连续口径",
+      "delta_pp": 2.88,
+      "pass": false,
+      "threshold_pp": 5.0,
+      "verdict": "破闸/未达"
+    },
+    "P1_count": {
+      "B": 3.4024,
+      "C": 3.1941,
+      "note": "连续口径仅并列补充，不改判据（预登记 §3 阈值一字未动）",
+      "p50": {
+        "B": 3.0,
+        "C": 3.0
+      },
+      "rel_pct": 6.52,
+      "zero_share_pct": {
+        "B": 3.59,
+        "C": 6.47
+      }
+    },
+    "Q1_L15": {
+      "B": 4.18,
+      "C": 4.31,
+      "delta_pp": -0.13,
+      "max_pp": 2.0,
+      "pass": true,
+      "verdict": "达标"
+    },
+    "Q2_L7": {
+      "adopt": {
+        "B": 28.4861,
+        "B_pct2": 28.49,
+        "C": 25.4902,
+        "C_pct2": 25.49,
+        "delta_pp": 2.9959,
+        "delta_pp4": 2.9959,
+        "margin_pp": 0.0041,
+        "pass": true
+      },
+      "contaminated": {
+        "B": 28.4861,
+        "C": 20.59,
+        "delta_pp": 7.8961,
+        "verdict": "无效（重复恶化）"
+      },
+      "note": "采用值擦线过（余量 <0.01pp < 单 seed 噪声），不得引为正面证据；污染口径会误判『重复恶化』"
+    },
+    "Q3_F2": {
+      "adopt": {
+        "B": 66.87,
+        "C": 63.34,
+        "delta_pp": 3.53,
+        "max_pp": 2.0,
+        "pass": false
+      },
+      "contaminated": {
+        "B": 66.87,
+        "C": 66.28,
+        "delta_pp": 0.59
+      },
+      "note": "采用值下 +3.53pp 超 2pp 闸 ⇒ 破闸（此为 dc02e06 判定档未列出的一项）"
+    },
+    "S": {
+      "ge6": {
+        "B": 29.41,
+        "C": 30.77,
+        "n": {
+          "B": 50,
+          "C": 52
+        }
+      },
+      "n_msgs": {
+        "B": 502,
+        "C": 510,
+        "rel_pct": -1.57
+      },
+      "n_threads": {
+        "B": 170,
+        "C": 169,
+        "rel_pct": 0.59
+      },
+      "pass": true,
+      "verdict": "达标"
+    },
+    "T": {
+      "adopt": {
+        "B": 26.0,
+        "C": 41.0,
+        "pass": false,
+        "rel_pct": -36.59,
+        "tol_pct": 10.0
+      },
+      "contaminated": {
+        "B": 26.0,
+        "C": 40.0,
+        "rel_pct": -35.0
+      },
+      "note": "两侧都破（采用 -36.59% / 污染 -35.00%）⇒ 结论稳健"
+    },
+    "cost": {
+      "dialogue_tokens_in_mean_uncached": {
+        "B": 310.8,
+        "C": 292.04
+      },
+      "llm_calls": {
+        "B": 2869,
+        "C": 2878,
+        "rel_pct": -0.31
+      },
+      "note": "破只记录，不判作废（预登记 §3 末行）"
+    }
+  },
+  "inputs": {
+    "B": {
+      "meta_code_sha": "c74985050b86f31c21f4ab90da8d9244b3410251",
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/d27-narration/v2/evidence/run_d27_B_n16r60_seed42/run.jsonl",
+      "sha256": "87e233c421aebeb5ecf3d4f37c74ba721cd6829f3d7e55ec75042e76d350f2f4"
+    },
+    "C": {
+      "meta_code_sha": "f2bf606bf5f6c362a7d4d34b9177f3210d43aabf",
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d27_C_n16r60_seed42/run.jsonl",
+      "sha256": "1fbb9ef5161fd07aa68fcc9fc4038f104ff18b56383a2fc6b31bb3cb5486a188"
+    },
+    "rulers": {
+      "L7_L15_F2": "tools/d5/dialogue_metrics.py (sha8=1d914735)",
+      "P1_wordlist": "v2/evidence/d12c_metrics.py::DETAIL (sha8=c41cb5ac)",
+      "len_p50_excl": "tools/d9/arm_state_check.py::metrics (sha8=c59e2ec3)",
+      "names": "code/config/personas.json (sha8=08d11eb3)"
+    },
+    "threshold_source": "v2/refs/D27-amendment1-merge-duplicate-prereg.md §3",
+    "thresholds": {
+      "M1_paren_min_pct": 30.0,
+      "M1b_short_share_min_pct": 80.0,
+      "P_delta_pp_min": 5.0,
+      "Q1_delta_pp_max": 2.0,
+      "Q2_gain_pp_min": 3.0,
+      "Q2_worse_pp_max": 3.0,
+      "Q3_delta_pp_max": 2.0,
+      "S_rel_tol_pct": 10.0,
+      "T_rel_tol_pct": 10.0
+    }
+  },
+  "note_task_card_mislabel": {
+    "L-7": "任务卡『8 轮窗口复述率』与仓内实现不符：实为全批 8-gram 近重复率（无窗口/无方向）",
+    "slot_dist": "『slot 饱和 slot{1:57,2:199}』在仓内**无生成脚本**（仅 d27_C_arm_acceptance.md 文字）；本脚本只能给可复算替代：payload.slot 四值分布 + 每线程 slot 数分布 + (agent,day,slot) 槽位数。判据层为『不可判（缺口径定义）』"
+  },
+  "reconciliation_vs_harvest": {
+    "items": [
+      {
+        "arm": "C",
+        "delta": 0,
+        "item": "n_msgs",
+        "landed": 510,
+        "match": true,
+        "note": "d12c_c_b.json",
+        "recomputed": 510
+      },
+      {
+        "arm": "C",
+        "delta": 0,
+        "item": "n_threads",
+        "landed": 169,
+        "match": true,
+        "note": "d12c_c_b.json",
+        "recomputed": 169
+      },
+      {
+        "arm": "C",
+        "delta": 0,
+        "item": "threads_p50",
+        "landed": 2,
+        "match": true,
+        "note": "d12c_c_b.json",
+        "recomputed": 2
+      },
+      {
+        "arm": "C",
+        "delta": 0.0,
+        "item": "paren_rate_pct",
+        "landed": 0.0,
+        "match": true,
+        "note": "d12c 口径=起头",
+        "recomputed": 0.0
+      },
+      {
+        "arm": "C",
+        "delta": 0.0,
+        "item": "P1_binary_rate_pct",
+        "landed": 93.53,
+        "match": true,
+        "note": "",
+        "recomputed": 93.53
+      },
+      {
+        "arm": "C",
+        "delta": 0.0,
+        "item": "P2_thirdparty_rate_pct",
+        "landed": 40.39,
+        "match": true,
+        "note": "",
+        "recomputed": 40.39
+      },
+      {
+        "arm": "C",
+        "delta": 0.0,
+        "item": "len_p50_raw",
+        "landed": 41.0,
+        "match": true,
+        "note": "len_p50(raw)=median(len(body))，对照 d27_metrics.len_all_p50；⚠ d12c_metrics.len_p50 实为『去括号后长度中位数』（=len_p50_excl），其 d12c 落盘值 C=41.0/B=26.0 与 len_p50_excl 同源，不是 raw",
+        "recomputed": 41.0
+      },
+      {
+        "arm": "C",
+        "delta": 0.0,
+        "item": "P1_count_mean",
+        "landed": 3.1941,
+        "match": true,
+        "note": "p1_count_c_b.json",
+        "recomputed": 3.1941
+      },
+      {
+        "arm": "C",
+        "delta": 0,
+        "item": "P1_count_sum",
+        "landed": 1629,
+        "match": true,
+        "note": "",
+        "recomputed": 1629
+      },
+      {
+        "arm": "C",
+        "delta": 0.0,
+        "item": "P1_count_p50",
+        "landed": 3.0,
+        "match": true,
+        "note": "",
+        "recomputed": 3.0
+      },
+      {
+        "arm": "C",
+        "delta": 0.0,
+        "item": "P1_count_zero_share_pct",
+        "landed": 6.47,
+        "match": true,
+        "note": "",
+        "recomputed": 6.47
+      },
+      {
+        "arm": "C",
+        "delta": null,
+        "item": "short_paren_share_pct",
+        "landed": null,
+        "match": true,
+        "note": "双方均 null（该臂无旁白，值不存在）d27_metrics",
+        "recomputed": null
+      },
+      {
+        "arm": "C",
+        "delta": null,
+        "item": "paren_inner_len_p50",
+        "landed": null,
+        "match": true,
+        "note": "双方均 null（该臂无旁白，值不存在）",
+        "recomputed": null
+      },
+      {
+        "arm": "C",
+        "delta": 0.0,
+        "item": "len_p50_excl",
+        "landed": 41.0,
+        "match": true,
+        "note": "d27_metrics(strip 版)",
+        "recomputed": 41.0
+      },
+      {
+        "arm": "C",
+        "delta": 0.0,
+        "item": "len_p50_excl_nostrip",
+        "landed": 41.0,
+        "match": true,
+        "note": "shape_gate(不 strip 版)",
+        "recomputed": 41.0
+      },
+      {
+        "arm": "C",
+        "delta": 0.0,
+        "item": "paren_any_rate_frac",
+        "landed": 0.0,
+        "match": true,
+        "note": "shape_gate",
+        "recomputed": 0.0
+      },
+      {
+        "arm": "C",
+        "delta": 0.0,
+        "item": "L15_restate_rate_pct",
+        "landed": 4.31,
+        "match": true,
+        "note": "l15_c_b.json",
+        "recomputed": 4.31
+      },
+      {
+        "arm": "C",
+        "delta": 0.0,
+        "item": "L15_strong_rate_pct",
+        "landed": 1.76,
+        "match": true,
+        "note": "",
+        "recomputed": 1.76
+      },
+      {
+        "arm": "C",
+        "delta": 0.0,
+        "item": "L7_dup_ngram8_rate4",
+        "landed": 25.4902,
+        "match": true,
+        "note": "dm_*.json L_wording（4 位小数，便于核对 2.9959 这类擦线差）",
+        "recomputed": 25.4902
+      },
+      {
+        "arm": "C",
+        "delta": 0.0,
+        "item": "F2_content_drift_rate_pct",
+        "landed": 63.34,
+        "match": true,
+        "note": "",
+        "recomputed": 63.34
+      },
+      {
+        "arm": "C",
+        "delta": 0,
+        "item": "F2_denominator_adjacent_pairs",
+        "landed": 341,
+        "match": true,
+        "note": "",
+        "recomputed": 341
+      },
+      {
+        "arm": "C",
+        "delta": 0.0,
+        "item": "ge6_rate_pct_all",
+        "landed": 30.77,
+        "match": true,
+        "note": "d27_gates.json S.ge6",
+        "recomputed": 30.77
+      },
+      {
+        "arm": "C",
+        "delta": 0,
+        "item": "n_ge6",
+        "landed": 52,
+        "match": true,
+        "note": "d27_gates.json S.ge6.n_ge6",
+        "recomputed": 52
+      },
+      {
+        "arm": "B",
+        "delta": 0,
+        "item": "n_msgs",
+        "landed": 502,
+        "match": true,
+        "note": "d12c_c_b.json",
+        "recomputed": 502
+      },
+      {
+        "arm": "B",
+        "delta": 0,
+        "item": "n_threads",
+        "landed": 170,
+        "match": true,
+        "note": "d12c_c_b.json",
+        "recomputed": 170
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "threads_p50",
+        "landed": 2.0,
+        "match": true,
+        "note": "d12c_c_b.json",
+        "recomputed": 2.0
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "paren_rate_pct",
+        "landed": 100.0,
+        "match": true,
+        "note": "d12c 口径=起头",
+        "recomputed": 100.0
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "P1_binary_rate_pct",
+        "landed": 96.41,
+        "match": true,
+        "note": "",
+        "recomputed": 96.41
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "P2_thirdparty_rate_pct",
+        "landed": 47.61,
+        "match": true,
+        "note": "",
+        "recomputed": 47.61
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "len_p50_raw",
+        "landed": 36.0,
+        "match": true,
+        "note": "len_p50(raw)=median(len(body))，对照 d27_metrics.len_all_p50；⚠ d12c_metrics.len_p50 实为『去括号后长度中位数』（=len_p50_excl），其 d12c 落盘值 C=41.0/B=26.0 与 len_p50_excl 同源，不是 raw",
+        "recomputed": 36.0
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "P1_count_mean",
+        "landed": 3.4024,
+        "match": true,
+        "note": "p1_count_c_b.json",
+        "recomputed": 3.4024
+      },
+      {
+        "arm": "B",
+        "delta": 0,
+        "item": "P1_count_sum",
+        "landed": 1708,
+        "match": true,
+        "note": "",
+        "recomputed": 1708
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "P1_count_p50",
+        "landed": 3.0,
+        "match": true,
+        "note": "",
+        "recomputed": 3.0
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "P1_count_zero_share_pct",
+        "landed": 3.59,
+        "match": true,
+        "note": "",
+        "recomputed": 3.59
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "short_paren_share_pct",
+        "landed": 99.4,
+        "match": true,
+        "note": "d27_metrics",
+        "recomputed": 99.4
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "paren_inner_len_p50",
+        "landed": 8.0,
+        "match": true,
+        "note": "",
+        "recomputed": 8.0
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "len_p50_excl",
+        "landed": 26.0,
+        "match": true,
+        "note": "d27_metrics(strip 版)",
+        "recomputed": 26.0
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "len_p50_excl_nostrip",
+        "landed": 26.0,
+        "match": true,
+        "note": "shape_gate(不 strip 版)",
+        "recomputed": 26.0
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "paren_any_rate_frac",
+        "landed": 1.0,
+        "match": true,
+        "note": "shape_gate",
+        "recomputed": 1.0
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "L15_restate_rate_pct",
+        "landed": 4.18,
+        "match": true,
+        "note": "l15_c_b.json",
+        "recomputed": 4.18
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "L15_strong_rate_pct",
+        "landed": 0.8,
+        "match": true,
+        "note": "",
+        "recomputed": 0.8
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "L7_dup_ngram8_rate4",
+        "landed": 28.4861,
+        "match": true,
+        "note": "dm_*.json L_wording（4 位小数，便于核对 2.9959 这类擦线差）",
+        "recomputed": 28.4861
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "F2_content_drift_rate_pct",
+        "landed": 66.87,
+        "match": true,
+        "note": "",
+        "recomputed": 66.87
+      },
+      {
+        "arm": "B",
+        "delta": 0,
+        "item": "F2_denominator_adjacent_pairs",
+        "landed": 332,
+        "match": true,
+        "note": "",
+        "recomputed": 332
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "ge6_rate_pct_all",
+        "landed": 29.41,
+        "match": true,
+        "note": "d27_gates.json S.ge6",
+        "recomputed": 29.41
+      },
+      {
+        "arm": "B",
+        "delta": 0,
+        "item": "n_ge6",
+        "landed": 50,
+        "match": true,
+        "note": "d27_gates.json S.ge6.n_ge6",
+        "recomputed": 50
+      },
+      {
+        "arm": "C",
+        "delta": 0.0,
+        "item": "dialogue_tokens_in_mean_uncached",
+        "landed": 292.04,
+        "match": true,
+        "note": "d27_gates.json dialogue_token_runtime",
+        "recomputed": 292.04
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "dialogue_tokens_in_mean_uncached",
+        "landed": 310.8,
+        "match": true,
+        "note": "d27_gates.json dialogue_token_runtime",
+        "recomputed": 310.8
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "M1a_paren_rate_B",
+        "landed": 100.0,
+        "match": true,
+        "note": "",
+        "recomputed": 100.0
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "P1_binary_delta_pp",
+        "landed": 2.88,
+        "match": true,
+        "note": "",
+        "recomputed": 2.88
+      },
+      {
+        "arm": "C",
+        "delta": 0.0,
+        "item": "Q2_L7_C_pct",
+        "landed": 25.4902,
+        "match": true,
+        "note": "",
+        "recomputed": 25.4902
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "Q2_L7_B_pct",
+        "landed": 28.4861,
+        "match": true,
+        "note": "",
+        "recomputed": 28.4861
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "Q2_delta_pp",
+        "landed": 2.9959,
+        "match": true,
+        "note": "",
+        "recomputed": 2.9959
+      },
+      {
+        "arm": "B",
+        "delta": 0.0,
+        "item": "T_rel_pct",
+        "landed": -36.59,
+        "match": true,
+        "note": "",
+        "recomputed": -36.59
+      }
+    ],
+    "n_items": 54,
+    "n_match": 54,
+    "n_mismatch": 0,
+    "n_missing": 0
+  },
+  "slot_evidence": {
+    "B": {
+      "msgs_per_agent_day_slot_cell_dist": {
+        "1": 40,
+        "2": 231
+      },
+      "n_agent_day_slot_cells": 271,
+      "n_thread_slot_cells": 314,
+      "payload_slot_dist": {
+        "afternoon": 131,
+        "evening": 140,
+        "morning": 131,
+        "night": 100
+      }
+    },
+    "C": {
+      "msgs_per_agent_day_slot_cell_dist": {
+        "1": 44,
+        "2": 233
+      },
+      "n_agent_day_slot_cells": 277,
+      "n_thread_slot_cells": 317,
+      "payload_slot_dist": {
+        "afternoon": 133,
+        "evening": 145,
+        "morning": 131,
+        "night": 101
+      }
+    }
+  },
+  "verdict": {
+    "adopt_values": {
+      "F2_C": 63.34,
+      "L15_C": 4.31,
+      "L7_C": 25.4902,
+      "len_p50_excl_C": 41.0
+    },
+    "composite": "作废/未达（见逐项）",
+    "contaminated_values": {
+      "F2_drift_pct": 66.28,
+      "L15_restate_pct": 4.12,
+      "L15_strong_pct": 2.16,
+      "L7_dup8_pct": 20.59,
+      "len_p50_excl": 40.0,
+      "source": "v2/evidence/d25a_result.md:26-28"
+    },
+    "mechanism_vs_effect": "M1（旁白机制）四项只作机制层事实，不进效果提升；效果层由 P/Q/T 决定",
+    "why": "M1 过 / P 未达（+2.88pp < +5pp） / T 破（-36.59%） / Q3 破（+3.53pp>2pp） ⇒ 即便 Q1/Q2(擦线)/S 过，仍不能判有效"
+  }
+}

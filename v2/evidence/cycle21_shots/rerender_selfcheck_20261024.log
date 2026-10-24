@@ -1,0 +1,23 @@
+# CYCLE-21 截图重渲染自检日志（只写入 /tmp，不替换 v2/evidence/cycle21_shots 下的取证 PNG）
+# 执行时刻: 2026-10-24T16:34:58+08:00
+# 目的: 记录 4 张图的 render_shots.py 逐张回执行（SHOT OK / blank_retries / ok_count / fail_count）并比对 PNG sha 可复现性
+
+=== [A] C 臂重渲染 ===
+SHOT OK: /tmp/c21rr_C/CYCLE-21C-chat-1fbb9ef5.png  elapsed=1.82s  mean_brightness=35.0(gray601,0-255,黑<8)  max_color_frac=29.98%  blank_retries=0/2
+SHOT OK: /tmp/c21rr_C/CYCLE-21C-rhythm-1fbb9ef5.png  elapsed=1.74s  mean_brightness=32.4(gray601,0-255,黑<8)  max_color_frac=34.44%  blank_retries=0/2
+  "report_sha256": "b9982d49b83dfe2b10a46f8e80b50bd6b2f4169b11fa56036792643b8b44cda9",
+  "threads_json_sha256": "12815e9f36f035bfffee98fe762d054885bfd210d8f367b2b5d79f3a1b249afe",
+  "ok_count": 2,
+  "fail_count": 0,
+      "png_sha256": "d0a33259fa2fd02807d0f8ccc8e7814cf6824c03241d90b7c005c11fa1951030",
+      "png_sha256": "21845927f4d819969843abbf1a6e2a1f9a290d4f08bbb8546f13beaec52653cf",
+
+=== [B] B 臂重渲染 ===
+SHOT OK: /tmp/c21rr_B/CYCLE-21B-chat-87e233c4.png  elapsed=1.80s  mean_brightness=35.4(gray601,0-255,黑<8)  max_color_frac=29.92%  blank_retries=0/2
+SHOT OK: /tmp/c21rr_B/CYCLE-21B-rhythm-87e233c4.png  elapsed=1.75s  mean_brightness=32.4(gray601,0-255,黑<8)  max_color_frac=34.44%  blank_retries=0/2
+  "report_sha256": "f7e36f792b407bc14bacb2a8df356f7abb3c89af96664ab232a5998141ef76ca",
+  "threads_json_sha256": "5c46b58645d16e3cc87ccf4a5d063b1d052c1a560c72ba7dae80477d3ca5b408",
+  "ok_count": 2,
+  "fail_count": 0,
+      "png_sha256": "386eaaddf899d13f6fec03c5f88c52da77627de7b4f7df612c9a89c40e9de132",
+      "png_sha256": "c5ce5f5035a83d66811386c2f5d241e23a2e1860467d82011cf5896f3e06d892",
