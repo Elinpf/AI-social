@@ -1,0 +1,162 @@
+# preflight log
+ts_iso=2026-10-25T00:03:42+08:00
+ts_utc=20261024T160342Z
+repo=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+branch=master
+head=009e95310c5221aef47c9c36f41ddad4f11e627b
+self_pid=930870
+ancestors= 930870 930865 1723526 1723496 1723474 1  
+## 1) concurrency scan
+concurrency_hits orchestration_run=0 run_batch=0 nightly_py=0
+## 2) clean tree check (code/{life,orchestration,config,engine})
+{
+ "batch_landing": null,
+ "blocking": [],
+ "head": "009e95310c5221aef47c9c36f41ddad4f11e627b",
+ "nonblocking": [
+  {
+   "path": "v2/evidence/d3_noiseband_bootstrap.json",
+   "status": "M"
+  },
+  {
+   "path": "code/frontend/sample/dialogue_a5_full6/",
+   "status": "??"
+  },
+  {
+   "path": "code/frontend/sample/dialogue_a5_multiturn/",
+   "status": "??"
+  },
+  {
+   "path": "code/frontend/sample/dialogue_cycle03_ctrl/",
+   "status": "??"
+  },
+  {
+   "path": "code/frontend/sample/dialogue_cycle04_a5/",
+   "status": "??"
+  },
+  {
+   "path": "code/frontend/sample/dialogue_cycle06_f6off/",
+   "status": "??"
+  },
+  {
+   "path": "code/frontend/sample/dialogue_cycle06_f6on/",
+   "status": "??"
+  },
+  {
+   "path": "code/frontend/sample/dialogue_cycle07_d12c_off/",
+   "status": "??"
+  },
+  {
+   "path": "code/frontend/sample/dialogue_cycle07_d12c_on/",
+   "status": "??"
+  },
+  {
+   "path": "code/frontend/sample/dialogue_d27_B/",
+   "status": "??"
+  },
+  {
+   "path": "code/frontend/sample/dialogue_d27_C/",
+   "status": "??"
+  },
+  {
+   "path": "code/frontend/sample/dialogue_f2b_v2_off/",
+   "status": "??"
+  },
+  {
+   "path": "code/frontend/sample/dialogue_r21_scene_off/",
+   "status": "??"
+  },
+  {
+   "path": "code/frontend/sample/dialogue_r21_scene_on/",
+   "status": "??"
+  },
+  {
+   "path": "tools/f2/r10e2e_forget_levels.py",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/cycle06_shots/_blank_check_failed/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/d12h_shots/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/e1_run_scripts/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/forget_levels_f2b_v2_off_a9c74f5.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/forget_levels_g1_b0_d9391a3.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/preflight/clean_tree_20261024T060438Z_9aaceee0_run_batch.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/preflight/clean_tree_20261024T145907Z_834dd2d0_run_batch.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/preflight/clean_tree_20261024T152853Z_04ff044e_run_batch.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/preflight/clean_tree_20261024T153213Z_a8e1c46b_run_batch.json",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/run_d28_C_n16r60_seed43_INVALID_allcached/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/run_d28_C_n16r60_seed43_INVALID_duplicate_stopped/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/run_d28_C_s43_n16r60_seed43/",
+   "status": "??"
+  },
+  {
+   "path": "v2/evidence/run_r10e2e_n16r60_seed42/",
+   "status": "??"
+  }
+ ],
+ "nonblocking_count": 28,
+ "note": "tools/ 下存在未跟踪 .py：需人工确认其不在 code/life 的 import 链上",
+ "repo": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment",
+ "rule": {
+  "hard_fail_prefixes": [
+   "code/life/",
+   "code/orchestration/",
+   "code/config/",
+   "code/engine/"
+  ],
+  "nonblocking_prefixes": [
+   "code/frontend/",
+   "reports/",
+   "v2/refs/",
+   "v2/evidence/",
+   "tools/",
+   "glossary/"
+  ],
+  "source": "leader 裁决 2026-10-20：A0 起跑的 S0a 放宽为「跑批代码树确定」"
+ },
+ "schema_version": "d5-s0a-clean-tree/1.0",
+ "tools_py_present": [
+  {
+   "path": "tools/f2/r10e2e_forget_levels.py",
+   "status": "??"
+  }
+ ],
+ "verdict": "PASS"
+}
+clean_tree_rc=0 out=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/preflight/clean_tree_20261024T160342Z_009e9531_survey_probe.json
+## 3) anchor
+rev_parse_HEAD=009e95310c5221aef47c9c36f41ddad4f11e627b branch=master ts_iso=2026-10-25T00:03:42+08:00
+verdict=PASS

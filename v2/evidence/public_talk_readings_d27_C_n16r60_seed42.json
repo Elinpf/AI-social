@@ -1,0 +1,623 @@
+{
+  "author_topic_crosstab": {
+    "authors_total": 12,
+    "authors_with_breadth_le_2": 11,
+    "by_author": {
+      "P002": {
+        "skill_practice": 3
+      },
+      "P003": {
+        "job_choice": 1,
+        "savings": 2
+      },
+      "P004": {
+        "savings": 2,
+        "skill_practice": 4
+      },
+      "P005": {
+        "savings": 3,
+        "skill_practice": 8
+      },
+      "P006": {
+        "savings": 1
+      },
+      "P007": {
+        "skill_practice": 4
+      },
+      "P008": {
+        "savings": 2,
+        "skill_practice": 5
+      },
+      "P010": {
+        "job_choice": 2,
+        "savings": 3
+      },
+      "P012": {
+        "savings": 2
+      },
+      "P013": {
+        "job_choice": 4,
+        "savings": 2,
+        "skill_practice": 2
+      },
+      "P015": {
+        "savings": 1,
+        "skill_practice": 2
+      },
+      "P016": {
+        "job_choice": 1,
+        "skill_practice": 1
+      }
+    },
+    "not_a_judgment": true,
+    "per_author_topic_breadth": {
+      "P002": 1,
+      "P003": 2,
+      "P004": 2,
+      "P005": 2,
+      "P006": 1,
+      "P007": 1,
+      "P008": 2,
+      "P010": 2,
+      "P012": 1,
+      "P013": 3,
+      "P015": 2,
+      "P016": 2
+    },
+    "probe": true,
+    "stat_unit": "M实例（MSG_PUBLIC 条）",
+    "topic_totals": {
+      "job_choice": 8,
+      "savings": 18,
+      "skill_practice": 29
+    },
+    "usage_note": "作为下一轮「接话」提示词设计的输入（同场不同话题的人才有接话空间）；不进任何判据"
+  },
+  "cross_batch_invariance": [
+    {
+      "code_sha": "625187c31b2c93d80d48bcf60afed1b5f41afc98",
+      "code_sha_short": null,
+      "is_official_ruler": false,
+      "key_presence": {
+        "MSG_DM": {
+          "events": 455,
+          "participants": 455,
+          "place": 455,
+          "reply_to": 455
+        },
+        "MSG_GROUP": {
+          "events": 0,
+          "participants": 0,
+          "place": 0,
+          "reply_to": 0
+        },
+        "MSG_PUBLIC": {
+          "events": 55,
+          "participants": 55,
+          "place": 55,
+          "reply_to": 55
+        }
+      },
+      "log_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_r10e2e_n16r60_seed42/run.jsonl",
+      "log_sha256": "f20f6822b7424bfc40f0820eca0726f635ed57618a04642cf230b20bfddb7476",
+      "meta_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_r10e2e_n16r60_seed42/meta.json",
+      "meta_schema": "full",
+      "msg_public_total": 55,
+      "participants_length_histogram": {
+        "1": 55
+      },
+      "participants_records_missing_key": 0,
+      "participants_records_nonarray": 0,
+      "place_missing_key": 0,
+      "place_nonnull": 0,
+      "place_null": 55,
+      "reply_to_forms": {
+        "empty_string": 0,
+        "json_null": 55,
+        "missing_key": 0,
+        "other": 0,
+        "real_message_id": 0,
+        "string_None": 0
+      },
+      "schema_compatible": true
+    },
+    {
+      "code_sha": "04ff044e7a46f89db6d8273a84806dd7212ef9c4",
+      "code_sha_short": null,
+      "is_official_ruler": false,
+      "key_presence": {
+        "MSG_DM": {
+          "events": 455,
+          "participants": 455,
+          "place": 455,
+          "reply_to": 455
+        },
+        "MSG_GROUP": {
+          "events": 0,
+          "participants": 0,
+          "place": 0,
+          "reply_to": 0
+        },
+        "MSG_PUBLIC": {
+          "events": 55,
+          "participants": 55,
+          "place": 55,
+          "reply_to": 55
+        }
+      },
+      "log_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d28_C_s43_n16r60_seed43/run.jsonl",
+      "log_sha256": "e3518b63f3a587e93f11cf0fa56e4e7c97f807de9e198aab17cb8968051aae36",
+      "meta_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d28_C_s43_n16r60_seed43/meta.json",
+      "meta_schema": "full",
+      "msg_public_total": 55,
+      "participants_length_histogram": {
+        "1": 55
+      },
+      "participants_records_missing_key": 0,
+      "participants_records_nonarray": 0,
+      "place_missing_key": 0,
+      "place_nonnull": 0,
+      "place_null": 55,
+      "reply_to_forms": {
+        "empty_string": 0,
+        "json_null": 55,
+        "missing_key": 0,
+        "other": 0,
+        "real_message_id": 0,
+        "string_None": 0
+      },
+      "schema_compatible": true
+    },
+    {
+      "code_sha": null,
+      "code_sha_short": "a977cb0",
+      "is_official_ruler": false,
+      "key_presence": {
+        "MSG_DM": {
+          "events": 455,
+          "participants": 455,
+          "place": 455,
+          "reply_to": 455
+        },
+        "MSG_GROUP": {
+          "events": 0,
+          "participants": 0,
+          "place": 0,
+          "reply_to": 0
+        },
+        "MSG_PUBLIC": {
+          "events": 55,
+          "participants": 55,
+          "place": 55,
+          "reply_to": 55
+        }
+      },
+      "log_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12c_on_n16r60_seed42/run.jsonl",
+      "log_sha256": "bd2df77fd125cc75c31f261cc05486bd7376d9a9fcd9334f083cf8897e496c87",
+      "meta_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12c_on_n16r60_seed42/meta.json",
+      "meta_schema": "simplified",
+      "msg_public_total": 55,
+      "participants_length_histogram": {
+        "1": 55
+      },
+      "participants_records_missing_key": 0,
+      "participants_records_nonarray": 0,
+      "place_missing_key": 0,
+      "place_nonnull": 0,
+      "place_null": 55,
+      "reply_to_forms": {
+        "empty_string": 0,
+        "json_null": 55,
+        "missing_key": 0,
+        "other": 0,
+        "real_message_id": 0,
+        "string_None": 0
+      },
+      "schema_compatible": true
+    },
+    {
+      "code_sha": "dc93c9d960fc6b6c045807b71943c708310f2db8",
+      "code_sha_short": null,
+      "is_official_ruler": false,
+      "key_presence": {
+        "MSG_DM": {
+          "events": 132,
+          "participants": 0,
+          "place": 132,
+          "reply_to": 0
+        },
+        "MSG_GROUP": {
+          "events": 7,
+          "participants": 0,
+          "place": 7,
+          "reply_to": 0
+        },
+        "MSG_PUBLIC": {
+          "events": 48,
+          "participants": 0,
+          "place": 48,
+          "reply_to": 0
+        }
+      },
+      "log_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d2_before_n16_seed42/run.jsonl",
+      "log_sha256": "c1f86bf61f62b3a0ce8e17e0c2312791cf0262381cd2120c2a63c9b6258963cf",
+      "meta_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d2_before_n16_seed42/meta.json",
+      "meta_schema": "full",
+      "msg_public_total": 48,
+      "participants_length_histogram": {},
+      "participants_records_missing_key": 48,
+      "participants_records_nonarray": 0,
+      "place_missing_key": 0,
+      "place_nonnull": 0,
+      "place_null": 48,
+      "reply_to_forms": {
+        "empty_string": 0,
+        "json_null": 0,
+        "missing_key": 48,
+        "other": 0,
+        "real_message_id": 0,
+        "string_None": 0
+      },
+      "schema_compatible": false
+    }
+  ],
+  "diagnostics": {
+    "author_list": [
+      "P002",
+      "P003",
+      "P004",
+      "P005",
+      "P006",
+      "P007",
+      "P008",
+      "P010",
+      "P012",
+      "P013",
+      "P015",
+      "P016"
+    ],
+    "distinct_authors": 12,
+    "distinct_thread_ids": 55,
+    "each_msg_owns_thread": true,
+    "each_msg_owns_thread_note": "true = 无任何 thread_id 被复用（每条消息独占一个线程）；旧字段 thread_id_reuse 语义相反、已删除",
+    "note": "仅作旁证，不构成任何判据；分母 55 < 68，全部 probe",
+    "refs_length_histogram": {
+      "0": 55
+    },
+    "scope_histogram": {
+      "global": 55
+    },
+    "stat_unit": "M实例（MSG_PUBLIC 条）",
+    "topic_histogram": {
+      "job_choice": 8,
+      "savings": 18,
+      "skill_practice": 29
+    },
+    "turn_index_histogram": {
+      "0": 55
+    }
+  },
+  "discipline": {
+    "probe_threshold_denominator": 68,
+    "ratio_min_denominator": 30,
+    "rules": [
+      "分母 < 30：只报事件数，不报比率",
+      "分母 < 68：probe=true，占比只作点估计",
+      "单 seed 点估计：不写显著、不给 CI、不跨批比较（跨批只做结构不变性自检）",
+      "读数不回改口径；口径与实现同文件共存，改动须同步改头部注释与变更记录",
+      "code_sha 一律取 meta.json；scale 一律从 meta 读；读不到写 UNKNOWN"
+    ]
+  },
+  "inputs": {
+    "code_sha": "f2bf606bf5f6c362a7d4d34b9177f3210d43aabf",
+    "code_sha_source": "meta.json:code_sha（跑批时点代码身份）",
+    "extra_log_count": 4,
+    "log_bytes": 56531099,
+    "log_lines": 116308,
+    "log_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d27_C_n16r60_seed42/run.jsonl",
+    "log_sha256": "1fbb9ef5161fd07aa68fcc9fc4038f104ff18b56383a2fc6b31bb3cb5486a188",
+    "meta_bytes": 5780,
+    "meta_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d27_C_n16r60_seed42/meta.json",
+    "meta_run_sha256": "1fbb9ef5161fd07aa68fcc9fc4038f104ff18b56383a2fc6b31bb3cb5486a188",
+    "meta_run_sha256_matches_log": true,
+    "meta_sha256": "e73acb4683fbafd322b0406e59f825ed5a6f8298db104f8333e4dcf431fcb793",
+    "msg_public_type": "MSG_PUBLIC",
+    "repo_head_at_run": "009e95310c5221aef47c9c36f41ddad4f11e627b",
+    "repo_head_at_run_note": "当前工作树 HEAD，**不是**该批跑批身份，仅供对照；引用必须用 code_sha",
+    "script_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/public_talk/public_talk_metrics.py",
+    "script_sha256": "b2820d719236e43cdfe4f20282085336af005e783fad21bf02bd428803010edc"
+  },
+  "invariance_note": {
+    "becomes_nonzero_after_wiring": true,
+    "claim": "在 D2 schema 及之后的各批（d27_C / r10e2e / d28_C_s43 / d12c_on）上，「MSG_PUBLIC 条数 / participants 长度直方图 / reply_to 形态」三项量是**结构不变量**，对「生活气息」没有鉴别力：数值完全相同而对话内容完全不同。它们现在只能证明「公开面未接线（无接话通道、无在场多人）」；将来接线后才会从 0/55 变成非零。",
+    "hard_constraint": "本不变量不得被用于论证改造无效或改造有效，只能证「公开面未接线」；任何以「三项量没变」为由否定某次改造的写法都属误用。",
+    "no_discrimination_before_wiring": true,
+    "not_a_quality_metric": true,
+    "scope": "D2 schema 及之后、n16r60 的 4 批；v0-anchor（schema 断代，48 条且无键）不在数值比较范围内",
+    "v0_anchor_note": "v0-anchor 只比结构存在性（participants / reply_to 键存在数 = 0），不比数值 48 vs 55"
+  },
+  "invariance_summary": {
+    "all_extra_batches_identical_to_main": false,
+    "identical_among_schema_compatible_batches": true,
+    "identical_scope_note": "all_extra_batches_identical_to_main 会把 schema 断代批（v0-anchor）算成 false；判断「不变量成立范围」应看 identical_among_schema_compatible_batches",
+    "main_batch_signature": {
+      "msg_public_total": 55,
+      "participants_length_histogram": {
+        "1": 55
+      },
+      "reply_to_forms": {
+        "empty_string": 0,
+        "json_null": 55,
+        "missing_key": 0,
+        "other": 0,
+        "real_message_id": 0,
+        "string_None": 0
+      }
+    },
+    "numeric_comparison_scope": "只有「schema_compatible=true 且条数一致」的批次可参与数值比较；v0-anchor 属 schema 断代批（48≠55、键存在数 0），只能比结构存在性",
+    "per_batch_identical_to_main": {
+      "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12c_on_n16r60_seed42/run.jsonl": true,
+      "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d28_C_s43_n16r60_seed43/run.jsonl": true,
+      "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d2_before_n16_seed42/run.jsonl": false,
+      "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_r10e2e_n16r60_seed42/run.jsonl": true
+    },
+    "per_batch_numerically_comparable_to_main": {
+      "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d12c_on_n16r60_seed42/run.jsonl": true,
+      "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d28_C_s43_n16r60_seed43/run.jsonl": true,
+      "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d2_before_n16_seed42/run.jsonl": false,
+      "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_r10e2e_n16r60_seed42/run.jsonl": true
+    },
+    "schema_incompatible_batches": [
+      "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d2_before_n16_seed42/run.jsonl"
+    ]
+  },
+  "invocation": {
+    "argv": [
+      "tools/public_talk/public_talk_metrics.py",
+      "--log",
+      "v2/evidence/run_d27_C_n16r60_seed42/run.jsonl",
+      "--meta",
+      "v2/evidence/run_d27_C_n16r60_seed42/meta.json",
+      "--extra-log",
+      "v2/evidence/run_r10e2e_n16r60_seed42/run.jsonl",
+      "--extra-log",
+      "v2/evidence/run_d28_C_s43_n16r60_seed43/run.jsonl",
+      "--extra-log",
+      "v2/evidence/run_d12c_on_n16r60_seed42/run.jsonl",
+      "--extra-log",
+      "v2/evidence/run_d2_before_n16_seed42/run.jsonl",
+      "--out",
+      "<OUT>"
+    ],
+    "argv_joined": "tools/public_talk/public_talk_metrics.py --log v2/evidence/run_d27_C_n16r60_seed42/run.jsonl --meta v2/evidence/run_d27_C_n16r60_seed42/meta.json --extra-log v2/evidence/run_r10e2e_n16r60_seed42/run.jsonl --extra-log v2/evidence/run_d28_C_s43_n16r60_seed43/run.jsonl --extra-log v2/evidence/run_d12c_on_n16r60_seed42/run.jsonl --extra-log v2/evidence/run_d2_before_n16_seed42/run.jsonl --out <OUT>",
+    "normalization": "D7：输出路径已归一化为占位符 <OUT>（`--out` 与 `--out=` 两种写法都处理），使读数 sha256 不依赖输出文件路径；其余参数（--log / --meta / 全部 --extra-log）原样保留，故 argv_joined 仍是可直接复制的命令，只是把 --out 换成你自己的路径即可。",
+    "note": "本读数由该命令行产生；复算必须使用同一条命令（尤其 --meta，否则 inputs 会缺 3 个键）",
+    "out_path_redacted": true
+  },
+  "judgeability": {
+    "can_judge_as_descriptive": true,
+    "cannot_judge": [
+      "place_adjacency：payload.place 恒 null，本规模下无法判定",
+      "任何跨批/跨臂的「变好/变差」比较：三项量本身是结构不变量，且本批单 seed 无对照",
+      "任何「显著」「因果」结论：无重复、无 CI",
+      "「公开渠道不存在多人对话」的普适结论：只能写「本批未观测到可见集合 >1 的公开消息」，且 participants 是可见集合而非收件人"
+    ],
+    "scale_desc": "seed=42 agents_n=16 rounds=60 （来源 meta.json）；M实例 n=55；单批单次、无对照"
+  },
+  "msg_graph_degree": {
+    "denominator_dm_reply": 341,
+    "dm_reply_to_hit_dm_msg_uid": 341,
+    "dm_reply_to_hit_pub_msg_uid": 0,
+    "dm_reply_to_nonnull": 341,
+    "isolated_nodes": true,
+    "not_a_judgment": true,
+    "note": "DM 的 reply_to 非空 341 条全部命中 DM msg_uid（341/341），命中 PUB msg_uid = 0 ⇒ 公开消息在消息图里入度 0、出边 0，是孤立节点",
+    "probe": true,
+    "pub_in_degree_total": 0,
+    "pub_in_degree_zero": true,
+    "pub_out_degree_refs_nonempty": 0,
+    "pub_out_degree_reply_nonnull": 0,
+    "pub_out_degree_zero": true,
+    "stat_unit": "边（reply_to 引用关系）"
+  },
+  "msg_public_total": {
+    "denominator": null,
+    "field_source": "顶层字段 type == 'MSG_PUBLIC'",
+    "line_span_in_log": {
+      "first": 54,
+      "last": 87592
+    },
+    "numerator": 55,
+    "probe": true,
+    "probe_reason": "本量自身即分母；以它为分母的比率，分母 55 < 68 ⇒ 一律 probe",
+    "ratio": null,
+    "stat_unit": "MSG_PUBLIC 事件条数（1 条 = 1 行 jsonl = 1 次公开发言）",
+    "value": 55
+  },
+  "participants_length_dist": {
+    "bucket_policy": "histogram 仅含「键存在且为数组」的样本；缺键/非数组单列，绝不并入 \"0\" 桶",
+    "denominator": 55,
+    "field_source": "payload.participants（数组，取 len）",
+    "histogram_sample_denominator": 55,
+    "length_histogram": {
+      "1": 55
+    },
+    "length_values_set": [
+      1
+    ],
+    "numerator_len_gt_1": 0,
+    "probe": true,
+    "probe_reason": "分母 55 < 68：占比只作点估计，不可作判据，不得写「显著」",
+    "ratio_len_gt_1": 0.0,
+    "ratio_suppressed_because_den_lt_30": false,
+    "records_missing_key": 0,
+    "records_nonarray": 0,
+    "semantics_note": "participants 为**线程参与者集合**（同一 thread_id 内取值恒定，本批实测 169 个线程中不一致者 0 个），**不是收件人**（DM 的收件人是 `to`），也不是消息级可见性开关；长度 > 1 不代表多人群聊、也不代表多人接话。",
+    "sender_in_participants": {
+      "denominator": 510,
+      "note": "发送方 = MSG_PUBLIC 的 author / MSG_DM 的 from；DM 无 author 字段，不可用 author 判定",
+      "numerator": 510
+    },
+    "stat_unit": "M实例（MSG_PUBLIC 条）",
+    "thread_consistency": {
+      "definition": "按 (事件类型, thread_id) 分组，组内 participants 元组是否唯一",
+      "threads_checked": 169,
+      "threads_with_inconsistent_participants": 0
+    }
+  },
+  "place_adjacency": {
+    "denominator_pairs": 54,
+    "field_source": "payload.place",
+    "grep_commands_used": [
+      "grep -c '\"type\":\"MSG_PUBLIC\"' <RUN>/run.jsonl   # -> 55",
+      "grep '\"type\":\"MSG_PUBLIC\"' <RUN>/run.jsonl | grep -c '\"place\":null'   # -> 55",
+      "grep '\"type\":\"MSG_PUBLIC\"' <RUN>/run.jsonl | grep -c '\"place\":[^n]'   # -> 0（非 null place 条数）",
+      "grep '\"type\":\"MSG_PUBLIC\"' <RUN>/run.jsonl | grep -c '\"reply_to\":null'   # -> 55"
+    ],
+    "judgeable_at_this_scale": false,
+    "missing_field": "payload.place",
+    "missing_kind": "值为 null 55 条",
+    "nonnull_place_records": 0,
+    "numerator_same_place_pairs": null,
+    "place_value_histogram": {
+      "null": 55
+    },
+    "probe": true,
+    "ratio_same_place": null,
+    "stat_unit": "msg_adjacent_pair（MSG 子序列上相邻两条 MSG_PUBLIC 构成 1 对）",
+    "status": "UNVERIFIED",
+    "why": "place 键存在但值恒为 null：非 null 覆盖 0/55 条（覆盖率 0.0），不满足 100% 覆盖 ⇒ 相邻对「同 place」无从判定。按纪律写 UNVERIFIED，不自造近似口径（不用 slot / topic / PLACE_ARRIVED / ACTIVITY_STARTED 顶替，不插补）。"
+  },
+  "pub_next_to_dm": {
+    "adjacent_next_msg_same_author": 0,
+    "definition_official": "在 MSG_DM/MSG_PUBLIC/MSG_GROUP 子序列上取紧邻下一条（跳过非消息事件）",
+    "denominator": 55,
+    "next_msg_type_histogram": {
+      "MSG_DM": 40,
+      "MSG_PUBLIC": 15
+    },
+    "not_a_judgment": true,
+    "numerator_next_is_dm": 40,
+    "probe": true,
+    "ratio_next_is_dm": 0.727273,
+    "raw_row_definition": {
+      "definition": "原始 jsonl 行序上的下一行事件类型（不跳过任何事件）",
+      "next_raw_event_type_histogram": {
+        "LLM_CALL": 12,
+        "MEMORY_RETRIEVE": 5,
+        "MEMORY_WRITE": 23,
+        "OFFER_ACCEPTED": 14,
+        "TIME_MARK": 1
+      },
+      "note": "原始行序口径下紧邻的通常是 MEMORY_WRITE/OFFER_ACCEPTED 等事件，与子序列口径差异极大；引用必须写明口径",
+      "numerator_next_raw_is_dm": 0,
+      "within_next_3_raw_rows_contains_dm": 0
+    },
+    "stat_unit": "M实例（MSG_PUBLIC 条）",
+    "within_next_3_msgs_contains_dm": 53
+  },
+  "reply_to_forms": {
+    "denominator": 55,
+    "field_source": "payload.reply_to（键可能缺失 / 值可能为 null / 字符串）",
+    "forms": {
+      "empty_string": 0,
+      "json_null": 55,
+      "missing_key": 0,
+      "other": 0,
+      "real_message_id": 0,
+      "string_None": 0
+    },
+    "note": "CYCLE-22 §4.3 自述的「取值集合恒 ['None']」= Python repr(None) = 本表 json_null；本表把 缺键 / JSON null / 字符串 'None' / 空串 分开计数，四者不可合并",
+    "numerator_nonnull_reply_to": 0,
+    "other_examples": [],
+    "probe": true,
+    "ratio_nonnull_reply_to": 0.0,
+    "stat_unit": "M实例（MSG_PUBLIC 条）"
+  },
+  "ruler": "public_talk/descriptive-3（描述性尺子；不发明编号，仅本文件内自解释命名）",
+  "scale": {
+    "agents_n": 16,
+    "complete": true,
+    "model": "DeepSeek-Flash",
+    "provider": "openai_compat",
+    "rounds": 60,
+    "seed": 42,
+    "source": "meta.json",
+    "unknown_fields": []
+  },
+  "schema_gate": {
+    "key_presence": {
+      "MSG_DM": {
+        "author": 0,
+        "body": 455,
+        "events": 455,
+        "msg_id": 455,
+        "msg_uid": 455,
+        "participants": 455,
+        "place": 455,
+        "refs": 455,
+        "reply_to": 455,
+        "scope": 0,
+        "thread_id": 455,
+        "topic": 455,
+        "turn_index": 455
+      },
+      "MSG_GROUP": {
+        "author": 0,
+        "body": 0,
+        "events": 0,
+        "msg_id": 0,
+        "msg_uid": 0,
+        "participants": 0,
+        "place": 0,
+        "refs": 0,
+        "reply_to": 0,
+        "scope": 0,
+        "thread_id": 0,
+        "topic": 0,
+        "turn_index": 0
+      },
+      "MSG_PUBLIC": {
+        "author": 55,
+        "body": 55,
+        "events": 55,
+        "msg_id": 55,
+        "msg_uid": 55,
+        "participants": 55,
+        "place": 55,
+        "refs": 55,
+        "reply_to": 55,
+        "scope": 55,
+        "thread_id": 55,
+        "topic": 55,
+        "turn_index": 55
+      }
+    },
+    "meta_required": true,
+    "missing_key_events": {
+      "any_of_participants_or_reply_to": 0,
+      "participants": 0,
+      "place": 0,
+      "reply_to": 0
+    },
+    "msg_public_events": 55,
+    "policy": "取键先判 `key in payload`：缺失显式计入 missing_key_events 并置 schema_compatible=false；绝不静默按 0 处理，也不 KeyError 崩溃；缺键样本不并入任何数值桶。v0-anchor 批（log sha c1f86bf6…、code_sha dc93c9d9、n16 r84）MSG_DM=132 / MSG_GROUP=7 / MSG_PUBLIC=48 的 participants、reply_to 键存在数均为 0，正是本闸要拦的形态。",
+    "required_keys": [
+      "participants",
+      "reply_to",
+      "place"
+    ],
+    "schema_compatible": true,
+    "schema_incompatible_reasons": []
+  },
+  "thread_isolation": {
+    "dm_thread_ids": 114,
+    "intersection_count": 0,
+    "isolated": true,
+    "not_a_judgment": true,
+    "note": "交集为 0 ⇒ 公开线程与私聊线程完全隔离，公开面自成一套线程，不流入对话线",
+    "probe": true,
+    "pub_thread_ids": 55,
+    "stat_unit": "thread_id 集合"
+  }
+}
