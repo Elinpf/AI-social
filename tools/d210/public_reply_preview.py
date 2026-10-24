@@ -163,6 +163,10 @@ def main() -> int:
         "predicted_reply_rate_pct": round(100.0 * len(predicted) / len(pub), 2) if pub else None,
         "predicted_by_round": dict(sorted(per_round.items())),
         "predicted_sample": predicted[:5],
+        "f2_note": ("⚠ 本工具的 jaccard 用**简化 bigram（只去空白）**，与权威口径 "
+                    "tools/d5/dialogue_metrics.py::content_bigrams（去括号旁白/去agent id/去标点空白/去STOP_CHARS）"
+                    "**不同** ⇒ 本文件里的 public/dm 漂移率只作附注，**不得当闸门上界**；"
+                    "闸门唯一参照见 v2/evidence/d210_f2_content_drift_tool.json（DM 基线 0.633431）。"),
         "f2_content_drift_dm_adjacent_pairs": dm_d[0],
         "f2_content_drift_dm_rate_pct": dm_d[2],
         "f2_content_drift_public_adjacent_pairs": pub_d[0],

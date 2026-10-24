@@ -1,0 +1,32 @@
+{
+  "log": "v2/evidence/run_d27_C_n16r60_seed42/run.jsonl",
+  "arm_code_sha": "f2bf606",
+  "command": "python3 tools/d5/dialogue_metrics.py --log v2/evidence/run_d27_C_n16r60_seed42/run.jsonl",
+  "F-2_content_drift": {
+    "denominator_adjacent_pairs": 341,
+    "drift_rate": 0.633431,
+    "jaccard_all": {
+      "max": 0.5,
+      "mean": 0.085271,
+      "min": 0.0,
+      "n": 341,
+      "p10": 0.0,
+      "p50": 0.074074,
+      "p90": 0.179487,
+      "stdev": 0.070039
+    },
+    "jaccard_switched": {
+      "max": null,
+      "mean": null,
+      "min": null,
+      "n": 0,
+      "p10": null,
+      "p50": null,
+      "p90": null,
+      "stdev": null
+    },
+    "rule": "内容侧话题漂移：相邻消息 char-bigram Jaccard<0.10 记一次换话头；**不以 tag 作否决项**（tag 恒定是引擎构造，不是对话事实）"
+  },
+  "F-2_topic_drift_status": "LEGACY_DEAD_RULER",
+  "note": "**闸门唯一参照**：口径=tools/d5/dialogue_metrics.py::content_bigrams（去括号旁白/去 agent id/去标点空白/去 STOP_CHARS 后的 char-bigram），阈值 jaccard<0.10 记漂移，分母=同一 thread_id 的相邻对。"
+}
