@@ -4,6 +4,7 @@
 > 审计与定稿时刻：2026-10-23 12:15–12:26 (+08:00)
 > 仓库：`/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment`
 > 改动基线 sha：`2a99344ead2e16be15ecd0feb415f250f1e6ce3f`（`master`，2026-10-23T11:56:07+08:00）
+> **2026-10-25 收口补记**：本分支已 **rebase 到 `master d1d60e4`**，rebase 后单测复跑全绿；报告编号由 `R23` 改 `R25`（master 的 R23 已被 `R23-solitude-idle.md` 占用）。见 §9。
 > 分支 / worktree：`feat/day-type-calendar` @ `.worktrees/feat-day-type-calendar`
 > 实现归属：life-dim-engineer（R2）；本报告对 R2 的每条结论**自行复跑**后才盖章。
 
@@ -268,11 +269,11 @@ cd /tmp/base_2a99344   # 与 tree_fingerprint.sh 同口径：每个 tracked 文�
 
 ## 4. 真实截图（1 张；性质＝纯函数输出渲染图，**不是**居民对话截图）
 
-**图**：`v2/evidence/r25_calendar/r23-calendar-prompts.png`（3000×3000，2× DPR 全页截图；HTML 源 `v2/evidence/r25_calendar/r23-calendar-prompts.html`）
+**图**：`v2/evidence/r25_calendar/r25-calendar-prompts.png`（3000×3000，2× DPR 全页截图；HTML 源 `v2/evidence/r25_calendar/r25-calendar-prompts.html`）
 
 ```bash
-sha256sum v2/evidence/r25_calendar/r23-calendar-prompts.png  # a7e9d5ce3e5a8ec50656ed00…
-sha256sum v2/evidence/r25_calendar/r23-calendar-prompts.html # 7455c68b039f02376d05b7ff…
+sha256sum v2/evidence/r25_calendar/r25-calendar-prompts.png  # a7e9d5ce3e5a8ec50656ed00…
+sha256sum v2/evidence/r25_calendar/r25-calendar-prompts.html # 7455c68b039f02376d05b7ff…
 ```
 
 **图注（请勿误读，字面口径）**：本图是 `code/life/calendar.py::render()` 与 `LifeLayerAgent._dialogue_prompt()` 的**真实装配输出的渲染图，不是居民真实对话截图**。本轮**未跑批、未调用任何 LLM**，因此不存在"跑出来的台词"。本图只证明「日历事实能被写进哪一行、写成什么人话」，**不构成任何效果读数**。
@@ -289,8 +290,8 @@ with sync_playwright() as p:
     b = p.chromium.launch(executable_path="/root/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome",
                           args=["--no-sandbox", "--disable-gpu"])
     pg = b.new_page(viewport={"width":1500,"height":1500}, device_scale_factor=2)
-    pg.goto("http://127.0.0.1:8899/r23-calendar-prompts.html", wait_until="networkidle")
-    pg.screenshot(path="r23-calendar-prompts.png", full_page=True); b.close()
+    pg.goto("http://127.0.0.1:8899/r25-calendar-prompts.html", wait_until="networkidle")
+    pg.screenshot(path="r25-calendar-prompts.png", full_page=True); b.close()
 PY
 pkill -f "http[.]server 8899"
 ```
@@ -375,3 +376,164 @@ from life.tests.support.mini_kernel import MiniKernel
 #    把「输入 → 真实输出行 → sha256」与「OFF/ON 提示词逐行对照」写进 HTML，
 #    再按 §4 的 Playwright 命令截图）
 ```
+
+
+---
+
+## 9. 本轮收口（2026-10-25 窗口）：rebase + 消编号冲突 + 单测复跑 + OFF 等价性跨树对拍 + 真截图（**零跑批 / 零 LLM**）
+
+> 本节的定位：把已经写好、但**停留在 10-23 那次 rebase 之前**的状态，推到「可跑且证据自洽」。
+> 性质：**零跑批、零 LLM 调用、零 `obs llm-cost`**（本轮窗口明确禁止起批次） ⇒ 本节**不新增任何效果结论**，效果仍为**未测**。
+> 施工时刻：2026-10-25 04:07–04:20 (+08:00)。工作树：`.worktrees/feat-day-type-calendar`（**只在这里改 `code/life`**，主树 master 未动）。
+
+### 9.1 施工纪律留痕：起任何命令前先 `pgrep`（本窗口正是"批在飞"）
+
+```bash
+$ pgrep -af 'orchestration run|run_batch' | grep -v pgrep
+1417039 /usr/bin/bash tools/d2/run_batch.sh --out-dir v2/evidence/run_d29_Bp_n16r60_seed42 --seed 42 --agents 16 --rounds 60 --side-root /tmp/d29_Bp_s42_v1
+1417145 python3 -m orchestration run --life --seed 42 --agents 16 --rounds 60 --out .../.worktrees/d29-syntax-diversity/v2/evidence/run_d29_Bp_n16r60_seed42/run.jsonl --flush-every 2 --side-root /tmp/d29_Bp_s42_v1
+```
+
+⇒ **D2.9 B′ 批（另一 worktree）在飞**，故本窗口**只做离线工作**（rebase / 单测 / 纯函数对拍 / 页面渲染），
+**未起任何 `run_batch.sh`、未调一次 LLM**。串行纪律未被违反。
+
+### 9.2 rebase：`d39c789 @ 2a99344` → **`f338094 @ d1d60e4`**
+
+```bash
+$ cd .worktrees/feat-day-type-calendar && git rebase master
+# Rebasing (1/1)
+# Auto-merging reports/README.md
+# CONFLICT (content): Merge conflict in reports/README.md
+```
+
+- **唯一冲突**：`reports/README.md`（索引表）。解法：保留 master 的 `R21/R22/R23/D12-F` 行，把日历行**改号 R25 后追加**在 `D12-F` 行之后；不删任何人已写的行。
+- **代码零冲突**（可复算）：master 自 `2a99344` 起**未改过** `code/life/agent.py`
+  ```bash
+  $ git diff --stat 2a99344 master -- code/life/agent.py
+  # （无输出）
+  ```
+  ⇒ 本臂 +41 行的接线在 rebase 后**逐字面未变**（内容 sha 见 §3 与 §9.4）。
+- rebase 后 HEAD：`f338094`（"feat(life) + reports(R25): 日历臂…"）；证据提交 `bfef816`。
+
+### 9.3 单测复跑（rebase 后必须重跑，不复用 10-23 的旧结论）
+
+```bash
+$ cd .worktrees/feat-day-type-calendar/code
+$ python3 -m pytest life/tests/test_calendar_day_type.py -q
+............................                                             [100%]
+28 passed in 0.34s
+
+$ python3 -m pytest life/tests -q
+207 passed in 186.06s (0:03:06)
+
+$ python3 -m pytest tests -q
+597 passed, 1 skipped in 83.31s (0:01:23)
+```
+
+⇒ 与 10-23 审计时的 `207 + 597 passed` 一致；**rebase 未打破任何单测**。
+
+### 9.4 报告/证据编号冲突消除（R23 → **R25**）
+
+占用核查（先查再改）：
+
+```bash
+$ ls reports | grep -E '^R2[0-9]'
+R20-f6-crossday-memory.md
+R22-d12d-t2-judge.md
+R23-solitude-idle.md      # ← master 已占 R23
+R24-public-talk-baseline.md   # ← R24 亦已被占用（文件在，README 索引未列行）
+```
+
+故取 **R25**。改名与自引用同步（全部在 `f338094` 内）：
+
+| 类别 | 改前 | 改后 |
+|---|---|---|
+| 报告文件 | `reports/R23-day-type-calendar.md` | `reports/R25-day-type-calendar.md` |
+| 证据目录 | `v2/evidence/r23_calendar/` | `v2/evidence/r25_calendar/` |
+| 渲染图 | `r23-calendar-prompts.{html,png}` | `r25-calendar-prompts.{html,png}` |
+| 报告内自引用 | `# R23 ·`、路径、`本轮只追加 R23 一行` | 同步改号（`grep -n 'R23' reports/R25-day-type-calendar.md` **零命中**） |
+| README 索引行 | 无（冲突块内为 `R23` 行） | `| **R25** | [日历臂…](R25-day-type-calendar.md) |` |
+
+### 9.5 OFF 等价性：**跨树对拍**（新工具，两把尺子）
+
+新增只读对拍器 `tools/calendar/off_equiv_prompts.py`（sha256 `8fe3e34afe502a4e79b1df21dcd18dc50a27acf0ac67c14206d9f549fd0bada6`）：
+在两棵树各构造一个最小 `LifeLayerAgent`（同 persona P003 / 同同伴 P007 / 同 `_wv()` 世界视图），
+**强制 `LIFE_PROMPT_CALENDAR` 缺省**后取 `_dialogue_prompt` / `_reply_prompt` 的**文本 sha256**；再取 ON 态做"减行回 OFF"核对。
+
+```bash
+# ① 主树（master d1d60e4，无 calendar 模块）
+$ cd <repo> && PYTHONPATH=code python3 <分支>/tools/calendar/off_equiv_prompts.py --tree "$PWD" --out /tmp/prompt_equiv_master.json
+# ② 分支树（f338094，含日历臂）
+$ cd .worktrees/feat-day-type-calendar && PYTHONPATH=code python3 tools/calendar/off_equiv_prompts.py --tree "$PWD" --out v2/evidence/r25_calendar/prompt_equiv_branch.json
+```
+
+两路读数（原件 `v2/evidence/r25_calendar/prompt_equiv_{master,branch}.json`）：
+
+| 量（`LIFE_PROMPT_CALENDAR` 缺省 ⇒ OFF） | master `d1d60e4` | 分支 `f338094` | 结论 |
+|---|---|---|---|
+| `dialogue_prompt_sha256` | `433147fdb45b7a2332b81418e0370477cc1bc87f701354361aaf6a53c33115a9` | **同左** | **逐字节一致** |
+| `reply_prompt_sha256` | `be6c67c2821b1ec1f9f0bd4736f504ac26204daab762964f0f76607e08229d1f` | **同左** | **逐字节一致** |
+| `dialogue_len` / `reply_len` | 355 / 368 | 355 / 368 | 等长 |
+| 日历标记行出现次数（两条提示词） | 0 / 0 | 0 / 0 | OFF 不出现 |
+| ON 态 `delta_len_dialogue` / `reply` | 0 / 0（master 无该臂，env 无效） | **+62 / +62** | 见下 |
+| ON 减掉标记行后 == OFF | true（空操作） | **true / true** | 「只差一行」成立 |
+
+- ON 态分支树：`dialogue_prompt_sha256 b429bfa1…`、`reply_prompt_sha256 e8664dc8…`，标记行各出现 **1** 次，**各 +62 字符**（与 §8① 的 `+62~+66` 口径一致；本节这一组固定输入即 `dow=2/workday`）。
+- 词表指纹：`lexicon_sha256 eee8ba1d2b4ba62848a7e5efdd72d078411889d870075c5fd874f742e7f9dd17`（`calendar-v1`），与 10-23 审计值相同。
+- **该脚本零 LLM、零事件、零墙钟、只写 `--out` 指定的 json**；master 树跑它不会产出 `calendar` 模块（json 内 `lexicon_note = ImportError: cannot import name 'calendar'`，是**预期事实**、不是失败）。
+
+### 9.6 真实截图（2 张；**从既有已收批日志现场渲染，零跑批**）
+
+```bash
+$ python3 tools/metrics/render_shots.py \
+    --run-dir <repo>/v2/evidence/run_d27_C_n16r60_seed42 \
+    --batch-id R25CAL-d27C \
+    --outdir v2/evidence/r25_calendar/shots \
+    --views chat,rhythm --blank-check off
+# ok_count 2 / fail_count 0；log_sha256 1fbb9ef5161fd07aa68fcc9fc4038f104ff18b56383a2fc6b31bb3cb5486a188
+# threads_json_sha256 37c163f41edf35fd5893d0a0d90b3e550ec7b67ac5046fb003cfbba0896b2a00
+```
+
+| 图 | 路径 | sha256 | 像素自检（脚本自算） |
+|---|---|---|---|
+| chat | `v2/evidence/r25_calendar/shots/R25CAL-d27C-chat-1fbb9ef5.png`（279,907 B） | `2398f4b3d59acea7d7f35ad1101d536d1ba2dd8c4ee0ac7ea626acae1c3eda5f` | `distinct_colors 24048 / top_color_frac 0.1417 / non_bg_frac 0.5826 → OK` |
+| rhythm | `v2/evidence/r25_calendar/shots/R25CAL-d27C-rhythm-1fbb9ef5.png`（283,223 B） | `e92b8a9615205a723b88ddd6321541c5a22c09db04025dfa0b1ebfebbae454b9` | `distinct_colors 22411 / top_color_frac 0.2620 / non_bg_frac 0.4748 → OK` |
+
+**口径必须写死（不许混用）**：
+1. 这两张图来自 **`run_d27_C` 基线批**（`code_sha f2bf606`，日历臂 OFF 时代），**不是本臂批次**——本臂根本还没有批次；
+2. 演示页**不显示日历字段** ⇒ 图上**看不到**「今天是周几」，所以这两张图**不能**用来证明日历臂效果，只证明「页面在既有日志上可真实渲染、非拼图/非旧图顶替」；
+3. 生成方式＝`tools/metrics/render_shots.py`（服务根为临时目录 + 符号链接，未在 `code/frontend` 写文件；`--blank-check off` 改用脚本自算像素自检，理由见 `render_report` 的 `policy.blank_check` 字段）；
+4. **截图不进判据**。
+
+### 9.7 结论状态词与「证据边界」（本节新增内容一律不越界）
+
+| 维度 | 现在能说什么 | 证据 |
+|---|---|---|
+| **机制接通** | ✅ **存在性事实**：ON 时两条提示词各插**一行**人话，OFF 时与 master `d1d60e4` **逐字节相同** | §9.5 两树 sha 对拍；§9.3 单测 |
+| **可结算性** | ✅ rebase 后单测全绿（28 / 207 / 597+1s），无编号冲突 | §9.2–9.4 |
+| **效果（生活气息）** | ❌ **未测**。无真 LLM 两臂、无 `obs llm-cost`、无日历词频读数、无 `L-1`/`L-7` 读数 | 本轮**明令禁止起批次**（§9.1） |
+| 措辞纪律 | **机制接通 ≠ 生活气息改善**。本节任何内容**不得**被引作"居民更像在过日子了"的证据 | — |
+
+### 9.8 下一窗口待办：候选 C 的两臂计划（预登记要点，**尚未执行**）
+
+| 项 | 计划值（写死，跑前不改） |
+|---|---|
+| 单变量 | 只翻 `LIFE_PROMPT_CALENDAR`（OFF=缺省 / ON=1）；**`LIFE_PROMPT_SCENE` 两臂均固定 OFF**（"日历+处境锚"属第三臂，不在本次） |
+| 规模 | `--seed 42 --agents 16 --rounds 84`（7 天 × 12 回合，**覆盖满一周**才看得到周末差异；24 回合只走 3 天多，不采用） |
+| 成本估算（**估算，非实测**） | 参照 `run_d27_C`（n16r60）：`llm_calls 2878` / `duration 3284s`。按回合数 ×1.4 外推 ⇒ **≈4000–4200 calls、≈75–80 min/臂**；两臂**串行** ≈ **2.5–2.7 h**（含 `obs llm-cost` 与收批断言）。**该外推未被任何实测批次验证。** |
+| 机制闸 | ON 臂 `ctx.calendar` 命中率 > 0（且 OFF 臂恒 0）；两条提示词各出现标记行 1 次 |
+| 主指标 | 对话文本中日历词（`周一…周日` / `上工` / `歇` / `周末` / `收工`）出现率；`ctx.calendar` 命中率；`len` 分布漂移 |
+| 守卫（二值处置） | `L-1` 长度分布、`L-7` 8-gram 重复、G1–G5：**越带即记 `BELOW_BAND`，不得记为改善**（R16/R22 措辞纪律） |
+| 验真 | `python3 -m obs llm-cost --log <run.jsonl> --require-provider openai_compat` **rc=0** 且 `degraded_calls=0`（贴原始输出） |
+| 起跑前置 | ① `pgrep -af 'orchestration run\|run_batch'` 干净；② `bash tools/d5/preflight.sh --tag d210` 类串行闸 **PASS**；③ 单测全绿；④ 本分支与 master 的 `code/life` 差异仅本臂 3 文件 |
+| 待补断言（遗留风险④） | 跑批前加一条断言：`TIME_CONFIG['DAY_TYPES'] == ["workday"]*5 + ["weekend"]*2`，防命名层与词表脱钩 |
+
+### 9.9 本轮 commit sha（结论绑定）
+
+| 层 | sha | 内容 |
+|---|---|---|
+| 代码 + 单测 + 报告改号 | **`f338094`** | rebase 后：`code/life/{agent.py,calendar.py,tests/test_calendar_day_type.py}` + `reports/R25-*` + `reports/README.md` + 证据目录改号 |
+| 证据（对拍器 + 截图 + 读数） | **`bfef816`** | `tools/calendar/off_equiv_prompts.py`、`v2/evidence/r25_calendar/{prompt_equiv_*.json,shots/*}` |
+| 本报告 §9 入库 | 见 push 回报（本节内容级 sha256 由 `git show <sha>:reports/R25-day-type-calendar.md \| sha256sum` 复算） | — |
+
+> 复算底线：§9 里每个数字都由本节贴出的命令重算得出；没有一处转抄旧结论、也没有一处来自未执行的批次。
