@@ -50,12 +50,46 @@ def _pick(seed: str, options: list):
     return options[int(sha256_hex(seed)[:8], 16) % len(options)]
 
 
+def place_affinity_weight(count: int, alpha: float) -> float:
+    """D2.3 权重（**纯函数，写死口径**）：`w(peer) = 1 + alpha * count`。
+
+    `count` = 该居民在 `place` 下与该 peer 的**双向**共现次数（自己发的 + 别人发给自己的）；
+    `alpha=0` ⇒ `w ≡ 1` ⇒ 与"等权映射（C 档）"逐字节等价（用于隔离映射伪影）。
+    """
+    return 1.0 + float(alpha) * max(0, int(count))
+
+
+def _weighted_pick(seed: str, options: list, weights: list):
+    """累积权重轴取点（确定性）：`u = sha256(seed)[:8] / 2**32 * sum(w)`，落轴即取。
+
+    与离线工具 `tools/d21/d22_place_feasibility.py::axis_pick` **同一映射**（w≡1 时逐字节等价）。
+    """
+    if not options:
+        return None
+    if len(options) != len(weights):
+        raise ValueError("options 与 weights 长度不一致")
+    total = float(sum(weights))
+    if total <= 0:
+        return _pick(seed, options)
+    u = (int(sha256_hex(seed)[:8], 16) / float(1 << 32)) * total
+    acc = 0.0
+    for opt, w in zip(options, weights):
+        acc += float(w)
+        if u < acc:
+            return opt
+    return options[-1]
+
+
 class Planner:
-    def __init__(self, agent_id: str, templates: dict, peers, places: dict) -> None:
+    def __init__(self, agent_id: str, templates: dict, peers, places: dict,
+                 place_peer_counts: dict | None = None, place_affinity_alpha: float = 3) -> None:
         self.agent_id = agent_id
         self.templates = templates
         self.peers = sorted({p for p in (peers or []) if p and p != agent_id})
         self.places = places or {}
+        # D2.3：**只读**地点亲和快照 `{place: {peer: count}}`；None ⇒ 完全不启用（原路径逐字节不变）
+        self.place_peer_counts = place_peer_counts or None
+        self.place_alpha = place_affinity_alpha
 
     # ---- eligibility ------------------------------------------------------
     def _open_places(self, tid: str, slot: str) -> list:
@@ -70,7 +104,7 @@ class Planner:
                     return False
         return True
 
-    def _participants(self, tid: str, slot_id: str) -> list | None:
+    def _participants(self, tid: str, slot_id: str, place: str | None = None) -> list | None:
         tpl = self.templates[tid]
         mn = int(tpl["participants"]["min"])
         mx = int(tpl["participants"]["max"])
@@ -83,7 +117,13 @@ class Planner:
             rem = [p for p in self.peers if p not in chosen]
             if not rem:
                 break
-            chosen.append(_pick(f"{self.agent_id}|{slot_id}|{tid}|p{i}", rem))
+            seed = f"{self.agent_id}|{slot_id}|{tid}|p{i}"
+            if place is None or self.place_peer_counts is None:
+                chosen.append(_pick(seed, rem))
+            else:
+                counts = self.place_peer_counts.get(place, {}) or {}
+                weights = [place_affinity_weight(counts.get(p, 0), self.place_alpha) for p in rem]
+                chosen.append(_weighted_pick(seed, rem, weights))
         if len(chosen) < need:
             return None
         return [self.agent_id] + chosen
@@ -114,7 +154,10 @@ class Planner:
                 continue
             if not self._self_cash_ok(tid, cash):
                 continue
-            parts = self._participants(tid, slot_id)
+            # D2.3：place 由独立种子决定（与 participants 无关）⇒ 提前算不改 place 分布
+            place_guess = _pick(f"{self.agent_id}|{slot_id}|place", sorted(places))
+            parts = self._participants(
+                tid, slot_id, place_guess if self.place_peer_counts is not None else None)
             if parts is None:
                 continue
             eligible.append((tid, sorted(places), parts))

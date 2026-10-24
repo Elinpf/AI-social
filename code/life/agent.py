@@ -560,12 +560,65 @@ class LifeLayerAgent:
             self._submit_audit("LLM_JUDGMENT", payload, phase=2)
         return str(payload.get("resolved", payload["decision"]))
 
+    # ---- D2.3：place 亲和的对端选择（开关默认关；关 ⇒ 与 master 逐字节一致）----
+    PLACE_AFFINITY_ENV = "HITT_PARTNER_PLACE_AFFINITY"
+    PLACE_AFFINITY_ALPHA = 3
+
+    @classmethod
+    def _place_affinity_on(cls) -> bool:
+        """`HITT_PARTNER_PLACE_AFFINITY`：缺省/`0` ⇒ 关闭；`1` ⇒ 开启；其它值抛错（不静默）。"""
+        import os
+        raw = (os.environ.get(cls.PLACE_AFFINITY_ENV, "") or "").strip()
+        if raw in ("", "0"):
+            return False
+        if raw == "1":
+            return True
+        raise ValueError(f"{cls.PLACE_AFFINITY_ENV}={raw!r}：只接受 0(关闭) / 1(开启)")
+
+    def _place_peer_counts(self, wv) -> dict:
+        """**只读**快照 `{place: {peer: count}}`：来自本居民自己的消息历史，**双向**计入。
+
+        口径（预登记 §2，写死）：自己发出的消息、或别人发给自己的消息，凡 `place` 非空，
+        就把该消息里**除自己以外**的参与者各 +1，按 `place` 归集。
+        不写任何状态、不改事件流 ⇒ 对 `state_hash` 与 replay 无影响（只在计划期读 `visible_events`）。
+        """
+        from collections import Counter
+        out: dict = {}
+        me = self.agent_id
+        for ev in getattr(wv, "visible_events", []) or []:
+            if getattr(ev, "type", "") not in ("MSG_DM", "MSG_PUBLIC", "MSG_GROUP"):
+                continue
+            pl = getattr(ev, "payload", None) or {}
+            place = pl.get("place")
+            if not place:
+                continue
+            frm = pl.get("from") or pl.get("author")
+            parts = set(pl.get("participants") or [])
+            if frm:
+                parts.add(frm)
+            if pl.get("to"):
+                parts.add(pl["to"])
+            if me not in parts:                       # 只统计"与我有关"的消息（双向）
+                continue
+            peers = {p for p in parts if p and p != me}
+            if not peers:
+                continue
+            bucket = out.setdefault(place, Counter())
+            for p in peers:
+                bucket[p] += 1
+        return {k: dict(v) for k, v in out.items()}
+
     def _weekly_slots(self, wv, focus: str | None = None) -> list[dict]:
         """Weekly plan. Social/economy slots may carry a `template_id` (T49) chosen by
         the deterministic `Planner`; other slots fall back to the base template."""
         from .planner import Planner
         templates = _templates(self.places)
-        planner = Planner(self.agent_id, templates, self.peers, self.places)
+        affinity_on = self._place_affinity_on()
+        planner = Planner(
+            self.agent_id, templates, self.peers, self.places,
+            place_peer_counts=(self._place_peer_counts(wv) if affinity_on else None),
+            place_affinity_alpha=self.PLACE_AFFINITY_ALPHA,
+        )
         slots = []
         self._plan_slots = {}
         for dow in range(C.TIME_CONFIG["DAYS_PER_WEEK"]):
