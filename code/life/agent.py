@@ -35,6 +35,7 @@ from . import anti_repeat as AR   # R12：L-7 去重臂（env LIFE_PROMPT_MEMORY
 from . import l7_structural as L7S  # L-7 结构臂（env LIFE_PROMPT_L7_STRUCT，**默认 ON**）
 from . import topic_breadth as TB  # R19 话题宽度臂（env LIFE_PROMPT_TOPIC_BREADTH，**默认 OFF**）
 from . import scene_anchor as SA  # 处境锚臂（env LIFE_PROMPT_SCENE，**默认 OFF**）
+from . import public_reply as PR  # D2.10 公开场合接话（env HITT_PUB_REPLY，**默认 OFF**）
 from .policy import (social_enabled, exchange_enabled, m2b_judge_mode, m2b_importance_mode,
                      narrative_persist_enabled)
 from .ports import (
@@ -874,11 +875,24 @@ class LifeLayerAgent:
                 return
         self._initiate(wv, cfg, slot_id)
 
+    def _slot_place(self, slot_id: str) -> str | None:
+        """D2.10：本居民在该 slot 的**计划地点**（确定性、两相位都可得；缺则 None）。
+
+        只用自己 `_plan_slots` 里的值 ⇒ 不读任何别人的私有状态（D2.3 教训：判据输入必须在计算时刻存在）。
+        """
+        entry = (getattr(self, "_plan_slots", None) or {}).get(slot_id) or {}
+        return entry.get("place")
+
     def _thread_max_turn(self, wv, tid: str) -> int:
-        """线程内「已存在的最大 turn_index」（按可见事件；无则 -1）。多方可同时处于同一 turn。"""
+        """线程内「已存在的最大 turn_index」（按可见事件；无则 -1）。多方可同时处于同一 turn。
+
+        D2.10：开关开时把 `MSG_PUBLIC` 也计入（否则 PUBLIC 线程的 max_turn 恒 -1 ⇒ 回话会被算成
+        `turn_index=0` 并可能绕过 `max_turns` 封口）。关时**类型集与 master 逐字节一致**。
+        """
         mx = -1
+        types = ("MSG_DM", "MSG_GROUP") + (("MSG_PUBLIC",) if PR.enabled() else ())
         for ev in wv.visible_events:
-            if ev.type not in ("MSG_DM", "MSG_GROUP"):
+            if ev.type not in types:
                 continue
             p = ev.payload or {}
             if p.get("thread_id") != tid:
@@ -900,11 +914,15 @@ class LifeLayerAgent:
         window = int(cfg.get("reply_window_rounds", 2))
         max_turns = int(cfg.get("max_turns", 6))
         fallback = None
+        # D2.10：开关关 ⇒ 类型集与 master 完全相同（PUBLIC 不进候选）
+        _pub = PR.enabled()
+        _types = ("MSG_DM", "MSG_GROUP") + (("MSG_PUBLIC",) if _pub else ())
+        _my_place = self._slot_place(f"day{wv.time.day_of_week}-{wv.time.slot}") if _pub else None
         for ev in reversed(list(wv.visible_events)):
-            if ev.type not in ("MSG_DM", "MSG_GROUP"):
+            if ev.type not in _types:
                 continue
             p = ev.payload or {}
-            if not DT.is_replyable(ev.type, p, self.agent_id):
+            if not DT.is_replyable(ev.type, p, self.agent_id, my_place=_my_place):
                 continue
             tid = p.get("thread_id")
             if not tid:
@@ -1079,7 +1097,8 @@ class LifeLayerAgent:
         tb_tag = self._topic_shift_tag(body)
         tb_audit = TB.audit(getattr(self, "_tb", None), bool(tb_tag)) if TB.enabled() else None
         payload: dict = {
-            "scope": "private" if ev.type == "MSG_DM" else "place_group",
+            "scope": (PR.scope_for(ev.type) if PR.enabled()
+                      else ("private" if ev.type == "MSG_DM" else "place_group")),
             "body": body, "refs": [],
             "tag_hints": list(p.get("tag_hints") or []) + ([tb_tag] if tb_tag else []),
             "thread_id": tid, "turn_index": turn,
@@ -1166,6 +1185,12 @@ class LifeLayerAgent:
                             "participants": sorted(set(parts)), "topic": tid,
                             "ctx": self._ctx_snapshot(to, tid, trigger=tid,
                                                       initiator=self.agent_id)})
+            # D2.10：公开话携带「我在哪儿」，供同场旁人判定接话；**仅开关开时打键**
+            #（缺省 None ⇒ 不打键 ⇒ OFF 日志逐字节不变）。不改既有 `place` 键。
+            if PR.enabled() and scope == "global":
+                pc = self._slot_place(slot_id)
+                if pc:
+                    payload["place_ctx"] = pc
         self._slot_msgs[slot_id] = int(self._slot_msgs.get(slot_id, 0)) + 1
         self._comm_slot = slot_id
         self.kernel.submit_intent(self.agent_id, Intent(INTENT_SOCIAL, self.agent_id, payload))

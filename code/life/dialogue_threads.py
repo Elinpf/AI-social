@@ -155,12 +155,22 @@ def thread_initiator(thread_id: str | None) -> str | None:
     return parts[1] if len(parts) >= 2 and parts[1] else None
 
 
-def is_replyable(ev_type: str, payload: dict, me: str) -> bool:
-    """该条入站消息是否「对我说、且可被我回复」。只看可见性已由内核保证的 EventView。"""
+def is_replyable(ev_type: str, payload: dict, me: str,
+                 my_place: str | None = None) -> bool:
+    """该条入站消息是否「对我说、且可被我回复」。只看可见性已由内核保证的 EventView。
+
+    D2.10（开关 `HITT_PUB_REPLY`，默认关）：`MSG_PUBLIC` 分支**只在开关打开时**参与判定；
+    关闭时本函数对 PUBLIC 恒 False（与 master 逐字节一致）。`my_place` 缺省 None ⇒ 不判同场。
+    """
     p = payload or {}
     if ev_type == "MSG_DM":
         return p.get("to") == me and (p.get("from") or "") != me
     if ev_type == "MSG_GROUP":
         parts = p.get("participants") or []
         return me in parts and (p.get("from") or "") != me
+    if ev_type == "MSG_PUBLIC":                   # D2.10：默认关 ⇒ 恒 False（原路径不变）
+        from . import public_reply as PR          # 惰性导入：关闭路径不加载本模块
+        if not PR.enabled():
+            return False
+        return PR.replyable(p, me, my_place)
     return False

@@ -848,6 +848,9 @@ class KernelAdapter:
                        "topic": p.get("topic"),
                        "body": body, "body_ref": body_ref, "refs": refs, "tag_hints": tags,
                        "place": None, "scope": "global", "day": t["day"], "slot": t["slot"]}
+            # D2.10：公开话的「发起人所在地」（**只追加键**；缺省 None ⇒ 不打键 ⇒ OFF 日志逐字节不变）
+            if p.get("place_ctx"):
+                payload["place_ctx"] = p["place_ctx"]
             payload.update(_thread_fields(p))   # D2：线程字段（只追加）
         else:  # place_group
             gid = p.get("group_id")

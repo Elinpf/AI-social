@@ -1,0 +1,87 @@
+{
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d27_C_n16r60_seed42/run.jsonl",
+  "mode": "offline preview (no LLM, no batch)",
+  "n_msg_public": 55,
+  "n_public_reply_to_null": 55,
+  "participants_len_hist": {
+    "1": 55
+  },
+  "opportunity_n": 46,
+  "opportunity_rate_pct": 83.64,
+  "opportunity_by_place": {
+    "library": 10,
+    "school": 6,
+    "farm": 8,
+    "bank": 17,
+    "town_hall": 2,
+    "office": 3
+  },
+  "predicted_replies_n": 10,
+  "predicted_reply_rate_pct": 18.18,
+  "predicted_by_round": {
+    "0": 2,
+    "1": 2,
+    "3": 0,
+    "4": 0,
+    "12": 0,
+    "13": 0,
+    "15": 0,
+    "16": 0,
+    "24": 2,
+    "25": 0,
+    "36": 2,
+    "37": 1,
+    "48": 1,
+    "49": 0,
+    "51": 0,
+    "52": 0
+  },
+  "predicted_sample": [
+    {
+      "round": 0,
+      "slot": "day0-morning",
+      "place": "school",
+      "replier": "P006",
+      "initiator": "P013",
+      "thread": "TH-P013-PUB-0-0",
+      "reply_to": "42:167"
+    },
+    {
+      "round": 0,
+      "slot": "day0-morning",
+      "place": "farm",
+      "replier": "P001",
+      "initiator": "P015",
+      "thread": "TH-P015-PUB-0-0",
+      "reply_to": "42:189"
+    },
+    {
+      "round": 1,
+      "slot": "day0-morning",
+      "place": "school",
+      "replier": "P006",
+      "initiator": "P013",
+      "thread": "TH-P013-PUB-1-0",
+      "reply_to": "42:1326"
+    },
+    {
+      "round": 1,
+      "slot": "day0-morning",
+      "place": "farm",
+      "replier": "P001",
+      "initiator": "P015",
+      "thread": "TH-P015-PUB-1-0",
+      "reply_to": "42:1509"
+    },
+    {
+      "round": 24,
+      "slot": "day2-morning",
+      "place": "farm",
+      "replier": "P003",
+      "initiator": "P002",
+      "thread": "TH-P002-PUB-24-0",
+      "reply_to": "42:33990"
+    }
+  ],
+  "caveat": "在场集合用 ACTIVITY_STARTED 的 (agent,slot)->place 近似（plan 真值的落账）；预测不含 LLM 是否愿意说、也不含 D2.8 措辞线交互；仅作「够不够判」的先验。"
+}
