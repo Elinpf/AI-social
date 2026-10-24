@@ -1,0 +1,21 @@
+# 执行时刻: 2026-10-24T20:05:11~20:05:17+08:00（首采）+ 20:06 重渲染（等值复现比对）
+# 命令: /opt/openjiuwen/workswarm-venv/bin/python3 -B tools/metrics/render_shots_extra.py --run-dir v2/evidence/run_d27_C_n16r60_seed42 --batch-id ROUND01-C --outdir v2/evidence/round01_life_texture_shots --views chat,rhythm,spread --timeout 240
+=== [A] 首采（取证那一组）===
+[gen_threads] wrote /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round01_life_texture_shots/threads_ROUND01-C.json (2153050 bytes)
+[3/4] static server http://127.0.0.1:36447  root=/tmp/hitt_render_ninvsste
+SHOT OK: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round01_life_texture_shots/ROUND01-C-chat-1fbb9ef5.png  elapsed=3.35s  mean_brightness=35.0(gray601,0-255,黑<8)  max_color_frac=29.98%  blank_retries=0/2
+SHOT OK: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round01_life_texture_shots/ROUND01-C-rhythm-1fbb9ef5.png  elapsed=1.87s  mean_brightness=32.4(gray601,0-255,黑<8)  max_color_frac=34.44%  blank_retries=0/2
+SHOT OK: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round01_life_texture_shots/ROUND01-C-spread-1fbb9ef5.png  elapsed=1.70s  mean_brightness=22.0(gray601,0-255,黑<8)  max_color_frac=75.25%  blank_retries=0/2
+=== [B] 20:06 重渲染（到 /tmp/round01/rerender，batch-id=ROUND01-C-RC）===
+[3/4] static server http://127.0.0.1:33615  root=/tmp/hitt_render_0imun1g0
+SHOT OK: /tmp/round01/rerender/ROUND01-C-RC-chat-1fbb9ef5.png  elapsed=1.85s  mean_brightness=35.0(gray601,0-255,黑<8)  max_color_frac=29.97%  blank_retries=0/2
+SHOT OK: /tmp/round01/rerender/ROUND01-C-RC-rhythm-1fbb9ef5.png  elapsed=1.76s  mean_brightness=32.4(gray601,0-255,黑<8)  max_color_frac=34.43%  blank_retries=0/2
+SHOT OK: /tmp/round01/rerender/ROUND01-C-RC-spread-1fbb9ef5.png  elapsed=1.68s  mean_brightness=22.0(gray601,0-255,黑<8)  max_color_frac=75.25%  blank_retries=0/2
+# 重渲染 PNG sha256:
+fb35b9911b45658cef752cbe00ea001c7802a0999b5ef6769f645227cf4b2f09  /tmp/round01/rerender/ROUND01-C-RC-chat-1fbb9ef5.png
+783069a704ffc6ae7cf9138d85e223ead7cf6ce53d186393ce6ef3a0f6a8e03b  /tmp/round01/rerender/ROUND01-C-RC-rhythm-1fbb9ef5.png
+ed8194a2a83b022bc7bdaa58c69026065c979a959d6a901cb2c9788ccbe89a29  /tmp/round01/rerender/ROUND01-C-RC-spread-1fbb9ef5.png
+# 首采 PNG sha256:
+b30731e3db1638576f5eef171b6088854a3a97d5920020da959a1c3ae95e0378  v2/evidence/round01_life_texture_shots/ROUND01-C-chat-1fbb9ef5.png
+9b027dc2e849d73370d23e7bc4985df1836843e18a48cf4208aeacc8e709ac8c  v2/evidence/round01_life_texture_shots/ROUND01-C-rhythm-1fbb9ef5.png
+cef1e085ce0cae032de4c9a24e9223e15be2da11945f1fa98b298a6d929cefe2  v2/evidence/round01_life_texture_shots/ROUND01-C-spread-1fbb9ef5.png
