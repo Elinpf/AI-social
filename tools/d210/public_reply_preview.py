@@ -112,6 +112,44 @@ def main() -> int:
                               "replier": b, "initiator": A, "thread": tid, "reply_to": uid})
             break
 
+    # ---- 3) F-2_content_drift 基线（质量闸 Q2 的离线依据，口径见 tools/d5/dialogue_metrics.py）
+    def _bigrams(t: str) -> set:
+        t = "".join(ch for ch in (t or "") if not ch.isspace())
+        return {t[i:i + 2] for i in range(len(t) - 1)}
+
+    threads = defaultdict(list)
+    for line in open(a.log, encoding="utf-8"):
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            e = json.loads(line)
+        except Exception:
+            continue
+        if e.get("type") not in ("MSG_DM", "MSG_PUBLIC", "MSG_GROUP"):
+            continue
+        pl = e.get("payload") or {}
+        if not pl.get("thread_id"):
+            continue
+        threads[pl["thread_id"]].append((e["round"], pl.get("turn_index") or 0,
+                                         e.get("type"), pl.get("body") or ""))
+
+    def _drift(types):
+        pairs = drift = 0
+        for _k, v in threads.items():
+            v.sort()
+            if len(v) < 2 or v[0][2] not in types:
+                continue
+            for i in range(1, len(v)):
+                aa, bb = _bigrams(v[i - 1][3]), _bigrams(v[i][3])
+                jac = (len(aa & bb) / len(aa | bb)) if (aa | bb) else 0.0
+                pairs += 1
+                drift += (jac < 0.10)
+        return pairs, drift, (round(100.0 * drift / pairs, 2) if pairs else None)
+
+    dm_d = _drift(("MSG_DM",))
+    pub_d = _drift(("MSG_PUBLIC",))
+
     out = {
         "log": a.log,
         "mode": "offline preview (no LLM, no batch)",
@@ -125,6 +163,10 @@ def main() -> int:
         "predicted_reply_rate_pct": round(100.0 * len(predicted) / len(pub), 2) if pub else None,
         "predicted_by_round": dict(sorted(per_round.items())),
         "predicted_sample": predicted[:5],
+        "f2_content_drift_dm_adjacent_pairs": dm_d[0],
+        "f2_content_drift_dm_rate_pct": dm_d[2],
+        "f2_content_drift_public_adjacent_pairs": pub_d[0],
+        "f2_content_drift_public_rate_pct": pub_d[2],
         "caveat": ("在场集合用 ACTIVITY_STARTED 的 (agent,slot)->place 近似（plan 真值的落账）；"
                    "预测不含 LLM 是否愿意说、也不含 D2.8 措辞线交互；仅作「够不够判」的先验。"),
     }

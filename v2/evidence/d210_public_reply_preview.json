@@ -83,5 +83,9 @@
       "reply_to": "42:33990"
     }
   ],
+  "f2_content_drift_dm_adjacent_pairs": 341,
+  "f2_content_drift_dm_rate_pct": 72.43,
+  "f2_content_drift_public_adjacent_pairs": 0,
+  "f2_content_drift_public_rate_pct": null,
   "caveat": "在场集合用 ACTIVITY_STARTED 的 (agent,slot)->place 近似（plan 真值的落账）；预测不含 LLM 是否愿意说、也不含 D2.8 措辞线交互；仅作「够不够判」的先验。"
 }
