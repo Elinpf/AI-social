@@ -80,6 +80,7 @@ predicted_replies_n 10 | predicted_reply_rate_pct 18.18
 |---|---|---|---|
 | **Q1 承接结构** | 每条接话必须 `reply_to` 非空**且指向一条前序 `MSG_PUBLIC` 的 `msg_uid`** | **100%**（任一条不满足即 Q1 破） | 结构可由代码保证（`_send_reply` 取 `p["msg_uid"]`） |
 | **Q2 内容承接不过度漂移** | 接话相邻对（前序 PUBLIC → 接话）的 `char-bigram Jaccard<0.10` **漂移率** | **≤ DM 同批相邻对漂移率 + 5pp = ≤ 77.43%** | 本批 DM 相邻对实测 **247/341 = 72.43%**（`F-2_content_drift` 口径，已复算）；+5pp 为容许带 |
+| **Q2 的 OFF 侧比较**（可执行化，二选一，按 OFF 实测自动选） | 若 OFF 臂的公开相邻对 **≥5 对** ⇒ 直接对 OFF 比：`ON_public_drift ≤ OFF_public_drift + 5pp`；若 OFF 臂公开相邻对 **<5 对**（基线本臂即 0 对）⇒ 用 DM 同批作参照：`ON_public_drift ≤ DM_drift + 5pp`（= 77.43%） | 阈值同上 | 基线 `run_d27_C`：PUBLIC 相邻对 **0**、DM 相邻对 **341（72.43%）** ⇒ 本次走 DM 参照分支 |
 | — | 口径声明 | 一律用 **`F-2_content_drift`**（`tools/d5/dialogue_metrics.py`），**禁止**用 `F-2_topic_drift`（`LEGACY_DEAD_RULER`，结构性恒 0，runbook §3.113 #1） | — |
 
 > Q 闸的意义：只数条数会把"body 随便塞字"的改动判成烟火气。Q1 管**接谁**，Q2 管**接得住不像 DM 那样恶化**。
