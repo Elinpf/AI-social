@@ -1,0 +1,18 @@
+{
+  "log": "/tmp/d23_off/run.jsonl",
+  "n_init": 45,
+  "self_check_orig_matches_actual_rate": 100.0,
+  "repeat_pair_rate_A_actual": 44.44,
+  "repeat_pair_rate_C_equalweight_all_pool": 42.22,
+  "repeat_pair_rate_B_same_place": 46.67,
+  "map_artifact_pp_C_minus_A": -2.22,
+  "mechanism_pp_B_minus_C": 4.45,
+  "same_place_hit_rate_actual": 35.56,
+  "same_place_hit_rate_B": 84.44,
+  "change_rate_B_vs_A": 82.22,
+  "pool_tags": {
+    "exact": 38,
+    "fallback_all": 7
+  },
+  "caveat": "在场集合用'该 round 发过消息的 (agent,place)'近似，非 plan 真值；退化到全员的比例见 pool_tags.fallback_all；仅作值不值得跑的预判，不作判定读数。"
+}

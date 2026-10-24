@@ -1,0 +1,20 @@
+{
+  "log": "/tmp/d23_off/run.jsonl",
+  "alpha": 3.0,
+  "n_init": 45,
+  "n_agents": 16,
+  "self_check_A_matches_actual_rate_pct": 100.0,
+  "self_check_C_matches_actual_rate_pct": 4.44,
+  "change_rate_B_vs_C_pct": 51.11,
+  "offline_expectation_pct": 80.7,
+  "tolerance_pp": 10.0,
+  "place_distribution_of_inits": {
+    "park": 13,
+    "school": 2,
+    "market": 13,
+    "plaza": 8,
+    "cafe": 6,
+    "community_center": 3
+  },
+  "note": "B 用 place_peer_counts（严格 < r 的双向历史，与 agent._place_peer_counts 同口径）；C 用 α=0（w≡1）⇒ 同池同映射，只差权重。"
+}
