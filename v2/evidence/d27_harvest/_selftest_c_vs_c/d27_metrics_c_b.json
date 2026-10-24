@@ -1,0 +1,38 @@
+{
+  "B": {
+    "M1a_paren_lead_count": 0,
+    "M1a_paren_lead_rate": 0.0,
+    "M1b_denominator": 0,
+    "M1b_short_paren_share_pct": null,
+    "len_all_p50": 41.0,
+    "len_p50_excl_paren": 41.0,
+    "msg_types": {
+      "MSG_DM": 455,
+      "MSG_PUBLIC": 55
+    },
+    "n_msgs": 510,
+    "n_threads": 169,
+    "paren_inner_len_max": null,
+    "paren_inner_len_p50": null,
+    "paren_mental_share_pct": null,
+    "threads_p50": 2
+  },
+  "C": {
+    "M1a_paren_lead_count": 0,
+    "M1a_paren_lead_rate": 0.0,
+    "M1b_denominator": 0,
+    "M1b_short_paren_share_pct": null,
+    "len_all_p50": 41.0,
+    "len_p50_excl_paren": 41.0,
+    "msg_types": {
+      "MSG_DM": 455,
+      "MSG_PUBLIC": 55
+    },
+    "n_msgs": 510,
+    "n_threads": 169,
+    "paren_inner_len_max": null,
+    "paren_inner_len_p50": null,
+    "paren_mental_share_pct": null,
+    "threads_p50": 2
+  }
+}

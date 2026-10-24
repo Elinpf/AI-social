@@ -1,0 +1,322 @@
+{
+  "gates": {
+    "M1": {
+      "M1a_pass": true,
+      "M1b_denominator": 502,
+      "M1b_pass": true,
+      "paren_inner_len_max": 15,
+      "paren_inner_len_p50": 8.0,
+      "paren_mental_share_pct": 0.0,
+      "paren_rate_B": 100.0,
+      "paren_rate_C": 0.0,
+      "pass": true,
+      "rule": "paren_rate 0.00%→>=30.0% 且 短旁白(len<=80)占比>=80.0%",
+      "short_paren_share_pct": 99.4
+    },
+    "P": {
+      "P1_binary_B": 96.41,
+      "P1_binary_C": 93.53,
+      "P1_binary_delta_pp": 2.88,
+      "P1_count_mean_B": 3.4024,
+      "P1_count_mean_C": 3.1941,
+      "P1_count_mean_rel_pct": 6.52,
+      "P1_count_p50_B": 3.0,
+      "P1_count_p50_C": 3.0,
+      "P1_count_zero_share_B": 3.59,
+      "P1_count_zero_share_C": 6.47,
+      "ceiling_headroom_pp": 6.47,
+      "pass": false,
+      "rule": "P1 具体性 相对 C ↑>=5.0pp（二元口径；天花板效应并列连续口径）"
+    },
+    "P_observe": {
+      "P2_thirdparty_B": 47.61,
+      "P2_thirdparty_C": 40.39,
+      "delta_pp": 7.22,
+      "note": "仅观察，不作判据"
+    },
+    "Q1": {
+      "B": 4.18,
+      "C": 4.31,
+      "by_turn_B": {
+        "1": {
+          "n": 170,
+          "restate_rate": 0.0,
+          "restate_strong_rate": 0.0
+        },
+        "2": {
+          "n": 89,
+          "restate_rate": 1.12,
+          "restate_strong_rate": 0.0
+        },
+        "3": {
+          "n": 74,
+          "restate_rate": 4.05,
+          "restate_strong_rate": 0.0
+        },
+        "4": {
+          "n": 66,
+          "restate_rate": 6.06,
+          "restate_strong_rate": 0.0
+        },
+        "5": {
+          "n": 53,
+          "restate_rate": 7.55,
+          "restate_strong_rate": 1.89
+        },
+        "6": {
+          "n": 50,
+          "restate_rate": 18.0,
+          "restate_strong_rate": 6.0
+        }
+      },
+      "delta_pp": -0.13,
+      "pass": true,
+      "rule": "L-15 restate_rate 相对 C ↑<=2.0pp",
+      "strong_B": 0.8,
+      "strong_C": 1.76
+    },
+    "Q2": {
+      "B": 28.4861,
+      "C": 25.4902,
+      "delta_pp": 2.9959,
+      "is_gain": false,
+      "margin_pp": 0.0041,
+      "pass": true,
+      "rule": "L-7 norm8 恶化<=3.0pp；下降>=3.0pp 记增益"
+    },
+    "Q3": {
+      "B": 66.8675,
+      "C": 63.3431,
+      "delta_pp": 3.5244,
+      "denominator_adjacent_pairs": {
+        "B": 332,
+        "C": 341
+      },
+      "pass": false,
+      "rule": "F-2_content_drift 相对 C 升<=2.0pp"
+    },
+    "S": {
+      "ge6": {
+        "B": 29.41,
+        "C": 30.77,
+        "delta_pp": -1.36,
+        "n_ge6": {
+          "B": 50,
+          "C": 52
+        }
+      },
+      "n_msgs": {
+        "B": 502,
+        "C": 510,
+        "rel_pct": -1.57
+      },
+      "n_threads": {
+        "B": 170,
+        "C": 169,
+        "rel_pct": 0.59
+      },
+      "pass": true,
+      "rule": "n_msgs / n_threads 相对 C ±10.0%"
+    },
+    "T": {
+      "B": 26.0,
+      "C": 41.0,
+      "dn_p50_excl_from_d27metrics": {
+        "B": 26.0,
+        "C": 41.0
+      },
+      "pass": false,
+      "rel_pct": -36.59,
+      "rule": "len_p50_excl（去括号后台词长度）相对 C ±10.0%"
+    },
+    "appendix_legacy_baseline": {
+      "M1_P_unchanged": "M1/P 的 C 值（0.00% / 93.53% / 3.1941）本就属于 run_d27_C，不受本次污染影响，两套基线同值。",
+      "Q1": {
+        "delta_pp_corrected": -0.13,
+        "delta_pp_if_legacy": 0.06,
+        "verdict_corrected": "PASS",
+        "verdict_if_legacy": "PASS"
+      },
+      "Q2": {
+        "delta_pp_corrected": 2.9959,
+        "delta_pp_if_legacy": 7.9,
+        "verdict_corrected": "PASS",
+        "verdict_if_legacy": "FAIL（重复恶化）"
+      },
+      "Q3": {
+        "delta_pp_corrected": 3.5244,
+        "delta_pp_if_legacy": 0.59,
+        "verdict_corrected": "FAIL（内容漂移）",
+        "verdict_if_legacy": "PASS"
+      },
+      "T": {
+        "rel_pct_corrected": -36.59,
+        "rel_pct_if_legacy": -35.0,
+        "verdict_corrected": "FAIL（作废）",
+        "verdict_if_legacy": "FAIL（作废）"
+      },
+      "legacy_baseline": {
+        "Q1_L15_restate_rate_pct": 4.12,
+        "Q1_restate_strong_pct": 2.16,
+        "Q2_L-7_norm8_pct": 20.59,
+        "Q3_F-2_content_drift_pct": 66.28,
+        "T_len_p50_excl": 40.0
+      },
+      "legacy_baseline_source": "v2/evidence/d25a_result.md:26-28（D2.5a C 臂，code_sha e2e7131，另一棵树）",
+      "note": "审计项：证明『换基线』不是为了让结论变好看。阈值一个未动，只换基线来源。"
+    },
+    "cost": {
+      "llm_B": {
+        "E-2_tokens_out_per_dialogue_call": 34.525896,
+        "E-2_tokens_out_per_message": 34.525896,
+        "degraded_calls": 0,
+        "degraded_ratio": 0.0,
+        "dialogue_calls": 502,
+        "llm_calls": 2869,
+        "provider_models": [
+          {
+            "calls": 2869,
+            "model": "DeepSeek-Flash",
+            "provider": "openai_compat"
+          }
+        ]
+      },
+      "llm_C": {
+        "E-2_tokens_out_per_dialogue_call": 37.839216,
+        "E-2_tokens_out_per_message": 37.839216,
+        "degraded_calls": 0,
+        "degraded_ratio": 0.0,
+        "dialogue_calls": 510,
+        "llm_calls": 2878,
+        "provider_models": [
+          {
+            "calls": 2878,
+            "model": "DeepSeek-Flash",
+            "provider": "openai_compat"
+          }
+        ]
+      },
+      "note": "权威 = tools / obs llm-cost；此处仅日志内记账交叉核对",
+      "rule": "calls ≤+10.0%；tokens ≤+40.0%"
+    },
+    "dialogue_token_runtime": {
+      "B": {
+        "cached": 0,
+        "calls": 502,
+        "tokens_in": 156022,
+        "tokens_in_mean_all": 310.8,
+        "tokens_in_mean_uncached": 310.8,
+        "tokens_out": 17332,
+        "tokens_out_mean": 34.53,
+        "uncached": 502
+      },
+      "B_tokens_in_mean_uncached": 310.8,
+      "C": {
+        "cached": 0,
+        "calls": 510,
+        "tokens_in": 148940,
+        "tokens_in_mean_all": 292.04,
+        "tokens_in_mean_uncached": 292.04,
+        "tokens_out": 19298,
+        "tokens_out_mean": 37.84,
+        "uncached": 510
+      },
+      "band_table": {
+        "<302": "未生效",
+        ">360": "生效但需说明",
+        "[302,320)": "灰区",
+        "[320,335)": "强证据",
+        "[335,360]": "仍判生效"
+      },
+      "delta_vs_C_uncached": 18.76,
+      "prereg": "v2/evidence/d27_gate_prediction_prereg.md（2026-10-24T16:12:20+08:00 事前冻结）",
+      "verdict": "灰区：既不得判强证据也不得判失败 ⇒ 须补①实际分词器/usage 核 35 字符折算、②B vs C 对话历史长度分布；仍落灰区则写『运行期证据不足，结论降级』"
+    },
+    "narration_template": {
+      "B": {
+        "n_distinct_paren": 420,
+        "n_lead_messages": 502,
+        "top1_share_pct": 1.59,
+        "top_parens": [
+          {
+            "n": 8,
+            "paren": "把算盘珠子拨回原位",
+            "share_of_lead_pct": 1.59
+          },
+          {
+            "n": 7,
+            "paren": "把锄头往墙根一靠",
+            "share_of_lead_pct": 1.39
+          },
+          {
+            "n": 4,
+            "paren": "刨子推过木料",
+            "share_of_lead_pct": 0.8
+          },
+          {
+            "n": 4,
+            "paren": "把锄头靠在门边",
+            "share_of_lead_pct": 0.8
+          },
+          {
+            "n": 4,
+            "paren": "把账本往膝头一摊",
+            "share_of_lead_pct": 0.8
+          },
+          {
+            "n": 4,
+            "paren": "把红笔搁在作业本上",
+            "share_of_lead_pct": 0.8
+          },
+          {
+            "n": 4,
+            "paren": "把账本往膝头一合",
+            "share_of_lead_pct": 0.8
+          },
+          {
+            "n": 4,
+            "paren": "把木剑横在膝上",
+            "share_of_lead_pct": 0.8
+          }
+        ]
+      },
+      "C": {
+        "n_distinct_paren": 0,
+        "n_lead_messages": 0,
+        "top1_share_pct": null,
+        "top_parens": []
+      }
+    }
+  },
+  "inputs": {
+    "B": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/d27-narration/v2/evidence/run_d27_B_n16r60_seed42",
+    "C": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d27_C_n16r60_seed42"
+  },
+  "note": "P1 二元口径受天花板限制（可用空间 6.47pp）",
+  "reconciliation": {
+    "B": {
+      "d12c_n_threads": 170,
+      "dialogue_metrics_threads": 170,
+      "structural_all": 170
+    },
+    "C": {
+      "d12c_n_threads": 169,
+      "dialogue_metrics_threads": 169,
+      "structural_all": 169
+    }
+  },
+  "thresholds": {
+    "M1_paren_min_pct": 30.0,
+    "M1b_short_share_min_pct": 80.0,
+    "P_delta_pp_min": 5.0,
+    "Q1_delta_pp_max": 2.0,
+    "Q2_gain_pp_min": 3.0,
+    "Q2_worse_pp_max": 3.0,
+    "Q3_delta_pp_max": 2.0,
+    "S_rel_tol_pct": 10.0,
+    "T_rel_tol_pct": 10.0,
+    "cost_calls_rel_max_pct": 10.0,
+    "cost_tokens_rel_max_pct": 40.0
+  },
+  "verdict": "未达（见各项）"
+}

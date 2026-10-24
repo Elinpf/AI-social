@@ -1,0 +1,22 @@
+{
+  "B": {
+    "P1_specificity_rate": 96.41,
+    "P2_thirdparty_rate": 47.61,
+    "len_p50": 26.0,
+    "n_msgs": 502,
+    "n_threads": 170,
+    "paren_rate": 100.0,
+    "threads_p50": 2.0,
+    "turns_A_p50": 2.0
+  },
+  "C": {
+    "P1_specificity_rate": 93.53,
+    "P2_thirdparty_rate": 40.39,
+    "len_p50": 41.0,
+    "n_msgs": 510,
+    "n_threads": 169,
+    "paren_rate": 0.0,
+    "threads_p50": 2,
+    "turns_A_p50": 2
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "B": {
+    "by_turn": {
+      "1": {
+        "n": 169,
+        "restate_rate": 0.0,
+        "restate_strong_rate": 0.0
+      },
+      "2": {
+        "n": 88,
+        "restate_rate": 0.0,
+        "restate_strong_rate": 0.0
+      },
+      "3": {
+        "n": 77,
+        "restate_rate": 3.9,
+        "restate_strong_rate": 1.3
+      },
+      "4": {
+        "n": 70,
+        "restate_rate": 2.86,
+        "restate_strong_rate": 1.43
+      },
+      "5": {
+        "n": 54,
+        "restate_rate": 18.52,
+        "restate_strong_rate": 9.26
+      },
+      "6": {
+        "n": 52,
+        "restate_rate": 13.46,
+        "restate_strong_rate": 3.85
+      }
+    },
+    "n_msgs": 510,
+    "restate_rate": 4.31,
+    "restate_strong_rate": 1.76,
+    "rule": {
+      "denominator": "全部 MSG_*",
+      "ngram": "normalize_body + 8-gram（与 L-7 同口径）",
+      "restate": "与本线程更早消息共享 ≥1 个 8-gram",
+      "restate_strong": "共享 ≥3 个 8-gram",
+      "scope": "同线程内前向引用（不跨线程）"
+    },
+    "thread_meta_missing": 0,
+    "top_shared": [
+      [
+        "把老周家那筐青椒",
+        2
+      ],
+      [
+        "给桂英家小孙子剥",
+        2
+      ],
+      [
+        "你嫂子家那袋红薯",
+        2
+      ],
+      [
+        "嫂子家那袋红薯秧",
+        2
+      ],
+      [
+        "李木匠家小孙子那",
+        2
+      ],
+      [
+        "拿两把回去煮水顺",
+        1
+      ],
+      [
+        "两把回去煮水顺便",
+        1
+      ],
+      [
+        "老赵家那笔犁头钱",
+        1
+      ]
+    ]
+  },
+  "C": {
+    "by_turn": {
+      "1": {
+        "n": 169,
+        "restate_rate": 0.0,
+        "restate_strong_rate": 0.0
+      },
+      "2": {
+        "n": 88,
+        "restate_rate": 0.0,
+        "restate_strong_rate": 0.0
+      },
+      "3": {
+        "n": 77,
+        "restate_rate": 3.9,
+        "restate_strong_rate": 1.3
+      },
+      "4": {
+        "n": 70,
+        "restate_rate": 2.86,
+        "restate_strong_rate": 1.43
+      },
+      "5": {
+        "n": 54,
+        "restate_rate": 18.52,
+        "restate_strong_rate": 9.26
+      },
+      "6": {
+        "n": 52,
+        "restate_rate": 13.46,
+        "restate_strong_rate": 3.85
+      }
+    },
+    "n_msgs": 510,
+    "restate_rate": 4.31,
+    "restate_strong_rate": 1.76,
+    "rule": {
+      "denominator": "全部 MSG_*",
+      "ngram": "normalize_body + 8-gram（与 L-7 同口径）",
+      "restate": "与本线程更早消息共享 ≥1 个 8-gram",
+      "restate_strong": "共享 ≥3 个 8-gram",
+      "scope": "同线程内前向引用（不跨线程）"
+    },
+    "thread_meta_missing": 0,
+    "top_shared": [
+      [
+        "把老周家那筐青椒",
+        2
+      ],
+      [
+        "给桂英家小孙子剥",
+        2
+      ],
+      [
+        "你嫂子家那袋红薯",
+        2
+      ],
+      [
+        "嫂子家那袋红薯秧",
+        2
+      ],
+      [
+        "李木匠家小孙子那",
+        2
+      ],
+      [
+        "拿两把回去煮水顺",
+        1
+      ],
+      [
+        "两把回去煮水顺便",
+        1
+      ],
+      [
+        "老赵家那笔犁头钱",
+        1
+      ]
+    ]
+  }
+}

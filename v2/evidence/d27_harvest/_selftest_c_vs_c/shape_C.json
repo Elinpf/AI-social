@@ -1,0 +1,55 @@
+{
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_d27_C_n16r60_seed42/run.jsonl",
+  "rounds_filter": null,
+  "n_bodies": 510,
+  "rounds_covered": [
+    0,
+    59
+  ],
+  "impl": {
+    "metrics_from": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d9/arm_state_check.py",
+    "metrics_impl_sha256": "9e11701f60fcddefaff8e14001e57b056d7baf5c22534d88947df9d5d765dc85"
+  },
+  "metrics": {
+    "paren_rate": 0.0,
+    "paren_head_rate": 0.0,
+    "addr_head_strict": 0.19019607843137254,
+    "addr_head_upper_rate": 0.41568627450980394,
+    "len_p50": 41.0,
+    "len_p50_excl": 41.0,
+    "id_leak_rate": 0.0,
+    "dup_exact_rate": 0.0
+  },
+  "names_source": {
+    "n_names": 16,
+    "error": null
+  },
+  "metrics_note": "F3 判据口径 = len_p50_excl（与预登记 §2 一致）；len_p50(raw) 仅展示；addr_head_strict 用显示名匹配（判据），addr_head_upper_rate 仅参照",
+  "gate": {
+    "F1_paren": {
+      "t5": 0.5784,
+      "drift_pp": -57.84,
+      "tol_pp": 5.0,
+      "verdict": "FAIL"
+    },
+    "F2_addr_head": {
+      "t5": 0.3647,
+      "t5_label": "addr_head_strict",
+      "t5_upper_reference": 0.41,
+      "observed_label": "addr_head_strict",
+      "observed_upper_reference": 0.41568627450980394,
+      "drift_pp": -17.450392156862748,
+      "tol_pp": 15.0,
+      "verdict": "FAIL"
+    },
+    "F3_len_p50_excl": {
+      "t5": 53.0,
+      "observed": 41.0,
+      "drift_rel": -0.22641509433962265,
+      "tol_rel": 0.1,
+      "verdict": "FAIL",
+      "raw_len_p50_shown_only": 41.0
+    }
+  },
+  "note": "F2 用精确口径（显示名匹配）；addr_head_upper_rate 是正则上界，仅参照，不作判据"
+}

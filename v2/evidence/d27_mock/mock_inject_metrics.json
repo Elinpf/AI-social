@@ -1,0 +1,12 @@
+{
+  "MOCK_INJECT": {
+    "P1_specificity_rate": 100.0,
+    "P2_thirdparty_rate": 0.0,
+    "len_p50": 7,
+    "n_msgs": 37,
+    "n_threads": 16,
+    "paren_rate": 100.0,
+    "threads_p50": 1.0,
+    "turns_A_p50": 1.0
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "B": {
+    "P1_binary_rate_pct_selfcheck": 93.53,
+    "P1_count_mean": 3.1941,
+    "P1_count_p50": 3.0,
+    "P1_count_sum": 1629,
+    "P1_count_zero_share_pct": 6.47,
+    "detail_patterns": 3,
+    "n_msgs": 510
+  },
+  "C": {
+    "P1_binary_rate_pct_selfcheck": 93.53,
+    "P1_count_mean": 3.1941,
+    "P1_count_p50": 3.0,
+    "P1_count_sum": 1629,
+    "P1_count_zero_share_pct": 6.47,
+    "detail_patterns": 3,
+    "n_msgs": 510
+  }
+}

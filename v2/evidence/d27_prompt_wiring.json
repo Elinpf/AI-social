@@ -1,0 +1,33 @@
+{
+  "B_arm": {
+    "code_root": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/d27-narration/code",
+    "dialogue_prompt_len": 293,
+    "dialogue_prompt_sha256": "bd038aae7c0b0388e9baa7e3d03799428db804bc460086d0d1949dbe3ee2a96f",
+    "dialogue_prompt_tail": "。性格：开放35/尽责82/外向30/宜人60/神经质45（0-100）。价值：自主40/仁爱60/成就45/安全85。语气：plain；长度：short。当前目标：security\n场景：走动人情；对象：秀娘（熟悉度20/好感5）。情绪：平和；最紧的需求：social=40。\n只写台词本身（一句家常话）：句首可用一个括号写一个具体的动作或神态（如“（把烟袋往桌上磕了磕）”），一句只一个、不超过 15 字；不要写心理活动，不要解释也不要总结；用口语短句，别反复用同一句口头禅。",
+    "reply_prompt_len": 306,
+    "reply_prompt_sha256": "1017d7f693f9c7ab007485108f4da2b800de15e978f30ec3fcab437108f4095f",
+    "reply_prompt_tail": "/外向30/宜人60/神经质45（0-100）。价值：自主40/仁爱60/成就45/安全85。语气：plain；长度：short。当前目标：security\n你正在和秀娘聊「走动人情」。情绪：平和；最紧的需求：social=40。\n刚才的对话：\n秀娘：show me\n只写台词本身（接着刚才的话往下说一句）：句首可用一个括号写一个具体的动作或神态（如“（把烟袋往桌上磕了磕）”），一句只一个、不超过 15 字；不要写心理活动，不要解释也不要总结；用口语短句，别反复用同一句口头禅。"
+  },
+  "C_arm": {
+    "code_root": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code",
+    "dialogue_prompt_len": 258,
+    "dialogue_prompt_sha256": "862683123170f07e040bb6458b1749291ea8614ef5da73004bc967679b9346e9",
+    "dialogue_prompt_tail": "rmer）。背景：种了一辈子地，天不亮就下田，话不多，认定的事不轻易改。性格：开放35/尽责82/外向30/宜人60/神经质45（0-100）。价值：自主40/仁爱60/成就45/安全85。语气：plain；长度：short。当前目标：security\n场景：走动人情；对象：秀娘（熟悉度20/好感5）。情绪：平和；最紧的需求：social=40。\n只写台词本身（一句家常话）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。",
+    "reply_prompt_len": 271,
+    "reply_prompt_sha256": "7b25e0a0cee5db62ef7c5b5137a616cbc142a22fb0bf58db98ba53cd7d50a065",
+    "reply_prompt_tail": "子地，天不亮就下田，话不多，认定的事不轻易改。性格：开放35/尽责82/外向30/宜人60/神经质45（0-100）。价值：自主40/仁爱60/成就45/安全85。语气：plain；长度：short。当前目标：security\n你正在和秀娘聊「走动人情」。情绪：平和；最紧的需求：social=40。\n刚才的对话：\n秀娘：show me\n只写台词本身（接着刚才的话往下说一句）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。"
+  },
+  "_note": "D2.7 接线证明：跨两棵树渲染 _dialogue_prompt / _reply_prompt，逐字对比。C=master(9aaceee) B=feat/d27-narration。",
+  "assertions": {
+    "B_dialogue_tail_has_allow": true,
+    "B_reply_tail_has_allow": true,
+    "C_dialogue_tail_has_ban": true,
+    "C_reply_tail_has_ban": true,
+    "dialogue_len_delta": 35,
+    "dialogue_prompt_sha_differs": true,
+    "only_narration_half_changed": true,
+    "replacement_text_len_delta": 35,
+    "reply_len_delta": 35,
+    "reply_prompt_sha_differs": true
+  }
+}
