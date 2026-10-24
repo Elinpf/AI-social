@@ -1,0 +1,610 @@
+{
+  "meta": {
+    "script": "tools/p2/plan_actual_consistency.py",
+    "input_run": "v2/evidence/run_r10e2e_n16r60_seed42/run.jsonl",
+    "input_sha256": "f20f6822b7424bfc40f0820eca0726f635ed57618a04642cf230b20bfddb7476",
+    "input_lines": 116589,
+    "stable_flag_passed": true,
+    "evidence_status": "描述性读数（无判据编号）",
+    "note": "确定性输出：无时间戳字段；同一 run.jsonl + 同参数重放应字节一致。只读，不跑批、不调 LLM。"
+  },
+  "definitions": {
+    "unit_plan_peer": "「计划同伴对实例」= 一条 ACTIVITY_STARTED 行 (agent A, day, slot) 的 payload.participants 中除 A 自身之外的每一个 agent B，构成一个有向对实例 (A→B)。同一对 (A,B) 若双方各自的行都列了对方，则计 2 个有向实例；另给去重无向口径 unique_undirected。",
+    "unit_realized_place": "「实际所在」= 同一 (agent, day, slot) 格的 ACTIVITY_STARTED.payload.place。这是磁盘日志里唯一全覆盖的落点字段（16 agents × 5 days × 4 slots = 320 格，ACTIVITY_STARTED 行数 320，无缺口）；PLACE_ARRIVED.payload.place 仅覆盖发生位移的 299 格，用于交叉校验（见 validators.arrival_place_vs_activity_place_mismatch）。",
+    "time_alignment": "以 slot 对齐（(day, slot) 二元组），不以 round 对齐。理由：ACTIVITY_STARTED 本身就挂在 slot 上（每格一行，start_tick 固定为槽内 tick）；日志里同一 slot 内的位移事件只发生在槽首，round 级对齐不增加信息量。",
+    "consistent": "对实例 (A→B, day, slot) 判「一致」当且仅当 place(B, day, slot) == place(A, day, slot) —— 即 B 自己这一格记录的落点与 A 计划里的落点相同。注意：一致 = 空间共处，不等于「两人真的互动过」；互动另由 msg_lens 段报告。",
+    "decidable": "对实例可判定当且仅当 B 在该 (day, slot) 有 ACTIVITY_STARTED 行且 place 非 null。不可判定的实例单独计数，不进主分母（本批实测 0）。",
+    "excluded_events": "排除：MSG_DM/MSG_PUBLIC（对话层，只用于 msg_lens 辅助段，不进主口径）、GROUP_CREATED（只用于第 5 项对账）、RELATION_ENCOUNTER（关系层共现，非落点）、OBSERVATION（观察者视角，非本人落点）。",
+    "gap_classes": "缺口 = 可判定但对实例不一致。互斥主类按以下优先级判定，命中即停：(1) peer_at_residence：B 同槽落点 = residence（私域/在家）；(2) peer_planner_gate_skip_fallback：B 同槽行无 template 且 planner 1/3 确定性门判定为跳过（复刻 code/life/planner.py:102-104），即 B 走 _base_activity 兜底；(3) peer_planned_elsewhere_with_own_group：B 非门跳过，且 B 自己的 participants 长度 >=2（B 另有同伴，只是不在 A 这里）；(4) peer_planned_elsewhere_solo：B 非门跳过，且 B 自己的 participants 长度 <=1（B 独自在别处）。",
+    "crosscut_flags": "非互斥标签，与主类正交：reciprocal_both_listed（B 的行也列了 A）、peer_no_place_move（B 该格无 PLACE_MOVE/PLACE_ARRIVED，原地未动）、peer_stayed_prev_place（B 该格落点 == B 上一槽落点）。",
+    "secondary_batch": "副批只用于「同一把尺子在另一批是否同量级」，不构成横向比较结论，也不是同臂重跑（两批 env 开关不同、臂不同）。"
+  },
+  "primary_batch": {
+    "run_jsonl": "v2/evidence/run_r10e2e_n16r60_seed42/run.jsonl",
+    "run_jsonl_sha256": "f20f6822b7424bfc40f0820eca0726f635ed57618a04642cf230b20bfddb7476",
+    "run_jsonl_lines": 116589,
+    "activity_plan_fingerprint_sha256": "43cf39e047ea706e62f683e0276fe08a92b3ea323d5f8411a9dc00840d106136"
+  },
+  "universe": {
+    "agents": 16,
+    "days": 5,
+    "slots": [
+      "morning",
+      "afternoon",
+      "evening",
+      "night"
+    ],
+    "rounds_per_slot": 3,
+    "activity_started_rows": 320,
+    "agent_day_slot_cells": 320,
+    "cells_formula": "16 agents × 5 days × 4 slots = 320",
+    "place_arrived_rows": 299,
+    "cells_with_place_move": 299,
+    "msg_rows": 510,
+    "group_created_rows": 17
+  },
+  "plan_pairs": {
+    "planned_pair_instances": 218,
+    "planned_pair_check_expected": 218,
+    "decidable_pair_instances": 218,
+    "undecidable_pair_instances": 0,
+    "consistent_pair_instances": 74,
+    "consistency_rate": {
+      "numerator": 74,
+      "denominator": 218,
+      "value": 0.3394495412844037
+    },
+    "consistency_rate_denominator_note": "分母 = 可判定的计划对端有向对实例数（不是 agent 数、不是 slot 数）；分子 = 其中对端同槽落点与计划落点相同的实例数。",
+    "unique_undirected_pairs": 210,
+    "unique_undirected_decidable": 210,
+    "unique_undirected_consistent": 67,
+    "consistency_rate_undirected": {
+      "numerator": 67,
+      "denominator": 210,
+      "value": 0.319047619047619
+    },
+    "by_slot": {
+      "morning": {
+        "decidable": 30,
+        "consistent": 8,
+        "rate": {
+          "numerator": 8,
+          "denominator": 30,
+          "value": 0.26666666666666666
+        }
+      },
+      "afternoon": {
+        "decidable": 136,
+        "consistent": 44,
+        "rate": {
+          "numerator": 44,
+          "denominator": 136,
+          "value": 0.3235294117647059
+        }
+      },
+      "evening": {
+        "decidable": 52,
+        "consistent": 22,
+        "rate": {
+          "numerator": 22,
+          "denominator": 52,
+          "value": 0.4230769230769231
+        }
+      },
+      "night": {
+        "decidable": 0,
+        "consistent": 0,
+        "rate": {
+          "numerator": 0,
+          "denominator": 0,
+          "value": null
+        }
+      }
+    },
+    "by_planner_participants_size": {
+      "2": {
+        "decidable": 99,
+        "consistent": 33,
+        "rate": {
+          "numerator": 33,
+          "denominator": 99,
+          "value": 0.3333333333333333
+        }
+      },
+      "5+": {
+        "decidable": 119,
+        "consistent": 41,
+        "rate": {
+          "numerator": 41,
+          "denominator": 119,
+          "value": 0.3445378151260504
+        }
+      }
+    },
+    "reciprocal": {
+      "pair_instances_both_listed": 16,
+      "of_which_consistent": 14,
+      "rate": {
+        "numerator": 14,
+        "denominator": 16,
+        "value": 0.875
+      },
+      "pair_instances_unilateral": 202,
+      "unilateral_consistent": 60,
+      "unilateral_rate": {
+        "numerator": 60,
+        "denominator": 202,
+        "value": 0.297029702970297
+      },
+      "note": "双向都在计划里互相列名的实例一致率单列；单向列名占多数，「计划同伴」多数是单方列名。"
+    }
+  },
+  "gap_breakdown": {
+    "gap_total": 144,
+    "gap_share_of_decidable": {
+      "numerator": 144,
+      "denominator": 218,
+      "value": 0.6605504587155964
+    },
+    "classes": {
+      "peer_planned_elsewhere_solo": {
+        "count": 33,
+        "share_of_gaps": {
+          "numerator": 33,
+          "denominator": 144,
+          "value": 0.22916666666666666
+        }
+      },
+      "peer_planned_elsewhere_with_own_group": {
+        "count": 50,
+        "share_of_gaps": {
+          "numerator": 50,
+          "denominator": 144,
+          "value": 0.3472222222222222
+        }
+      },
+      "peer_planner_gate_skip_fallback": {
+        "count": 61,
+        "share_of_gaps": {
+          "numerator": 61,
+          "denominator": 144,
+          "value": 0.4236111111111111
+        }
+      }
+    },
+    "class_definitions": "缺口 = 可判定但对实例不一致。互斥主类按以下优先级判定，命中即停：(1) peer_at_residence：B 同槽落点 = residence（私域/在家）；(2) peer_planner_gate_skip_fallback：B 同槽行无 template 且 planner 1/3 确定性门判定为跳过（复刻 code/life/planner.py:102-104），即 B 走 _base_activity 兜底；(3) peer_planned_elsewhere_with_own_group：B 非门跳过，且 B 自己的 participants 长度 >=2（B 另有同伴，只是不在 A 这里）；(4) peer_planned_elsewhere_solo：B 非门跳过，且 B 自己的 participants 长度 <=1（B 独自在别处）。",
+    "by_slot": {
+      "morning": 22,
+      "afternoon": 92,
+      "evening": 30,
+      "night": 0
+    },
+    "peer_realized_place_histogram": {
+      "cafe": 36,
+      "bank": 27,
+      "farm": 17,
+      "workshop": 15,
+      "kitchen": 9,
+      "plaza": 7,
+      "community_center": 6,
+      "park": 6,
+      "school": 6,
+      "clinic": 4,
+      "market": 4,
+      "town_hall": 4,
+      "library": 3
+    },
+    "crosscut_flags": {
+      "reciprocal_both_listed": {
+        "count": 2,
+        "share_of_gaps": {
+          "numerator": 2,
+          "denominator": 144,
+          "value": 0.013888888888888888
+        }
+      },
+      "peer_no_place_move": {
+        "count": 16,
+        "share_of_gaps": {
+          "numerator": 16,
+          "denominator": 144,
+          "value": 0.1111111111111111
+        }
+      },
+      "peer_stayed_prev_place": {
+        "count": 16,
+        "share_of_gaps": {
+          "numerator": 16,
+          "denominator": 144,
+          "value": 0.1111111111111111
+        }
+      }
+    },
+    "class_x_reciprocal": {
+      "peer_planned_elsewhere_solo": 0,
+      "peer_planned_elsewhere_with_own_group": 2,
+      "peer_planner_gate_skip_fallback": 0
+    },
+    "unassignable": 0,
+    "unassignable_note": "本批全部缺口都能在事件流里找到「对端自己这一格的落点 + 是否门跳过」两条可核事实，故主类归属 0 条无法归因。但「对端为什么改主意去别处」属动机层，日志不可归因，见 unconfirmed。"
+  },
+  "msg_lens": {
+    "definition": "在「一致」的无向对里，看同 (day, slot) 是否出现一条把两人连起来的对话事件（MSG_DM 的 from→to；MSG_PUBLIC 的 participants 两两全连接）。辅助列，不进主分母，只回答「同处了有没有说话」。",
+    "consistent_undirected_pairs": 67,
+    "with_msg_link": 36,
+    "without_msg_link": 31,
+    "with_msg_link_rate": {
+      "numerator": 36,
+      "denominator": 67,
+      "value": 0.5373134328358209
+    },
+    "gap_pairs_with_msg_link": 54,
+    "gap_pairs_with_msg_link_note": "缺口对（不同地点）却仍出现对话连接的实例数；本口径下对话不需要同处，故该数不是矛盾。"
+  },
+  "group_created_reconciliation": {
+    "question": "CYCLE-16 §3.2 P2 的反读矛盾：17 个 8 人组 vs 仅 17 行 participants=8，是否真实矛盾。",
+    "group_created_total": 17,
+    "group_created_distinct_member_sets": 17,
+    "group_created_by_group_place_slot": {
+      "place:market|afternoon": 17
+    },
+    "groups_with_exactly_one_matching_activity_row": 17,
+    "activity_rows_with_participants_size_8": 17,
+    "rows_size8_by_slot": {
+      "afternoon": 17
+    },
+    "rows_size8_by_place": {
+      "market": 17
+    },
+    "size8_peer_pairs_decidable": 119,
+    "size8_peer_pairs_co_located": 41,
+    "size8_peer_pair_co_located_rate": {
+      "numerator": 41,
+      "denominator": 119,
+      "value": 0.3445378151260504
+    },
+    "verdict": "计数口径差异 + 字段语义差异，不是真实矛盾。GROUP_CREATED 以「组」为单位由世界层发出；ACTIVITY_STARTED.participants 是「每个 agent 自己计划里的同伴名单」。每个 GROUP_CREATED 的成员集合恰好对应 1 条（不是 8 条）ACTIVITY_STARTED 行的 participants，即只有发起人那一条行把整组成员写进自己的名单，其余成员各自另发自己的行。因此 17 组 ⇒ 17 行 size=8 自洽，17 不能用 8 去验。",
+    "detail": [
+      {
+        "group_id": "place:market",
+        "day": 0,
+        "slot": "afternoon",
+        "n_members": 8,
+        "members": [
+          "P002",
+          "P003",
+          "P004",
+          "P009",
+          "P011",
+          "P012",
+          "P014",
+          "P015"
+        ],
+        "matching_activity_rows": [
+          "P002"
+        ]
+      },
+      {
+        "group_id": "place:market",
+        "day": 0,
+        "slot": "afternoon",
+        "n_members": 8,
+        "members": [
+          "P003",
+          "P004",
+          "P006",
+          "P008",
+          "P012",
+          "P013",
+          "P015",
+          "P016"
+        ],
+        "matching_activity_rows": [
+          "P004"
+        ]
+      },
+      {
+        "group_id": "place:market",
+        "day": 0,
+        "slot": "afternoon",
+        "n_members": 8,
+        "members": [
+          "P001",
+          "P002",
+          "P005",
+          "P007",
+          "P008",
+          "P009",
+          "P012",
+          "P013"
+        ],
+        "matching_activity_rows": [
+          "P007"
+        ]
+      },
+      {
+        "group_id": "place:market",
+        "day": 0,
+        "slot": "afternoon",
+        "n_members": 8,
+        "members": [
+          "P002",
+          "P008",
+          "P009",
+          "P010",
+          "P012",
+          "P013",
+          "P015",
+          "P016"
+        ],
+        "matching_activity_rows": [
+          "P009"
+        ]
+      },
+      {
+        "group_id": "place:market",
+        "day": 1,
+        "slot": "afternoon",
+        "n_members": 8,
+        "members": [
+          "P002",
+          "P003",
+          "P005",
+          "P007",
+          "P011",
+          "P012",
+          "P014",
+          "P016"
+        ],
+        "matching_activity_rows": [
+          "P002"
+        ]
+      },
+      {
+        "group_id": "place:market",
+        "day": 1,
+        "slot": "afternoon",
+        "n_members": 8,
+        "members": [
+          "P002",
+          "P003",
+          "P008",
+          "P010",
+          "P013",
+          "P014",
+          "P015",
+          "P016"
+        ],
+        "matching_activity_rows": [
+          "P008"
+        ]
+      },
+      {
+        "group_id": "place:market",
+        "day": 1,
+        "slot": "afternoon",
+        "n_members": 8,
+        "members": [
+          "P004",
+          "P005",
+          "P007",
+          "P008",
+          "P010",
+          "P011",
+          "P012",
+          "P014"
+        ],
+        "matching_activity_rows": [
+          "P011"
+        ]
+      },
+      {
+        "group_id": "place:market",
+        "day": 1,
+        "slot": "afternoon",
+        "n_members": 8,
+        "members": [
+          "P002",
+          "P003",
+          "P004",
+          "P005",
+          "P007",
+          "P008",
+          "P012",
+          "P013"
+        ],
+        "matching_activity_rows": [
+          "P013"
+        ]
+      },
+      {
+        "group_id": "place:market",
+        "day": 2,
+        "slot": "afternoon",
+        "n_members": 8,
+        "members": [
+          "P001",
+          "P003",
+          "P004",
+          "P007",
+          "P009",
+          "P010",
+          "P012",
+          "P016"
+        ],
+        "matching_activity_rows": [
+          "P010"
+        ]
+      },
+      {
+        "group_id": "place:market",
+        "day": 3,
+        "slot": "afternoon",
+        "n_members": 8,
+        "members": [
+          "P001",
+          "P003",
+          "P004",
+          "P005",
+          "P008",
+          "P011",
+          "P012",
+          "P014"
+        ],
+        "matching_activity_rows": [
+          "P001"
+        ]
+      },
+      {
+        "group_id": "place:market",
+        "day": 3,
+        "slot": "afternoon",
+        "n_members": 8,
+        "members": [
+          "P002",
+          "P003",
+          "P004",
+          "P005",
+          "P007",
+          "P008",
+          "P010",
+          "P016"
+        ],
+        "matching_activity_rows": [
+          "P002"
+        ]
+      },
+      {
+        "group_id": "place:market",
+        "day": 3,
+        "slot": "afternoon",
+        "n_members": 8,
+        "members": [
+          "P001",
+          "P002",
+          "P004",
+          "P005",
+          "P008",
+          "P012",
+          "P015",
+          "P016"
+        ],
+        "matching_activity_rows": [
+          "P004"
+        ]
+      },
+      {
+        "group_id": "place:market",
+        "day": 3,
+        "slot": "afternoon",
+        "n_members": 8,
+        "members": [
+          "P002",
+          "P005",
+          "P007",
+          "P008",
+          "P009",
+          "P010",
+          "P015",
+          "P016"
+        ],
+        "matching_activity_rows": [
+          "P008"
+        ]
+      },
+      {
+        "group_id": "place:market",
+        "day": 3,
+        "slot": "afternoon",
+        "n_members": 8,
+        "members": [
+          "P002",
+          "P004",
+          "P006",
+          "P007",
+          "P008",
+          "P009",
+          "P010",
+          "P011"
+        ],
+        "matching_activity_rows": [
+          "P011"
+        ]
+      },
+      {
+        "group_id": "place:market",
+        "day": 4,
+        "slot": "afternoon",
+        "n_members": 8,
+        "members": [
+          "P001",
+          "P002",
+          "P007",
+          "P008",
+          "P009",
+          "P010",
+          "P012",
+          "P016"
+        ],
+        "matching_activity_rows": [
+          "P002"
+        ]
+      },
+      {
+        "group_id": "place:market",
+        "day": 4,
+        "slot": "afternoon",
+        "n_members": 8,
+        "members": [
+          "P002",
+          "P003",
+          "P004",
+          "P007",
+          "P011",
+          "P013",
+          "P015",
+          "P016"
+        ],
+        "matching_activity_rows": [
+          "P007"
+        ]
+      },
+      {
+        "group_id": "place:market",
+        "day": 4,
+        "slot": "afternoon",
+        "n_members": 8,
+        "members": [
+          "P001",
+          "P002",
+          "P004",
+          "P006",
+          "P007",
+          "P012",
+          "P013",
+          "P014"
+        ],
+        "matching_activity_rows": [
+          "P013"
+        ]
+      }
+    ]
+  },
+  "validators": {
+    "arrival_place_vs_activity_place_mismatch": 0,
+    "arrival_place_vs_activity_place_note": "PLACE_ARRIVED.place 与同格 ACTIVITY_STARTED.place 不一致的格数（期望 0），用于确认「落点取自 ACTIVITY_STARTED」不引入位移噪声。",
+    "planned_pairs_sum_matches_row_arithmetic": true,
+    "cells_without_place_move": 21,
+    "cells_without_place_move_note": "这些格无位移事件（原地未动），落点仍由 ACTIVITY_STARTED.place 表征；已核对不存在「落点变了却没有位移事件」的情形（对应 gap crosscut flag peer_no_place_move 的语义边界）。",
+    "gate_skip_cells": 111,
+    "meta_assertion_participants_consistent": "meta.json: assertions.participants_consistent=true / participants_violations=0 指的是「参加者集合内部自洽」的日志断言，与「计划同伴 = 实际同处」的一致率不是一回事，不得互相解释。"
+  },
+  "unconfirmed": [
+    "「对端为什么去了别处」的动机不可从日志归因；本文件只给落点事实与门跳过事实，不给因果。",
+    "ACTIVITY_STARTED 是 slot 级计划事件，不是逐 round 的在场记录；同槽内短时错峰到场/离场本口径不可见。",
+    "一致 ≠ 互动：msg_lens 的「同处但无对话」不能被解释为关系冷淡，只能说该槽内没有对话事件。",
+    "max_messages_per_slot=2 饱和 / reply_window_rounds 错过属对话层参数，无法解释落点层缺口（缺口对按定义不同处）；至多是「同处之后没说话」的下游候选原因，未验证。",
+    "单批读数；副批（另一 env 臂、同 code_sha）只用于「同尺子是否同量级」，不构成横向比较结论，也不能替代同臂重跑。"
+  ],
+  "secondary_batch": null
+}

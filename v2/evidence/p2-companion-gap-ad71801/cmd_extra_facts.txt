@@ -1,0 +1,25 @@
+{
+ "decidable": 218,
+ "consistent": 74,
+ "peer_gate_skipped": {
+  "decidable": 76,
+  "consistent": 15,
+  "rate": 0.1974
+ },
+ "peer_has_template": {
+  "decidable": 142,
+  "consistent": 59,
+  "rate": 0.4155
+ },
+ "peer_no_template": {
+  "decidable": 76,
+  "consistent": 15,
+  "rate": 0.1974
+ },
+ "peer_b_psize_hist_on_decidable": {
+  "1": 111,
+  "2": 75,
+  "8": 32
+ },
+ "note": "B 这一格是否带 template 由 planner.plan_slot 决定；template 缺失=门跳过或非模板槽兜底。"
+}

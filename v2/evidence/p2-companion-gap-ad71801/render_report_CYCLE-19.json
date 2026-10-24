@@ -1,0 +1,59 @@
+{
+  "batch_id": "CYCLE-19",
+  "fail_count": 0,
+  "generated_at": "2026-10-24T12:04:26+08:00",
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_r10e2e_n16r60_seed42/run.jsonl",
+  "log_sha256": "f20f6822b7424bfc40f0820eca0726f635ed57618a04642cf230b20bfddb7476",
+  "ok_count": 1,
+  "policy": {
+    "blank_check": "自行像素自检（distinct_colors/top_color_frac/non_bg_frac 逐张落盘）；未沿用 shot.py 的单色判据——该判据对深色 dialogue.html 会假红（实测 80.09% 误判）",
+    "code_untouched": "服务根为临时目录 + 符号链接；未在 code/frontend 下写入任何文件",
+    "no_reuse": "输出同名 PNG 若已存在则先删除，只认本次现截",
+    "no_stitching": "每张图独立截图，禁止拼图/跨批混拼"
+  },
+  "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_r10e2e_n16r60_seed42",
+  "run_sha256_in_threads": "f20f6822b7424bfc40f0820eca0726f635ed57618a04642cf230b20bfddb7476",
+  "schema_version": "render-shots/1.0",
+  "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/p2-companion-gap-ad71801/threads_CYCLE-19.json",
+  "threads_json_sha256": "6ab53a320f2a7f7e639ba1645689f79e729efd9b7bc46c049068bb434d8fb11c",
+  "views": [
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 22370,
+        "height": 1050,
+        "non_bg_frac": 0.4745,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.262,
+        "width": 1300
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/p2-companion-gap-ad71801/CYCLE-19-rhythm-f20f6822.png",
+      "png_bytes": 282877,
+      "png_mtime_iso": "2026-10-24T12:04:25+08:00",
+      "png_mtime_ns": 1792814665446514462,
+      "png_sha256": "b245703c5a4006d88436b5013677910d04dee6a6ca9eb6804358cfb0374c2362",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_r10e2e_n16r60_seed42/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_r10e2e_n16r60_seed42/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/p2-companion-gap-ad71801/threads_CYCLE-19.json --label CYCLE-19",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_r10e2e_n16r60_seed42/run.jsonl",
+        "log_sha256": "f20f6822b7424bfc40f0820eca0726f635ed57618a04642cf230b20bfddb7476",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:41233/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_CYCLE-19/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/p2-companion-gap-ad71801/CYCLE-19-rhythm-f20f6822.png --width 1300 --height 1050 --timeout 120.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_r10e2e_n16r60_seed42",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/p2-companion-gap-ad71801/threads_CYCLE-19.json",
+        "threads_json_sha256": "6ab53a320f2a7f7e639ba1645689f79e729efd9b7bc46c049068bb434d8fb11c"
+      },
+      "view": "rhythm"
+    }
+  ]
+}

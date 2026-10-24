@@ -1,0 +1,130 @@
+{
+  "meta": {
+    "script": "tools/p2/p2_gap_crosstab.py",
+    "input_run": "v2/evidence/run_f3_off_n16r60_seed42/run.jsonl",
+    "input_sha256": "19d5cb03de2f0203e3b8aa1c9160adfbef787a159f961713f40b88027931d305",
+    "note": "只读诊断旁证；不改主出数器的分母与定义。与 plan_actual_consistency.py 同源复刻。"
+  },
+  "gap_total": 144,
+  "class_counts": {
+    "peer_planned_elsewhere_solo": 33,
+    "peer_planned_elsewhere_with_own_group": 50,
+    "peer_planner_gate_skip_fallback": 61
+  },
+  "crosstab": {
+    "class_x_b_place": {
+      "peer_planned_elsewhere_solo": {
+        "bank": 27,
+        "farm": 2,
+        "town_hall": 2,
+        "school": 1,
+        "workshop": 1
+      },
+      "peer_planned_elsewhere_with_own_group": {
+        "cafe": 24,
+        "plaza": 7,
+        "community_center": 6,
+        "park": 6,
+        "library": 3,
+        "market": 3,
+        "school": 1
+      },
+      "peer_planner_gate_skip_fallback": {
+        "farm": 15,
+        "workshop": 14,
+        "cafe": 12,
+        "kitchen": 9,
+        "clinic": 4,
+        "school": 4,
+        "town_hall": 2,
+        "market": 1
+      }
+    },
+    "class_x_slot": {
+      "peer_planned_elsewhere_solo": {
+        "afternoon": 27,
+        "morning": 6
+      },
+      "peer_planned_elsewhere_with_own_group": {
+        "afternoon": 25,
+        "evening": 18,
+        "morning": 7
+      },
+      "peer_planner_gate_skip_fallback": {
+        "afternoon": 40,
+        "evening": 12,
+        "morning": 9
+      }
+    },
+    "class_x_a_psize": {
+      "peer_planned_elsewhere_solo": {
+        "8": 25,
+        "2": 8
+      },
+      "peer_planned_elsewhere_with_own_group": {
+        "2": 28,
+        "8": 22
+      },
+      "peer_planner_gate_skip_fallback": {
+        "8": 31,
+        "2": 30
+      }
+    },
+    "class_x_b_psize": {
+      "peer_planned_elsewhere_solo": {
+        "1": 33
+      },
+      "peer_planned_elsewhere_with_own_group": {
+        "2": 47,
+        "8": 3
+      },
+      "peer_planner_gate_skip_fallback": {
+        "1": 61
+      }
+    },
+    "class_x_reciprocal": {
+      "peer_planned_elsewhere_solo": {
+        "False": 33
+      },
+      "peer_planned_elsewhere_with_own_group": {
+        "False": 48,
+        "True": 2
+      },
+      "peer_planner_gate_skip_fallback": {
+        "False": 61
+      }
+    },
+    "class_x_peer_no_place_move": {
+      "peer_planned_elsewhere_solo": {
+        "False": 33
+      },
+      "peer_planned_elsewhere_with_own_group": {
+        "False": 48,
+        "True": 2
+      },
+      "peer_planner_gate_skip_fallback": {
+        "False": 47,
+        "True": 14
+      }
+    }
+  },
+  "mechanism_checks": {
+    "gate_skip_class": {
+      "n": 61,
+      "b_place_equals_base_activity_predicted": 61,
+      "b_place_residence_share": 0,
+      "mismatch": 0,
+      "mismatch_rows": [],
+      "b_has_template_false": 61,
+      "verdict": "机制已核验：门跳过的对端这一格 61/61 落在 _base_activity 兜底落点，且 61/61 无 template"
+    },
+    "solo_class": {
+      "n": 33,
+      "b_has_template_true": 33
+    },
+    "own_group_class": {
+      "n": 50,
+      "b_has_template_true": 50
+    }
+  }
+}
