@@ -1,0 +1,59 @@
+[1/4] gen_threads: /opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/d28-narration-quota/v2/evidence/run_d28_B_n16r60_seed42/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/d28-narration-quota/v2/evidence/run_d28_B_n16r60_seed42/meta.json --out /tmp/cycle23_rerender_same/threads_CYCLE23-B.json --label CYCLE23-B
+[gen_threads] events=116342 messages=510 threads=169 multi_turn=88 ge3=77 legacy_msgs=0 moves=299 ref_edges=0 echoes=0
+[gen_threads] wrote /tmp/cycle23_rerender_same/threads_CYCLE23-B.json (2176927 bytes)
+[2/4] threads.json 733900352f31f232…  run_sha256=f0c8724de04ba251…  sha8=f0c8724d  threads=169
+[3/4] static server http://127.0.0.1:36649  root=/tmp/hitt_render_6cv35gdp
+[4/4] shot chat: /opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:36649/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_CYCLE23-B/threads.json --out /tmp/cycle23_rerender_same/CYCLE23-B-chat-f0c8724d.png --width 1400 --height 900 --timeout 240.0 --retry-blank 2 --no-blank-check
+SHOT OK: /tmp/cycle23_rerender_same/CYCLE23-B-chat-f0c8724d.png  elapsed=1.84s  mean_brightness=35.6(gray601,0-255,黑<8)  max_color_frac=29.98%  blank_retries=0/2
+  blank_cumulative=16/333 次空白/总取证（T282 观察哨，仅留痕）
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+
+[4/4] shot rhythm: /opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:36649/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_CYCLE23-B/threads.json --out /tmp/cycle23_rerender_same/CYCLE23-B-rhythm-f0c8724d.png --width 1300 --height 1050 --timeout 240.0 --retry-blank 2 --no-blank-check
+SHOT OK: /tmp/cycle23_rerender_same/CYCLE23-B-rhythm-f0c8724d.png  elapsed=1.76s  mean_brightness=32.4(gray601,0-255,黑<8)  max_color_frac=34.44%  blank_retries=0/2
+  blank_cumulative=16/334 次空白/总取证（T282 观察哨，仅留痕）
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+
+[4/4] shot spread: /opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:36649/dialogue.html?still=1&multi=1&min=0&view=spread&data=sample/dialogue_CYCLE23-B/threads.json --out /tmp/cycle23_rerender_same/CYCLE23-B-spread-f0c8724d.png --width 1400 --height 1000 --timeout 240.0 --retry-blank 2 --no-blank-check
+SHOT OK: /tmp/cycle23_rerender_same/CYCLE23-B-spread-f0c8724d.png  elapsed=1.77s  mean_brightness=22.0(gray601,0-255,黑<8)  max_color_frac=75.25%  blank_retries=0/2
+  blank_cumulative=16/335 次空白/总取证（T282 观察哨，仅留痕）
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+
+{
+  "report": "/tmp/cycle23_rerender_same/render_report_CYCLE23-B.json",
+  "report_sha256": "3e39bbdb9299555e22696443f68850f377deee8c375d24573a3acc6d4b0761ed",
+  "threads_json_sha256": "733900352f31f232d7c0a0db45e32ff31fee94ae9e4170d9472d1815b758d859",
+  "ok_count": 3,
+  "fail_count": 0,
+  "pngs": [
+    {
+      "view": "chat",
+      "png": "/tmp/cycle23_rerender_same/CYCLE23-B-chat-f0c8724d.png",
+      "rc": 0,
+      "png_sha256": "57897f72e23270dbe13aef7c2d95e56f8afe6326a9d7169723b6afb6f71d66ce",
+      "png_bytes": 289157
+    },
+    {
+      "view": "rhythm",
+      "png": "/tmp/cycle23_rerender_same/CYCLE23-B-rhythm-f0c8724d.png",
+      "rc": 0,
+      "png_sha256": "b86360cd92f2abfe25a397917449d51fdd30f7420d4e3255783ddfa9ebaf990e",
+      "png_bytes": 283084
+    },
+    {
+      "view": "spread",
+      "png": "/tmp/cycle23_rerender_same/CYCLE23-B-spread-f0c8724d.png",
+      "rc": 0,
+      "png_sha256": "1611027108033fcce48ca74f5cc379b204763acdaf03a54b23cf6686956d7604",
+      "png_bytes": 179243
+    }
+  ]
+}
