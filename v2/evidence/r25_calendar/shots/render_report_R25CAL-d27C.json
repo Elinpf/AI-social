@@ -1,4 +1,7 @@
 {
+  "arm": "OFF-era",
+  "arm_note": "本批图来自 run_d27_C_n16r60_seed42（code_sha f2bf606，日历臂 LIFE_PROMPT_CALENDAR 缺省=OFF 的基线批）；演示页不显示日历字段 ⇒ 这些图只能证明页面可真实渲染，**不能**证明日历臂效果；截图不进判据。",
+  "arm_field_provenance": "manual-by-life-engineer(2026-10-25 r-fix)：非 render_shots.py 生成字段，整改 S2 追加",
   "batch_id": "R25CAL-d27C",
   "fail_count": 0,
   "generated_at": "2026-10-25T04:11:55+08:00",

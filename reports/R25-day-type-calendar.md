@@ -282,7 +282,8 @@ sha256sum v2/evidence/r25_calendar/r25-calendar-prompts.html # 7455c68b039f02376
 
 ```bash
 cd .worktrees/feat-day-type-calendar
-python3 /tmp/gen_r23_shot.py          # 调真实 render()/_dialogue_prompt() 生成 HTML（此脚本全文见 §附A）
+python3 /tmp/gen_r23_shot.py          # 调真实 render()/_dialogue_prompt() 生成 HTML（此脚本全文见 §附A）。
+                                      # ⚠ `gen_r23_shot.py` 是**历史临时脚本名，未随本报告改号**（见 §9.4a M2）；它在 /tmp，非入库件，不可复算。
 cd v2/evidence/r25_calendar && (python3 -m http.server 8899 --bind 127.0.0.1 &)
 python3 - <<'PY'
 from playwright.sync_api import sync_playwright
@@ -326,8 +327,9 @@ bash frontend/tools/dialogue_shots.sh http://127.0.0.1:8848 sample/<batch>/threa
 |---|---|
 | 改动基线（`master`） | `2a99344ead2e16be15ecd0feb415f250f1e6ce3f` |
 | 实现分支 / worktree | `feat/day-type-calendar` @ `.worktrees/feat-day-type-calendar` |
-| 交付 commit（本报告 + 实现 + 证据同批入库） | 见 `git log -1 --format=%H feat/day-type-calendar`；完整 40 位 sha 由本轮 push 回报记录在 `team-workspace/reports/r23-brief.md` |
+| 交付 commit（本报告 + 实现 + 证据同批入库） | 见 §9.9 三层 sha 表（代码 `f338094`／证据 `bfef816`／报告 §9 `b40f1d6`，均已 push 到远端分支 `feat/day-type-calendar-r25`）；亦可 `git log -1 --format=%H feat/day-type-calendar`（**本地分支名，远端未强推覆盖旧 `d39c789`**） |
 | 内容级绑定（不依赖 commit 可核对） | `calendar.py d742a914…`／`test_calendar_day_type.py 07c2b397…`／`agent.py diff 22e4ae79…`／图 `a7e9d5ce…` |
+| ⚠ 已删除的死链（2026-10-25 复核整改 M2） | 本行原写「完整 40 位 sha 记录在 `team-workspace/reports/r23-brief.md`」——该路径**实测不存在**（复核方 `ls` 实测 + 本轮复查），属死链，已改为指向 §9.9 |
 | 尺子身份 | `lexicon_sha256 = eee8ba1d2b4ba62848a7e5efdd72d078411889d870075c5fd874f742e7f9dd17`（`LEXICON_VERSION=calendar-v1`） |
 
 > 说明：报告无法自指自身的 commit sha，故交付 sha 记录在 push 回报与团队简报中；内容级 sha256 已足够把"结论 ↔ 代码字节"钉死。
@@ -358,7 +360,7 @@ bash frontend/tools/dialogue_shots.sh http://127.0.0.1:8848 sample/<batch>/threa
 
 ---
 
-## 附A：生成截图的脚本（`/tmp/gen_r23_shot.py` 核心）
+## 附A：生成截图的脚本（`/tmp/gen_r23_shot.py` 核心；**历史名未改**，见 §9.4a M2）
 
 ```python
 # 只读：调真实 render() 与 _dialogue_prompt()，输出 HTML 供截图；不调 LLM、不写仓库其他文件
@@ -451,8 +453,36 @@ R24-public-talk-baseline.md   # ← R24 亦已被占用（文件在，README 索
 | 报告文件 | `reports/R23-day-type-calendar.md` | `reports/R25-day-type-calendar.md` |
 | 证据目录 | `v2/evidence/r23_calendar/` | `v2/evidence/r25_calendar/` |
 | 渲染图 | `r23-calendar-prompts.{html,png}` | `r25-calendar-prompts.{html,png}` |
-| 报告内自引用 | `# R23 ·`、路径、`本轮只追加 R23 一行` | 同步改号（`grep -n 'R23' reports/R25-day-type-calendar.md` **零命中**） |
+| 报告内自引用 | `# R23 ·`、路径、`本轮只追加 R23 一行` | 标题、文件名、证据目录、README 索引**已全改 R25**；正文仍余 `R23` 字样，逐处性质见 §9.4a（**均为「说明改号」或「旧名↔新名对照表」，无一处是被漏改的自引用**） |
 | README 索引行 | 无（冲突块内为 `R23` 行） | `| **R25** | [日历臂…](R25-day-type-calendar.md) |` |
+
+### 9.4a 改号后残留 `R23` / `r23` 字样逐处清点（**复核整改 M1**，可从命令复算）
+
+> **勘误**：本节前一版写的「`grep -n 'R23' …` **零命中**」**不成立**——独立复核实测 `grep -c 'R23'` = **7**。
+> 那是一句"报告里给出、却跑不出所述结果"的命令，属硬伤。下面改成可复算的真话：**先把数字跑出来，再逐处说明性质**。
+
+```bash
+$ cd .worktrees/feat-day-type-calendar
+$ grep -c 'R23' reports/R25-day-type-calendar.md
+15
+$ grep -c 'r23' reports/R25-day-type-calendar.md     # 小写（不含大写 R-2-3 行）
+16
+```
+
+逐处性质（行号以本文件当前版本为准；性质分三类：**A 说明改号这件事** / **B 旧名↔新名对照表** / **C 历史遗留名、已就地标注**）：
+
+| 类别 | 内容 | 判定 |
+|---|---|---|
+| **A** | 页首补记「编号由 `R23` 改 `R25`」；§9.2 冲突解法「保留 master 的 `R21/R22/R23/D12-F` 行」；§9.4 小节标题「编号冲突消除（R23 → R25）」；§9.4 占用核查里的 `R23-solitude-idle.md` | 必须出现（否则读者不知道为什么改号），**非漏改** |
+| **B** | §9.4 对照表：`reports/R23-day-type-calendar.md` → `R25-…`；`v2/evidence/r23_calendar/` → `r25_calendar/`；`r23-calendar-prompts.{html,png}` → `r25-*`；README 行「冲突块内为 `R23` 行」 | 对照表左列**按设计保留旧名**，**非漏改** |
+| **C** | `:285` / `:363` 的 `/tmp/gen_r23_shot.py` —— **历史临时脚本名，不随本报告改号**，已就地标注「历史名未改，且它在 `/tmp`、非入库件、不可复算」 | 已显式标注（原 M2 之一） |
+
+**结论（可复算口径）**：`R23`/`r23` 字样**全部属于 A/B/C 三类**：标题、文件名、证据目录、README 索引四处**实际引用**都已改成 `R25`/`r25`（`ls reports | grep -i calendar` 只剩 `R25-day-type-calendar.md`），正文残留只是"说明改号"与"对照表左列"。
+**不再声称"零命中"**——真话是（2026-10-25 整改后、在**当前文件**上实测）：`grep -c 'R23'` = **15**、`grep -c 'r23'` = **16**，逐处性质见上表。
+> ⚠ 这两个数字**包含本节自身的文字**（本节要解释改号，必然写出旧编号），所以它们只保证「由上面两条命令在当前文件重跑即可得到」，不承诺跨版本恒定；任何引用都请重跑命令、不要转抄数字。
+
+**M2 的另一半（死链）已处置**：§6 原先指向 `team-workspace/reports/r23-brief.md` 的那一行，实测路径不存在 ⇒ 已改为指向 §9.9 的 sha 表，并在原处留一行勘误说明。
+复算：`grep -n 'r23-brief' reports/R25-day-type-calendar.md` 现在的命中**全部是「记录这条死链曾被修掉」的勘误/整改文字**（不再有指向该路径的活链接）。
 
 ### 9.5 OFF 等价性：**跨树对拍**（新工具，两把尺子）
 
@@ -481,6 +511,10 @@ $ cd .worktrees/feat-day-type-calendar && PYTHONPATH=code python3 tools/calendar
 - ON 态分支树：`dialogue_prompt_sha256 b429bfa1…`、`reply_prompt_sha256 e8664dc8…`，标记行各出现 **1** 次，**各 +62 字符**（与 §8① 的 `+62~+66` 口径一致；本节这一组固定输入即 `dow=2/workday`）。
 - 词表指纹：`lexicon_sha256 eee8ba1d2b4ba62848a7e5efdd72d078411889d870075c5fd874f742e7f9dd17`（`calendar-v1`），与 10-23 审计值相同。
 - **该脚本零 LLM、零事件、零墙钟、只写 `--out` 指定的 json**；master 树跑它不会产出 `calendar` 模块（json 内 `lexicon_note = ImportError: cannot import name 'calendar'`，是**预期事实**、不是失败）。
+
+> **S1 口径声明（2026-10-25 复核整改建议采纳）**：上表 sha256 **只在本工具（`tools/calendar/off_equiv_prompts.py`）+ 本 `_wv()` 输入**（`day_of_week=2 / day_type=workday / round=12`、真实 `LifeLayerAgent` 构造、带 `wv` 世界视图 ⇒ 提示词长度 355/368）下**两树之间可比**；
+> **跨工具绝对值不可比**：复核方用 `tools/d9/prompt_fn_sha.py` 的极简 agent 口径在同一棵树测得 **258/271 字符**（`dialogue 8626831…` / `reply 7b25e0a…`，见 `rounds/current/verify.md` 建议项 S1），**这不是矛盾**，是尺子与输入不同。
+> 因此本表的可比性判据只有一条：**同工具、同输入、两树 sha 是否相等**。
 
 ### 9.6 真实截图（2 张；**从既有已收批日志现场渲染，零跑批**）
 
@@ -537,3 +571,26 @@ $ python3 tools/metrics/render_shots.py \
 | 本报告 §9 入库 | 见 push 回报（本节内容级 sha256 由 `git show <sha>:reports/R25-day-type-calendar.md \| sha256sum` 复算） | — |
 
 > 复算底线：§9 里每个数字都由本节贴出的命令重算得出；没有一处转抄旧结论、也没有一处来自未执行的批次。
+
+
+---
+
+## 10. 复核整改（2026-10-25，复核判定「有条件通过」→ 本条落实 M1/M2 + S1/S2）
+
+- **复核意见原件**：`<team-workspace>/rounds/current/verify.md`（判定：**有条件通过**，M1/M2 必修）
+- **纪律留痕（本整改动工前）**：
+  ```bash
+  $ pgrep -af 'orchestration run|run_batch' | grep -v pgrep
+  # （空 —— d29 B′ 批已收批；本整改期间无任何在飞批次）
+  ```
+  本整改**只改文档与证据字段**，**零跑批、零 LLM 调用**；`code/life`、`code/orchestration`、`code/config`、`code/engine` **零改动**；master 主树未动。
+
+| # | 复核要求 | 本整改的处置 | 复算方法 |
+|---|---|---|---|
+| **M1** | §9.4 的「`grep -n 'R23' …` **零命中**」与事实不符（实测 `grep -c` = 7），改成可复算真话 | 新增 **§9.4a**：先贴 `grep -c 'R23'` / `grep -c 'r23'` 的真实数字，再把每一处按 **A 说明改号 / B 对照表左列 / C 历史遗留名（已标注）** 分类；§9.4 表格里那句"零命中"已改写为指向 §9.4a | §9.4a 内两条 `grep -c` 命令直接重跑 |
+| **M2** | 正文遗留 `r23` 命名要么处置要么显式标注：`:285`/`:361` 的 `/tmp/gen_r23_shot.py` → 注明"历史名未改"；`:329` 的 `team-workspace/reports/r23-brief.md` 是**死链** → 改指向真实记录处或删除 | ① 两处脚本名就地加注「**历史临时脚本名，不随改号**；在 `/tmp`、非入库件、不可复算」（见 §6、附A 与 §9.4a 的 C 类）；② 死链行**改为指向 §9.9 三层 sha 表**，并在原行留勘误说明（记录"该路径实测不存在"），不静默删除历史 | `grep -n 'r23' reports/R25-day-type-calendar.md` 贴输出 |
+| **S1**（建议，已采纳） | §9.5 加口径声明：本表 sha 只在本工具 + 本 `_wv()` 输入下可比，跨工具绝对值不可比 | §9.5 末尾新增"S1 口径声明"段（并点名复核方 d9 尺子的 258/271 不是矛盾） | 读 §9.5 |
+| **S2**（建议，已采纳） | 给 `render_report` 加 `arm=OFF-era` 字段，避免图日后被误引为"日历臂截图" | `v2/evidence/r25_calendar/shots/render_report_R25CAL-d27C.json` 顶部新增两个字段：`"arm": "OFF-era"`、`"arm_note"`（说明图来自 `run_d27_C` 基线批、`code_sha f2bf606`、日历臂 OFF 时代、**不能证明日历臂效果**）。⚠ 该字段是**交付方手工追加**（非 `render_shots.py` 生成），故在同一文件里记 `"arm_field_provenance": "manual-by-life-engineer(2026-10-25 r-fix)"`，不冒充工具产出 | `python3 -c "import json;d=json.load(open('v2/evidence/r25_calendar/shots/render_report_R25CAL-d27C.json'));print(d['arm'],d['arm_field_provenance'])"` |
+
+**整改后仍未改变的边界**：本轮**无真 LLM 批次、无 `obs llm-cost`、无效果读数**；「机制接通 ≠ 生活气息改善」这条口径一字未松。
+**整改 commit sha**：见本轮 push 回报；上一轮三层 sha（`f338094` / `bfef816` / `b40f1d6`）作为**历史锚点保留**，本整改**在其之上追加**，不改写既有 sha。
