@@ -1,3 +1,3 @@
 wrote v2/evidence/p2-companion-gap-ad71801/p2_gap_crosstab_f3off.json
 gaps 144 classes {'peer_planned_elsewhere_solo': 33, 'peer_planned_elsewhere_with_own_group': 50, 'peer_planner_gate_skip_fallback': 61}
-gate_skip 机制核验 61/61 命中, 无template 61/61
+gate_skip 严格口径 61/61 命中（mismatch 0）｜弱口径 61/61｜无template 61/61
