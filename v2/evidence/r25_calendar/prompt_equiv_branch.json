@@ -1,0 +1,27 @@
+{
+  "env_LIFE_PROMPT_CALENDAR_at_entry": null,
+  "lexicon_sha256": "eee8ba1d2b4ba62848a7e5efdd72d078411889d870075c5fd874f742e7f9dd17",
+  "lexicon_version": "calendar-v1",
+  "off": {
+    "calendar_mark_count_dialogue": 0,
+    "calendar_mark_count_reply": 0,
+    "dialogue_len": 355,
+    "dialogue_prompt_sha256": "433147fdb45b7a2332b81418e0370477cc1bc87f701354361aaf6a53c33115a9",
+    "reply_len": 368,
+    "reply_prompt_sha256": "be6c67c2821b1ec1f9f0bd4736f504ac26204daab762964f0f76607e08229d1f"
+  },
+  "on": {
+    "calendar_mark_count_dialogue": 1,
+    "calendar_mark_count_reply": 1,
+    "delta_len_dialogue": 62,
+    "delta_len_reply": 62,
+    "dialogue_len": 417,
+    "dialogue_prompt_sha256": "b429bfa1fe5c1b5c35a18d6ee88e8ba330ef83fe94d1e095209d80afb66b0be9",
+    "on_minus_mark_equals_off_dialogue": true,
+    "on_minus_mark_equals_off_reply": true,
+    "reply_len": 430,
+    "reply_prompt_sha256": "e8664dc8a8658d638d3a0ddb998b2cd84aa5bec24cdd401b4e9614036ca25eca"
+  },
+  "tree": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/feat-day-type-calendar",
+  "tree_head": "f338094bdcc5118f2cd33c9bea0f32bd902ee932"
+}
