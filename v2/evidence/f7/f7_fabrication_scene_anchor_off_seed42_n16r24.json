@@ -1,0 +1,177 @@
+{
+  "batch_id": "scene_anchor_off_seed42_n16r24",
+  "caliber_version": "f7-fabrication-rule/2.0",
+  "inputs": {
+    "log_bytes": 17161028,
+    "log_path": "v2/evidence/run_scene_anchor_off_seed42_n16r24/run.jsonl",
+    "log_sha256": "4d70674e0be7dcf24b92ecd73ed01062f03cf41d483464dc85ec538a2060c7e6",
+    "personas": {
+      "exists": true,
+      "field": "personas[].persona_id + personas[].display_name(strip '青溪镇·')",
+      "n": 20,
+      "name_table_sha256": "cdf28d499146220921482d175d43298269d2c2b08c25c0585b6f5e51af4b64d1",
+      "path": "code/config/personas.json",
+      "sha256": "08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d"
+    },
+    "places": {
+      "exists": true,
+      "n": 17,
+      "path": "code/config/places.json",
+      "place_names": [
+        "中央广场",
+        "事务所",
+        "住宅",
+        "公园",
+        "农场",
+        "咖啡馆",
+        "图书馆",
+        "城门",
+        "学校",
+        "工坊",
+        "市政厅",
+        "市集",
+        "礼堂",
+        "社区中心",
+        "诊所",
+        "银行",
+        "面包房"
+      ],
+      "sha256": "c36c0f8776372f4e36ec39126f0fd9546c1dadf5e814c294172f5e2e04bb66fa"
+    },
+    "script_sha256": "819e8b0dba5a5593cd664310ca069b528ef98403b131c1baa2a886526d23de44"
+  },
+  "layers": [
+    {
+      "decidable": true,
+      "denominator": 0,
+      "denominator_definition": "正文（旁白已剔除）含至少 1 个非发言人裸 P-ID 的消息数（per-message）",
+      "id": "L1_fabricated_entity",
+      "numerator": 0,
+      "question": "正文是否引用了 personas 名单里不存在的居民编号？",
+      "rate": null,
+      "samples": [],
+      "unjudged": {
+        "note": "名单固定 20 人；名单外人类实体无法核验在场性，按判据卡 §2.2 不入分母"
+      }
+    },
+    {
+      "ctx_scene_explains_hits": {
+        "hits": 0,
+        "hits_where_ctx_scene_equals_claim": 0,
+        "note": "若命中能被 ctx.scene.place 解释，则矛盾源头是『引擎注入给模型的场景与真实位置不符』，而不是模型凭空编造；此时不得把命中读成模型的 F-7 编造。"
+      },
+      "decidable": true,
+      "denominator": 0,
+      "denominator_definition": "含 ≥1 条非时间偏移/非完成体的显式自我在场断言、且日志在场事实可查的消息数（per-message）",
+      "fact_base": "payload.place（缺失时回落 PLACE_ARRIVED/PLACE_MOVE 链的 point-in-time 位置）",
+      "fact_source_counts": {},
+      "id": "L2_location_claim_conflict",
+      "numerator": 0,
+      "question": "消息里显式的「我此刻在<场所>」是否与日志记录的在场事实矛盾？",
+      "rate": null,
+      "samples": [],
+      "unjudged": {
+        "excluded_past_completed": 1,
+        "excluded_time_shift": 1
+      }
+    },
+    {
+      "candidates_day0": 2,
+      "decidable": false,
+      "denominator": 7,
+      "denominator_definition": "正文出现 昨天/昨晚/昨儿/前天/前日 的消息数（per-message）",
+      "id": "L3_prehistory_reference",
+      "numerator": null,
+      "question": "世界第 0 天就引用「昨天/昨晚」——是角色前史还是编造不存在的过往？",
+      "rate": null,
+      "samples": [
+        {
+          "body_excerpt": "我这儿正把上月的流水誊到新账本上，笔尖蘸多了墨，洇了一小团。你弹错音不打紧，倒是刘家米铺那杆秤，我昨儿称了半斤盐，回来一复秤少了三钱。",
+          "channel": "MSG_DM",
+          "day": 0,
+          "from": "P009",
+          "layer": "L3",
+          "round": 7,
+          "seq": 6266,
+          "to": "P010",
+          "token": "昨儿"
+        },
+        {
+          "body_excerpt": "阿禾，你等等——我这儿正把昨天收上来的作文按小组分堆，红笔搁在搪瓷缸边上，你上回说你家小子爱看书，我挑了两本旧的放窗台，回头你路过捎走。",
+          "channel": "MSG_DM",
+          "day": 0,
+          "from": "P006",
+          "layer": "L3",
+          "round": 10,
+          "seq": 12421,
+          "to": "P003",
+          "token": "昨天"
+        }
+      ],
+      "why_not_decidable": "日志不含世界开始前的历史；规则无法区分『persona 前史（合法）』与『编造』，需 judge/人判"
+    },
+    {
+      "caliber_landing_points": {
+        "definition": "reports/R4-life-texture.md:43（率 = 编造条数 / 受检条数，单位 per-message）",
+        "judge_hook_needed": "LLM_JUDGMENT.dimension='fabrication' + 事件摘要上下文 + prompt_hash（未实现，属 code/ 冻结区）",
+        "mention_proxy": "v2/refs/F7-offscreen-criteria.md（P1 提及层，代理口径，不等于编造）",
+        "rule_precedent": "code/devtools/storyteller.py::qc_story Q-6（『句中数字须逐字来自 payload』）"
+      },
+      "decidable": false,
+      "denominator": null,
+      "id": "L4_semantic_fabrication",
+      "numerator": null,
+      "question": "这条消息所陈述的事件，日志里发生过吗？（R4:43 的 F-7 原义）",
+      "rate": null,
+      "samples": [],
+      "why_not_decidable": "仓内不存在 F-7 编造判定的规则或 judge：run.jsonl 的 LLM_JUDGMENT 仅覆盖 weekly_focus/stance/affection/rel_affinity/respect 5 个维度（见 llm-cost 的 llm_judgment_by_dimension），无 fabrication 维度；新增 judge 维度需改 code/（本轮冻结区），故本轮不实现、不猜测。"
+    }
+  ],
+  "log_fact_self_consistency": {
+    "ctx_scene_place_vs_payload_place": {
+      "ctx_scene_present": 0,
+      "disagree": 0,
+      "disagree_rate_among_present": null,
+      "interpretation": "ctx.scene.place 是 scene_anchor 注入给模型的场景块，**不是事实**；它与 payload.place 的差异度量『注入场景是否过期/错位』"
+    },
+    "payload_place_vs_place_chain": {
+      "agree": 167,
+      "disagree": 0,
+      "interpretation": "payload.place 与位置链 point-in-time 位置的一致性（实测两臂均为 167/167 一致、0 矛盾 ⇒ 可当同一事实用）",
+      "messages_total": 191,
+      "missing_one_side": 24
+    }
+  },
+  "metric": "F-7 越界编造率（规则可判档 only；R4 原义语义级编造仍不可判，见 L4）",
+  "schema": "f7-fabrication/2.0",
+  "statistical_unit": "per-message（一条 MSG_DM/MSG_PUBLIC/MSG_GROUP 记 1；与 R4:43 一致）",
+  "summary": {
+    "f7_rate_headline": null,
+    "f7_rate_headline_reason": "R4 原义（语义级编造）无规则/judge 实现 ⇒ 本轮不给单一 F-7 率；只按层给可判读数。禁止把 L1/L2 任一层读成『越界编造率』。",
+    "note_no_summing": "各层分母定义不同，禁止相加或求平均",
+    "per_layer_rate": {
+      "L1_fabricated_entity": null,
+      "L2_location_claim_conflict": null
+    },
+    "rule_decidable_layers": [
+      "L1_fabricated_entity",
+      "L2_location_claim_conflict"
+    ],
+    "unjudged_layers": [
+      "L3_prehistory_reference",
+      "L4_semantic_fabrication"
+    ]
+  },
+  "units": {
+    "agents_with_place_events": 16,
+    "by_channel": {
+      "MSG_DM": 167,
+      "MSG_PUBLIC": 24
+    },
+    "days_covered": [
+      0,
+      1
+    ],
+    "messages_total": 191
+  }
+}
