@@ -225,6 +225,35 @@ top 帧（频次 4 / 2 / 2…，**最高频帧也只占 4 条**）示例：
 
 `probe`（只报事件数、不报率）：`P003=21/23`、`P006=16/26`、`P012=23/28`。
 
+> **实现口径补充声明（预登记遗漏，事后补记，不改变任何读数）** —— 对应复核 N1
+>
+> 1. **缺口事实**：预登记卡 `v2/evidence/template_ruler_r32/prereg-caliber.md` §M6 只写了「按 `payload.from` 分桶」；
+>    而实现（`tools/metrics/template_repetition.py:164`）的取值是
+>    `"from": str(p.get("from") or p.get("author") or r.get("actor") or "")`
+>    ——即 **`payload.from` 优先，为空回落 `payload.author`，再为空回落记录顶层 `actor`**。卡与实现确有缺口。
+> 2. **为什么会踩到**：本批 `MSG_PUBLIC` **55 条没有 `payload.from` 字段**。实测覆盖（命令见下）：
+>    `MSG_PUBLIC n= 55 有payload.from= 0 有payload.author= 55 有顶层actor= 55`。
+>    若**严格只认** `payload.from`，这 55 条会进「无作者」桶 ⇒ 作者档变成 **8 ok / 9 probe + 55 条无作者**，
+>    与上表 13 ok / 3 probe 不一致。
+> 3. **处理方式**：**不回改已提交的预登记卡**（事后改卡等于篡改预登记）。此声明为**事后补记**，
+>    只记录「实现与卡的缺口」，并明确：**上表读数 = 「`from` 优先、`author` 回落」口径下的结果，任何数字都不变**。
+> 4. **复算核验命令**（只读）：
+>    ```
+>    python3 - <<'EOF'
+>    import json
+>    n=f=a=ac=0
+>    for ln in open('v2/evidence/run_d12d_on_n16r60_seed42/run.jsonl',encoding='utf-8'):
+>        ln=ln.strip()
+>        if not ln: continue
+>        r=json.loads(ln)
+>        if r.get('type')!='MSG_PUBLIC': continue
+>        p=r.get('payload') or {}; n+=1
+>        f+=1 if p.get('from') else 0; a+=1 if p.get('author') else 0; ac+=1 if r.get('actor') else 0
+>    print('MSG_PUBLIC n=',n,'有payload.from=',f,'有payload.author=',a,'有顶层actor=',ac)
+>    EOF
+>    ```
+>    输出：`MSG_PUBLIC n= 55 有payload.from= 0 有payload.author= 55 有顶层actor= 55`
+
 > 档间跨度 **60.61% → 100.00%**：**同一个模型、同一批，个体间差距近 40pp**。
 > 这不能读成「P013 更爱回忆」（U1 不可判），只能读成「这套句式在 P013 身上饱和到 100%」。
 
@@ -310,8 +339,11 @@ git diff --name-only 7403e29 HEAD | grep -E '^(code/life|code/config|code/engine
 - 分支：`feat/life-template-metrics-r32`，基点 `7403e29c09a4074d3ba4d4af21cb59826ddd9397`。
 - 远端默认分支 `master@c55da9a2eae6dcc1756260b44c564f720ebf2e46`；`feat/life-emotion-echo-r31` 相对 master
   **领先 52 / 落后 18**（merge-base `fbf1ff3`，Leader 已采信为权威基线）。
-- 本分支是从 `feat/life-emotion-echo-r31` 切出的 ⇒ 实测 `git rev-list --left-right --count origin/master...feat/life-template-metrics-r32`
-  = **18 54**，即相对 `origin/master` **领先 54 / 落后 18**（52 来自 r31 + 本轮的 2 个 commit），merge-base = `fbf1ff3`。
+- 本分支是从 `feat/life-emotion-echo-r31` 切出的 ⇒ 分歧量随时间推进（**数字必须带 sha 时刻，不可当作静态常量**）：
+  - 于 `2ee34fc`（首个证据 commit）时刻实测 `git rev-list --left-right --count origin/master...feat/life-template-metrics-r32` = **18 54**
+    （52 来自 r31 + 本轮当时的 2 个 commit）；
+  - 于 `f9cbae1`（归属修正 commit）时刻实测 = **18 57**；`git fetch origin master` 后本地与 `origin/master` 同步，同刻一致；
+  - merge-base 恒为 `fbf1ff3`（无 rebase/merge 发生）。
   **本轮不合入 master**：本轮只新增只读工具与证据，不触碰任何运行时代码，
   合入时机应由 master 侧代码演进收口后再定，强行在本轮 merge 只会把 18 个未读过的上游提交一起吞进来。
 - 冲突风险：本分支新增文件全部落在 `tools/metrics/`、`v2/evidence/template_ruler_r32/`、`reports/` 三处，
@@ -344,6 +376,8 @@ CJK 字体 `Noto Sans CJK SC`，无外网、无模板底图。
    仓内没有 `fabrication`/`memory_fidelity` 这类维度（与 `tools/metrics/f7_fabrication.py` L3/L4 同型的缺口）。
 2. **U2**：F-6（跨天记忆引用）读数**是否被**这套句式污染？——本报告能给的是**共现**（79.80% 的消息带「上回」）
    与**上界推断**（若 F-6 的 6.4% 全部落在这些消息里，则 F-6 至多只能解释为句式的一部分），**不给因果**。
+   （6.4% 取值出处：`v2/evidence/d5_metrics_a0.json` 的 `F-6_crossday_memory.timeref_rate=0.06414`，
+   为 **A0 锚**而非本批 d12d 读数；本批 d12d 无对应 d5 metrics，此值**仅作上界推断用**。）
 3. **U3**：这套句式是模型自发，还是提示词/记忆注入逼出来的？——单批、无对照臂，**不可归因**。
 
 **对 recon §7.1 措辞的一处更正（就事论事，不算打脸）**
@@ -375,21 +409,26 @@ CJK 字体 `Noto Sans CJK SC`，无外网、无模板底图。
 | `v2/evidence/template_ruler_r32/fig2_skeleton_share_and_author_rate.png` | 129,251 | 图 2 |
 | `reports/R26-template-repetition-ruler-20261029.md` | — | 本报告 |
 
-**commit sha**：本轮共 3 个 commit——
+**commit sha**：本轮共 6 个 commit（含 2 个文档修订）——
 1. `ea52f23` 预登记口径卡（先口径后出数）
 2. `2ee34fc` 复算器 + 读数 JSON + 两张 PNG + 本报告
-3. 本报告 §11.1 回填证据 sha、push 原文与远端可见性（即本报告所在的最新 commit）
+3. `667a6d4` 本报告 §11.1 回填证据 sha、push 原文与远端可见性
+4. `798695a` 工作区计数透明说明（**其 commit message 内的署名推断已作废，见 §11.2**）
+5. `f9cbae1` 撤回对 `d12c_corpus_has_no_narration.md` 的署名推断（改为「来源未确认、不指名任何人」）
+6. 复核 N1/N4/N5 文档修订（即本报告所在的最新 commit）：`git log -1 --format=%H -- reports/R26-template-repetition-ruler-20261029.md`
 
-### 11.1 sha 回填（写完本节后补提交，见 commit 3）
+### 11.1 sha 回填（写完本节后补提交，见 commit 3；本表已按 N4 刷新到 `f9cbae1`）
 
 | 项 | 值 |
 |---|---|
 | 证据 commit（复算器+JSON+PNG+报告） | `2ee34fcd59e41076e64faeadd2f95f6f42a08b00`（简写 `2ee34fc`） |
 | 口径卡 commit | `ea52f23` |
+| 归属修正 commit | `f9cbae1767f6f32582bf9d135cbff12d7b5facdf`（简写 `f9cbae1`） |
 | 回填 commit | 即本表所在 commit：`git log -1 --format=%H -- reports/R26-template-repetition-ruler-20261029.md`（自指 sha 无法写进自身，故给复算命令） |
 | 分支 | `feat/life-template-metrics-r32` |
-| 远端可见性验证 | `git ls-remote origin \| grep 2ee34fc` → `2ee34fcd59e41076e64faeadd2f95f6f42a08b00  refs/heads/feat/life-template-metrics-r32`；`git branch -r --contains 2ee34fc` → `origin/feat/life-template-metrics-r32` |
-| 相对 origin/master | `git rev-list --left-right --count origin/master...feat/life-template-metrics-r32` → `18  54` |
+| **远端可见性（`f9cbae1`，即本次文档修订前的 tip）** | `git ls-remote origin refs/heads/feat/life-template-metrics-r32` → `f9cbae1767f6f32582bf9d135cbff12d7b5facdf	refs/heads/feat/life-template-metrics-r32`；`git branch -r --contains f9cbae1` → `origin/feat/life-template-metrics-r32`。※ 本报告自身的修订 commit 会把 tip 前移，**当次 tip 一律以该 `git ls-remote` 命令的实时输出为准**（本报告末次修订 commit 见上行自指命令） |
+| 早前可见性（留档，非当前 tip） | `git ls-remote origin \| grep 2ee34fc` → `2ee34fcd59e41076e64faeadd2f95f6f42a08b00  refs/heads/feat/life-template-metrics-r32` |
+| 相对 `origin/master`（带时刻，勿当静态常量） | 于 `2ee34fc` 时刻 `18 54`；于 `f9cbae1` 时刻 **`18  57`**；本报告末次修订 commit 之后为 **`18  58`**（该修订只新增 1 个文档 commit，不涉代码）；命令 `git rev-list --left-right --count origin/master...feat/life-template-metrics-r32` |
 | 是否合入 master | **本轮不合入**（理由见 §7.5） |
 
 `git push` 输出原文片段（`GIT_HTTP_LOW_SPEED_LIMIT=1 GIT_HTTP_LOW_SPEED_TIME=15 timeout 90 git push origin feat/life-template-metrics-r32`，`push_rc=0`）：
@@ -404,6 +443,14 @@ To https://github.com/Elinpf/AI-social.git
 > 透明说明：**第一次 push 失败**（`fatal: unable to access 'https://github.com/Elinpf/AI-social.git/': Failed to connect to github.com port 443 after 132627 ms: Couldn't connect to server`），
 > 同刻 `curl https://github.com` 亦超时（`rc=124`）⇒ 判定为出网侧瞬时不可达，非凭据/分支问题。
 > 稍后重试即成功（上为成功那次原文）。首次失败的原文一并留在此处，避免读者只看到成功那一次。
+
+### 11.2 历史 commit message 的作废声明（对应复核 N5）
+
+> **`798695a` 的 commit message 中「该项由 Leader 在本轮并行写入」这一署名推断已作废**，以 `f9cbae1` 的正文为准。
+> 事实口径：`v2/evidence/d12c_corpus_has_no_narration.md` **来源未确认**（mtime `2026-10-29 02:07:51`、4,776 B、
+> sha256 `45f539b9dd9681adbcf13c6cf8b8bcdad559cc195dddff88bc0aef8222161e67d`、git 状态 `??`、从未入库），
+> 属本轮之前的第三方文件，**不计入本轮成果，且不指名任何人**。
+> commit message 不可改写（不改写历史），故在此留一条文内作废声明；本报告正文（§7.3）自 `f9cbae1` 起已是正确表述。
 
 ---
 
