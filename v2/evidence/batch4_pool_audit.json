@@ -9,6 +9,20 @@
     "rule": "round 只能从 msg_id **次末段**取（P-0-0 ⇒ 0；D-12-1 ⇒ 12）"
   },
   "used_lists": {
+    "batch1": [
+      "TH-P002-P007-39",
+      "TH-P002-P007-40",
+      "TH-P004-P013-3",
+      "TH-P005-P013-39",
+      "TH-P007-P005-19",
+      "TH-P010-P009-6",
+      "TH-P011-P008-19",
+      "TH-P011-P008-37",
+      "TH-P012-P001-25",
+      "TH-P012-P001-30",
+      "TH-P012-P001-36",
+      "TH-P016-P005-18"
+    ],
     "batch2": [
       "TH-P001-P009-18",
       "TH-P004-P013-20",
@@ -36,29 +50,30 @@
       "TH-P016-P005-13",
       "TH-P016-P005-19",
       "TH-P016-P005-6"
-    ],
-    "batch1_short_known": [
-      "TH-P002-P007-39",
-      "TH-P002-P007-40",
-      "TH-P005-P013-39",
-      "TH-P016-P005-18"
-    ],
-    "batch1_long_8": "NOT_ARCHIVED（无抽样清单落盘，不得假装已知）"
+    ]
   },
+  "used_source_sha256": {
+    "batch1": "9bb0d79eb2e53bd6094482f0160eb0a26c207a9b539f39fc897a66a377ac79e1",
+    "batch2": "0ffeac1ea1623066d03bdf2e0c9ee3094dc8fa8fa4767e06b9c1b27142420da0",
+    "batch3": "7a7f8ff69de441f3597306494fe8bec1cdc8b6a256c7a3fdb311d2dfca3bade0"
+  },
+  "used_union_total": 36,
   "pairwise_intersections": {
-    "batch1_short_known∩batch2": [],
-    "batch1_short_known∩batch3": [],
+    "batch1∩batch2": [],
+    "batch1∩batch3": [],
     "batch2∩batch3": []
   },
-  "known_used_total": 28,
+  "known_used_total": 36,
   "known_used_not_in_this_run": [],
   "pool_by_layer": {
     "1": {
       "total": 55,
-      "known_used": 0,
-      "truncated": 13,
-      "remaining_clean": 42,
-      "remaining_clean_ids": [
+      "used": 0,
+      "unused": 55,
+      "truncated_in_unused": 13,
+      "truncated_total": 13,
+      "clean_available": 42,
+      "clean_available_ids": [
         "TH-P001-P002-4",
         "TH-P001-P003-6",
         "TH-P001-P003-8",
@@ -101,21 +116,41 @@
         "TH-P013-PUB-5-0",
         "TH-P015-PUB-0-0",
         "TH-P015-PUB-1-0"
+      ],
+      "truncated_unused_ids": [
+        "TH-P003-PUB-37-0",
+        "TH-P004-P001-39",
+        "TH-P004-P001-40",
+        "TH-P004-PUB-37-0",
+        "TH-P005-P013-40",
+        "TH-P005-PUB-37-0",
+        "TH-P005-PUB-38-0",
+        "TH-P006-P016-37",
+        "TH-P007-PUB-38-0",
+        "TH-P008-P016-39",
+        "TH-P008-P016-41",
+        "TH-P008-PUB-37-0",
+        "TH-P013-PUB-38-0"
       ]
     },
     "2-3": {
       "total": 8,
-      "known_used": 8,
-      "truncated": 4,
-      "remaining_clean": 0,
-      "remaining_clean_ids": []
+      "used": 8,
+      "unused": 0,
+      "truncated_in_unused": 0,
+      "truncated_total": 4,
+      "clean_available": 0,
+      "clean_available_ids": [],
+      "truncated_unused_ids": []
     },
     "4-6": {
       "total": 77,
-      "known_used": 20,
-      "truncated": 5,
-      "remaining_clean": 55,
-      "remaining_clean_ids": [
+      "used": 28,
+      "unused": 49,
+      "truncated_in_unused": 1,
+      "truncated_total": 5,
+      "clean_available": 48,
+      "clean_available_ids": [
         "TH-P001-P002-3",
         "TH-P002-P007-31",
         "TH-P002-P007-32",
@@ -123,12 +158,10 @@
         "TH-P004-P002-0",
         "TH-P004-P002-6",
         "TH-P004-P007-24",
-        "TH-P004-P013-3",
         "TH-P006-P002-24",
         "TH-P006-P002-25",
         "TH-P006-P003-13",
         "TH-P006-P016-36",
-        "TH-P007-P005-19",
         "TH-P007-P005-26",
         "TH-P008-P007-6",
         "TH-P008-P007-7",
@@ -136,10 +169,8 @@
         "TH-P010-P004-28",
         "TH-P010-P009-13",
         "TH-P010-P009-36",
-        "TH-P010-P009-6",
         "TH-P010-P009-7",
         "TH-P011-P008-13",
-        "TH-P011-P008-19",
         "TH-P011-P008-31",
         "TH-P011-P013-14",
         "TH-P011-P013-20",
@@ -148,10 +179,7 @@
         "TH-P011-P013-8",
         "TH-P012-P001-18",
         "TH-P012-P001-24",
-        "TH-P012-P001-25",
-        "TH-P012-P001-30",
         "TH-P012-P001-31",
-        "TH-P012-P001-36",
         "TH-P012-P015-3",
         "TH-P012-P016-0",
         "TH-P014-P011-0",
@@ -171,6 +199,9 @@
         "TH-P016-P005-25",
         "TH-P016-P005-31",
         "TH-P016-P005-7"
+      ],
+      "truncated_unused_ids": [
+        "TH-P014-P016-37"
       ]
     }
   },
