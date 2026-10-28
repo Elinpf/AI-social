@@ -649,6 +649,24 @@ env -i PATH=/usr/bin:/bin HOME=/tmp/d7home python3 tools/verify_dialogue_page.py
   `dialogue` 调用的 `prompt_hash` 逐字节相同、第 14 次（seq 674）起分叉 ⇒ 采样差异会沿上下文向前传播。
   复算见 `reports/D7-演示页面.md` §5b。
 
+
+**A0 展示素材交付前必须先过 L-13 筛查**（2026-10-28 事故实例）：
+A0 批次（`run_d2_after_n16_seed42`，`643f13a5`）有 **27/686 = 3.94%** 的台词含 ≥3 位连续英文词
+（`[A-Za-z]{3,}`，如 `contest`/`whisper`），属「内部 token 泄进台词」。因此**任何要进对外报告的 A0 素材**
+（截图/原文/案例）交付前都要跑一遍筛查，并把「批次 x/n + 拟引用线程 x/n」写进交付说明。复算：
+
+```bash
+python3 - <<'P'
+import json, re
+d = json.load(open('code/frontend/sample/dialogue_run_d2_after_n16_seed42/threads.json'))
+eng = re.compile(r'[A-Za-z]{3,}')
+msgs = [m for t in d['threads'] for m in t['messages']]
+print('batch', sum(1 for m in msgs if eng.findall(m.get('body') or '')), '/', len(msgs))
+P
+# → batch 27 / 686
+```
+> 页面侧的对应开关：左栏「⚠ 只看 token 泄漏」（`&leak=1`），同一判据、同一读数。
+
 ### 17.12 已知边界
 
 - 页面只吃 `threads.json`（不直接解析 run.jsonl）：解析与聚合口径只保留在 `gen_threads.py` **一处**，
