@@ -1,0 +1,96 @@
+{
+  "run": "v2/evidence/run_a5_real_n16r42_seed42/run.jsonl",
+  "maxround": 41,
+  "max_turns_param": 6,
+  "n_msgs": 523,
+  "n_threads": 140,
+  "msgs_by_type": {
+    "MSG_PUBLIC": 32,
+    "MSG_DM": 491
+  },
+  "threads_by_scope": {
+    "DM": 108,
+    "GROUP": 0,
+    "PUBLIC": 32
+  },
+  "len_by_scope": {
+    "DM": {
+      "1": 23,
+      "2": 6,
+      "3": 2,
+      "4": 4,
+      "5": 4,
+      "6": 69
+    },
+    "GROUP": {},
+    "PUBLIC": {
+      "1": 32
+    }
+  },
+  "scope_zero_note": "threads_by_scope / len_by_scope 三个 scope 键恒存在；某 scope 为 0 或 {} 表示本臂**没有该类线程**（不是脚本漏算）。GROUP 通路存在：life/agent.py::_GROUP_TEMPLATES 且 _initiate 要求 len(parts)>=3。",
+  "layer_2_3": {
+    "all_threads": {
+      "k": 8,
+      "n": 140,
+      "pct": 5.71
+    },
+    "dm_only": {
+      "k": 8,
+      "n": 108,
+      "pct": 7.41
+    },
+    "dm_non_tail": {
+      "k": 4,
+      "n": 93,
+      "pct": 4.3
+    }
+  },
+  "tail_cut_round": 36,
+  "tail_born": {
+    "all": 22,
+    "dm": 15
+  },
+  "one_turn_causes": {
+    "A_非DM不可回": 32,
+    "C_对端该slot回复额度已满": 22,
+    "B_尾回合发起(无后续回合)": 1
+  },
+  "turn_gap_rounds": {
+    "1": 381,
+    "2": 2
+  },
+  "cap_reached_6": {
+    "k": 69,
+    "n": 108,
+    "pct": 63.89
+  },
+  "per_actor_slot": {
+    "init_max": 2,
+    "reply_max": 3,
+    "init_total": 140,
+    "reply_total": 383
+  },
+  "llm_calls": {
+    "by_purpose": {
+      "judge": 497,
+      "plan": 16,
+      "dialogue": 523,
+      "importance": 1523,
+      "reflect": 112,
+      "negotiation": 34
+    },
+    "total": 2705,
+    "cached_total": 1406,
+    "network_total": 1299
+  },
+  "layer_2_3_thread_ids": [
+    "TH-P001-P009-18",
+    "TH-P002-P007-39",
+    "TH-P002-P007-40",
+    "TH-P005-P013-39",
+    "TH-P009-P004-0",
+    "TH-P011-P012-0",
+    "TH-P015-P011-40",
+    "TH-P016-P005-18"
+  ]
+}
