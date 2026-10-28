@@ -1,0 +1,125 @@
+{
+  "schema": "dequant-probe/1.0",
+  "n_msg": 510,
+  "msg_by_type": {
+    "MSG_DM": 455,
+    "MSG_PUBLIC": 55
+  },
+  "keywords": {
+    "上回": {
+      "count": 9,
+      "pct": 1.8
+    },
+    "上次": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "想起": {
+      "count": 4,
+      "pct": 0.8
+    },
+    "半指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "第三格": {
+      "count": 0,
+      "pct": 0.0
+    }
+  },
+  "lexicon": {
+    "半指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "一指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "两指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "三指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "第三格": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "第二格": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "第一格": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "半勺": {
+      "count": 1,
+      "pct": 0.2
+    },
+    "三钱": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "半袋": {
+      "count": 1,
+      "pct": 0.2
+    },
+    "半日": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "上回": {
+      "count": 9,
+      "pct": 1.8
+    },
+    "上次": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "上月": {
+      "count": 2,
+      "pct": 0.4
+    }
+  },
+  "head6_top": [
+    {
+      "head6": "这雨下得人心",
+      "count": 5
+    },
+    {
+      "head6": "我正把灶上那",
+      "count": 4
+    },
+    {
+      "head6": "金先生，我这",
+      "count": 4
+    },
+    {
+      "head6": "五味，你刚说",
+      "count": 3
+    },
+    {
+      "head6": "你这会儿是不",
+      "count": 3
+    }
+  ],
+  "paren_ba_wang_msgs": {
+    "count": 0,
+    "pct": 0.0
+  },
+  "skeleton_dup": {
+    "count": 0,
+    "pct": 0.0,
+    "distinct_skeletons": 510
+  },
+  "source": {
+    "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_dequant_on_n16r60_seed42/run.jsonl",
+    "log_sha256": "27c16f4f3bad913b916ee8880d13aa98638b6de4155cb0e1ac0cff3373ab8133"
+  },
+  "cmd": "python3 tools/metrics/dequant_probe.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_dequant_on_n16r60_seed42/run.jsonl",
+  "generated_at": "2026-10-28T20:44:15+08:00"
+}
