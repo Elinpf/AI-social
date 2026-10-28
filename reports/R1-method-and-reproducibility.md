@@ -113,7 +113,7 @@
 
 ---
 
-## 3. 可信边界清单（权威版，共 7 条）
+## 3. 可信边界清单（权威版，共 12 条）
 
 > 这是全族唯一的权威版。R2–R5 只写一句"边界见 R1 §3"并列出各自最相关的 2–3 条。
 
@@ -154,6 +154,64 @@ mock 生成器按输入字符串的哈希从词池取句、**不读语义**。�
 任何用于判定阈值的指标，必须以**唯一实现（函数源码 + `sha256`）**入预登记；**两种实现并存时，判定值取更保守者**，另一版只能作注。
 事故实例：同一 `DETAIL_WORDS` 两个实现使 OFF 相差 **1.04pp**，把 Δ 从 **+3.14pp** 翻成 **+2.09pp**，而阈值恰为 **+3pp** ⇒ **同一份数据得出相反判定**。
 （推论：「达标与否」在实现未冻结前不是事实，是可被实现的写法翻转的结论。）
+
+**边界 11 · A0 展示素材须先过 L-13 筛查（词汇层历史 bug 会污染案例）。**
+A0 臂（`run_d2_after_n16_seed42`，日志 `643f13a5`，686 条消息）的运行树**早于 L-13 修复**，`ctx.topic` 的内部英文 token 直接进入了台词本体。按「正文含 ≥3 位连续英文词」计数（脚本口径：正则 `[A-Za-z]{3,}`，**不加 `\b`**——中文字符在 Unicode 下算词字符，加了边界会漏计中文夹英文的情形），实测 **27/686 = 3.94%** 命中：`contest` 18、`whisper` 8、`combat` 2、`training` 2、`mentorship` 1。
+因此：**任何 A0 展示素材（报告正文引用的原文片段、截图里的对话）必须先过这一项筛查**，命中条数 >0 时**换线程**，或**只引未命中句并在正文写明替换原因**——**不得用脚注"解释"泄漏后照常引用**。理由：一条 18 条中 14 条带 token 的线程，可引的只剩 4 条，等于把一个 6 回合案例剪成旁白，案例本身已失效；而"需先读免责声明才敢相信它不是 bug"的展示段落，对读者是负资产。
+事故实例：原定对外展示案例 `TH-P009-Gplace-hall-67`（**18 条 / `turn_index` 去重 6 回合**、`group_id` 恒为 `place:hall`、round 67–72、跨 3 个时段）**18 条中 14 条命中**（token 全为 `contest`）⇒ 判定**不合格**，改用零泄漏线程 `TH-P016-Gplace-town_hall-76`（**15 条 / 6 回合 / `group_id` 恒为 `place:town_hall` / 跨 3 个时段 / 命中 0**）。**替换必须写在正文里（"原定案例因 L-13 不合格，改用零泄漏线程"），不许悄悄换**——悄悄换等于让读者以为 A0 没有这个问题。
+**两条线程的对照事实（全部按 `group_id` 口径，不要再引入地点数差异）**：两者都是**单一锚定地点的群聊**（礼堂 / 镇公所）、**都是 6 回合、都跨 3 个时段**（P009：evening/night/morning；P016：afternoon/evening/night）⇒ **真正成立的替换代价只有一条：P016 的 15 条里 token 命中 0、P009 的 18 条里命中 14**。替换就为这一条，**不需要、也不许再编一条"地点口径差异"来凑**。
+> **本条的更正留痕（勿复原）**：本条初稿曾写「替换件跨 3 个时段、5 个地点，故不得写成同一地点群聊」——那是把 **`msg.place`（该发言人当下所在地）的取值个数**当成了**线程地点数**，属**量错字段**。按 `group_id` 复算，两条线程各自只对应 1 个 group、全批**没有任何线程跨 >1 个 `group`**，故"地点数差异"不存在，该句已删除。字段口径见**边界 12**。
+（**反例保留**：`TH-P009` 仍是**「结构改造成功、词汇层受历史 bug 污染」的分离样本**——6 回合、18 条、指针与 `ctx` 覆盖完整，结构面全部达标，仅词汇层含 token。可作「结构对 / 词表错」的证据，**不整条丢弃**。）
+复算命令（仓库根执行；只打印汇总数，不改文件）：
+
+```bash
+python3 - <<'PY'
+import json,re
+pat=re.compile(r'[A-Za-z]{3,}')            # 注意：不加 \b（中文算词字符，加边界会漏计）
+p='v2/evidence/run_d2_after_n16_seed42/run.jsonl'
+n=hit=0; th={}
+for line in open(p,encoding='utf-8'):
+    if '"MSG' not in line: continue
+    e=json.loads(line); pl=e.get('payload',{}); b=pl.get('body') or ''
+    if not b: continue
+    n+=1; t=pl.get('thread_id'); th.setdefault(t,[0,0]); th[t][0]+=1
+    if pat.search(b): hit+=1; th[t][1]+=1
+print('MSG',n,'命中',hit,f'{hit/n*100:.2f}%')
+for k in ('TH-P009-Gplace-hall-67','TH-P016-Gplace-town_hall-76'):
+    print(k,th.get(k))
+PY
+```
+
+**边界 12 · 「会话地点」认 `group_id`，`msg.place` 是发言人位置——两者不可混用。**
+一条线程的地点应看 **`group_id`**（形如 `place:<place>`，`TH-P009-Gplace-hall-67` 的 `hall` 与 `TH-P016-Gplace-town_hall-76` 的 `town_hall` 都在这里）；而 `MSG` 的 **`msg.place` 是"该发言人此刻所在地"**，可以与会话地点不同（人可以在家/公园插话）。实测（A0 批 `643f13a5`，686 条消息 / 206 线程）：
+- 带 `place:*` group 的 **126** 条消息中，`msg.place` 与 group 地点相同的只有 **13/126 = 10.3%**；
+- **没有任何线程跨 >1 个 `group`（0/206）**；
+- 反例形态：`TH-P009`（`place:hall`，18 条）的 `msg.place` 出现 `hall / park / residence / workshop` 四种；`TH-P016`（`place:town_hall`，15 条）出现 `cafe / park / plaza / residence / town_hall` 五种——**这两种"多值"是同一类东西：发言时刻各人在哪**。
+
+因此：① 凡「同一地点群聊」「跨地点」等叙述，**一律以 `group_id` 判定**；② **不得把 `msg.place` 的去重个数当作线程地点数**（这正是边界 11 初稿的口径错误来源）；③ 若确实要谈"发言位置与会话地点不一致"，那是**另一个议题**（本轮观测到 89.7% 的 `place:*` 群消息由不在该地点的居民发出），不与线程地点混算。
+
+```bash
+python3 - <<'PY'
+import json
+from collections import defaultdict
+p='v2/evidence/run_d2_after_n16_seed42/run.jsonl'
+th=defaultdict(lambda:{'n':0,'gid':set(),'place':set()})
+gm=match=0
+for line in open(p,encoding='utf-8'):
+    if '"MSG' not in line: continue
+    e=json.loads(line); pl=e.get('payload',{})
+    if not (pl.get('body') or ''): continue
+    t=pl.get('thread_id'); g=pl.get('group_id'); d=th[t]; d['n']+=1
+    if g: d['gid'].add(g)
+    if pl.get('place'): d['place'].add(pl['place'])
+    if isinstance(g,str) and g.startswith('place:'):
+        gm+=1; match += (pl.get('place')==g.split(':',1)[1])
+print('place:* group 消息',gm,'msg.place==group地点',match,f'{match/gm*100:.1f}%')
+print('跨>1 group 的线程',sum(1 for d in th.values() if len(d['gid'])>1),'/',len(th))
+for k in ('TH-P009-Gplace-hall-67','TH-P016-Gplace-town_hall-76'):
+    d=th[k]; print(k,d['n'],sorted(d['gid']),sorted(d['place']))
+PY
+```
 
 ---
 
