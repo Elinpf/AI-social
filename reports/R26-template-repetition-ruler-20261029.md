@@ -303,8 +303,9 @@ git diff --name-only 7403e29 HEAD | grep -E '^(code/life|code/config|code/engine
 - 分支：`feat/life-template-metrics-r32`，基点 `7403e29c09a4074d3ba4d4af21cb59826ddd9397`。
 - 远端默认分支 `master@c55da9a2eae6dcc1756260b44c564f720ebf2e46`；`feat/life-emotion-echo-r31` 相对 master
   **领先 52 / 落后 18**（merge-base `fbf1ff3`，Leader 已采信为权威基线）。
-- 本分支是从 `feat/life-emotion-echo-r31` 切出的 ⇒ **同样落后 master 18 个提交**，且这 18 个提交里
-  包含 `code/` 侧的并发演进。**本轮不合入 master**：本轮只新增只读工具与证据，不触碰任何运行时代码，
+- 本分支是从 `feat/life-emotion-echo-r31` 切出的 ⇒ 实测 `git rev-list --left-right --count origin/master...feat/life-template-metrics-r32`
+  = **18 54**，即相对 `origin/master` **领先 54 / 落后 18**（52 来自 r31 + 本轮的 2 个 commit），merge-base = `fbf1ff3`。
+  **本轮不合入 master**：本轮只新增只读工具与证据，不触碰任何运行时代码，
   合入时机应由 master 侧代码演进收口后再定，强行在本轮 merge 只会把 18 个未读过的上游提交一起吞进来。
 - 冲突风险：本分支新增文件全部落在 `tools/metrics/`、`v2/evidence/template_ruler_r32/`、`reports/` 三处，
   **不参与任何代码路径**，与 master 侧改动的路径交集应为空（本次未做 merge 演练，故只作「低」评级，不宣称「零冲突」）。
@@ -369,18 +370,33 @@ CJK 字体 `Noto Sans CJK SC`，无外网、无模板底图。
 
 **commit sha**：本轮共 3 个 commit——
 1. `ea52f23` 预登记口径卡（先口径后出数）
-2. `<见下方回填行>` 复算器 + 读数 JSON + 两张 PNG + 本报告
-3. `<见下方回填行>` 本报告结论回填 sha 与远端可见性
+2. `2ee34fc` 复算器 + 读数 JSON + 两张 PNG + 本报告
+3. 本报告 §11.1 回填证据 sha、push 原文与远端可见性（即本报告所在的最新 commit）
 
 ### 11.1 sha 回填（写完本节后补提交，见 commit 3）
 
 | 项 | 值 |
 |---|---|
-| 证据 commit（复算器+JSON+PNG+报告） | `__EVIDENCE_SHA__` |
-| 回填 commit | `__FILL_SHA__` |
+| 证据 commit（复算器+JSON+PNG+报告） | `2ee34fcd59e41076e64faeadd2f95f6f42a08b00`（简写 `2ee34fc`） |
+| 口径卡 commit | `ea52f23` |
+| 回填 commit | 即本表所在 commit：`git log -1 --format=%H -- reports/R26-template-repetition-ruler-20261029.md`（自指 sha 无法写进自身，故给复算命令） |
 | 分支 | `feat/life-template-metrics-r32` |
-| 远端可见性验证 | `git branch -r --contains __EVIDENCE_SHA__` → `origin/feat/life-template-metrics-r32`；`git ls-remote origin \| grep __EVIDENCE_SHA__` |
+| 远端可见性验证 | `git ls-remote origin \| grep 2ee34fc` → `2ee34fcd59e41076e64faeadd2f95f6f42a08b00  refs/heads/feat/life-template-metrics-r32`；`git branch -r --contains 2ee34fc` → `origin/feat/life-template-metrics-r32` |
+| 相对 origin/master | `git rev-list --left-right --count origin/master...feat/life-template-metrics-r32` → `18  54` |
 | 是否合入 master | **本轮不合入**（理由见 §7.5） |
+
+`git push` 输出原文片段（`GIT_HTTP_LOW_SPEED_LIMIT=1 GIT_HTTP_LOW_SPEED_TIME=15 timeout 90 git push origin feat/life-template-metrics-r32`，`push_rc=0`）：
+
+```
+remote: Create a pull request for 'feat/life-template-metrics-r32' on GitHub by visiting:
+remote:      https://github.com/Elinpf/AI-social/pull/new/feat/life-template-metrics-r32
+To https://github.com/Elinpf/AI-social.git
+ * [new branch]      feat/life-template-metrics-r32 -> feat/life-template-metrics-r32
+```
+
+> 透明说明：**第一次 push 失败**（`fatal: unable to access 'https://github.com/Elinpf/AI-social.git/': Failed to connect to github.com port 443 after 132627 ms: Couldn't connect to server`），
+> 同刻 `curl https://github.com` 亦超时（`rc=124`）⇒ 判定为出网侧瞬时不可达，非凭据/分支问题。
+> 稍后重试即成功（上为成功那次原文）。首次失败的原文一并留在此处，避免读者只看到成功那一次。
 
 ---
 
