@@ -1,0 +1,125 @@
+{
+  "schema": "dequant-probe/1.0",
+  "n_msg": 67,
+  "msg_by_type": {
+    "MSG_DM": 58,
+    "MSG_PUBLIC": 9
+  },
+  "keywords": {
+    "上回": {
+      "count": 4,
+      "pct": 6.0
+    },
+    "上次": {
+      "count": 1,
+      "pct": 1.5
+    },
+    "想起": {
+      "count": 2,
+      "pct": 3.0
+    },
+    "半指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "第三格": {
+      "count": 0,
+      "pct": 0.0
+    }
+  },
+  "lexicon": {
+    "半指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "一指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "两指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "三指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "第三格": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "第二格": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "第一格": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "半勺": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "三钱": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "半袋": {
+      "count": 5,
+      "pct": 7.5
+    },
+    "半日": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "上回": {
+      "count": 4,
+      "pct": 6.0
+    },
+    "上次": {
+      "count": 1,
+      "pct": 1.5
+    },
+    "上月": {
+      "count": 0,
+      "pct": 0.0
+    }
+  },
+  "head6_top": [
+    {
+      "head6": "哎，我这儿正",
+      "count": 2
+    },
+    {
+      "head6": "哟，我正给李",
+      "count": 2
+    },
+    {
+      "head6": "紧俏就紧俏吧",
+      "count": 2
+    },
+    {
+      "head6": "这阵子总见你",
+      "count": 2
+    },
+    {
+      "head6": "作文批到哪一",
+      "count": 1
+    }
+  ],
+  "paren_ba_wang_msgs": {
+    "count": 0,
+    "pct": 0.0
+  },
+  "skeleton_dup": {
+    "count": 0,
+    "pct": 0.0,
+    "distinct_skeletons": 67
+  },
+  "source": {
+    "log": "v2/evidence/run_dequant_baseline_n8r16_seed42/run.jsonl",
+    "log_sha256": "2255888c3b90a5c9ac361868c0315f58dc80019b746418443cbb361207300d25"
+  },
+  "cmd": "python3 tools/metrics/dequant_probe.py --log v2/evidence/run_dequant_baseline_n8r16_seed42/run.jsonl",
+  "generated_at": "2026-10-28T18:12:44+08:00"
+}

@@ -1,0 +1,125 @@
+{
+  "schema": "dequant-probe/1.0",
+  "n_msg": 67,
+  "msg_by_type": {
+    "MSG_DM": 58,
+    "MSG_PUBLIC": 9
+  },
+  "keywords": {
+    "上回": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "上次": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "想起": {
+      "count": 1,
+      "pct": 1.5
+    },
+    "半指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "第三格": {
+      "count": 0,
+      "pct": 0.0
+    }
+  },
+  "lexicon": {
+    "半指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "一指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "两指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "三指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "第三格": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "第二格": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "第一格": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "半勺": {
+      "count": 2,
+      "pct": 3.0
+    },
+    "三钱": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "半袋": {
+      "count": 1,
+      "pct": 1.5
+    },
+    "半日": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "上回": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "上次": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "上月": {
+      "count": 0,
+      "pct": 0.0
+    }
+  },
+  "head6_top": [
+    {
+      "head6": "你这阵子忙得",
+      "count": 2
+    },
+    {
+      "head6": "周公文，我这",
+      "count": 2
+    },
+    {
+      "head6": "人一静下来，",
+      "count": 1
+    },
+    {
+      "head6": "作业本我收下",
+      "count": 1
+    },
+    {
+      "head6": "你给镇公所修",
+      "count": 1
+    }
+  ],
+  "paren_ba_wang_msgs": {
+    "count": 0,
+    "pct": 0.0
+  },
+  "skeleton_dup": {
+    "count": 0,
+    "pct": 0.0,
+    "distinct_skeletons": 67
+  },
+  "source": {
+    "log": "v2/evidence/run_dequant_on_n8r16_seed42/run.jsonl",
+    "log_sha256": "8ebb04757a652deb35dafd2b37ec6d7a3d27dda4f0d7c0ac7be3ffcc7efc0af9"
+  },
+  "cmd": "python3 tools/metrics/dequant_probe.py --log v2/evidence/run_dequant_on_n8r16_seed42/run.jsonl",
+  "generated_at": "2026-10-28T18:19:16+08:00"
+}

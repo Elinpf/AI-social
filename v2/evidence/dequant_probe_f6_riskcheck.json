@@ -1,0 +1,176 @@
+{
+  "arms": [
+    {
+      "run": "OFF",
+      "run_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_dequant_baseline_n8r16_seed42/run.jsonl",
+      "records": 6052,
+      "messages": 67,
+      "days": [
+        0,
+        1
+      ],
+      "threads": 25,
+      "body_len": {
+        "p50": 38,
+        "max": 97,
+        "mean": 40.81
+      },
+      "M-1_opportunity": {
+        "hits": 1,
+        "den": 3,
+        "rate": 0.3333,
+        "wilson95": [
+          0.0615,
+          0.7923
+        ]
+      },
+      "M-1b_allday": {
+        "hits": 1,
+        "den": 19,
+        "rate": 0.0526,
+        "wilson95": [
+          0.0094,
+          0.2464
+        ]
+      },
+      "M-0_sameday_control": {
+        "hits": 2,
+        "den": 7,
+        "rate": 0.2857,
+        "wilson95": [
+          0.0822,
+          0.6411
+        ]
+      },
+      "crosscheck_timeref": {
+        "hits": 7,
+        "den": 67,
+        "rate": 0.1045,
+        "note": "本地复现，仅与官方 F-6 交叉核对，不作结论",
+        "wilson95": [
+          0.0515,
+          0.2003
+        ]
+      },
+      "crosscheck_L6": {
+        "hits": 0,
+        "den": 67,
+        "rate": 0.0
+      },
+      "crosscheck_L7": {
+        "hits": 3,
+        "den": 67,
+        "rate": 0.0448
+      },
+      "ctx_memory_refs_msgs": 0,
+      "ctx_memory_refs_rate": 0.0,
+      "official": {
+        "path": null,
+        "F-6_rate": null,
+        "L-5": null,
+        "L-6": null,
+        "L-7": null,
+        "L-8": null
+      }
+    },
+    {
+      "run": "ON",
+      "run_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_dequant_on_n8r16_seed42/run.jsonl",
+      "records": 6047,
+      "messages": 67,
+      "days": [
+        0,
+        1
+      ],
+      "threads": 25,
+      "body_len": {
+        "p50": 39,
+        "max": 81,
+        "mean": 42.39
+      },
+      "M-1_opportunity": {
+        "hits": 1,
+        "den": 3,
+        "rate": 0.3333,
+        "wilson95": [
+          0.0615,
+          0.7923
+        ]
+      },
+      "M-1b_allday": {
+        "hits": 1,
+        "den": 19,
+        "rate": 0.0526,
+        "wilson95": [
+          0.0094,
+          0.2464
+        ]
+      },
+      "M-0_sameday_control": {
+        "hits": 0,
+        "den": 7,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.3543
+        ]
+      },
+      "crosscheck_timeref": {
+        "hits": 1,
+        "den": 67,
+        "rate": 0.0149,
+        "note": "本地复现，仅与官方 F-6 交叉核对，不作结论",
+        "wilson95": [
+          0.0026,
+          0.0798
+        ]
+      },
+      "crosscheck_L6": {
+        "hits": 0,
+        "den": 67,
+        "rate": 0.0
+      },
+      "crosscheck_L7": {
+        "hits": 5,
+        "den": 67,
+        "rate": 0.0746
+      },
+      "ctx_memory_refs_msgs": 0,
+      "ctx_memory_refs_rate": 0.0,
+      "official": {
+        "path": null,
+        "F-6_rate": null,
+        "L-5": null,
+        "L-6": null,
+        "L-7": null,
+        "L-8": null
+      }
+    }
+  ],
+  "deltas": {
+    "M-1_opportunity": {
+      "delta_pp": 0.0,
+      "ci_overlap": true,
+      "significant": false,
+      "rule": "|Δ|>=1pp 且 Wilson95 区间不重叠 ⇒ 判显著（事前定）"
+    },
+    "M-1b_allday": {
+      "delta_pp": 0.0,
+      "ci_overlap": true,
+      "significant": false,
+      "rule": "|Δ|>=1pp 且 Wilson95 区间不重叠 ⇒ 判显著（事前定）"
+    },
+    "M-0_sameday_control": {
+      "delta_pp": -28.57,
+      "ci_overlap": true,
+      "significant": false,
+      "rule": "|Δ|>=1pp 且 Wilson95 区间不重叠 ⇒ 判显著（事前定）"
+    },
+    "crosscheck_timeref": {
+      "delta_pp": -8.96,
+      "ci_overlap": true,
+      "significant": false,
+      "rule": "|Δ|>=1pp 且 Wilson95 区间不重叠 ⇒ 判显著（事前定）"
+    }
+  }
+}
