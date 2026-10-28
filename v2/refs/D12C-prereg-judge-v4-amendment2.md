@@ -2,7 +2,7 @@
 
 > 提出：`prompt-linguist`｜**口径由** `team-leader` **批准**｜落盘：2026-10-29
 > 对象文件：`v2/refs/D12C-prereg-judge-v4.md`（本 amend **不修改其任何条文、不改决策表、不改阈值**，只在执行侧增加一条豁免规则 + 一项标注义务）
-> 实证依据：`v2/evidence/d12c_v4_narration_applicability_13.md`（`dialogue-core-dev`，sha256 `4186ee32105022409d51ab10bf3f9f6843565aca744831f98287da815f5e9792`，75 行，commit `4186ee32`）
+> 实证依据：`v2/evidence/d12c_v4_narration_applicability_13.md`（`dialogue-core-dev` 提出；**现行 sha256 `95329949672cbab821bb537cf1097e81cab3d3603071dd523e3837b152a1b3b5`，75 行，入库 commit `2176d83`**）。⚠ 交付时版本（入库 `aa4a3cf`）sha 为 `4186ee32…f5e9792`；leader 于 `2176d83` 更正该件 §4 后 sha 变更，**两版规则内容不受影响**。
 > 配套单页 `v2/refs/D12C-judge-v4-execution-card.md`：**本 amend 生效前不向其追加强制内容**（按 leader 要求；单页保持现状）
 
 ---
@@ -111,5 +111,5 @@ Q6=1；同时被 Q2=2 命中（第 5 步）；旁白豁免：否
 ## 8. 可复算
 
 - 本文件不跑批、不调用 LLM、不改 `code/`、不改 v4 条文与决策表、不改任何已判档位。
-- 实证件 sha256 可核：`sha256sum v2/evidence/d12c_v4_narration_applicability_13.md` → `4186ee32…f5e9792`；`wc -l <` → **75**。
+- 实证件 sha256 可核：`sha256sum v2/evidence/d12c_v4_narration_applicability_13.md` → **`9532994…a1b3b5`（现行，`2176d83`）**；交付时版本（`aa4a3cf`）为 `4186ee32…f5e9792`；`wc -l <` → **75**（两版行数相同）。⇒ **引用请以 `origin/master` 当前版本为准**，并同时给 commit。
 - 两例原文可在该实证件 §3 第 10、13 行逐字核对；13 条集合的复算脚本见该件 §1。
