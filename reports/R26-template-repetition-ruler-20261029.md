@@ -297,8 +297,10 @@ git diff --name-only 7403e29 HEAD | grep -E '^(code/life|code/config|code/engine
 > 本轮各 commit 的 `--name-only` 里都不含这 5 个路径（可逐条核）。
 >
 > **工作区计数透明说明**：复核基线（`round-01/verify-baseline.log`）记 44 项脏改动；本轮收尾时实测 **45 项**，
-> 差集为 **+1 新增、0 消失**：`?? v2/evidence/d12c_corpus_has_no_narration.md`（mtime `2026-10-29 02:07:51`，
-> 文件头署名「核查人：`team-leader`」）⇒ 该项由 Leader 在本轮并行写入，**非本轮产物，本轮从未写过该路径**。
+> 差集为 **+1 新增、0 消失**：`?? v2/evidence/d12c_corpus_has_no_narration.md`。
+> ※ **该文件来源未确认**——`stat -c '%y|%s|%n'` 实测 mtime `2026-10-29 02:07:51.250456543 +0800`、4,776 B、
+> sha256 `45f539b9dd9681adbcf13c6cf8b8bcdad559cc195dddff88bc0aef8222161e67d`；`git status --porcelain` 状态 `??`（未跟踪、从未入库）。
+> 它是 **mtime 02:07、非本轮新增、不计入本轮成果** 的第三方文件；本报告**不对其作者做任何指名**。
 > 5 项冻结区脏改动逐条仍在（`git status --porcelain -- code/life code/config` 可核），本轮未 checkout / 未 stash / 未提交。
 
 ### 7.4 未用 `setsid` / 未长 sleep
