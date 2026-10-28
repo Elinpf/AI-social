@@ -659,7 +659,7 @@ A0 批次（`run_d2_after_n16_seed42`，`643f13a5`）有 **27/686 = 3.94%** 的�
 python3 - <<'P'
 import json, re
 d = json.load(open('code/frontend/sample/dialogue_run_d2_after_n16_seed42/threads.json'))
-eng = re.compile(r'[A-Za-z]{3,}')
+eng = re.compile(r'[A-Za-z]{3,}')   # 不加 \b：中文在 Unicode 下算词字符，加边界会漏计"中文夹英文"（实测 \b 只得 6 条，正确为 27 条）
 msgs = [m for t in d['threads'] for m in t['messages']]
 print('batch', sum(1 for m in msgs if eng.findall(m.get('body') or '')), '/', len(msgs))
 P
