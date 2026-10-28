@@ -1,0 +1,766 @@
+{
+  "anchor_crosscheck": {
+    "anchor_match": "exact",
+    "claimed": {
+      "denominator": 510,
+      "numerator": 407,
+      "rate_pct": 79.8039
+    },
+    "delta_denominator": 0,
+    "delta_numerator": 0,
+    "delta_rate_pp": -0.0,
+    "denominator_reconciliation": {
+      "body_missing": 0,
+      "claimed_denominator": 510,
+      "explanation": "锚点分母 510 应等于 MSG_DM/MSG_PUBLIC/MSG_GROUP 的总条数；与 body_missing 的关系见差值",
+      "messages_analyzed": 510,
+      "msg_type_total": 510
+    },
+    "recomputed": {
+      "denominator": 510,
+      "numerator": 407,
+      "rate_pct": 79.8039
+    },
+    "source": "reports/recon-20261028.md §7.1"
+  },
+  "batch_id": "d12d_on_n16r60_seed42",
+  "caliber_version": "template-repetition-rule/1.0",
+  "inputs": {
+    "log_bytes": 55316353,
+    "log_path": "v2/evidence/run_d12d_on_n16r60_seed42/run.jsonl",
+    "log_sha256": "ad0c939f062d23553adeb42af52617d082395265ddb2f6fe12a11d3093144ca0",
+    "personas": {
+      "exists": true,
+      "n": 20,
+      "path": "code/config/personas.json",
+      "sha256": "08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d"
+    },
+    "script_sha256": "5cddda9f057fec87a059334ce683b5d345672a018e710fd40ba668f9eb816570"
+  },
+  "layers": [
+    {
+      "decidable": true,
+      "definition": "正文包含子串「上回」的 MSG_* 条数 / body 非空 MSG_* 条数",
+      "denominator": 510,
+      "id": "M1_backref_hit_rate",
+      "numerator": 407,
+      "rate": 0.7980392156862746,
+      "rate_pct": 79.8039,
+      "wilson95": [
+        0.761028,
+        0.830594
+      ],
+      "word": "上回"
+    },
+    {
+      "decidable": true,
+      "definition": "12 个回指词逐词命中率（各词独立指标，禁止相加成『回指率』）",
+      "id": "M2_backref_family",
+      "note_no_summing": "同一句可同时命中多个词，故各行不可相加/求平均",
+      "rows": [
+        {
+          "denominator": 510,
+          "numerator": 407,
+          "rate": 0.7980392156862746,
+          "rate_pct": 79.8039,
+          "wilson95": [
+            0.761028,
+            0.830594
+          ],
+          "word": "上回"
+        },
+        {
+          "denominator": 510,
+          "numerator": 35,
+          "rate": 0.06862745098039216,
+          "rate_pct": 6.8627,
+          "wilson95": [
+            0.049756,
+            0.093949
+          ],
+          "word": "上次"
+        },
+        {
+          "denominator": 510,
+          "numerator": 8,
+          "rate": 0.01568627450980392,
+          "rate_pct": 1.5686,
+          "wilson95": [
+            0.007969,
+            0.030645
+          ],
+          "word": "上个月"
+        },
+        {
+          "denominator": 510,
+          "numerator": 8,
+          "rate": 0.01568627450980392,
+          "rate_pct": 1.5686,
+          "wilson95": [
+            0.007969,
+            0.030645
+          ],
+          "word": "去年"
+        },
+        {
+          "denominator": 510,
+          "numerator": 0,
+          "rate": 0.0,
+          "rate_pct": 0.0,
+          "wilson95": [
+            0.0,
+            0.007476
+          ],
+          "word": "年前"
+        },
+        {
+          "denominator": 510,
+          "numerator": 4,
+          "rate": 0.00784313725490196,
+          "rate_pct": 0.7843,
+          "wilson95": [
+            0.003054,
+            0.019991
+          ],
+          "word": "那天"
+        },
+        {
+          "denominator": 510,
+          "numerator": 0,
+          "rate": 0.0,
+          "rate_pct": 0.0,
+          "wilson95": [
+            0.0,
+            0.007476
+          ],
+          "word": "前些日子"
+        },
+        {
+          "denominator": 510,
+          "numerator": 1,
+          "rate": 0.00196078431372549,
+          "rate_pct": 0.1961,
+          "wilson95": [
+            0.000346,
+            0.011022
+          ],
+          "word": "之前"
+        },
+        {
+          "denominator": 510,
+          "numerator": 7,
+          "rate": 0.013725490196078431,
+          "rate_pct": 1.3725,
+          "wilson95": [
+            0.006664,
+            0.028058
+          ],
+          "word": "记得"
+        },
+        {
+          "denominator": 510,
+          "numerator": 52,
+          "rate": 0.10196078431372549,
+          "rate_pct": 10.1961,
+          "wilson95": [
+            0.078604,
+            0.131269
+          ],
+          "word": "想起"
+        },
+        {
+          "denominator": 510,
+          "numerator": 0,
+          "rate": 0.0,
+          "rate_pct": 0.0,
+          "wilson95": [
+            0.0,
+            0.007476
+          ],
+          "word": "小时候"
+        },
+        {
+          "denominator": 510,
+          "numerator": 1,
+          "rate": 0.00196078431372549,
+          "rate_pct": 0.1961,
+          "wilson95": [
+            0.000346,
+            0.011022
+          ],
+          "word": "那年"
+        }
+      ]
+    },
+    {
+      "decidable": true,
+      "definition": "量化词对总词次 / 去重词型 / 复用率 = 1 − distinct/词次（词表级复用，非语义判断）",
+      "id": "M3_qty_word_reuse",
+      "pair_tokens_total": 613,
+      "pair_types_distinct": 79,
+      "regex": "[一二三四五六七八九十两半几数]\\s*(指|格|钱|勺|寸|尺|斤|步|刻|个月|年|天|回|次|趟|位|个|把|碗|升)",
+      "reuse_rate": 0.871126,
+      "top": [
+        {
+          "count": 152,
+          "token": "三格"
+        },
+        {
+          "count": 122,
+          "token": "半指"
+        },
+        {
+          "count": 54,
+          "token": "七钱"
+        },
+        {
+          "count": 32,
+          "token": "三天"
+        },
+        {
+          "count": 14,
+          "token": "两指"
+        },
+        {
+          "count": 12,
+          "token": "半个月"
+        },
+        {
+          "count": 12,
+          "token": "半勺"
+        },
+        {
+          "count": 11,
+          "token": "一个"
+        },
+        {
+          "count": 11,
+          "token": "半寸"
+        },
+        {
+          "count": 10,
+          "token": "三斤"
+        }
+      ]
+    },
+    {
+      "S5_first6": {
+        "denominator": 510,
+        "distinct": 307,
+        "distinct_over_denominator": 0.601961,
+        "n_chars": 6,
+        "top": [
+          {
+            "count": 15,
+            "head": "（把火钳往砧"
+          },
+          {
+            "count": 13,
+            "head": "（把手里那杆"
+          },
+          {
+            "count": 9,
+            "head": "金先生，我这"
+          },
+          {
+            "count": 9,
+            "head": "（把手里那半"
+          },
+          {
+            "count": 9,
+            "head": "（把药碾子往"
+          }
+        ]
+      },
+      "decidable": true,
+      "definition": "5 类句式骨架逐类占比（分母同 M1 分母；S5 另给 distinct 首6字骨架数）",
+      "id": "M4_skeleton_share",
+      "rows": [
+        {
+          "denominator": 510,
+          "id": "S1_narration_paren_open",
+          "numerator": 238,
+          "rate": 0.4666666666666667,
+          "rate_pct": 46.6667,
+          "regex": "^\\s*[（(]",
+          "wilson95": [
+            0.42378,
+            0.510052
+          ]
+        },
+        {
+          "denominator": 510,
+          "id": "S2_ba_wang_skeleton",
+          "numerator": 143,
+          "rate": 0.2803921568627451,
+          "rate_pct": 28.0392,
+          "regex": "把[^。！？]{0,12}往",
+          "wilson95": [
+            0.243161,
+            0.320907
+          ]
+        },
+        {
+          "denominator": 510,
+          "id": "S3_backref_quote",
+          "numerator": 120,
+          "rate": 0.23529411764705882,
+          "rate_pct": 23.5294,
+          "regex": "(?:上回|上次)[^。！？]{0,12}(?:说|讲|提|问)",
+          "wilson95": [
+            0.200543,
+            0.274003
+          ]
+        },
+        {
+          "denominator": 510,
+          "id": "S4_shortfall_claim",
+          "numerator": 64,
+          "rate": 0.12549019607843137,
+          "rate_pct": 12.549,
+          "regex": "还差",
+          "wilson95": [
+            0.09951,
+            0.15707
+          ]
+        }
+      ]
+    },
+    {
+      "backref_messages": 407,
+      "decidable": true,
+      "definition": "含『上回』的消息（剔旁白后取第一个含该词的分句）归一化为帧后去重；归一键：人名表 / P\\d{3} / 数字 / 量化词对 / 空白",
+      "distinct_frames_per_hit": 0.899263,
+      "frames_distinct": 366,
+      "frames_without_piece": 0,
+      "id": "M5_backref_frames",
+      "top": [
+        {
+          "count": 4,
+          "example_seq": 56380,
+          "frame": "“这第<QTY>烤盘里的桃酥还差两分钟就好——上回<NAME>来买时非说糖少放<QTY>更香，我今儿倒要试试他这说法灵不灵"
+        },
+        {
+          "count": 4,
+          "example_seq": 56466,
+          "frame": "药柜第<QTY>那包给赵家小子的柴胡，我称了<QTY>，手却一直没停——上回他爹咳了<QTY>才来，我到现在还记着"
+        },
+        {
+          "count": 2,
+          "example_seq": 37111,
+          "frame": "<NAME>上回饿得扶墙，是没学会先垫一口"
+        },
+        {
+          "count": 2,
+          "example_seq": 89040,
+          "frame": "<NAME>那坛酱我记着，可你灶上这锅汤再煨三分钟，火就过了——上回他替你挡酱，这回我替你记着时辰"
+        },
+        {
+          "count": 2,
+          "example_seq": 90318,
+          "frame": "<NAME>，你数橡皮上的道道，我倒想起<NAME>上回借我变调夹，还回来时弹簧松了半圈——我那天在咖啡馆唱到第三首，夹子“啪”地滑下来，台下还以为是效果"
+        },
+        {
+          "count": 2,
+          "example_seq": 84051,
+          "frame": "<NAME>，先歇半盏茶的功夫吧——这木剑我握得手心都发潮了，上回小<NAME>练完还追着问我“老师，为什么出剑要先退<QTY>”，那股认真劲儿倒让我想起自己刚学拳时的笨样"
+        },
+        {
+          "count": 2,
+          "example_seq": 90777,
+          "frame": "<NAME>，您那算盘珠子卡在第三档，我这汤里的盐还差七分才够——可<NAME>上回替我尝的那口，咸淡是他定的，这回我得自己拿准"
+        },
+        {
+          "count": 2,
+          "example_seq": 34294,
+          "frame": "<NAME>，我这第<QTY>粉笔盒都见底了，肚子也空得慌——上回<NAME>说想练完这套步法再吃饭，结果饿得直打晃，咱俩可别学他"
+        },
+        {
+          "count": 2,
+          "example_seq": 34515,
+          "frame": "<NAME>，我这第<QTY>账匣还差<QTY>才平，饿得手抖——上回老李在柜上多抓<QTY>铜板，也是这么抖着补上的"
+        },
+        {
+          "count": 2,
+          "example_seq": 101520,
+          "frame": "<NAME>，我这第三档不是卡，是差七厘才平——<NAME>上回替你尝的那口，他舌头准，可他没签字"
+        }
+      ]
+    },
+    {
+      "decidable": true,
+      "definition": "按 payload.from 分桶的 M1 命中率（定位用，非判据；分母 < 30 记 probe）",
+      "id": "M6_by_from",
+      "rows": [
+        {
+          "denominator": 30,
+          "hit": 24,
+          "key": "P001",
+          "label": "ok",
+          "n": 30,
+          "numerator": 24,
+          "rate": 0.8,
+          "rate_pct": 80.0,
+          "wilson95": [
+            0.626943,
+            0.904949
+          ]
+        },
+        {
+          "denominator": 34,
+          "hit": 23,
+          "key": "P002",
+          "label": "ok",
+          "n": 34,
+          "numerator": 23,
+          "rate": 0.6764705882352942,
+          "rate_pct": 67.6471,
+          "wilson95": [
+            0.508429,
+            0.808684
+          ]
+        },
+        {
+          "hit": 21,
+          "key": "P003",
+          "label": "probe",
+          "n": 23,
+          "note": "分母 23 < 30：只报事件数、不报比率",
+          "rate": null
+        },
+        {
+          "denominator": 35,
+          "hit": 29,
+          "key": "P004",
+          "label": "ok",
+          "n": 35,
+          "numerator": 29,
+          "rate": 0.8285714285714286,
+          "rate_pct": 82.8571,
+          "wilson95": [
+            0.673177,
+            0.918974
+          ]
+        },
+        {
+          "denominator": 33,
+          "hit": 28,
+          "key": "P005",
+          "label": "ok",
+          "n": 33,
+          "numerator": 28,
+          "rate": 0.8484848484848485,
+          "rate_pct": 84.8485,
+          "wilson95": [
+            0.690801,
+            0.933495
+          ]
+        },
+        {
+          "hit": 16,
+          "key": "P006",
+          "label": "probe",
+          "n": 26,
+          "note": "分母 26 < 30：只报事件数、不报比率",
+          "rate": null
+        },
+        {
+          "denominator": 33,
+          "hit": 28,
+          "key": "P007",
+          "label": "ok",
+          "n": 33,
+          "numerator": 28,
+          "rate": 0.8484848484848485,
+          "rate_pct": 84.8485,
+          "wilson95": [
+            0.690801,
+            0.933495
+          ]
+        },
+        {
+          "denominator": 36,
+          "hit": 31,
+          "key": "P008",
+          "label": "ok",
+          "n": 36,
+          "numerator": 31,
+          "rate": 0.8611111111111112,
+          "rate_pct": 86.1111,
+          "wilson95": [
+            0.713405,
+            0.939182
+          ]
+        },
+        {
+          "denominator": 32,
+          "hit": 21,
+          "key": "P009",
+          "label": "ok",
+          "n": 32,
+          "numerator": 21,
+          "rate": 0.65625,
+          "rate_pct": 65.625,
+          "wilson95": [
+            0.483111,
+            0.795896
+          ]
+        },
+        {
+          "denominator": 31,
+          "hit": 21,
+          "key": "P010",
+          "label": "ok",
+          "n": 31,
+          "numerator": 21,
+          "rate": 0.6774193548387096,
+          "rate_pct": 67.7419,
+          "wilson95": [
+            0.50141,
+            0.814306
+          ]
+        },
+        {
+          "denominator": 33,
+          "hit": 20,
+          "key": "P011",
+          "label": "ok",
+          "n": 33,
+          "numerator": 20,
+          "rate": 0.6060606060606061,
+          "rate_pct": 60.6061,
+          "wilson95": [
+            0.436834,
+            0.753169
+          ]
+        },
+        {
+          "hit": 23,
+          "key": "P012",
+          "label": "probe",
+          "n": 28,
+          "note": "分母 28 < 30：只报事件数、不报比率",
+          "rate": null
+        },
+        {
+          "denominator": 36,
+          "hit": 36,
+          "key": "P013",
+          "label": "ok",
+          "n": 36,
+          "numerator": 36,
+          "rate": 1.0,
+          "rate_pct": 100.0,
+          "wilson95": [
+            0.903581,
+            1.0
+          ]
+        },
+        {
+          "denominator": 31,
+          "hit": 24,
+          "key": "P014",
+          "label": "ok",
+          "n": 31,
+          "numerator": 24,
+          "rate": 0.7741935483870968,
+          "rate_pct": 77.4194,
+          "wilson95": [
+            0.601876,
+            0.886049
+          ]
+        },
+        {
+          "denominator": 33,
+          "hit": 31,
+          "key": "P015",
+          "label": "ok",
+          "n": 33,
+          "numerator": 31,
+          "rate": 0.9393939393939394,
+          "rate_pct": 93.9394,
+          "wilson95": [
+            0.803938,
+            0.983219
+          ]
+        },
+        {
+          "denominator": 36,
+          "hit": 31,
+          "key": "P016",
+          "label": "ok",
+          "n": 36,
+          "numerator": 31,
+          "rate": 0.8611111111111112,
+          "rate_pct": 86.1111,
+          "wilson95": [
+            0.713405,
+            0.939182
+          ]
+        }
+      ]
+    },
+    {
+      "decidable": true,
+      "definition": "按 payload.topic 分桶的 M1 命中率（定位用，非判据；分母 < 30 记 probe）",
+      "id": "M6_by_topic",
+      "rows": [
+        {
+          "denominator": 148,
+          "hit": 111,
+          "key": "combat_training",
+          "label": "ok",
+          "n": 148,
+          "numerator": 111,
+          "rate": 0.75,
+          "rate_pct": 75.0,
+          "wilson95": [
+            0.674512,
+            0.812839
+          ]
+        },
+        {
+          "denominator": 41,
+          "hit": 34,
+          "key": "counter_propose",
+          "label": "ok",
+          "n": 41,
+          "numerator": 34,
+          "rate": 0.8292682926829268,
+          "rate_pct": 82.9268,
+          "wilson95": [
+            0.687374,
+            0.914747
+          ]
+        },
+        {
+          "denominator": 60,
+          "hit": 45,
+          "key": "gift",
+          "label": "ok",
+          "n": 60,
+          "numerator": 45,
+          "rate": 0.75,
+          "rate_pct": 75.0,
+          "wilson95": [
+            0.627679,
+            0.842235
+          ]
+        },
+        {
+          "hit": 8,
+          "key": "job_choice",
+          "label": "probe",
+          "n": 8,
+          "note": "分母 8 < 30：只报事件数、不报比率",
+          "rate": null
+        },
+        {
+          "hit": 22,
+          "key": "mentorship",
+          "label": "probe",
+          "n": 27,
+          "note": "分母 27 < 30：只报事件数、不报比率",
+          "rate": null
+        },
+        {
+          "denominator": 35,
+          "hit": 31,
+          "key": "polite_reject",
+          "label": "ok",
+          "n": 35,
+          "numerator": 31,
+          "rate": 0.8857142857142857,
+          "rate_pct": 88.5714,
+          "wilson95": [
+            0.740485,
+            0.954648
+          ]
+        },
+        {
+          "hit": 19,
+          "key": "rel_maintain",
+          "label": "probe",
+          "n": 27,
+          "note": "分母 27 < 30：只报事件数、不报比率",
+          "rate": null
+        },
+        {
+          "hit": 15,
+          "key": "savings",
+          "label": "probe",
+          "n": 18,
+          "note": "分母 18 < 30：只报事件数、不报比率",
+          "rate": null
+        },
+        {
+          "denominator": 53,
+          "hit": 47,
+          "key": "scarce_buy",
+          "label": "ok",
+          "n": 53,
+          "numerator": 47,
+          "rate": 0.8867924528301887,
+          "rate_pct": 88.6792,
+          "wilson95": [
+            0.774235,
+            0.94707
+          ]
+        },
+        {
+          "hit": 29,
+          "key": "skill_practice",
+          "label": "probe",
+          "n": 29,
+          "note": "分母 29 < 30：只报事件数、不报比率",
+          "rate": null
+        },
+        {
+          "denominator": 64,
+          "hit": 46,
+          "key": "whisper",
+          "label": "ok",
+          "n": 64,
+          "numerator": 46,
+          "rate": 0.71875,
+          "rate_pct": 71.875,
+          "wilson95": [
+            0.598661,
+            0.814066
+          ]
+        }
+      ]
+    }
+  ],
+  "metric": "句式模板化 / 记忆回指污染（规则可判档；语义层见 unjudged）",
+  "prereg": "v2/evidence/template_ruler_r32/prereg-caliber.md",
+  "schema": "template-repetition/1.0",
+  "statistical_unit": "per-message（一条 MSG_DM/MSG_PUBLIC/MSG_GROUP 记 1）",
+  "summary": {
+    "headline": "本轮只出字面点估计与锚点对拍，**不出改善/恶化判定**（单批、无对照臂）",
+    "note_no_summing": "各指标分母定义不同或可重叠，禁止相加或求平均",
+    "rule_decidable_layers": [
+      "M1_backref_hit_rate",
+      "M2_backref_family",
+      "M3_qty_word_reuse",
+      "M4_skeleton_share",
+      "M5_backref_frames",
+      "M6_by_from",
+      "M6_by_topic"
+    ],
+    "unjudged": [
+      "U1: 消息是否『真的』在回忆过去（需 judge/事实核验；仓内无 fabrication-like 维度）",
+      "U2: F-6 读数是否被该句式污染（只给共现，不给因果）",
+      "U3: 该句式是否模型自发（单批无对照臂，不可归因）"
+    ]
+  },
+  "units": {
+    "body_missing": 0,
+    "by_channel": {
+      "MSG_DM": 455,
+      "MSG_PUBLIC": 55
+    },
+    "messages_analyzed": 510,
+    "msg_type_total": 510
+  }
+}
