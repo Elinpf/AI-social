@@ -18,6 +18,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 from collections import Counter, defaultdict
@@ -28,14 +29,12 @@ TID = re.compile(r"thread=TH-[A-Za-z0-9-]+")
 
 # 已用清单的**出处**（逐批写清 provenance，缺的部分明确标 NOT_ARCHIVED）
 USED_SOURCES = {
+    # 三批的**抽样清单本体**（每批 12 个 id）——batch1 的清单一直在仓库里，
+    # 只是文件名不带 batch 序号（`d12c_a5_sampled_threads_raw.txt`），此前误标 NOT_ARCHIVED 已撤销。
+    "batch1": ("v2/evidence/d12c_a5_sampled_threads_raw.txt", "thread="),
     "batch2": ("v2/evidence/d12c_a5_batch2_raw_clean.txt", "thread="),
     "batch3": ("v2/evidence/d12c_batch3_sampled_raw.txt", "thread="),
 }
-# batch1 只有 2–3 轮层 4 条可在 `d12c_short_thread_tail_truncation.md` 表里核到；
-# 其 4–6 轮层 8 条**没有任何抽样清单落盘** ⇒ 标 NOT_ARCHIVED，不得假装已知。
-BATCH1_SHORT_KNOWN = [
-    "TH-P016-P005-18", "TH-P002-P007-39", "TH-P005-P013-39", "TH-P002-P007-40",
-]
 
 
 def load_messages(path):
@@ -112,8 +111,8 @@ def main() -> int:
     for tag, (p, _) in USED_SOURCES.items():
         used[tag] = sorted(set(TID.findall(Path(p).read_text(encoding="utf-8")) and
                                [x.replace("thread=", "") for x in TID.findall(Path(p).read_text(encoding="utf-8"))]))
-    used["batch1_short_known"] = sorted(BATCH1_SHORT_KNOWN)
-    used["batch1_long_8"] = "NOT_ARCHIVED（无抽样清单落盘，不得假装已知）"
+    used_source_sha = {tag: hashlib.sha256(Path(pth).read_bytes()).hexdigest()
+                       for tag, (pth, _) in USED_SOURCES.items()}
 
     # 交集校验（只对**能核实**的集合做）
     known_sets = {k: set(v) for k, v in used.items() if isinstance(v, list)}
@@ -135,14 +134,19 @@ def main() -> int:
     for lay in ("1", "2-3", "4-6"):
         ids = [t for t, d in per_thread.items() if layer(d["len"]) == lay]
         used_hit = [t for t in ids if t in known_used]
-        trunc = [t for t in ids if per_thread[t]["truncated"]]
-        remaining = [t for t in ids if t not in known_used and not per_thread[t]["truncated"]]
+        unused = [t for t in ids if t not in known_used]
+        trunc_unused = [t for t in unused if per_thread[t]["truncated"]]
+        trunc_total = [t for t in ids if per_thread[t]["truncated"]]
+        clean = [t for t in unused if not per_thread[t]["truncated"]]
         table[lay] = {
             "total": len(ids),
-            "known_used": len(used_hit),
-            "truncated": len(trunc),
-            "remaining_clean": len(remaining),
-            "remaining_clean_ids": sorted(remaining),
+            "used": len(used_hit),
+            "unused": len(unused),
+            "truncated_in_unused": len(trunc_unused),
+            "truncated_total": len(trunc_total),
+            "clean_available": len(clean),
+            "clean_available_ids": sorted(clean),
+            "truncated_unused_ids": sorted(trunc_unused),
         }
 
     out = {
@@ -156,6 +160,8 @@ def main() -> int:
             "rule": "round 只能从 msg_id **次末段**取（P-0-0 ⇒ 0；D-12-1 ⇒ 12）",
         },
         "used_lists": used,
+        "used_source_sha256": used_source_sha,
+        "used_union_total": len(known_used),
         "pairwise_intersections": inter,
         "known_used_total": len(known_used),
         "known_used_not_in_this_run": unknown_used,
