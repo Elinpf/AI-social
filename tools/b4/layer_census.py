@@ -66,9 +66,16 @@ def main() -> int:
 
     tail_cut = maxround - (a.max_turns - 1)
     start = {tid: min(x["rnd"] for x in v) for tid, v in th.items()}
-    by_scope_len = defaultdict(Counter)
+    # **三个 scope 一律出键**（即使 0 条）：让"某 scope 为 0"是**可读事实**而不是"脚本漏算"。
+    # 本臂 GROUP=0 属**事实**——GROUP 通路存在（`agent.py::_GROUP_TEMPLATES` + `_initiate` 的
+    # `len(parts) >= 3` 门），只是本次没有模板同时满足"是 group 模板且参与者 ≥3"。
+    SCOPES = ("DM", "GROUP", "PUBLIC")
+    by_scope_len = {s_: Counter() for s_ in SCOPES}
+    threads_by_scope = {s_: 0 for s_ in SCOPES}
     for tid, v in th.items():
-        by_scope_len[scope(tid)][len(v)] += 1
+        sc = scope(tid)
+        by_scope_len[sc][len(v)] += 1
+        threads_by_scope[sc] += 1
 
     dm = {t: v for t, v in th.items() if scope(t) == "DM"}
     dm_notail = {t: v for t, v in dm.items() if start[t] <= tail_cut}
@@ -118,8 +125,11 @@ def main() -> int:
         "n_msgs": len(msgs),
         "n_threads": len(th),
         "msgs_by_type": dict(Counter(m["type"] for m in msgs)),
-        "threads_by_scope": dict(Counter(scope(t) for t in th)),
-        "len_by_scope": {s: dict(sorted(c.items())) for s, c in by_scope_len.items()},
+        "threads_by_scope": threads_by_scope,
+        "len_by_scope": {s_: dict(sorted(c.items())) for s_, c in by_scope_len.items()},
+        "scope_zero_note": ("threads_by_scope / len_by_scope 三个 scope 键恒存在；某 scope 为 0 或 {} "
+                            "表示本臂**没有该类线程**（不是脚本漏算）。GROUP 通路存在："
+                            "life/agent.py::_GROUP_TEMPLATES 且 _initiate 要求 len(parts)>=3。"),
         "layer_2_3": {
             "all_threads": {"k": k_all, "n": len(th), "pct": round(100.0 * k_all / len(th), 2)},
             "dm_only": {"k": k_dm, "n": len(dm), "pct": round(100.0 * k_dm / len(dm), 2)},

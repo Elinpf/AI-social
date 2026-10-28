@@ -31,7 +31,7 @@
 |---|---|---|---|---|---|---|---|
 | DM | 23 | **6** | **2** | 4 | 4 | **69** | 108 |
 | PUBLIC | **32** | 0 | 0 | 0 | 0 | 0 | 32 |
-| GROUP | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| GROUP | 0 | 0 | 0 | 0 | 0 | 0 | **0** |
 
 ## 0.2 复现命令（**只读**，产出 `v2/evidence/batch4_layer_census.json`）
 
@@ -44,6 +44,16 @@ python3 tools/b4/layer_census.py \
 
 该脚本口径写死：`scope` 由 `thread_id` 形态判（`-PUB-`⇒PUBLIC、`-G…-`⇒GROUP、否则 DM）；
 **尾截断线程** = `min(round) > maxround − (max_turns−1)` = `> 36`（`maxround=41`）。
+
+### 0.3 关于 **GROUP = 0**（**本臂事实，不是脚本漏算**）
+
+- `batch4_layer_census.json` 的 `threads_by_scope` / `len_by_scope` **三个 scope 键恒存在**
+  （`{"DM":108,"GROUP":0,"PUBLIC":32}`、`{"DM":{…},"GROUP":{},"PUBLIC":{"1":32}}`），并有 `scope_zero_note` 字段自述；
+- **GROUP 通路是真实存在的**：`code/life/agent.py:177 _GROUP_TEMPLATES = {creative_collab, academic_collab, power_conflict, contest, combat_training}`，
+  `_initiate` 在 `tid in _GROUP_TEMPLATES and len(parts) >= 3` 时才走 `scope="place_group"`（`agent.py:1211`）；
+- 本臂**没有一条**线程同时满足"模板是 group 模板 且 计划参与者 ≥3" ⇒ 32 条 PUBLIC、108 条 DM、0 条 GROUP。
+- **对 batch4 的影响**：2–3 轮层抽样只看 DM（PUBLIC 结构不可回、GROUP 本臂为 0）；若将来换了触发条件使 GROUP 出现，
+  抽样口径须先确认 GROUP 线程是否可回（`is_replyable` 认 `MSG_GROUP`）再决定是否纳入，**不得默认沿用"只抽 DM"**。
 
 ## 1. 短线程到底怎么产生（读代码，只读不改）
 

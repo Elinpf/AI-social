@@ -9,13 +9,11 @@
     "MSG_DM": 491
   },
   "threads_by_scope": {
-    "PUBLIC": 32,
-    "DM": 108
+    "DM": 108,
+    "GROUP": 0,
+    "PUBLIC": 32
   },
   "len_by_scope": {
-    "PUBLIC": {
-      "1": 32
-    },
     "DM": {
       "1": 23,
       "2": 6,
@@ -23,8 +21,13 @@
       "4": 4,
       "5": 4,
       "6": 69
+    },
+    "GROUP": {},
+    "PUBLIC": {
+      "1": 32
     }
   },
+  "scope_zero_note": "threads_by_scope / len_by_scope 三个 scope 键恒存在；某 scope 为 0 或 {} 表示本臂**没有该类线程**（不是脚本漏算）。GROUP 通路存在：life/agent.py::_GROUP_TEMPLATES 且 _initiate 要求 len(parts)>=3。",
   "layer_2_3": {
     "all_threads": {
       "k": 8,
