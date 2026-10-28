@@ -1,0 +1,149 @@
+{
+  "schema": "dequant-probe/1.0",
+  "n_msg": 510,
+  "msg_by_type": {
+    "MSG_DM": 455,
+    "MSG_PUBLIC": 55
+  },
+  "keywords": {
+    "上回": {
+      "count": 407,
+      "pct": 79.8
+    },
+    "上次": {
+      "count": 35,
+      "pct": 6.9
+    },
+    "想起": {
+      "count": 52,
+      "pct": 10.2
+    },
+    "半指": {
+      "count": 121,
+      "pct": 23.7
+    },
+    "第三格": {
+      "count": 152,
+      "pct": 29.8
+    }
+  },
+  "lexicon": {
+    "半指": {
+      "count": 121,
+      "pct": 23.7
+    },
+    "一指": {
+      "count": 1,
+      "pct": 0.2
+    },
+    "两指": {
+      "count": 14,
+      "pct": 2.7
+    },
+    "三指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "第三格": {
+      "count": 152,
+      "pct": 29.8
+    },
+    "第二格": {
+      "count": 6,
+      "pct": 1.2
+    },
+    "第一格": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "半勺": {
+      "count": 12,
+      "pct": 2.4
+    },
+    "三钱": {
+      "count": 2,
+      "pct": 0.4
+    },
+    "半袋": {
+      "count": 21,
+      "pct": 4.1
+    },
+    "半日": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "上回": {
+      "count": 407,
+      "pct": 79.8
+    },
+    "上次": {
+      "count": 35,
+      "pct": 6.9
+    },
+    "上月": {
+      "count": 12,
+      "pct": 2.4
+    }
+  },
+  "head6_top": [
+    {
+      "head6": "（把火钳往砧",
+      "count": 15
+    },
+    {
+      "head6": "（把手里那杆",
+      "count": 13
+    },
+    {
+      "head6": "金先生，我这",
+      "count": 9
+    },
+    {
+      "head6": "（把手里那半",
+      "count": 9
+    },
+    {
+      "head6": "（把药碾子往",
+      "count": 9
+    }
+  ],
+  "paren_ba_wang_msgs": {
+    "count": 123,
+    "pct": 24.1
+  },
+  "skeleton_dup": {
+    "count": 113,
+    "pct": 22.2,
+    "distinct_skeletons": 450
+  },
+  "source": {
+    "log": "v2/evidence/run_d12d_on_n16r60_seed42/run.jsonl",
+    "log_sha256": "ad0c939f062d23553adeb42af52617d082395265ddb2f6fe12a11d3093144ca0"
+  },
+  "cmd": "python3 tools/metrics/dequant_probe.py --log v2/evidence/run_d12d_on_n16r60_seed42/run.jsonl",
+  "generated_at": "2026-10-28T18:10:29+08:00",
+  "self_check": {
+    "tolerance_pp": 0.4,
+    "checks": {
+      "上回": {
+        "expect_pct": 79.8,
+        "got_pct": 79.8,
+        "delta_pp": 0.0,
+        "ok": true
+      },
+      "第三格": {
+        "expect_pct": 29.8,
+        "got_pct": 29.8,
+        "delta_pp": 0.0,
+        "ok": true
+      },
+      "半指": {
+        "expect_pct": 23.7,
+        "got_pct": 23.7,
+        "delta_pp": 0.0,
+        "ok": true
+      }
+    },
+    "ok": true
+  }
+}

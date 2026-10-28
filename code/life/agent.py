@@ -75,6 +75,78 @@ def memory_f6_enabled() -> bool:
     """F-6 臂开关（env `LIFE_PROMPT_MEMORY_F6` ∈ {1,true,yes,on}）；默认关。"""
     return os.environ.get(MEMORY_F6_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
 
+
+# ---- 去量化词/回指模板臂（DEQUANT）-----------------------------------------
+# 背景（`reports/recon-20261028.md` §7.1，样本
+# `v2/evidence/run_d12d_on_n16r60_seed42/run.jsonl`，510 条 `MSG_*`，基线 sha 71a6d74）：
+#   「上回」407/510=79.8%、「第三格」152/510=29.8%、「半指」121/510=23.7%，
+#   首 6 字高频全是「（把…往…」。⇒ 台词像同一支笔写的；「记得」被固定句法冒充
+#   （F-6 读数被抬高并不代表真的记得，见 §7.1 病灶②）。
+#
+# 本臂**只改提示词收尾指令**（零 config、零结构、零调用链改动）：
+#   - `LIFE_PROMPT_DEQUANT=0/false/no/off` ⇒ `_dequant_line()` 返回空串，
+#     两个提示词与接入前**逐字节一致**（可用 `LLM_CALL.payload.prompt_hash` 对拍）；
+#   - 开启 ⇒ 只在两个提示词末尾**追加**一段负向约束（单变量：ON = OFF + 一处追加）。
+# **默认 OFF**（与 G-1 / F-6 / DEQUP / F-3 / F-4 范式对齐）：OFF 时既有提示词逐字节不变，
+# 既有基线对拍测试（如 `test_gossip_g1_prompt_single_variable.py` 的 d9391a3 基线、
+# `test_l7_structural.py` 的收尾指令断言）继续成立。跑处理臂时必须**显式**
+# `export LIFE_PROMPT_DEQUANT=1`（不依赖默认值），并记进 launch evidence。
+DEQUANT_ENV = "LIFE_PROMPT_DEQUANT"
+
+#: 字面黑名单：本镇度量词 / 记忆回指词。**只用于断言与离线度量**
+#: （`tools/metrics/dequant_probe.py` 同口径），不用于删改模型输出
+#: （删改会改变生成结果，破坏同 seed 可复现性与单变量对照）。
+DEQUANT_LEXICON: tuple[str, ...] = (
+    "半指", "一指", "两指", "三指", "第三格", "第二格", "第一格",
+    "半勺", "三钱", "半袋", "半日", "上回", "上次", "上月",
+)
+
+#: 台词 → 句式骨架时保留的字符数（骨架 = 遮蔽人名/数字量词/标点后的前 N 字）
+DEQUANT_SKEL_CHARS = 16
+
+#: 数字+度量词的遮蔽口径（与 `dequant_probe.py::_NUM_RE` 同口径，改这里必须同步改那边）
+_DEQ_NUM_RE = re.compile(
+    r"(?:第[一二三四五六七八九十0-9]+[格层遍回步天年]"
+    r"|[一二两三四五六七八九十半几0-9]+(?:指|勺|寸|钱|文|升|斗|斤|尺|袋|日|天|年))"
+)
+#: 标点/空白（与 `anti_repeat.normalize` 同一套标点集合，避免另立口径）
+_DEQ_PUNCT_RE = re.compile(r"[\s,，。！？!?、；;:：\"'“”‘’…—\-\.\(\)（）\[\]【】]")
+
+
+def dequant_enabled() -> bool:
+    """DEQUANT 臂开关（env `LIFE_PROMPT_DEQUANT` ∈ {1,true,yes,on}）；**默认关**。
+
+    默认关是本仓范式（G-1/F-6/DEQUP/F-3/F-4 同款）：OFF 时提示词逐字节不变，
+    既有基线对拍测试继续成立；处理臂必须显式打开。
+    """
+    return os.environ.get(DEQUANT_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def dequant_lexicon_hits(body: str) -> list[str]:
+    """该句命中的字面黑名单词（按 `DEQUANT_LEXICON` 顺序、去重）。"""
+    s = body or ""
+    return [t for t in DEQUANT_LEXICON if t in s]
+
+
+def dequant_skeleton(body: str, names: tuple[str, ...] = ()) -> str:
+    """把一句台词压成「句式骨架」，用于「同一 slot 内骨架不重复」的断言。
+
+    **纯函数、只读**：只做遮蔽，不产生也不修改任何台词。
+      ① 人名（显示名）→ 删；② 字面黑名单词（`上回` / `上次` / `半指` / `第三格` …）→ `#`；
+      ③ 其余数字+度量词（`两指` / `七钱` / `半袋` …）→ `#`；
+      ④ 标点空白 → 删；⑤ 取前 `DEQUANT_SKEL_CHARS` 字。
+    例（遮蔽人名「老陈」后）：「把卷宗归到第三格后，我想起老陈上回漏填了日期」
+        → 「把卷宗归到#后我想起#漏填了日期」——同模板的两句会落到同一个骨架上。
+    """
+    s = body or ""
+    for n in sorted({x for x in names if x}, key=len, reverse=True):
+        s = s.replace(n, "")
+    for w in DEQUANT_LEXICON:                     # 回指词/度量词本身也是骨架的一部分
+        s = s.replace(w, "#")
+    s = _DEQ_NUM_RE.sub("#", s)
+    s = _DEQ_PUNCT_RE.sub("", s)
+    return s[:DEQUANT_SKEL_CHARS]
+
 _SALIENT_EVENTS = {
     "ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "PLACE_ARRIVED",
     "MSG_PUBLIC", "MSG_DM", "MSG_GROUP", "RELATION_ENCOUNTER", "RELATION_CHANGE",
@@ -149,6 +221,10 @@ class LifeLayerAgent:
         self._appraised: set = set()        # (to, week) already social-appraised (T127)
         self._narrated_weeks: set = set()
         self._comm_slot: str | None = None  # last slot we generated dialogue for (≤1/slot)
+        # DEQUANT 臂（去量化词/回指模板，默认 OFF）：**只记账**的去重断言状态，
+        # 不进 payload、不进 state_hash、不参与生成。关闭时恒为空（零扰动）。
+        self._dequant_stats: dict = {"checked": 0, "lexicon_hit": 0, "repeated": 0}
+        self._dequant_slot_seen: dict[str, set] = {}
         # D2 线程化（agent-local 表达层状态；不进 state_hash、不发事件）
         self._peer_names = dict(peer_names or {})   # persona_id -> 提示词显示名（只读注入）
         self._slot_msgs: dict = {}                  # slot_id -> 本 slot 已发 MSG 条数（上限见配置）
@@ -997,7 +1073,8 @@ class LifeLayerAgent:
             ctx["scene"] = self._scene
         return ctx
 
-    def _dequp_body(self, prompt: str, body: str, meta: dict) -> str:
+    def _dequp_body(self, prompt: str, body: str, meta: dict,
+                    slot: str | None = None) -> str:
         """R12 去重臂：新台词与最近窗口内的台词撞 8-gram ⇒ **一次性**重生成。
 
         默认 OFF ⇒ `AR.collide()` 恒 None、`AR.remember()` 不记账，本方法等于
@@ -1007,7 +1084,13 @@ class LifeLayerAgent:
         L-7 结构臂（`LIFE_PROMPT_L7_STRUCT`，默认 ON）优先接管：约束已经在
         `_dialogue_prompt` / `_reply_prompt` 里**生成前**下发，这里**不再重试**
         （零额外 LLM 调用，也不留任何进程级状态 ⇒ 同 seed 两次跑逐字节一致）。
+
+        DEQUANT 臂（`LIFE_PROMPT_DEQUANT`）：本方法里**只记账、不改 body**
+        （`_dequant_guard`，见 `_memory_line` 上方）。它不新增 LLM 调用、
+        不改 payload、不改返回的台词 ⇒ 对生成结果零影响；关闭时是空操作。
+        `slot` 只用于「同一 slot 内骨架不重复」的分桶，缺省 `None` 时记在 `"-"` 桶。
         """
+        self._dequant_guard(body, slot)      # 只记账的断言（默认 OFF ⇒ 空操作）
         if L7S.enabled():
             return body
         hit = AR.collide(body)
@@ -1074,7 +1157,7 @@ class LifeLayerAgent:
         body = (res.text or "").strip()
         if not body:
             return False
-        body = self._dequp_body(prompt, body, meta)   # R12：撞车一次性重生成（默认OFF ⇒ 原样返回）
+        body = self._dequp_body(prompt, body, meta, slot=slot_id)   # R12：撞车一次性重生成（默认OFF ⇒ 原样返回）
         # R19 话题宽度臂：**内容门控**——正文真的落到岔入话题才追加第二个 tag（OFF ⇒ 恒 None）
         tb_tag = self._topic_shift_tag(body)
         tb_audit = TB.audit(getattr(self, "_tb", None), bool(tb_tag)) if TB.enabled() else None
@@ -1142,7 +1225,7 @@ class LifeLayerAgent:
         body = (res.text or "").strip()
         if not body:
             return
-        body = self._dequp_body(prompt, body, meta)   # R12：撞车一次性重生成（默认OFF ⇒ 原样返回）
+        body = self._dequp_body(prompt, body, meta, slot=slot_id)   # R12：撞车一次性重生成（默认OFF ⇒ 原样返回）
         payload: dict = {"scope": scope, "body": body, "refs": [], "tag_hints": [tid]}
         if to:
             payload["to"] = to
@@ -1241,6 +1324,62 @@ class LifeLayerAgent:
             return ""
         self._scene = SA.audit(slot, place or None, activity or None, line)
         return line
+
+    def _dequant_line(self) -> str:
+        """DEQUANT 臂（`LIFE_PROMPT_DEQUANT`）：给两条提示词**追加**的收尾负向约束。
+
+        单变量约束（沿用 `_gossip_hint` / `_memory_line` / `_l7_struct_line` 先例）：
+          - 关闭（`LIFE_PROMPT_DEQUANT=0`）⇒ 返回空串，`_dialogue_prompt` /
+            `_reply_prompt` 与接入前**逐字节一致**（`LLM_CALL.payload.prompt_hash`
+            可直接对拍）；
+          - 开启 ⇒ 只在末尾追加这一段，不改任何既有段落、不改 config、不改世界态。
+
+        为什么写这几句（证据：`reports/recon-20261028.md` §7.1/§7.3）：
+          ① 固定量词表（`半指宽` / `第三格` / `三钱`）在不同人、不同场所反复复用
+             ⇒ 显式禁止把它当默认填充，并把「真的要量」作为例外条件给出；
+          ② 「上回/上次 X 说 Y」占 79.8% ⇒ 显式禁止**每条**都回指，并要求
+             真引用时必须具体到「谁 + 做了什么」且在过去日子对得上（可核验，
+             与 `tools/metrics/f7_fabrication.py` 的越界判据同方向）。
+        给的是**条件**而非新模板：不提供任何例句，避免又造出一套新套话。
+        """
+        if not dequant_enabled():
+            return ""
+        return ("\n说眼前这件事的时候，别拿镇上那套数儿当填充——「半指宽」「第三格」"
+                "「三钱」这类词不是每句话的配料，只有这件活真到了要量的那一步才用，"
+                "而且量多少就写多少。也别把「上回」「上次」当句子的起手式：不是每句都"
+                "得提过去，眼下的事就说眼下；真要提，得说清是谁、做了什么，"
+                "且那件事得是这些天确实发生过的。")
+
+    def _dequant_guard(self, body: str, slot: str | None = None) -> dict | None:
+        """DEQUANT 臂的**字面黑名单 / 句式骨架去重断言**（只记账，不改台词）。
+
+        纪律（对应任务书「不得改变调用链路与数据结构」）：
+          - 纯副作用记账：**不修改 `body`**、不新增 LLM 调用、不改 payload、
+            不改 `state_hash`；结果只留在本进程内存（`self._dequant_stats` /
+            `self._dequant_slot_seen`），供单测与离线核对读取；
+          - 关闭（`LIFE_PROMPT_DEQUANT=0`）⇒ 直接 `return None`，不建任何状态。
+        断言内容：
+          ① 字面黑名单命中（`dequant_lexicon_hits`，与 `dequant_probe.py` 同口径）；
+          ② 同一 `slot` 内**句式骨架**（`dequant_skeleton`，遮蔽人名/数字量词/标点）
+             重复 ⇒ `repeated += 1`。这正是「同一个 slot 里别用同一个骨架」的机器检查，
+             跑批后可据此判断该 slot 的台词是否又落回同一模板。
+        返回本次记账（供测试/取值）；关闭时 `None`。
+        """
+        if not dequant_enabled():
+            return None
+        slot = str(slot or "-")
+        hits = dequant_lexicon_hits(body)
+        names = tuple(n for n in self._peer_names.values() if n)
+        skel = dequant_skeleton(body, names)
+        bucket = self._dequant_slot_seen.setdefault(slot, set())
+        repeated = bool(skel) and skel in bucket
+        bucket.add(skel)
+        self._dequant_stats["checked"] = int(self._dequant_stats.get("checked", 0)) + 1
+        if hits:
+            self._dequant_stats["lexicon_hit"] = int(self._dequant_stats.get("lexicon_hit", 0)) + 1
+        if repeated:
+            self._dequant_stats["repeated"] = int(self._dequant_stats.get("repeated", 0)) + 1
+        return {"slot": slot, "lexicon_hits": hits, "skeleton": skel, "repeated": repeated}
 
     def _memory_line(self, wv, exclude: list | None = None) -> str:
         """F-6 臂（跨天记忆进对话）：把「**本人**前些天记下的事」原样接进提示词。
@@ -1450,7 +1589,8 @@ class LifeLayerAgent:
                 + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
                 + self._l7_struct_line(wv, partners, 0, "initiate")  # L-7 结构臂：开口/收束/禁忌开头（默认ON）
                 + AR.prompt_line()           # R12 去重臂：最近说过的话（默认OFF ⇒ 空串）
-                + "\n只写台词本身（一句家常话）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（零 config/结构改动）
+                + "\n只写台词本身（一句家常话）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。"
+                + self._dequant_line())  # DEQUANT 臂：末尾追加去量化词/回指模板约束（OFF ⇒ 空串，逐字节不变）
 
     def _reply_prompt(self, partner: str | None, topic: str, history: list,
                       cfg: dict | None = None, rift_line: str | None = None,
@@ -1475,7 +1615,8 @@ class LifeLayerAgent:
                                        "reply")  # L-7 结构臂：开口/收束/禁忌开头（默认ON）
                 + self._topic_shift_line(wv, partner, tid, topic, turn)  # R19 话题宽度臂（默认OFF ⇒ 空串）
                 + AR.prompt_line()           # R12 去重臂：最近说过的话（默认OFF ⇒ 空串）
-                + "\n只写台词本身（接着刚才的话往下说一句）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（承载「承接上一轮」结构不变）
+                + "\n只写台词本身（接着刚才的话往下说一句）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。"
+                + self._dequant_line())  # DEQUANT 臂：末尾追加去量化词/回指模板约束（OFF ⇒ 空串，逐字节不变）
 
     # ---- economy: negotiation / offer / order-cancel (T133) ----------------
     def _maybe_negotiate(self, wv) -> None:
