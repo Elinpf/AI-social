@@ -667,6 +667,12 @@ P
 ```
 > 页面侧的对应开关：左栏「⚠ 只看 token 泄漏」（`&leak=1`），同一判据、同一读数。
 
+
+**线程地点口径（`group_id` vs `msg.place`）**：**线程地点以 `group_id` 为准**（如 `place:hall`、`place:town_hall`），
+它表示「这场对话锚定在哪个场所」；`msg.place` 是**发言人当下所在地**（同一条线程里可能出现多个），
+**不能用 `msg.place` 判断「同一场对话在哪儿」**。页面线程卡显示的「地点」是线程级锚点；legacy（无 `group_id`）时退回
+`msg.place` 并在页面上标「旧格式」。
+
 ### 17.12 已知边界
 
 - 页面只吃 `threads.json`（不直接解析 run.jsonl）：解析与聚合口径只保留在 `gen_threads.py` **一处**，
