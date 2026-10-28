@@ -1,0 +1,5 @@
+unset LIFE_PROMPT_DEQUANT  (OFF 臂：默认关闭，显式 unset)
+cmd: setsid bash tools/d2/run_batch.sh --out-dir /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_dequant_baseline_n16r60_seed42 --seed 42 --agents 16 --rounds 60 --flush-every 8
+worktree: .worktrees/dequant-baseline-71a6d74  (code_sha 71a6d74b4dcf704357092b7a88a9eca2c630be87)
+arm: OFF
+seed: 42 | agents: 16 | rounds: 60

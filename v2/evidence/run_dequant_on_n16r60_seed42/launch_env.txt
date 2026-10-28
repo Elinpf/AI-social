@@ -1,0 +1,5 @@
+export LIFE_PROMPT_DEQUANT=1
+cmd: setsid bash tools/d2/run_batch.sh --out-dir /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_dequant_on_n16r60_seed42 --seed 42 --agents 16 --rounds 60 --flush-every 8
+worktree: .worktrees/dequant-on
+arm: ON (LIFE_PROMPT_DEQUANT=1)
+seed: 42 | agents: 16 | rounds: 60
