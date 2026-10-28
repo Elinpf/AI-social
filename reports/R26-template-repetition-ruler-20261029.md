@@ -294,7 +294,12 @@ git diff --name-only 7403e29 HEAD | grep -E '^(code/life|code/config|code/engine
 | `??` | `code/life/tests/test_f3_echo_struct_r31.py` | 同上 |
 
 > 声明：**以上 5 项为本轮之前既有的未提交改动，归属 R31「情绪呼应」改造，不计入本轮成果。**
-> 本轮三次 commit 的 `--name-only` 里都不含这 5 个路径（可逐条核）。
+> 本轮各 commit 的 `--name-only` 里都不含这 5 个路径（可逐条核）。
+>
+> **工作区计数透明说明**：复核基线（`round-01/verify-baseline.log`）记 44 项脏改动；本轮收尾时实测 **45 项**，
+> 差集为 **+1 新增、0 消失**：`?? v2/evidence/d12c_corpus_has_no_narration.md`（mtime `2026-10-29 02:07:51`，
+> 文件头署名「核查人：`team-leader`」）⇒ 该项由 Leader 在本轮并行写入，**非本轮产物，本轮从未写过该路径**。
+> 5 项冻结区脏改动逐条仍在（`git status --porcelain -- code/life code/config` 可核），本轮未 checkout / 未 stash / 未提交。
 
 ### 7.4 未用 `setsid` / 未长 sleep
 本轮无长跑任务（单次出数 0.61s、画图 < 2s），未起后台进程、未用任何 `sleep`。
