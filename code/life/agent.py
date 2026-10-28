@@ -225,6 +225,9 @@ class LifeLayerAgent:
         # 不进 payload、不进 state_hash、不参与生成。关闭时恒为空（零扰动）。
         self._dequant_stats: dict = {"checked": 0, "lexicon_hit": 0, "repeated": 0}
         self._dequant_slot_seen: dict[str, set] = {}
+        # F-3 情绪呼应（默认 OFF）：本条已下发的呼应计划（供生成后 `EE.verify()` 自检）。
+        # 只在 `_emotion_echo()` 产出计划时被赋值；关闭/不产 ⇒ None ⇒ 无任何审计键。
+        self._echo_plan: dict | None = None
         # D2 线程化（agent-local 表达层状态；不进 state_hash、不发事件）
         self._peer_names = dict(peer_names or {})   # persona_id -> 提示词显示名（只读注入）
         self._slot_msgs: dict = {}                  # slot_id -> 本 slot 已发 MSG 条数（上限见配置）
@@ -1105,8 +1108,10 @@ class LifeLayerAgent:
         return out
 
     def _emotion_echo(self, ctx_in: dict | None, partner_body: str | None,
-                      partner: str | None) -> tuple[str | None, dict | None]:
-        """F-3 情绪呼应：判定「对方此刻的情绪」并给出**一句处境提示**（+ 审计字段）。
+                      partner: str | None, *, thread_id: str | None = None,
+                      turn: int | None = None,
+                      round_no: int | None = None) -> tuple[str | None, dict | None]:
+        """F-3 情绪呼应：判定「对方此刻的情绪」并给出**一段结构化硬约束**（+ 审计字段）。
 
         单变量约束（沿用 `_gossip_hint` / `_memory_line` 的开关先例）：
           - 开关关闭（`config/emotion_echo.json::enabled=false` 且未设 env，**默认**）
@@ -1117,13 +1122,30 @@ class LifeLayerAgent:
         判定与强度全部由 `life/emotion_echo.py` 的纯函数推导（**不调用 LLM**）：
         语面极性复用 `life/emotion.emotion_sign`（单一真源），处境情绪取入站消息
         `payload["ctx"]["mood"]`（发送方生成时按自身 needs 算出的确定性标签）。
+
+        R31 形态改动（两处，都只在开关打开时生效）：
+          ① **证据门控**：只有对方那句本身有情绪证据（`source` 含 `text`）才产；
+             仅处境标签（`source=="mood"`）不再触发（R14 里 92.54% 的噪声来源）。
+          ② **形态让位**：`LIFE_PROMPT_L7_STRUCT`（默认 ON）已经指派了「开口方式」，
+             两者同时下发会打架 ⇒ L-7 开启时本模块只下发**内容**约束（第一分句先接住），
+             不指派「回应形态」（`form_ins=None`）。L-7 关闭时形态按 sha256 确定性轮转。
+        本方法把计划挂到 `self._echo_plan`，供 `_send_reply` 生成后做 `verify()` 自检
+        （只写 `ctx.echo.verify` 审计，不改台词、不新增 LLM 调用）。
         """
+        self._echo_plan = None
         if not EE.enabled():
             return None, None
-        plan = EE.plan((ctx_in or {}).get("mood"), partner_body or "")
+        plan = EE.plan((ctx_in or {}).get("mood"), partner_body or "",
+                       agent_id=self.agent_id, thread_id=thread_id,
+                       turn=turn, round_no=round_no)
         if plan is None:
             return None, None
+        if L7S.enabled():
+            plan["form"] = None      # 让位给 L-7 的开口方式，避免两条结构约束打架
+            plan["form_ins"] = None
         name = self._name(partner) if partner else None
+        plan["name"] = name
+        self._echo_plan = plan
         return EE.prompt_line(plan, name), EE.audit(plan)
 
     def _send_reply(self, wv, ev, cfg, slot_id: str) -> bool:
@@ -1147,7 +1169,9 @@ class LifeLayerAgent:
             # R13 / F-4：本线程确有未了结旧账 ⇒ 追加「这一句把话说开」的动作要求（只提要求，不给句式）
             repair_line = DR.repair_ask(self._rifts, tid, partner, int(wv.round), dr_cfg)
         # F-3：接住对方情绪（默认 OFF ⇒ (None, None)，下面两处都退化为"什么都不加"）
-        echo_line, echo_audit = self._emotion_echo(ctx_in, p.get("body"), partner)
+        echo_line, echo_audit = self._emotion_echo(ctx_in, p.get("body"), partner,
+                                                   thread_id=tid, turn=turn,
+                                                   round_no=int(wv.round))
         prompt = self._reply_prompt(partner, topic, history, cfg, rift_line=rift_line,
                                     repair_line=repair_line, echo_line=echo_line, wv=wv,
                                     turn=turn, tid=tid)
@@ -1158,6 +1182,10 @@ class LifeLayerAgent:
         if not body:
             return False
         body = self._dequp_body(prompt, body, meta, slot=slot_id)   # R12：撞车一次性重生成（默认OFF ⇒ 原样返回）
+        # F-3：生成后**确定性自检**（只写 ctx.echo.verify 审计；不改台词、不新增 LLM 调用）。
+        # 关闭 / 不产 ⇒ echo_audit is None ⇒ 该键不出现 ⇒ payload 与接入前逐字节一致。
+        if echo_audit is not None and getattr(self, "_echo_plan", None) is not None:
+            echo_audit["verify"] = EE.verify(body, self._echo_plan)
         # R19 话题宽度臂：**内容门控**——正文真的落到岔入话题才追加第二个 tag（OFF ⇒ 恒 None）
         tb_tag = self._topic_shift_tag(body)
         tb_audit = TB.audit(getattr(self, "_tb", None), bool(tb_tag)) if TB.enabled() else None
@@ -1606,7 +1634,6 @@ class LifeLayerAgent:
                 + self._scene_line(wv)      # 处境锚臂：时段/场所/手上事（默认 OFF ⇒ 空串）
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + (repair_line or "")        # R13：本线程旧账的「这一句把话说开」要求；关闭/无旧账为空串
-                + (echo_line or "")          # F-3：接住对方情绪的一句处境提示；关闭/不产为空串
                 + f"\n刚才的对话：\n{lines}"
                 + self._gossip_hint([partner] if partner else [])  # G系列A1臂：可引用真人名单（默认OFF ⇒ 空串）
                 + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
@@ -1615,6 +1642,10 @@ class LifeLayerAgent:
                                        "reply")  # L-7 结构臂：开口/收束/禁忌开头（默认ON）
                 + self._topic_shift_line(wv, partner, tid, topic, turn)  # R19 话题宽度臂（默认OFF ⇒ 空串）
                 + AR.prompt_line()           # R12 去重臂：最近说过的话（默认OFF ⇒ 空串）
+                + (echo_line or "")          # F-3 R31：结构化硬约束块（情绪标注+证据+三条硬要求）；
+                                             # 关闭/不产为空串。**位置从对话正文之前移到尾部约束区**——
+                                             # 与「只写台词本身」的格式约束相邻，模型才把"第一分句做什么"
+                                             # 当约束读，而不是当背景散文（R14 的形态问题，见 r31-impl-note §2）
                 + "\n只写台词本身（接着刚才的话往下说一句）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。"
                 + self._dequant_line())  # DEQUANT 臂：末尾追加去量化词/回指模板约束（OFF ⇒ 空串，逐字节不变）
 

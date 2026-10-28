@@ -166,11 +166,13 @@ def test_detect_neutral_yields_no_echo():
 
 
 def test_min_intensity_gates_plan():
+    # R31 起仅处境标签（source=mood）默认被证据门控挡掉 ⇒ 这里改用**有语面证据**的入参，
+    # 仍只测「阈值闸门」这一件事（强度 = text_hit 60 + 浮躁 40//2 = 80）。
     p = EE.load_params()
     p["enabled"], p["min_intensity"] = True, 100
-    assert EE.plan("浮躁", "", p) is None, "强度 40 < 阈值 100 ⇒ 不呼应"
+    assert EE.plan("浮躁", "心里挺委屈", p) is None, "强度 80 < 阈值 100 ⇒ 不呼应"
     p["min_intensity"] = 30
-    assert EE.plan("浮躁", "", p) is not None
+    assert EE.plan("浮躁", "心里挺委屈", p) is not None
 
 
 def test_tier_cuts_are_text_only():
@@ -231,7 +233,8 @@ def test_on_path_injects_prompt_and_audit(tmp_path, monkeypatch):
     a = payload_on["ctx"]["echo"]
     assert a["v"] == EE.VERSION
     assert a["sign"] == -1 and a["kind"] == "soothe" and a["prompted"] is True
-    expected = EE.detect("低落", "今天真是累，心里挺委屈", EE.load_params())
+    # R31：提醒改成结构化块（多出「证据」行）⇒ 用 plan() 复算，与 agent 侧同形
+    expected = EE.plan("低落", "今天真是累，心里挺委屈", EE.load_params())
     assert a["intensity"] == expected["intensity"]
     assert a["tier"] == expected["tier"]
     # ③ 与 OFF 提示词的关系：ON = OFF + 插入那一段（其余段落不变）

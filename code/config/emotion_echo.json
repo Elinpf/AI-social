@@ -1,10 +1,12 @@
 {
-  "_comment": "F-3「情绪呼应」（life/emotion_echo.py）。enabled=false（默认）⇒ 回复提示词与 MSG payload 与接入前逐字节一致，无 dialogue_echo 字段。本文件**不进** engine/version.py::FINGERPRINT_FILES，开/关都不改 engine_version 指纹。消融/逃生口：env HITT_DIALOGUE_EMOTION_ECHO=1|true|on|yes → 开；其它任何取值（含 0/false/off/no/空串）→ 关。判定与强度全部确定性推导（纯函数），LLM 只按提示词出措辞，不参与任何数值。",
-  "schema_version": "1.0",
+  "_comment": "F-3「情绪呼应」（life/emotion_echo.py）。enabled=false（默认）⇒ 回复提示词与 MSG payload 与接入前逐字节一致，无 ctx.echo 字段。本文件**不进** engine/version.py::FINGERPRINT_FILES，开/关都不改 engine_version 指纹。消融/逃生口：env HITT_DIALOGUE_EMOTION_ECHO=1|true|on|yes → 开；其它任何取值（含 0/false/off/no/空串）→ 关。判定与强度全部确定性推导（纯函数），LLM 只按提示词出措辞，不参与任何数值。R31（f3/2）：require_text_evidence=true ⇒ 只认「对方那句话本身」有情绪证据（source 含 text）才触发，仅处境标签(ctx.mood)不触发；form_rotation=true ⇒ 回应形态按 sha256 确定性轮转（L-7 结构臂开启时让位、不下发形态）。两项置 false 即回到 R14（f3/1）口径，供消融。",
+  "schema_version": "1.1",
   "enabled": false,
   "criterion": "natural",
   "min_intensity": 30,
   "text_hit_intensity": 60,
   "mood_bonus_div": 2,
-  "tier_cuts": [45, 70]
+  "tier_cuts": [45, 70],
+  "require_text_evidence": true,
+  "form_rotation": true
 }
