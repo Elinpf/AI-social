@@ -1,0 +1,125 @@
+{
+  "schema": "dequant-probe/1.0",
+  "n_msg": 510,
+  "msg_by_type": {
+    "MSG_DM": 455,
+    "MSG_PUBLIC": 55
+  },
+  "keywords": {
+    "上回": {
+      "count": 18,
+      "pct": 3.5
+    },
+    "上次": {
+      "count": 1,
+      "pct": 0.2
+    },
+    "想起": {
+      "count": 10,
+      "pct": 2.0
+    },
+    "半指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "第三格": {
+      "count": 1,
+      "pct": 0.2
+    }
+  },
+  "lexicon": {
+    "半指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "一指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "两指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "三指": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "第三格": {
+      "count": 1,
+      "pct": 0.2
+    },
+    "第二格": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "第一格": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "半勺": {
+      "count": 5,
+      "pct": 1.0
+    },
+    "三钱": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "半袋": {
+      "count": 5,
+      "pct": 1.0
+    },
+    "半日": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "上回": {
+      "count": 18,
+      "pct": 3.5
+    },
+    "上次": {
+      "count": 1,
+      "pct": 0.2
+    },
+    "上月": {
+      "count": 7,
+      "pct": 1.4
+    }
+  },
+  "head6_top": [
+    {
+      "head6": "哎，我这儿正",
+      "count": 5
+    },
+    {
+      "head6": "唉，这日子过",
+      "count": 4
+    },
+    {
+      "head6": "这日子过得真",
+      "count": 4
+    },
+    {
+      "head6": "金先生，我这",
+      "count": 4
+    },
+    {
+      "head6": "哎，老石，我",
+      "count": 3
+    }
+  ],
+  "paren_ba_wang_msgs": {
+    "count": 0,
+    "pct": 0.0
+  },
+  "skeleton_dup": {
+    "count": 0,
+    "pct": 0.0,
+    "distinct_skeletons": 510
+  },
+  "source": {
+    "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_dequant_baseline_n16r60_seed42/run.jsonl",
+    "log_sha256": "086939dd6942ef1372b9e9ed18dab197459a4d693188fd4d508f2c489bb87bbd"
+  },
+  "cmd": "python3 tools/metrics/dequant_probe.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_dequant_baseline_n16r60_seed42/run.jsonl",
+  "generated_at": "2026-10-28T22:06:31+08:00"
+}
