@@ -12,7 +12,8 @@
   exit 3  行数 != 事件条数（读不完整）
   exit 4  非真跑：LLM_CALL==0，或 provider 出现非 openai_compat，或 model 含 mock/空
   exit 5  日志内 spec 与声明不一致（仅当显式给 --seed/--n/--rounds 时才校验）
-  exit 8  `--require-weather-state` 显式给定但运行期反推值不符（缺省不传 ⇒ 不校验、不影响返回码）
+  exit 8  `--require-weather-state` / `--require-dialogue-state` 显式给定但运行期反推值不符
+          （缺省不传 ⇒ 不校验、不影响返回码）
   * seed/n/rounds 的**权威值一律从日志派生**（WORLD_INIT.seed / AGENT_BORN 计数 / max(round)+1），
     命令行参数只用于交叉校验；不带参数也能生成 meta（用于「跑完补 meta」场景）。
 
@@ -177,6 +178,89 @@ def _weather_switch_effective(recs) -> dict:
     }
 
 
+def _dialogue_switch_effective(recs) -> dict:
+    """从 run.jsonl 反推 F-3/F-4 两个对话臂开关的**运行期生效值**（非声明值）。
+
+    与天气臂（`_weather_switch_effective`）同一方法论：只用日志里的**结构化审计键**，
+    不用 env、不用人声明。
+
+    判据（运行期事实，见 `code/life/agent.py::_send_reply`）：
+      * F-3 情绪呼应（`config/emotion_echo.json` / env `HITT_DIALOGUE_EMOTION_ECHO`）
+        开启且判定命中时，MSG payload 的 `ctx.echo` 多出审计键
+        （`v/sign/intensity/tier/kind/source/mood/prompted`）；关闭或未命中 ⇒ 该键**恒不出现**。
+      * F-4 误会与和解（`config/dialogue_repair.json` / env `HITT_DIALOGUE_REPAIR`）
+        开启时，MSG payload 顶层会在有旧账/有修复配对时出现 `dialogue_rift` / `dialogue_repair`；
+        关闭 ⇒ 两者**恒不出现**（`if dr_cfg.get("enabled")` 整块跳过）。
+
+    四态：命中>0 ⇒ on（声明 OFF 则 contradiction）；命中==0 ⇒ off（声明 ON 则 cannot-verify，
+    因为日志无法区分「OFF」与「ON 但本轮一次都没触发」——这是**结构性可观测上限**，
+    必须如实标注，不得当成 OFF 证据）。
+    """
+    f3_hits = 0
+    f3_by_type: dict[str, int] = {}
+    signs, kinds, sources, tiers = set(), set(), set(), set()
+    f4_rift = 0
+    f4_repair = 0
+    f4_by_type: dict[str, int] = {}
+    for r in recs:
+        if not str(r.get("type", "")).startswith("MSG"):
+            continue
+        payload = r.get("payload") or {}
+        ctx = payload.get("ctx")
+        if isinstance(ctx, dict):
+            echo = ctx.get("echo")
+            if isinstance(echo, dict):
+                f3_hits += 1
+                f3_by_type[r["type"]] = f3_by_type.get(r["type"], 0) + 1
+                if echo.get("sign") is not None:
+                    signs.add(int(echo["sign"]))
+                if echo.get("kind"):
+                    kinds.add(str(echo["kind"]))
+                if echo.get("source"):
+                    sources.add(str(echo["source"]))
+                if echo.get("tier"):
+                    tiers.add(str(echo["tier"]))
+        _rift = isinstance(payload.get("dialogue_rift"), dict)
+        _rep = isinstance(payload.get("dialogue_repair"), dict)
+        if _rift:
+            f4_rift += 1
+        if _rep:
+            f4_repair += 1
+        if _rift or _rep:
+            f4_by_type[r["type"]] = f4_by_type.get(r["type"], 0) + 1
+    return {
+        "HITT_DIALOGUE_EMOTION_ECHO": {
+            "ctx_echo_msgs": f3_hits,
+            "ctx_echo_by_msg_type": {k: v for k, v in sorted(f3_by_type.items())},
+            "distinct_signs": sorted(signs),
+            "kinds": sorted(kinds),
+            "sources": sorted(sources),
+            "tiers": sorted(tiers),
+            "evidence_field": "run.jsonl[*].payload.ctx.echo",
+            "cannot_verify_note": ("命中==0 时日志无法区分「OFF」与「ON 但一次都没命中」；"
+                                   "F-3 需对方上一句有情感词（语面）或入站 ctx.mood 非平和（处境），"
+                                   "mock 模板池可能两者皆无 ⇒ 命中 0 不等于开关没开"),
+        },
+        "HITT_DIALOGUE_REPAIR": {
+            "n_dialogue_rift_key": f4_rift,
+            "n_dialogue_repair_key": f4_repair,
+            "n_f4_any_key": f4_rift + f4_repair,
+            "f4_by_msg_type": {k: v for k, v in sorted(f4_by_type.items())},
+            "evidence_field": "run.jsonl[*].payload.dialogue_rift | .dialogue_repair",
+            "cannot_verify_note": ("命中==0 时日志无法区分「OFF」与「ON 但台账无旧账」；"
+                                   "rift 由 `DR.ingest` 从入站消息负面词（NEG_WORDS）入账，"
+                                   "mock 模板池若无冲突句 ⇒ 0 条入账 ⇒ 该臂在 mock 下结构性测不出"),
+        },
+    }
+
+
+def _fuse_state(hits: int, declared_on: bool) -> str:
+    """四态融合（与天气臂同口径）：on / off / cannot-verify / contradiction。"""
+    if hits > 0:
+        return "on" if declared_on else "contradiction"
+    return "off" if not declared_on else "cannot-verify"
+
+
 def _read_lines(path: str | None) -> list | None:
     if not path:
         return None
@@ -215,6 +299,9 @@ def main(argv=None) -> int:
     ap.add_argument("--require-weather-state", choices=("on", "off"), default=None,
                     help="可选硬闸：断言天气臂运行期生效值（ON 臂传 on / OFF 臂传 off）。"
                          "缺省(None) ⇒ 只记录不拦，返回码与未加本参数时完全一致。")
+    ap.add_argument("--require-dialogue-state", choices=("on", "off"), default=None,
+                    help="可选硬闸（impl-101 / F-3+F-4 对话臂）：断言两个对话开关的运行期反推值。"
+                         "缺省(None) ⇒ 只记录不拦。注意 cannot-verify 不会被「放宽」通过。")
     a = ap.parse_args(argv)
 
     run_dir = (ROOT / a.run_dir).resolve() if not Path(a.run_dir).is_absolute() else Path(a.run_dir)
@@ -333,6 +420,9 @@ def main(argv=None) -> int:
         "switch_declared": {
             "HITT_WEATHER": _declared_switch("HITT_WEATHER"),
             "HITT_WORLD_SEED": _declared_switch("HITT_WORLD_SEED", kind="int"),
+            # F-3 / F-4 对话臂（impl-101）：同一套 env 逃生口 + 运行期反推取证
+            "HITT_DIALOGUE_EMOTION_ECHO": _declared_switch("HITT_DIALOGUE_EMOTION_ECHO"),
+            "HITT_DIALOGUE_REPAIR": _declared_switch("HITT_DIALOGUE_REPAIR"),
         },
     }
     # 运行期反推（强证据）：在 meta 落盘前算，overwrite 上面的占位
@@ -347,6 +437,23 @@ def main(argv=None) -> int:
     _wx_eff["state_rule"] = ("ctx.weather>0 ⇒ on（若声明 OFF 则 contradiction）；"
                              "ctx.weather==0 ⇒ off（若声明 ON 则 cannot-verify）")
     meta["switch_effective"] = {"HITT_WEATHER": _wx_eff}
+
+    # --- 开关取证（F-3/F-4 对话臂，impl-101）：声明值 + 运行期反推，二者并列 -----------
+    # 起因：`config/emotion_echo.json` / `config/dialogue_repair.json` 刻意**不进**
+    # FINGERPRINT_FILES（默认关 ⇒ 旧日志 fingerprint 与重放不受影响），代价是「开关当时的值」
+    # 无法从 engine_version 归因。这里补上运行期反推，使同 sha 的 ON/OFF 两臂可复算。
+    _dlg_eff = _dialogue_switch_effective(recs)
+    for _k in ("HITT_DIALOGUE_EMOTION_ECHO", "HITT_DIALOGUE_REPAIR"):
+        _decl = meta["switch_declared"][_k]["normalized_effective"]
+        if _k == "HITT_DIALOGUE_EMOTION_ECHO":
+            _hits = _dlg_eff[_k]["ctx_echo_msgs"]
+        else:
+            _hits = _dlg_eff[_k]["n_f4_any_key"]
+        _dlg_eff[_k]["effective"] = _fuse_state(_hits, _decl)
+        _dlg_eff[_k]["declared_on"] = _decl
+        _dlg_eff[_k]["state_rule"] = ("结构字段命中>0 ⇒ on（声明 OFF 则 contradiction）；"
+                                      "命中==0 ⇒ off（声明 ON 则 cannot-verify，非 OFF 证据）")
+    meta["switch_effective"].update(_dlg_eff)
 
     drops = Counter((r["payload"].get("reason"), r["payload"].get("type"))
                     for r in recs if r["type"] == "DROPPED")
@@ -370,6 +477,15 @@ def main(argv=None) -> int:
     print(f"[meta] switch_effective.HITT_WEATHER={meta['switch_effective']['HITT_WEATHER']['effective']} "
           f"ctx_weather_msgs={meta['switch_effective']['HITT_WEATHER']['ctx_weather_msgs']} "
           f"declared={meta['switch_declared']['HITT_WEATHER']['raw']!r}")
+    print(f"[meta] switch_effective.HITT_DIALOGUE_EMOTION_ECHO="
+          f"{meta['switch_effective']['HITT_DIALOGUE_EMOTION_ECHO']['effective']} "
+          f"ctx_echo_msgs={meta['switch_effective']['HITT_DIALOGUE_EMOTION_ECHO']['ctx_echo_msgs']} "
+          f"declared={meta['switch_declared']['HITT_DIALOGUE_EMOTION_ECHO']['raw']!r}")
+    print(f"[meta] switch_effective.HITT_DIALOGUE_REPAIR="
+          f"{meta['switch_effective']['HITT_DIALOGUE_REPAIR']['effective']} "
+          f"n_dialogue_rift_key={meta['switch_effective']['HITT_DIALOGUE_REPAIR']['n_dialogue_rift_key']} "
+          f"n_dialogue_repair_key={meta['switch_effective']['HITT_DIALOGUE_REPAIR']['n_dialogue_repair_key']} "
+          f"declared={meta['switch_declared']['HITT_DIALOGUE_REPAIR']['raw']!r}")
 
     # 可选硬闸：只有显式传 --require-weather-state 才拦（缺省 ⇒ 只记录，返回码不变，exit 8 专用）
     if a.require_weather_state is not None:
@@ -381,6 +497,17 @@ def main(argv=None) -> int:
                   file=sys.stderr)
             return 8
         print(f"[meta] OK(开关取证): HITT_WEATHER effective={got}")
+
+    # 可选硬闸（impl-101）：F-3/F-4 对话臂的两臂判别（缺省 ⇒ 只记录不拦）
+    if a.require_dialogue_state is not None:
+        _want = a.require_dialogue_state
+        for _k in ("HITT_DIALOGUE_EMOTION_ECHO", "HITT_DIALOGUE_REPAIR"):
+            _got = meta["switch_effective"][_k]["effective"]
+            if _got != _want:
+                print(f"[meta] FAIL(开关取证): require-dialogue-state={_want} 但 {_k} "
+                      f"运行期反推 effective={_got}", file=sys.stderr)
+                return 8
+            print(f"[meta] OK(开关取证): {_k} effective={_got}")
 
 
     if a.rounds and meta["rounds_effective"] != a.rounds:
