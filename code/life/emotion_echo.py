@@ -28,6 +28,19 @@ R14 的读数（`reports/R14-f3-emotion-echo.md` §0.1）：ON 臂 295 条触发
 OFF 逐字节等价都会被破坏）。"可校验"改为**生成后确定性自检** `verify()`，
 结果只落 `ctx.echo.verify`（只追加的审计字段，不是报告口径）。
 
+## N-05：生成侧「第一分句线索」闸门（`cue_repair`，默认 True，**只在开关打开时生效**）
+
+R31 把触发口径收紧了，但 CYCLE-34 ON 臂读数显示瓶颈换到了生成侧：`echo_msgs=107` 里
+`verify_has_cue=7`、`verify_ack_then_switch=66`——即 **大多数回复第一分句根本没接住**，
+应一声就转话题。N-05 只修这件事，**不加 echo 强度**（阈值/强度/触发口径一条没动）：
+
+  * 提示词侧（`prompt_line` 硬要求 1）：补一句"第一分句里要出现一个表露情绪回应的字眼"；
+  * **生成后闸门**：`verify()` 判 `need_rewrite()` 为真 ⇒ 用 `rewrite_line()` 追加一次
+    重写要求，**最多重写一次**；重写结果 `rewrite_ok()` 为真才替换正文，否则**保留原文**
+    （⇒ 结果**不劣于**修正前，不是"多喊几遍"）。记账只追加 `ctx.echo.verify.rewrite`。
+  * OFF 臂（未设 `HITT_DIALOGUE_EMOTION_ECHO`）：`enabled()==False` ⇒ `plan()` 不产 ⇒
+    agent 侧 `echo_audit is None` ⇒ **整段闸门不执行**，不多一次 LLM 调用、不改提示词/ payload。
+
 ## 分层与开关（与 R14 一致，未改）
 
   * **不产生事件类型、不改世界态、不进 `state_hash`**；
@@ -106,6 +119,8 @@ DEFAULTS = {
     # R31 新增（默认值即本轮处理臂；关掉即回到 R14 口径，供消融）
     "require_text_evidence": True,  # 只认「对方那句话本身」有情绪证据；仅处境标签不触发
     "form_rotation": True,          # 下发确定性轮转的「回应形态」，避免同句式（L-7 守卫）
+    # N-05 新增（**只在开关打开时才有意义**；OFF 时本键不被任何路径读到）
+    "cue_repair": True,             # 生成后第一分句缺回应线索 / 应声就转话题 ⇒ 重写一次
 }
 
 #: 「回应形态」——**结构**而非句式（模型仍自由造句，**不提供任何例句**）。
@@ -172,6 +187,7 @@ def load_params(path: str | Path | None = None) -> dict:
     out["mood_bonus_div"] = max(1, int(out["mood_bonus_div"]))
     out["require_text_evidence"] = bool(out["require_text_evidence"])
     out["form_rotation"] = bool(out["form_rotation"])
+    out["cue_repair"] = bool(out["cue_repair"])
     cuts = [int(x) for x in (out["tier_cuts"] or DEFAULTS["tier_cuts"])]
     out["tier_cuts"] = cuts[:2] if len(cuts) >= 2 else list(DEFAULTS["tier_cuts"])
     if path is None:
@@ -324,7 +340,8 @@ def prompt_line(plan_dict: dict | None, name: str | None = None) -> str:
         lines.append(f"证据（{who}原话）：「{quote}」")
     lines += [
         "这一条必须做到（按顺序，缺一条就算没做到）：",
-        f"1) 第一分句先接住这份情绪（承认/关心/顺着接），不许第一分句就只讲自己的事；",
+        f"1) 第一分句先接住这份情绪（承认/关心/顺着接），不许第一分句就只讲自己的事；"
+        "第一分句里要出现一个表露情绪回应的字眼（累/辛苦/难/别/心疼/放心这类），不能只复述事实；",
         f"2) 第一分句里要出现对{who}的指称（「你」或ta的名字）；",
         "3) 可以先应一声（嗯/哎/唉），但应完必须在同一句里接住这份情绪，不许应一声就转话题。",
     ]
@@ -391,3 +408,69 @@ def audit(plan_dict: dict | None) -> dict | None:
             "kind": plan_dict["kind"], "source": plan_dict["source"],
             "mood": plan_dict.get("mood"), "form": plan_dict.get("form"),
             "prompted": True}
+
+
+# ---------------------------------------------------------------- N-05 生成侧闸门
+def cue_repair() -> bool:
+    """N-05 重写闸开关（读 `cue_repair`，默认 True）。**只在 echo 开关打开时被调用**。"""
+    return bool(load_params()["cue_repair"])
+
+
+def need_rewrite(ver: dict | None) -> bool:
+    """生成侧闸门判据（纯函数）：第一分句**缺回应线索** 或 **应一声就转话题** ⇒ 需重写一次。
+
+    这正是 CYCLE-34 ON 臂 107 条 echo 里 `verify_has_cue=7` / `ack_then_switch=66` 的
+    那个瓶颈：不是呼应不够强，而是第一分句根本没接住。判据只读 `verify()` 的确定性输出。
+    """
+    v = ver or {}
+    return (not bool(v.get("has_cue"))) or bool(v.get("ack_then_switch"))
+
+
+def rewrite_ok(ver: dict | None) -> bool:
+    """重写结果是否**可以替换原文**（纯函数）：第一分句有线索，且不是应声即转话题。
+
+    只看这两条（不看 `has_ref`）：N-05 只修「第一分句有没有接住」，指称是 R31 原有要求；
+    多一条门槛会让替换更难成立，反而保证不了「不劣于修正前」。
+    """
+    v = ver or {}
+    return bool(v.get("has_cue")) and not bool(v.get("ack_then_switch"))
+
+
+def _fail_reason(ver: dict | None) -> str:
+    """把 `verify()` 的失败项翻成一句给模型看的话（确定性、无随机）。"""
+    v = ver or {}
+    bits = []
+    if not v.get("has_cue"):
+        bits.append("第一分句里没有任何回应情绪的字眼")
+    if v.get("ack_then_switch"):
+        bits.append("只应了一声就转到自己的事上")
+    return "；".join(bits) or "第一分句没有真正接住这份情绪"
+
+
+def rewrite_line(plan_dict: dict | None, ver: dict | None,
+                 name: str | None = None) -> str:
+    """N-05：把「第一分句不合格」渲染成一次**重写要求**（追加在提示词尾部，不改原有块）。
+
+    **不给现成句式**（与 F-4 / R31 口径一致）：只说结构要求（第一分句要有线索字眼、
+    要有指称、应声不许超过三个字），措辞仍由 LLM 产出；也不要求模型输出任何标记。
+    """
+    if not plan_dict:
+        return ""
+    who = name or plan_dict.get("name") or "对方"
+    fc = str((ver or {}).get("first_clause") or "").strip()
+    lines = [
+        "\n【情绪呼应·第一分句重写】",
+        f"你上一条没做到：{_fail_reason(ver)}。",
+    ]
+    if fc:
+        lines.append(f"上一条的第一分句：「{fc}」")
+    lines += [
+        "只重写这一条台词，按顺序满足：",
+        f"1) 第一分句就接住{who}这份情绪，且出现一个表露情绪回应的字眼（累/辛苦/难/别/心疼/放心这类），"
+        "不能只复述事实、不能只讲自己的事；",
+        f"2) 第一分句里要有对{who}的指称（「你」或ta的名字）；",
+        "3) 应声词最多三个字，而且必须在同一个小句里接住情绪，不许应一声就转话题。",
+        "只输出台词本身：不要解释、不要说你在改、不要把上面这些字或方括号抄进去。",
+    ]
+    return "\n".join(lines)
+

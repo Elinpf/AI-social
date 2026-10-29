@@ -1148,6 +1148,44 @@ class LifeLayerAgent:
         self._echo_plan = plan
         return EE.prompt_line(plan, name), EE.audit(plan)
 
+    def _echo_rewrite(self, prompt: str, body: str, ver: dict,
+                      meta: dict) -> tuple[str, dict]:
+        """N-05：第一分句没接住 ⇒ 追加一次重写要求并**最多重写一次**（不放大 echo 强度）。
+
+        只在 echo 开关打开、且本条确有呼应计划时被 `_send_reply` 调用，所以 **OFF 臂
+        一次都不会进来**（不新增 LLM 调用、不改提示词/payload ⇒ 两臂仍能在同一 sha 配对）。
+
+        只用**结构**要求（`EE.rewrite_line`），不给现成句式；重写结果必须过
+        `EE.rewrite_ok()`（第一分句有线索、且不是应声即转话题）才替换正文，否则
+        **保留原文** ⇒ 本条结果不劣于修正前。记账只追加 `verify.rewrite`（审计，非报告口径）。
+
+        注意：重写后的正文**不再走** `_dequp_body`（避免同一 slot 二次重生成叠加），
+        与 AR 的撞车账本可能存在一条漏记——本轮只求最小改动，已知并接受。
+        """
+        plan = getattr(self, "_echo_plan", None) or {}
+        line = EE.rewrite_line(plan, ver)
+        if not line:
+            return body, ver
+        res = self.llm.call("dialogue", prompt + line,
+                            meta={**meta, "echo_rewrite": 1})
+        cand = (res.text or "").strip()
+        ver2 = EE.verify(cand, plan) if cand else None
+        ok = bool(ver2 is not None and EE.rewrite_ok(ver2))
+        note = {
+            "attempted": bool(cand),
+            "accepted": ok,
+            "before": {"has_cue": bool(ver.get("has_cue")),
+                       "ack_then_switch": bool(ver.get("ack_then_switch"))},
+            "after": (None if ver2 is None else
+                      {"has_cue": bool(ver2.get("has_cue")),
+                       "ack_then_switch": bool(ver2.get("ack_then_switch"))}),
+        }
+        if ok:
+            ver2["rewrite"] = note
+            return cand, ver2
+        ver["rewrite"] = note
+        return body, ver
+
     def _send_reply(self, wv, ev, cfg, slot_id: str) -> bool:
         p = ev.payload or {}
         tid = p["thread_id"]
@@ -1182,10 +1220,15 @@ class LifeLayerAgent:
         if not body:
             return False
         body = self._dequp_body(prompt, body, meta, slot=slot_id)   # R12：撞车一次性重生成（默认OFF ⇒ 原样返回）
-        # F-3：生成后**确定性自检**（只写 ctx.echo.verify 审计；不改台词、不新增 LLM 调用）。
+        # F-3：生成后**确定性自检**（只写 ctx.echo.verify 审计；不改台词）。
         # 关闭 / 不产 ⇒ echo_audit is None ⇒ 该键不出现 ⇒ payload 与接入前逐字节一致。
         if echo_audit is not None and getattr(self, "_echo_plan", None) is not None:
-            echo_audit["verify"] = EE.verify(body, self._echo_plan)
+            ver = EE.verify(body, self._echo_plan)
+            # N-05 生成侧闸门：第一分句缺回应线索 / 应一声就转话题 ⇒ **最多重写一次**。
+            # 仍完全处于 echo 开关之内：OFF ⇒ echo_audit is None ⇒ 不走到这里，不多一次调用。
+            if EE.cue_repair() and EE.need_rewrite(ver):
+                body, ver = self._echo_rewrite(prompt, body, ver, meta)
+            echo_audit["verify"] = ver
         # R19 话题宽度臂：**内容门控**——正文真的落到岔入话题才追加第二个 tag（OFF ⇒ 恒 None）
         tb_tag = self._topic_shift_tag(body)
         tb_audit = TB.audit(getattr(self, "_tb", None), bool(tb_tag)) if TB.enabled() else None
