@@ -76,6 +76,40 @@ def memory_f6_enabled() -> bool:
     """F-6 臂开关（env `LIFE_PROMPT_MEMORY_F6` ∈ {1,true,yes,on}）；默认关。"""
     return os.environ.get(MEMORY_F6_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
 
+
+# D9i 臂开关（旁白/动作神态通道）：**只影响 prompt 收尾指令的文本**，默认 0 = 现状（禁旁白）。
+# 目的：OFF/ON 用同一份代码跑，两臂之间只剩「收尾指令允不允许成对括号旁白」这一个差异。
+# 硬约束（v2/refs/D9i-prereg-narration-toggle.md）：env 未设或 =0 时，提示词与改动前**逐字节相同**；
+# 只改这两处收尾指令，不改阈值 / 事件结构 / 调度 / 其它措辞。
+NARRATION_ENV = "LIFE_PROMPT_NARRATION"
+
+#: env 未设/=0 时的收尾指令（= 改动前的字面量，逐字节保留；单测据此做 sha256 等价断言）
+_NARRATION_TAIL_OFF = {
+    "initiate": "\n只写台词本身（一句家常话）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。",
+    "reply": "\n只写台词本身（接着刚才的话往下说一句）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。",
+}
+
+#: env=1 时的收尾指令：放开「成对括号的动作/神态/眼前景」，但**不得**放开到心理独白或旁白叙事。
+_NARRATION_TAIL_ON = {
+    "initiate": "\n只写台词本身（一句家常话，用成对的（）补一句动作、神态或眼前的景，如（把围裙往腰后一掖），但不要写心理独白或旁白叙事，不要用方括号或星号）：不要解释也不要总结；用口语短句，别反复用同一句口头禅。",
+    "reply": "\n只写台词本身（接着刚才的话往下说一句，用成对的（）补一句动作、神态或眼前的景，如（低头刨木，木屑卷起），但不要写心理独白或旁白叙事，不要用方括号或星号）：不要解释也不要总结；用口语短句，别反复用同一句口头禅。",
+}
+
+
+def narration_enabled() -> bool:
+    """D9i 臂开关（env `LIFE_PROMPT_NARRATION` ∈ {1,true,yes,on}）；默认关（=禁旁白，与改动前逐字节一致）。"""
+    return os.environ.get(NARRATION_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def narration_tail(kind: str) -> str:
+    """返回对话 prompt 的收尾指令（本臂唯一改动点）。
+
+    kind ∈ {"initiate"（开场白）, "reply"（接话）}。
+    env 未设或 =0 ⇒ 返回改动前的字面量（逐字节等价）；env=1 ⇒ 允许成对括号的动作/神态/眼前景。
+    """
+    table = _NARRATION_TAIL_ON if narration_enabled() else _NARRATION_TAIL_OFF
+    return table[kind]
+
 _SALIENT_EVENTS = {
     "ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "PLACE_ARRIVED",
     "MSG_PUBLIC", "MSG_DM", "MSG_GROUP", "RELATION_ENCOUNTER", "RELATION_CHANGE",
@@ -1494,7 +1528,7 @@ class LifeLayerAgent:
                 + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
                 + self._l7_struct_line(wv, partners, 0, "initiate")  # L-7 结构臂：开口/收束/禁忌开头（默认ON）
                 + AR.prompt_line()           # R12 去重臂：最近说过的话（默认OFF ⇒ 空串）
-                + "\n只写台词本身（一句家常话）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（零 config/结构改动）
+                + narration_tail("initiate"))  # D9i 旁白通道臂：收尾指令按 env LIFE_PROMPT_NARRATION 二选一（env 未设/=0 时与 A1 原字面量逐字节相同）
 
     def _reply_prompt(self, partner: str | None, topic: str, history: list,
                       cfg: dict | None = None, rift_line: str | None = None,
@@ -1520,7 +1554,7 @@ class LifeLayerAgent:
                                        "reply")  # L-7 结构臂：开口/收束/禁忌开头（默认ON）
                 + self._topic_shift_line(wv, partner, tid, topic, turn)  # R19 话题宽度臂（默认OFF ⇒ 空串）
                 + AR.prompt_line()           # R12 去重臂：最近说过的话（默认OFF ⇒ 空串）
-                + "\n只写台词本身（接着刚才的话往下说一句）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（承载「承接上一轮」结构不变）
+                + narration_tail("reply"))  # D9i 旁白通道臂：收尾指令按 env LIFE_PROMPT_NARRATION 二选一（env 未设/=0 时与 A1 原字面量逐字节相同）
 
     # ---- economy: negotiation / offer / order-cancel (T133) ----------------
     def _maybe_negotiate(self, wv) -> None:
