@@ -234,7 +234,14 @@ PY
 跑批有轮数上限，**靠近上限才开始的线程在物理上没有足够回合把话说完**——它的"没接上/没回答"是**截断**造成的，不是生成缺陷。判定式（本臂实例：`maxround=41`、`max_turns=6`）：
 
 ```
-尾截断 ⟺ min_round + T − 1 ≥ maxround        # T = 该线程【实际】轮数（唯一 turn_index 个数）
+尾截断 ⟺ min_round + T − 1 ≥ maxround   且   T < max_turns
+# T = 该线程【实际】轮数（唯一 turn_index 个数）；max_turns = 该臂线程轮数上限
+# 第二个条件（2026-10-29 增补）：`T ≥ A`（A = maxround − min_round + 1 = 可用回合）只说明线程占到末轮，
+#   但若 T 已等于 max_turns，它是**被轮数上限正常封口**，不是被 run 结束打断 —— 两者现象相同、成因相反。
+#   截断的定义是「本可以继续，但 run 到头了」；跑满额度的是「本来就应该结束」。
+#   D9b 实测例：min_round=78、maxround=83 ⇒ A=6=T=max_turns ⇒ 不截断（空间恰好够）；
+#               min_round=80、maxround=83 ⇒ A=4=T<max_turns ⇒ 真截断。
+
 # r42 算例：maxround=41、max_turns=6 ⇒ 自 min_round=36 起即截断（36+5=41 ≥ 41）；本文件此前写作
 #   `min(round) > maxround − (max_turns−1)`，该式用【配置上限】而非实际轮数，会把"起始贴尾但已自然结束"的
 #   线程误判为截断（例 min=37、T=2 ⇒ 实际未截断，旧式判截断）。2026-10-29 更正为此式。
