@@ -228,7 +228,11 @@ def test_verify_rejects_self_centred_and_ack_only_cases():
     self_centred = EE.verify("我今儿也累得够呛，地还没锄完。", plan)
     assert self_centred["has_ref"] is False and self_centred["adopted"] is False
     ack_only = EE.verify("嗯，那你先忙。", plan)
-    assert ack_only["ack_then_switch"] is True and ack_only["adopted"] is False
+    # R32：判定改用「第一个实质分句」（跳过单独成段的应声）⇒ 这里真正被判的是「那你先忙」，
+    # 它没有回应线索 ⇒ has_cue False / adopted False（旧口径会把它记成 ack_then_switch=True）。
+    assert ack_only["clause_mode"] == "content"
+    assert ack_only["first_clause"] == "那你先忙" and ack_only["first_clause_raw"] == "嗯"
+    assert ack_only["ack_then_switch"] is False and ack_only["adopted"] is False
     no_cue = EE.verify("你今天去地里了没。", plan)
     assert no_cue["has_ref"] is True and no_cue["has_cue"] is False and no_cue["adopted"] is False
 
@@ -301,7 +305,7 @@ def test_on_path_block_goes_after_history_and_records_verify(tmp_path, monkeypat
     assert a["v"] == EE.VERSION == "f3/2"
     assert a["prompted"] is True and a["source"] in ("text", "text+mood")
     assert "verify" in a, "R31 必须写入生成后确定性自检"
-    assert a["verify"]["v"] == "f3-verify/1"
+    assert a["verify"]["v"] == "f3-verify/2"   # R32：「第一分句」口径改动 ⇒ verify schema 升版
     assert a["verify"]["adopted"] is True            # 固定替身台词「你先歇会儿…」含指称+线索
     # 结构块位置：在「刚才的对话」之后（尾部约束区），而不是对话正文之前
     assert prompt_on.index("刚才的对话") < prompt_on.index("【情绪呼应·本条硬约束】")

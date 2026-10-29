@@ -1,0 +1,95 @@
+{
+  "S1_to_S2_loss": {
+    "gated_mood_only": 339,
+    "no_emotion_signal": 34
+  },
+  "S4_loss_content_clause": {
+    "ack_then_switch_no_cue": 66,
+    "no_cue": 34
+  },
+  "emotion_echo_sha256": "8248470b2519a200ea4fd02a2cfa107c8c4fce3eb80fb7dca2269585feb8e96d",
+  "f3_echo_rate_sha256": "3e1bdb28c805194c1f3178e8a3321856bc1df9dbb29684cb19d8774cc82a1341",
+  "first_clause_shape": {
+    "cue_in_segment_0": 7,
+    "cue_in_segment_1": 44,
+    "cue_in_segment_2plus": 38,
+    "cue_nowhere": 18,
+    "raw_first_is_ack_only": 62,
+    "raw_first_is_name_only": 30
+  },
+  "funnel": {
+    "S0_msgs": 686,
+    "S0_reply_events": 480,
+    "S1_wide_breakdown": {
+      "counted_opportunity": 438,
+      "excluded_no_reply_to": 206,
+      "excluded_parent_no_affect": 42,
+      "n_reply_msgs": 480,
+      "parent_unresolvable": 0
+    },
+    "S1_wide_opportunity": 438,
+    "S2_candidates": 107,
+    "S3_prompted": 107,
+    "S4_adopted_content_clause": 7,
+    "S4_adopted_raw_clause": 7
+  },
+  "lines_total": 193933,
+  "log": "v2/evidence/cycle34_f3_on_n16r84_seed42/run.jsonl",
+  "log_sha256": "b6cacdaf975a178ca3f950df9b905b5734cd8aa58298359ed09fac6ba25cffee",
+  "params": {
+    "criterion": "natural",
+    "cue_repair": true,
+    "enabled": true,
+    "form_rotation": true,
+    "min_intensity": 30,
+    "mood_bonus_div": 2,
+    "require_text_evidence": true,
+    "text_hit_intensity": 60,
+    "tier_cuts": [
+      45,
+      70
+    ]
+  },
+  "rates": {
+    "adopted_content_over_candidates": 0.065421,
+    "adopted_raw_over_candidates": 0.065421,
+    "candidates_over_replies": 0.222917
+  },
+  "replay_consistency": {
+    "extra_in_replay": [],
+    "identical": true,
+    "logged_echo_rows": 107,
+    "missing_in_replay": [],
+    "replayed_candidates": 107
+  },
+  "schema": "f3-funnel/1.0",
+  "script_sha256": "6a92f99bcfd7e5911883f50e861e6457d690326f8e940e5019cf059fb59df418",
+  "verify_content_clause": {
+    "ack_then_switch": 66,
+    "adopted": 7,
+    "has_cue": 7,
+    "has_ref": 45
+  },
+  "verify_raw_clause": {
+    "ack_then_switch": 66,
+    "adopted": 7,
+    "has_cue": 7,
+    "has_ref": 45
+  },
+  "wide_caliber": {
+    "band": "ok",
+    "den": 438,
+    "hits": {
+      "H1_H2_overlap": 0,
+      "H1_polarity_match": 4,
+      "H2_empathy_markers": 6,
+      "H3_mood_term_echo": 0,
+      "P1_union": 10
+    },
+    "rate": 0.022831,
+    "wilson95": [
+      0.012448,
+      0.041512
+    ]
+  }
+}

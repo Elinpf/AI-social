@@ -44,6 +44,22 @@ def _reset(monkeypatch):
     EE.reload()
 
 
+
+@pytest.fixture()
+def raw_clause():
+    """R32 消融口：把这组用例钉在 **R31/N-05 原来的 raw 第一分句口径**上（逐字节回归）。
+
+    R32 把「第一分句」改成「第一个实质分句」（跳过单独成段的应声/称呼，见
+    `emotion_echo.content_first_clause`）。本文件这些用例瞄准的是 N-05 闸门本身
+    （"应一声就转话题"要触发重写），其样本台词是按 raw 口径构造的 ⇒ 显式钉回 raw，
+    保证 N-05 的既有行为被原样回归；content 口径的覆盖在
+    `test_f3_r32_content_clause.py`。
+    """
+    EE.set_override({**EE.load_params(), "enabled": True, "content_clause": False})
+    yield
+    EE.set_override(None)
+
+
 class _SeqLLM:
     """确定性 LLM 替身：按调用次序返回给定台词，并记录每条提示词（不联网、不随机）。"""
 
@@ -82,7 +98,7 @@ def _plan() -> dict:
 
 
 # ---------------------------------------------------------------- A 判据是纯函数
-def test_need_rewrite_and_rewrite_ok_are_pure_predicates():
+def test_need_rewrite_and_rewrite_ok_are_pure_predicates(raw_clause):
     plan = _plan()
     bad_ack = EE.verify(ACK_THEN_SWITCH, plan)
     bad_cue = EE.verify(NO_CUE, plan)
@@ -99,7 +115,7 @@ def test_need_rewrite_and_rewrite_ok_are_pure_predicates():
     assert EE.rewrite_ok(None) is False
 
 
-def test_rewrite_line_is_structural_not_a_ready_made_sentence():
+def test_rewrite_line_is_structural_not_a_ready_made_sentence(raw_clause):
     plan = _plan()
     line = EE.rewrite_line(plan, EE.verify(ACK_THEN_SWITCH, plan))
     assert "【情绪呼应·第一分句重写】" in line
@@ -123,7 +139,7 @@ def test_prompt_line_gains_cue_word_requirement():
 
 
 # ---------------------------------------------------------------- B 闸门落在链路上
-def test_on_ack_then_switch_is_rewritten_once(tmp_path, monkeypatch):
+def test_on_ack_then_switch_is_rewritten_once(tmp_path, monkeypatch, raw_clause):
     monkeypatch.setenv(EE.ECHO_ENV, "1")
     EE.reload()
     _kernel, agent = _build(tmp_path)
@@ -157,7 +173,7 @@ def test_on_good_first_pass_makes_no_extra_call(tmp_path, monkeypatch):
 
 
 # ---------------------------------------------------------------- C 不劣于修正前
-def test_on_rewrite_still_bad_keeps_original_body(tmp_path, monkeypatch):
+def test_on_rewrite_still_bad_keeps_original_body(tmp_path, monkeypatch, raw_clause):
     monkeypatch.setenv(EE.ECHO_ENV, "1")
     EE.reload()
     _kernel, agent = _build(tmp_path)
@@ -171,7 +187,7 @@ def test_on_rewrite_still_bad_keeps_original_body(tmp_path, monkeypatch):
     assert rw["after"] == {"has_cue": False, "ack_then_switch": True}
 
 
-def test_on_empty_rewrite_keeps_original_body(tmp_path, monkeypatch):
+def test_on_empty_rewrite_keeps_original_body(tmp_path, monkeypatch, raw_clause):
     monkeypatch.setenv(EE.ECHO_ENV, "1")
     EE.reload()
     _kernel, agent = _build(tmp_path)

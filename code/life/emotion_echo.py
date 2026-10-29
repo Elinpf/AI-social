@@ -41,6 +41,28 @@ R31 把触发口径收紧了，但 CYCLE-34 ON 臂读数显示瓶颈换到了生
   * OFF 臂（未设 `HITT_DIALOGUE_EMOTION_ECHO`）：`enabled()==False` ⇒ `plan()` 不产 ⇒
     agent 侧 `echo_audit is None` ⇒ **整段闸门不执行**，不多一次 LLM 调用、不改提示词/ payload。
 
+## R32：「第一分句」判定口径 = 第一个**有实质内容**的分句（`content_clause`，默认 True）
+
+CYCLE-34 的漏斗复算（`tools/metrics/f3_funnel.py`，证据 `v2/evidence/cycle36_f3_funnel/`）
+把 `107 → 7`（6.54%）拆开后，最大的一级丢失**不在生成质量，而在切分口径**：
+
+  * 107 条候选里 **62 条的第一段就是一个「嗯」/「哎」**、**30 条是一个单独的称呼**（"巧儿"/"陈医"）；
+  * 旧口径「第一个逗号之前 = 第一分句」⇒ 这 92 条的第一分句里**不可能**出现线索词 ⇒ `has_cue=7`；
+  * 而其中 **44 条把线索词放在紧跟其后的第一个实质分句里**（"嗯，你压腿压得高兴就好"）。
+
+⇒ 本模块把「第一分句」定义为**跳过开头单独成段的应声词/称呼后的第一个实质分句**
+（`content_first_clause()`），并让提示词把这条定义写明（只解释，不禁止应声/称呼，不牺牲口语感）。
+`content_clause=False` ⇒ 与 R31/N-05 **逐字节等价**（`first_clause` 键值不变），供消融/回归。
+
+两臂同树对照的消融口：env **`HITT_ECHO_CONTENT_CLAUSE`**（`1/true/on/yes` → 开；其它任何取值 → 关；
+未设 → 默认 `True`）。**不能靠改 `code/config/emotion_echo.json` 切换**——`code/config/` 是跑批
+preflight 的冻结区，两臂改配置就不是同一棵树，归因直接失效。
+
+注意口径纪律：`verify.*` 是**只追加的审计字段，不是报告口径**（报告口径是
+`tools/metrics/f3_echo_rate.py` 的宽口径 P1）。本改动提高的是「这一条结构上有没有接住」的
+**判定保真度**，并顺带减少 N-05 的无谓重写调用（`need_rewrite()` 跟着口径变准）；它**不宣称**
+台词本身的情绪质量变好——那要靠两臂跑批的宽口径读数判。
+
 ## 分层与开关（与 R14 一致，未改）
 
   * **不产生事件类型、不改世界态、不进 `state_hash`**；
@@ -93,6 +115,13 @@ from . import emotion as E
 #: 单 env 开关（消融/逃生口）：{1,true,on,yes} → 开；其它任何值（含空串/拼错）→ 关。
 ECHO_ENV = "HITT_DIALOGUE_EMOTION_ECHO"
 
+#: R32 单 env 消融口（**两臂同树对照**用）：`HITT_ECHO_CONTENT_CLAUSE`。
+#: 语义与 `ECHO_ENV` 完全一致：{1,true,on,yes}（大小写不敏感）→ 开；其它任何取值 → 关；
+#: **未设时不动默认值**（仍是 `DEFAULTS["content_clause"]=True`）⇒ 不改变任何既有臂的语义。
+#: 存在理由：`code/config/` 是跑批 preflight 的冻结区，两臂不能靠改配置切换，
+#: 否则两臂不同树 ⇒ 归因失效（见 `team-workspace/evidence/handoff-to-life-dev-content-clause-switch.md`）。
+CONTENT_CLAUSE_ENV = "HITT_ECHO_CONTENT_CLAUSE"
+
 #: 信号版本（写进 payload，便于按版本复算）。R31：`f3/1` → `f3/2`
 #: （触发口径收紧 + 多两个只追加子键 ⇒ 旧读数可按 v 分桶，不与 R14 混账）。
 VERSION = "f3/2"
@@ -121,6 +150,8 @@ DEFAULTS = {
     "form_rotation": True,          # 下发确定性轮转的「回应形态」，避免同句式（L-7 守卫）
     # N-05 新增（**只在开关打开时才有意义**；OFF 时本键不被任何路径读到）
     "cue_repair": True,             # 生成后第一分句缺回应线索 / 应声就转话题 ⇒ 重写一次
+    # R32 新增（同上：只在开关打开时才有意义）
+    "content_clause": True,         # 「第一分句」判定口径：跳过单独的应声/称呼，取第一个实质分句
 }
 
 #: 「回应形态」——**结构**而非句式（模型仍自由造句，**不提供任何例句**）。
@@ -147,6 +178,10 @@ CUE_TOKENS = (
 _CLAUSE_RE = re.compile(r"[，。！？!?；;、,.~～\n]")
 #: 「应声词」——只用来判定「应了一声之后有没有接住」，不是禁令（与 L-7 的开口方式不冲突）
 _ACK_RE = re.compile(r"^(嗯+|唉+|哎+|哦+|哟+|啊+|唔+)[，,、]?")
+#: R32：「纯应声分句」——整整一段只有一个应声词（允许尾随标点）。单独成段不算「第一分句」。
+_ACK_ONLY_RE = re.compile(r"^(嗯+|唉+|哎+|哦+|哟+|啊+|唔+)[，,、。.！!？?~～…]*$")
+#: R32：单独成段的**称呼**最长几位（再长就不像称呼了，宁可不跳，避免误伤短句）
+_NAME_SEG_MAX = 5
 
 _CFG_PATH = Path(__file__).resolve().parents[1] / "config" / "emotion_echo.json"
 _cache: dict | None = None
@@ -155,10 +190,13 @@ _override: dict | None = None
 
 # ---------------------------------------------------------------- 开关/参数
 def load_params(path: str | Path | None = None) -> dict:
-    """读 `config/emotion_echo.json`（缺省值 → 默认**关**）；支持 env 逃生口。
+    """读 `config/emotion_echo.json`（缺省值 → 默认**关**）；支持两个 env 逃生口。
 
-    env：`HITT_DIALOGUE_EMOTION_ECHO=1|true|on|yes` → 打开；
-    **其余任何取值（含 `0|false|off|no|`空串|拼写错误）→ 关闭**（消融/回退用）。
+    env：
+      * `HITT_DIALOGUE_EMOTION_ECHO=1|true|on|yes` → 打开情绪呼应；
+      * `HITT_ECHO_CONTENT_CLAUSE=1|true|on|yes` → 打开 R32「第一分句=第一个实质分句」口径；
+    **其余任何取值（含 `0|false|off|no|`空串|拼写错误）→ 对应的那一项关闭**（消融/回退用）。
+    两个 env **均未设**时不动任何默认值（`enabled=False` / `content_clause=True`）⇒ 既有臂语义不变。
     本文件不进 engine_version 指纹（默认关 ⇒ 旧日志 fingerprint 不受影响）。
     """
     global _cache
@@ -188,6 +226,11 @@ def load_params(path: str | Path | None = None) -> dict:
     out["require_text_evidence"] = bool(out["require_text_evidence"])
     out["form_rotation"] = bool(out["form_rotation"])
     out["cue_repair"] = bool(out["cue_repair"])
+    out["content_clause"] = bool(out["content_clause"])
+    # R32 消融口：**未设 env 时逐字不动**上面的结果（默认 True 不变）；显式设定时覆盖。
+    env_cc = os.environ.get(CONTENT_CLAUSE_ENV)
+    if env_cc is not None:
+        out["content_clause"] = env_cc.strip().lower() in ("1", "true", "on", "yes")
     cuts = [int(x) for x in (out["tier_cuts"] or DEFAULTS["tier_cuts"])]
     out["tier_cuts"] = cuts[:2] if len(cuts) >= 2 else list(DEFAULTS["tier_cuts"])
     if path is None:
@@ -340,6 +383,14 @@ def prompt_line(plan_dict: dict | None, name: str | None = None) -> str:
         lines.append(f"证据（{who}原话）：「{quote}」")
     lines += [
         "这一条必须做到（按顺序，缺一条就算没做到）：",
+    ]
+    if load_params()["content_clause"]:
+        # R32：把「第一分句」的定义写明，避免模型以为「嗯，」/「巧儿，」那一小段就算做到了。
+        # 只解释判定口径，**不禁止**开头应声或叫名字（不牺牲口语自然度）。
+        lines.append(
+            "（这里说的「第一分句」指第一个有实质内容的分句：单独一个「嗯/哎」这类应声、"
+            "或单独叫一声对方的名字，都不算第一分句；它们之后第一个逗号之前就要有实质内容。）")
+    lines += [
         f"1) 第一分句先接住这份情绪（承认/关心/顺着接），不许第一分句就只讲自己的事；"
         "第一分句里要出现一个表露情绪回应的字眼（累/辛苦/难/别/心疼/放心这类），不能只复述事实；",
         f"2) 第一分句里要出现对{who}的指称（「你」或ta的名字）；",
@@ -356,6 +407,51 @@ def first_clause(body: str) -> str:
     return _CLAUSE_RE.split((body or "").strip(), maxsplit=1)[0].strip()
 
 
+def segments(body: str) -> list[str]:
+    """把正文按中文标点切成非空分句段（确定性、纯函数）。"""
+    return [s.strip() for s in _CLAUSE_RE.split((body or "").strip()) if s.strip()]
+
+
+def is_vocative_segment(seg: str, name: str | None = None) -> bool:
+    """R32：这一段是不是**单独的称呼**（"巧儿"/"陈医"/"金先生"这种）——纯函数、闭集判定。
+
+    只认「短（≤`_NAME_SEG_MAX` 字）∧ 不含回应线索 ∧ 不含对对方的指称 ∧ 与对方显示名互为子串」。
+    宁可不跳也不误跳：谈不上就返回 False，判定退化为旧口径。
+    """
+    n = str(name or "").strip()
+    s = str(seg or "").strip()
+    if not n or not s or len(s) > _NAME_SEG_MAX:
+        return False
+    if any(t in s for t in CUE_TOKENS) or any(t in s for t in REF_TOKENS):
+        return False
+    return s == n or s in n or n in s
+
+
+def content_first_clause(body: str, name: str | None = None) -> str:
+    """R32：**第一个实质分句**——跳过开头单独成段的应声词（嗯/哎/唉…）与单独的称呼。
+
+    为什么需要它（CYCLE-34 漏斗，`v2/evidence/cycle36_f3_funnel/`）：ON 臂 107 条 echo 里
+    **62 条的第一段就是一个「嗯」/「哎」、30 条是一个单独的称呼**；按旧口径（第一个逗号之前
+    就是第一分句），这些条目的第一分句里不可能出现线索词，于是 `has_cue=7/107`。
+    而其中 44 条把线索词放在紧跟其后的第一个实质分句里（"嗯，你压腿压得高兴就好"）。
+
+    ⇒ 本函数把「第一分句」定义为**去掉称呼/应声前缀后的第一个实质分句**，
+      与提示词里「第一分句先接住情绪」这句话的真实语义对齐。**不改台词、不做任何生成侧过滤。**
+    整段都是应声/称呼时（正文只有一个词）返回最后一段，保持函数总返回非空字符串。
+    """
+    segs = segments(body)
+    if not segs:
+        return ""
+    i = 0
+    while i < len(segs) - 1:
+        seg = segs[i]
+        if _ACK_ONLY_RE.match(seg) or is_vocative_segment(seg, name):
+            i += 1
+            continue
+        break
+    return segs[i]
+
+
 def verify(body: str, plan_dict: dict | None) -> dict:
     """生成后**确定性自检**（只写审计，不改台词、不新增 LLM 调用、**不是报告口径**）。
 
@@ -365,18 +461,31 @@ def verify(body: str, plan_dict: dict | None) -> dict:
       * `ack_then_switch`：以应声词起头、且除应声外没有别的回应线索（= 应一声就转话题）；
       * `adopted` = has_ref and has_cue and not ack_then_switch（**结构合规**，非"效果好"）。
     `form_ok`：按本条指派的形态做一次结构检测（形态未指派 ⇒ None）。
+
+    R32：`content_clause=True`（默认）时，「第一分句」= `content_first_clause()`（跳过单独的
+    应声/称呼）；置 False 则与 R31/N-05 **逐字节等价**（`first_clause` 键值不变，供消融/回归）。
+    `first_clause_raw` 永远给旧口径的第一段，`clause_mode` 标明本次用的是哪一档。
     """
     plan_dict = plan_dict or {}
-    fc = first_clause(body)
+    p = load_params()
     name = str(plan_dict.get("name") or "").strip()
+    fc_raw = first_clause(body)
+    if p["content_clause"]:
+        fc = content_first_clause(body, name)
+        mode = "content"
+    else:
+        fc = fc_raw
+        mode = "raw"
     has_ref = any(t in fc for t in REF_TOKENS) or bool(name and name in fc)
     has_cue = any(t in fc for t in CUE_TOKENS)
     ack = _ACK_RE.match(fc) is not None
     rest = _ACK_RE.sub("", fc)
     ack_then_switch = bool(ack) and not any(t in rest for t in CUE_TOKENS)
     out = {
-        "v": "f3-verify/1",
+        "v": "f3-verify/2",
         "first_clause": fc,
+        "first_clause_raw": fc_raw,
+        "clause_mode": mode,
         "has_ref": bool(has_ref),
         "has_cue": bool(has_cue),
         "ack_then_switch": bool(ack_then_switch),

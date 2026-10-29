@@ -1,0 +1,95 @@
+{
+  "A_pipeline_equivalence": true,
+  "B_env_parsing": true,
+  "C_fixture_diff": [
+    {
+      "arms": {
+        "content_clause=OFF": {
+          "ack_then_switch": true,
+          "adopted": false,
+          "content_clause": false,
+          "first_clause": "嗯",
+          "first_clause_raw": "嗯",
+          "has_cue": false,
+          "has_ref": false,
+          "need_rewrite": true,
+          "prompt_has_definition_line": false,
+          "prompt_len": 293
+        },
+        "content_clause=ON": {
+          "ack_then_switch": false,
+          "adopted": true,
+          "content_clause": true,
+          "first_clause": "你压腿压得高兴就好",
+          "first_clause_raw": "嗯",
+          "has_cue": true,
+          "has_ref": true,
+          "need_rewrite": false,
+          "prompt_has_definition_line": true,
+          "prompt_len": 372
+        }
+      },
+      "sample": "CYCLE-34 msg_uid=42:2141"
+    },
+    {
+      "arms": {
+        "content_clause=OFF": {
+          "ack_then_switch": false,
+          "adopted": false,
+          "content_clause": false,
+          "first_clause": "巧儿",
+          "first_clause_raw": "巧儿",
+          "has_cue": false,
+          "has_ref": true,
+          "need_rewrite": true,
+          "prompt_has_definition_line": false,
+          "prompt_len": 293
+        },
+        "content_clause=ON": {
+          "ack_then_switch": false,
+          "adopted": false,
+          "content_clause": true,
+          "first_clause": "你拿废木条练榫头",
+          "first_clause_raw": "巧儿",
+          "has_cue": false,
+          "has_ref": true,
+          "need_rewrite": true,
+          "prompt_has_definition_line": true,
+          "prompt_len": 372
+        }
+      },
+      "sample": "CYCLE-34 msg_uid=42:1198"
+    },
+    {
+      "arms": {
+        "content_clause=OFF": {
+          "ack_then_switch": false,
+          "adopted": true,
+          "content_clause": false,
+          "first_clause": "你这话听着就累",
+          "first_clause_raw": "你这话听着就累",
+          "has_cue": true,
+          "has_ref": true,
+          "need_rewrite": false,
+          "prompt_has_definition_line": false,
+          "prompt_len": 293
+        },
+        "content_clause=ON": {
+          "ack_then_switch": false,
+          "adopted": true,
+          "content_clause": true,
+          "first_clause": "你这话听着就累",
+          "first_clause_raw": "你这话听着就累",
+          "has_cue": true,
+          "has_ref": true,
+          "need_rewrite": false,
+          "prompt_has_definition_line": true,
+          "prompt_len": 372
+        }
+      },
+      "sample": "对照：第一段就是实质内容"
+    }
+  ],
+  "env": "HITT_ECHO_CONTENT_CLAUSE",
+  "note": "content_clause 不只影响 verify()：prompt_line() 多一行口径说明、need_rewrite() 触发率随口径变化 ⇒ 两臂 llm_calls 的 echo_rewrite 分块预期不等。"
+}

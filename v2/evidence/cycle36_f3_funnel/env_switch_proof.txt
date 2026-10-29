@@ -1,0 +1,39 @@
+==============================================================================
+A. 管道等价（env 未设 ⇒ 与加 env 口之前的实现逐键相等）
+==============================================================================
+  [OK ] default(no cfg)            content_clause=True enabled=False identical=True
+  [OK ] cfg:content_clause=false   content_clause=False enabled=False identical=True
+  [OK ] cfg:content_clause=true    content_clause=True enabled=False identical=True
+  ⇒ 三组配置全部逐键相等: True
+
+==============================================================================
+B. env 双向解析（只有 1/true/on/yes 开；未设 = 默认 True；其它任何取值 = 关）
+==============================================================================
+  （未设）           → content_clause=True  期望=True  OK
+  1              → content_clause=True  期望=True  OK
+  true           → content_clause=True  期望=True  OK
+  TRUE           → content_clause=True  期望=True  OK
+  on             → content_clause=True  期望=True  OK
+  Yes            → content_clause=True  期望=True  OK
+  0              → content_clause=False 期望=False OK
+  false          → content_clause=False 期望=False OK
+  off            → content_clause=False 期望=False OK
+  no             → content_clause=False 期望=False OK
+  （空串）           → content_clause=False 期望=False OK
+  拼错 enable      → content_clause=False 期望=False OK
+  ⇒ 全部符合规格: True
+
+==============================================================================
+C. 同一 fixture，env=1 vs env=0（判读差异 + 提示词差异，供报告披露）
+==============================================================================
+  · CYCLE-34 msg_uid=42:2141
+      content_clause=ON    first_clause='你压腿压得高兴就好'    has_cue=True  ack_switch=False adopted=True  need_rewrite=False definition_line=True
+      content_clause=OFF   first_clause='嗯'            has_cue=False ack_switch=True  adopted=False need_rewrite=True  definition_line=False
+  · CYCLE-34 msg_uid=42:1198
+      content_clause=ON    first_clause='你拿废木条练榫头'     has_cue=False ack_switch=False adopted=False need_rewrite=True  definition_line=True
+      content_clause=OFF   first_clause='巧儿'           has_cue=False ack_switch=False adopted=False need_rewrite=True  definition_line=False
+  · 对照：第一段就是实质内容
+      content_clause=ON    first_clause='你这话听着就累'      has_cue=True  ack_switch=False adopted=True  need_rewrite=False definition_line=True
+      content_clause=OFF   first_clause='你这话听着就累'      has_cue=True  ack_switch=False adopted=True  need_rewrite=False definition_line=False
+
+written: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle36_f3_funnel/env_switch_proof.json
