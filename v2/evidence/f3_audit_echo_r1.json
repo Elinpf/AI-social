@@ -1,0 +1,2084 @@
+{
+ "schema": "f3-audit-echo/2",
+ "script_sha256": "2e80809597dfdddb0354660c1e6a384f6ce40d847b011cd5ec2081e1d60f617f",
+ "empathy_markers": [
+  "我懂",
+  "我也",
+  "别难过",
+  "恭喜",
+  "辛苦",
+  "真惨",
+  "太好了",
+  "确实",
+  "是啊",
+  "可不是"
+ ],
+ "agreement_only_excluded": [
+  "我懂",
+  "确实",
+  "是啊",
+  "可不是"
+ ],
+ "arms": [
+  {
+   "meta": {
+    "label": "off",
+    "log": "v2/evidence/emo-off-20261030/run.jsonl",
+    "log_sha8": "c27691d9",
+    "n_messages": 191,
+    "n_threads": 66,
+    "bad_lines": 0,
+    "n_messages_reply_path": 125,
+    "emotion_lexicon_sha256": "8427245cdf65550c6fb80d10616a01d9054d3d4fe97842b4b81feed7afd4a996"
+   },
+   "tier_definitions": {
+    "loose": "极性相同 ∪ 任意 EMPATHY_MARKERS（= tools/d5 原式；与 R1–R13 可比）",
+    "loose_no_agree": "极性相同 ∪ 标记剔 `我懂`（中间列，保留供历史对齐）",
+    "polarity_match": "只认极性一致（标记一律不算）——技术对照，**禁止称「严格」**；负→负假阳性保留",
+    "marker_based": "**主指标**：只认真回应标记（剔 我懂/确实/是啊/可不是），不要求极性一致；依赖词表⇒系统性低估"
+   },
+   "main_metric": "marker_based",
+   "dropped": {
+    "union_of_polarity_and_marker": "已弃用（并集不构成第三种标准）"
+   },
+   "tiers": {
+    "loose": {
+     "all_messages": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 7,
+      "rate": 0.142857,
+      "wilson95": [
+       0.02568,
+       0.513128
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 156,
+        "cur_seq": 1632,
+        "p_prev": -1,
+        "p_cur": -1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+        "cur_body": "哎，我正翻着刘家那筐新到的干辣椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾半干再码盐。你试试。"
+       }
+      ]
+     },
+     "reply_path": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 7,
+      "rate": 0.142857,
+      "wilson95": [
+       0.02568,
+       0.513128
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 156,
+        "cur_seq": 1632,
+        "p_prev": -1,
+        "p_cur": -1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+        "cur_body": "哎，我正翻着刘家那筐新到的干辣椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾半干再码盐。你试试。"
+       }
+      ]
+     }
+    },
+    "loose_no_agree": {
+     "all_messages": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 7,
+      "rate": 0.142857,
+      "wilson95": [
+       0.02568,
+       0.513128
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 156,
+        "cur_seq": 1632,
+        "p_prev": -1,
+        "p_cur": -1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+        "cur_body": "哎，我正翻着刘家那筐新到的干辣椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾半干再码盐。你试试。"
+       }
+      ]
+     },
+     "reply_path": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 7,
+      "rate": 0.142857,
+      "wilson95": [
+       0.02568,
+       0.513128
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 156,
+        "cur_seq": 1632,
+        "p_prev": -1,
+        "p_cur": -1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+        "cur_body": "哎，我正翻着刘家那筐新到的干辣椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾半干再码盐。你试试。"
+       }
+      ]
+     }
+    },
+    "polarity_match": {
+     "all_messages": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 7,
+      "rate": 0.142857,
+      "wilson95": [
+       0.02568,
+       0.513128
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 156,
+        "cur_seq": 1632,
+        "p_prev": -1,
+        "p_cur": -1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+        "cur_body": "哎，我正翻着刘家那筐新到的干辣椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾半干再码盐。你试试。"
+       }
+      ]
+     },
+     "reply_path": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 7,
+      "rate": 0.142857,
+      "wilson95": [
+       0.02568,
+       0.513128
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 156,
+        "cur_seq": 1632,
+        "p_prev": -1,
+        "p_cur": -1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+        "cur_body": "哎，我正翻着刘家那筐新到的干辣椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾半干再码盐。你试试。"
+       }
+      ]
+     }
+    },
+    "marker_based": {
+     "all_messages": {
+      "events": 0,
+      "dedup_by_body": 0,
+      "dup_delta": 0,
+      "denominator": 7,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.35433
+      ],
+      "band": "count_only",
+      "samples": []
+     },
+     "reply_path": {
+      "events": 0,
+      "dedup_by_body": 0,
+      "dup_delta": 0,
+      "denominator": 7,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.35433
+      ],
+      "band": "count_only",
+      "samples": []
+     }
+    }
+   },
+   "marker_hits": {},
+   "agreement_only_excluded": [
+    "我懂",
+    "确实",
+    "是啊",
+    "可不是"
+   ],
+   "opportunity_density": {
+    "per_message": 0.036649,
+    "per_round": 0.318182,
+    "n_rounds_seen": 22
+   },
+   "mechanism": {
+    "field_path": "payload.ctx.echo",
+    "echo_rows_n": 0,
+    "echo_rows_ratio_per_message": 0.0,
+    "top_level_dialogue_echo_rows": 0,
+    "ctx_echo_key_absent_on_all_msgs": true,
+    "versions": [],
+    "prompted_all_true": null,
+    "by_source": {},
+    "by_tier": {},
+    "by_sign": {},
+    "by_kind": {},
+    "n_threads": 0,
+    "echo_rows_tier_hit": {
+     "loose": 0,
+     "loose_no_agree": 0,
+     "polarity_match": 0,
+     "marker_based": 0
+    },
+    "echo_rows_in_opportunities": 0,
+    "echo_rows_never_hit_any_tier": 0,
+    "activation_checks": {
+     "v_all_f3_1": false,
+     "sign_dist_nonempty": false,
+     "source_dist": {},
+     "prompted_eq_field_present": null,
+     "verdict": "off_or_not_activated",
+     "note": "四项齐（v=f3/1 / sign 非空 / source 构成 / prompted==present）才认『ON 确实 ON』；echo_rows=0 时**无法区分**「开关关着」与「开关没生效」，不能写『机制无效』"
+    },
+    "rows": []
+   },
+   "rows": [
+    {
+     "thread": "m:T|TH-P007-P005-19",
+     "prev_seq": 26537,
+     "cur_seq": 27718,
+     "round": 21,
+     "cur_is_reply": true,
+     "p_prev": -1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "刚把李木匠家小子的退烧药包好，手上还沾着药碾子的苦味，你搁下的陈皮我瞧见了，先搁着吧，等会儿拿它煮水正好压压我这空了一上午的胃，你铺子那边今天进的货都归置妥了没？",
+     "cur_body": "陈医，我那铺子后头还堆着两筐新到的山货没拆呢，等会儿回去再慢慢归置吧。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P009-P004-0",
+     "prev_seq": 124,
+     "cur_seq": 675,
+     "round": 1,
+     "cur_is_reply": true,
+     "p_prev": 1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "秀娘，你家那口子这阵子还咳得厉害吗？账要平。",
+     "cur_body": "哎，他咳得轻些了，我刚把炉子里的桂圆红枣糕翻了个面，等会儿给金先生你切一块尝尝。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P012-P001-18",
+     "prev_seq": 28277,
+     "cur_seq": 29483,
+     "round": 22,
+     "cur_is_reply": true,
+     "p_prev": -1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "锄头搁田埂上不怕丢，我这儿正给桂英家择韭菜呢，她明儿办席。你手没洗就先歇歇。",
+     "cur_body": "我刚把西头那块田的排水沟清完，裤腿上全是泥，你给桂英家择韭菜这事我听着呢。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P012-P016-0",
+     "prev_seq": 156,
+     "cur_seq": 1632,
+     "round": 1,
+     "cur_is_reply": true,
+     "p_prev": -1,
+     "p_cur": -1,
+     "same_polarity": true,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+     "cur_body": "哎，我正翻着刘家那筐新到的干辣椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾半干再码盐。你试试。",
+     "tier_loose": true,
+     "tier_loose_no_agree": true,
+     "tier_polarity_match": true,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P012-P016-0",
+     "prev_seq": 1632,
+     "cur_seq": 2196,
+     "round": 3,
+     "cur_is_reply": true,
+     "p_prev": -1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "哎，我正翻着刘家那筐新到的干辣椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾半干再码盐。你试试。",
+     "cur_body": "哟，我正搓着周家送来的那簸箕萝卜条呢，听你这么一说，那我下回先泡足钟头再晾。盐得晚点撒。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P016-P002-7",
+     "prev_seq": 16947,
+     "cur_seq": 17418,
+     "round": 11,
+     "cur_is_reply": true,
+     "p_prev": 1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "手都磨出泡了还惦记蒜。我这儿刚剥了一辫子，你拿两头去，回头把萝卜汤盛一碗给巷口老周家孙子，那孩子这两天咳得厉害。",
+     "cur_body": "哎，蒜我拿两头，萝卜汤盛出来先给老周家孙子晾着。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P016-P005-0",
+     "prev_seq": 5096,
+     "cur_seq": 5893,
+     "round": 7,
+     "cur_is_reply": true,
+     "p_prev": -1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "刚把新到的陈皮翻晒完，风一吹满摊子都是那股子苦香，陈医你那戥子称完当归，手也该歇歇了。称得准。",
+     "cur_body": "这戥子一响啊，倒让我想起年轻时跟师父练功，一站就是半炷香，腿肚子直打颤呢。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    }
+   ]
+  },
+  {
+   "meta": {
+    "label": "on",
+    "log": "v2/evidence/emo-on-20261029/run.jsonl",
+    "log_sha8": "2aa6c774",
+    "n_messages": 192,
+    "n_threads": 65,
+    "bad_lines": 0,
+    "n_messages_reply_path": 127,
+    "emotion_lexicon_sha256": "8427245cdf65550c6fb80d10616a01d9054d3d4fe97842b4b81feed7afd4a996"
+   },
+   "tier_definitions": {
+    "loose": "极性相同 ∪ 任意 EMPATHY_MARKERS（= tools/d5 原式；与 R1–R13 可比）",
+    "loose_no_agree": "极性相同 ∪ 标记剔 `我懂`（中间列，保留供历史对齐）",
+    "polarity_match": "只认极性一致（标记一律不算）——技术对照，**禁止称「严格」**；负→负假阳性保留",
+    "marker_based": "**主指标**：只认真回应标记（剔 我懂/确实/是啊/可不是），不要求极性一致；依赖词表⇒系统性低估"
+   },
+   "main_metric": "marker_based",
+   "dropped": {
+    "union_of_polarity_and_marker": "已弃用（并集不构成第三种标准）"
+   },
+   "tiers": {
+    "loose": {
+     "all_messages": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 10,
+      "rate": 0.1,
+      "wilson95": [
+       0.017876,
+       0.40415
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 156,
+        "cur_seq": 1632,
+        "p_prev": -1,
+        "p_cur": -1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+        "cur_body": "哎，我这儿正翻着周家那筐青椒呢，腌萝卜发苦不是盐的事，是头道水没攥干。你上回说我不肯带人，我心里堵到现在。"
+       }
+      ]
+     },
+     "reply_path": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 10,
+      "rate": 0.1,
+      "wilson95": [
+       0.017876,
+       0.40415
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 156,
+        "cur_seq": 1632,
+        "p_prev": -1,
+        "p_cur": -1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+        "cur_body": "哎，我这儿正翻着周家那筐青椒呢，腌萝卜发苦不是盐的事，是头道水没攥干。你上回说我不肯带人，我心里堵到现在。"
+       }
+      ]
+     }
+    },
+    "loose_no_agree": {
+     "all_messages": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 10,
+      "rate": 0.1,
+      "wilson95": [
+       0.017876,
+       0.40415
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 156,
+        "cur_seq": 1632,
+        "p_prev": -1,
+        "p_cur": -1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+        "cur_body": "哎，我这儿正翻着周家那筐青椒呢，腌萝卜发苦不是盐的事，是头道水没攥干。你上回说我不肯带人，我心里堵到现在。"
+       }
+      ]
+     },
+     "reply_path": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 10,
+      "rate": 0.1,
+      "wilson95": [
+       0.017876,
+       0.40415
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 156,
+        "cur_seq": 1632,
+        "p_prev": -1,
+        "p_cur": -1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+        "cur_body": "哎，我这儿正翻着周家那筐青椒呢，腌萝卜发苦不是盐的事，是头道水没攥干。你上回说我不肯带人，我心里堵到现在。"
+       }
+      ]
+     }
+    },
+    "polarity_match": {
+     "all_messages": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 10,
+      "rate": 0.1,
+      "wilson95": [
+       0.017876,
+       0.40415
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 156,
+        "cur_seq": 1632,
+        "p_prev": -1,
+        "p_cur": -1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+        "cur_body": "哎，我这儿正翻着周家那筐青椒呢，腌萝卜发苦不是盐的事，是头道水没攥干。你上回说我不肯带人，我心里堵到现在。"
+       }
+      ]
+     },
+     "reply_path": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 10,
+      "rate": 0.1,
+      "wilson95": [
+       0.017876,
+       0.40415
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 156,
+        "cur_seq": 1632,
+        "p_prev": -1,
+        "p_cur": -1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+        "cur_body": "哎，我这儿正翻着周家那筐青椒呢，腌萝卜发苦不是盐的事，是头道水没攥干。你上回说我不肯带人，我心里堵到现在。"
+       }
+      ]
+     }
+    },
+    "marker_based": {
+     "all_messages": {
+      "events": 0,
+      "dedup_by_body": 0,
+      "dup_delta": 0,
+      "denominator": 10,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.277533
+      ],
+      "band": "count_only",
+      "samples": []
+     },
+     "reply_path": {
+      "events": 0,
+      "dedup_by_body": 0,
+      "dup_delta": 0,
+      "denominator": 10,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.277533
+      ],
+      "band": "count_only",
+      "samples": []
+     }
+    }
+   },
+   "marker_hits": {},
+   "agreement_only_excluded": [
+    "我懂",
+    "确实",
+    "是啊",
+    "可不是"
+   ],
+   "opportunity_density": {
+    "per_message": 0.052083,
+    "per_round": 0.5,
+    "n_rounds_seen": 20
+   },
+   "mechanism": {
+    "field_path": "payload.ctx.echo",
+    "echo_rows_n": 94,
+    "echo_rows_ratio_per_message": 0.489583,
+    "top_level_dialogue_echo_rows": 0,
+    "ctx_echo_key_absent_on_all_msgs": false,
+    "versions": [
+     "f3/1"
+    ],
+    "prompted_all_true": true,
+    "by_source": {
+     "text": 11,
+     "mood": 60,
+     "text+mood": 23
+    },
+    "by_tier": {
+     "明显": 47,
+     "轻": 24,
+     "很强": 23
+    },
+    "by_sign": {
+     "-1": 92,
+     "1": 2
+    },
+    "by_kind": {
+     "soothe": 92,
+     "cheer": 2
+    },
+    "n_threads": 28,
+    "echo_rows_tier_hit": {
+     "loose": 0,
+     "loose_no_agree": 0,
+     "polarity_match": 0,
+     "marker_based": 0
+    },
+    "echo_rows_in_opportunities": 6,
+    "echo_rows_never_hit_any_tier": 6,
+    "activation_checks": {
+     "v_all_f3_1": true,
+     "sign_dist_nonempty": true,
+     "source_dist": {
+      "text": 11,
+      "mood": 60,
+      "text+mood": 23
+     },
+     "prompted_eq_field_present": true,
+     "verdict": "on_verified",
+     "note": "四项齐（v=f3/1 / sign 非空 / source 构成 / prompted==present）才认『ON 确实 ON』；echo_rows=0 时**无法区分**「开关关着」与「开关没生效」，不能写『机制无效』"
+    },
+    "rows": [
+     {
+      "seq": 1198,
+      "round": 1,
+      "thread": "TH-P014-P011-0",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 60,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "text",
+      "mood": "平和",
+      "prompted": true
+     },
+     {
+      "seq": 2141,
+      "round": 3,
+      "thread": "TH-P010-P009-1",
+      "v": "f3/1",
+      "sign": 1,
+      "intensity": 60,
+      "tier": "明显",
+      "kind": "cheer",
+      "source": "text",
+      "mood": "平和",
+      "prompted": true
+     },
+     {
+      "seq": 2262,
+      "round": 3,
+      "thread": "TH-P016-P005-0",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 60,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "text",
+      "mood": "平和",
+      "prompted": true
+     },
+     {
+      "seq": 2914,
+      "round": 4,
+      "thread": "TH-P001-P002-3",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 3760,
+      "round": 4,
+      "thread": "TH-P010-P009-0",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 60,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "text",
+      "mood": "平和",
+      "prompted": true
+     },
+     {
+      "seq": 3982,
+      "round": 4,
+      "thread": "TH-P014-P011-0",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 60,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "text",
+      "mood": "平和",
+      "prompted": true
+     },
+     {
+      "seq": 4869,
+      "round": 6,
+      "thread": "TH-P001-P002-3",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 60,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "孤单",
+      "prompted": true
+     },
+     {
+      "seq": 4890,
+      "round": 6,
+      "thread": "TH-P001-P002-4",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 5009,
+      "round": 6,
+      "thread": "TH-P010-P009-1",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 60,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "text",
+      "mood": "平和",
+      "prompted": true
+     },
+     {
+      "seq": 5018,
+      "round": 6,
+      "thread": "TH-P010-P009-0",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 60,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "text",
+      "mood": "平和",
+      "prompted": true
+     },
+     {
+      "seq": 5065,
+      "round": 6,
+      "thread": "TH-P004-P013-4",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 60,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "text",
+      "mood": "平和",
+      "prompted": true
+     },
+     {
+      "seq": 5497,
+      "round": 7,
+      "thread": "TH-P001-P002-4",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 60,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "孤单",
+      "prompted": true
+     },
+     {
+      "seq": 5558,
+      "round": 7,
+      "thread": "TH-P001-P002-3",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 5732,
+      "round": 7,
+      "thread": "TH-P004-P013-4",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 6266,
+      "round": 7,
+      "thread": "TH-P010-P009-0",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 60,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "text",
+      "mood": "平和",
+      "prompted": true
+     },
+     {
+      "seq": 6525,
+      "round": 7,
+      "thread": "TH-P014-P011-0",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 60,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "text",
+      "mood": "平和",
+      "prompted": true
+     },
+     {
+      "seq": 8048,
+      "round": 9,
+      "thread": "TH-P001-P002-3",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 60,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "孤单",
+      "prompted": true
+     },
+     {
+      "seq": 8095,
+      "round": 9,
+      "thread": "TH-P016-P002-7",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 8150,
+      "round": 9,
+      "thread": "TH-P006-P003-7",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 8199,
+      "round": 9,
+      "thread": "TH-P004-P013-4",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 8352,
+      "round": 9,
+      "thread": "TH-P008-P007-7",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 8399,
+      "round": 9,
+      "thread": "TH-P008-P007-6",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 8460,
+      "round": 9,
+      "thread": "TH-P010-P009-1",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 8575,
+      "round": 9,
+      "thread": "TH-P014-P011-1",
+      "v": "f3/1",
+      "sign": 1,
+      "intensity": 60,
+      "tier": "明显",
+      "kind": "cheer",
+      "source": "text",
+      "mood": "平和",
+      "prompted": true
+     },
+     {
+      "seq": 8818,
+      "round": 9,
+      "thread": "TH-P012-P015-4",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 10574,
+      "round": 10,
+      "thread": "TH-P001-P002-3",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 80,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 11044,
+      "round": 10,
+      "thread": "TH-P006-P003-6",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 12900,
+      "round": 10,
+      "thread": "TH-P008-P007-6",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 13364,
+      "round": 10,
+      "thread": "TH-P008-P007-7",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 16956,
+      "round": 10,
+      "thread": "TH-P016-P002-7",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 60,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "孤单",
+      "prompted": true
+     },
+     {
+      "seq": 18890,
+      "round": 12,
+      "thread": "TH-P016-P002-7",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 18976,
+      "round": 12,
+      "thread": "TH-P006-P003-7",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 19193,
+      "round": 12,
+      "thread": "TH-P006-P003-6",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 19268,
+      "round": 12,
+      "thread": "TH-P008-P007-7",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 19339,
+      "round": 12,
+      "thread": "TH-P008-P007-6",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 87,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 20241,
+      "round": 13,
+      "thread": "TH-P004-P001-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 80,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 20301,
+      "round": 13,
+      "thread": "TH-P015-P002-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 80,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 20361,
+      "round": 13,
+      "thread": "TH-P006-P003-6",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 20606,
+      "round": 13,
+      "thread": "TH-P006-P003-7",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 87,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 20687,
+      "round": 13,
+      "thread": "TH-P008-P007-6",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 20843,
+      "round": 13,
+      "thread": "TH-P001-P009-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 80,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 21166,
+      "round": 13,
+      "thread": "TH-P009-P014-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 21332,
+      "round": 13,
+      "thread": "TH-P016-P002-7",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 60,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "孤单",
+      "prompted": true
+     },
+     {
+      "seq": 21825,
+      "round": 15,
+      "thread": "TH-P001-P009-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 21834,
+      "round": 15,
+      "thread": "TH-P016-P002-7",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 80,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 21841,
+      "round": 15,
+      "thread": "TH-P006-P003-7",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 21858,
+      "round": 15,
+      "thread": "TH-P004-P001-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 21916,
+      "round": 15,
+      "thread": "TH-P011-P008-13",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 87,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 21937,
+      "round": 15,
+      "thread": "TH-P009-P014-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 87,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 21963,
+      "round": 15,
+      "thread": "TH-P011-P008-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 22007,
+      "round": 15,
+      "thread": "TH-P015-P002-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 90,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "孤单",
+      "prompted": true
+     },
+     {
+      "seq": 22401,
+      "round": 16,
+      "thread": "TH-P004-P001-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 22495,
+      "round": 16,
+      "thread": "TH-P015-P002-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 87,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 22637,
+      "round": 16,
+      "thread": "TH-P013-P004-15",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 80,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 22901,
+      "round": 16,
+      "thread": "TH-P011-P008-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 22962,
+      "round": 16,
+      "thread": "TH-P001-P009-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 80,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 23110,
+      "round": 16,
+      "thread": "TH-P011-P008-13",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 23305,
+      "round": 16,
+      "thread": "TH-P009-P014-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 87,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 23354,
+      "round": 16,
+      "thread": "TH-P016-P015-15",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 23811,
+      "round": 18,
+      "thread": "TH-P001-P009-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 23864,
+      "round": 18,
+      "thread": "TH-P013-P004-16",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 23930,
+      "round": 18,
+      "thread": "TH-P011-P008-13",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 87,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 23939,
+      "round": 18,
+      "thread": "TH-P009-P014-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 23975,
+      "round": 18,
+      "thread": "TH-P011-P008-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 24013,
+      "round": 18,
+      "thread": "TH-P013-P004-15",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 24023,
+      "round": 18,
+      "thread": "TH-P016-P015-16",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 24026,
+      "round": 18,
+      "thread": "TH-P016-P015-15",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 24439,
+      "round": 19,
+      "thread": "TH-P012-P001-18",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 24740,
+      "round": 19,
+      "thread": "TH-P013-P004-15",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 24868,
+      "round": 19,
+      "thread": "TH-P007-P005-18",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 25174,
+      "round": 19,
+      "thread": "TH-P011-P008-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 25304,
+      "round": 19,
+      "thread": "TH-P001-P009-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 25487,
+      "round": 19,
+      "thread": "TH-P011-P008-13",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 25745,
+      "round": 19,
+      "thread": "TH-P013-P004-16",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 25875,
+      "round": 19,
+      "thread": "TH-P009-P014-12",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 25939,
+      "round": 19,
+      "thread": "TH-P016-P015-15",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 80,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 26071,
+      "round": 19,
+      "thread": "TH-P016-P015-16",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 87,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 26549,
+      "round": 20,
+      "thread": "TH-P007-P005-19",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 27151,
+      "round": 21,
+      "thread": "TH-P012-P001-19",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 87,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 27456,
+      "round": 21,
+      "thread": "TH-P013-P004-16",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 87,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 27726,
+      "round": 21,
+      "thread": "TH-P007-P005-19",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 87,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 27815,
+      "round": 21,
+      "thread": "TH-P011-P008-13",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 87,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 28283,
+      "round": 21,
+      "thread": "TH-P012-P001-18",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 28393,
+      "round": 21,
+      "thread": "TH-P013-P004-15",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 28594,
+      "round": 21,
+      "thread": "TH-P016-P015-16",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 28698,
+      "round": 21,
+      "thread": "TH-P016-P015-15",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 87,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 29495,
+      "round": 22,
+      "thread": "TH-P012-P001-18",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 30014,
+      "round": 22,
+      "thread": "TH-P013-P004-15",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 30190,
+      "round": 22,
+      "thread": "TH-P007-P005-19",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 31394,
+      "round": 22,
+      "thread": "TH-P012-P001-19",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 40,
+      "tier": "轻",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "紧绷",
+      "prompted": true
+     },
+     {
+      "seq": 31572,
+      "round": 22,
+      "thread": "TH-P013-P004-16",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 31922,
+      "round": 22,
+      "thread": "TH-P016-P015-15",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 87,
+      "tier": "很强",
+      "kind": "soothe",
+      "source": "text+mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 32112,
+      "round": 22,
+      "thread": "TH-P016-P015-16",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     },
+     {
+      "seq": 32912,
+      "round": 23,
+      "thread": "TH-P007-P005-19",
+      "v": "f3/1",
+      "sign": -1,
+      "intensity": 55,
+      "tier": "明显",
+      "kind": "soothe",
+      "source": "mood",
+      "mood": "饥饿",
+      "prompted": true
+     }
+    ]
+   },
+   "rows": [
+    {
+     "thread": "m:T|TH-P001-P002-3",
+     "prev_seq": 2055,
+     "cur_seq": 2914,
+     "round": 4,
+     "cur_is_reply": true,
+     "p_prev": -1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "我正给西头老赵家修那台抽水机，手上全是油，你那事我怕是搭不上手，你看找别人行不？",
+     "cur_body": "我这儿正给李家小孙子修那把小木凳，榫头松了，得重新楔一下。你手上油多，先忙你的，回头我把凳子送过去，顺路给你带两个刚出锅的糖糕。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P001-P002-3",
+     "prev_seq": 8048,
+     "cur_seq": 10574,
+     "round": 10,
+     "cur_is_reply": true,
+     "p_prev": 1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "李家那凳子榫头松得厉害？我这儿刚把锄头把子换好，正拿砂纸磨呢，你一个人刨木头闷不闷？",
+     "cur_body": "锄头把子磨得顺手不？我这儿正给赵家那窗框起线，刨花卷了一地。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P004-P013-4",
+     "prev_seq": 5732,
+     "cur_seq": 7844,
+     "round": 8,
+     "cur_is_reply": true,
+     "p_prev": -1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "铁还红着你就先顾着尝酥，桂婶那把菜刀等着使呢，你倒不怕烫着手啊",
+     "cur_body": "这话我记着呢，桂婶那把刀我夹在砧子上回火，手背蹭掉块皮也没敢停。你上回那句“抢不着就认命”，我听着像说我。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P007-P005-4",
+     "prev_seq": 3464,
+     "cur_seq": 4941,
+     "round": 6,
+     "cur_is_reply": true,
+     "p_prev": 1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "这阵子铺子里进的那批盐还没卸完，我一边码着麻袋一边听人说陈医家老太太咳得厉害，你晓不晓得他家现在是个什么光景？",
+     "cur_body": "哎，我刚把药柜第三层那包川贝翻出来，正想着给陈家老太太配点润肺的，你倒先提起来了——他家儿子昨儿来抓过两副药，说是夜里咳得睡不踏实，你看这紧俏货抢的，连药材都跟着紧张，你那边铺子里还匀得出人手帮衬一下不？",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P012-P016-0",
+     "prev_seq": 156,
+     "cur_seq": 1632,
+     "round": 1,
+     "cur_is_reply": true,
+     "p_prev": -1,
+     "p_cur": -1,
+     "same_polarity": true,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+     "cur_body": "哎，我这儿正翻着周家那筐青椒呢，腌萝卜发苦不是盐的事，是头道水没攥干。你上回说我不肯带人，我心里堵到现在。",
+     "tier_loose": true,
+     "tier_loose_no_agree": true,
+     "tier_polarity_match": true,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P012-P016-0",
+     "prev_seq": 1632,
+     "cur_seq": 2196,
+     "round": 3,
+     "cur_is_reply": true,
+     "p_prev": -1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "哎，我这儿正翻着周家那筐青椒呢，腌萝卜发苦不是盐的事，是头道水没攥干。你上回说我不肯带人，我心里堵到现在。",
+     "cur_body": "哟，我正给陈家小孙子缝书包带呢，针脚歪了拆两回。上回那话是我嘴快，你别往心里去。改天来教我攥萝卜水。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P013-P004-16",
+     "prev_seq": 23254,
+     "cur_seq": 23864,
+     "round": 18,
+     "cur_is_reply": true,
+     "p_prev": -1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "哟，秀娘，我这铁钳还夹着周公文家锄头呢，先给我留半袋米。上回那话，算了。先顾肚子。",
+     "cur_body": "铁头，灶上这笼枣泥酥刚出屉，你先拿两个垫垫肚子，米我拿油纸给你留了半袋在柜台底下。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P015-P002-12",
+     "prev_seq": 19838,
+     "cur_seq": 20301,
+     "round": 13,
+     "cur_is_reply": true,
+     "p_prev": -1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "老石，我这会儿正拿小本子改第三遍红烧肉的糖色比例，锅都烧上了又关火，心里直打鼓；你上回说你家灶台火偏软，那到底该多熬几秒才不苦啊？",
+     "cur_body": "糖色这事急不得，我手里正给李家打个榫卯，一凿子下去偏半分就废了。你锅都关了，先别管几秒，火软就多熬两下，闻着甜里带点焦就下肉。你上回那句“练功别光使蛮劲”，我琢磨到现在——你是嫌我哪下没使对？",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P016-P015-16",
+     "prev_seq": 23401,
+     "cur_seq": 24023,
+     "round": 18,
+     "cur_is_reply": true,
+     "p_prev": -1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "兰姐这儿正给陈家小孙子称半斤虾皮，秤杆子还没放平呢，你托的那事我怕是搭不上手。改天再聊。",
+     "cur_body": "兰姐，我这锅里还炖着给赵家老爷子留的萝卜牛腩，火候正紧，走不开，你那虾皮先称着——上回你说我那话，我听着心里堵了两天，可回头一想，你也是替我着急，这事咱翻篇行不？",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P016-P015-16",
+     "prev_seq": 26071,
+     "cur_seq": 28594,
+     "round": 21,
+     "cur_is_reply": true,
+     "p_prev": 1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "萝卜牛腩这火候是得盯着，赵家老爷子牙口不好，炖烂点才咬得动。我这虾皮你先搁着，我抓把虾皮垫垫肚子，饿得手都抖了，称不准回头又得让你笑话。",
+     "cur_body": "虾皮你先抓，手抖就多抓两把，我这儿还有半块早上剩的烧饼，掰开泡你碗里，垫住了再称。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    }
+   ]
+  }
+ ]
+}

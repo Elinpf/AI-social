@@ -1,0 +1,63 @@
+{
+  "arms": {
+    "off": {
+      "echo_coverage_of_reply_path": 0.0,
+      "echo_on_reply_path": 0,
+      "exists": true,
+      "intensity_max": null,
+      "intensity_min": null,
+      "kind": {},
+      "msg_reply_path": 125,
+      "msg_total": 191,
+      "msg_with_ctx_echo": 0,
+      "prompted": {},
+      "run_jsonl": "v2/evidence/emo-off-20261030/run.jsonl",
+      "run_jsonl_sha256": "c27691d90849f53171e883bfd4dd1198caa862253c9bd5704912f4b285d8e22d",
+      "sign": {},
+      "sign_negative_share": null,
+      "source": {},
+      "tier": {},
+      "unparsable_lines": 0,
+      "version": []
+    },
+    "on": {
+      "echo_coverage_of_reply_path": 0.7401574803149606,
+      "echo_on_reply_path": 94,
+      "exists": true,
+      "intensity_max": 90,
+      "intensity_min": 40,
+      "kind": {
+        "cheer": 2,
+        "soothe": 92
+      },
+      "msg_reply_path": 127,
+      "msg_total": 192,
+      "msg_with_ctx_echo": 94,
+      "prompted": {
+        "True": 94
+      },
+      "run_jsonl": "v2/evidence/emo-on-20261029/run.jsonl",
+      "run_jsonl_sha256": "2aa6c774b2e6d019f8b4e258ddec0861d7de05f7ac416e3dacf90a0f874f5ffe",
+      "sign": {
+        "-1": 92,
+        "1": 2
+      },
+      "sign_negative_share": 0.9787234042553191,
+      "source": {
+        "mood": 60,
+        "text": 11,
+        "text+mood": 23
+      },
+      "tier": {
+        "很强": 23,
+        "明显": 47,
+        "轻": 24
+      },
+      "unparsable_lines": 0,
+      "version": [
+        "f3/1"
+      ]
+    }
+  },
+  "spec": "F-3 echo field stats (read-only, zero-LLM)"
+}
