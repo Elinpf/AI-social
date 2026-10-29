@@ -1,0 +1,329 @@
+{
+  "arm": "on",
+  "card": {
+    "path": "v2/refs/P-F3-verdictable-r32.md",
+    "sha256": "2a8b40cdcb00b73b3a5b3625316d538bc28ad4c2622b9a646dadd9a802d60752"
+  },
+  "inputs": {
+    "count_only_min": 30,
+    "empathy_markers": [
+      "我懂",
+      "我也",
+      "别难过",
+      "恭喜",
+      "辛苦",
+      "真惨",
+      "太好了",
+      "确实",
+      "是啊",
+      "可不是"
+    ],
+    "lexicon": {
+      "n": 34,
+      "path": "tools/d5/emotion_lexicon.txt",
+      "sha256": "8427245cdf65550c6fb80d10616a01d9054d3d4fe97842b4b81feed7afd4a996"
+    },
+    "log": "v2/evidence/cycle34_f3_on_n16r84_seed42/run.jsonl",
+    "log_sha256": "b6cacdaf975a178ca3f950df9b905b5734cd8aa58298359ed09fac6ba25cffee",
+    "mood_terms": [
+      "紧绷",
+      "孤单",
+      "疲惫",
+      "饥饿"
+    ],
+    "n_lines": 193933,
+    "n_msg_uid_unique": 686,
+    "n_msgs": 686,
+    "neutral_moods": [
+      "平和"
+    ],
+    "probe_min_denom": 68
+  },
+  "old_caliber": {
+    "all_messages": {
+      "band": "count_only",
+      "den": 22,
+      "hits_loose": 4,
+      "hits_marker": 0,
+      "hits_polarity_match": 4,
+      "rate_loose": 0.181818,
+      "wilson95_loose": [
+        0.073069,
+        0.385166
+      ]
+    },
+    "note": "本块仅作「同证据旧读数」对照；**新口径的率不可与它直接比大小**（分母放大 15 倍以上）",
+    "reply_path": {
+      "band": "count_only",
+      "den": 22,
+      "hits_loose": 4,
+      "hits_marker": 0,
+      "hits_polarity_match": 4,
+      "rate_loose": 0.181818,
+      "wilson95_loose": [
+        0.073069,
+        0.385166
+      ]
+    },
+    "rule": "线程内相邻消息对，且上一句词表极性≠0（= tools/d5 / tools/f3 历史口径）"
+  },
+  "schema": "f3-echo-rate/1.0",
+  "script": {
+    "path": "tools/metrics/f3_echo_rate.py",
+    "sha256": "3e1bdb28c805194c1f3178e8a3321856bc1df9dbb29684cb19d8774cc82a1341"
+  },
+  "verdict": {
+    "arm": "on",
+    "band": "ok",
+    "caliber_change_note": "新口径率不可与旧口径(22)直接比大小：分母从 22 → 438，是尺子变了，不是呼应变好/变坏。",
+    "den": 438,
+    "judgeable": true,
+    "message": "可判：机会分母 438 ≥ 68，报率 0.022831（Wilson95 (0.012448, 0.041512)）。注意分母够 ≠ 能检出小效应：本规模 MDE≈0.028277（绝对率差），小于 MDE 的差异只能写『无可检出差异/样本不足以排除小效应』，不得写『证明无差异』。",
+    "old_caliber_den_same_evidence": 22
+  },
+  "wide_caliber": {
+    "band": "ok",
+    "by_msg_type": {
+      "MSG_DM": {
+        "den": 325,
+        "p1": 7
+      },
+      "MSG_GROUP": {
+        "den": 113,
+        "p1": 3
+      }
+    },
+    "by_parent_mood": {
+      "孤单": {
+        "den": 5,
+        "p1": 0
+      },
+      "平和": {
+        "den": 4,
+        "p1": 1
+      },
+      "紧绷": {
+        "den": 317,
+        "p1": 9
+      },
+      "饥饿": {
+        "den": 112,
+        "p1": 0
+      }
+    },
+    "den": 438,
+    "hits": {
+      "H1_H2_overlap": 0,
+      "H1_polarity_match": 4,
+      "H2_empathy_markers": 6,
+      "H3_mood_term_echo": 0,
+      "P1_union": 10
+    },
+    "hits_detail": [
+      {
+        "H1": true,
+        "H2": false,
+        "H2_markers": [],
+        "body": "哎，我正翻着摊上那筐新到的红椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾到半干再码盐。你试试。",
+        "cur_pol": -1,
+        "msg_uid": "42:1632",
+        "parent_mood": "平和",
+        "parent_pol": -1,
+        "parent_uid": "42:156",
+        "round": 1,
+        "type": "MSG_DM"
+      },
+      {
+        "H1": false,
+        "H2": true,
+        "H2_markers": [
+          "我懂"
+        ],
+        "body": "花生那几垄我懂，我摊上这杆秤还没校完，昨儿王麻子家小子来买盐，非说我少他半两。",
+        "cur_pol": 0,
+        "msg_uid": "42:40226",
+        "parent_mood": "紧绷",
+        "parent_pol": 0,
+        "parent_uid": "42:38695",
+        "round": 31,
+        "type": "MSG_DM"
+      },
+      {
+        "H1": true,
+        "H2": false,
+        "H2_markers": [],
+        "body": "哎，陈医，你那边药碾子刚停又惦记着李家小孙子，听着就替你累得慌——我这儿刚把周家小子的作文本合上，红笔还搁在砚台边上没来得及收呢。你这一锅枇杷膏收完汁，今晚还能歇口气不？",
+        "cur_pol": -1,
+        "msg_uid": "42:52580",
+        "parent_mood": "紧绷",
+        "parent_pol": -1,
+        "parent_uid": "42:44606",
+        "round": 34,
+        "type": "MSG_DM"
+      },
+      {
+        "H1": true,
+        "H2": false,
+        "H2_markers": [],
+        "body": "嗯，你那边红笔搁下了，人却还绷着——周家小子那本子合上了，你心里那根弦怕是还没松吧？我这枇杷膏收着汁，火候一到就得离手，你今晚打算怎么把这口气缓下来？",
+        "cur_pol": -1,
+        "msg_uid": "42:54987",
+        "parent_mood": "紧绷",
+        "parent_pol": -1,
+        "parent_uid": "42:52580",
+        "round": 35,
+        "type": "MSG_DM"
+      },
+      {
+        "H1": false,
+        "H2": true,
+        "H2_markers": [
+          "可不是"
+        ],
+        "body": "可不是嘛，我这摊上刚摆开一筐新到的青椒，还带着露水呢，得赶早市挑一遍。你那田字格画到第几行了？",
+        "cur_pol": 0,
+        "msg_uid": "42:90858",
+        "parent_mood": "紧绷",
+        "parent_pol": 0,
+        "parent_uid": "42:88961",
+        "round": 55,
+        "type": "MSG_DM"
+      },
+      {
+        "H1": true,
+        "H2": false,
+        "H2_markers": [],
+        "body": "乐谱先别急着还，我这儿正拿橡皮擦你上次洒了咖啡的那页，王婶家闺女明儿才回镇。嗓子先歇。",
+        "cur_pol": 1,
+        "msg_uid": "42:118745",
+        "parent_mood": "紧绷",
+        "parent_pol": 1,
+        "parent_uid": "42:117202",
+        "round": 61,
+        "type": "MSG_DM"
+      },
+      {
+        "H1": false,
+        "H2": true,
+        "H2_markers": [
+          "我懂"
+        ],
+        "body": "卷刃这事儿我懂，前年在临县跟人学磨剪子，那师傅也是先让我顺刃背，一顺就是三天。窗台第三格是吧，我这就去拿那把小锉刀，先把这刃背顺出个亮面来。",
+        "cur_pol": 0,
+        "msg_uid": "42:120011",
+        "parent_mood": "紧绷",
+        "parent_pol": 0,
+        "parent_uid": "42:118675",
+        "round": 63,
+        "type": "MSG_DM"
+      },
+      {
+        "H1": false,
+        "H2": true,
+        "H2_markers": [
+          "确实"
+        ],
+        "body": "五味，你松快些就好，我手里这半块豆干还捏着呢——老石家那口子晒豆子那天我确实在，她借簸箕时脸都急红了，你说她是不是又跟老石拌嘴了？",
+        "cur_pol": 0,
+        "msg_uid": "42:123839",
+        "parent_mood": "紧绷",
+        "parent_pol": 0,
+        "parent_uid": "42:122514",
+        "round": 67,
+        "type": "MSG_GROUP"
+      },
+      {
+        "H1": false,
+        "H2": true,
+        "H2_markers": [
+          "我也"
+        ],
+        "body": "唉，你这一沉我也跟着揪心呢，我这正给王家小孙女包退烧的药粉，手底下都慢了几分，镇上这些事争来争去，谁心里都不好受吧。",
+        "cur_pol": 0,
+        "msg_uid": "42:169351",
+        "parent_mood": "紧绷",
+        "parent_pol": 0,
+        "parent_uid": "42:160866",
+        "round": 81,
+        "type": "MSG_GROUP"
+      },
+      {
+        "H1": false,
+        "H2": true,
+        "H2_markers": [
+          "我也"
+        ],
+        "body": "我这儿正把新出炉的枣泥酥往竹篮里捡，油纸还烫手呢，铁头，你给赵家打刀归打刀，镇上争的那些话我也听了一耳朵，回头我拿两块酥去给王家小孙女垫垫嘴，药苦。",
+        "cur_pol": -1,
+        "msg_uid": "42:190019",
+        "parent_mood": "紧绷",
+        "parent_pol": 0,
+        "parent_uid": "42:182516",
+        "round": 82,
+        "type": "MSG_GROUP"
+      }
+    ],
+    "mde_hint": {
+      "mde_abs": 0.028277,
+      "n": 438,
+      "note": "分母≥68 只代表『允许报率』；MDE 是本臂规模下能检出的最小绝对率差（α=0.05 双侧、power=0.80）",
+      "p_bar": 0.022831
+    },
+    "mechanism_M": {
+      "adoption_rate": 0.065421,
+      "arm_has_field": true,
+      "echo_by_source": {
+        "text": 12,
+        "text+mood": 95
+      },
+      "echo_msgs": 107,
+      "verify_adopted": 7,
+      "verify_present": 107,
+      "warning": "仅 ON 臂有值，**不参与两臂比较**；机制接线成立 ≠ 行为被采纳（口径卡 §4.2/§5.5）"
+    },
+    "n_rounds_seen": 81,
+    "opportunity_breakdown": {
+      "counted_opportunity": 438,
+      "excluded_no_reply_to": 206,
+      "excluded_parent_no_affect": 42,
+      "n_reply_msgs": 480,
+      "parent_unresolvable": 0
+    },
+    "opportunity_per_round": 5.407407,
+    "rate": 0.022831,
+    "rate_components": {
+      "H1": 0.009132,
+      "H2": 0.013699,
+      "H3": 0.0
+    },
+    "rule": "机会 = reply 消息 ∧ 父消息可解析 ∧ (父 ctx.mood∉{平和} ∨ 父正文词表极性≠0)",
+    "secondary_mood_resonance_S1": {
+      "band": "ok",
+      "den": 434,
+      "match": 348,
+      "pairs": {
+        "孤单→平和": 1,
+        "孤单→紧绷": 3,
+        "孤单→饥饿": 1,
+        "紧绷→孤单": 4,
+        "紧绷→平和": 4,
+        "紧绷→疲惫": 6,
+        "紧绷→紧绷": 273,
+        "紧绷→饥饿": 30,
+        "饥饿→孤单": 3,
+        "饥饿→紧绷": 34,
+        "饥饿→饥饿": 75
+      },
+      "rate": 0.801843,
+      "warning": "受 agent 需求状态持续性混淆（非对话驱动）；只作对照，不得当作情绪呼应主判据（口径卡 §4.2/§5.5）",
+      "wilson95": [
+        0.761764,
+        0.836626
+      ]
+    },
+    "wilson95": [
+      0.012448,
+      0.041512
+    ]
+  }
+}

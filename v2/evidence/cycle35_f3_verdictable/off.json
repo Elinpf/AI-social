@@ -1,0 +1,311 @@
+{
+  "arm": "off",
+  "card": {
+    "path": "v2/refs/P-F3-verdictable-r32.md",
+    "sha256": "2a8b40cdcb00b73b3a5b3625316d538bc28ad4c2622b9a646dadd9a802d60752"
+  },
+  "inputs": {
+    "count_only_min": 30,
+    "empathy_markers": [
+      "我懂",
+      "我也",
+      "别难过",
+      "恭喜",
+      "辛苦",
+      "真惨",
+      "太好了",
+      "确实",
+      "是啊",
+      "可不是"
+    ],
+    "lexicon": {
+      "n": 34,
+      "path": "tools/d5/emotion_lexicon.txt",
+      "sha256": "8427245cdf65550c6fb80d10616a01d9054d3d4fe97842b4b81feed7afd4a996"
+    },
+    "log": "v2/evidence/cycle33_f3_off_n16r84_seed42/run.jsonl",
+    "log_sha256": "8bf3a53676a85425baa7e70c96962bb0b43c05f4177bdf02a8a4611b1ed44933",
+    "mood_terms": [
+      "紧绷",
+      "孤单",
+      "疲惫",
+      "饥饿"
+    ],
+    "n_lines": 193964,
+    "n_msg_uid_unique": 686,
+    "n_msgs": 686,
+    "neutral_moods": [
+      "平和"
+    ],
+    "probe_min_denom": 68
+  },
+  "old_caliber": {
+    "all_messages": {
+      "band": "count_only",
+      "den": 28,
+      "hits_loose": 5,
+      "hits_marker": 0,
+      "hits_polarity_match": 5,
+      "rate_loose": 0.178571,
+      "wilson95_loose": [
+        0.078785,
+        0.355914
+      ]
+    },
+    "note": "本块仅作「同证据旧读数」对照；**新口径的率不可与它直接比大小**（分母放大 15 倍以上）",
+    "reply_path": {
+      "band": "count_only",
+      "den": 28,
+      "hits_loose": 5,
+      "hits_marker": 0,
+      "hits_polarity_match": 5,
+      "rate_loose": 0.178571,
+      "wilson95_loose": [
+        0.078785,
+        0.355914
+      ]
+    },
+    "rule": "线程内相邻消息对，且上一句词表极性≠0（= tools/d5 / tools/f3 历史口径）"
+  },
+  "schema": "f3-echo-rate/1.0",
+  "script": {
+    "path": "tools/metrics/f3_echo_rate.py",
+    "sha256": "3e1bdb28c805194c1f3178e8a3321856bc1df9dbb29684cb19d8774cc82a1341"
+  },
+  "verdict": {
+    "arm": "off",
+    "band": "ok",
+    "caliber_change_note": "新口径率不可与旧口径(28)直接比大小：分母从 28 → 439，是尺子变了，不是呼应变好/变坏。",
+    "den": 439,
+    "judgeable": true,
+    "message": "可判：机会分母 439 ≥ 68，报率 0.020501（Wilson95 (0.010822, 0.038499)）。注意分母够 ≠ 能检出小效应：本规模 MDE≈0.026796（绝对率差），小于 MDE 的差异只能写『无可检出差异/样本不足以排除小效应』，不得写『证明无差异』。",
+    "old_caliber_den_same_evidence": 28
+  },
+  "wide_caliber": {
+    "band": "ok",
+    "by_msg_type": {
+      "MSG_DM": {
+        "den": 326,
+        "p1": 9
+      },
+      "MSG_GROUP": {
+        "den": 113,
+        "p1": 0
+      }
+    },
+    "by_parent_mood": {
+      "孤单": {
+        "den": 5,
+        "p1": 0
+      },
+      "平和": {
+        "den": 5,
+        "p1": 2
+      },
+      "紧绷": {
+        "den": 317,
+        "p1": 4
+      },
+      "饥饿": {
+        "den": 112,
+        "p1": 3
+      }
+    },
+    "den": 439,
+    "hits": {
+      "H1_H2_overlap": 0,
+      "H1_polarity_match": 4,
+      "H2_empathy_markers": 5,
+      "H3_mood_term_echo": 0,
+      "P1_union": 9
+    },
+    "hits_detail": [
+      {
+        "H1": true,
+        "H2": false,
+        "H2_markers": [],
+        "body": "哎，我正翻着刘家那筐新到的青萝卜，你尝着发苦多半是盐下早了，萝卜没出水就腌上，苦味全锁里头了。先晾半天再下盐。",
+        "cur_pol": -1,
+        "msg_uid": "42:1632",
+        "parent_mood": "平和",
+        "parent_pol": -1,
+        "parent_uid": "42:156",
+        "round": 1,
+        "type": "MSG_DM"
+      },
+      {
+        "H1": true,
+        "H2": false,
+        "H2_markers": [],
+        "body": "哟，我正搓着周家送来的那簸箕干辣椒，听你这么一说才明白，怪不得上回腌的萝卜总带苦味。先晾半天再下盐。",
+        "cur_pol": -1,
+        "msg_uid": "42:2196",
+        "parent_mood": "平和",
+        "parent_pol": -1,
+        "parent_uid": "42:1632",
+        "round": 3,
+        "type": "MSG_DM"
+      },
+      {
+        "H1": false,
+        "H2": true,
+        "H2_markers": [
+          "我懂"
+        ],
+        "body": "归档那页我懂，我上回帮赵家跑地契也是卡在归档上，手里还攥着半张写错的门牌号纸条呢。李家宅基地那复核单是李老三家还是李老四家的？",
+        "cur_pol": 0,
+        "msg_uid": "42:12896",
+        "parent_mood": "紧绷",
+        "parent_pol": 0,
+        "parent_uid": "42:8399",
+        "round": 10,
+        "type": "MSG_DM"
+      },
+      {
+        "H1": false,
+        "H2": true,
+        "H2_markers": [
+          "我也"
+        ],
+        "body": "兰姐，我灶上这锅笋干老鸭还差你那一把干笋吊味呢，你托的事我记着，可你摊子走不开我也不能干等着——要不我明早收摊前把改好的方子给你送过去，你先瞅一眼成不成？",
+        "cur_pol": 0,
+        "msg_uid": "42:24011",
+        "parent_mood": "紧绷",
+        "parent_pol": 0,
+        "parent_uid": "42:23389",
+        "round": 18,
+        "type": "MSG_DM"
+      },
+      {
+        "H1": false,
+        "H2": true,
+        "H2_markers": [
+          "我也"
+        ],
+        "body": "灶上那锅笋干焖肉我也刚关火，油星子还噼啪响呢，你倒先惦记上王婆那葱油饼了。明儿干笋你来看可以，可我这摊子后头就剩半张饼，你说是给你留着，还是我自个儿先咬一口？",
+        "cur_pol": 0,
+        "msg_uid": "42:24014",
+        "parent_mood": "饥饿",
+        "parent_pol": 0,
+        "parent_uid": "42:23344",
+        "round": 18,
+        "type": "MSG_DM"
+      },
+      {
+        "H1": true,
+        "H2": false,
+        "H2_markers": [],
+        "body": "药碾子边上就药碾子边上，我这手刚摸过骡车上的麻绳，比你这苦味还冲。王婶的止咳散得碾到啥时候？",
+        "cur_pol": -1,
+        "msg_uid": "42:32915",
+        "parent_mood": "饥饿",
+        "parent_pol": -1,
+        "parent_uid": "42:30191",
+        "round": 23,
+        "type": "MSG_DM"
+      },
+      {
+        "H1": false,
+        "H2": true,
+        "H2_markers": [
+          "辛苦"
+        ],
+        "body": "哟，我这粉笔头刚在袖口蹭掉半截，红薯还搁在讲台角上没顾上掰。孩子们下午默写《悯农》，我批到“粒粒皆辛苦”那句就想起你这话——练功嘛，我多半是趁天没亮在院里比划两下，晚上改完作业骨头都散了。你家那榫头赶完没有？",
+        "cur_pol": -1,
+        "msg_uid": "42:37098",
+        "parent_mood": "饥饿",
+        "parent_pol": 0,
+        "parent_uid": "42:35409",
+        "round": 27,
+        "type": "MSG_DM"
+      },
+      {
+        "H1": true,
+        "H2": false,
+        "H2_markers": [],
+        "body": "唉，我正给刘家打那把锄头，铁还红着呢，价高倒不怕，就怕砸手里耽误工夫吧。",
+        "cur_pol": -1,
+        "msg_uid": "42:80989",
+        "parent_mood": "紧绷",
+        "parent_pol": -1,
+        "parent_uid": "42:67671",
+        "round": 46,
+        "type": "MSG_DM"
+      },
+      {
+        "H1": false,
+        "H2": true,
+        "H2_markers": [
+          "我懂"
+        ],
+        "body": "酸萝卜抵红薯这账我懂，可三小子那排骨我正拿粗盐搓着，搓到第三遍才见血水清。斤两差半两，我拿灶上那勺老卤补他。先搓完再说。",
+        "cur_pol": 0,
+        "msg_uid": "42:108885",
+        "parent_mood": "紧绷",
+        "parent_pol": 0,
+        "parent_uid": "42:90239",
+        "round": 57,
+        "type": "MSG_DM"
+      }
+    ],
+    "mde_hint": {
+      "mde_abs": 0.026796,
+      "n": 439,
+      "note": "分母≥68 只代表『允许报率』；MDE 是本臂规模下能检出的最小绝对率差（α=0.05 双侧、power=0.80）",
+      "p_bar": 0.020501
+    },
+    "mechanism_M": {
+      "adoption_rate": null,
+      "arm_has_field": false,
+      "echo_by_source": {},
+      "echo_msgs": 0,
+      "verify_adopted": 0,
+      "verify_present": 0,
+      "warning": "仅 ON 臂有值，**不参与两臂比较**；机制接线成立 ≠ 行为被采纳（口径卡 §4.2/§5.5）"
+    },
+    "n_rounds_seen": 81,
+    "opportunity_breakdown": {
+      "counted_opportunity": 439,
+      "excluded_no_reply_to": 206,
+      "excluded_parent_no_affect": 41,
+      "n_reply_msgs": 480,
+      "parent_unresolvable": 0
+    },
+    "opportunity_per_round": 5.419753,
+    "rate": 0.020501,
+    "rate_components": {
+      "H1": 0.009112,
+      "H2": 0.01139,
+      "H3": 0.0
+    },
+    "rule": "机会 = reply 消息 ∧ 父消息可解析 ∧ (父 ctx.mood∉{平和} ∨ 父正文词表极性≠0)",
+    "secondary_mood_resonance_S1": {
+      "band": "ok",
+      "den": 434,
+      "match": 348,
+      "pairs": {
+        "孤单→平和": 1,
+        "孤单→紧绷": 3,
+        "孤单→饥饿": 1,
+        "紧绷→孤单": 4,
+        "紧绷→平和": 4,
+        "紧绷→疲惫": 6,
+        "紧绷→紧绷": 273,
+        "紧绷→饥饿": 30,
+        "饥饿→孤单": 3,
+        "饥饿→紧绷": 34,
+        "饥饿→饥饿": 75
+      },
+      "rate": 0.801843,
+      "warning": "受 agent 需求状态持续性混淆（非对话驱动）；只作对照，不得当作情绪呼应主判据（口径卡 §4.2/§5.5）",
+      "wilson95": [
+        0.761764,
+        0.836626
+      ]
+    },
+    "wilson95": [
+      0.010822,
+      0.038499
+    ]
+  }
+}
