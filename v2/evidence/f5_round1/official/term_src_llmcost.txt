@@ -1,0 +1,178 @@
+# source: llm_cost_off.json + llm_cost_on.json (逐字节拼接，无编辑)
+{
+    "engine_log": {
+        "by_provider": {
+            "mock": 2646
+        },
+        "by_purpose": {
+            "dialogue": {
+                "cached": 0,
+                "calls": 397,
+                "degraded": 0,
+                "thinking": 0,
+                "tokens_in": 3176,
+                "tokens_out": 3176
+            },
+            "importance": {
+                "cached": 1372,
+                "calls": 1508,
+                "degraded": 0,
+                "thinking": 0,
+                "tokens_in": 1088,
+                "tokens_out": 1088
+            },
+            "judge": {
+                "cached": 0,
+                "calls": 579,
+                "degraded": 0,
+                "thinking": 579,
+                "tokens_in": 4632,
+                "tokens_out": 4632
+            },
+            "negotiation": {
+                "cached": 19,
+                "calls": 34,
+                "degraded": 0,
+                "thinking": 0,
+                "tokens_in": 120,
+                "tokens_out": 120
+            },
+            "plan": {
+                "cached": 0,
+                "calls": 16,
+                "degraded": 0,
+                "thinking": 0,
+                "tokens_in": 128,
+                "tokens_out": 128
+            },
+            "reflect": {
+                "cached": 5,
+                "calls": 112,
+                "degraded": 0,
+                "thinking": 0,
+                "tokens_in": 856,
+                "tokens_out": 856
+            }
+        },
+        "llm_judgment_by_dimension": {
+            "affection": 134,
+            "rel_affinity": 20,
+            "rel_familiarity": 140,
+            "rel_trust": 1,
+            "respect": 134,
+            "stance": 134,
+            "weekly_focus": 16
+        },
+        "source": "engine_log(LLM_CALL)",
+        "total": {
+            "cached": 1396,
+            "calls": 2646,
+            "degraded": 0,
+            "thinking": 579,
+            "tokens_in": 10000,
+            "tokens_out": 10000,
+            "tokens_total": 20000
+        }
+    },
+    "provider_guard": {
+        "by_provider": {
+            "mock": 2646
+        },
+        "expected": "openai_compat",
+        "ok": false,
+        "policy": "\u8ba1\u5212\u7528\u771f LLM \u65f6\u5fc5\u987b\u663e\u5f0f\u6821\u9a8c provider \u8ba1\u6570 > 0 \u4e14\u65e0 mock \u6df7\u5165\u3002",
+        "problems": [
+            "\u51fa\u73b0\u975e\u9884\u671f provider\uff1a['mock']\uff08\u9884\u671f\u4ec5 openai_compat\uff09",
+            "\u9884\u671f provider openai_compat \u8ba1\u6570\u4e3a 0"
+        ]
+    }
+}
+
+{
+    "engine_log": {
+        "by_provider": {
+            "mock": 2653
+        },
+        "by_purpose": {
+            "dialogue": {
+                "cached": 0,
+                "calls": 447,
+                "degraded": 0,
+                "thinking": 0,
+                "tokens_in": 3576,
+                "tokens_out": 3576
+            },
+            "importance": {
+                "cached": 1380,
+                "calls": 1516,
+                "degraded": 0,
+                "thinking": 0,
+                "tokens_in": 1088,
+                "tokens_out": 1088
+            },
+            "judge": {
+                "cached": 0,
+                "calls": 528,
+                "degraded": 0,
+                "thinking": 528,
+                "tokens_in": 4224,
+                "tokens_out": 4224
+            },
+            "negotiation": {
+                "cached": 19,
+                "calls": 34,
+                "degraded": 0,
+                "thinking": 0,
+                "tokens_in": 120,
+                "tokens_out": 120
+            },
+            "plan": {
+                "cached": 0,
+                "calls": 16,
+                "degraded": 0,
+                "thinking": 0,
+                "tokens_in": 128,
+                "tokens_out": 128
+            },
+            "reflect": {
+                "cached": 0,
+                "calls": 112,
+                "degraded": 0,
+                "thinking": 0,
+                "tokens_in": 896,
+                "tokens_out": 896
+            }
+        },
+        "llm_judgment_by_dimension": {
+            "affection": 130,
+            "rel_affinity": 19,
+            "rel_familiarity": 102,
+            "rel_trust": 1,
+            "respect": 130,
+            "stance": 130,
+            "weekly_focus": 16
+        },
+        "source": "engine_log(LLM_CALL)",
+        "total": {
+            "cached": 1399,
+            "calls": 2653,
+            "degraded": 0,
+            "thinking": 528,
+            "tokens_in": 10032,
+            "tokens_out": 10032,
+            "tokens_total": 20064
+        }
+    },
+    "provider_guard": {
+        "by_provider": {
+            "mock": 2653
+        },
+        "expected": "openai_compat",
+        "ok": false,
+        "policy": "\u8ba1\u5212\u7528\u771f LLM \u65f6\u5fc5\u987b\u663e\u5f0f\u6821\u9a8c provider \u8ba1\u6570 > 0 \u4e14\u65e0 mock \u6df7\u5165\u3002",
+        "problems": [
+            "\u51fa\u73b0\u975e\u9884\u671f provider\uff1a['mock']\uff08\u9884\u671f\u4ec5 openai_compat\uff09",
+            "\u9884\u671f provider openai_compat \u8ba1\u6570\u4e3a 0"
+        ]
+    }
+}

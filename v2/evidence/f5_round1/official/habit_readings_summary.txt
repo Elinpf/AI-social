@@ -1,0 +1,30 @@
+[OFF] agents=16 days=4 events=256 code_sha=d356a5b6cb537dfb10006dfcb723654b717e6371
+   M1_living_per_agent_day: value=0.421875 num=27 den=64
+   M1p_living_pool_per_agent_day: value=0.921875 num=59 den=64
+   M2_leisure_per_agent_5d: value=1.328125 num=17 den=64
+   M3_living_slot_hit: value=0.65625 num=42 den=64
+   M4_daytime_routine_stability: value=0.578125 num=None den=None
+   G1_activity_diversity: value=8.875 num=None den=None exp=None
+   G2_activity_total: value=256 num=None den=None exp=256
+   G3_productive_share: value=0.382812 num=98 den=256 exp=None
+   G4_template_hit_rate: value=0.492188 num=126 den=256 exp=None
+[ON] agents=16 days=4 events=256 code_sha=d356a5b6cb537dfb10006dfcb723654b717e6371
+   M1_living_per_agent_day: value=0.890625 num=57 den=64
+   M1p_living_pool_per_agent_day: value=1.265625 num=81 den=64
+   M2_leisure_per_agent_5d: value=2.65625 num=34 den=64
+   M3_living_slot_hit: value=1.0 num=64 den=64
+   M4_daytime_routine_stability: value=0.515625 num=None den=None
+   G1_activity_diversity: value=9.625 num=None den=None exp=None
+   G2_activity_total: value=256 num=None den=None exp=256
+   G3_productive_share: value=0.382812 num=98 den=256 exp=None
+   G4_template_hit_rate: value=0.578125 num=148 den=256 exp=None
+--- delta ---
+   G1_activity_diversity: base=8.875 treat=9.625 diff=0.75 ratio=1.084507
+   G2_activity_total: base=256 treat=256 diff=0 ratio=1.0
+   G3_productive_share: base=0.382812 treat=0.382812 diff=0.0 ratio=1.0
+   G4_template_hit_rate: base=0.492188 treat=0.578125 diff=0.085937 ratio=1.174602
+   M1_living_per_agent_day: base=0.421875 treat=0.890625 diff=0.46875 ratio=2.111111
+   M1p_living_pool_per_agent_day: base=0.921875 treat=1.265625 diff=0.34375 ratio=1.372881
+   M2_leisure_per_agent_5d: base=1.328125 treat=2.65625 diff=1.328125 ratio=2.0
+   M3_living_slot_hit: base=0.65625 treat=1.0 diff=0.34375 ratio=1.52381
+   M4_daytime_routine_stability: base=0.578125 treat=0.515625 diff=-0.0625 ratio=0.891892

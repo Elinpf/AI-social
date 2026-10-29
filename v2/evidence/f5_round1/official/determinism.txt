@@ -1,0 +1,10 @@
+OFF#1 vs OFF#2:
+  IDENTICAL (cmp rc=0)
+ON#1 vs ON#2:
+  IDENTICAL (cmp rc=0)
+--- sha256 ---
+97b8f62498fd0d863d5707aefbe239bce8f329bc74bafcf1c2035f4cd743d820  /tmp/r1runs/d356_off/run.jsonl
+97b8f62498fd0d863d5707aefbe239bce8f329bc74bafcf1c2035f4cd743d820  /tmp/r1runs/d356_off_rerun/run.jsonl
+2154598d620a626c894a8c9f77b166f6dd0dd8b8267a984168d2070f797a1ce1  /tmp/r1runs/d356_on/run.jsonl
+2154598d620a626c894a8c9f77b166f6dd0dd8b8267a984168d2070f797a1ce1  /tmp/r1runs/d356_on_rerun/run.jsonl
+97b8f62498fd0d863d5707aefbe239bce8f329bc74bafcf1c2035f4cd743d820  /tmp/r1runs/d2d1993_r48/run.jsonl

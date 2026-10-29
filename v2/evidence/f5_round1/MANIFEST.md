@@ -1,0 +1,46 @@
+# F-5 round1 证据清单（R25）
+
+本目录随 `reports/R25-f5-habit-strength.md` 一起提交；报告内所有引用路径均相对于本目录。
+大文件（两臂 `run.jsonl`，各约 39–41 MB）**未入库**，留在跑批机 `/tmp/r1runs/d356_{off,on}{,_rerun}/`，以 sha256 复核。
+
+```
+339a54cb86ee924de6ccfbcb157d2f056c12530d62e218b9fd2822b2ed9a5f78  ./official/code_tree_fingerprint.txt
+06ec3693d8399703d949f8a3f65ff253a75230b3cce68ac6f17dd76ebc4a7004  ./official/determinism.txt
+a2d82713467c48c69186502d23b17ccdac0516a95f779c7ac4459d077e2bc675  ./official/event_type_diff.txt
+dc4316b6a105abb9a435c015fe44428485232644249bc6a188035c60359e005d  ./official/four_fold.txt
+2ea1675c6c7da1fdb63c51018e63be810782bead43e1b1ef2057f06c5dc49a15  ./official/habit_readings.json
+2fd651538e3ba19e3ae3178bd134afa6626a69a41bf88470e00c0bb5b30ef1b8  ./official/habit_readings_stdout.txt
+3cdda514255c86421805594535505617f3c70299838fcdc8bcf5fbeb0cf32b78  ./official/habit_readings_summary.txt
+898cdb5c64c35f0dcc9014d76b32e4f011eb9a0f8362e960f51f96dd8f1a6749  ./official/llm_cost_off.json
+601aff8084436a7fa3f8ed628b5931bb430fb5260f1b8fb6982f6b8f62ead969  ./official/llm_cost_off.txt
+cf37c0d498f91ff6dc23727ff2a86e295932ff1e63f2a1b37c591d84079a6f4e  ./official/llm_cost_on.json
+ee4d37c1eede9972563562bf00b90495ace42069729d166a23bf8d7786a7cbd0  ./official/llm_cost_on.txt
+8b30915e04ddb18dae3ee5ae99381dfe6a4198c920b7c8f4de89e95bbbd6097e  ./official/metrics_off.json
+8edc96d1173b0d329fc10d79f7630a3dfe734b816141f012aaa9fab437ff853f  ./official/metrics_off.md
+ff038d9233adb943a43024b947af355c4ebfc9dd46c5fb42aff55c5a462949f4  ./official/metrics_on.json
+f5b040bf6b701017c6bd6a59cf35bfc3a9a7736d4eff6764c126c52210acd208  ./official/metrics_on.md
+9095e0f1bfffcda4e1ad82c5c5016ff15a513fb52ce06857b63d4cd6ef3865f6  ./official/off/ended_at.txt
+7790e39d5c68c0260fad415f3353a47e8517881add173bc4fec68c3c7c547ec6  ./official/off/host.log
+1db059a4df24701526462233b0bf78374d6a14a703668d6fd00f9fd4ca9367bf  ./official/off/pgrep_proof.txt
+36990fd7f391a17c2f9938411a94734942f866c7ac25835fe20f59711836dc2a  ./official/off/preflight_stdout.txt
+9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./official/off/run_batch.rc
+2eeee4ee5b2b7482dd78536cc5d16ea7d9910f87c7c13e3cc6c31c2cb654e01c  ./official/off/sha256.txt
+e696140af438cf43ad2f30e5cc734d0f63fde95b3ba50c42c5f96a699866f128  ./official/off/started_at.txt
+3ea34f8e957dcd3b570a0ecbc8a4f0463da21c25eb54e63b5524a23ecc93c08a  ./official/off/switch_proof.txt
+1177a0296efbddc83e8660f0d2e001469178993985e592715408a6db1dd7afe7  ./official/on/ended_at.txt
+dddecbf825c6380100b57be61b43085a551741d77decf2d7ae4eed40b638a7e2  ./official/on/host.log
+b68c18c7f00facfa6c44ed4a06bbaef6d5a1172b6916b4464e5bf48fc46c1653  ./official/on/pgrep_proof.txt
+4c100626d059983795b8311597cee802f81f35fe48bafc153e3f1c4936b7ddaa  ./official/on/preflight_stdout.txt
+9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./official/on/run_batch.rc
+1569462b821384066cba29420ca0b5f819bf64ce4497e43c7be8b6f0c922ecb4  ./official/on/sha256.txt
+4c2448fa3e7b18b0f86677f42afd78cb3e72e39b76674031f96b5d863fdf297b  ./official/on/started_at.txt
+b0b283c8c8c6f29926ac11d25241f5be5c1b87d7705cc7beab5593f26701bf37  ./official/on/switch_proof.txt
+d2370b7d5a5e3074bd1a517ca9ccb966cf56b0a2e0ba80753e52686a6f371819  ./official/term_src_fourfold.txt
+f8a3d7e12dc858f01ddc0acaf61aa9cbd3e89af47e2c1b2ad55c9ff1fb85d081  ./official/term_src_llmcost.txt
+452ebf7d7da1547501c41fb00e14bb97257eea7d2d5794889c9fd13f435529a2  ./official/term_src_metrics.txt
+2dc3477261d65e20138ff5f6eea853528f78ffc494c661dd4bdb5e464f3f15c8  ./shots/term_fourfold.png
+45e6fde0d74c4d26a0d9d10d38bbe52c79a1f3dd7b54647e2c6681e35f501447  ./shots/term_llmcost.png
+53430910d0a5548c4bfd56bb74e93f1929838646e3e73cbd884303cd60673555  ./shots/term_metrics.png
+88dc34f399ad049f984883e152850ed92cd7a376cbeeb23f6b9b9a62768f4473  ./shots/ui_off_r48_round12.png
+7f931a72514da40641eeaf6b675398519e503b8fec5eb0e90e08fbea7a450a64  ./shots/ui_on_r48_round12.png
+```

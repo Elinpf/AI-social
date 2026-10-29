@@ -1,0 +1,22 @@
+==== 四重判定原始行 ====
+---- off ----
+rc=0
+-rw-r--r-- 1 root root 3814 Oct 30 06:24 /tmp/r1runs/d356_off/meta.json
+[d2] run: python3 -m orchestration run --life --seed 42 --agents 16 --rounds 48 --out /tmp/r1runs/d356_off/run.jsonl --flush-every 2
+[meta] events=82906 llm_calls=2646 cached_ratio=0.5276 provider={'mock': 2646} model={'mock-1': 2646}
+[meta] seed_in_log=42 n_in_log=16 rounds_effective=48
+[meta] OK (mock 臂：跳过真跑判定)
+[d2] self-check wc -l=82906 meta.events=82906
+[d2] OK
+---- on ----
+rc=0
+-rw-r--r-- 1 root root 4169 Oct 30 06:26 /tmp/r1runs/d356_on/meta.json
+[d2] run: python3 -m orchestration run --life --seed 42 --agents 16 --rounds 48 --out /tmp/r1runs/d356_on/run.jsonl --flush-every 2
+[meta] events=80300 llm_calls=2653 cached_ratio=0.5273 provider={'mock': 2653} model={'mock-1': 2653}
+[meta] seed_in_log=42 n_in_log=16 rounds_effective=48
+[meta] OK (mock 臂：跳过真跑判定)
+[d2] self-check wc -l=80300 meta.events=80300
+[d2] OK
+==== admission ====
+off verdict= REJECTED  evidence_level= probe  failed= ['B-19_provider_distribution', 'B-20_model_no_mock', 'B-21_body_not_template']
+on verdict= REJECTED  evidence_level= probe  failed= ['B-19_provider_distribution', 'B-20_model_no_mock', 'B-21_body_not_template']

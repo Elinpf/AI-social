@@ -1,0 +1,324 @@
+{
+  "arm_meta": {
+    "OFF": {
+      "code_sha": "d356a5b6cb537dfb10006dfcb723654b717e6371",
+      "ended_at": null,
+      "events": 82906,
+      "rounds_effective": 48,
+      "started_at": "2026-10-30T06:23:37+08:00"
+    },
+    "ON": {
+      "code_sha": "d356a5b6cb537dfb10006dfcb723654b717e6371",
+      "ended_at": null,
+      "events": 80300,
+      "rounds_effective": 48,
+      "started_at": "2026-10-30T06:25:31+08:00"
+    }
+  },
+  "arms": {
+    "OFF": {
+      "G1_activity_diversity": {
+        "formula": "activity_diversity = mean_agent(#distinct (slot, place, activity_type))",
+        "value": 8.875
+      },
+      "G2_activity_total": {
+        "expected_agents_days_x4": 256,
+        "formula": "activity_total = #ACTIVITY_STARTED",
+        "value": 256
+      },
+      "G3_productive_share": {
+        "den": 256,
+        "formula": "productive_share = #{activity_type in PRODUCTIVE} / #ACTIVITY_STARTED",
+        "num": 98,
+        "value": 0.382812
+      },
+      "G4_template_hit_rate": {
+        "den": 256,
+        "formula": "template_hit_rate = #{template non-empty} / #ACTIVITY_STARTED",
+        "num": 126,
+        "value": 0.492188
+      },
+      "M1_living_per_agent_day": {
+        "den": 64,
+        "formula": "living_per_agent_day = #{ACTIVITY_STARTED: template in LIVING} / (agents * days)",
+        "num": 27,
+        "value": 0.421875
+      },
+      "M1p_living_pool_per_agent_day": {
+        "den": 64,
+        "formula": "living_pool_per_agent_day = #{template in LIVING_POOL} / (agents * days)（载体口径，不参与 PASS）",
+        "num": 59,
+        "value": 0.921875
+      },
+      "M2_leisure_per_agent_5d": {
+        "den": 64,
+        "formula": "leisure_per_agent_5d = #{activity_type == 'leisure'} / (agents * days) * 5",
+        "num": 17,
+        "value": 1.328125
+      },
+      "M3_living_slot_hit": {
+        "den": 64,
+        "formula": "living_slot_hit = #{(agent,day): 该日 evening 上 template in LIVING_POOL} / (agents * days)",
+        "num": 42,
+        "value": 0.65625
+      },
+      "M4_daytime_routine_stability": {
+        "formula": "daytime_routine_stability = mean_{agent,slot in DAY_SLOTS}(mode_days / observed_days)",
+        "n_agent_slot": 48,
+        "value": 0.578125
+      },
+      "agents": 16,
+      "days": 4,
+      "distribution": {
+        "activity_type": {
+          "civic": 4,
+          "learn": 26,
+          "leisure": 17,
+          "rest": 64,
+          "socialize": 73,
+          "trade": 28,
+          "work": 44
+        },
+        "slot_x_template": {
+          "afternoon": {
+            "(none)": 27,
+            "counter_propose": 5,
+            "polite_reject": 9,
+            "savings": 9,
+            "scarce_buy": 14
+          },
+          "evening": {
+            "(none)": 22,
+            "gift": 18,
+            "rel_maintain": 10,
+            "whisper": 14
+          },
+          "morning": {
+            "(none)": 17,
+            "combat_training": 17,
+            "job_choice": 4,
+            "mentorship": 3,
+            "skill_practice": 23
+          },
+          "night": {
+            "(none)": 64
+          }
+        },
+        "template": {
+          "(none)": 130,
+          "combat_training": 17,
+          "counter_propose": 5,
+          "gift": 18,
+          "job_choice": 4,
+          "mentorship": 3,
+          "polite_reject": 9,
+          "rel_maintain": 10,
+          "savings": 9,
+          "scarce_buy": 14,
+          "skill_practice": 23,
+          "whisper": 14
+        }
+      },
+      "exposure": {
+        "activity_events": 256,
+        "agents_x_days": 64
+      },
+      "recompute": "python3 tools/habit/habit_readings.py --run <TAG>=/tmp/r1runs/d356_off",
+      "run_dir": "/tmp/r1runs/d356_off",
+      "run_jsonl_sha256": "97b8f62498fd0d863d5707aefbe239bce8f329bc74bafcf1c2035f4cd743d820",
+      "schema_version": "habit-readings/1.0"
+    },
+    "ON": {
+      "G1_activity_diversity": {
+        "formula": "activity_diversity = mean_agent(#distinct (slot, place, activity_type))",
+        "value": 9.625
+      },
+      "G2_activity_total": {
+        "expected_agents_days_x4": 256,
+        "formula": "activity_total = #ACTIVITY_STARTED",
+        "value": 256
+      },
+      "G3_productive_share": {
+        "den": 256,
+        "formula": "productive_share = #{activity_type in PRODUCTIVE} / #ACTIVITY_STARTED",
+        "num": 98,
+        "value": 0.382812
+      },
+      "G4_template_hit_rate": {
+        "den": 256,
+        "formula": "template_hit_rate = #{template non-empty} / #ACTIVITY_STARTED",
+        "num": 148,
+        "value": 0.578125
+      },
+      "M1_living_per_agent_day": {
+        "den": 64,
+        "formula": "living_per_agent_day = #{ACTIVITY_STARTED: template in LIVING} / (agents * days)",
+        "num": 57,
+        "value": 0.890625
+      },
+      "M1p_living_pool_per_agent_day": {
+        "den": 64,
+        "formula": "living_pool_per_agent_day = #{template in LIVING_POOL} / (agents * days)（载体口径，不参与 PASS）",
+        "num": 81,
+        "value": 1.265625
+      },
+      "M2_leisure_per_agent_5d": {
+        "den": 64,
+        "formula": "leisure_per_agent_5d = #{activity_type == 'leisure'} / (agents * days) * 5",
+        "num": 34,
+        "value": 2.65625
+      },
+      "M3_living_slot_hit": {
+        "den": 64,
+        "formula": "living_slot_hit = #{(agent,day): 该日 evening 上 template in LIVING_POOL} / (agents * days)",
+        "num": 64,
+        "value": 1.0
+      },
+      "M4_daytime_routine_stability": {
+        "formula": "daytime_routine_stability = mean_{agent,slot in DAY_SLOTS}(mode_days / observed_days)",
+        "n_agent_slot": 48,
+        "value": 0.515625
+      },
+      "agents": 16,
+      "days": 4,
+      "distribution": {
+        "activity_type": {
+          "civic": 4,
+          "learn": 26,
+          "leisure": 34,
+          "rest": 64,
+          "socialize": 56,
+          "trade": 28,
+          "work": 44
+        },
+        "slot_x_template": {
+          "afternoon": {
+            "(none)": 27,
+            "counter_propose": 5,
+            "polite_reject": 9,
+            "savings": 9,
+            "scarce_buy": 14
+          },
+          "evening": {
+            "contest": 17,
+            "creative_collab": 7,
+            "gift": 16,
+            "ice_break": 6,
+            "rel_maintain": 6,
+            "select_location": 4,
+            "whisper": 8
+          },
+          "morning": {
+            "(none)": 17,
+            "combat_training": 17,
+            "job_choice": 4,
+            "mentorship": 3,
+            "skill_practice": 23
+          },
+          "night": {
+            "(none)": 64
+          }
+        },
+        "template": {
+          "(none)": 108,
+          "combat_training": 17,
+          "contest": 17,
+          "counter_propose": 5,
+          "creative_collab": 7,
+          "gift": 16,
+          "ice_break": 6,
+          "job_choice": 4,
+          "mentorship": 3,
+          "polite_reject": 9,
+          "rel_maintain": 6,
+          "savings": 9,
+          "scarce_buy": 14,
+          "select_location": 4,
+          "skill_practice": 23,
+          "whisper": 8
+        }
+      },
+      "exposure": {
+        "activity_events": 256,
+        "agents_x_days": 64
+      },
+      "recompute": "python3 tools/habit/habit_readings.py --run <TAG>=/tmp/r1runs/d356_on",
+      "run_dir": "/tmp/r1runs/d356_on",
+      "run_jsonl_sha256": "2154598d620a626c894a8c9f77b166f6dd0dd8b8267a984168d2070f797a1ce1",
+      "schema_version": "habit-readings/1.0"
+    }
+  },
+  "compare": {
+    "base": "OFF",
+    "delta": {
+      "G1_activity_diversity": {
+        "base": 8.875,
+        "diff": 0.75,
+        "ratio": 1.084507,
+        "treat": 9.625
+      },
+      "G2_activity_total": {
+        "base": 256,
+        "diff": 0,
+        "ratio": 1.0,
+        "treat": 256
+      },
+      "G3_productive_share": {
+        "base": 0.382812,
+        "diff": 0.0,
+        "ratio": 1.0,
+        "treat": 0.382812
+      },
+      "G4_template_hit_rate": {
+        "base": 0.492188,
+        "diff": 0.085937,
+        "ratio": 1.174602,
+        "treat": 0.578125
+      },
+      "M1_living_per_agent_day": {
+        "base": 0.421875,
+        "diff": 0.46875,
+        "ratio": 2.111111,
+        "treat": 0.890625
+      },
+      "M1p_living_pool_per_agent_day": {
+        "base": 0.921875,
+        "diff": 0.34375,
+        "ratio": 1.372881,
+        "treat": 1.265625
+      },
+      "M2_leisure_per_agent_5d": {
+        "base": 1.328125,
+        "diff": 1.328125,
+        "ratio": 2.0,
+        "treat": 2.65625
+      },
+      "M3_living_slot_hit": {
+        "base": 0.65625,
+        "diff": 0.34375,
+        "ratio": 1.52381,
+        "treat": 1.0
+      },
+      "M4_daytime_routine_stability": {
+        "base": 0.578125,
+        "diff": -0.0625,
+        "ratio": 0.891892,
+        "treat": 0.515625
+      }
+    },
+    "treat": "ON"
+  },
+  "generated_at": "2026-10-30T06:27:46+08:00",
+  "schema_version": "habit-readings/1.0",
+  "spec": {
+    "G1": "activity_diversity = mean_agent(#distinct (slot, place, activity_type))",
+    "G2": "activity_total = #ACTIVITY_STARTED",
+    "G3": "productive_share = #{activity_type in PRODUCTIVE} / #ACTIVITY_STARTED",
+    "G4": "template_hit_rate = #{template non-empty} / #ACTIVITY_STARTED",
+    "M1": "living_per_agent_day = #{ACTIVITY_STARTED: template in LIVING} / (agents * days)",
+    "M1p": "living_pool_per_agent_day = #{template in LIVING_POOL} / (agents * days)（载体口径，不参与 PASS）",
+    "M2": "leisure_per_agent_5d = #{activity_type == 'leisure'} / (agents * days) * 5",
+    "M3": "living_slot_hit = #{(agent,day): 该日 evening 上 template in LIVING_POOL} / (agents * days)",
+    "M4": "daytime_routine_stability = mean_{agent,slot in DAY_SLOTS}(mode_days / observed_days)"
+  }
+}

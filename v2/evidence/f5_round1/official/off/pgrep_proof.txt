@@ -1,0 +1,8 @@
+==== pgrep 串行证明 ts=2026-10-30T06:23:36+08:00 ====
+self_pid=2299385  self_tree=2299357
+---- pattern: orchestration[[:space:]]+run ----
+  hits(excluding ancestors)=0
+---- pattern: run_[b]atch ----
+  hits(excluding ancestors)=0
+---- pattern: [n]ightly\.py ----
+  hits(excluding ancestors)=0
