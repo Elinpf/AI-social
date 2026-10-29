@@ -433,3 +433,60 @@ cd code && python3 -m obs llm-cost --log /tmp/r1runs/d356_off/run.jsonl --requir
 ---
 
 *本报告所有数字绑定：HEAD `d356a5b`、读数器 `c695fce4…`、口径卡 `7314adec…`、两臂 `run.jsonl` sha256 `97b8f624…` / `2154598d…`。凡未直接验证的条目已在 §⑩ 标注。*
+
+---
+
+## ⑫ 合入记录（可复现：在哪个路径、哪个分支、基于哪个 sha 完成合并）
+
+> 本节由交付方（delivery-reporter）在合入后补记；正文所有验证结论与读数不受本节影响。
+
+### 12.1 边界（为什么不在主工作区做 git 写操作）
+
+主工作区 `/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment` 当时在 `feat/prompt-narration-toggle`（HEAD `d2a6fa9`）且 **dirty 141 项**，全程未被触碰（未 `checkout`/`stash`/`reset`/`commit`）。本轮**所有** git 写操作（`commit` / `fetch` / `merge` / `push`）都在下列两个干净位置之一完成：
+
+| 操作 | 路径 | 分支 | 基于 sha |
+|---|---|---|---|
+| 报告与证据的 `commit` | `.worktrees/life-habit-strength`（隔离 worktree，`git status --porcelain` 为空） | `feat/life-habit-strength` | 父提交 `d356a5b`（`code/` 未改） |
+| `fetch` / 分支 `push` / 合入 master / master `push` | `/tmp/f5-merge`（`git clone --shared <主树>` 的临时克隆，干净树） | 先在 `feat/life-habit-strength`，后在 `master` | 分支推 `7ee591e`，master 以 `origin/master` 为合入基 |
+
+### 12.2 合入方式（明确 merge commit，不是 FF）
+
+合入前实测：`origin/master` 已从 `d2d1993` 前进到 **`0e65476`**（master 侧另有 **3 条 doc-only 提交**：`f7b7fbf`、`df488ce`、`0e65476`，只动 `v2/refs/` 与 `v2/evidence/` 下的文档，与本轮**无文件重叠**）。因此 `origin/master` 不是本分支 HEAD 的祖先，**无法 fast-forward**，采用显式 **merge commit**：
+
+```
+$ git checkout -B master origin/master          # 0e65476
+$ git merge --no-ff origin/feat/life-habit-strength
+=> merge commit 3a2ef22293e8c9b691886aae4040a5d5d238fb9d
+   parents: 0e65476 (origin/master) + 7ee591e (本轮分支)
+```
+
+**「没有把别的分支内容带进来」的机械核查**（`git diff --name-only origin/master HEAD`）：
+
+```
+ 38 v2/evidence        （全在 v2/evidence/f5_round1/ 下）
+  3 tools/habit
+  3 code/life
+  1 v2/refs（round1-prereg-F5.md）
+  1 reports/README.md
+  1 reports/R25-f5-habit-strength.md
+```
+
+白名单外文件数 = **0**（`git diff --name-only origin/master HEAD | grep -v -E '^(code/life/planner\.py|code/life/tests/|tools/habit/|v2/refs/round1-prereg-F5\.md|reports/R25-f5-habit-strength\.md|reports/README\.md|v2/evidence/f5_round1/)'` → 空）。差异合计 `47 files changed, 39655 insertions(+), 23 deletions(-)`，全部为本轮产物。
+
+### 12.3 push 后三 sha 核对（`git ls-remote origin` 实测）
+
+| ref | origin 上实测 | 本地 | 一致 |
+|---|---|---|---|
+| `refs/heads/feat/life-habit-strength` | `7ee591ead572ddc1951c0e275975a25b55ae5345` | `7ee591e` | ✅ |
+| `refs/heads/master` | `3a2ef22293e8c9b691886aae4040a5d5d238fb9d` | `3a2ef22` | ✅ |
+
+复现命令：
+
+```bash
+git ls-remote origin refs/heads/master refs/heads/feat/life-habit-strength
+git log --oneline --graph -4 3a2ef22
+git diff --name-only 0e65476 3a2ef22        # 应只含本轮 47 个文件
+```
+
+> 本节补记本身的提交 sha 见 `git log -1 -- reports/R25-f5-habit-strength.md`（master 上）；
+> 补记只增本节文字，**不改任何读数、阈值、判据与证据文件**。
