@@ -39,3 +39,12 @@
 
 - 本条只管**"这个任务是否有效"**，不管**"该任务能否做对"**；后者由各自的预登记/口径规则约束。
 - 交付件提交权仍归 Leader（`v2/refs/**`、`v2/evidence/**`、`reports/**`），与本条并行、不替代。
+
+## 6. 提交纪律（2026-10-29 事故后增补）
+
+**禁令：提交者不得在当前 checkout 的分支上执行 `git reset <commit>`。**
+
+- `git reset`（默认 mixed）会**同时移动当前分支指针**。想在主树上用 plumbing 造"只含某几个文件"的提交时，正确做法是 `GIT_INDEX_FILE=/tmp/idx git read-tree <base>` 操作**临时索引**；需要换基座再 `git read-tree <commit>`——**`read-tree` 只动索引、不动 HEAD**。
+- 事故记录（Leader 本人，2026-10-29 12:55 前后）：在 `feat/life-emotion-echo-r32-contentclause` 上跑了 `git reset -q $C1`，该分支 HEAD 由 `f601eba` 被移到 `062d491`。已用 `git reset -q f601eba` 恢复；两笔提交对象（`062d491`、`2215265`）未丢失，随后 `f0e240f..2215265` 正常推到 master。
+- **恢复动作固定为三步**：① `git reflog` 找事故前 HEAD；② `git reset -q <事故前HEAD>` 复位分支；③ `git rev-parse --abbrev-ref HEAD` + `git log --oneline -1` 复核，并确认游离提交对象仍在（`git log --oneline -1 <sha>`）。
+- **推远端前必须复核"我要推的 sha 不是当前分支 HEAD 的意外移动结果"**：本次正是因为 `git push <sha>:master` 用的是显式 sha（而非分支名），事故才没有污染 master。
