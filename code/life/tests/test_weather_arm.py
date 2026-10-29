@@ -264,3 +264,51 @@ def test_on_missing_time_fields_degrades_silently(monkeypatch, tmp_path):
                          current_activity=None, inventory=(), time=None)
     assert agent._weather_line(wv) == ""
     assert agent._weather is None
+
+
+# ---- T1 追加（life-dev, 2026-10-29）：跨进程确定性 = 真正的 replay 判据 -----------
+# 注意：**不传 seed**，让派生走 env `HITT_WORLD_SEED`（这才是跑批实际路径）。
+_DET_TABLE_SNIPPET = (
+    "import json; from life import weather as WX; "
+    "print(json.dumps({str(d): WX.weather_of_day(d) for d in range(12)}, "
+    "ensure_ascii=False, sort_keys=True))"
+)
+
+
+def _derive_table_in_subprocess(env_extra: dict) -> str:
+    """在**独立进程**里跑一次「同 seed 同 day 派生表」，返回 stdout。
+
+    为什么要独立进程：`weather_of_day` 若不慎读了进程状态/墙钟/随机源，
+    在同一进程内两次调用可能恰好相同（伪确定性）。只有**两个全新进程**给出逐字符
+    相同的表，才等价于「重放/跨批可复现」（replay 纪律的硬判据）。
+    """
+    import os
+    import subprocess
+    import sys
+
+    env = dict(os.environ)
+    env.update(env_extra)
+    env["PYTHONPATH"] = str(CODE_DIR)
+    out = subprocess.run([sys.executable, "-c", _DET_TABLE_SNIPPET],
+                         env=env, cwd=str(CODE_DIR), capture_output=True,
+                         text=True, timeout=120)
+    assert out.returncode == 0, f"子进程失败: {out.stderr}"
+    return out.stdout.strip()
+
+
+def test_weather_table_deterministic_across_processes():
+    """同一 (world_seed=42, day) 在**两个独立进程**里必得同一天气表（可 replay）。"""
+    a = _derive_table_in_subprocess({"HITT_WORLD_SEED": "42"})
+    b = _derive_table_in_subprocess({"HITT_WORLD_SEED": "42"})
+    assert a == b, f"跨进程派生不一致（非重新可复现）：\nA={a}\nB={b}"
+    # 表里必须都是合法天气 key（空串 = 派生失败）
+    table = json.loads(a)
+    assert len(table) == 12 and all(v in WX.WEATHER_KINDS for v in table.values())
+
+
+def test_weather_table_differs_with_other_seed_process():
+    """换 world_seed（42 vs 43）在**独立进程**里 12 天内至少有一天不同。"""
+    a = json.loads(_derive_table_in_subprocess({"HITT_WORLD_SEED": "42"}))
+    c = json.loads(_derive_table_in_subprocess({"HITT_WORLD_SEED": "43"}))
+    diff = [d for d in a if a[d] != c[d]]
+    assert diff, "换 world_seed 天气表完全不变 ⇒ seed 未真正参与派生"
