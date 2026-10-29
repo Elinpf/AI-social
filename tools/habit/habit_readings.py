@@ -42,7 +42,8 @@ from pathlib import Path
 
 SCHEMA_VERSION = "habit-readings/1.0"
 
-#: 生活类模板集合（口径卡 §3 写死；只列 `activity_templates.json` 里既有的模板 id）
+#: M1 的「生活类模板」集合（口径卡 §3 写死：只列 `activity_templates.json` 里既有的、且
+#: **不属于改动前 evening 既有社会活动** 的模板 ⇒ 不含 gift/whisper，见 AMENDMENT-2）
 LIVING = (
     "combat_training",
     "contest",
@@ -51,17 +52,23 @@ LIVING = (
     "creative_collab",
     "rel_maintain",
 )
+#: 机制实际候选池（口径卡 §2.2 定稿；M3 判「闲时段是否真排上生活类」，用这一池；M1' 亦用它）
+LIVING_POOL = (
+    "contest", "gift", "whisper", "rel_maintain",
+    "ice_break", "creative_collab", "select_location", "combat_training",
+)
 #: 生产性活动类型（守卫 G3）
 PRODUCTIVE = ("work", "learn", "trade")
 #: 白天时段（M4 口径；night 因全员同睡同地点被剔除）
 DAY_SLOTS = ("morning", "afternoon", "evening")
-#: 闲时段轮转表（口径卡 §2.2，与 planner._LIVING_SLOTS 同源语义）
-LIVING_SLOTS = ("morning", "afternoon", "evening")
+#: 闲时段（口径卡 §2.2 + AMENDMENT-1：**每天 evening**；周末 afternoon 另计，不进 M3 分母）
+LIVING_SLOT = "evening"
 
 SPEC = {
     "M1": "living_per_agent_day = #{ACTIVITY_STARTED: template in LIVING} / (agents * days)",
     "M2": "leisure_per_agent_5d = #{activity_type == 'leisure'} / (agents * days) * 5",
-    "M3": "living_slot_hit = #{(agent,day): living_slot(dow) 上 template in LIVING} / (agents * days)",
+    "M1p": "living_pool_per_agent_day = #{template in LIVING_POOL} / (agents * days)（载体口径，不参与 PASS）",
+    "M3": "living_slot_hit = #{(agent,day): 该日 evening 上 template in LIVING_POOL} / (agents * days)",
     "M4": "daytime_routine_stability = mean_{agent,slot in DAY_SLOTS}(mode_days / observed_days)",
     "G1": "activity_diversity = mean_agent(#distinct (slot, place, activity_type))",
     "G2": "activity_total = #ACTIVITY_STARTED",
@@ -90,10 +97,9 @@ def _dow(slot_id: str, day: int | None) -> int | None:
     return None
 
 
-def _living_slot(dow: int | None) -> str | None:
-    if dow is None:
-        return None
-    return LIVING_SLOTS[dow % len(LIVING_SLOTS)]
+def _living_slot(_dow: int | None = None) -> str:
+    """AMENDMENT-1 后的闲时段：每天 evening（不再按 dow 轮转）。"""
+    return LIVING_SLOT
 
 
 def _rate(num: float, den: float) -> float | None:
@@ -147,6 +153,7 @@ def analyze(run_dir: Path) -> dict:
 
     n = len(acts)
     living = [a for a in acts if a["template"] in LIVING]
+    living_pool = [a for a in acts if a["template"] in LIVING_POOL]
     leisure = [a for a in acts if a["activity_type"] == "leisure"]
     prod = [a for a in acts if a["activity_type"] in PRODUCTIVE]
     tmpl = [a for a in acts if a["template"]]
@@ -159,7 +166,7 @@ def analyze(run_dir: Path) -> dict:
         key = (a["agent"], a["day"])
         if a["slot"] != _living_slot(_dow(a["slot_id"], a["day"])):
             continue
-        if a["template"] in LIVING:
+        if a["template"] in LIVING_POOL:
             hit[key] = True
     m3_hits = sum(1 for v in hit.values() if v)
 
@@ -192,6 +199,8 @@ def analyze(run_dir: Path) -> dict:
         "exposure": {"agents_x_days": ad, "activity_events": n},
         "M1_living_per_agent_day": {"value": _rate(len(living), ad), "num": len(living), "den": ad,
                                     "formula": SPEC["M1"]},
+        "M1p_living_pool_per_agent_day": {"value": _rate(len(living_pool), ad), "num": len(living_pool),
+                                          "den": ad, "formula": SPEC["M1p"]},
         "M2_leisure_per_agent_5d": {"value": _r6(len(leisure) / ad * 5) if ad else None,
                                     "num": len(leisure), "den": ad, "formula": SPEC["M2"]},
         "M3_living_slot_hit": {"value": _rate(m3_hits, ad), "num": m3_hits, "den": ad,
@@ -222,7 +231,8 @@ def compare(arms: dict[str, dict]) -> dict:
         return {}
     names = list(arms)
     base, treat = names[0], names[-1]
-    keys = ["M1_living_per_agent_day", "M2_leisure_per_agent_5d", "M3_living_slot_hit",
+    keys = ["M1_living_per_agent_day", "M1p_living_pool_per_agent_day",
+            "M2_leisure_per_agent_5d", "M3_living_slot_hit",
             "M4_daytime_routine_stability", "G1_activity_diversity", "G2_activity_total",
             "G3_productive_share", "G4_template_hit_rate"]
     out = {"base": base, "treat": treat, "delta": {}}

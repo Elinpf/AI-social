@@ -100,9 +100,10 @@ PY
 
 | 编号 | 指标 | 公式 | 口径备注 |
 |---|---|---|---|
-| **M1 主** | 生活类活动人均日频 | `#{p ∈ A: p.template ∈ LIVING} / (agents × days)` | 单位：次/（人·天）。**与 OFF 臂同参数比** |
+| **M1 主** | 生活类活动人均日频 | `#{p ∈ A: p.template ∈ LIVING} / (agents × days)`；`LIVING` = 6 个既有但改动前 evening 不常出现的模板（见 AMENDMENT-2） | 单位：次/（人·天）。**与 OFF 臂同参数比** |
+| **M1' 载体** | 生活类候选池人均日频 | `#{p ∈ A: p.template ∈ LIVING_POOL} / (agents × days)` | **不参与 PASS**，只为排除"挑口径"质疑 |
 | **M2 主** | 休闲（leisure）人均 5 天频 | `#{p ∈ A: p.activity_type == "leisure"} / (agents × days) × 5` | **对齐 R23/R4 口径**（R23: 1.44 次/人/5 天），用于与既有报告对表 |
-| **M3 辅** | 闲时段命中率 | `#{(agent, day): 该 (agent,day) 的 living_slot(dow) 上出现 template ∈ LIVING} / (agents × days)` | 直接测机制是否真落地（机制面） |
+| **M3 辅** | 闲时段命中率 | `#{(agent, day): 该 (agent,day) 的 `evening` 上出现 template ∈ **LIVING_POOL**} / (agents × days)` | 直接测机制是否真落地（机制面）；AMENDMENT-2 把主体改为候选池、AMENDMENT-1 把时段定为 evening |
 | **M4 辅** | 白天作息稳定性 | 对每个 `(agent, slot∈{morning,afternoon,evening})`：`众数(place,activity_type) 的天数 / 该 slot 观测天数`，再对全部 (agent,slot) 取均值 | 官方 F-5 的"白天段"版本（剔除 night 共睡），**仅作描述/对照**，不作为本轮 PASS 依据 |
 | **G1 守卫** | 活动多样性 | 每个 agent 的 `distinct (slot, place, activity_type)` 三元组数，取**全 agent 均值** | 防止"把日子压成一种" |
 | **G2 守卫** | 活动总量守恒 | `#A` 必须 `== agents × days × 4` | planner 改动不得减少活动 |
@@ -170,7 +171,8 @@ PY
 
 | # | 改动 | 理由 | 时间戳 | 是否在 ON 臂读数之后 |
 |---|---|---|---|---|
-| 1 | §2.2 闲时段：`dow%3` 轮转 morning/afternoon/evening → 固定 `evening` + 周末 `afternoon`；evening 候选权重写死（`contest`×2） | 静态复算显示原方案会把 workday 生产性活动替换掉、预计 `G3` −15pp 必破自设守卫；阈值一字未改 | 2026-10-30 06:2x（落盘见 `stat`） | **否**（本批尚未起跑，无 ON 读数） |
+| 1 | §2.2 闲时段：`dow%3` 轮转 morning/afternoon/evening → 固定 `evening` + 周末 `afternoon`；evening 候选权重写死（`contest`×2） | 静态复算显示原方案会把 workday 生产性活动替换掉、预计 `G3` −15pp 必破自设守卫；阈值一字未改 | 2026-10-30 06:0x（落盘见 `stat`） | **否**（本批尚未起跑，无 ON 读数） |
+| 2 | §3 口径澄清：`M3 闲时段命中率` 的主体定义为**机制候选池** `LIVING_POOL`（= contest/gift/whisper/rel_maintain/ice_break/creative_collab/select_location/combat_training），并新增**载体口径 `M1'`**（同一池，只读并列报出、**不参与 PASS 判定**）；`M1/M2/G1..G4` 公式与全部阈值**一字未改** | 定稿 §3 原把 `M3` 写成"template ∈ LIVING"，而 `LIVING` 只含 6 个非既有模板（不含 gift/whisper），与 §2.2 的机制候选池不一致 ⇒ 机制明明命中也会被判未命中。属**定义自洽性修正**，且发生在任何真/假 ON 臂读数之前 | 2026-10-30 06:1x（`stat` 见下） | **否**（只有 mock 机制自检，且未见任何真实 ON 臂结果） |
 
 ---
 
