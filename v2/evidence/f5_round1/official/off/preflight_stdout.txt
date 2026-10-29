@@ -1,0 +1,2 @@
+PASS preflight sha=d356a5b6(HEAD) ts=2026-10-30T06:23:36+08:00 concurrency=0 frozen_tree=clean log=/root/.jiuwenswarm/.agent_teams/jiuwen_team_cron___1a189ad533f_81dc38ca6dee/team-workspace/artifacts/round1-run/official/off/preflight/preflight_20261029T222336Z_d356a5b6_r1-off.log
+preflight_rc=0

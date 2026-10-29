@@ -1,0 +1,10 @@
+==== 开关真值（执行层 /proc/<pid>/environ） ====
+arm=off  tree=/tmp/f5-branch  code_sha=d356a5b6cb537dfb10006dfcb723654b717e6371
+orchestration_pid=2299621
+captured_at=2026-10-30T06:23:37+08:00
+cgroup=0::/system.slice/jiuwenswarm.service
+cmdline=python3 -m orchestration run --life --seed 42 --agents 16 --rounds 48 --out /tmp/r1runs/d356_off/run.jsonl --flush-every 2 
+---- environ 中 HITT_/LIFE_ 行 ----
+  (无 HITT_/LIFE_ 行)
+---- HITT_LIVING_SLOT 存在性 ----
+  (不存在该行 ⇒ OFF 臂期望事实)
