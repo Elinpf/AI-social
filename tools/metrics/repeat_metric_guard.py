@@ -108,7 +108,7 @@ def l7(bodies: list[str]) -> dict:
         "total_chars": total_chars,
         "total_ngrams": total_ngrams,
         "avg_ngrams_per_msg": (total_ngrams / n) if n else 0.0,
-        "pool_size": n,          # 候选池大小 = MSG 数（L-7 的碰撞池）
+        "pool_size": max(0, n - 1),   # 每条 MSG 可碰撞的对端数 = n−1（L-7 是"与任一**其他** MSG 共享 8-gram"）
     }
 
 
@@ -132,7 +132,27 @@ def verdict(raw_diff_pp: float, same_diff_pp: float) -> tuple[str, str]:
     )
 
 
-def analyse(off_path: str, on_path: str) -> dict:
+def _identity(body: str) -> str:
+    """`--strip none` 用的恒等变换（不剥任何载体）。"""
+    return body
+
+
+STRIP_MODES = {
+    "bracket": strip_narration,     # 默认：剥成对全角/半角括号内的旁白
+    "none": _identity,              # 不剥（同口径 ≡ 原始口径）
+}
+
+
+def analyse(off_path: str, on_path: str, strip: str | None = "bracket") -> dict:
+    """算两臂的 `L-7` 原始差与同口径差，并给判定。
+
+    `strip` 为**显式入参**（"bracket" / "none"），用于同口径重算；
+    **不修改模块全局**，因此同一进程内可用不同 `strip` 反复调用 `analyse()` 而互不污染。
+    """
+    if strip not in STRIP_MODES:
+        raise ValueError(f"未知 strip 模式：{strip!r}（可选 {sorted(STRIP_MODES)}）")
+    strip_fn = STRIP_MODES[strip]
+
     off = load_msgs(off_path)
     on = load_msgs(on_path)
 
@@ -140,8 +160,8 @@ def analyse(off_path: str, on_path: str) -> dict:
     on_m = l7(on)
 
     # 同口径：剥除新增载体（两侧都剥；对照臂若无载体则数值不变）
-    off_s = l7([strip_narration(b) for b in off])
-    on_s = l7([strip_narration(b) for b in on])
+    off_s = l7([strip_fn(b) for b in off])
+    on_s = l7([strip_fn(b) for b in on])
 
     raw_pp = (on_m["l7_rate"] - off_m["l7_rate"]) * 100
     same_pp = (on_s["l7_rate"] - off_s["l7_rate"]) * 100
@@ -208,12 +228,7 @@ def main(argv: list[str] | None = None) -> int:
                     help="同口径重算时剥除的载体（默认 bracket=成对括号旁白；none=不剥）")
     ap.add_argument("--json", default=None, help="把结构化结果写到该路径（可选）")
     args = ap.parse_args(argv)
-
-    if args.strip == "none":
-        global strip_narration
-        strip_narration = lambda b: b  # noqa: E731
-
-    res = analyse(args.off, args.on)
+    res = analyse(args.off, args.on, strip=args.strip)
     print(render(res))
     if args.json:
         Path(args.json).write_text(json.dumps(res, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")

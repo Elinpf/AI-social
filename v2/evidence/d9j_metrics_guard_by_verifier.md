@@ -109,3 +109,68 @@ python3 tools/metrics/repeat_metric_guard.py --off <off> --on <on> --strip none 
 
 - 不改任何既有指标实现（`L-7` 仍以 `tools/d5/dialogue_metrics.py` 为准）；
 - 不改引擎、不改判据、不跑批、不 commit。
+
+---
+
+## 9. 修订记录 v2（Leader 复核两点后）
+
+### 9.1 改动 1：去掉全局副作用（`--strip none` 不再改模块全局）
+
+**原实现（有问题）**：
+```python
+if args.strip == "none":
+    global strip_narration
+    strip_narration = lambda b: b        # ← 改模块全局
+```
+⇒ 同一进程内先 `strip="none"` 再 `strip="bracket"`，第二次会拿到被污染的恒等函数。
+
+**现实现**：`strip` 成为 `analyse()` 的**显式入参**，通过 `STRIP_MODES` 查表：
+```python
+STRIP_MODES = {"bracket": strip_narration, "none": _identity}
+def analyse(off_path, on_path, strip="bracket"):
+    strip_fn = STRIP_MODES[strip]        # 未知模式直接 ValueError
+    ...
+```
+**验证（同进程顺序 none → bracket → none）**：
+```
+r1(none)    同口径差 = +7.3298  FAIL
+r2(bracket) 同口径差 = -7.3298  WARN-暴露面效应
+r3(none)    同口径差 = +7.3298  FAIL
+无全局污染（r1==r3 且 r2 不同）: True
+```
+
+### 9.2 改动 2：`pool_size` 改为 `n − 1`（并保留 `n_msgs`）
+
+- **原值**：`pool_size = n`（= MSG 数）。这是**错的语义**：L-7 的判定是「与任一**其他** MSG 共享 ≥1 个 8-gram」，每条 MSG 的可碰撞对端是 `n − 1`。
+- **现值**：`pool_size = max(0, n − 1)`，并在 JSON 中另保留 `n_msgs = n`。本例：`n_msgs = 191`、`pool_size = 190`。
+- **影响评估**：该字段**不参与任何判定**（判定只用 `l7_rate` 差），故**既有结论（WARN/PASS/FAIL）全部不变**；仅为口径正确性修正。
+
+### 9.3 修订后复测（三用例 + rc，全部与修订前一致）
+
+| 用例 | 判定 | rc |
+|---|---|---|
+| D9i 两臂（`--strip bracket`，默认） | `WARN-暴露面效应`（+7.33pp / −7.33pp） | 0 |
+| D9i 两臂（`--strip none`） | `FAIL`（+7.33pp 且同口径未下降） | 1 |
+| 同臂自比 | `PASS`（+0.00pp） | 0 |
+
+⇒ **行为等价、语义更准、无全局副作用**。工具新指纹见件头（本次修订后的 `sha256` 与行数以末次命令为准）。
+
+### 9.4 一条遗留（未改，需 Leader 定）
+`pool_size` 虽改为 `n−1`，但**真正的"暴露面强度"其实由 `total_ngrams` 与"对端是否更长"共同决定**，单看 `pool_size` 不足以量化。若要做更严的可比性检查，应加入**长度分层**（按 body 长度分桶后比较同桶命中率）——本工具当前**未实现**（见 §6 局限 2）。
+
+---
+
+## 10. Leader 终裁（2026-10-30 05:30）：**不加 `--stratify`**（写死）
+
+> **裁定**：本工具**保持"同口径重算"这一条硬手段**，**不实现**长度分层（`--stratify`）。
+
+**理由（Leader 采纳本文 §9.4 的表述并推进一层）**：既然承认真实暴露面"单看 `pool_size` 量化不了"，那么**加一层分桶只是把"未量化的混淆"换成"分桶边界的人为选择"**，而**后者更难审计**（读者无法判断桶宽/切点是否被挑选过）。
+⇒ **宁可承认"暴露面只能部分量化"，也不引入一个不可审计的自由度。**
+
+**由此产生的使用纪律（引用本工具时必须遵守）**
+1. 本工具的判定**只回答**"该差异能否被**剥载体后的同口径差**解释"，**不回答**"差异大小是否显著"；
+2. `pool_size` / `total_ngrams` 只作**描述性暴露面**，**不得**当作协变量做校正或回归；
+3. 需要"分层/校正"类分析时，**不得**在本工具上临时加参数，须**另立预登记**并说明桶宽来源；
+4. 本工具的 `WARN-暴露面效应` **不等于**"质量没变"——它只说"该指标在此口径下不能作为质量判据"。
+
+> 本节为裁定原文落档；`--stratify` 不实现，代码中亦无该参数（`python tools/metrics/repeat_metric_guard.py --help` 可核）。
