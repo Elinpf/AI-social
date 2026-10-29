@@ -1,0 +1,108 @@
+{
+ "arm": "ON",
+ "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/narr-on-20261030/run.jsonl",
+ "denominator_msg_total": 191,
+ "paired": {
+  "regex": "（[^（）]{1,120}）|\\([^()]{1,120}\\)",
+  "msgs_with_paired_paren": 179,
+  "rate": 0.937173,
+  "blocks_total": 205,
+  "action_blocks": 159,
+  "emotion_or_other_blocks": 46,
+  "action_share_of_blocks": 0.77561,
+  "block_top": [
+   {
+    "inner": "把沾着面粉的手在围裙上蹭了蹭",
+    "count": 3
+   },
+   {
+    "inner": "把算盘珠子拨回原位",
+    "count": 3
+   },
+   {
+    "inner": "顿了顿",
+    "count": 3
+   },
+   {
+    "inner": "抬眼",
+    "count": 2
+   },
+   {
+    "inner": "搓了搓手",
+    "count": 2
+   },
+   {
+    "inner": "拿刨子推过木料，木花卷着落下来",
+    "count": 1
+   },
+   {
+    "inner": "把裁纸刀往桌角一搁",
+    "count": 1
+   },
+   {
+    "inner": "把压腿的脚尖从把杆上收回来，顺手抹了把额角的汗",
+    "count": 1
+   },
+   {
+    "inner": "把木剑往地上一戳，歪头看桂婶手里的竹筛",
+    "count": 1
+   },
+   {
+    "inner": "把手里那半截腌菜坛子往膝上一搁",
+    "count": 1
+   },
+   {
+    "inner": "把烧红的锄头往水桶里一按，白汽腾起来",
+    "count": 1
+   },
+   {
+    "inner": "拿锉刀在铜片边上蹭了两下",
+    "count": 1
+   },
+   {
+    "inner": "把灶上那锅萝卜牛腩转成小火，拿筷子戳了戳肉",
+    "count": 1
+   },
+   {
+    "inner": "掀开锅盖闻了闻，又撒了半勺糖",
+    "count": 1
+   },
+   {
+    "inner": "放下刨子，指腹蹭过刚开的榫眼",
+    "count": 1
+   }
+  ],
+  "samples_action": [
+   "拿刨子推过木料，木花卷着落下来",
+   "把沾着面粉的手在围裙上蹭了蹭",
+   "把裁纸刀往桌角一搁",
+   "把木剑往地上一戳，歪头看桂婶手里的竹筛",
+   "把手里那半截腌菜坛子往膝上一搁",
+   "拿锉刀在铜片边上蹭了两下",
+   "把灶上那锅萝卜牛腩转成小火，拿筷子戳了戳肉",
+   "掀开锅盖闻了闻，又撒了半勺糖"
+  ],
+  "samples_emotion_or_other": [
+   "把算盘珠子拨回原位",
+   "顿了顿",
+   "把压腿的脚尖从把杆上收回来，顺手抹了把额角的汗",
+   "把烧红的锄头往水桶里一按，白汽腾起来",
+   "哎，金先生，他工钱是结了，我正揉着明早要发的面，手上还沾着干粉呢。",
+   "把压腿的脚尖往把杆上又蹭了蹭",
+   "用砂纸蹭着木片边缘",
+   "把刚削好的榫头在掌心转了半圈"
+  ]
+ },
+ "any_paren": {
+  "regex": "[（(]",
+  "msgs_with_any_open_paren": 179,
+  "rate": 0.937173,
+  "note": "任意左括号字符（含未闭合单侧、纯情绪标签）"
+ },
+ "cross_check_dialogue_metrics_L3": {
+  "regex": "(?:（[^）]{0,120}）|\\([^)]{0,120}\\))",
+  "msgs": 179,
+  "rate": 0.937173,
+  "note": "tools/d5/dialogue_metrics.py 的 PAREN_ANY_RE（同样要求成对，0 字符内容也算）"
+ }
+}

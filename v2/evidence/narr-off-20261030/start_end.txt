@@ -1,0 +1,6 @@
+arm=off
+started_at=2026-10-30T02:11:32+08:00
+finished_at=2026-10-30T02:32:55+08:00
+duration_sec=1283
+run_batch_rc=0
+llm_cost_rc=1

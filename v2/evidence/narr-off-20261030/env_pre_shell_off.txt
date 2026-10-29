@@ -1,0 +1,4 @@
+ts=2026-10-30T02:11:32+08:00
+arm=off
+declared_LIFE_PROMPT_NARRATION=<unset>
+note=本文件是起跑前 shell 层声明值；真值取 /proc/<pid>/environ（switch_proof.txt）

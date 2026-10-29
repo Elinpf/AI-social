@@ -1,0 +1,11 @@
+# switch_proof（被执行层自证，runbook §3.98b）
+captured_at=2026-10-30T02:11:33+0800
+arm=off
+resolved_pid=1716764
+pid_cgroup=0::/system.slice/jiuwenswarm.service
+--- @ 1 /proc/<pid>/environ（开关真值；仅摘相关键）
+HITT_LLM_PROVIDER=openai_compat
+--- @ 2 /proc/<pid>/cmdline
+python3 -m orchestration run --life --seed 42 --agents 16 --rounds 24 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/narr-off-20261030/run.jsonl --flush-every 2 --side-root /tmp/narr_off_n16r24_s42
+--- @ 3 期望
+OFF 臂期望：LIFE_PROMPT_NARRATION 无输出（显式 unset ⇒ 代码走默认分支 = 改动前逐字节）

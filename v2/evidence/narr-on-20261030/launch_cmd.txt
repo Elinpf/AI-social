@@ -1,0 +1,4 @@
+[narr-arm] arm=on out_dir=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/narr-on-20261030
+[narr-arm] declared LIFE_PROMPT_NARRATION=1
+[narr-arm] cmd: bash tools/d2/run_batch.sh --out-dir /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/narr-on-20261030 --seed 42 --agents 16 --rounds 24 --flush-every 2 --side-root /tmp/narr_on_n16r24_s42
+[narr-arm] script_sha256=112f27f794ae797d63dad2ea4689ef238e878d59b0c4a353d4fe41581e4d5ff4

@@ -1,0 +1,28 @@
+{
+ "arm": "OFF",
+ "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/narr-off-20261030/run.jsonl",
+ "denominator_msg_total": 191,
+ "paired": {
+  "regex": "（[^（）]{1,120}）|\\([^()]{1,120}\\)",
+  "msgs_with_paired_paren": 0,
+  "rate": 0.0,
+  "blocks_total": 0,
+  "action_blocks": 0,
+  "emotion_or_other_blocks": 0,
+  "action_share_of_blocks": null,
+  "samples_action": [],
+  "samples_emotion_or_other": []
+ },
+ "any_paren": {
+  "regex": "[（(]",
+  "msgs_with_any_open_paren": 0,
+  "rate": 0.0,
+  "note": "任意左括号字符（含未闭合单侧、纯情绪标签）"
+ },
+ "cross_check_dialogue_metrics_L3": {
+  "regex": "(?:（[^）]{0,120}）|\\([^)]{0,120}\\))",
+  "msgs": 0,
+  "rate": 0.0,
+  "note": "tools/d5/dialogue_metrics.py 的 PAREN_ANY_RE（同样要求成对，0 字符内容也算）"
+ }
+}
