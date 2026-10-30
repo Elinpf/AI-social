@@ -1,6 +1,6 @@
-# R27 交叉核对：metrics-dev 出数器 vs round-scribe 独立复算器
+# R27 交叉核对：metrics-dev 出数器 vs round-scribe **同作者第二实现**（代码级对拍，非第三方复核）
 
-两份实现**互不共享代码**：scribe 版直接调 `tools/d5/dialogue_metrics.py` CLI 并自算旁白括号统计；metrics-dev 版调其 `main()` 并复用 `tools/d9i/narration_stats.py` 的旁白正则。二者对同一对日志算 delta。
+两份实现**互不共享代码**（但**同一作者**：round-scribe 自己另写的一份，只做代码级对拍 ⇒ **不构成第三方独立复核**；第三方复核以 runtime-ops 的 `round-crosscheck-narration-hedge.md` 为准，截至本提交尚未回填）：scribe 版直接调 `tools/d5/dialogue_metrics.py` CLI 并自算旁白括号统计；metrics-dev 版调其 `main()` 并复用 `tools/d9i/narration_stats.py` 的旁白正则。二者对同一对日志算 delta。
 
 > 指标名映射：scribe 表里 `F-7`（越界提及率）≡ metrics-dev 的 `F-7a`（同一条 d5 `F-7a_offscreen_mention`）。
 
@@ -32,8 +32,8 @@ python3 v2/evidence/narration_hedge/recompute_by_round_scribe.py \
 ```
 
 ## 文件指纹（sha256）
-- `v2/evidence/narration_hedge/readings.json` `9c6818b04bef44acfa1c5543de9ecde9037ffe25e7290c6cf539102ba201a6f4`
-- `v2/evidence/narration_hedge/table.md` `007c89a1d76edbeeed9746243abfc71624a1b04bb10f8b4c281d088667163d2d`
+- `v2/evidence/narration_hedge/readings.json` `1574aaca3529935efe428abf64e7faeb404686792ce8c656787eee43237be95e`
+- `v2/evidence/narration_hedge/table.md` `0ece5522119869af0189ddbb0ea3cd490a2c3b1ac7ca8f118b2df8f0786df661`
 - `v2/evidence/narration_hedge/readings_by_round_scribe.json` `a222a28a6ea44cf22aa3a95d47430959e9adf4beddf7a001ab8625f582b7a48a`
 - `v2/evidence/narration_hedge/table_by_round_scribe.md` `ad7e9a466188a03cc20624611788ea9feaa30c54af35bc203fa58ed76e9964c7`
-- `v2/evidence/narration_hedge/recompute_by_round_scribe.py` `6f1868c5f1c21483d7dae49edd2e84d97a42cadaee474b8db4f17c7fca10b87f`
+- `v2/evidence/narration_hedge/recompute_by_round_scribe.py` `213152acae984e1952e342992ad34756206f2b9e3548f47f8394365c76d37d94`

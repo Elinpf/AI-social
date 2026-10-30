@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""R27 独立复算器（round-scribe 侧交叉核对用；零 LLM、只读既有 run.jsonl）。
+"""R27 复算器（round-scribe 侧**同作者第二实现**；零 LLM、只读既有 run.jsonl）。
+
+★ 定性（务必不要误读）：这是**同一作者（round-scribe）**另写的一份实现，只做**代码级对拍**
+——同一批日志、同一 d5 口径，换一套代码路径复算。它**不构成第三方独立复核**；
+第三方复核以 runtime-ops 的 `round-crosscheck-narration-hedge.md` 为准（截至本提交尚未回填）。
 
 做两件事，一条命令出全部数字：
   1) 旁白统计 N-1…N-4（成对括号口径，与 tools/d5 的 PAREN 口径同族）；

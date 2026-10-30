@@ -157,16 +157,24 @@ wc -l v2/evidence/d9m-ab-{off,on}_n16r24_s42/run.jsonl; sha256sum v2/evidence/d9
 
 ### 2.6 出数命令（本报告全部数字的唯一来源）
 
+> 命令为**出数器的规范形态**：第三个 `--log` 是**参照臂**（`arms_role = reference_only`），只为留痕、**不参与判决**（见 §3.4）。
+
 ```bash
 python3 tools/metrics/narration_hedge.py \
   --log v2/evidence/d9m-ab-off_n16r24_s42 --label OFF \
   --log v2/evidence/d9m-ab-on_n16r24_s42  --label ON \
+  --log v2/evidence/round1_narration_default_n16r24_s42 --label ROUND1-default-ON \
   --baseline-arm OFF --treatment-arm ON \
   --out-json v2/evidence/narration_hedge/readings.json \
   --out-md   v2/evidence/narration_hedge/table.md
 ```
 
-真实输出（退出码 0；重复执行 `readings.json` 逐字节稳定，sha256 `9f96eebfb50dcb70aef6f2122af89f1e7bea29671c1f3d3824b73cbe6ad7f999`，`table.md` sha256 `6840cb39735aa549aaf9f71d39a44f12fecc55e88fd8dc5ad122f62c3b9da7ad`）：
+**复算一致性（实测）**：用上述命令**原样再跑一次**（输出改到 `/tmp`）与入库文件逐字节比对 ⇒ `readings_byte_identical: True`、`table_byte_identical: True`。
+入库文件 sha256：`readings.json` = `1574aaca3529935efe428abf64e7faeb404686792ce8c656787eee43237be95e`；`table.md` = `0ece5522119869af0189ddbb0ea3cd490a2c3b1ac7ca8f118b2df8f0786df661`。
+
+> ⚠️ **注意命令必须与上面完全一致**：`--log` 的臂集合会被写进 `recompute_command` 字段与 `arms` 表，少写参照臂会让产出**不是**这两个 sha（数值读数不变，但文件不同字节）。这类"参数不同 ⇒ 字节不同"属于正常，但引用 sha 时必须连带引用命令。
+
+真实输出（退出码 0）：
 
 ```
 hedge_verdict = swap_only
@@ -174,7 +182,7 @@ reason: 旁白有实质增量（0.0 → 0.926702），但去掉 R4 陷阱1/2 后
 被取消改善资格的读数：F-6（陷阱1 + 陷阱2）；另有可判同向恶化：F-1、F-7a
 ```
 
-### 2.7 独立交叉核对（第二份互不共享代码的实现）
+### 2.7 同作者第二实现的对拍（**不是第三方复核**，见 §5 第 10 条）
 
 ```bash
 python3 v2/evidence/narration_hedge/recompute_by_round_scribe.py \
@@ -234,12 +242,24 @@ F-4 +0.000000 | F-5 +0.000000 | F-6 +0.115183 | F-7a +0.041885   ← 8/8 与 met
 2. 但按 `R4:88` 的文字口径，**「F-6 升高 + 旁白率同升」同时成立即判换词**，所以它仍**不算改善**。
 3. **给下一轮的口子**：值得单独开一个「旁白 ON 对台词正文时间回指的影响」臂，用重复率受控的对照来判断这 +11.52pp 是"更会提过去"还是"更套路地塞昨天"（本轮 L-7 恶化 +8.38pp 倾向于后者，但**未做逐条归因，属未验证**）。
 
-### 3.4 参照臂（**不参与判决**）
+### 3.4 参照臂（**不参与判决**，`arms_role = reference_only`）
 
-`round1_narration_default_n16r24_s42`（`code_sha dfe6d5b2…`、`events=33845`、n16r24 seed42、旁白默认 ON）与 d9m 两臂**代码树不同**，只作旁白默认化后的「同规模快照」参照：
+`round1_narration_default_n16r24_s42`（`code_sha dfe6d5b283a9e37f9d3f2373e1b8224fd15d609f`、`events=33845`、n16r24 seed42、旁白默认 ON、`cached 1387/2252`）**与 d9m 两臂代码树不同**（`dfe6d5b2` vs `3176048a`），只作旁白默认化后的「同规模快照」参照。它由 §2.6 的 `--log ... --label ROUND1-default-ON` 一并出数（`readings.json` 里 `arms_role = reference_only`）：
 
-- 其 `narration_stats.json` 记录：`191` 条消息里 `175` 条含成对括号（rate `0.91623`）、`205` 个括号块、动作类 `144/205`。
-- **本报告不用它算任何 delta、不参与 `hedge_verdict`**；任何人不得把它当第三臂或第三组对照。
+| 项 | ROUND1-default-ON（参照） |
+|---|---|
+| 旁白覆盖率 | `175/191 = 0.91623`（91.62%） |
+| 括号块数 / 重复块(≥2 次) | `205` / `3`（块/条 = 1.073298） |
+| 动作类占比 | `144/205 = 0.702439` |
+| L-2 旁白代理率 / L-3 括号块任意率 | `0.863874` / `0.91623` |
+| L-7 8-gram 撞车率 | `0.209424` |
+| F-1 / F-2 / F-2b | `145/191 = 0.759162` / `88/125 = 0.704` / `0/66 = 0.0` |
+| F-3 / F-4 / F-5 | `1/6 = 0.166667`（probe）/ `0/5 = 0.0`（probe）/ `0/16 = 0.0`（probe） |
+| F-6 / F-7a | `33/191 = 0.172775` / `28/191 = 0.146597` |
+
+- **本报告不用它算任何 delta、不参与 `hedge_verdict`**（工具把它标 `reference_only`，判决只用 `OFF` vs `ON`）。
+- 任何人不得把它当第三臂或第三个对照结论；它的唯一用途是「旁白默认 ON 之后，另一棵代码树上的同规模快照长什么样」。
+- 一个必须避免的误读：它与 d9m-ON 臂的旁白覆盖率几乎相同（91.62% vs 92.67%）**但 code_sha 不同**，**不得据此推导「旁白行为稳定/可复现」**——那需要同代码树的重复批，本轮没有。
 
 ---
 
@@ -279,6 +299,7 @@ F-4 +0.000000 | F-5 +0.000000 | F-6 +0.115183 | F-7a +0.041885   ← 8/8 与 met
 7. **日志所属代码树 ≠ 分析基准**：读数绑定 `3176048a`（worktree `narration-action-diversity`），不是当前 HEAD `0b14183a`；**不得把本报告数字挪用到 `0b14183a`**。
 8. **`F-5 习惯强度` 结构性为 0**：本批只跑 1 个模拟日（`max_repeat_days_mean = 1.75`，`<3 天`），该维度在本规模下**天然不可能非零**，不是旁白导致的下降。
 9. **runtime-ops 独立复核（t-crosscheck-narration）未回填**：本轮 push 时该复核结论尚未落盘 ⇒ 见 `round-crosscheck-narration-hedge.md`（待补）。**本报告不替它写任何结论。**
+10. **「第二实现」的性质必须读对**：`v2/evidence/narration_hedge/recompute_by_round_scribe.py` 是**同一作者（round-scribe）**另写的实现，只做**代码级对拍**（换一套代码路径、同一 d5 口径复算同一批日志），**不构成第三方独立复核**。它的价值是「排除单点实现错误」，不是「外部验证」。**真正的第三方复核以 runtime-ops 的 `round-crosscheck-narration-hedge.md` 为准**（截至本提交未回填）；两件事不得混为一谈，也不得拿前者顶替后者。
 
 ---
 
@@ -290,7 +311,7 @@ F-4 +0.000000 | F-5 +0.000000 | F-6 +0.115183 | F-7a +0.041885   ← 8/8 与 met
 | 被读日志代码树 | `3176048a39f0429204adbdb9eac7a975bfe10c72`（两臂相同） |
 | 日志指纹 | OFF `5f1dda97633ccf0b3f7d2b279c39a43752db7d945a2ca6f9133e0b2bc9106ed5`；ON `2edc751c5a32d1328ed5834ab169d29c5c457cbe7b1d5abe3146d7840df6a795` |
 | 准入 | 两臂均 `ADMITTED`（`strict` / `evidence`），`provider=openai_compat`、`degraded=0` |
-| 读数文件 | `readings.json` `9f96eebf…f999`；`table.md` `6840cb39…a7ad`；交叉核对 `readings_by_round_scribe.json` / `table_by_round_scribe.md`（见 `crosscheck_by_round_scribe.md`） |
+| 读数文件 | `readings.json` `1574aaca3529935efe428abf64e7faeb404686792ce8c656787eee43237be95e`；`table.md` `0ece5522119869af0189ddbb0ea3cd490a2c3b1ac7ca8f118b2df8f0786df661`（命令见 §2.6，复跑逐字节一致）；交叉核对 `readings_by_round_scribe.json` / `table_by_round_scribe.md`（见 `crosscheck_by_round_scribe.md`） |
 | 参照臂（不参与判决） | `round1_narration_default_n16r24_s42`，`code_sha dfe6d5b283a9e37f9d3f2373e1b8224fd15d609f` |
 | 本报告所在提交 | 分支 `feat/round-narration-hedge`（基于 `0b14183a`），pushed sha 见提交回执 / §8 |
 
@@ -314,13 +335,14 @@ html: /root/narration_hedge_prep/narration_hedge_table.html
 png ($HOME): /root/narration_hedge_prep/narration_hedge_table.png
 png (copied into repo): v2/evidence/narration_hedge_shots/narration_hedge_table.png
 cmp_identical: True
-bytes: 1141154
-sha256: 256e319e0137ab0377dad6017663d4192cbde742d967bdf241f215aaffe9e4a6
+bytes: 1403990
+sha256: e33b9a30891ba2b5cfa06020f089bd4a3d17a1779a6072f9092654e46dbf5922
 clip_check: {'tables': 4, 'overflowX': False}
-size: (2912, 4386)   mean_brightness: 244.1
+size: (2912, 4806)   mean_brightness: 243.0
 ```
 
-- 产物：`v2/evidence/narration_hedge_shots/narration_hedge_table.png`（`sha256 256e319e0137ab0377dad6017663d4192cbde742d967bdf241f215aaffe9e4a6`，2912×4386，`mean_brightness 244.1` 非黑图，4 张表无横向溢出）
+- 产物：`v2/evidence/narration_hedge_shots/narration_hedge_table.png`（`sha256 e33b9a30891ba2b5cfa06020f089bd4a3d17a1779a6072f9092654e46dbf5922`，2912×4806，`mean_brightness 243.0` 非黑图，4 张表无横向溢出）
+- 说明：本图对应**含参照臂**的 `table.md`（§2.6 规范命令产物），故与上一版（不含参照臂、`256e319e…`）字节不同；旧版已作废，勿引用。
 - 渲染器：`v2/evidence/narration_hedge_shots/render_table_shot.py`（浏览器探测复用 `code/frontend/tools/_chrome.find_chrome()`，**不写死任何家目录/缓存路径**）
 - 说明：图上内容就是 §2.6 生成的 `table.md` 原文，**截图不含任何手工补写的数字**；截图本身**不进判据**，只作可读性凭证。
 
@@ -330,7 +352,7 @@ size: (2912, 4386)   mean_brightness: 244.1
 
 - 出数器：`tools/metrics/narration_hedge.py`（metrics-dev；零 LLM，F 口径全部转调 d5）
 - 机读读数：`v2/evidence/narration_hedge/readings.json`；人读表：`v2/evidence/narration_hedge/table.md`
-- 独立交叉核对（scribe 侧）：`v2/evidence/narration_hedge/recompute_by_round_scribe.py` + `readings_by_round_scribe.json` / `table_by_round_scribe.md` / `crosscheck_by_round_scribe.md`（8/8 delta 一致、判决一致）
+- **同作者第二实现**（代码级对拍，**不构成第三方复核**）：`v2/evidence/narration_hedge/recompute_by_round_scribe.py` + `readings_by_round_scribe.json` / `table_by_round_scribe.md` / `crosscheck_by_round_scribe.md`（8/8 delta 一致、判决一致）
 - 截图：`v2/evidence/narration_hedge_shots/narration_hedge_table.png` + `render_table_shot.py`
 - 上游口径：`reports/R4-life-texture.md:28-44`（定义式）、`:86-89`（三条「不算改善」陷阱）
 - 待补：`round-crosscheck-narration-hedge.md`（runtime-ops 独立复核，本轮 push 时未回填）
