@@ -86,6 +86,34 @@ done
 | 仪器 `tools/d9n/narration_family.py` | `3dbca76f1f387cd7df6bd1810cb1a0dcd1e347fb17c26d9f23ea9654628ee636` |
 | 词表 `tools/d9n/narration_family_lexicon.json` | `01e5533870f0f6b43300e6be6422130d958a01497a90d610620916f454489ed0` |
 
+## 6.1 独立复算记录（`repro-verifier` 自跑，本件据此由「作者自报值」升为「已独立复算」）
+
+初版（`eb83ebd`）发布时，`A+B` 的原料尚未入库 ⇒ 复核方只能验 3/4 行，**本件当时只能算「作者自报值」**。
+`3359526` 入库两臂原料后，复核方独立重算，**六个数逐项相同**：
+
+```
+msgs 191 ｜ blocks 196 ｜ density 1.0262 ｜ max_v 12(蹭) ｜ dupMax 2 ｜ max_k 2 ｜ b2′ 违例族 4
+verdicts: (a) 成立  (b2′) 失败  (d) 失败  (e) 成立
+```
+
+六件 R-9 回读（独立跑，sha / 行 / 字节 / 与本地 diff 全部一致）：
+`d9m-ab-on/run.jsonl` `2edc751c…` 33857 行 17170391 B｜`d9m-ab-off/run.jsonl` `5f1dda97…` 33850 行 17158005 B｜
+两臂 `switch_proof.txt` `9ba96fb1…` / `49e9e906…` 各 10 行｜`family_A_B_on.json` `20973311…` 410 行｜`family_A_B_off.json` `9b1da3a7…` 85 行。
+
+**开关自证**（`/proc/<pid>/environ` 真值）：两臂均 `ROTATION=1`、`ACTION=1`、`HITT_LLM_PROVIDER=openai_compat`，**唯一差异 `LIFE_PROMPT_NARRATION`（ON=1 / OFF=0）** ⇒ 单变量候选成立。
+**提交范围自证**：`git diff --stat eb83ebd..3359526` = 12 files changed / 69045 insertions(+)，`code/` 改动 0，非 `v2/evidence` 改动 0。
+
+### 复算三件（缺一不可复算）
+1. 仪器 `tools/d9n/narration_family.py` sha256 `3dbca76f1f387cd7df6bd1810cb1a0dcd1e347fb17c26d9f23ea9654628ee636`
+2. 词表 `tools/d9n/narration_family_lexicon.json` sha256 `01e5533870f0f6b43300e6be6422130d958a01497a90d610620916f454489ed0`
+3. `--arm AB`（臂名进入输出，用于回读比对）
+
+## 6.2 复现性边界（本件的「可复算」只覆盖 D9m 两臂）
+
+- **D9m 两臂 `run.jsonl` 已强制入库**（`git add -f`，绕过 `.gitignore:8 **/*.jsonl`）⇒ 这两行**任何人可复算**。
+- **本件引用的 H0（`narr-on-20261030`）与 `A_ONLY_ROT`（`d9n-rot-20261030`）的 `run.jsonl` 不在 `master`**：`git ls-tree origin/master v2/evidence/narr-on-20261030/` 输出为空。⇒ 这两行**仅「本机有、master 无」**，第三方只能核其派生 json，不能重跑仪器。
+- 因此本件第 4 行（`A+B`）是**已独立复算**；第 2、3 行（H0 / A only）是**本机复算一致、入库不可复算**。**两者不得混写为「全部已独立复算」。**
+
 ## 7. 边界（四条）
 
 1. **n=191 单 seed**：所有差值均为描述性，不做显著性；`12 vs 31` 不构成"显著改善"的断言。
