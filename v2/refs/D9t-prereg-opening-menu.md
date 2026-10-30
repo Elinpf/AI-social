@@ -19,7 +19,8 @@
 >
 > **⚠ v3 观察量（必报，但不入判据）**：**三级骨架集中度**——全臂 top1 / 每个出口内部 top1 / 该出口片段分母。
 > 实测：OFF 全臂 2.06%、ON2 全臂 6.90%、**ON2 新出口子集 53.85%（`一屉馒头在灶` ×7 / 13）**。
-> ⇒ **只报全臂会看不见塌陷，只报子集会夸大。** 详见 `d9t-new-opening-internal-templating.md`。
+> ⇒ **只报全臂会看不见塌陷，只报子集会夸大。** 详见 `v2/evidence/d9t-new-opening-internal-templating.md`；
+> 独立留档件（含切法前6/8/12三档同值检验、两层分母 194/174/13 不可互比、`OFF_run1` 该出口 0 条故无 OFF 对照）：`v2/evidence/d9t-obs-skeleton-concentration.md`（`36c1d324…`，commit `68cba63`）。
 > **⚠ v3（2026-10-30 20:3x）**：主判据改 **`H ≥ 1.7578 bits` 绝对值**（§3.6），分母只用于报告。
 > **⚠ v2（2026-10-30 20:2x）**：新增 §3.5——**8 出口 ≠ 仪器 6 类**，`H/log₂6` 不能直接作主判据；须先在 (a) 扩仪器到 8 类 / (b) 收紧出口到 6 / (c) 双判据 三者中定一条。
 > 上游：`reports/D9s-syntax-diversity-20261030.md`（`bd04fb4`）+ `d9s-step1-judgement-fail-hotspot-shift.md`（`db40aef`）。
