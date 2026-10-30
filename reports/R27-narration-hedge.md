@@ -334,4 +334,7 @@ size: (2912, 4386)   mean_brightness: 244.1
 - 截图：`v2/evidence/narration_hedge_shots/narration_hedge_table.png` + `render_table_shot.py`
 - 上游口径：`reports/R4-life-texture.md:28-44`（定义式）、`:86-89`（三条「不算改善」陷阱）
 - 待补：`round-crosscheck-narration-hedge.md`（runtime-ops 独立复核，本轮 push 时未回填）
-- 提交：分支 `feat/round-narration-hedge`（基于 `0b14183a`），**不动 master**；pushed sha 见提交回执
+- 提交：分支 `feat/round-narration-hedge`（基于 `0b14183a`），**不动 master**；
+  内容提交 sha = **`117ad1ee03338b0e806850d77b72abd0e5fa5b80`**（已 push，`git ls-remote origin feat/round-narration-hedge` 可复核）；
+  master 仍为 `b737b30f688608bb4fcd66a25e50cb821f8a28c2`（未动）。
+  > 自指说明：本行 sha 由紧随其后的「回填 pushed sha」补记提交写入，因此补记提交自身的 sha 不等于 `117ad1e`；按仓库既有先例（R25 §10）以内容提交 sha 为权威值。
