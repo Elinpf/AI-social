@@ -1,0 +1,410 @@
+{
+ "schema": "d9m.judgement/1",
+ "lexicon": {
+  "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d9n/narration_family_lexicon.json",
+  "sha256": "01e5533870f0f6b43300e6be6422130d958a01497a90d610620916f454489ed0",
+  "lexicon_schema": "d9m-family-lexicon/1.1"
+ },
+ "log": {
+  "path": "v2/evidence/d9m-ab-on_n16r24_s42/run.jsonl",
+  "sha256": "2edc751c5a32d1328ed5834ab169d29c5c457cbe7b1d5abe3146d7840df6a795"
+ },
+ "blocks_total": 196,
+ "msgs_total": 191,
+ "density": 1.026178,
+ "coverage": {
+  "assigned": 45,
+  "blocks_total": 196,
+  "rate": 0.229592
+ },
+ "unassigned_verb_rate": 0.770408,
+ "verb_counts": {
+  "蹭": 12,
+  "搓": 0,
+  "抹": 0,
+  "擦": 0,
+  "拂": 0,
+  "拍": 3,
+  "抿": 0,
+  "揉": 0,
+  "别": 0,
+  "挽": 0,
+  "拢": 0,
+  "让": 0,
+  "靠": 10,
+  "挪": 9,
+  "望": 0,
+  "扇": 0,
+  "撤": 0,
+  "抬": 7,
+  "低": 3,
+  "伸": 1,
+  "侧": 2
+ },
+ "max_v": {
+  "value": 12,
+  "verb": "蹭"
+ },
+ "max_exact_dup": 2,
+ "exact_dup_top": [
+  {
+   "inner": "把算盘珠子拨回原位",
+   "count": 2
+  },
+  {
+   "inner": "把墨斗线在指头上绕了两圈",
+   "count": 2
+  },
+  {
+   "inner": "抬眼",
+   "count": 2
+  },
+  {
+   "inner": "拿刨子推过一块榆木板，木花卷着落下来",
+   "count": 1
+  },
+  {
+   "inner": "把案板上那团发过头的面往旁边推了推",
+   "count": 1
+  },
+  {
+   "inner": "把周家族谱摊在膝上，指腹压住刚描的“周”字",
+   "count": 1
+  },
+  {
+   "inner": "把算盘往石桌上一搁",
+   "count": 1
+  },
+  {
+   "inner": "把压腿的横杆又调低一格，脚尖抵着木地板慢慢往下沉",
+   "count": 1
+  },
+  {
+   "inner": "把木桩上的沙袋扶正，又拍了两下",
+   "count": 1
+  },
+  {
+   "inner": "把竹筛往膝头挪了挪，指头拨着半干的萝卜条",
+   "count": 1
+  }
+ ],
+ "families_b": [
+  {
+   "family": "抬|null",
+   "total": 7,
+   "by_agent": {
+    "P005": 2,
+    "P011": 3,
+    "P014": 1,
+    "P016": 1
+   },
+   "n_ge2": 2
+  },
+  {
+   "family": "挪|null",
+   "total": 6,
+   "by_agent": {
+    "P016": 2,
+    "P009": 1,
+    "P008": 3
+   },
+   "n_ge2": 2
+  },
+  {
+   "family": "蹭|锉刀",
+   "total": 5,
+   "by_agent": {
+    "P013": 3,
+    "P014": 2
+   },
+   "n_ge2": 2
+  },
+  {
+   "family": "靠|null",
+   "total": 4,
+   "by_agent": {
+    "P001": 3,
+    "P003": 1
+   },
+   "n_ge2": 1
+  },
+  {
+   "family": "低|null",
+   "total": 3,
+   "by_agent": {
+    "P010": 3
+   },
+   "n_ge2": 1
+  },
+  {
+   "family": "拍|null",
+   "total": 3,
+   "by_agent": {
+    "P011": 1,
+    "P015": 1,
+    "P001": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "蹭|null",
+   "total": 3,
+   "by_agent": {
+    "P014": 1,
+    "P010": 1,
+    "P011": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "蹭|指腹",
+   "total": 3,
+   "by_agent": {
+    "P002": 3
+   },
+   "n_ge2": 1
+  },
+  {
+   "family": "侧|null",
+   "total": 2,
+   "by_agent": {
+    "P009": 1,
+    "P008": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "挪|指头",
+   "total": 2,
+   "by_agent": {
+    "P012": 1,
+    "P009": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "靠|指腹",
+   "total": 2,
+   "by_agent": {
+    "P010": 1,
+    "P005": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "挪|碗",
+   "total": 1,
+   "by_agent": {
+    "P016": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "蹭|围裙",
+   "total": 1,
+   "by_agent": {
+    "P016": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "靠|手",
+   "total": 1,
+   "by_agent": {
+    "P003": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "靠|锅",
+   "total": 1,
+   "by_agent": {
+    "P007": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "靠|门槛",
+   "total": 1,
+   "by_agent": {
+    "P003": 1
+   },
+   "n_ge2": 0
+  }
+ ],
+ "b1": {
+  "max": {
+   "family": "低|null",
+   "agent": "P010",
+   "count": 3,
+   "total": 3,
+   "share": 1.0
+  },
+  "offenders": [
+   {
+    "family": "低|null",
+    "agent": "P010",
+    "count": 3,
+    "total": 3,
+    "share": 1.0
+   },
+   {
+    "family": "蹭|锉刀",
+    "agent": "P013",
+    "count": 3,
+    "total": 5,
+    "share": 0.6
+   },
+   {
+    "family": "靠|null",
+    "agent": "P001",
+    "count": 3,
+    "total": 4,
+    "share": 0.75
+   },
+   {
+    "family": "抬|null",
+    "agent": "P011",
+    "count": 3,
+    "total": 7,
+    "share": 0.428571
+   },
+   {
+    "family": "挪|null",
+    "agent": "P008",
+    "count": 3,
+    "total": 6,
+    "share": 0.5
+   },
+   {
+    "family": "蹭|指腹",
+    "agent": "P002",
+    "count": 3,
+    "total": 3,
+    "share": 1.0
+   }
+  ]
+ },
+ "b2p": {
+  "offenders": [
+   {
+    "family": "抬|null",
+    "total": 7,
+    "n_ge2": 2,
+    "by_agent": {
+     "P005": 2,
+     "P011": 3,
+     "P014": 1,
+     "P016": 1
+    }
+   },
+   {
+    "family": "挪|null",
+    "total": 6,
+    "n_ge2": 2,
+    "by_agent": {
+     "P016": 2,
+     "P009": 1,
+     "P008": 3
+    }
+   },
+   {
+    "family": "蹭|锉刀",
+    "total": 5,
+    "n_ge2": 2,
+    "by_agent": {
+     "P013": 3,
+     "P014": 2
+    }
+   },
+   {
+    "family": "靠|null",
+    "total": 4,
+    "n_ge2": 1,
+    "by_agent": {
+     "P001": 3,
+     "P003": 1
+    }
+   }
+  ]
+ },
+ "e_dist": {
+  "0": 14,
+  "1": 158,
+  "2": 19
+ },
+ "max_k": 2,
+ "a_caliber_diagnostic_top": [
+  {
+   "family_literal": "蹭|锉刀",
+   "count": 5
+  },
+  {
+   "family_literal": "蹭|指腹",
+   "count": 3
+  },
+  {
+   "family_literal": "挪|指头",
+   "count": 2
+  },
+  {
+   "family_literal": "靠|指腹",
+   "count": 2
+  },
+  {
+   "family_literal": "蹭|围裙",
+   "count": 1
+  },
+  {
+   "family_literal": "靠|门槛",
+   "count": 1
+  },
+  {
+   "family_literal": "靠|手",
+   "count": 1
+  },
+  {
+   "family_literal": "伸|手",
+   "count": 1
+  },
+  {
+   "family_literal": "挪|碗",
+   "count": 1
+  },
+  {
+   "family_literal": "靠|锅",
+   "count": 1
+  }
+ ],
+ "guards": {
+  "sample_ok": true,
+  "coverage_ok": true,
+  "coverage_threshold_abs": 0.193171,
+  "unassigned_ok": true,
+  "unassigned_threshold_abs": 0.778049
+ },
+ "verdicts": {
+  "a_exact_dup": "成立",
+  "b1_share": "失败",
+  "b2p": "失败",
+  "c1_density": "成立",
+  "c2_bite": "不可判",
+  "d_max_v": "失败",
+  "e_max_k": "成立"
+ },
+ "verdict_basis": {
+  "c2_bite": "咬合率无文字化判据 + 无冻结实现 ⇒ 本轮恒为不可判（主件 §4.4）",
+  "b1_share": "本轮降级为辅助读数：n 小、口径敏感（主件 §4.3）"
+ },
+ "samples_unassigned": [
+  "拿刨子推过一块榆木板，木花卷着落下来",
+  "把案板上那团发过头的面往旁边推了推",
+  "把周家族谱摊在膝上，指腹压住刚描的“周”字",
+  "把算盘往石桌上一搁",
+  "把烧红的锄头从炉里夹出来搁砧子上",
+  "拿锉刀把竹片边角磨圆",
+  "把灶上那锅萝卜牛腩的火拧小，掀盖看了一眼汤色",
+  "拿刨子压住那块榆木案板边角"
+ ],
+ "arm": "A_B_on"
+}

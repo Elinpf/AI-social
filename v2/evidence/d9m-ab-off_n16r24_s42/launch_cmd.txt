@@ -1,0 +1,4 @@
+arm=off  out=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/narration-action-diversity/runs/d9m-ab-off_n16r24_s42  seed=42 agents=16 rounds=24  HEAD=3176048a39f0429204adbdb9eac7a975bfe10c72
+LIFE_PROMPT_NARRATION=0 ROTATION=1 ACTION=1
+bash_pid=2823956
+finished_at=2026-10-30T10:10:21+08:00 rc=0

@@ -1,0 +1,85 @@
+{
+ "schema": "d9m.judgement/1",
+ "lexicon": {
+  "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d9n/narration_family_lexicon.json",
+  "sha256": "01e5533870f0f6b43300e6be6422130d958a01497a90d610620916f454489ed0",
+  "lexicon_schema": "d9m-family-lexicon/1.1"
+ },
+ "log": {
+  "path": "v2/evidence/d9m-ab-off_n16r24_s42/run.jsonl",
+  "sha256": "5f1dda97633ccf0b3f7d2b279c39a43752db7d945a2ca6f9133e0b2bc9106ed5"
+ },
+ "blocks_total": 0,
+ "msgs_total": 191,
+ "density": 0.0,
+ "coverage": {
+  "assigned": 0,
+  "blocks_total": 0,
+  "rate": null
+ },
+ "unassigned_verb_rate": null,
+ "verb_counts": {
+  "蹭": 0,
+  "搓": 0,
+  "抹": 0,
+  "擦": 0,
+  "拂": 0,
+  "拍": 0,
+  "抿": 0,
+  "揉": 0,
+  "别": 0,
+  "挽": 0,
+  "拢": 0,
+  "让": 0,
+  "靠": 0,
+  "挪": 0,
+  "望": 0,
+  "扇": 0,
+  "撤": 0,
+  "抬": 0,
+  "低": 0,
+  "伸": 0,
+  "侧": 0
+ },
+ "max_v": {
+  "value": 0,
+  "verb": null
+ },
+ "max_exact_dup": 0,
+ "exact_dup_top": [],
+ "families_b": [],
+ "b1": {
+  "max": null,
+  "offenders": []
+ },
+ "b2p": {
+  "offenders": []
+ },
+ "e_dist": {
+  "0": 191
+ },
+ "max_k": 0,
+ "a_caliber_diagnostic_top": [],
+ "guards": {
+  "sample_ok": false,
+  "coverage_ok": false,
+  "coverage_threshold_abs": 0.193171,
+  "unassigned_ok": false,
+  "unassigned_threshold_abs": 0.778049
+ },
+ "verdicts": {
+  "a_exact_dup": "不可判",
+  "b1_share": "不可判",
+  "b2p": "不可判",
+  "c1_density": "不可判",
+  "c2_bite": "不可判",
+  "d_max_v": "不可判",
+  "e_max_k": "不可判"
+ },
+ "verdict_basis": {
+  "c2_bite": "咬合率无文字化判据 + 无冻结实现 ⇒ 本轮恒为不可判（主件 §4.4）",
+  "b1_share": "本轮降级为辅助读数：n 小、口径敏感（主件 §4.3）"
+ },
+ "samples_unassigned": [],
+ "arm": "A_B_off"
+}

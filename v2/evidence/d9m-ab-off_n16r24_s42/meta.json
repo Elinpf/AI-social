@@ -1,0 +1,163 @@
+{
+  "assertions": {
+    "code_unchanged_during_run": null,
+    "msg_uid_unique": true,
+    "participants_consistent": true,
+    "participants_violations": 0,
+    "ptr_cross_thread": 0,
+    "ptr_dangling": 0,
+    "reply_to_same_thread": true,
+    "turn_index_dense": true,
+    "turn_index_gap_threads": 0
+  },
+  "code_identity_note": "代码身份硬证据 = code_sha + WORLD_INIT.config_components；git_dirty_code_files 为空表示 code/ 无未提交改动",
+  "code_sha": "3176048a39f0429204adbdb9eac7a975bfe10c72",
+  "code_sha_end": "3176048a39f0429204adbdb9eac7a975bfe10c72",
+  "degraded_calls": 0,
+  "derived_from_log_sha256": "5f1dda97633ccf0b3f7d2b279c39a43752db7d945a2ca6f9133e0b2bc9106ed5",
+  "dropped_counts": {
+    "insufficient_goods|None": 14,
+    "offer_exhausted|None": 15
+  },
+  "duration_sec": 16,
+  "endpoint_host": "172.16.3.41:31809",
+  "events": 33850,
+  "fallback_detected": false,
+  "finished_at": "2026-10-30T10:10:20+08:00",
+  "generated_after_run": true,
+  "generated_at": "2026-10-30T10:10:20",
+  "git_dirty_code_files": [],
+  "git_dirty_files": [
+    "?? runs/",
+    "?? tools/d9m/launch_arm.sh",
+    "?? v2/evidence/preflight/clean_tree_20261030T004400Z_3176048a_run_batch.json",
+    "?? v2/evidence/preflight/clean_tree_20261030T010940Z_3176048a_run_batch.json",
+    "?? v2/evidence/preflight/clean_tree_20261030T011233Z_3176048a_run_batch.json",
+    "?? v2/evidence/preflight/clean_tree_20261030T013952Z_3176048a_run_batch.json",
+    "?? v2/evidence/preflight/clean_tree_20261030T021003Z_3176048a_run_batch.json"
+  ],
+  "git_status_end": [
+    "?? runs/",
+    "?? tools/d9m/launch_arm.sh",
+    "?? v2/evidence/preflight/clean_tree_20261030T004400Z_3176048a_run_batch.json",
+    "?? v2/evidence/preflight/clean_tree_20261030T010940Z_3176048a_run_batch.json",
+    "?? v2/evidence/preflight/clean_tree_20261030T011233Z_3176048a_run_batch.json",
+    "?? v2/evidence/preflight/clean_tree_20261030T013952Z_3176048a_run_batch.json",
+    "?? v2/evidence/preflight/clean_tree_20261030T021003Z_3176048a_run_batch.json"
+  ],
+  "git_status_start": null,
+  "git_status_start_source": null,
+  "llm_cached": 2252,
+  "llm_cached_ratio": 1.0,
+  "llm_calls": 2252,
+  "llm_model_in_events": {
+    "DeepSeek-Flash": 2252
+  },
+  "llm_provider_in_events": {
+    "openai_compat": 2252
+  },
+  "llm_purposes": {
+    "dialogue": 191,
+    "importance": 1523,
+    "judge": 425,
+    "negotiation": 7,
+    "plan": 16,
+    "reflect": 90
+  },
+  "mock_precalib_msg_count": 0,
+  "mock_precalib_note": "mock 预校准（同 n/rounds、MockProvider）的 MSG 总条数，仅用于跑前估规模；其日志另存 v2/evidence/run_d2_mock_precalib_*.jsonl，不混入本臂任何统计",
+  "model": "DeepSeek-Flash",
+  "model_reported": [
+    "DeepSeek-Flash"
+  ],
+  "model_requested": "DeepSeek-Flash",
+  "msg_counts": {
+    "MSG_DM": 167,
+    "MSG_PUBLIC": 24
+  },
+  "msg_dropped_unknown_intent_field": 0,
+  "n": 16,
+  "n_declared": 16,
+  "n_in_log": 16,
+  "provider": "openai_compat",
+  "rounds": 24,
+  "rounds_contiguous": true,
+  "rounds_declared": 24,
+  "rounds_effective": 24,
+  "rounds_per_slot_effective": 3,
+  "rounds_seen_max": 23,
+  "rounds_seen_min": 0,
+  "run_bytes": 17158005,
+  "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/narration-action-diversity/runs/d9m-ab-off_n16r24_s42",
+  "run_file": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/narration-action-diversity/runs/d9m-ab-off_n16r24_s42/run.jsonl",
+  "run_sha256": "5f1dda97633ccf0b3f7d2b279c39a43752db7d945a2ca6f9133e0b2bc9106ed5",
+  "seed": 42,
+  "seed_declared": 42,
+  "seed_in_log": 42,
+  "side_root": null,
+  "side_root_note": "命令行声明值（非硬证据）；cache 隔离的硬证据见两臂 freeze_cache 目录 mtime/inode 不同 + 按 purpose 的 cached 率",
+  "started_at": "2026-10-30T10:10:04+08:00",
+  "switch_declared": {
+    "HITT_DIALOGUE_EMOTION_ECHO": {
+      "normalized_effective": false,
+      "raw": null,
+      "source": "os.environ['HITT_DIALOGUE_EMOTION_ECHO'] @ emit_run_meta 进程"
+    },
+    "HITT_DIALOGUE_REPAIR": {
+      "normalized_effective": false,
+      "raw": null,
+      "source": "os.environ['HITT_DIALOGUE_REPAIR'] @ emit_run_meta 进程"
+    },
+    "HITT_WEATHER": {
+      "normalized_effective": false,
+      "raw": null,
+      "source": "os.environ['HITT_WEATHER'] @ emit_run_meta 进程"
+    },
+    "HITT_WORLD_SEED": {
+      "parse_rule": "同 code/life/weather.py::world_seed：缺失/非法 ⇒ 0",
+      "parsed_int": 0,
+      "raw": null,
+      "source": "os.environ['HITT_WORLD_SEED'] @ emit_run_meta 进程"
+    }
+  },
+  "switch_effective": {
+    "HITT_DIALOGUE_EMOTION_ECHO": {
+      "cannot_verify_note": "命中==0 时日志无法区分「OFF」与「ON 但一次都没命中」；F-3 需对方上一句有情感词（语面）或入站 ctx.mood 非平和（处境），mock 模板池可能两者皆无 ⇒ 命中 0 不等于开关没开",
+      "ctx_echo_by_msg_type": {},
+      "ctx_echo_msgs": 0,
+      "declared_on": false,
+      "distinct_signs": [],
+      "effective": "off",
+      "evidence_field": "run.jsonl[*].payload.ctx.echo",
+      "kinds": [],
+      "sources": [],
+      "state_rule": "结构字段命中>0 ⇒ on（声明 OFF 则 contradiction）；命中==0 ⇒ off（声明 ON 则 cannot-verify，非 OFF 证据）",
+      "tiers": []
+    },
+    "HITT_DIALOGUE_REPAIR": {
+      "cannot_verify_note": "命中==0 时日志无法区分「OFF」与「ON 但台账无旧账」；rift 由 `DR.ingest` 从入站消息负面词（NEG_WORDS）入账，mock 模板池若无冲突句 ⇒ 0 条入账 ⇒ 该臂在 mock 下结构性测不出",
+      "declared_on": false,
+      "effective": "off",
+      "evidence_field": "run.jsonl[*].payload.dialogue_rift | .dialogue_repair",
+      "f4_by_msg_type": {},
+      "n_dialogue_repair_key": 0,
+      "n_dialogue_rift_key": 0,
+      "n_f4_any_key": 0,
+      "state_rule": "结构字段命中>0 ⇒ on（声明 OFF 则 contradiction）；命中==0 ⇒ off（声明 ON 则 cannot-verify，非 OFF 证据）"
+    },
+    "HITT_WEATHER": {
+      "ctx_weather_by_msg_type": {},
+      "ctx_weather_msgs": 0,
+      "declared_on": false,
+      "distinct_days": 0,
+      "distinct_line_sha256": 0,
+      "distinct_seasons": [],
+      "distinct_weather_kinds": [],
+      "effective": "off",
+      "evidence_field": "run.jsonl[*].payload.ctx.weather",
+      "seeds_seen": [],
+      "state_rule": "ctx.weather>0 ⇒ on（若声明 OFF 则 contradiction）；ctx.weather==0 ⇒ off（若声明 ON 则 cannot-verify）"
+    }
+  },
+  "wc_l": 33850
+}
