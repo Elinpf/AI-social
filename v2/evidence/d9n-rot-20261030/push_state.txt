@@ -31,3 +31,37 @@ push_retry_stderr=(空)
 final_statement=accad13 未推送至 origin；按纪律停止重试（不在网络抖动期反复 push）
 retry_policy_observed=首次 timeout90 → rc=124；后台一次 → rc=128(GnuTLS -110)；收批后 10 分钟内再试一次 → rc=124；共 3 次尝试，此后停手
 remote_confirm_cmd=git ls-remote --heads origin feat/life-narration-rotation   # 网络恢复后执行；成功时把返回 sha 追加到本文件
+
+## 追加（最后一次尝试，第 4 次，2026-10-30T08:51:33+08:00）
+rev_commit=5af48e620982471baf524d6e0f31555c6e893560   # R1–R8 修订提交
+push4_cmd=timeout 90 git push -u origin feat/life-narration-rotation
+push4_rc=124      # 超时（TLS 传输再次未能完成）
+push4_stderr=（空，超时前无错误输出）
+lsremote_after_cmd=timeout 25 git ls-remote --heads origin feat/life-narration-rotation
+lsremote_after_rc=124     # 超时，无法确认远端引用
+push_final=未推送（网络 GnuTLS -110，3+1 次 rc≠0；本地 sha=accad13，修订提交 5af48e6 同样未推送）
+note=按纪律停止重试，不再做第 5 次；未 rebase/amend/强推；报告正文未预写「已推送」
+
+## foreign_commit_on_branch（2026-10-30T08:51:48+08:00，report-writer 上报）
+head_at_check=db808ea601ffae2a3e144eaa3cac838c01d9314c
+head_parent=5af48e620982471baf524d6e0f31555c6e893560   # 本团队 R1–R8 修订提交（audit-1 通过）
+foreign_author=life-evidence-analyst <life-evidence-analyst@jiuwenswarm.local>
+foreign_committed_at=2026-10-30 08:50:24 +0800
+foreign_files=reports/CYCLE-31-20261030.md (+579)
+foreign_evidence_source=…/jiuwen_team_cron___1a18a36a77f_80a872762afb/team-workspace/（另一支团队；统稿 cycle-report-writer）
+statement=该提交非 report-writer 产出；push 是否覆盖它由 Leader 裁决；在裁决前本文件不记录 push_final
+note_shared_tree=本分支尖端可能被并行团队推进；本轮所有结论仅绑定 5af48e6 及其祖先链，不绑定分支名
+note_shared_tree_risk=他队可直接在本仓库/工作树提交（本轮已发生：85980d3 被 reset --soft 撤回）；任何 git add -A 都可能把他队文件卷进我方 commit
+
+## 追加（裁决 B 执行结果，2026-10-30T08:53:02+08:00）
+pushB_cmd=timeout 90 git push origin 5af48e6:refs/heads/feat/life-narration-rotation
+pushB_rc=1
+pushB_stderr=hint: Updates were rejected because the tip of your current branch is behind its remote counterpart.（non-fast-forward）
+remote_probe_cmd=timeout 30 git ls-remote --heads origin feat/life-narration-rotation
+remote_probe_rc=0
+remote_branch_sha=db808ea601ffae2a3e144eaa3cac838c01d9314c   # 远端分支尖端＝他队提交
+remote_branch_existed_before_us=yes   # 远端分支已由他方推送，我方从未成功 push 过
+our_commits_on_remote=accad13(在) 22f166a(在) 5af48e6(在)   # 作为远端尖端的祖先链存在于 origin
+decision_B_feasible=no   # 若不 force-push（把远端 ref 回退到 5af48e6）则无法实现「远端只含我方提交」
+force_push_performed=no  # 明确未执行：回退远端 ref 属历史改写，禁止
+push_final=我方受审提交已在 origin（作为 db808ea 的祖先链）；但我们并未自行推送，且远端尖端含非本团队提交 db808ea —— 该状态由他方推送造成，非本团队动作
