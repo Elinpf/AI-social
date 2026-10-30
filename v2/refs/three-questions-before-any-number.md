@@ -183,3 +183,28 @@
 ### 8.2 与 V-4 / §7.2 的关系
 V-4 管"这个量该不该动"，§7.2 管"这两个数能不能比"，**V-5 管"这个阈值够不够格"**。
 三者同族：**先把"能不能算/能不能判"判掉，再谈"算出来是多少"。**
+
+## 9. V-6：陈旧快照提交禁令（`repro-verifier` 2026-10-31 发现，Leader 自身踩中，事故留档）
+
+**事故**：`d5c386e` 把 `338625e` 刚落地的 Amendment A2、复核件、骨架算法段**全部写回旧值**（D9t 件 blob `72f943a8…` → `0c176d2…`，复核件在 master 上**消失**），而提交说明只描述新增 §7.2，`git show --stat` 却显示三处删除。
+
+**成因（机制）**：`commit-tree` 造树时用了**过期的本地 ref**（`git read-tree master`，而本地 `master` 落后于 `origin/master`）⇒ 该树快照取自更早时点 ⇒ 期间的改动被当成"多余差异"写回旧值。**与"平行孤儿"同族：从旧 base 造树，历史不断，内容倒退。**
+
+**规则：推送前必须过三道自查，任一不过不许推。**
+
+```bash
+# ① 本地跟随 ref 不得落后
+git fetch -q origin master && git log --oneline origin/master..master | wc -l    # 必须 0
+# ② 新提交必须以服务端最新为祖先（不是"历史里有"，是"最新点上是"）
+git merge-base --is-ancestor origin/master <新sha>; echo rc=$?                  # 必须 rc=0
+# ③ 树快照不得有非本意的删除
+git show --stat <新提交>          # 除本意文件外，不应出现大面积删除行或文件消失
+```
+
+**造树纪律（写死）**：
+> 一律 `git read-tree origin/master`（**不是** `master`），`git add <本次要改的路径>`，再 `git commit-tree -p origin/master`。
+> 提交后在**同一输出**里打 `git rev-parse origin/master` 与目标 blob 的 `git rev-parse master:<path>`，两值必须一致才算落成。
+
+**回读纪律（`repro-verifier` 补）**：读 master 上的件，必须把 `git rev-parse origin/master` 与 blob 读数**打在同一个输出里**；ref 更新前后各读一次会得出"一会儿有一会儿没有"的假象。
+
+**事故件**：`v2/evidence/d9t-A2-overwritten-by-d5c386e-alert-by-verifier.md`（`dd704a0b…`，105 行）。
