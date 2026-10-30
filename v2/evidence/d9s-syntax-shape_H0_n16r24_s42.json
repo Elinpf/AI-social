@@ -142,7 +142,7 @@
   },
   "head_entropy": 1.307289,
   "instrument": "tools/d9s/syntax_shape.py",
-  "instrument_sha256": "17dae11da4b6fa2b99c9ff4eec11c9b72d651289b141b422976ee3e2e7629c41",
+  "instrument_sha256": "ca54572380ee53824528c4c31a3e1ff45321dd345c3fd1be90e42d9e169ad1fd",
   "log": "v2/evidence/narr-on-20261030/run.jsonl",
   "log_sha256": "fdb31c7e2ca64b4dac1466fd4c81770dc0198ced4904584a3faf59939fd663ee",
   "max_head_share": 0.721951,

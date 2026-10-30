@@ -142,7 +142,7 @@
   },
   "head_entropy": 1.125447,
   "instrument": "tools/d9s/syntax_shape.py",
-  "instrument_sha256": "17dae11da4b6fa2b99c9ff4eec11c9b72d651289b141b422976ee3e2e7629c41",
+  "instrument_sha256": "ca54572380ee53824528c4c31a3e1ff45321dd345c3fd1be90e42d9e169ad1fd",
   "log": "v2/evidence/d9n-rot-20261030/run.jsonl",
   "log_sha256": "e4fd6db7f863fe2f6bcf6e06753600783ce57505b48a10d5c97247bf5866ece1",
   "max_head_share": 0.772277,
