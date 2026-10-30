@@ -1,0 +1,97 @@
+########## RUN 1: v2/evidence/cycle34_f3_on_n16r84_seed42 (batch R34-n16r84-f3on) ##########
+[1/4] gen_threads: /opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle34_f3_on_n16r84_seed42/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle34_f3_on_n16r84_seed42/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round34_addr_shots/threads_R34-n16r84-f3on.json --label R34-n16r84-f3on
+[gen_threads] events=193933 messages=686 threads=206 multi_turn=104 ge3=90 legacy_msgs=0 moves=406 ref_edges=0 echoes=0
+[gen_threads] wrote /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round34_addr_shots/threads_R34-n16r84-f3on.json (4601210 bytes)
+[2/4] threads.json 0d168eedc3e1d312…  run_sha256=b6cacdaf975a178c…  sha8=b6cacdaf  threads=206
+[3/4] static server http://127.0.0.1:45595  root=/tmp/hitt_render_k6srhbke
+[4/4] shot chat: /opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:45595/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_R34-n16r84-f3on/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round34_addr_shots/R34-n16r84-f3on-chat-b6cacdaf.png --width 1400 --height 900 --timeout 180.0 --retry-blank 2 --no-blank-check
+SHOT OK: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round34_addr_shots/R34-n16r84-f3on-chat-b6cacdaf.png  elapsed=2.74s  mean_brightness=36.0(gray601,0-255,黑<8)  max_color_frac=30.82%  blank_retries=0/2
+  blank_cumulative=19/440 次空白/总取证（T282 观察哨，仅留痕）
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/metrics/render_shots.py:102: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(im.getdata())
+[4/4] shot rhythm: /opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:45595/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_R34-n16r84-f3on/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round34_addr_shots/R34-n16r84-f3on-rhythm-b6cacdaf.png --width 1300 --height 1050 --timeout 180.0 --retry-blank 2 --no-blank-check
+SHOT OK: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round34_addr_shots/R34-n16r84-f3on-rhythm-b6cacdaf.png  elapsed=1.79s  mean_brightness=33.6(gray601,0-255,黑<8)  max_color_frac=35.60%  blank_retries=0/2
+  blank_cumulative=19/441 次空白/总取证（T282 观察哨，仅留痕）
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+
+{
+  "report": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round34_addr_shots/render_report_R34-n16r84-f3on.json",
+  "report_sha256": "71d2919af137ec1c805762496749153c6a276709181d22bad3dd861651d34dfc",
+  "threads_json_sha256": "0d168eedc3e1d31261e6642e1b1ff0fef23821467e516576bf3daa446efa06ae",
+  "ok_count": 2,
+  "fail_count": 0,
+  "pngs": [
+    {
+      "view": "chat",
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round34_addr_shots/R34-n16r84-f3on-chat-b6cacdaf.png",
+      "rc": 0,
+      "png_sha256": "1afa2d515019fc1e1d3344a21c36e9e1cd84c83c6f52ab902dfa165f955c5542",
+      "png_bytes": 296057
+    },
+    {
+      "view": "rhythm",
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round34_addr_shots/R34-n16r84-f3on-rhythm-b6cacdaf.png",
+      "rc": 0,
+      "png_sha256": "6a15be1b1c2fe59d7bbc9d1801194f97b78e408d6a5a1c465ed9a40bfaca61e3",
+      "png_bytes": 285197
+    }
+  ]
+}
+RC=0
+
+########## RUN 2: v2/evidence/d9m-ab-on_n16r24_s42 (batch R34-D10-addr) ##########
+[1/4] gen_threads: /opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9m-ab-on_n16r24_s42/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9m-ab-on_n16r24_s42/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round34_addr_shots/threads_R34-D10-addr.json --label R34-D10-addr
+[gen_threads] events=33857 messages=191 threads=66 multi_turn=32 ge3=28 legacy_msgs=0 moves=121 ref_edges=0 echoes=0
+[gen_threads] wrote /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round34_addr_shots/threads_R34-D10-addr.json (761036 bytes)
+[2/4] threads.json 5c4271ab1fbe46b6…  run_sha256=2edc751c5a32d132…  sha8=2edc751c  threads=66
+[3/4] static server http://127.0.0.1:40575  root=/tmp/hitt_render_7rjmi86x
+[4/4] shot chat: /opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:40575/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_R34-D10-addr/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round34_addr_shots/R34-D10-addr-chat-2edc751c.png --width 1400 --height 900 --timeout 180.0 --retry-blank 2 --no-blank-check
+SHOT OK: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round34_addr_shots/R34-D10-addr-chat-2edc751c.png  elapsed=1.70s  mean_brightness=35.6(gray601,0-255,黑<8)  max_color_frac=28.03%  blank_retries=0/2
+  blank_cumulative=19/442 次空白/总取证（T282 观察哨，仅留痕）
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/metrics/render_shots.py:102: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(im.getdata())
+[4/4] shot rhythm: /opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:40575/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_R34-D10-addr/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round34_addr_shots/R34-D10-addr-rhythm-2edc751c.png --width 1300 --height 1050 --timeout 180.0 --retry-blank 2 --no-blank-check
+SHOT OK: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round34_addr_shots/R34-D10-addr-rhythm-2edc751c.png  elapsed=1.64s  mean_brightness=30.6(gray601,0-255,黑<8)  max_color_frac=39.99%  blank_retries=0/2
+  blank_cumulative=19/443 次空白/总取证（T282 观察哨，仅留痕）
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:174: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(q.getdata())
+/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  data = im.getdata()
+
+{
+  "report": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round34_addr_shots/render_report_R34-D10-addr.json",
+  "report_sha256": "0b6039ff78260443ec0f991b67f11c9bccdad8ffcc358d5d7684a60ffb33b1f8",
+  "threads_json_sha256": "5c4271ab1fbe46b6b439c8812415de63d5bc33c5453b4ca194958d921f576dbd",
+  "ok_count": 2,
+  "fail_count": 0,
+  "pngs": [
+    {
+      "view": "chat",
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round34_addr_shots/R34-D10-addr-chat-2edc751c.png",
+      "rc": 0,
+      "png_sha256": "167fd1267004a20c003489a7b3c989f2c6e32b27395bc1e1e4c3fb494c9b280c",
+      "png_bytes": 294563
+    },
+    {
+      "view": "rhythm",
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round34_addr_shots/R34-D10-addr-rhythm-2edc751c.png",
+      "rc": 0,
+      "png_sha256": "803e412d7c694a2ca521b6f8bf358a063786f135cbc80ca34fe02579bee5534b",
+      "png_bytes": 279783
+    }
+  ]
+}
+RC=0

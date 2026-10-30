@@ -1,0 +1,45 @@
+prereg_file=v2/refs/D9n-prereg-narration-example-rotation.md
+prereg_sha256=0d10450232b04327fe7980ddbaa68b694fba9b1b827b433b5b54b5d7c1b06643
+prereg_add_commit=c164e2b
+prereg_commit_committer_time=2026-10-30T08:13:42+08:00
+rename_commit=5f302dc
+impl_commit=5d20cc5
+impl_file_sha256[code/life/agent.py]=da6f5b8ae37dc15020cc979733c4697ae2e7a98c989f42bec67af2dacf9b152c
+impl_file_sha256[code/tests/test_life_narration_rotation.py]=6183242291e90056fbc1a939af9082aa7f1e582c88e2275759128664b69fa442
+branch=feat/life-narration-rotation
+base_commit=d2a6fa99b7eb978185a965b3f5c77675a7533498
+rationale=与并行线 v2/refs/D9m-prereg-narration-action-diversity.md（master 0938f14）编号冲突，仅改名，内容未改（sha256 前后一致）
+note=本文件为外部锚定回执，不修改冻结件正文；冻结件内容 sha256 即上列 prereg_sha256
+
+# ---- 追加 2026-10-30 08:25（exp-designer）：判据增补件入 git 留痕 ----
+prereg_amendments_commit=5a9b5a2bbc22d31f035293c5738b34c168b2f919
+amendments_commit_committer_time=2026-10-30T08:19:17+08:00   # 展开值，取自 git log --format=%cI -1 5a9b5a2（v1.1 勘误：原为未展开 shell 表达式，无可复算时间）
+note_amendments=NUMBERS: 01=seed/guards/renumbering/six-criteria; 02=guard-thresholds(原D9m-AM-01); 03=family-lexicon(原D9m-AM-02); 04=d9j-provenance(原D9m-AM-1); 05=paths-and-renames
+sha256[D9n-prereg-amendment-01.md]=3b055ffa518e07e61375d2f2b0c1c9259c4ec47d21f8fdd46100a4afc602bbd9
+sha256[D9n-prereg-amendment-02-guard-thresholds.md]=401617edc2bbb5dcb04e8291df30e8df315200bd9af676146a4108b959988095
+sha256[D9n-prereg-amendment-03-family-lexicon.md]=fa5af47dc53f8a272dde9238b741db67a69fa9ac00537ad8bf6cb944862898cf
+sha256[D9n-prereg-amendment-04-d9j-provenance.md]=1cc362c2be1705e8a8b424b348c13119685fd4c469caa8ee4bdd5e64e11896d5
+sha256[D9n-prereg-amendment-05-paths-and-renames.md]=5c465b0e83acc5766a6cb63ac2a45031095fa66dfb468c823ccb3a2f108252d9
+sha256[tools/d9n/narration_family_lexicon.json]=9a87ebb5ee80bb8d991d2c54e1562e312810ed23f1081141e30b98b3f9933edd
+note_lexicon_path=tools/d9m/ -> tools/d9n/ （内容字节不变，sha256 同上）
+note_main_file=主件 D9n-prereg-narration-example-rotation.md 内容 sha256 仍 0d10450232b04327fe7980ddbaa68b694fba9b1b827b433b5b54b5d7c1b06643（未改一字；内文残留 D9m 编号 8 处 / tools/d9m 路径 7 处，映射见增补 05）
+note_rename_sha_invariance=改名前=改名后：02=401617ed / 03=fa5af47d / 04=1cc362c2 / lexicon(v1.0)=9a87ebb5 全部逐字节相同
+
+# ---- 追加 2026-10-30T08:24:00+08:00（exp-designer）：lexicon v1.1 重锚 + 增补 06 + baseline-1 ----
+# 说明：尺子字节从 v1.0 改为 v1.1（守卫基线改用与判定同口径 V_judge=21 词），anchor 必须重锚，否则无法证明报告用的是哪版尺子。
+lexicon.path=tools/d9n/narration_family_lexicon.json
+lexicon.version=d9m-family-lexicon/1.1
+lexicon.sha256_v1_0_superseded=9a87ebb5ee80bb8d991d2c54e1562e312810ed23f1081141e30b98b3f9933edd
+lexicon.sha256=01e5533870f0f6b43300e6be6422130d958a01497a90d610620916f454489ed0
+lexicon.size_B=5486
+lexicon_commit=1624540065a9083d56f90a414f1c98e3ea520fb2
+lexicon_commit_committer_time=2026-10-30T08:23:16+08:00
+lexicon_change=守卫基线 coverage 40/205(0.19512, 闭表8动词遗留值) -> 66/205(0.321951, V_judge=21词)；门限 coverage >=11.707% -> >=19.317%；unassigned <=90.488% -> <=77.805%；**方向=收紧**；词表内容/parts_6/objs_13/顺序/R1-R8 未改
+amendments_commit_2=de4649c028f4b9a50af75e429dbfb1a85a120185
+amendments_commit_2_committer_time=2026-10-30T08:23:32+08:00
+sha256[D9n-prereg-amendment-05-paths-and-renames.md]=3da0f4b63fc646e362febfdf8de60b0bf37bce2ffec241b172d50594cf6f8eeb   # v1.1：四列映射表 + 旧主件路径失效项 + lexicon v1.1 勘误；v1.0 为 5c465b0e
+sha256[D9n-prereg-amendment-06-guard-anchor-same-caliber.md]=543cfd1e6b2da0c592f0c6f3d01d285e59e962ab98ca3157e29455f9a17c3962
+baseline_judgement.file=v2/evidence/d9n-rot-20261030/d9m_baseline_judgement.json
+baseline_judgement.sha256=c00680a478a07b0860a8a2d8b5086b5fe569e66b6991b362bd5939f30c125cb6
+baseline_judgement.note=coverage 用 21 词口径 66/205=0.321951；unassigned=0.678049；(b2') 基线=9（D9j 的 8 为漏计，漏项=P013 r13/P014 r19）
+main_file_unchanged=是：0d10450232b04327fe7980ddbaa68b694fba9b1b827b433b5b54b5d7c1b06643（主件与 01-04 一字未改；05/06 为新增/更新件）

@@ -109,6 +109,9 @@ def test_off_means_no_plan_render_audit(monkeypatch):
 # ---- B. 单变量插入 ---------------------------------------------------------
 def test_on_prompts_differ_by_exactly_one_segment(monkeypatch, tmp_path):
     """B. ON = OFF + 恰好一处插入；既有段落（含 R15 收尾指令）逐字节不变。"""
+    # ROUND1 旁白默认化后补的"臂环境钉死"：本条的 R15 收尾指令基线（`_TAIL_D`/`_TAIL_R`）
+    # 记录在**禁旁白**语境下，显式 `=0` 把语境钉回禁旁白，本条只检验 L7 结构臂的单变量插入。
+    monkeypatch.setenv("LIFE_PROMPT_NARRATION", "0")
     agent = _agent(tmp_path)
     history = [("名2", "早上好。")]
     wv = _wv(["秀娘，你家的鸡又跑了。"])

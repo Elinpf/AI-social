@@ -1,0 +1,689 @@
+{
+ "addr_any_mention_rate": 0.8115183246073299,
+ "addr_coverage": 0.3193717277486911,
+ "addr_misaddress": {
+  "addr_error_rate": 0.03389830508474576,
+  "misaddress_rate": 0.03389830508474576,
+  "n_addr_err": 2,
+  "n_generic": 0,
+  "n_named_addr_judgeable": 59,
+  "n_other_named": 2,
+  "n_self_name": 0,
+  "n_target_ok": 57,
+  "n_unknown_target": 2,
+  "rows": [
+   {
+    "addressee": "P013",
+    "body": "哟，我这刚出炉的枣泥酥还烫着手呢，周公文你来得巧，先尝一块——你家那口子不是念叨着要买紧俏货嘛，我留了两包在柜台底下，你说这算不算赶早不如赶巧？",
+    "form": "周公文",
+    "seq": 3121,
+    "speaker": "P004",
+    "thread_id": "TH-P004-P013-4"
+   },
+   {
+    "addressee": "P004",
+    "body": "哟，周公文你手里那袋糙米先匀我两升，我家灶上还炖着陈医他娘给的药罐子，饿得我锤子都抡不动了。先赊着。",
+    "form": "周公文",
+    "seq": 23253,
+    "speaker": "P013",
+    "thread_id": "TH-P013-P004-16"
+   }
+  ],
+  "selfname_rate": 0.0,
+  "selfname_rows": []
+ },
+ "addr_target_distribution": {
+  "other_named": 2,
+  "target_ok": 57,
+  "unknown_target": 2
+ },
+ "arm": "OFF",
+ "computed_at": "2026-10-30T18:06:40+0800",
+ "form_tiers": {
+  "五味": 3,
+  "兰姐": 2,
+  "周公文": 1,
+  "小满": 3,
+  "巧儿": 3,
+  "巧儿姐": 2,
+  "方老师": 1,
+  "月牙": 3,
+  "桂婶": 2,
+  "秀娘": 3,
+  "老周": 3,
+  "老石": 3,
+  "金先生": 1,
+  "铁头": 3,
+  "阿林": 3,
+  "阿禾": 3,
+  "陈医": 1
+ },
+ "input_log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9m-ab-off_n16r24_s42/run.jsonl",
+ "input_log_sha256": "5f1dda97633ccf0b3f7d2b279c39a43752db7d945a2ca6f9133e0b2bc9106ed5",
+ "lexicon_path": "v2/refs/address-ordinal.yaml",
+ "lexicon_sha256": "dc4ce327ff8e0a77d34545903e8589ea97429a30c9b26bf0ed9d972eda122d95",
+ "lexicon_version": "address-ordinal-v1",
+ "metrics": {
+  "addr_stage_ordinal": {
+   "coarse": {
+    "mean_delta": -0.0625,
+    "n_down": 1,
+    "n_flat": 15,
+    "n_up": 0
+   },
+   "denom_directed_pairs": 16,
+   "mean_delta": -0.0625,
+   "n_down": 1,
+   "n_flat": 15,
+   "n_up": 0,
+   "rows": [
+    {
+     "coarse_delta": 0,
+     "coarse_first": "近昵",
+     "coarse_last": "近昵",
+     "delta": 0,
+     "first_form": "老周",
+     "first_seq": 19044,
+     "first_tier": 3,
+     "forms_distinct": [
+      "老周"
+     ],
+     "last_form": "老周",
+     "last_seq": 20427,
+     "last_tier": 3,
+     "n_addr": 2,
+     "pair": [
+      "P004",
+      "P001"
+     ]
+    },
+    {
+     "coarse_delta": 0,
+     "coarse_first": "近昵",
+     "coarse_last": "近昵",
+     "delta": 0,
+     "first_form": "铁头",
+     "first_seq": 22634,
+     "first_tier": 3,
+     "forms_distinct": [
+      "铁头"
+     ],
+     "last_form": "铁头",
+     "last_seq": 30020,
+     "last_tier": 3,
+     "n_addr": 5,
+     "pair": [
+      "P004",
+      "P013"
+     ]
+    },
+    {
+     "coarse_delta": 0,
+     "coarse_first": "近昵",
+     "coarse_last": "近昵",
+     "delta": 0,
+     "first_form": "阿禾",
+     "first_seq": 4946,
+     "first_tier": 3,
+     "forms_distinct": [
+      "阿禾"
+     ],
+     "last_form": "阿禾",
+     "last_seq": 19186,
+     "last_tier": 3,
+     "n_addr": 3,
+     "pair": [
+      "P006",
+      "P003"
+     ]
+    },
+    {
+     "coarse_delta": 0,
+     "coarse_first": "粗疏",
+     "coarse_last": "粗疏",
+     "delta": 0,
+     "first_form": "陈医",
+     "first_seq": 2107,
+     "first_tier": 1,
+     "forms_distinct": [
+      "陈医"
+     ],
+     "last_form": "陈医",
+     "last_seq": 27724,
+     "last_tier": 1,
+     "n_addr": 3,
+     "pair": [
+      "P007",
+      "P005"
+     ]
+    },
+    {
+     "coarse_delta": 0,
+     "coarse_first": "近昵",
+     "coarse_last": "近昵",
+     "delta": 0,
+     "first_form": "老周",
+     "first_seq": 22959,
+     "first_tier": 3,
+     "forms_distinct": [
+      "老周"
+     ],
+     "last_form": "老周",
+     "last_seq": 25301,
+     "last_tier": 3,
+     "n_addr": 2,
+     "pair": [
+      "P009",
+      "P001"
+     ]
+    },
+    {
+     "coarse_delta": 0,
+     "coarse_first": "近昵",
+     "coarse_last": "近昵",
+     "delta": 0,
+     "first_form": "巧儿",
+     "first_seq": 19401,
+     "first_tier": 3,
+     "forms_distinct": [
+      "巧儿"
+     ],
+     "last_form": "巧儿",
+     "last_seq": 23936,
+     "last_tier": 3,
+     "n_addr": 2,
+     "pair": [
+      "P009",
+      "P014"
+     ]
+    },
+    {
+     "coarse_delta": 0,
+     "coarse_first": "粗疏",
+     "coarse_last": "粗疏",
+     "delta": 0,
+     "first_form": "金先生",
+     "first_seq": 135,
+     "first_tier": 1,
+     "forms_distinct": [
+      "金先生"
+     ],
+     "last_form": "金先生",
+     "last_seq": 6421,
+     "last_tier": 1,
+     "n_addr": 4,
+     "pair": [
+      "P010",
+      "P009"
+     ]
+    },
+    {
+     "coarse_delta": -1,
+     "coarse_first": "近昵",
+     "coarse_last": "乡亲",
+     "delta": -1,
+     "first_form": "巧儿",
+     "first_seq": 1198,
+     "first_tier": 3,
+     "forms_distinct": [
+      "巧儿",
+      "巧儿姐"
+     ],
+     "last_form": "巧儿姐",
+     "last_seq": 5039,
+     "last_tier": 2,
+     "n_addr": 2,
+     "pair": [
+      "P011",
+      "P014"
+     ]
+    },
+    {
+     "coarse_delta": 0,
+     "coarse_first": "近昵",
+     "coarse_last": "近昵",
+     "delta": 0,
+     "first_form": "老周",
+     "first_seq": 23985,
+     "first_tier": 3,
+     "forms_distinct": [
+      "老周"
+     ],
+     "last_form": "老周",
+     "last_seq": 25612,
+     "last_tier": 3,
+     "n_addr": 2,
+     "pair": [
+      "P012",
+      "P001"
+     ]
+    },
+    {
+     "coarse_delta": 0,
+     "coarse_first": "近昵",
+     "coarse_last": "近昵",
+     "delta": 0,
+     "first_form": "五味",
+     "first_seq": 4039,
+     "first_tier": 3,
+     "forms_distinct": [
+      "五味"
+     ],
+     "last_form": "五味",
+     "last_seq": 5044,
+     "last_tier": 3,
+     "n_addr": 2,
+     "pair": [
+      "P012",
+      "P015"
+     ]
+    },
+    {
+     "coarse_delta": 0,
+     "coarse_first": "近昵",
+     "coarse_last": "近昵",
+     "delta": 0,
+     "first_form": "秀娘",
+     "first_seq": 7844,
+     "first_tier": 3,
+     "forms_distinct": [
+      "秀娘"
+     ],
+     "last_form": "秀娘",
+     "last_seq": 21976,
+     "last_tier": 3,
+     "n_addr": 3,
+     "pair": [
+      "P013",
+      "P004"
+     ]
+    },
+    {
+     "coarse_delta": 0,
+     "coarse_first": "粗疏",
+     "coarse_last": "粗疏",
+     "delta": 0,
+     "first_form": "金先生",
+     "first_seq": 21133,
+     "first_tier": 1,
+     "forms_distinct": [
+      "金先生"
+     ],
+     "last_form": "金先生",
+     "last_seq": 25872,
+     "last_tier": 1,
+     "n_addr": 3,
+     "pair": [
+      "P014",
+      "P009"
+     ]
+    },
+    {
+     "coarse_delta": 0,
+     "coarse_first": "近昵",
+     "coarse_last": "近昵",
+     "delta": 0,
+     "first_form": "老石",
+     "first_seq": 19831,
+     "first_tier": 3,
+     "forms_distinct": [
+      "老石"
+     ],
+     "last_form": "老石",
+     "last_seq": 21218,
+     "last_tier": 3,
+     "n_addr": 2,
+     "pair": [
+      "P015",
+      "P002"
+     ]
+    },
+    {
+     "coarse_delta": 0,
+     "coarse_first": "乡亲",
+     "coarse_last": "乡亲",
+     "delta": 0,
+     "first_form": "桂婶",
+     "first_seq": 4766,
+     "first_tier": 2,
+     "forms_distinct": [
+      "桂婶"
+     ],
+     "last_form": "桂婶",
+     "last_seq": 7127,
+     "last_tier": 2,
+     "n_addr": 2,
+     "pair": [
+      "P015",
+      "P012"
+     ]
+    },
+    {
+     "coarse_delta": 0,
+     "coarse_first": "乡亲",
+     "coarse_last": "乡亲",
+     "delta": 0,
+     "first_form": "兰姐",
+     "first_seq": 24020,
+     "first_tier": 2,
+     "forms_distinct": [
+      "兰姐"
+     ],
+     "last_form": "兰姐",
+     "last_seq": 31928,
+     "last_tier": 2,
+     "n_addr": 2,
+     "pair": [
+      "P015",
+      "P016"
+     ]
+    },
+    {
+     "coarse_delta": 0,
+     "coarse_first": "近昵",
+     "coarse_last": "近昵",
+     "delta": 0,
+     "first_form": "五味",
+     "first_seq": 22021,
+     "first_tier": 3,
+     "forms_distinct": [
+      "五味"
+     ],
+     "last_form": "五味",
+     "last_seq": 32118,
+     "last_tier": 3,
+     "n_addr": 2,
+     "pair": [
+      "P016",
+      "P015"
+     ]
+    }
+   ]
+  },
+  "addr_switch_rate": {
+   "denom_all_pairs": 93,
+   "denom_scored_pairs": 11,
+   "examples": [],
+   "n_switch": 0,
+   "rate_all": 0.0,
+   "rate_scored": 0.0
+  },
+  "addr_vocab_per_pair": {
+   "denom_pairs": 19,
+   "max": 3,
+   "mean": 1.5789473684210527,
+   "median": 1,
+   "min_msgs_per_pair": 3,
+   "rows": [
+    {
+     "forms": [
+      "老石"
+     ],
+     "n_msgs": 4,
+     "n_with_addr": 1,
+     "pair": [
+      "P001",
+      "P002"
+     ],
+     "vocab_size": 1
+    },
+    {
+     "forms": [
+      "老周"
+     ],
+     "n_msgs": 5,
+     "n_with_addr": 2,
+     "pair": [
+      "P001",
+      "P004"
+     ],
+     "vocab_size": 1
+    },
+    {
+     "forms": [
+      "老周",
+      "金先生"
+     ],
+     "n_msgs": 6,
+     "n_with_addr": 3,
+     "pair": [
+      "P001",
+      "P009"
+     ],
+     "vocab_size": 2
+    },
+    {
+     "forms": [
+      "老周"
+     ],
+     "n_msgs": 7,
+     "n_with_addr": 2,
+     "pair": [
+      "P001",
+      "P012"
+     ],
+     "vocab_size": 1
+    },
+    {
+     "forms": [
+      "老石"
+     ],
+     "n_msgs": 6,
+     "n_with_addr": 1,
+     "pair": [
+      "P002",
+      "P004"
+     ],
+     "vocab_size": 1
+    },
+    {
+     "forms": [
+      "老石"
+     ],
+     "n_msgs": 5,
+     "n_with_addr": 2,
+     "pair": [
+      "P002",
+      "P015"
+     ],
+     "vocab_size": 1
+    },
+    {
+     "forms": [
+      "老石"
+     ],
+     "n_msgs": 6,
+     "n_with_addr": 1,
+     "pair": [
+      "P002",
+      "P016"
+     ],
+     "vocab_size": 1
+    },
+    {
+     "forms": [
+      "方老师",
+      "阿禾"
+     ],
+     "n_msgs": 12,
+     "n_with_addr": 4,
+     "pair": [
+      "P003",
+      "P006"
+     ],
+     "vocab_size": 2
+    },
+    {
+     "forms": [
+      "周公文",
+      "秀娘",
+      "铁头"
+     ],
+     "n_msgs": 17,
+     "n_with_addr": 10,
+     "pair": [
+      "P004",
+      "P013"
+     ],
+     "vocab_size": 3
+    },
+    {
+     "forms": [
+      "陈医"
+     ],
+     "n_msgs": 10,
+     "n_with_addr": 3,
+     "pair": [
+      "P005",
+      "P007"
+     ],
+     "vocab_size": 1
+    },
+    {
+     "forms": [
+      "陈医"
+     ],
+     "n_msgs": 6,
+     "n_with_addr": 1,
+     "pair": [
+      "P005",
+      "P016"
+     ],
+     "vocab_size": 1
+    },
+    {
+     "forms": [
+      "阿林"
+     ],
+     "n_msgs": 10,
+     "n_with_addr": 1,
+     "pair": [
+      "P007",
+      "P008"
+     ],
+     "vocab_size": 1
+    },
+    {
+     "forms": [
+      "周公文"
+     ],
+     "n_msgs": 12,
+     "n_with_addr": 1,
+     "pair": [
+      "P008",
+      "P011"
+     ],
+     "vocab_size": 1
+    },
+    {
+     "forms": [
+      "月牙",
+      "金先生"
+     ],
+     "n_msgs": 12,
+     "n_with_addr": 5,
+     "pair": [
+      "P009",
+      "P010"
+     ],
+     "vocab_size": 2
+    },
+    {
+     "forms": [
+      "巧儿",
+      "金先生"
+     ],
+     "n_msgs": 6,
+     "n_with_addr": 5,
+     "pair": [
+      "P009",
+      "P014"
+     ],
+     "vocab_size": 2
+    },
+    {
+     "forms": [
+      "小满",
+      "巧儿",
+      "巧儿姐"
+     ],
+     "n_msgs": 12,
+     "n_with_addr": 3,
+     "pair": [
+      "P011",
+      "P014"
+     ],
+     "vocab_size": 3
+    },
+    {
+     "forms": [
+      "五味",
+      "桂婶"
+     ],
+     "n_msgs": 6,
+     "n_with_addr": 4,
+     "pair": [
+      "P012",
+      "P015"
+     ],
+     "vocab_size": 2
+    },
+    {
+     "forms": [
+      "兰姐",
+      "桂婶"
+     ],
+     "n_msgs": 4,
+     "n_with_addr": 2,
+     "pair": [
+      "P012",
+      "P016"
+     ],
+     "vocab_size": 2
+    },
+    {
+     "forms": [
+      "五味",
+      "兰姐"
+     ],
+     "n_msgs": 11,
+     "n_with_addr": 4,
+     "pair": [
+      "P015",
+      "P016"
+     ],
+     "vocab_size": 2
+    }
+   ]
+  }
+ },
+ "n_messages": 191,
+ "n_messages_with_addr": 61,
+ "personas_path": "code/config/personas.json",
+ "term_distribution": {
+  "五味": 4,
+  "兰姐": 4,
+  "周公文": 4,
+  "小满": 2,
+  "巧儿": 3,
+  "巧儿姐": 1,
+  "方老师": 1,
+  "月牙": 1,
+  "桂婶": 3,
+  "秀娘": 5,
+  "老周": 7,
+  "老石": 5,
+  "金先生": 8,
+  "铁头": 5,
+  "阿林": 1,
+  "阿禾": 3,
+  "陈医": 4
+ },
+ "tier_distribution": {
+  "1": 17,
+  "2": 8,
+  "3": 36
+ },
+ "tool": "tools/metrics/address_drift.py",
+ "tool_sha256": "37a5dc52cf55ae43f0c43acb7ef5e07422e59ba9cfced341e08ccb0bfe7dcc0c"
+}

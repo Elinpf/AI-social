@@ -1,0 +1,2733 @@
+{
+ "schema": "narration-hedge/scribe-check/1",
+ "arms": {
+  "off": {
+   "run_dir": "v2/evidence/d9m-ab-off_n16r24_s42",
+   "narration": {
+    "n_msgs": 191,
+    "msgs_with_narration": 0,
+    "narration_msg_rate": 0.0,
+    "narration_blocks": 0,
+    "narration_blocks_unique": 0,
+    "narration_block_unique_rate": null,
+    "narration_share_of_chars": 0.0,
+    "narration_top_blocks": []
+   },
+   "d5": {
+    "E_efficiency": {
+     "E-1_msg_per_agent_round": 0.542614,
+     "n_agents": 16,
+     "n_rounds": 22
+    },
+    "F-1_chatter": {
+     "functional_msgs": 43,
+     "nonfunctional_chatter_rate": 0.774869,
+     "rule": "功能性 = tag_hints∩task_tags 非空 或 正文命中事务正则；闲聊率 = 1 − 功能性占比"
+    },
+    "F-2_content_drift": {
+     "denominator_adjacent_pairs": 125,
+     "drift_rate": 0.68,
+     "jaccard_all": {
+      "max": 0.24,
+      "mean": 0.069218,
+      "min": 0.0,
+      "n": 125,
+      "p10": 0.0,
+      "p50": 0.057143,
+      "p90": 0.142857,
+      "stdev": 0.059033
+     },
+     "jaccard_switched": {
+      "max": null,
+      "mean": null,
+      "min": null,
+      "n": 0,
+      "p10": null,
+      "p50": null,
+      "p90": null,
+      "stdev": null
+     },
+     "rule": "内容侧话题漂移：相邻消息 char-bigram Jaccard<0.10 记一次换话头；**不以 tag 作否决项**（tag 恒定是引擎构造，不是对话事实）"
+    },
+    "F-2_tag_change_split": {
+     "denominator_adjacent_pairs": 125,
+     "rule": "R19 拆分（board-scout 要求）：「多挂一个 tag、原话题保留」记 tag_added（话题展开）；「两集合无交集」记 tag_replaced（真换话题，**主判据**）。两者互斥，和 = F-2_tag_switch.switch_pairs（仅当 prev 非空时；空 tag 集不计入任一侧）",
+     "tag_added": 0,
+     "tag_added_rate": 0.0,
+     "tag_replaced": 0,
+     "tag_replaced_rate": 0.0
+    },
+    "F-2_tag_switch": {
+     "denominator_adjacent_pairs": 125,
+     "rule": "机制侧话题切换：相邻消息 tag 集合不相等即记一次（含「回复追加第二个 tag」）；本列测「引擎是否承认话题变了」，**不得单独作为效果判据**",
+     "switch_pairs": 0,
+     "switch_rate": 0.0
+    },
+    "F-2_topic_drift": {
+     "denominator_adjacent_pairs": 125,
+     "drift_rate": 0.0,
+     "multi_topic_thread_ratio": 0.0,
+     "rule": "相邻消息 tag 无交集 且 char-bigram Jaccard<0.10 记一次话题转移；漂移率=转移/相邻对",
+     "status": "LEGACY_DEAD_RULER",
+     "status_note": "R19：本键保留原口径仅作跨报告对照。新结构下 tag_hints 线程内恒定 ⇒ 「tag 无交集」恒 False ⇒ 该读数结构性恒 0，不得作为效果判据；请读 F-2_content_drift / F-2_tag_switch（口径变更依据 team-workspace/r19-f2-recheck.md）。"
+    },
+    "F-2b_multi_topic_threads": {
+     "denominator_threads": 66,
+     "denominator_threads_group": 66,
+     "multi_topic_thread_ratio": 0.0,
+     "n_multi_topic_threads": 0,
+     "rule": "线程内 tag 种数≥2 的线程数 / 线程数；R19 起**分子分母统一到 mixed_key 线程口径**，并同时打印两个分母（旧版分子 mixed_key、分母 group_threads，v0 批 136 vs 172 不一致）"
+    },
+    "F-3_emotion_echo": {
+     "denominator": 11,
+     "echo_rate": 0.090909,
+     "rule": "上一句极性≠0 时，下一句极性相同 或 含共情标记 → 呼应"
+    },
+    "F-4_tension_repair": {
+     "closed_loop_rate": 0.0,
+     "mean_lag_msgs": null,
+     "repaired": 0,
+     "rule": "张力 = 相邻极性相反 或 当前句极性为负；其后 8 条同线程内出现修复词 = 闭环",
+     "tension_events": 8
+    },
+    "F-5_habit_repetition": {
+     "habit_strength": 0.0,
+     "max_repeat_days_mean": 1.75,
+     "rule": "习惯 = 同一 agent 在同一 (slot, place) 出现 ≥3 天；强度 = 有习惯的 agent / agent 总数"
+    },
+    "F-6_crossday_memory": {
+     "rule": "正文命中时间回指词表（昨天/前天/上次…）即计入；只测「提到过去」，不测「引用是否正确」（后者需人工或 D2 ctx）",
+     "timeref_rate": 0.057592
+    },
+    "F-7a_offscreen_mention": {
+     "applicability": "ok",
+     "denominator": 191,
+     "offscreen_mention_rate": 0.099476,
+     "rule": "提及他人名字（persona 主干名）时，若该角色在同一 round 的 PLACE_ARRIVED 位置 ≠ 本条消息 place，记为越界提及；只测「引用不可能在场的人」，不测「引用不可能知道的事件」（后者需 judge，F-7b）",
+     "unknown_place_lookups": 73
+    },
+    "F-8_scene_anchor": {
+     "F-8": {
+      "den": 191,
+      "denominator": 191,
+      "denominator_rule": "num=命中本人当回合处境（时段**仅档内词** / 自身地点 / 活动 任一）的 MSG_* 条数；den=全部 MSG_*；时段侧用 F-8t_core（不含通用指示词「这会儿」），故与 F-8_with_all_time 可能不同；各分项按自己的分母计入（F-8p 用有 place 的 167、F-8a 用有 activity 的 n）",
+      "num": 6,
+      "numerator": 6,
+      "rate": 0.031414,
+      "rate_pct": 3.141361,
+      "ratio": 0.031414,
+      "wilson95": {
+       "confidence": 0.95,
+       "hi": 0.066829,
+       "lo": 0.014475,
+       "method": "wilson_score_no_cc",
+       "n": 191,
+       "p": 0.031414,
+       "two_sided": true,
+       "x": 6,
+       "z": 1.959964
+      }
+     },
+     "F-8a_activity": {
+      "activity_lexicon": "render ∪ semantic_equivalents",
+      "den": null,
+      "denominator": null,
+      "denominator_rule": "num=正文命中「本人 ctx.scene.activity」的渲染措辞或语义等价项；den=含 ctx.scene.activity 的 MSG_*",
+      "hits_by_activity": {},
+      "num": null,
+      "numerator": null,
+      "rate": null,
+      "rate_pct": null,
+      "ratio": null,
+      "reason": "no_ctx_scene",
+      "reason_detail": "本臂 MSG payload 无 ctx.scene.activity（191/191 条缺该键）⇒ 分母不适用；不等于『模型没做活动锚定』",
+      "status": "not_applicable",
+      "wilson95": null
+     },
+     "F-8p_place": {
+      "den": 167,
+      "denominator": 167,
+      "denominator_rule": "只认 places.json::name_cn（含 place.short_names 可接受简称）；num=正文含「本人 place」名称的条数；den=有 payload.place 的 MSG_*",
+      "num": 0,
+      "numerator": 0,
+      "rate": 0.0,
+      "rate_pct": 0.0,
+      "ratio": 0.0,
+      "wilson95": {
+       "confidence": 0.95,
+       "hi": 0.022486,
+       "lo": 0.0,
+       "method": "wilson_score_no_cc",
+       "n": 167,
+       "p": 0.0,
+       "two_sided": true,
+       "x": 0,
+       "z": 1.959964
+      }
+     },
+     "F-8p_public": {
+      "den": 24,
+      "denominator": 24,
+      "denominator_rule": "仅覆盖说明、不作判定：MSG_PUBLIC 无 place 字段，den=MSG_PUBLIC 条数，num=正文命中任一 name_cn 条数",
+      "num": 1,
+      "numerator": 1,
+      "rate": 0.041667,
+      "rate_pct": 4.166667,
+      "ratio": 0.041667,
+      "wilson95": {
+       "confidence": 0.95,
+       "hi": 0.202418,
+       "lo": 0.007393,
+       "method": "wilson_score_no_cc",
+       "n": 24,
+       "p": 0.041667,
+       "two_sided": true,
+       "x": 1,
+       "z": 1.959964
+      }
+     },
+     "F-8t_all": {
+      "den": 191,
+      "denominator": 191,
+      "denominator_rule": "词汇口径：num=含通用指示词「这会儿」在内的 narrow 命中条数；den=有 slot 的 MSG_*。**只能用于『词汇使用』结论，不得用于处境锚定裁定**",
+      "hits_by_slot": {
+       "afternoon": 1,
+       "evening": 1,
+       "morning": 3,
+       "night": 1
+      },
+      "hits_by_token": {
+       "半夜": 1,
+       "这会儿": 5
+      },
+      "hits_by_token_msgs": {
+       "42:145": [
+        "这会儿"
+       ],
+       "42:19261": [
+        "这会儿"
+       ],
+       "42:19831": [
+        "这会儿"
+       ],
+       "42:32920": [
+        "半夜"
+       ],
+       "42:3760": [
+        "这会儿"
+       ],
+       "42:6049": [
+        "这会儿"
+       ]
+      },
+      "hits_by_token_note": "hits_by_token=非互斥（一条可命中多词，和可能 > 分子）；hits_by_token_primary=互斥（每条归到最长匹配词，和 == 分子）；A2-4 判「这会儿是否戴功」请用 primary",
+      "hits_by_token_primary": {
+       "半夜": 1,
+       "这会儿": 5
+      },
+      "label": "all",
+      "lexicon": "narrow",
+      "num": 6,
+      "numerator": 6,
+      "onslot_word_hit_msgs": 1,
+      "rate": 0.031414,
+      "rate_pct": 3.141361,
+      "ratio": 0.031414,
+      "scope": "own_slot",
+      "wilson95": {
+       "confidence": 0.95,
+       "hi": 0.066829,
+       "lo": 0.014475,
+       "method": "wilson_score_no_cc",
+       "n": 191,
+       "p": 0.031414,
+       "two_sided": true,
+       "x": 6,
+       "z": 1.959964
+      }
+     },
+     "F-8t_core": {
+      "degenerate": false,
+      "degenerate_note": null,
+      "den": 191,
+      "denominator": 191,
+      "denominator_rule": "构念口径：num=正文命中**档内时段词**（排除 slot_agnostic「这会儿」类通用指示词）的 MSG_*；den=有 slot 的 MSG_*。**唯一可用于『处境锚定』结论的时段通道**",
+      "excluded_agnostic_tokens": [
+       "这会儿"
+      ],
+      "hits_by_token": {
+       "半夜": 1
+      },
+      "hits_by_token_msgs": {
+       "42:32920": [
+        "半夜"
+       ]
+      },
+      "hits_by_token_primary": {
+       "半夜": 1
+      },
+      "label": "core",
+      "lexicon": "narrow_onslot",
+      "note": "排除的通用指示词见 excluded_agnostic_tokens；本通道与 F-8t_all 分母相同，可直接相减看「这会儿」贡献",
+      "num": 1,
+      "numerator": 1,
+      "rate": 0.005236,
+      "rate_pct": 0.52356,
+      "ratio": 0.005236,
+      "scope": "own_slot",
+      "wilson95": {
+       "confidence": 0.95,
+       "hi": 0.029056,
+       "lo": 0.000925,
+       "method": "wilson_score_no_cc",
+       "n": 191,
+       "p": 0.005236,
+       "two_sided": true,
+       "x": 1,
+       "z": 1.959964
+      }
+     },
+     "F-8t_time": {
+      "den": 191,
+      "den_by_slot": {
+       "afternoon": 51,
+       "evening": 55,
+       "morning": 53,
+       "night": 32
+      },
+      "denominator": 191,
+      "denominator_rule": "判定词表=time.narrow（Amendment 1：不含 刚/早上/下午/晚上/昨晚/今天/今儿）；scope=本人当回合 slot；den=有 slot 的 MSG_*",
+      "hits_by_slot": {
+       "afternoon": 1,
+       "evening": 1,
+       "morning": 3,
+       "night": 1
+      },
+      "hits_by_token": {
+       "半夜": 1,
+       "这会儿": 5
+      },
+      "hits_by_token_note": "hits_by_token=非互斥（一条可命中多词，和可能 > 分子）；hits_by_token_primary=互斥（每条归到最长匹配词，和 == 分子）。报告做 A2-4 有效性判定时用 primary 计「该词为主的命中条数」",
+      "hits_by_token_primary": {
+       "半夜": 1,
+       "这会儿": 5
+      },
+      "lexicon": "narrow",
+      "n_slot_missing": 0,
+      "num": 6,
+      "numerator": 6,
+      "onslot_word_hit_msgs": 1,
+      "onslot_word_note": "档内词（非 slot_agnostic 的时段词）命中的消息条数；若该值在 ON 臂相对 OFF 增量主要来自 slot_agnostic「这会儿」，按 A2-4 只能写「短指示词使用上升」",
+      "rate": 0.031414,
+      "rate_pct": 3.141361,
+      "ratio": 0.031414,
+      "scope": "own_slot",
+      "wilson95": {
+       "confidence": 0.95,
+       "hi": 0.066829,
+       "lo": 0.014475,
+       "method": "wilson_score_no_cc",
+       "n": 191,
+       "p": 0.031414,
+       "two_sided": true,
+       "x": 6,
+       "z": 1.959964
+      }
+     },
+     "F-8t_time_pre_am2": {
+      "amendment_excluded": [
+       "下午"
+      ],
+      "den": 191,
+      "denominator": 191,
+      "denominator_rule": "敏感性对照（Amendment 2 前口径）：同一 onset 下剔除 ['下午']，仍按本回合 slot 限定；den 与 F-8t_time 完全相同，供报告并列证明结论不依赖该词取舍",
+      "lexicon": "narrow_pre_am2",
+      "num": 6,
+      "numerator": 6,
+      "rate": 0.031414,
+      "rate_pct": 3.141361,
+      "ratio": 0.031414,
+      "scope": "own_slot",
+      "wilson95": {
+       "confidence": 0.95,
+       "hi": 0.066829,
+       "lo": 0.014475,
+       "method": "wilson_score_no_cc",
+       "n": 191,
+       "p": 0.031414,
+       "two_sided": true,
+       "x": 6,
+       "z": 1.959964
+      }
+     },
+     "arm": "OFF",
+     "coverage": {
+      "n_line_sha_recovered": 0,
+      "n_msg": 191,
+      "n_scene_activity": 0,
+      "n_scene_present": 0,
+      "n_slot_missing": 0,
+      "note": "ctx.scene 只在开关 ON 时出现 ⇒ OFF 臂/老批 n_scene_present=0 属预期，非实现缺陷"
+     },
+     "degenerate_d1": {
+      "d2_min_abs_effect_X": 0.15,
+      "note": "单臂输出只给数值；退化判定需两臂 json 对照",
+      "off_num_le": 2,
+      "rule": "OFF 臂 F-8 分子 ≤ 2 ⇒ C1/两比例检验不适用，只报 ON 臂 x/n + 标准 Wilson 95% CI"
+     },
+     "denominator_ledger": {
+      "F-8": 191,
+      "F-8a_activity": 0,
+      "F-8p_place": 167,
+      "F-8p_public": 24,
+      "F-8t_time": 191,
+      "note": "四个分项分母互不相同，逐个标明；不得共用总分母"
+     },
+     "diagnostics": {
+      "F-8_with_all_time": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "对照：把时段侧换成 F-8t_all 后的 F-8 总数；仅说明构念选择影响多大，不作判定",
+       "num": 185,
+       "numerator": 185,
+       "rate": 0.968586,
+       "rate_pct": 96.858639,
+       "ratio": 0.968586,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.985525,
+        "lo": 0.933171,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.968586,
+        "two_sided": true,
+        "x": 185,
+        "z": 1.959964
+       }
+      },
+      "F-8a_exact_injected_word": {
+       "den": null,
+       "denominator": null,
+       "denominator_rule": "同上口径的活动措辞",
+       "num": null,
+       "numerator": null,
+       "rate": null,
+       "rate_pct": null,
+       "ratio": null,
+       "reason": "no_line_sha256",
+       "reason_detail": "本臂无 ctx.scene.line_sha256 ⇒ 无从反解",
+       "status": "not_applicable",
+       "wilson95": null
+      },
+      "F-8a_render_only": {
+       "den": null,
+       "denominator": null,
+       "denominator_rule": "严格口径：只认渲染措辞原文（不认语义等价项）；den 同 F-8a",
+       "num": null,
+       "numerator": null,
+       "rate": null,
+       "rate_pct": null,
+       "ratio": null,
+       "reason": "no_ctx_scene",
+       "reason_detail": "本臂无 ctx.scene.activity ⇒ 无从计算",
+       "status": "not_applicable",
+       "wilson95": null
+      },
+      "F-8p_open_any_cn": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "敏感性：正文命中任一 name_cn（不看本人位置）；den=全部 MSG_*",
+       "num": 1,
+       "numerator": 1,
+       "rate": 0.005236,
+       "rate_pct": 0.52356,
+       "ratio": 0.005236,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.029056,
+        "lo": 0.000925,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.005236,
+        "two_sided": true,
+        "x": 1,
+        "z": 1.959964
+       }
+      },
+      "F-8p_short_only": {
+       "den": 167,
+       "denominator": 167,
+       "denominator_rule": "其中只靠简称命中（如 广场/面包铺）的条数，用于说明简称扩表的贡献",
+       "num": 0,
+       "numerator": 0,
+       "rate": 0.0,
+       "rate_pct": 0.0,
+       "ratio": 0.0,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.022486,
+        "lo": 0.0,
+        "method": "wilson_score_no_cc",
+        "n": 167,
+        "p": 0.0,
+        "two_sided": true,
+        "x": 0,
+        "z": 1.959964
+       }
+      },
+      "F-8t_broad": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "宽表敏感性（wide_reference 词表，不按 slot 限定）；不参与判定",
+       "num": 60,
+       "numerator": 60,
+       "rate": 0.314136,
+       "rate_pct": 31.413613,
+       "ratio": 0.314136,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.383079,
+        "lo": 0.252522,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.314136,
+        "two_sided": true,
+        "x": 60,
+        "z": 1.959964
+       }
+      },
+      "F-8t_broad_scoped": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "Amendment 2 候选（未批准，仅敏感性）：把渲染词 下午/上午/早上/晚上 加进对应档，仍按本回合 slot 限定",
+       "lexicon": "slot_scoped_broad",
+       "num": 6,
+       "numerator": 6,
+       "rate": 0.031414,
+       "rate_pct": 3.141361,
+       "ratio": 0.031414,
+       "scope": "own_slot",
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.066829,
+        "lo": 0.014475,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.031414,
+        "two_sided": true,
+        "x": 6,
+        "z": 1.959964
+       }
+      },
+      "F-8t_ckpt_narrow": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "复现跑前 checkpoint 窄表读数（time.ckpt_reference.narrow_tokens，不按 slot 限定）；仅核对工具一致性，不参与判定",
+       "num": 7,
+       "numerator": 7,
+       "rate": 0.036649,
+       "rate_pct": 3.664921,
+       "ratio": 0.036649,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.073705,
+        "lo": 0.017864,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.036649,
+        "two_sided": true,
+        "x": 7,
+        "z": 1.959964
+       }
+      },
+      "F-8t_ckpt_wide": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "复现跑前 checkpoint 宽表读数（ckpt_reference.narrow_tokens ∪ {刚}，不按 slot 限定）；仅核对工具一致性，不参与判定",
+       "num": 58,
+       "numerator": 58,
+       "rate": 0.303665,
+       "rate_pct": 30.366492,
+       "ratio": 0.303665,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.372219,
+        "lo": 0.242852,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.303665,
+        "two_sided": true,
+        "x": 58,
+        "z": 1.959964
+       }
+      },
+      "F-8t_exact_injected_word": {
+       "den": null,
+       "denominator": null,
+       "denominator_rule": "仅当 ctx.scene.line_sha256 可反解：num=正文含「模型实际看到的那一 slot 措辞」",
+       "num": null,
+       "numerator": null,
+       "rate": null,
+       "rate_pct": null,
+       "ratio": null,
+       "reason": "no_line_sha256",
+       "reason_detail": "本臂无 ctx.scene.line_sha256（OFF 臂/老批预期）⇒ 无从反解",
+       "status": "not_applicable",
+       "wilson95": null
+      },
+      "F-8t_narrow_plus_jinr": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "敏感性：当前 narrow 词表 ∪ {今儿}，不按 slot 限定；不参与判定",
+       "num": 8,
+       "numerator": 8,
+       "rate": 0.041885,
+       "rate_pct": 4.188482,
+       "ratio": 0.041885,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.08046,
+        "lo": 0.021374,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.041885,
+        "two_sided": true,
+        "x": 8,
+        "z": 1.959964
+       }
+      },
+      "F-8t_open_any": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "敏感性：narrow 词表不按 slot 限定；den=全部 MSG_*",
+       "num": 7,
+       "numerator": 7,
+       "rate": 0.036649,
+       "rate_pct": 3.664921,
+       "ratio": 0.036649,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.073705,
+        "lo": 0.017864,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.036649,
+        "two_sided": true,
+        "x": 7,
+        "z": 1.959964
+       }
+      },
+      "F-8t_render_echo": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "回声通道（防系统性判漏）：命中渲染词表 SLOT_WORDS 的可指认词元任一（含 下午/上午/午后）；不参与判定",
+       "num": 6,
+       "numerator": 6,
+       "rate": 0.031414,
+       "rate_pct": 3.141361,
+       "ratio": 0.031414,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.066829,
+        "lo": 0.014475,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.031414,
+        "two_sided": true,
+        "x": 6,
+        "z": 1.959964
+       }
+      },
+      "F-8t_wide_reference": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "仅参考、不参与判定（Amendment 1）",
+       "num": 60,
+       "numerator": 60,
+       "rate": 0.314136,
+       "rate_pct": 31.413613,
+       "ratio": 0.314136,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.383079,
+        "lo": 0.252522,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.314136,
+        "two_sided": true,
+        "x": 60,
+        "z": 1.959964
+       }
+      }
+     },
+     "guard": {
+      "place_alias_hit": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "归因抽样用（provisional 别名），不参与判定",
+       "num": 0,
+       "numerator": 0,
+       "rate": 0.0,
+       "rate_pct": 0.0,
+       "ratio": 0.0,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.019716,
+        "lo": 0.0,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.0,
+        "two_sided": true,
+        "x": 0,
+        "z": 1.959964
+       }
+      },
+      "place_id_in_body": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "守卫（对应 L-8c）：正文出现 places.json::place_id 内部 id 的条数；>0 ⇒ 硬失败",
+       "num": 0,
+       "numerator": 0,
+       "rate": 0.0,
+       "rate_pct": 0.0,
+       "ratio": 0.0,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.019716,
+        "lo": 0.0,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.0,
+        "two_sided": true,
+        "x": 0,
+        "z": 1.959964
+       }
+      }
+     },
+     "known_gap": {
+      "closed_by": "Amendment-2（仅 `下午` 一项；`上午/早上/晚上` 明确不升）",
+      "disposition": "其中 `下午` 已于 Amendment 2（2026-10-23 02:32:25 +0800，report-release 落 prereg §10；team-leader 02:31:30 裁定）升为 afternoon 档内判定词；`上午/早上/晚上` 本次不升，留在 `slot_scoped_broad`。条目保留以体现「曾有缺口→按程序补上」，不删除",
+      "residual": "上午/早上/晚上 仍未进主判定：前两者在渲染值域里只以「上午这会儿」出现（已被 这会儿 覆盖），后者不是渲染措辞；故无需再扩",
+      "status": "已按 Amendment 2 补上（条目保留，体现「曾有缺口→按程序补上」）",
+      "tokens": [
+       "上午",
+       "早上"
+      ],
+      "why": "这两个是渲染值域里的词形（morning 档以「上午这会儿」出现，已被 slot_agnostic「这会儿」覆盖），但作为裸词属 Amendment 1 排除的高自发词，故不进主判定口径"
+     },
+     "lexicon": {
+      "frozen_at": "2026-10-23T02:34:40+0800",
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/f8_lexicon.json",
+      "sha256": "sha256:004f3bca138e7800a0fc0ac7e0f1c0f0bdb9b0a862432fa53f65b152bdb2ddd3",
+      "sources": {
+       "code": "code/life/scene_anchor.py::SLOT_WORDS / ACTIVITY_WORDS",
+       "place_names": "code/config/places.json::places[].name_cn",
+       "render_lexicon_json": "rounds/20261023-0202/scene-render-lexicon.json",
+       "render_lexicon_md": "rounds/20261023-0202/scene-render-lexicon.md",
+       "scene_anchor_LEXICON_VERSION": "scene-anchor-v1",
+       "scene_anchor_lexicon_sha256": "3f12e5b8d2e3088e48a72333b65da13b8219bed5a068d6d3d4a4a963a7866fbf",
+       "scene_anchor_lexicon_sha256_scope": "只覆盖 SLOT_WORDS + ACTIVITY_WORDS + 版本号，不含 places.json；地点词由 places.json 的 sha256 单独冻结"
+      },
+      "version": "f8-lexicon-v3"
+     },
+     "places": {
+      "n_places": 17,
+      "names": [
+       "住宅",
+       "农场",
+       "工坊",
+       "面包房",
+       "诊所",
+       "学校",
+       "事务所",
+       "市集",
+       "银行",
+       "中央广场",
+       "市政厅",
+       "图书馆",
+       "社区中心",
+       "咖啡馆",
+       "公园",
+       "礼堂",
+       "城门"
+      ],
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/../../code/config/places.json",
+      "sha256": "sha256:c36c0f8776372f4e36ec39126f0fd9546c1dadf5e814c294172f5e2e04bb66fa",
+      "short_names": {
+       "中央广场": [
+        "广场"
+       ],
+       "市集": [
+        "集市"
+       ],
+       "社区中心": [
+        "活动中心"
+       ],
+       "面包房": [
+        "面包铺",
+        "面包坊"
+       ]
+      }
+     },
+     "samples": [
+      {
+       "activity_hit": false,
+       "body": "你这会儿蹲在井台边择韭菜，是家里要来客了吧。",
+       "place": "park",
+       "place_hit": false,
+       "round": 0,
+       "seq": 145,
+       "slot": "morning",
+       "time_hit": true,
+       "type": "MSG_DM"
+      },
+      {
+       "activity_hit": false,
+       "body": "你这会儿账本摊在柜台上，铅笔头还咬在嘴里，是打算把月牙那两拍半也记进流水？多出的气孔能透气，多出的拍子得看落在谁家鼓点上",
+       "place": "market",
+       "place_hit": false,
+       "round": 4,
+       "seq": 3760,
+       "slot": "afternoon",
+       "time_hit": true,
+       "type": "MSG_DM"
+      },
+      {
+       "activity_hit": false,
+       "body": "我这会儿蹲在铺子后头啃冷馒头，就着半碗凉水，肚子还是咕咕叫。你桌上那本登记簿翻到陈家那页，编号抄完顺手把纸角压平，别让风",
+       "place": "park",
+       "place_hit": false,
+       "round": 7,
+       "seq": 6049,
+       "slot": "evening",
+       "time_hit": true,
+       "type": "MSG_DM"
+      },
+      {
+       "activity_hit": false,
+       "body": "哎，赵家老三那三包盐我让他当面点清了，回头我再去他铺子门口蹲着看他拆包；我这会儿正把灶台边那半袋粗盐往陶罐里倒，罐口垫了",
+       "place": "school",
+       "place_hit": false,
+       "round": 12,
+       "seq": 19261,
+       "slot": "morning",
+       "time_hit": true,
+       "type": "MSG_DM"
+      },
+      {
+       "activity_hit": false,
+       "body": "老石，我这会儿正把灶上那锅红烧肉的火关小，刚才手一抖多撒了半勺糖，甜得我自己都皱眉，你那边今天忙得咋样？",
+       "place": "park",
+       "place_hit": false,
+       "round": 12,
+       "seq": 19831,
+       "slot": "morning",
+       "time_hit": true,
+       "type": "MSG_DM"
+      },
+      {
+       "activity_hit": false,
+       "body": "止咳散这三包扎口前得拿秤再校一遍吧，我上回在邻县药铺见人漏了半钱，王家老太太咳得半夜坐起来。你手边这秤准不准，要不我帮你",
+       "place": "residence",
+       "place_hit": false,
+       "round": 23,
+       "seq": 32920,
+       "slot": "night",
+       "time_hit": true,
+       "type": "MSG_DM"
+      }
+     ],
+     "thresholds": {
+      "D2_min_abs_effect_X": 0.15,
+      "F8_unit": "per-message",
+      "F8a_denominator": "含 payload.ctx.scene.activity 的 MSG_*（缺失 ⇒ status=not_applicable / reason=no_ctx_scene，不填 0 不出率）",
+      "F8p_denominator": "有 payload.place 的 MSG_*（MSG_PUBLIC 无该字段 ⇒ 不进分母，另单列 *_public 覆盖说明）",
+      "F8t_denominator": "全部 MSG_*（MSG_PUBLIC 也计；slot 缺失另计并从该分项分母剔除）",
+      "degenerate_off_num_le": 2,
+      "wilson_z_95_two_sided": 1.959964
+     },
+     "unavailable_ledger": [
+      {
+       "den": null,
+       "detail": "本臂 MSG payload 无 ctx.scene.activity（191/191 条缺该键）⇒ 分母不适用；不等于『模型没做活动锚定』",
+       "item": "F-8a_activity",
+       "num": null,
+       "reason": "no_ctx_scene",
+       "status": "not_applicable"
+      },
+      {
+       "den": 167,
+       "item": "F-8p_place",
+       "num": 0,
+       "reason": "24 条 MSG（MSG_PUBLIC）无 payload.place，已从分母剔除，另在 F-8p_public 单列覆盖（不作判定）"
+      }
+     ],
+     "unit": "per-message"
+    },
+    "F_lexicons": {
+     "emotion_sha256": "sha256:8427245cdf65550c6fb80d10616a01d9054d3d4fe97842b4b81feed7afd4a996",
+     "repair_sha256": "sha256:0528e735909c90c4181539f9ba239298d8070c1a2dc2b2fcd394724c1f440fc9",
+     "task_tags_sha256": "sha256:a71c6c963279b28f6f9de3b44317b5c9bbf80498c594c98f9460ed79954aa69e",
+     "timeref_sha256": "sha256:9357b4c91aad8584e6d845e311eed289b1f58179ccbfdc3a49588641978b7d5d"
+    },
+    "K-1_topic_continuation": {
+     "cont_backref": 0.736,
+     "cont_lexical": 0.824,
+     "cont_same_topic": 1.0,
+     "cont_same_topic_denominator": 125,
+     "denominator_adjacent_pairs": 125,
+     "grouping": "mixed = channel 感知：dm 按无序对、public 按 (day) 合流、group 按 group_id/day；与 prompt-linguist 的 D3 口径一致（t300 分母 68）",
+     "tag_overlap_rate_reference": 1.0
+    },
+    "K-1b_topic_continuation_wide": {
+     "composite": "leader 裁决：不出合成数；如需派生指标须另行登记，不得作为判据",
+     "cont_backref": 0.727273,
+     "cont_lexical": 0.203209,
+     "cont_same_topic": 0.358289,
+     "cont_same_topic_denominator": 187,
+     "denominator_adjacent_pairs": 187,
+     "grouping": "wide = (day, channel)：同一天同一渠道内按 (round,seq) 相邻（口径更宽，分母更大）",
+     "tag_overlap_rate_reference": 0.358289
+    },
+    "K-1c_topic_continuation_pair": {
+     "composite": "leader 裁决：不出合成数；如需派生指标须另行登记，不得作为判据",
+     "cont_backref": 0.751678,
+     "cont_lexical": 0.624161,
+     "cont_same_topic": 0.973154,
+     "cont_same_topic_denominator": 149,
+     "denominator_adjacent_pairs": 149,
+     "grouping": "narrow = (day, channel, {from,to})：同一天同一对参与者的会话线（与 S-1/S-2 的 legacy 线程一致）",
+     "tag_overlap_rate_reference": 0.973154
+    },
+    "L-13_token_leak": {
+     "by_topic": {},
+     "n": 0,
+     "rule": "分母 = 全部 MSG；分子 = `ctx.topic` 原字符串（内部 token）直接出现在 body 的消息数。只测「token 未人话化」，不测语义正确性",
+     "samples": [],
+     "token_leak_rate": 0.0
+    },
+    "L_wording": {
+     "L-10_denominator": 174,
+     "L-10_self_address_error_rate": 0.0,
+     "L-11_note": "only dm+group; MSG_PUBLIC 单列（本行不含）",
+     "L-11_second_person_rate_dm_group": 0.790419,
+     "L-12_definitions": {
+      "L-12a_mention": "正文出现对方名字（DM: to；GROUP: 任一其他 participants；排除说话者自己、排除自己名字）",
+      "L-12b_address": "名字以称呼语形式出现：名字后紧跟 [，、！？：；—…~～啊呀哦呢哈嘛吧] 或已到句末",
+      "denominator": "DM+GROUP 消息条数（不含 PUBLIC）",
+      "judgement": "判定用 L-12b（称呼）；L-12a 作描述性提及率"
+     },
+     "L-12_peer_mention_rate": 0.383234,
+     "L-12b_peer_address_rate": 0.281437,
+     "L-1_len": {
+      "all": {
+       "max": 105.0,
+       "mean": 44.057592,
+       "min": 19.0,
+       "n": 191,
+       "p10": 28.0,
+       "p50": 41.0,
+       "p90": 63.0,
+       "stdev": 15.525417
+      },
+      "excl_paren": {
+       "max": 105.0,
+       "mean": 44.057592,
+       "min": 19.0,
+       "n": 191,
+       "p10": 28.0,
+       "p50": 41.0,
+       "p90": 63.0,
+       "stdev": 15.525417
+      }
+     },
+     "L-2_narration_rate_proxy": 0.0,
+     "L-3_paren_block_any": 0.0,
+     "L-4_third_person_self_rate": 0.015707,
+     "L-5_template_hit_by_pattern": {},
+     "L-5_template_hit_rate": 0.0,
+     "L-6_dup_exact_rate": 0.0,
+     "L-7_dup_ngram8_rate": 0.21466,
+     "L-8_agent_id_leak_rate": 0.0,
+     "L-8_definition": "分子=body（仅正文，不含 msg_id/body_ref）命中 re 正则 `P\\d{3}(?!\\d)`（不加 \\b；后瞻仅防未来 4 位 ID，与 `P\\d{3}` 在当前数据上等价）；括号内 ID 也计入（另给 L-8b 只统计括号内）；分母=全部 MSG 条数",
+     "L-8_invariant": {
+      "counts": {
+       "L-8": 0,
+       "L-8b": 0,
+       "L-8c": 0
+      },
+      "holds": true,
+      "identity": "L-8 == L-8b + L-8c（消息级，互斥分类）"
+     },
+     "L-8b_definition": "括号块=re.findall(r\"（[^（）]*）|\\([^()]*\\)\")（不嵌套、全半角都算）；移除括号块后余串若含未闭合左括号，则其后全算旁白；余串仍含 ID ⇒ 记「本体命中」(L-8c)，否则记 L-8b。同一句既有括号块又有括号外 ID ⇒ 归本体（只进 L-8/L-8c，不进 L-8b）",
+     "L-8b_paren_only_id_rate": 0.0,
+     "L-8c_body_leak_rate": 0.0,
+     "L-9_meta_talk_rate": 0.0,
+     "denominators": {
+      "dm_group": 167,
+      "per_message": 191,
+      "threads": 66
+     }
+    },
+    "S-1C_turns_by_turn_index": {
+     "definition": "轮数 = 线程内 turn_index 去重后的个数（群聊同轮多人并发只计 1 轮）；无 turn_index 的 legacy 批次为 null",
+     "dist": {
+      "max": 6.0,
+      "mean": 2.893939,
+      "min": 1.0,
+      "n": 66,
+      "p10": 1.0,
+      "p50": 1.0,
+      "p90": 6.0,
+      "stdev": 2.195925
+     },
+     "note": "计轮请用本字段；S-1A 是「说话人交替段数」，不等于轮数；chain_by_pointer 只作可解析性辅助"
+    },
+    "S-1_turns_per_thread": {
+     "A_speaker_turns": {
+      "max": 6.0,
+      "mean": 2.893939,
+      "min": 1.0,
+      "n": 66,
+      "p10": 1.0,
+      "p50": 1.0,
+      "p90": 6.0,
+      "stdev": 2.195925
+     },
+     "B_note": "v0 无指针字段时恒为 0（字段缺失，非缺陷）；B 不参与前后差",
+     "B_roundtrips": {
+      "max": 5.0,
+      "mean": 1.893939,
+      "min": 0.0,
+      "n": 66,
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 5.0,
+      "stdev": 2.195925
+     }
+    },
+    "S-2_thread_scale": {
+     "msgs_per_thread": {
+      "max": 6.0,
+      "mean": 2.893939,
+      "min": 1.0,
+      "n": 66,
+      "p10": 1.0,
+      "p50": 1.0,
+      "p90": 6.0,
+      "stdev": 2.195925
+     },
+     "multi_turn_thread_ratio": 0.424242,
+     "multi_turn_threshold": "turns_A >= 3",
+     "single_msg_thread_ratio": 0.515152,
+     "single_speaker_thread_ratio": 0.515152,
+     "speakers_per_thread": {
+      "max": 2.0,
+      "mean": 1.484848,
+      "min": 1.0,
+      "n": 66,
+      "p10": 1.0,
+      "p50": 1.0,
+      "p90": 2.0,
+      "stdev": 0.49977
+     }
+    },
+    "S-3_longest_chain": {
+     "chain_by_alternation": {
+      "max": 6.0,
+      "mean": 2.893939,
+      "min": 1.0,
+      "n": 66,
+      "p10": 1.0,
+      "p50": 1.0,
+      "p90": 6.0,
+      "stdev": 2.195925
+     },
+     "chain_by_pointer": {
+      "max": 6.0,
+      "mean": 2.893939,
+      "min": 1.0,
+      "n": 66,
+      "p10": 1.0,
+      "p50": 1.0,
+      "p90": 6.0,
+      "stdev": 2.195925
+     }
+    },
+    "S-4_reply_pointer_coverage": {
+     "classify": "empty=未填 / dangling=指向不存在的 msg_id / forward=指向同线程未来 / cross_thread=指向别线程 / ok=指向同线程前序",
+     "denominator_nonfirst_msgs": 125,
+     "ptr_cross_thread": 0,
+     "ptr_dangling": 0,
+     "ptr_empty": 0,
+     "ptr_forward": 0,
+     "ptr_ok": 125,
+     "rate": 1.0
+    },
+    "S-5_orphan_msg_rate": 0.0,
+    "S-5_orphan_msg_rate_note": "ok",
+    "admission": {
+     "checks": {
+      "B-10_provider": {
+       "detail": "openai_compat",
+       "pass": true
+      },
+      "B-11_real_calls": {
+       "detail": {
+        "dialogue_calls": 191
+       },
+       "pass": true
+      },
+      "B-12_degraded_ratio": {
+       "detail": {
+        "calls": 2252,
+        "degraded": 0,
+        "ratio": 0.0
+       },
+       "pass": true
+      },
+      "B-13_event_families": {
+       "detail": {
+        "missing": []
+       },
+       "pass": true
+      },
+      "B-15_msg_fields": {
+       "detail": {
+        "empty_body": [],
+        "required_keys": [
+         "from",
+         "to",
+         "body",
+         "msg_id",
+         "day",
+         "slot",
+         "place",
+         "tag_hints"
+        ]
+       },
+       "pass": true
+      },
+      "B-15_msg_volume": {
+       "detail": {
+        "dm_threads": 32,
+        "floor": "MSG>=150 且 MSG_DM>=100 且 DM 会话线>=12（v1.2）",
+        "messages": 191,
+        "msg_dm": 167
+       },
+       "pass": true
+      },
+      "B-16_round_dense": {
+       "detail": {
+        "max": 23,
+        "min": 0,
+        "n": 24
+       },
+       "pass": true
+      },
+      "B-17_hash_chain": {
+       "detail": {
+        "hash_links_ok": true,
+        "n": 33850,
+        "seq_dense": true
+       },
+       "pass": true
+      },
+      "B-19_provider_distribution": {
+       "detail": {
+        "providers": {
+         "openai_compat": 2252
+        },
+        "rule": "全部 LLM_CALL.provider 必须为 openai_compat"
+       },
+       "pass": true
+      },
+      "B-20_model_no_mock": {
+       "detail": {
+        "models": [
+         "DeepSeek-Flash"
+        ],
+        "rule": "model 去重集合不得含 mock"
+       },
+       "pass": true
+      },
+      "B-21_body_not_template": {
+       "detail": {
+        "L-5_template_hit_rate": 0.0,
+        "L-6_dup_exact_rate": 0.0,
+        "rule": "模板命中率<50% 且 完全重复率<50%；另需人工抽样双查"
+       },
+       "pass": true
+      },
+      "B-2b_manifest_effective": {
+       "detail": {
+        "note": "",
+        "rounds_effective": 24,
+        "rounds_per_slot_effective": 3
+       },
+       "pass": true
+      },
+      "B-7_files": {
+       "detail": "meta.json 存在",
+       "pass": true
+      },
+      "B-8_parse": {
+       "detail": [],
+       "pass": true
+      },
+      "B-9_event_count": {
+       "detail": {
+        "actual_lines": 33850,
+        "meta.events": 33850
+       },
+       "pass": true
+      }
+     },
+     "evidence_level": "evidence",
+     "manifest_profile": "strict",
+     "verdict": "ADMITTED"
+    },
+    "assertions": {
+     "msg_id_n": 191,
+     "msg_id_unique": false,
+     "msg_uid_n": 191,
+     "msg_uid_unique": true,
+     "note": "D2 起指针目标 = msg_uid(<seed>:<seq>)，全局唯一；msg_id 为展示标签（legacy 格式可能重复，不作指针目标）"
+    },
+    "inputs": {
+     "chain": {
+      "hash_links_ok": true,
+      "n": 33850,
+      "seq_dense": true
+     },
+     "f8_lexicon": {
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/f8_lexicon.json",
+      "sha256": "sha256:004f3bca138e7800a0fc0ac7e0f1c0f0bdb9b0a862432fa53f65b152bdb2ddd3",
+      "version": "f8-lexicon-v3"
+     },
+     "f8_places": {
+      "n": 17,
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/../../code/config/places.json",
+      "sha256": "sha256:c36c0f8776372f4e36ec39126f0fd9546c1dadf5e814c294172f5e2e04bb66fa"
+     },
+     "f_lexicons": {
+      "emotion_sha": "sha256:8427245cdf65550c6fb80d10616a01d9054d3d4fe97842b4b81feed7afd4a996",
+      "repair_sha": "sha256:0528e735909c90c4181539f9ba239298d8070c1a2dc2b2fcd394724c1f440fc9",
+      "task_tags_sha": "sha256:a71c6c963279b28f6f9de3b44317b5c9bbf80498c594c98f9460ed79954aa69e",
+      "timeref_sha": "sha256:9357b4c91aad8584e6d845e311eed289b1f58179ccbfdc3a49588641978b7d5d"
+     },
+     "lexicon": {
+      "n": 16,
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/backref_lexicon.txt",
+      "sha256": "sha256:6fda89f1d62e22937313152b30826f69af9ce8a5d772c355e6f9130445d77a30"
+     },
+     "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9m-ab-off_n16r24_s42/run.jsonl",
+     "log_parse": {
+      "bad_lines": [],
+      "n_bad": 0
+     },
+     "meta": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9m-ab-off_n16r24_s42/meta.json",
+     "meta_sha256": "sha256:16647d039f873af7f869a2089880e15de1247351573f3ad5d817cef7652e7b1f",
+     "personas": {
+      "derived": "{\"P001\":\"老周\",\"P002\":\"老石\",\"P003\":\"阿禾\",\"P004\":\"秀娘\",\"P005\":\"陈医\",\"P006\":\"方老师\",\"P007\":\"阿林\",\"P008\":\"周公文\",\"P009\":\"金先生\",\"P010\":\"月牙\",\"P011\":\"小满\",\"P012\":\"桂婶\",\"P013\":\"铁头\",\"P014\":\"巧儿\",\"P015\":\"五味\",\"P016\":\"兰姐\",\"P017\":\"书言\",\"P018\":\"弦歌\",\"P019\":\"石头\",\"P020\":\"阿散\"}",
+      "derived_sha256": "sha256:cdf28d499146220921482d175d43298269d2c2b08c25c0585b6f5e51af4b64d1",
+      "exists": true,
+      "n": 20,
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/../../code/config/personas.json",
+      "sha256": "sha256:08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d"
+     },
+     "rounds_max": 24,
+     "run_sha256": "sha256:5f1dda97633ccf0b3f7d2b279c39a43752db7d945a2ca6f9133e0b2bc9106ed5",
+     "script": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/dialogue_metrics.py",
+     "script_sha256": "sha256:1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271",
+     "seed": 42,
+     "subset": null,
+     "templates": {
+      "n": 8,
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/template_patterns.txt",
+      "sha256": "sha256:05b29b068123b81702bc029fae5773edecae6848d6788745af6fab4dac589f4e"
+     }
+    },
+    "llm": {
+     "E-2_tokens_out_per_dialogue_call": 0.0,
+     "E-2_tokens_out_per_message": 0.0,
+     "degraded_calls": 0,
+     "degraded_ratio": 0.0,
+     "dialogue_calls": 191,
+     "llm_calls": 2252,
+     "provider_models": [
+      {
+       "calls": 2252,
+       "model": "DeepSeek-Flash",
+       "provider": "openai_compat"
+      }
+     ]
+    },
+    "meta": {
+     "channels": {
+      "dm": 167,
+      "public": 24
+     },
+     "n_messages": 191,
+     "n_threads": 66,
+     "thread_schema": "explicit"
+    },
+    "schema_version": "d5-metrics/1.0"
+   }
+  },
+  "on": {
+   "run_dir": "v2/evidence/d9m-ab-on_n16r24_s42",
+   "narration": {
+    "n_msgs": 191,
+    "msgs_with_narration": 177,
+    "narration_msg_rate": 0.9267015706806283,
+    "narration_blocks": 196,
+    "narration_blocks_unique": 193,
+    "narration_block_unique_rate": 0.9846938775510204,
+    "narration_share_of_chars": 0.2875608676405489,
+    "narration_top_blocks": [
+     [
+      "把算盘珠子拨回原位",
+      2
+     ],
+     [
+      "把墨斗线在指头上绕了两圈",
+      2
+     ],
+     [
+      "抬眼",
+      2
+     ],
+     [
+      "把手里那半块冷馍掰开又捏上",
+      1
+     ],
+     [
+      "把烧红的锄头从炉里夹出来搁砧子上",
+      1
+     ]
+    ]
+   },
+   "d5": {
+    "E_efficiency": {
+     "E-1_msg_per_agent_round": 0.542614,
+     "n_agents": 16,
+     "n_rounds": 22
+    },
+    "F-1_chatter": {
+     "functional_msgs": 48,
+     "nonfunctional_chatter_rate": 0.748691,
+     "rule": "功能性 = tag_hints∩task_tags 非空 或 正文命中事务正则；闲聊率 = 1 − 功能性占比"
+    },
+    "F-2_content_drift": {
+     "denominator_adjacent_pairs": 125,
+     "drift_rate": 0.696,
+     "jaccard_all": {
+      "max": 0.368421,
+      "mean": 0.079547,
+      "min": 0.0,
+      "n": 125,
+      "p10": 0.0,
+      "p50": 0.064516,
+      "p90": 0.181115,
+      "stdev": 0.071516
+     },
+     "jaccard_switched": {
+      "max": null,
+      "mean": null,
+      "min": null,
+      "n": 0,
+      "p10": null,
+      "p50": null,
+      "p90": null,
+      "stdev": null
+     },
+     "rule": "内容侧话题漂移：相邻消息 char-bigram Jaccard<0.10 记一次换话头；**不以 tag 作否决项**（tag 恒定是引擎构造，不是对话事实）"
+    },
+    "F-2_tag_change_split": {
+     "denominator_adjacent_pairs": 125,
+     "rule": "R19 拆分（board-scout 要求）：「多挂一个 tag、原话题保留」记 tag_added（话题展开）；「两集合无交集」记 tag_replaced（真换话题，**主判据**）。两者互斥，和 = F-2_tag_switch.switch_pairs（仅当 prev 非空时；空 tag 集不计入任一侧）",
+     "tag_added": 0,
+     "tag_added_rate": 0.0,
+     "tag_replaced": 0,
+     "tag_replaced_rate": 0.0
+    },
+    "F-2_tag_switch": {
+     "denominator_adjacent_pairs": 125,
+     "rule": "机制侧话题切换：相邻消息 tag 集合不相等即记一次（含「回复追加第二个 tag」）；本列测「引擎是否承认话题变了」，**不得单独作为效果判据**",
+     "switch_pairs": 0,
+     "switch_rate": 0.0
+    },
+    "F-2_topic_drift": {
+     "denominator_adjacent_pairs": 125,
+     "drift_rate": 0.0,
+     "multi_topic_thread_ratio": 0.0,
+     "rule": "相邻消息 tag 无交集 且 char-bigram Jaccard<0.10 记一次话题转移；漂移率=转移/相邻对",
+     "status": "LEGACY_DEAD_RULER",
+     "status_note": "R19：本键保留原口径仅作跨报告对照。新结构下 tag_hints 线程内恒定 ⇒ 「tag 无交集」恒 False ⇒ 该读数结构性恒 0，不得作为效果判据；请读 F-2_content_drift / F-2_tag_switch（口径变更依据 team-workspace/r19-f2-recheck.md）。"
+    },
+    "F-2b_multi_topic_threads": {
+     "denominator_threads": 66,
+     "denominator_threads_group": 66,
+     "multi_topic_thread_ratio": 0.0,
+     "n_multi_topic_threads": 0,
+     "rule": "线程内 tag 种数≥2 的线程数 / 线程数；R19 起**分子分母统一到 mixed_key 线程口径**，并同时打印两个分母（旧版分子 mixed_key、分母 group_threads，v0 批 136 vs 172 不一致）"
+    },
+    "F-3_emotion_echo": {
+     "denominator": 1,
+     "echo_rate": 0.0,
+     "rule": "上一句极性≠0 时，下一句极性相同 或 含共情标记 → 呼应"
+    },
+    "F-4_tension_repair": {
+     "closed_loop_rate": 0.0,
+     "mean_lag_msgs": null,
+     "repaired": 0,
+     "rule": "张力 = 相邻极性相反 或 当前句极性为负；其后 8 条同线程内出现修复词 = 闭环",
+     "tension_events": 1
+    },
+    "F-5_habit_repetition": {
+     "habit_strength": 0.0,
+     "max_repeat_days_mean": 1.75,
+     "rule": "习惯 = 同一 agent 在同一 (slot, place) 出现 ≥3 天；强度 = 有习惯的 agent / agent 总数"
+    },
+    "F-6_crossday_memory": {
+     "rule": "正文命中时间回指词表（昨天/前天/上次…）即计入；只测「提到过去」，不测「引用是否正确」（后者需人工或 D2 ctx）",
+     "timeref_rate": 0.172775
+    },
+    "F-7a_offscreen_mention": {
+     "applicability": "ok",
+     "denominator": 191,
+     "offscreen_mention_rate": 0.141361,
+     "rule": "提及他人名字（persona 主干名）时，若该角色在同一 round 的 PLACE_ARRIVED 位置 ≠ 本条消息 place，记为越界提及；只测「引用不可能在场的人」，不测「引用不可能知道的事件」（后者需 judge，F-7b）",
+     "unknown_place_lookups": 115
+    },
+    "F-8_scene_anchor": {
+     "F-8": {
+      "den": 191,
+      "denominator": 191,
+      "denominator_rule": "num=命中本人当回合处境（时段**仅档内词** / 自身地点 / 活动 任一）的 MSG_* 条数；den=全部 MSG_*；时段侧用 F-8t_core（不含通用指示词「这会儿」），故与 F-8_with_all_time 可能不同；各分项按自己的分母计入（F-8p 用有 place 的 167、F-8a 用有 activity 的 n）",
+      "num": 6,
+      "numerator": 6,
+      "rate": 0.031414,
+      "rate_pct": 3.141361,
+      "ratio": 0.031414,
+      "wilson95": {
+       "confidence": 0.95,
+       "hi": 0.066829,
+       "lo": 0.014475,
+       "method": "wilson_score_no_cc",
+       "n": 191,
+       "p": 0.031414,
+       "two_sided": true,
+       "x": 6,
+       "z": 1.959964
+      }
+     },
+     "F-8a_activity": {
+      "activity_lexicon": "render ∪ semantic_equivalents",
+      "den": null,
+      "denominator": null,
+      "denominator_rule": "num=正文命中「本人 ctx.scene.activity」的渲染措辞或语义等价项；den=含 ctx.scene.activity 的 MSG_*",
+      "hits_by_activity": {},
+      "num": null,
+      "numerator": null,
+      "rate": null,
+      "rate_pct": null,
+      "ratio": null,
+      "reason": "no_ctx_scene",
+      "reason_detail": "本臂 MSG payload 无 ctx.scene.activity（191/191 条缺该键）⇒ 分母不适用；不等于『模型没做活动锚定』",
+      "status": "not_applicable",
+      "wilson95": null
+     },
+     "F-8p_place": {
+      "den": 167,
+      "denominator": 167,
+      "denominator_rule": "只认 places.json::name_cn（含 place.short_names 可接受简称）；num=正文含「本人 place」名称的条数；den=有 payload.place 的 MSG_*",
+      "num": 0,
+      "numerator": 0,
+      "rate": 0.0,
+      "rate_pct": 0.0,
+      "ratio": 0.0,
+      "wilson95": {
+       "confidence": 0.95,
+       "hi": 0.022486,
+       "lo": 0.0,
+       "method": "wilson_score_no_cc",
+       "n": 167,
+       "p": 0.0,
+       "two_sided": true,
+       "x": 0,
+       "z": 1.959964
+      }
+     },
+     "F-8p_public": {
+      "den": 24,
+      "denominator": 24,
+      "denominator_rule": "仅覆盖说明、不作判定：MSG_PUBLIC 无 place 字段，den=MSG_PUBLIC 条数，num=正文命中任一 name_cn 条数",
+      "num": 2,
+      "numerator": 2,
+      "rate": 0.083333,
+      "rate_pct": 8.333333,
+      "ratio": 0.083333,
+      "wilson95": {
+       "confidence": 0.95,
+       "hi": 0.258488,
+       "lo": 0.023159,
+       "method": "wilson_score_no_cc",
+       "n": 24,
+       "p": 0.083333,
+       "two_sided": true,
+       "x": 2,
+       "z": 1.959964
+      }
+     },
+     "F-8t_all": {
+      "den": 191,
+      "denominator": 191,
+      "denominator_rule": "词汇口径：num=含通用指示词「这会儿」在内的 narrow 命中条数；den=有 slot 的 MSG_*。**只能用于『词汇使用』结论，不得用于处境锚定裁定**",
+      "hits_by_slot": {
+       "afternoon": 1,
+       "evening": 3,
+       "morning": 2
+      },
+      "hits_by_token": {
+       "下午": 1,
+       "这会儿": 5
+      },
+      "hits_by_token_msgs": {
+       "42:1509": [
+        "这会儿"
+       ],
+       "42:22638": [
+        "下午"
+       ],
+       "42:5671": [
+        "这会儿"
+       ],
+       "42:6421": [
+        "这会儿"
+       ],
+       "42:694": [
+        "这会儿"
+       ],
+       "42:7815": [
+        "这会儿"
+       ]
+      },
+      "hits_by_token_note": "hits_by_token=非互斥（一条可命中多词，和可能 > 分子）；hits_by_token_primary=互斥（每条归到最长匹配词，和 == 分子）；A2-4 判「这会儿是否戴功」请用 primary",
+      "hits_by_token_primary": {
+       "下午": 1,
+       "这会儿": 5
+      },
+      "label": "all",
+      "lexicon": "narrow",
+      "num": 6,
+      "numerator": 6,
+      "onslot_word_hit_msgs": 1,
+      "rate": 0.031414,
+      "rate_pct": 3.141361,
+      "ratio": 0.031414,
+      "scope": "own_slot",
+      "wilson95": {
+       "confidence": 0.95,
+       "hi": 0.066829,
+       "lo": 0.014475,
+       "method": "wilson_score_no_cc",
+       "n": 191,
+       "p": 0.031414,
+       "two_sided": true,
+       "x": 6,
+       "z": 1.959964
+      }
+     },
+     "F-8t_core": {
+      "degenerate": false,
+      "degenerate_note": null,
+      "den": 191,
+      "denominator": 191,
+      "denominator_rule": "构念口径：num=正文命中**档内时段词**（排除 slot_agnostic「这会儿」类通用指示词）的 MSG_*；den=有 slot 的 MSG_*。**唯一可用于『处境锚定』结论的时段通道**",
+      "excluded_agnostic_tokens": [
+       "这会儿"
+      ],
+      "hits_by_token": {
+       "下午": 1
+      },
+      "hits_by_token_msgs": {
+       "42:22638": [
+        "下午"
+       ]
+      },
+      "hits_by_token_primary": {
+       "下午": 1
+      },
+      "label": "core",
+      "lexicon": "narrow_onslot",
+      "note": "排除的通用指示词见 excluded_agnostic_tokens；本通道与 F-8t_all 分母相同，可直接相减看「这会儿」贡献",
+      "num": 1,
+      "numerator": 1,
+      "rate": 0.005236,
+      "rate_pct": 0.52356,
+      "ratio": 0.005236,
+      "scope": "own_slot",
+      "wilson95": {
+       "confidence": 0.95,
+       "hi": 0.029056,
+       "lo": 0.000925,
+       "method": "wilson_score_no_cc",
+       "n": 191,
+       "p": 0.005236,
+       "two_sided": true,
+       "x": 1,
+       "z": 1.959964
+      }
+     },
+     "F-8t_time": {
+      "den": 191,
+      "den_by_slot": {
+       "afternoon": 51,
+       "evening": 55,
+       "morning": 53,
+       "night": 32
+      },
+      "denominator": 191,
+      "denominator_rule": "判定词表=time.narrow（Amendment 1：不含 刚/早上/下午/晚上/昨晚/今天/今儿）；scope=本人当回合 slot；den=有 slot 的 MSG_*",
+      "hits_by_slot": {
+       "afternoon": 1,
+       "evening": 3,
+       "morning": 2
+      },
+      "hits_by_token": {
+       "下午": 1,
+       "这会儿": 5
+      },
+      "hits_by_token_note": "hits_by_token=非互斥（一条可命中多词，和可能 > 分子）；hits_by_token_primary=互斥（每条归到最长匹配词，和 == 分子）。报告做 A2-4 有效性判定时用 primary 计「该词为主的命中条数」",
+      "hits_by_token_primary": {
+       "下午": 1,
+       "这会儿": 5
+      },
+      "lexicon": "narrow",
+      "n_slot_missing": 0,
+      "num": 6,
+      "numerator": 6,
+      "onslot_word_hit_msgs": 1,
+      "onslot_word_note": "档内词（非 slot_agnostic 的时段词）命中的消息条数；若该值在 ON 臂相对 OFF 增量主要来自 slot_agnostic「这会儿」，按 A2-4 只能写「短指示词使用上升」",
+      "rate": 0.031414,
+      "rate_pct": 3.141361,
+      "ratio": 0.031414,
+      "scope": "own_slot",
+      "wilson95": {
+       "confidence": 0.95,
+       "hi": 0.066829,
+       "lo": 0.014475,
+       "method": "wilson_score_no_cc",
+       "n": 191,
+       "p": 0.031414,
+       "two_sided": true,
+       "x": 6,
+       "z": 1.959964
+      }
+     },
+     "F-8t_time_pre_am2": {
+      "amendment_excluded": [
+       "下午"
+      ],
+      "den": 191,
+      "denominator": 191,
+      "denominator_rule": "敏感性对照（Amendment 2 前口径）：同一 onset 下剔除 ['下午']，仍按本回合 slot 限定；den 与 F-8t_time 完全相同，供报告并列证明结论不依赖该词取舍",
+      "lexicon": "narrow_pre_am2",
+      "num": 5,
+      "numerator": 5,
+      "rate": 0.026178,
+      "rate_pct": 2.617801,
+      "ratio": 0.026178,
+      "scope": "own_slot",
+      "wilson95": {
+       "confidence": 0.95,
+       "hi": 0.059807,
+       "lo": 0.011232,
+       "method": "wilson_score_no_cc",
+       "n": 191,
+       "p": 0.026178,
+       "two_sided": true,
+       "x": 5,
+       "z": 1.959964
+      }
+     },
+     "arm": "ON",
+     "coverage": {
+      "n_line_sha_recovered": 0,
+      "n_msg": 191,
+      "n_scene_activity": 0,
+      "n_scene_present": 0,
+      "n_slot_missing": 0,
+      "note": "ctx.scene 只在开关 ON 时出现 ⇒ OFF 臂/老批 n_scene_present=0 属预期，非实现缺陷"
+     },
+     "degenerate_d1": {
+      "d2_min_abs_effect_X": 0.15,
+      "note": "单臂输出只给数值；退化判定需两臂 json 对照",
+      "off_num_le": 2,
+      "rule": "OFF 臂 F-8 分子 ≤ 2 ⇒ C1/两比例检验不适用，只报 ON 臂 x/n + 标准 Wilson 95% CI"
+     },
+     "denominator_ledger": {
+      "F-8": 191,
+      "F-8a_activity": 0,
+      "F-8p_place": 167,
+      "F-8p_public": 24,
+      "F-8t_time": 191,
+      "note": "四个分项分母互不相同，逐个标明；不得共用总分母"
+     },
+     "diagnostics": {
+      "F-8_with_all_time": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "对照：把时段侧换成 F-8t_all 后的 F-8 总数；仅说明构念选择影响多大，不作判定",
+       "num": 177,
+       "numerator": 177,
+       "rate": 0.926702,
+       "rate_pct": 92.670157,
+       "ratio": 0.926702,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.955839,
+        "lo": 0.880739,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.926702,
+        "two_sided": true,
+        "x": 177,
+        "z": 1.959964
+       }
+      },
+      "F-8a_exact_injected_word": {
+       "den": null,
+       "denominator": null,
+       "denominator_rule": "同上口径的活动措辞",
+       "num": null,
+       "numerator": null,
+       "rate": null,
+       "rate_pct": null,
+       "ratio": null,
+       "reason": "no_line_sha256",
+       "reason_detail": "本臂无 ctx.scene.line_sha256 ⇒ 无从反解",
+       "status": "not_applicable",
+       "wilson95": null
+      },
+      "F-8a_render_only": {
+       "den": null,
+       "denominator": null,
+       "denominator_rule": "严格口径：只认渲染措辞原文（不认语义等价项）；den 同 F-8a",
+       "num": null,
+       "numerator": null,
+       "rate": null,
+       "rate_pct": null,
+       "ratio": null,
+       "reason": "no_ctx_scene",
+       "reason_detail": "本臂无 ctx.scene.activity ⇒ 无从计算",
+       "status": "not_applicable",
+       "wilson95": null
+      },
+      "F-8p_open_any_cn": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "敏感性：正文命中任一 name_cn（不看本人位置）；den=全部 MSG_*",
+       "num": 3,
+       "numerator": 3,
+       "rate": 0.015707,
+       "rate_pct": 1.570681,
+       "ratio": 0.015707,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.045154,
+        "lo": 0.005356,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.015707,
+        "two_sided": true,
+        "x": 3,
+        "z": 1.959964
+       }
+      },
+      "F-8p_short_only": {
+       "den": 167,
+       "denominator": 167,
+       "denominator_rule": "其中只靠简称命中（如 广场/面包铺）的条数，用于说明简称扩表的贡献",
+       "num": 0,
+       "numerator": 0,
+       "rate": 0.0,
+       "rate_pct": 0.0,
+       "ratio": 0.0,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.022486,
+        "lo": 0.0,
+        "method": "wilson_score_no_cc",
+        "n": 167,
+        "p": 0.0,
+        "two_sided": true,
+        "x": 0,
+        "z": 1.959964
+       }
+      },
+      "F-8t_broad": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "宽表敏感性（wide_reference 词表，不按 slot 限定）；不参与判定",
+       "num": 41,
+       "numerator": 41,
+       "rate": 0.21466,
+       "rate_pct": 21.465969,
+       "ratio": 0.21466,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.278211,
+        "lo": 0.16236,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.21466,
+        "two_sided": true,
+        "x": 41,
+        "z": 1.959964
+       }
+      },
+      "F-8t_broad_scoped": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "Amendment 2 候选（未批准，仅敏感性）：把渲染词 下午/上午/早上/晚上 加进对应档，仍按本回合 slot 限定",
+       "lexicon": "slot_scoped_broad",
+       "num": 6,
+       "numerator": 6,
+       "rate": 0.031414,
+       "rate_pct": 3.141361,
+       "ratio": 0.031414,
+       "scope": "own_slot",
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.066829,
+        "lo": 0.014475,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.031414,
+        "two_sided": true,
+        "x": 6,
+        "z": 1.959964
+       }
+      },
+      "F-8t_ckpt_narrow": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "复现跑前 checkpoint 窄表读数（time.ckpt_reference.narrow_tokens，不按 slot 限定）；仅核对工具一致性，不参与判定",
+       "num": 10,
+       "numerator": 10,
+       "rate": 0.052356,
+       "rate_pct": 5.235602,
+       "ratio": 0.052356,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.093679,
+        "lo": 0.028684,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.052356,
+        "two_sided": true,
+        "x": 10,
+        "z": 1.959964
+       }
+      },
+      "F-8t_ckpt_wide": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "复现跑前 checkpoint 宽表读数（ckpt_reference.narrow_tokens ∪ {刚}，不按 slot 限定）；仅核对工具一致性，不参与判定",
+       "num": 39,
+       "numerator": 39,
+       "rate": 0.204188,
+       "rate_pct": 20.418848,
+       "ratio": 0.204188,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.266922,
+        "lo": 0.153119,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.204188,
+        "two_sided": true,
+        "x": 39,
+        "z": 1.959964
+       }
+      },
+      "F-8t_exact_injected_word": {
+       "den": null,
+       "denominator": null,
+       "denominator_rule": "仅当 ctx.scene.line_sha256 可反解：num=正文含「模型实际看到的那一 slot 措辞」",
+       "num": null,
+       "numerator": null,
+       "rate": null,
+       "rate_pct": null,
+       "ratio": null,
+       "reason": "no_line_sha256",
+       "reason_detail": "本臂无 ctx.scene.line_sha256（OFF 臂/老批预期）⇒ 无从反解",
+       "status": "not_applicable",
+       "wilson95": null
+      },
+      "F-8t_narrow_plus_jinr": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "敏感性：当前 narrow 词表 ∪ {今儿}，不按 slot 限定；不参与判定",
+       "num": 11,
+       "numerator": 11,
+       "rate": 0.057592,
+       "rate_pct": 5.759162,
+       "ratio": 0.057592,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.100169,
+        "lo": 0.032459,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.057592,
+        "two_sided": true,
+        "x": 11,
+        "z": 1.959964
+       }
+      },
+      "F-8t_open_any": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "敏感性：narrow 词表不按 slot 限定；den=全部 MSG_*",
+       "num": 7,
+       "numerator": 7,
+       "rate": 0.036649,
+       "rate_pct": 3.664921,
+       "ratio": 0.036649,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.073705,
+        "lo": 0.017864,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.036649,
+        "two_sided": true,
+        "x": 7,
+        "z": 1.959964
+       }
+      },
+      "F-8t_render_echo": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "回声通道（防系统性判漏）：命中渲染词表 SLOT_WORDS 的可指认词元任一（含 下午/上午/午后）；不参与判定",
+       "num": 8,
+       "numerator": 8,
+       "rate": 0.041885,
+       "rate_pct": 4.188482,
+       "ratio": 0.041885,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.08046,
+        "lo": 0.021374,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.041885,
+        "two_sided": true,
+        "x": 8,
+        "z": 1.959964
+       }
+      },
+      "F-8t_wide_reference": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "仅参考、不参与判定（Amendment 1）",
+       "num": 41,
+       "numerator": 41,
+       "rate": 0.21466,
+       "rate_pct": 21.465969,
+       "ratio": 0.21466,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.278211,
+        "lo": 0.16236,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.21466,
+        "two_sided": true,
+        "x": 41,
+        "z": 1.959964
+       }
+      }
+     },
+     "guard": {
+      "place_alias_hit": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "归因抽样用（provisional 别名），不参与判定",
+       "num": 0,
+       "numerator": 0,
+       "rate": 0.0,
+       "rate_pct": 0.0,
+       "ratio": 0.0,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.019716,
+        "lo": 0.0,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.0,
+        "two_sided": true,
+        "x": 0,
+        "z": 1.959964
+       }
+      },
+      "place_id_in_body": {
+       "den": 191,
+       "denominator": 191,
+       "denominator_rule": "守卫（对应 L-8c）：正文出现 places.json::place_id 内部 id 的条数；>0 ⇒ 硬失败",
+       "num": 0,
+       "numerator": 0,
+       "rate": 0.0,
+       "rate_pct": 0.0,
+       "ratio": 0.0,
+       "wilson95": {
+        "confidence": 0.95,
+        "hi": 0.019716,
+        "lo": 0.0,
+        "method": "wilson_score_no_cc",
+        "n": 191,
+        "p": 0.0,
+        "two_sided": true,
+        "x": 0,
+        "z": 1.959964
+       }
+      }
+     },
+     "known_gap": {
+      "closed_by": "Amendment-2（仅 `下午` 一项；`上午/早上/晚上` 明确不升）",
+      "disposition": "其中 `下午` 已于 Amendment 2（2026-10-23 02:32:25 +0800，report-release 落 prereg §10；team-leader 02:31:30 裁定）升为 afternoon 档内判定词；`上午/早上/晚上` 本次不升，留在 `slot_scoped_broad`。条目保留以体现「曾有缺口→按程序补上」，不删除",
+      "residual": "上午/早上/晚上 仍未进主判定：前两者在渲染值域里只以「上午这会儿」出现（已被 这会儿 覆盖），后者不是渲染措辞；故无需再扩",
+      "status": "已按 Amendment 2 补上（条目保留，体现「曾有缺口→按程序补上」）",
+      "tokens": [
+       "上午",
+       "早上"
+      ],
+      "why": "这两个是渲染值域里的词形（morning 档以「上午这会儿」出现，已被 slot_agnostic「这会儿」覆盖），但作为裸词属 Amendment 1 排除的高自发词，故不进主判定口径"
+     },
+     "lexicon": {
+      "frozen_at": "2026-10-23T02:34:40+0800",
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/f8_lexicon.json",
+      "sha256": "sha256:004f3bca138e7800a0fc0ac7e0f1c0f0bdb9b0a862432fa53f65b152bdb2ddd3",
+      "sources": {
+       "code": "code/life/scene_anchor.py::SLOT_WORDS / ACTIVITY_WORDS",
+       "place_names": "code/config/places.json::places[].name_cn",
+       "render_lexicon_json": "rounds/20261023-0202/scene-render-lexicon.json",
+       "render_lexicon_md": "rounds/20261023-0202/scene-render-lexicon.md",
+       "scene_anchor_LEXICON_VERSION": "scene-anchor-v1",
+       "scene_anchor_lexicon_sha256": "3f12e5b8d2e3088e48a72333b65da13b8219bed5a068d6d3d4a4a963a7866fbf",
+       "scene_anchor_lexicon_sha256_scope": "只覆盖 SLOT_WORDS + ACTIVITY_WORDS + 版本号，不含 places.json；地点词由 places.json 的 sha256 单独冻结"
+      },
+      "version": "f8-lexicon-v3"
+     },
+     "places": {
+      "n_places": 17,
+      "names": [
+       "住宅",
+       "农场",
+       "工坊",
+       "面包房",
+       "诊所",
+       "学校",
+       "事务所",
+       "市集",
+       "银行",
+       "中央广场",
+       "市政厅",
+       "图书馆",
+       "社区中心",
+       "咖啡馆",
+       "公园",
+       "礼堂",
+       "城门"
+      ],
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/../../code/config/places.json",
+      "sha256": "sha256:c36c0f8776372f4e36ec39126f0fd9546c1dadf5e814c294172f5e2e04bb66fa",
+      "short_names": {
+       "中央广场": [
+        "广场"
+       ],
+       "市集": [
+        "集市"
+       ],
+       "社区中心": [
+        "活动中心"
+       ],
+       "面包房": [
+        "面包铺",
+        "面包坊"
+       ]
+      }
+     },
+     "samples": [
+      {
+       "activity_hit": false,
+       "body": "哎，我刚把药柜第三格那包晒了半月的艾叶翻了个面，顺手捻了捻，还带着点潮气呢——兰姐，你那陈皮晒到这会儿，是不是也该收进竹",
+       "place": "workshop",
+       "place_hit": false,
+       "round": 1,
+       "seq": 694,
+       "slot": "morning",
+       "time_hit": true,
+       "type": "MSG_DM"
+      },
+      {
+       "activity_hit": false,
+       "body": "这火候真跟人一样，你越急它越不听话。（拿筷子尖戳了戳砂锅里的牛腩，又缩回手甩了甩）王屠户今早留的那块筋头巴脑，我搁了半勺",
+       "place": null,
+       "place_hit": false,
+       "round": 1,
+       "seq": 1509,
+       "slot": "morning",
+       "time_hit": true,
+       "type": "MSG_PUBLIC"
+      },
+      {
+       "activity_hit": false,
+       "body": "（把沾着泥的锄头靠在门框上）你那菜园子刚浇过水，地还湿着，这会儿又给我纸，我拿回去也是搁着呀。",
+       "place": "plaza",
+       "place_hit": false,
+       "round": 7,
+       "seq": 5671,
+       "slot": "evening",
+       "time_hit": true,
+       "type": "MSG_DM"
+      },
+      {
+       "activity_hit": false,
+       "body": "金先生，我这会儿正给月琴换第三根弦呢，赵家闺女那把旧琴的弦轴松得跟晒蔫的豆角似的，一拧就吱呀响啊。",
+       "place": "cafe",
+       "place_hit": false,
+       "round": 7,
+       "seq": 6421,
+       "slot": "evening",
+       "time_hit": true,
+       "type": "MSG_DM"
+      },
+      {
+       "activity_hit": false,
+       "body": "（把豆角一根根码进竹篮，顺手拨开篮底两片黄叶）哎，五味，你灶上那锅老鸭汤正滚着，笋干我瞅着都发亮了，豆角这会儿下进去正好",
+       "place": "cafe",
+       "place_hit": false,
+       "round": 8,
+       "seq": 7815,
+       "slot": "evening",
+       "time_hit": true,
+       "type": "MSG_DM"
+      },
+      {
+       "activity_hit": false,
+       "body": "（掀开蒸笼盖，白汽扑了满脸，手里还捏着给赵家孙子留的豆沙包）铁头，我这儿也紧着呢，面粉铺老周说下午才到货，我先把这笼豆沙",
+       "place": "market",
+       "place_hit": false,
+       "round": 16,
+       "seq": 22638,
+       "slot": "afternoon",
+       "time_hit": true,
+       "type": "MSG_DM"
+      }
+     ],
+     "thresholds": {
+      "D2_min_abs_effect_X": 0.15,
+      "F8_unit": "per-message",
+      "F8a_denominator": "含 payload.ctx.scene.activity 的 MSG_*（缺失 ⇒ status=not_applicable / reason=no_ctx_scene，不填 0 不出率）",
+      "F8p_denominator": "有 payload.place 的 MSG_*（MSG_PUBLIC 无该字段 ⇒ 不进分母，另单列 *_public 覆盖说明）",
+      "F8t_denominator": "全部 MSG_*（MSG_PUBLIC 也计；slot 缺失另计并从该分项分母剔除）",
+      "degenerate_off_num_le": 2,
+      "wilson_z_95_two_sided": 1.959964
+     },
+     "unavailable_ledger": [
+      {
+       "den": null,
+       "detail": "本臂 MSG payload 无 ctx.scene.activity（191/191 条缺该键）⇒ 分母不适用；不等于『模型没做活动锚定』",
+       "item": "F-8a_activity",
+       "num": null,
+       "reason": "no_ctx_scene",
+       "status": "not_applicable"
+      },
+      {
+       "den": 167,
+       "item": "F-8p_place",
+       "num": 0,
+       "reason": "24 条 MSG（MSG_PUBLIC）无 payload.place，已从分母剔除，另在 F-8p_public 单列覆盖（不作判定）"
+      }
+     ],
+     "unit": "per-message"
+    },
+    "F_lexicons": {
+     "emotion_sha256": "sha256:8427245cdf65550c6fb80d10616a01d9054d3d4fe97842b4b81feed7afd4a996",
+     "repair_sha256": "sha256:0528e735909c90c4181539f9ba239298d8070c1a2dc2b2fcd394724c1f440fc9",
+     "task_tags_sha256": "sha256:a71c6c963279b28f6f9de3b44317b5c9bbf80498c594c98f9460ed79954aa69e",
+     "timeref_sha256": "sha256:9357b4c91aad8584e6d845e311eed289b1f58179ccbfdc3a49588641978b7d5d"
+    },
+    "K-1_topic_continuation": {
+     "cont_backref": 0.784,
+     "cont_lexical": 0.832,
+     "cont_same_topic": 1.0,
+     "cont_same_topic_denominator": 125,
+     "denominator_adjacent_pairs": 125,
+     "grouping": "mixed = channel 感知：dm 按无序对、public 按 (day) 合流、group 按 group_id/day；与 prompt-linguist 的 D3 口径一致（t300 分母 68）",
+     "tag_overlap_rate_reference": 1.0
+    },
+    "K-1b_topic_continuation_wide": {
+     "composite": "leader 裁决：不出合成数；如需派生指标须另行登记，不得作为判据",
+     "cont_backref": 0.780749,
+     "cont_lexical": 0.213904,
+     "cont_same_topic": 0.358289,
+     "cont_same_topic_denominator": 187,
+     "denominator_adjacent_pairs": 187,
+     "grouping": "wide = (day, channel)：同一天同一渠道内按 (round,seq) 相邻（口径更宽，分母更大）",
+     "tag_overlap_rate_reference": 0.358289
+    },
+    "K-1c_topic_continuation_pair": {
+     "composite": "leader 裁决：不出合成数；如需派生指标须另行登记，不得作为判据",
+     "cont_backref": 0.791946,
+     "cont_lexical": 0.644295,
+     "cont_same_topic": 0.973154,
+     "cont_same_topic_denominator": 149,
+     "denominator_adjacent_pairs": 149,
+     "grouping": "narrow = (day, channel, {from,to})：同一天同一对参与者的会话线（与 S-1/S-2 的 legacy 线程一致）",
+     "tag_overlap_rate_reference": 0.973154
+    },
+    "L-13_token_leak": {
+     "by_topic": {},
+     "n": 0,
+     "rule": "分母 = 全部 MSG；分子 = `ctx.topic` 原字符串（内部 token）直接出现在 body 的消息数。只测「token 未人话化」，不测语义正确性",
+     "samples": [],
+     "token_leak_rate": 0.0
+    },
+    "L_wording": {
+     "L-10_denominator": 172,
+     "L-10_self_address_error_rate": 0.0,
+     "L-11_note": "only dm+group; MSG_PUBLIC 单列（本行不含）",
+     "L-11_second_person_rate_dm_group": 0.802395,
+     "L-12_definitions": {
+      "L-12a_mention": "正文出现对方名字（DM: to；GROUP: 任一其他 participants；排除说话者自己、排除自己名字）",
+      "L-12b_address": "名字以称呼语形式出现：名字后紧跟 [，、！？：；—…~～啊呀哦呢哈嘛吧] 或已到句末",
+      "denominator": "DM+GROUP 消息条数（不含 PUBLIC）",
+      "judgement": "判定用 L-12b（称呼）；L-12a 作描述性提及率"
+     },
+     "L-12_peer_mention_rate": 0.51497,
+     "L-12b_peer_address_rate": 0.341317,
+     "L-1_len": {
+      "all": {
+       "max": 116.0,
+       "mean": 59.136126,
+       "min": 27.0,
+       "n": 191,
+       "p10": 38.0,
+       "p50": 58.0,
+       "p90": 81.0,
+       "stdev": 16.489321
+      },
+      "excl_paren": {
+       "max": 100.0,
+       "mean": 40.078534,
+       "min": 12.0,
+       "n": 191,
+       "p10": 25.0,
+       "p50": 38.0,
+       "p90": 57.0,
+       "stdev": 13.735692
+      }
+     },
+     "L-2_narration_rate_proxy": 0.832461,
+     "L-3_paren_block_any": 0.926702,
+     "L-4_third_person_self_rate": 0.010471,
+     "L-5_template_hit_by_pattern": {},
+     "L-5_template_hit_rate": 0.0,
+     "L-6_dup_exact_rate": 0.0,
+     "L-7_dup_ngram8_rate": 0.298429,
+     "L-8_agent_id_leak_rate": 0.0,
+     "L-8_definition": "分子=body（仅正文，不含 msg_id/body_ref）命中 re 正则 `P\\d{3}(?!\\d)`（不加 \\b；后瞻仅防未来 4 位 ID，与 `P\\d{3}` 在当前数据上等价）；括号内 ID 也计入（另给 L-8b 只统计括号内）；分母=全部 MSG 条数",
+     "L-8_invariant": {
+      "counts": {
+       "L-8": 0,
+       "L-8b": 0,
+       "L-8c": 0
+      },
+      "holds": true,
+      "identity": "L-8 == L-8b + L-8c（消息级，互斥分类）"
+     },
+     "L-8b_definition": "括号块=re.findall(r\"（[^（）]*）|\\([^()]*\\)\")（不嵌套、全半角都算）；移除括号块后余串若含未闭合左括号，则其后全算旁白；余串仍含 ID ⇒ 记「本体命中」(L-8c)，否则记 L-8b。同一句既有括号块又有括号外 ID ⇒ 归本体（只进 L-8/L-8c，不进 L-8b）",
+     "L-8b_paren_only_id_rate": 0.0,
+     "L-8c_body_leak_rate": 0.0,
+     "L-9_meta_talk_rate": 0.0,
+     "denominators": {
+      "dm_group": 167,
+      "per_message": 191,
+      "threads": 66
+     }
+    },
+    "S-1C_turns_by_turn_index": {
+     "definition": "轮数 = 线程内 turn_index 去重后的个数（群聊同轮多人并发只计 1 轮）；无 turn_index 的 legacy 批次为 null",
+     "dist": {
+      "max": 6.0,
+      "mean": 2.893939,
+      "min": 1.0,
+      "n": 66,
+      "p10": 1.0,
+      "p50": 1.0,
+      "p90": 6.0,
+      "stdev": 2.195925
+     },
+     "note": "计轮请用本字段；S-1A 是「说话人交替段数」，不等于轮数；chain_by_pointer 只作可解析性辅助"
+    },
+    "S-1_turns_per_thread": {
+     "A_speaker_turns": {
+      "max": 6.0,
+      "mean": 2.893939,
+      "min": 1.0,
+      "n": 66,
+      "p10": 1.0,
+      "p50": 1.0,
+      "p90": 6.0,
+      "stdev": 2.195925
+     },
+     "B_note": "v0 无指针字段时恒为 0（字段缺失，非缺陷）；B 不参与前后差",
+     "B_roundtrips": {
+      "max": 5.0,
+      "mean": 1.893939,
+      "min": 0.0,
+      "n": 66,
+      "p10": 0.0,
+      "p50": 0.0,
+      "p90": 5.0,
+      "stdev": 2.195925
+     }
+    },
+    "S-2_thread_scale": {
+     "msgs_per_thread": {
+      "max": 6.0,
+      "mean": 2.893939,
+      "min": 1.0,
+      "n": 66,
+      "p10": 1.0,
+      "p50": 1.0,
+      "p90": 6.0,
+      "stdev": 2.195925
+     },
+     "multi_turn_thread_ratio": 0.424242,
+     "multi_turn_threshold": "turns_A >= 3",
+     "single_msg_thread_ratio": 0.515152,
+     "single_speaker_thread_ratio": 0.515152,
+     "speakers_per_thread": {
+      "max": 2.0,
+      "mean": 1.484848,
+      "min": 1.0,
+      "n": 66,
+      "p10": 1.0,
+      "p50": 1.0,
+      "p90": 2.0,
+      "stdev": 0.49977
+     }
+    },
+    "S-3_longest_chain": {
+     "chain_by_alternation": {
+      "max": 6.0,
+      "mean": 2.893939,
+      "min": 1.0,
+      "n": 66,
+      "p10": 1.0,
+      "p50": 1.0,
+      "p90": 6.0,
+      "stdev": 2.195925
+     },
+     "chain_by_pointer": {
+      "max": 6.0,
+      "mean": 2.893939,
+      "min": 1.0,
+      "n": 66,
+      "p10": 1.0,
+      "p50": 1.0,
+      "p90": 6.0,
+      "stdev": 2.195925
+     }
+    },
+    "S-4_reply_pointer_coverage": {
+     "classify": "empty=未填 / dangling=指向不存在的 msg_id / forward=指向同线程未来 / cross_thread=指向别线程 / ok=指向同线程前序",
+     "denominator_nonfirst_msgs": 125,
+     "ptr_cross_thread": 0,
+     "ptr_dangling": 0,
+     "ptr_empty": 0,
+     "ptr_forward": 0,
+     "ptr_ok": 125,
+     "rate": 1.0
+    },
+    "S-5_orphan_msg_rate": 0.0,
+    "S-5_orphan_msg_rate_note": "ok",
+    "admission": {
+     "checks": {
+      "B-10_provider": {
+       "detail": "openai_compat",
+       "pass": true
+      },
+      "B-11_real_calls": {
+       "detail": {
+        "dialogue_calls": 191
+       },
+       "pass": true
+      },
+      "B-12_degraded_ratio": {
+       "detail": {
+        "calls": 2252,
+        "degraded": 0,
+        "ratio": 0.0
+       },
+       "pass": true
+      },
+      "B-13_event_families": {
+       "detail": {
+        "missing": []
+       },
+       "pass": true
+      },
+      "B-15_msg_fields": {
+       "detail": {
+        "empty_body": [],
+        "required_keys": [
+         "from",
+         "to",
+         "body",
+         "msg_id",
+         "day",
+         "slot",
+         "place",
+         "tag_hints"
+        ]
+       },
+       "pass": true
+      },
+      "B-15_msg_volume": {
+       "detail": {
+        "dm_threads": 32,
+        "floor": "MSG>=150 且 MSG_DM>=100 且 DM 会话线>=12（v1.2）",
+        "messages": 191,
+        "msg_dm": 167
+       },
+       "pass": true
+      },
+      "B-16_round_dense": {
+       "detail": {
+        "max": 23,
+        "min": 0,
+        "n": 24
+       },
+       "pass": true
+      },
+      "B-17_hash_chain": {
+       "detail": {
+        "hash_links_ok": true,
+        "n": 33857,
+        "seq_dense": true
+       },
+       "pass": true
+      },
+      "B-19_provider_distribution": {
+       "detail": {
+        "providers": {
+         "openai_compat": 2252
+        },
+        "rule": "全部 LLM_CALL.provider 必须为 openai_compat"
+       },
+       "pass": true
+      },
+      "B-20_model_no_mock": {
+       "detail": {
+        "models": [
+         "DeepSeek-Flash"
+        ],
+        "rule": "model 去重集合不得含 mock"
+       },
+       "pass": true
+      },
+      "B-21_body_not_template": {
+       "detail": {
+        "L-5_template_hit_rate": 0.0,
+        "L-6_dup_exact_rate": 0.0,
+        "rule": "模板命中率<50% 且 完全重复率<50%；另需人工抽样双查"
+       },
+       "pass": true
+      },
+      "B-2b_manifest_effective": {
+       "detail": {
+        "note": "",
+        "rounds_effective": 24,
+        "rounds_per_slot_effective": 3
+       },
+       "pass": true
+      },
+      "B-7_files": {
+       "detail": "meta.json 存在",
+       "pass": true
+      },
+      "B-8_parse": {
+       "detail": [],
+       "pass": true
+      },
+      "B-9_event_count": {
+       "detail": {
+        "actual_lines": 33857,
+        "meta.events": 33857
+       },
+       "pass": true
+      }
+     },
+     "evidence_level": "evidence",
+     "manifest_profile": "strict",
+     "verdict": "ADMITTED"
+    },
+    "assertions": {
+     "msg_id_n": 191,
+     "msg_id_unique": false,
+     "msg_uid_n": 191,
+     "msg_uid_unique": true,
+     "note": "D2 起指针目标 = msg_uid(<seed>:<seq>)，全局唯一；msg_id 为展示标签（legacy 格式可能重复，不作指针目标）"
+    },
+    "inputs": {
+     "chain": {
+      "hash_links_ok": true,
+      "n": 33857,
+      "seq_dense": true
+     },
+     "f8_lexicon": {
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/f8_lexicon.json",
+      "sha256": "sha256:004f3bca138e7800a0fc0ac7e0f1c0f0bdb9b0a862432fa53f65b152bdb2ddd3",
+      "version": "f8-lexicon-v3"
+     },
+     "f8_places": {
+      "n": 17,
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/../../code/config/places.json",
+      "sha256": "sha256:c36c0f8776372f4e36ec39126f0fd9546c1dadf5e814c294172f5e2e04bb66fa"
+     },
+     "f_lexicons": {
+      "emotion_sha": "sha256:8427245cdf65550c6fb80d10616a01d9054d3d4fe97842b4b81feed7afd4a996",
+      "repair_sha": "sha256:0528e735909c90c4181539f9ba239298d8070c1a2dc2b2fcd394724c1f440fc9",
+      "task_tags_sha": "sha256:a71c6c963279b28f6f9de3b44317b5c9bbf80498c594c98f9460ed79954aa69e",
+      "timeref_sha": "sha256:9357b4c91aad8584e6d845e311eed289b1f58179ccbfdc3a49588641978b7d5d"
+     },
+     "lexicon": {
+      "n": 16,
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/backref_lexicon.txt",
+      "sha256": "sha256:6fda89f1d62e22937313152b30826f69af9ce8a5d772c355e6f9130445d77a30"
+     },
+     "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9m-ab-on_n16r24_s42/run.jsonl",
+     "log_parse": {
+      "bad_lines": [],
+      "n_bad": 0
+     },
+     "meta": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9m-ab-on_n16r24_s42/meta.json",
+     "meta_sha256": "sha256:76cdeff702459f4df2485a7a11fe6da2d5468bde88b8e0d767f78ff3cbfcf229",
+     "personas": {
+      "derived": "{\"P001\":\"老周\",\"P002\":\"老石\",\"P003\":\"阿禾\",\"P004\":\"秀娘\",\"P005\":\"陈医\",\"P006\":\"方老师\",\"P007\":\"阿林\",\"P008\":\"周公文\",\"P009\":\"金先生\",\"P010\":\"月牙\",\"P011\":\"小满\",\"P012\":\"桂婶\",\"P013\":\"铁头\",\"P014\":\"巧儿\",\"P015\":\"五味\",\"P016\":\"兰姐\",\"P017\":\"书言\",\"P018\":\"弦歌\",\"P019\":\"石头\",\"P020\":\"阿散\"}",
+      "derived_sha256": "sha256:cdf28d499146220921482d175d43298269d2c2b08c25c0585b6f5e51af4b64d1",
+      "exists": true,
+      "n": 20,
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/../../code/config/personas.json",
+      "sha256": "sha256:08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d"
+     },
+     "rounds_max": 24,
+     "run_sha256": "sha256:2edc751c5a32d1328ed5834ab169d29c5c457cbe7b1d5abe3146d7840df6a795",
+     "script": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/dialogue_metrics.py",
+     "script_sha256": "sha256:1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271",
+     "seed": 42,
+     "subset": null,
+     "templates": {
+      "n": 8,
+      "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/template_patterns.txt",
+      "sha256": "sha256:05b29b068123b81702bc029fae5773edecae6848d6788745af6fab4dac589f4e"
+     }
+    },
+    "llm": {
+     "E-2_tokens_out_per_dialogue_call": 5.183246,
+     "E-2_tokens_out_per_message": 5.183246,
+     "degraded_calls": 0,
+     "degraded_ratio": 0.0,
+     "dialogue_calls": 191,
+     "llm_calls": 2252,
+     "provider_models": [
+      {
+       "calls": 2252,
+       "model": "DeepSeek-Flash",
+       "provider": "openai_compat"
+      }
+     ]
+    },
+    "meta": {
+     "channels": {
+      "dm": 167,
+      "public": 24
+     },
+     "n_messages": 191,
+     "n_threads": 66,
+     "thread_schema": "explicit"
+    },
+    "schema_version": "d5-metrics/1.0"
+   }
+  }
+ },
+ "table": [
+  {
+   "id": "N-1",
+   "name": "旁白覆盖率（含成对括号的消息占比）",
+   "unit": "per-message",
+   "off": 0.0,
+   "on": 0.9267015706806283,
+   "delta": 0.9267015706806283,
+   "denominator": "191 / 191",
+   "level": "evidence",
+   "source": "narration_stats()"
+  },
+  {
+   "id": "N-2",
+   "name": "旁白块总数",
+   "unit": "per-block",
+   "off": 0,
+   "on": 196,
+   "delta": 196,
+   "denominator": "—",
+   "level": "evidence",
+   "source": "narration_stats()"
+  },
+  {
+   "id": "N-3",
+   "name": "旁白去重率（unique/total）",
+   "unit": "per-block",
+   "off": null,
+   "on": 0.9846938775510204,
+   "delta": null,
+   "denominator": "0 / 196",
+   "level": "evidence",
+   "source": "narration_stats()"
+  },
+  {
+   "id": "N-4",
+   "name": "旁白字符占正文比例",
+   "unit": "per-message",
+   "off": 0.0,
+   "on": 0.2875608676405489,
+   "delta": 0.2875608676405489,
+   "denominator": "—",
+   "level": "evidence",
+   "source": "narration_stats()"
+  },
+  {
+   "id": "F-1",
+   "name": "非功能性闲聊占比",
+   "unit": "per-message",
+   "off": 0.774869,
+   "on": 0.748691,
+   "delta": -0.026178000000000035,
+   "denominator": "191 / 191",
+   "level": "evidence",
+   "source": "d5 F-1_chatter"
+  },
+  {
+   "id": "F-2",
+   "name": "话题漂移率（content 口径）",
+   "unit": "per-adjacent-pair",
+   "off": 0.68,
+   "on": 0.696,
+   "delta": 0.015999999999999903,
+   "denominator": "125 / 125",
+   "level": "evidence",
+   "source": "d5 F-2_content_drift（F-2_topic_drift 为 LEGACY_DEAD_RULER，不引用）"
+  },
+  {
+   "id": "F-2b",
+   "name": "多话题线程占比",
+   "unit": "per-thread",
+   "off": 0.0,
+   "on": 0.0,
+   "delta": 0.0,
+   "denominator": "66 / 66",
+   "level": "evidence",
+   "source": "d5 F-2b_multi_topic_threads"
+  },
+  {
+   "id": "F-3",
+   "name": "情绪呼应率",
+   "unit": "per-adjacent-pair",
+   "off": 0.090909,
+   "on": 0.0,
+   "delta": -0.090909,
+   "denominator": "11 / 1",
+   "level": "probe（分母<30）",
+   "source": "d5 F-3_emotion_echo"
+  },
+  {
+   "id": "F-4",
+   "name": "修复闭环率",
+   "unit": "per-event",
+   "off": 0.0,
+   "on": 0.0,
+   "delta": 0.0,
+   "denominator": "8 / 1",
+   "level": "probe（分母<30）",
+   "source": "d5 F-4_tension_repair"
+  },
+  {
+   "id": "F-5",
+   "name": "习惯强度",
+   "unit": "per-agent",
+   "off": 0.0,
+   "on": 0.0,
+   "delta": 0.0,
+   "denominator": "16 / 16（1 天，<3 天 ⇒ 结构性为 0）",
+   "level": "probe",
+   "source": "d5 F-5_habit_repetition"
+  },
+  {
+   "id": "F-6",
+   "name": "跨天记忆引用率",
+   "unit": "per-message",
+   "off": 0.057592,
+   "on": 0.172775,
+   "delta": 0.11518300000000001,
+   "denominator": "191 / 191",
+   "level": "evidence",
+   "source": "d5 F-6_crossday_memory"
+  },
+  {
+   "id": "F-7",
+   "name": "越界提及率（F-7a 提及层）",
+   "unit": "per-message",
+   "off": 0.099476,
+   "on": 0.141361,
+   "delta": 0.04188499999999999,
+   "denominator": "191 / 191",
+   "level": "evidence",
+   "source": "d5 F-7a_offscreen_mention（F-7b 需 judge，本轮未跑）"
+  },
+  {
+   "id": "L-7",
+   "name": "8-gram 撞车率（重复率守卫）",
+   "unit": "per-message",
+   "off": 0.21466,
+   "on": 0.298429,
+   "delta": 0.08376900000000001,
+   "denominator": "—",
+   "level": "evidence",
+   "source": "d5 L_wording.L-7"
+  }
+ ],
+ "verdict": {
+  "narration_msg_rate_delta": 0.9267015706806283,
+  "F_improved": [
+   "F-2",
+   "F-6",
+   "F-7"
+  ],
+  "F_regressed": [
+   "F-1",
+   "F-3"
+  ],
+  "L7_delta": 0.08376900000000001,
+  "rule": "R4:86-89 陷阱1（旁白换生活气息不算改善）+ 陷阱2（F-6 升高而重复率同步恶化不算改善）",
+  "verdict": "swap_only",
+  "reason": "旁白覆盖率大幅上升，但 F 指标无同向改善：F-1/F-3/F-4 passive 下降或分母坍缩，F-6 虽升 +11.52pp，但 8-gram 撞车率同步恶化 +8.38pp ⇒ 按 R4:89 陷阱2 不计为改善；F-7a 越界提及反向上升。结论：旁白只带来表层景物/动作描写，**不算生活气息改善**。"
+ }
+}

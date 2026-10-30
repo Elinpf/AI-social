@@ -53,3 +53,13 @@ python3 tools/d9s/d9u_order_sensitivity.py --old-lexicon current        # 对当
 python3 tools/d9s/d9u_order_sensitivity.py --old-lexicon <v1.1快照> --new-lexicon <官方新表>   # 官方两版本对拍
 ```
 脚本要点（防"写死版本"复发）：`last_verbs_key()` **动态识别**最后一个动词表；加载后校验 `Σlen(verbs_*) == len(v_judge)`，不等即报错；`REPO` 用**哨兵路径**定位数据仓（`v2/evidence/narr-on-20261030/run.jsonl` 必须存在）。
+
+## 5. 失效条件（何时必须重出本表）
+本表**与下面任一 sha 绑定**，任一变化即作废，须按 §4 重跑后重出：
+1. `lexicon_sha256` 变了（再加词/改词/改 parts_6/objs_13/阈值）；
+2. `instrument_sha256` 变了（`narration_family.py` 的 `v_judge`/`assign_family`/`analyse` 任一被改）；
+3. 语料侧变化（换臂、换 seed/n/rounds、或某臂不再是 dialogue 100% 真调用）。
+
+**引用纪律（两条，缺一即误读）**
+- 引 `Δmax_v (+2/+11/+18/+19/+33)` 时**必须**连带写「**判据 B 只登记不设阈**」——`max_v` 是"计数换靶子"，不是"动作更同质"；
+- 引 `(d2)/max_v/(b2′)/coverage` 时**必须**同时写 `lexicon_sha` 与 `instrument_sha`。

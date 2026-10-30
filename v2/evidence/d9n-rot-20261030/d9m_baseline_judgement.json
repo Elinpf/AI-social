@@ -1,0 +1,438 @@
+{
+ "schema": "d9m.baseline_judgement/1",
+ "naming_note": "文件名 d9m_baseline_judgement.json 为历史命名，所属线为 **D9n**，目录 v2/evidence/d9n-rot-20261030/；不得按文件名误判为并行线 D9m-prereg-narration-action-diversity。",
+ "line": "D9n（旁白示例句确定性轮换，A only 单变量）",
+ "generated_at": "2026-10-30T08:22:35+0800",
+ "generated_by": "exp-designer（task baseline-1）",
+ "generation_command": "python3 tools/d9n/narration_family.py --log v2/evidence/narr-on-20261030/run.jsonl --lexicon tools/d9n/narration_family_lexicon.json --arm ON --out v2/evidence/d9n-rot-20261030/d9m_baseline_judgement.json",
+ "reproduce_rc": 0,
+ "corpus": {
+  "log": "v2/evidence/narr-on-20261030/run.jsonl",
+  "log_sha256": "fdb31c7e2ca64b4dac1466fd4c81770dc0198ced4904584a3faf59939fd663ee",
+  "code_sha_of_that_batch": "47a7da9e71e4ab31e8b58a9a5cc14105ecd0aed8",
+  "code_identity_note": "47a7da9 是 base d2a6fa9 的祖先且 `git diff --stat 47a7da9 d2a6fa9 -- code/` 为空(lines=0) ⇒ 代码身份等价，读数可作 base=d2a6fa9 的基线",
+  "denominator_rule": "仅 MSG_DM/MSG_PUBLIC/MSG_GROUP 的 payload.body，片段级计数",
+  "known_caliber_trap": {
+   "fragment_level_蹭": 31,
+   "msg_record_level_蹭": 33,
+   "msg_record_level_breakdown": {
+    "MSG_DM": 30,
+    "MSG_PUBLIC": 3
+   },
+   "MEMORY_CONSOLIDATE_蹭": 30,
+   "whole_event_stream_蹭": 63,
+   "explain": "记录级 33 与片段级 31 差 2：那 2 条的「蹭」只在台词里、不在括号旁白内；MEMORY_CONSOLIDATE 30 条为纯污染源"
+  },
+  "blocks_total": 205,
+  "msgs_total": 191
+ },
+ "instruments": {
+  "family_tool": {
+   "path": "tools/d9n/narration_family.py",
+   "sha256": "3dbca76f1f387cd7df6bd1810cb1a0dcd1e347fb17c26d9f23ea9654628ee636"
+  },
+  "lexicon": {
+   "path": "tools/d9n/narration_family_lexicon.json",
+   "sha256": "01e5533870f0f6b43300e6be6422130d958a01497a90d610620916f454489ed0",
+   "version": "d9m-family-lexicon/1.1"
+  },
+  "narration_stats": {
+   "path": "tools/d9i/narration_stats.py",
+   "sha256": "8ddb9111072c9ef71e7853dc7b455d618352b2baf44492d0576e440467627e85"
+  },
+  "impl_status": "impl-2 已交付 tools/d9n/narration_family.py 并在本日志上跑通（rc=0），**未使用临时实现**"
+ },
+ "guards": {
+  "coverage": {
+   "value": 0.321951,
+   "assigned": 66,
+   "blocks_total": 205,
+   "threshold": 0.193171,
+   "threshold_fragments": 40,
+   "ok": true,
+   "note": "v1.1 勘误后基线锚 66/205=0.321951；门限 60%×基线=0.193171"
+  },
+  "unassigned_verb_rate": {
+   "value": 0.678049,
+   "threshold": 0.778049,
+   "ok": true,
+   "note": "相对口径 ≤OFF+10pp；OFF 基线 0.678049 ⇒ 门限 0.778049"
+  },
+  "guard_threshold_change": {
+   "title": "守卫基线口径修正：必须用与判定同口径的 V_judge（21 词）重算",
+   "table": [
+    {
+     "item": "coverage 基线",
+     "old_v1_0": "40/205 = 0.19512（闭表 8 动词遗留值）",
+     "new_v1_1": "66/205 = 0.321951（21 词）"
+    },
+    {
+     "item": "coverage 门限（规则 ≥60%×基线）",
+     "old_v1_0": "0.11707（≥24 片段）",
+     "new_v1_1": "0.193171（≥40 片段）"
+    },
+    {
+     "item": "unassigned 基线",
+     "old_v1_0": "0.80488",
+     "new_v1_1": "0.678049"
+    },
+    {
+     "item": "unassigned 门限（规则 ≤基线+10pp）",
+     "old_v1_0": "0.90488",
+     "new_v1_1": "0.778049"
+    }
+   ],
+   "direction": "**收紧，不是放宽**：绝对门槛由「≥24 片段」升到「≥40 片段」（+16 片段）；unassigned 由 ≤90.488% 降到 ≤77.805%（-12.68pp）",
+   "why": "v1.0 的 coverage 用闭表 8 动词算出，而判定口径 V_judge 是 21 词 ⇒ 基线与判定不同口径（分母同、分子窄），守卫被系统性放宽；v1.1 统一为同口径",
+   "rule_unchanged": "60% 与 +10pp 两条规则本身未动，只更正锚",
+   "verified_by": [
+    "life-engineer 实测 66/205",
+    "verifier 独立重算 66/205"
+   ]
+  }
+ },
+ "criteria": [
+  {
+   "id": "(a)",
+   "name": "精确串重复",
+   "role": "辅助(诊断)",
+   "threshold": "≤2",
+   "registered_value": "3 次（D9j §1：`蹭了蹭`）",
+   "recomputed_value": {
+    "max_exact_dup": 3,
+    "top": [
+     {
+      "inner": "把沾着面粉的手在围裙上蹭了蹭",
+      "count": 3
+     },
+     {
+      "inner": "把算盘珠子拨回原位",
+      "count": 3
+     },
+     {
+      "inner": "顿了顿",
+      "count": 3
+     }
+    ]
+   },
+   "diff": "无差异（3=3）。D9j 只点了 `蹭了蹭`；实测 3 次并列的还有 `把算盘珠子拨回原位`、`顿了顿`",
+   "verdict_suggestion": "失败（≥3）",
+   "note": "辅助判据，不得单独引用下结论"
+  },
+  {
+   "id": "(b1)",
+   "name": "同一「角色×族」占比",
+   "role": "辅助（本轮由判定降级）",
+   "threshold": "族总量≥3 的族：share ≤60% 且 该(角色,族) count ≤2",
+   "registered_value": "`蹭+手` 8 次、P004 5/8 = 62.5%（D9j §0）",
+   "recomputed_value": {
+    "max": {
+     "family": "蹭|手",
+     "agent": "P004",
+     "count": 5,
+     "total": 8,
+     "share": 0.625
+    },
+    "offenders": [
+     {
+      "family": "蹭|手",
+      "agent": "P004",
+      "count": 5,
+      "total": 8,
+      "share": 0.625
+     },
+     {
+      "family": "蹭|锉刀",
+      "agent": "P014",
+      "count": 3,
+      "total": 9,
+      "share": 0.333333
+     },
+     {
+      "family": "蹭|锉刀",
+      "agent": "P013",
+      "count": 3,
+      "total": 9,
+      "share": 0.333333
+     },
+     {
+      "family": "蹭|null",
+      "agent": "P002",
+      "count": 3,
+      "total": 6,
+      "share": 0.5
+     }
+    ]
+   },
+   "diff": "**无差异**：冻结口径（parts_6 指头单列）重算 = 蹭|手 8 次、P004 5/8 = 62.5%，与 D9j 逐位一致。我 08:14 曾写 5/9=55.6%，是**我漏列「指头」的口径错误**，已撤回（见 D9n 增补 03 §C-1）",
+   "verdict_suggestion": "失败（62.5% > 60%）",
+   "note": "降为辅助的唯一理由是功效：n=8，Wilson 95% CI 半宽≈±27pp ≫ 距阈值 4.4pp 的余量 1.9pp；**不是球门移动**"
+  },
+  {
+   "id": "(b2′)",
+   "name": "族内「出现≥2次的角色数」",
+   "role": "**主判据**",
+   "threshold": "所有族 total ≤3 且 n_ge2 ≤1",
+   "registered_value": "`蹭+锉刀` **8 次**（D9j §0/§1.4；其分项 3+2+2=7 与总数 8 自相矛盾）",
+   "recomputed_value": {
+    "family": "蹭|锉刀",
+    "total": 9,
+    "n_ge2": 3,
+    "by_agent": {
+     "P014": 3,
+     "P013": 3,
+     "P011": 2,
+     "P002": 1
+    },
+    "nine_fragments": [
+     {
+      "agent_id": "P002",
+      "round": 13,
+      "seq": 20288,
+      "channel": "dm",
+      "inner": "拿锉刀在木马耳朵上蹭了两下，木屑落在鞋面",
+      "body": "（拿锉刀在木马耳朵上蹭了两下，木屑落在鞋面）我这正给马耳朵倒个圆角，省得他磕着。你那竹篮底下垫块旧布吧，香菇颠一路该碎了嘛。"
+     },
+     {
+      "agent_id": "P011",
+      "round": 4,
+      "seq": 3982,
+      "channel": "dm",
+      "inner": "用锉刀蹭着铜片边",
+      "body": "（用锉刀蹭着铜片边）这铜皮越磨越薄，倒像咱镇口那层老墙皮。老石家那截还够，就是手一抖就歪。你给赵家小孙子磨的铁环，圈口收圆了没？"
+     },
+     {
+      "agent_id": "P011",
+      "round": 7,
+      "seq": 6525,
+      "channel": "dm",
+      "inner": "拿锉刀蹭着铜片边，铜屑落了一裤腿",
+      "body": "（拿锉刀蹭着铜片边，铜屑落了一裤腿）我这铜片是给李家小闺女裁的，她娘要个薄片锁柜门。你那铁环圆不圆，得看滚不滚得直。滚一个瞧瞧。"
+     },
+     {
+      "agent_id": "P013",
+      "round": 1,
+      "seq": 1326,
+      "channel": "public",
+      "inner": "拿锉刀蹭着犁头缺口",
+      "body": "（拿锉刀蹭着犁头缺口）这阵子忙哪块地呢，犁都豁成这样了才送来——你家那几亩坡田，翻得动吗？"
+     },
+     {
+      "agent_id": "P013",
+      "round": 4,
+      "seq": 4182,
+      "channel": "public",
+      "inner": "拿锉刀蹭了蹭犁头边",
+      "body": "（拿锉刀蹭了蹭犁头边）这铁比人实诚，你使多大劲它记多清楚。（顿了顿）东街老周家那把锄头，我修了三回，他媳妇还是嫌贵。攒够这季就歇。"
+     },
+     {
+      "agent_id": "P013",
+      "round": 13,
+      "seq": 21068,
+      "channel": "public",
+      "inner": "拿锉刀蹭了蹭铁砧上那把豁口的柴刀",
+      "body": "（拿锉刀蹭了蹭铁砧上那把豁口的柴刀）活计？东头老周家要打三把锄头，我正给他赶。你那边有活儿？"
+     },
+     {
+      "agent_id": "P014",
+      "round": 0,
+      "seq": 178,
+      "channel": "dm",
+      "inner": "拿锉刀在铜片边上蹭了两下",
+      "body": "（拿锉刀在铜片边上蹭了两下）小满，你刚说“练”，我这就练上了——老石家那破门轴拆下来的铜皮，磨圆了能当个小铃铛。你要不要也来蹭两下？"
+     },
+     {
+      "agent_id": "P014",
+      "round": 7,
+      "seq": 6955,
+      "channel": "dm",
+      "inner": "拿锉刀蹭了蹭凳角，木屑落在鞋面上",
+      "body": "（拿锉刀蹭了蹭凳角，木屑落在鞋面上）赵家那车我打算用旧伞骨穿轴，轻，还不硌手——你说这法子成不成？"
+     },
+     {
+      "agent_id": "P014",
+      "round": 19,
+      "seq": 25868,
+      "channel": "dm",
+      "inner": "拿锉刀蹭着赵家铁环的毛边，肚子咕噜响了一声",
+      "body": "（拿锉刀蹭着赵家铁环的毛边，肚子咕噜响了一声）金先生，这环我刚磨完，三文我垫了——您那干饼能掰我半块不？"
+     }
+    ],
+    "other_offending_families": [
+     {
+      "family": "抬|null",
+      "total": 4,
+      "n_ge2": 0,
+      "by_agent": {
+       "P001": 1,
+       "P008": 1,
+       "P011": 1,
+       "P016": 1
+      }
+     },
+     {
+      "family": "挪|手",
+      "total": 4,
+      "n_ge2": 1,
+      "by_agent": {
+       "P012": 1,
+       "P006": 1,
+       "P015": 2
+      }
+     },
+     {
+      "family": "蹭|null",
+      "total": 6,
+      "n_ge2": 1,
+      "by_agent": {
+       "P010": 1,
+       "P014": 1,
+       "P002": 3,
+       "P003": 1
+      }
+     },
+     {
+      "family": "蹭|手",
+      "total": 8,
+      "n_ge2": 1,
+      "by_agent": {
+       "P004": 5,
+       "P001": 1,
+       "P003": 1,
+       "P015": 1
+      }
+     },
+     {
+      "family": "蹭|指腹",
+      "total": 4,
+      "n_ge2": 0,
+      "by_agent": {
+       "P002": 1,
+       "P014": 1,
+       "P008": 1,
+       "P015": 1
+      }
+     },
+     {
+      "family": "靠|null",
+      "total": 4,
+      "n_ge2": 1,
+      "by_agent": {
+       "P003": 1,
+       "P010": 1,
+       "P001": 2
+      }
+     }
+    ]
+   },
+   "diff": "**9 vs 8，差 1（+1）**。定性：**纯列举遗漏，非族归属差异**。按族口径 `蹭|锉刀` 共 9 条（逐条见 nine_fragments）；verifier 独立定位（`team-workspace/audit/D9m-verify-prep.md`，08:22）D9j §1.4 漏掉的是 **P013 r13「拿锉刀蹭了蹭铁砧上那把豁口的柴刀」** 与 **P014 r19「拿锉刀蹭着赵家铁环的毛边…」**；另其自身「总 8」与「分项 P014 3/P013 2/P011 2 = 7」互相矛盾（内部差 1）、P002 r13 亦未列入分项。⇒ **D9j 记 8 为漏计 1 条，来源已定位，不是口径分歧**；三方独立复现（exp-designer / life-engineer / verifier）均为 **9**",
+   "verdict_suggestion": "失败（total 9>3 且 n_ge2 3>1）。**改善幅度以 9 为基线**（若用 8 会夸大改善）",
+   "note": "主判据；另有 6 个族同时红：抬|null 4、挪|手 4、蹭|null 6、蹭|手 8、蹭|指腹 4、靠|null 4"
+  },
+  {
+   "id": "(c-1)",
+   "name": "旁白片段密度",
+   "role": "守卫（非改善判据）",
+   "threshold": "≥1.0 片段/MSG",
+   "registered_value": "205/191 ≈ 1.07（D9j §1）",
+   "recomputed_value": {
+    "density": 1.073298,
+    "blocks": 205,
+    "msgs": 191
+   },
+   "diff": "无差异（1.073298）",
+   "verdict_suggestion": "成立（1.0733 ≥ 1.0）",
+   "note": "防止「少写旁白」刷绿 (b2′)/(d)"
+  },
+  {
+   "id": "(c-2)",
+   "name": "咬合率",
+   "role": "**本轮不可判**",
+   "threshold": "≥82.35%（D9j 原判据的另一半）",
+   "registered_value": "82.35% = 42/51（人工判读，`v2/evidence/d9i_language_read_prompt_linguist.md:46`）",
+   "recomputed_value": null,
+   "diff": "**不可复算**：无判定公式、无实现件（D9j §6 自认「实现闸未做」），且分母是 51 条手工抽样、抽样规则未披露",
+   "verdict_suggestion": "**不可判**（缺：咬合判据文字化 + 冻结实现 + 抽样框）",
+   "note": "报告不得出现咬合率读数；只能写「密度达标、咬合不可判」"
+  },
+  {
+   "id": "(d)",
+   "name": "动词级总量（抹掉器物维度）",
+   "role": "**主判据**",
+   "threshold": "max_v ≤5，且 unassigned_verb_rate 达守卫",
+   "registered_value": "蹭 31 / 搓 5 / 抹 3 / 揉 1（值由 D9k §4 提供；D9j §6 自认未算）",
+   "recomputed_value": {
+    "max_v": {
+     "value": 31,
+     "verb": "蹭"
+    },
+    "verb_counts": {
+     "蹭": 31,
+     "搓": 5,
+     "抹": 3,
+     "擦": 0,
+     "拂": 0,
+     "拍": 0,
+     "抿": 0,
+     "揉": 1,
+     "别": 1,
+     "挽": 0,
+     "拢": 4,
+     "让": 0,
+     "靠": 6,
+     "挪": 7,
+     "望": 0,
+     "扇": 2,
+     "撤": 0,
+     "抬": 5,
+     "低": 3,
+     "伸": 0,
+     "侧": 1
+    }
+   },
+   "diff": "无差异（蹭=31、搓=5、抹=3、揉=1）；**新增** 13 个旋转动词的基线计数（别1/拢4/靠6/挪7/扇2/抬5/低3/侧1，挽让望撤伸=0）——v1.0 闭表口径看不到这些",
+   "verdict_suggestion": "失败（max_v=31 ≫ 5）",
+   "note": "主判据；守卫 coverage 0.321951 ≥ 0.193171 成立、unassigned 0.678049 ≤ 0.778049 成立 ⇒ 尺子有效，(d) 判定可采信"
+  },
+  {
+   "id": "(e)",
+   "name": "单条 MSG 旁白片段数",
+   "role": "辅助",
+   "threshold": "max_k ≤2",
+   "registered_value": "0:12 / 1:153 / 2:26（191 条），最大 2（值由 D9k §4 提供）",
+   "recomputed_value": {
+    "dist": {
+     "0": 12,
+     "1": 153,
+     "2": 26
+    },
+    "max_k": 2
+   },
+   "diff": "无差异",
+   "verdict_suggestion": "成立（max_k=2 ≤2）",
+   "note": "与 (c-1) 联合读，防「1 条 MSG 塞 3 片段」"
+  }
+ ],
+ "summary": {
+  "baseline_anchor_for_run1": "(b2′) 以 **9** 为基线（D9j 的 8 = 漏计 1 条，漏项已定位为 P013 r13 与 P014 r19）；(d) 以 蹭=31 为基线；(b1) 以 5/8=62.5% 为基线；(a) 以 3 为基线；(c-1) 以 1.0733 为基线；(e) 以 max_k=2 为基线；(c-2) 恒为不可判",
+  "verdicts": {
+   "a_exact_dup": "失败",
+   "b1_share": "失败",
+   "b2p": "失败",
+   "c1_density": "成立",
+   "c2_bite": "不可判",
+   "d_max_v": "失败",
+   "e_max_k": "成立"
+  },
+  "vacuity_checks": {
+   "coverage_guard_ok": true,
+   "unassigned_guard_ok": true,
+   "note": "两守卫在基线上均成立 ⇒ 尺子对基线语料有效；(d)/(b1)/(b2′) 的「失败」不是尺子失效伪影"
+  },
+  "not_comparable_to": [
+   "master 6fda371/7cd10f9/2761559/0938f14（无旁白实现）",
+   "dd7e3fb（无示例句）",
+   "并行线 A+B 预登记"
+  ]
+ }
+}

@@ -1,0 +1,14 @@
+{
+  "arm": "on",
+  "run_batch_rc": 0,
+  "llm_cost_rc": 0,
+  "started_at": "2026-10-30T02:34:22+08:00",
+  "finished_at": "2026-10-30T02:53:36+08:00",
+  "meta_json_present": true,
+  "switch_proof_present": true,
+  "code_sha": "47a7da9e71e4ab31e8b58a9a5cc14105ecd0aed8",
+  "provider": "openai_compat",
+  "model": "DeepSeek-Flash",
+  "events": 33851,
+  "duration_sec_meta": 1152
+}

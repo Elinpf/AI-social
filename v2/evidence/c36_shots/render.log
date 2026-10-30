@@ -1,0 +1,89 @@
+CYCLE-36 §4 截图渲染日志（render.log）
+渲染时刻：2026-10-31T04:35:29+08:00
+仓库：/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+分支：exp/n36-scene-anchor
+渲染时 HEAD：46cfd9e7a163fde88b0a9392c704a858b152d3aa
+渲染工具：tools/metrics/render_shots.py（sha256 a85f2711a46bfe150d0d162361cfa7584d8d7aea9ec2fb01b344d3ec879e0b34）
+零跑批、零 LLM：只读 run.jsonl；服务根为临时目录 + 符号链接，未在 code/frontend/ 下写任何文件。
+
+=== 命令 1（ON 臂）===
+/opt/openjiuwen/workswarm-venv/bin/python3 tools/metrics/render_shots.py --run-dir v2/evidence/n15-on_n16r84_s42 --batch-id c36-on --outdir v2/evidence/c36_shots/on --views chat,rhythm --timeout 240
+
+--- 命令 1 stdout 尾部（v2/evidence/c36_shots/on_render.stdout.log）---
+      "view": "chat",
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/on/c36-on-chat-d74f7d00.png",
+      "rc": 0,
+      "png_sha256": "ecc6278afedef6fc927ba229b40d67fdb76b699ec7e873e20167c733a4797cb6",
+      "png_bytes": 301545
+    },
+    {
+      "view": "rhythm",
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/on/c36-on-rhythm-d74f7d00.png",
+      "rc": 0,
+      "png_sha256": "18d55a026e696013c61e9a305824808522b957ebeac4210580a988f8ac1008e9",
+      "png_bytes": 284495
+    }
+  ]
+}
+
+=== 命令 2（OFF 臂）===
+/opt/openjiuwen/workswarm-venv/bin/python3 tools/metrics/render_shots.py --run-dir v2/evidence/n15-off_n16r84_s42 --batch-id c36-off --outdir v2/evidence/c36_shots/off --views chat,rhythm --timeout 240
+
+--- 命令 2 stdout 尾部（v2/evidence/c36_shots/off_render.stdout.log）---
+      "view": "chat",
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/off/c36-off-chat-da4d2487.png",
+      "rc": 0,
+      "png_sha256": "55dfa4fdbff1bbe303f9527e84740f5ca1945362c054e70d7ed3ba8e91afb359",
+      "png_bytes": 300816
+    },
+    {
+      "view": "rhythm",
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/off/c36-off-rhythm-da4d2487.png",
+      "rc": 0,
+      "png_sha256": "3f80f74dc98b7094815f4bd36ee14c81b78c850f24cc82e83102dd0d7f3219d8",
+      "png_bytes": 284574
+    }
+  ]
+}
+
+=== 逐张结果（取自 render_report_c36-*.json，未改写）===
+[ON] report=v2/evidence/c36_shots/on/render_report_c36-on.json report_sha256=d75a3702730c7cbdfd475159c27f815ad9745018ea4070581485cf13583a5f74
+      log=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/n15-on_n16r84_s42/run.jsonl
+      log_sha256=d74f7d00104a60c6d835c4022ba4979e22e1b9136185cc104506296b1996fefd
+      ok_count=2 fail_count=0
+      view=chat rc=0 png=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/on/c36-on-chat-d74f7d00.png
+        png_sha256=ecc6278afedef6fc927ba229b40d67fdb76b699ec7e873e20167c733a4797cb6 bytes=301545
+        pixel: distinct_colors=24358 top_color_frac=0.1599 non_bg_frac=0.5639 status=OK size=1400x900
+        render_cmd=/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:43077/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_c36-on/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/on/c36-on-chat-d74f7d00.png --width 1400 --height 900 --timeout 240.0 --retry-blank 2 --no-blank-check
+      view=rhythm rc=0 png=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/on/c36-on-rhythm-d74f7d00.png
+        png_sha256=18d55a026e696013c61e9a305824808522b957ebeac4210580a988f8ac1008e9 bytes=284495
+        pixel: distinct_colors=22852 top_color_frac=0.1954 non_bg_frac=0.5427 status=OK size=1300x1050
+        render_cmd=/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:43077/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_c36-on/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/on/c36-on-rhythm-d74f7d00.png --width 1300 --height 1050 --timeout 240.0 --retry-blank 2 --no-blank-check
+[OFF] report=v2/evidence/c36_shots/off/render_report_c36-off.json report_sha256=11c2e057a88977e7d05dea59d72707c0cf3f26cd94919acea8b644a1af7d3ad5
+      log=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/n15-off_n16r84_s42/run.jsonl
+      log_sha256=da4d248785efefe2caf92fc08821109e44057932812b9012bcf203bc569729d0
+      ok_count=2 fail_count=0
+      view=chat rc=0 png=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/off/c36-off-chat-da4d2487.png
+        png_sha256=55dfa4fdbff1bbe303f9527e84740f5ca1945362c054e70d7ed3ba8e91afb359 bytes=300816
+        pixel: distinct_colors=24443 top_color_frac=0.1599 non_bg_frac=0.564 status=OK size=1400x900
+        render_cmd=/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:46457/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_c36-off/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/off/c36-off-chat-da4d2487.png --width 1400 --height 900 --timeout 240.0 --retry-blank 2 --no-blank-check
+      view=rhythm rc=0 png=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/off/c36-off-rhythm-da4d2487.png
+        png_sha256=3f80f74dc98b7094815f4bd36ee14c81b78c850f24cc82e83102dd0d7f3219d8 bytes=284574
+        pixel: distinct_colors=22820 top_color_frac=0.1954 non_bg_frac=0.5428 status=OK size=1300x1050
+        render_cmd=/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:46457/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_c36-off/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/off/c36-off-rhythm-da4d2487.png --width 1300 --height 1050 --timeout 240.0 --retry-blank 2 --no-blank-check
+
+=== 落盘 PNG sha256sum（原始输出）===
+ecc6278afedef6fc927ba229b40d67fdb76b699ec7e873e20167c733a4797cb6  v2/evidence/c36_shots/on/c36-on-chat-d74f7d00.png
+18d55a026e696013c61e9a305824808522b957ebeac4210580a988f8ac1008e9  v2/evidence/c36_shots/on/c36-on-rhythm-d74f7d00.png
+55dfa4fdbff1bbe303f9527e84740f5ca1945362c054e70d7ed3ba8e91afb359  v2/evidence/c36_shots/off/c36-off-chat-da4d2487.png
+3f80f74dc98b7094815f4bd36ee14c81b78c850f24cc82e83102dd0d7f3219d8  v2/evidence/c36_shots/off/c36-off-rhythm-da4d2487.png
+
+=== 源日志 sha256sum（原始输出）===
+d74f7d00104a60c6d835c4022ba4979e22e1b9136185cc104506296b1996fefd  v2/evidence/n15-on_n16r84_s42/run.jsonl
+da4d248785efefe2caf92fc08821109e44057932812b9012bcf203bc569729d0  v2/evidence/n15-off_n16r84_s42/run.jsonl
+
+=== 重渲染声明 ===
+渲染只依赖 run.jsonl 内容；重跑得内容等价图，PNG 字节 sha256 不会相同（时间戳/渲染抖动）。本日志记录的是本轮实际落盘字节。
+
+=== 图不进判据 ===
+上述 PNG 只作展示，不参与任何指标、闸线或「提升」判断。

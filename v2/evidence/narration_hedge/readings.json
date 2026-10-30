@@ -1,0 +1,1117 @@
+{
+ "arms": {
+  "OFF": {
+   "L_wording": {
+    "L-2_narration_rate_proxy": 0.0,
+    "L-3_paren_block_any": 0.0,
+    "L-6_dup_exact_rate": 0.0,
+    "L-7_dup_ngram8_rate": 0.21466
+   },
+   "admission": {
+    "checks": {
+     "B-10_provider": {
+      "detail": "openai_compat",
+      "pass": true
+     },
+     "B-11_real_calls": {
+      "detail": {
+       "dialogue_calls": 191
+      },
+      "pass": true
+     },
+     "B-12_degraded_ratio": {
+      "detail": {
+       "calls": 2252,
+       "degraded": 0,
+       "ratio": 0.0
+      },
+      "pass": true
+     },
+     "B-13_event_families": {
+      "detail": {
+       "missing": []
+      },
+      "pass": true
+     },
+     "B-15_msg_fields": {
+      "detail": {
+       "empty_body": [],
+       "required_keys": [
+        "from",
+        "to",
+        "body",
+        "msg_id",
+        "day",
+        "slot",
+        "place",
+        "tag_hints"
+       ]
+      },
+      "pass": true
+     },
+     "B-15_msg_volume": {
+      "detail": {
+       "dm_threads": 32,
+       "floor": "MSG>=150 且 MSG_DM>=100 且 DM 会话线>=12（v1.2）",
+       "messages": 191,
+       "msg_dm": 167
+      },
+      "pass": true
+     },
+     "B-16_round_dense": {
+      "detail": {
+       "max": 23,
+       "min": 0,
+       "n": 24
+      },
+      "pass": true
+     },
+     "B-17_hash_chain": {
+      "detail": {
+       "hash_links_ok": true,
+       "n": 33850,
+       "seq_dense": true
+      },
+      "pass": true
+     },
+     "B-19_provider_distribution": {
+      "detail": {
+       "providers": {
+        "openai_compat": 2252
+       },
+       "rule": "全部 LLM_CALL.provider 必须为 openai_compat"
+      },
+      "pass": true
+     },
+     "B-20_model_no_mock": {
+      "detail": {
+       "models": [
+        "DeepSeek-Flash"
+       ],
+       "rule": "model 去重集合不得含 mock"
+      },
+      "pass": true
+     },
+     "B-21_body_not_template": {
+      "detail": {
+       "L-5_template_hit_rate": 0.0,
+       "L-6_dup_exact_rate": 0.0,
+       "rule": "模板命中率<50% 且 完全重复率<50%；另需人工抽样双查"
+      },
+      "pass": true
+     },
+     "B-2b_manifest_effective": {
+      "detail": {
+       "note": "",
+       "rounds_effective": 24,
+       "rounds_per_slot_effective": 3
+      },
+      "pass": true
+     },
+     "B-7_files": {
+      "detail": "meta.json 存在",
+      "pass": true
+     },
+     "B-8_parse": {
+      "detail": [],
+      "pass": true
+     },
+     "B-9_event_count": {
+      "detail": {
+       "actual_lines": 33850,
+       "meta.events": 33850
+      },
+      "pass": true
+     }
+    },
+    "evidence_level": "evidence",
+    "manifest_profile": "strict",
+    "verdict": "ADMITTED"
+   },
+   "cached_over_total": "2252/2252",
+   "code_sha": "3176048a39f0429204adbdb9eac7a975bfe10c72",
+   "f_den": {
+    "F-1": 191,
+    "F-2": 125,
+    "F-2b": 66,
+    "F-3": 11,
+    "F-4": 8,
+    "F-5": 16,
+    "F-6": 191,
+    "F-6_onscreen_only": 191,
+    "F-7a": 191,
+    "F-7b": null
+   },
+   "f_rows": [
+    {
+     "den": 191,
+     "evidence_level": "evidence",
+     "metric": "F-1",
+     "num": 148,
+     "source_key": "F-1_chatter.nonfunctional_chatter_rate",
+     "unit": "per-message",
+     "value": 0.774869
+    },
+    {
+     "den": 125,
+     "evidence_level": "evidence",
+     "metric": "F-2",
+     "num": 85,
+     "source_key": "F-2_content_drift.drift_rate",
+     "unit": "per-adjacent-pair",
+     "value": 0.68
+    },
+    {
+     "den": 66,
+     "evidence_level": "evidence",
+     "metric": "F-2b",
+     "num": 0,
+     "source_key": "F-2b_multi_topic_threads.multi_topic_thread_ratio",
+     "unit": "per-thread",
+     "value": 0.0
+    },
+    {
+     "den": 11,
+     "evidence_level": "probe",
+     "metric": "F-3",
+     "num": 1,
+     "source_key": "F-3_emotion_echo.echo_rate",
+     "unit": "per-adjacent-pair",
+     "value": 0.090909
+    },
+    {
+     "den": 8,
+     "evidence_level": "probe",
+     "metric": "F-4",
+     "num": 0,
+     "source_key": "F-4_tension_repair.closed_loop_rate",
+     "unit": "per-event",
+     "value": 0.0
+    },
+    {
+     "den": 16,
+     "evidence_level": "probe",
+     "metric": "F-5",
+     "num": 0,
+     "source_key": "F-5_habit_repetition.habit_strength",
+     "unit": "per-agent",
+     "value": 0.0
+    },
+    {
+     "den": 191,
+     "evidence_level": "evidence",
+     "metric": "F-6",
+     "num": 11,
+     "source_key": "F-6_crossday_memory.timeref_rate",
+     "unit": "per-message",
+     "value": 0.057592
+    },
+    {
+     "den": 191,
+     "evidence_level": "evidence",
+     "metric": "F-7a",
+     "num": 19,
+     "source_key": "F-7a_offscreen_mention.offscreen_mention_rate",
+     "unit": "per-message",
+     "value": 0.099476
+    },
+    {
+     "den": null,
+     "evidence_level": "未验证",
+     "metric": "F-7b",
+     "missing_premise": {
+      "下一轮接手前提": "新开分支写 judge 脚本 + 选受检样本（可按线程分层）+ obs llm-cost 取证；在此之前任何『旁白没有带来编造』的说法都不成立",
+      "为什么本轮没跑": "本轮任务书锁死零 LLM、零跑批（只读既有日志）；judge 调用属 LLM 调用，因此 F-7b 只能留 None/未验证，不得估算、不得用 F-7a 冒充",
+      "需要什么判据": "按 F-7 定义（reports/R4-life-texture.md:39-40，F-7 行）：judge 拿到该线程时段内**真实发生的事件摘要**，逐条判该消息是否编造了日志中不存在的事件；率 = 编造条数 / 受检条数。F-7a 只测『引用了当时不在场的人』（规则可测），F-7b 测『引用了不可能知道/不存在的事件』（规则不可测）",
+      "需要什么脚本": "仓库内**没有** F-7b 实现：tools/metrics 与 tools/d5 下只有规则版 F-7a；需新写一个 judge 脚本（读 run.jsonl 抽事件摘要 → 喂 judge → 按 msg_uid 记录判定），并遵循团队纪律『真 LLM 调用必须用 obs llm-cost 验证真实性』"
+     },
+     "note": "F-7b 编造事件率无法用规则算，必须 judge 判定；本轮不跑，故恒为 None",
+     "num": null,
+     "source_key": "（仓库内无实现）",
+     "unit": "per-message",
+     "value": null
+    },
+    {
+     "den": 191,
+     "evidence_level": "diagnostic",
+     "metric": "F-6_onscreen_only",
+     "num": 11,
+     "source_key": "compute(strip_paren) → F-6_crossday_memory.timeref_rate",
+     "unit": "per-message",
+     "value": 0.057592
+    }
+   ],
+   "llm_cached": 2252,
+   "llm_cached_ratio": 1.0,
+   "llm_calls": 2252,
+   "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9m-ab-off_n16r24_s42/run.jsonl",
+   "meta": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9m-ab-off_n16r24_s42/meta.json",
+   "narration": {
+    "any_paren": {
+     "msgs_with_any_open_paren": 0,
+     "rate": 0.0,
+     "regex": "[（(]"
+    },
+    "denominator_msg_total": 191,
+    "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9m-ab-off_n16r24_s42/run.jsonl",
+    "log_parse": {
+     "bad_lines": [],
+     "n_bad": 0
+    },
+    "log_sha256": "sha256:5f1dda97633ccf0b3f7d2b279c39a43752db7d945a2ca6f9133e0b2bc9106ed5",
+    "paired": {
+     "action_blocks": 0,
+     "action_share_of_blocks": null,
+     "blocks_per_msg": 0.0,
+     "blocks_total": 0,
+     "coverage_rate": 0.0,
+     "msgs_with_paired_paren": 0,
+     "regex": "（[^（）]{1,120}）|\\([^()]{1,120}\\)",
+     "repeat_blocks": 0,
+     "repeated_occurrences": 0,
+     "samples_action": [],
+     "samples_other": [],
+     "top_blocks": [],
+     "unique_blocks": 0,
+     "unique_ratio": null
+    },
+    "text_ratio": {
+     "body_chars": 8415,
+     "mean_narration_chars_per_msg": 0.0,
+     "narration_char_share": 0.0,
+     "narration_chars": 0,
+     "onscreen_chars": 8415
+    }
+   }
+  },
+  "ON": {
+   "L_wording": {
+    "L-2_narration_rate_proxy": 0.832461,
+    "L-3_paren_block_any": 0.926702,
+    "L-6_dup_exact_rate": 0.0,
+    "L-7_dup_ngram8_rate": 0.298429
+   },
+   "admission": {
+    "checks": {
+     "B-10_provider": {
+      "detail": "openai_compat",
+      "pass": true
+     },
+     "B-11_real_calls": {
+      "detail": {
+       "dialogue_calls": 191
+      },
+      "pass": true
+     },
+     "B-12_degraded_ratio": {
+      "detail": {
+       "calls": 2252,
+       "degraded": 0,
+       "ratio": 0.0
+      },
+      "pass": true
+     },
+     "B-13_event_families": {
+      "detail": {
+       "missing": []
+      },
+      "pass": true
+     },
+     "B-15_msg_fields": {
+      "detail": {
+       "empty_body": [],
+       "required_keys": [
+        "from",
+        "to",
+        "body",
+        "msg_id",
+        "day",
+        "slot",
+        "place",
+        "tag_hints"
+       ]
+      },
+      "pass": true
+     },
+     "B-15_msg_volume": {
+      "detail": {
+       "dm_threads": 32,
+       "floor": "MSG>=150 且 MSG_DM>=100 且 DM 会话线>=12（v1.2）",
+       "messages": 191,
+       "msg_dm": 167
+      },
+      "pass": true
+     },
+     "B-16_round_dense": {
+      "detail": {
+       "max": 23,
+       "min": 0,
+       "n": 24
+      },
+      "pass": true
+     },
+     "B-17_hash_chain": {
+      "detail": {
+       "hash_links_ok": true,
+       "n": 33857,
+       "seq_dense": true
+      },
+      "pass": true
+     },
+     "B-19_provider_distribution": {
+      "detail": {
+       "providers": {
+        "openai_compat": 2252
+       },
+       "rule": "全部 LLM_CALL.provider 必须为 openai_compat"
+      },
+      "pass": true
+     },
+     "B-20_model_no_mock": {
+      "detail": {
+       "models": [
+        "DeepSeek-Flash"
+       ],
+       "rule": "model 去重集合不得含 mock"
+      },
+      "pass": true
+     },
+     "B-21_body_not_template": {
+      "detail": {
+       "L-5_template_hit_rate": 0.0,
+       "L-6_dup_exact_rate": 0.0,
+       "rule": "模板命中率<50% 且 完全重复率<50%；另需人工抽样双查"
+      },
+      "pass": true
+     },
+     "B-2b_manifest_effective": {
+      "detail": {
+       "note": "",
+       "rounds_effective": 24,
+       "rounds_per_slot_effective": 3
+      },
+      "pass": true
+     },
+     "B-7_files": {
+      "detail": "meta.json 存在",
+      "pass": true
+     },
+     "B-8_parse": {
+      "detail": [],
+      "pass": true
+     },
+     "B-9_event_count": {
+      "detail": {
+       "actual_lines": 33857,
+       "meta.events": 33857
+      },
+      "pass": true
+     }
+    },
+    "evidence_level": "evidence",
+    "manifest_profile": "strict",
+    "verdict": "ADMITTED"
+   },
+   "cached_over_total": "2209/2252",
+   "code_sha": "3176048a39f0429204adbdb9eac7a975bfe10c72",
+   "f_den": {
+    "F-1": 191,
+    "F-2": 125,
+    "F-2b": 66,
+    "F-3": 1,
+    "F-4": 1,
+    "F-5": 16,
+    "F-6": 191,
+    "F-6_onscreen_only": 191,
+    "F-7a": 191,
+    "F-7b": null
+   },
+   "f_rows": [
+    {
+     "den": 191,
+     "evidence_level": "evidence",
+     "metric": "F-1",
+     "num": 143,
+     "source_key": "F-1_chatter.nonfunctional_chatter_rate",
+     "unit": "per-message",
+     "value": 0.748691
+    },
+    {
+     "den": 125,
+     "evidence_level": "evidence",
+     "metric": "F-2",
+     "num": 87,
+     "source_key": "F-2_content_drift.drift_rate",
+     "unit": "per-adjacent-pair",
+     "value": 0.696
+    },
+    {
+     "den": 66,
+     "evidence_level": "evidence",
+     "metric": "F-2b",
+     "num": 0,
+     "source_key": "F-2b_multi_topic_threads.multi_topic_thread_ratio",
+     "unit": "per-thread",
+     "value": 0.0
+    },
+    {
+     "den": 1,
+     "evidence_level": "probe",
+     "metric": "F-3",
+     "num": 0,
+     "source_key": "F-3_emotion_echo.echo_rate",
+     "unit": "per-adjacent-pair",
+     "value": 0.0
+    },
+    {
+     "den": 1,
+     "evidence_level": "probe",
+     "metric": "F-4",
+     "num": 0,
+     "source_key": "F-4_tension_repair.closed_loop_rate",
+     "unit": "per-event",
+     "value": 0.0
+    },
+    {
+     "den": 16,
+     "evidence_level": "probe",
+     "metric": "F-5",
+     "num": 0,
+     "source_key": "F-5_habit_repetition.habit_strength",
+     "unit": "per-agent",
+     "value": 0.0
+    },
+    {
+     "den": 191,
+     "evidence_level": "evidence",
+     "metric": "F-6",
+     "num": 33,
+     "source_key": "F-6_crossday_memory.timeref_rate",
+     "unit": "per-message",
+     "value": 0.172775
+    },
+    {
+     "den": 191,
+     "evidence_level": "evidence",
+     "metric": "F-7a",
+     "num": 27,
+     "source_key": "F-7a_offscreen_mention.offscreen_mention_rate",
+     "unit": "per-message",
+     "value": 0.141361
+    },
+    {
+     "den": null,
+     "evidence_level": "未验证",
+     "metric": "F-7b",
+     "missing_premise": {
+      "下一轮接手前提": "新开分支写 judge 脚本 + 选受检样本（可按线程分层）+ obs llm-cost 取证；在此之前任何『旁白没有带来编造』的说法都不成立",
+      "为什么本轮没跑": "本轮任务书锁死零 LLM、零跑批（只读既有日志）；judge 调用属 LLM 调用，因此 F-7b 只能留 None/未验证，不得估算、不得用 F-7a 冒充",
+      "需要什么判据": "按 F-7 定义（reports/R4-life-texture.md:39-40，F-7 行）：judge 拿到该线程时段内**真实发生的事件摘要**，逐条判该消息是否编造了日志中不存在的事件；率 = 编造条数 / 受检条数。F-7a 只测『引用了当时不在场的人』（规则可测），F-7b 测『引用了不可能知道/不存在的事件』（规则不可测）",
+      "需要什么脚本": "仓库内**没有** F-7b 实现：tools/metrics 与 tools/d5 下只有规则版 F-7a；需新写一个 judge 脚本（读 run.jsonl 抽事件摘要 → 喂 judge → 按 msg_uid 记录判定），并遵循团队纪律『真 LLM 调用必须用 obs llm-cost 验证真实性』"
+     },
+     "note": "F-7b 编造事件率无法用规则算，必须 judge 判定；本轮不跑，故恒为 None",
+     "num": null,
+     "source_key": "（仓库内无实现）",
+     "unit": "per-message",
+     "value": null
+    },
+    {
+     "den": 191,
+     "evidence_level": "diagnostic",
+     "metric": "F-6_onscreen_only",
+     "num": 33,
+     "source_key": "compute(strip_paren) → F-6_crossday_memory.timeref_rate",
+     "unit": "per-message",
+     "value": 0.172775
+    }
+   ],
+   "llm_cached": 2209,
+   "llm_cached_ratio": 0.9809,
+   "llm_calls": 2252,
+   "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9m-ab-on_n16r24_s42/run.jsonl",
+   "meta": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9m-ab-on_n16r24_s42/meta.json",
+   "narration": {
+    "any_paren": {
+     "msgs_with_any_open_paren": 177,
+     "rate": 0.926702,
+     "regex": "[（(]"
+    },
+    "denominator_msg_total": 191,
+    "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9m-ab-on_n16r24_s42/run.jsonl",
+    "log_parse": {
+     "bad_lines": [],
+     "n_bad": 0
+    },
+    "log_sha256": "sha256:2edc751c5a32d1328ed5834ab169d29c5c457cbe7b1d5abe3146d7840df6a795",
+    "paired": {
+     "action_blocks": 134,
+     "action_share_of_blocks": 0.683673,
+     "blocks_per_msg": 1.026178,
+     "blocks_total": 196,
+     "coverage_rate": 0.926702,
+     "msgs_with_paired_paren": 177,
+     "regex": "（[^（）]{1,120}）|\\([^()]{1,120}\\)",
+     "repeat_blocks": 3,
+     "repeated_occurrences": 6,
+     "samples_action": [
+      "拿刨子推过一块榆木板，木花卷着落下来",
+      "把案板上那团发过头的面往旁边推了推",
+      "把算盘往石桌上一搁",
+      "把木桩上的沙袋扶正，又拍了两下",
+      "把烧红的锄头从炉里夹出来搁砧子上",
+      "拿锉刀把竹片边角磨圆"
+     ],
+     "samples_other": [
+      "把周家族谱摊在膝上，指腹压住刚描的“周”字",
+      "把压腿的横杆又调低一格，脚尖抵着木地板慢慢往下沉",
+      "把竹筛往膝头挪了挪，指头拨着半干的萝卜条",
+      "把刚出炉的枣泥酥往竹匾里码，油纸垫在底下",
+      "把账本往膝头一合，侧耳听你脚下的鼓点",
+      "把压腿的横杆又调低一格，脚尖点着地"
+     ],
+     "top_blocks": [
+      {
+       "count": 2,
+       "inner": "把算盘珠子拨回原位"
+      },
+      {
+       "count": 2,
+       "inner": "把墨斗线在指头上绕了两圈"
+      },
+      {
+       "count": 2,
+       "inner": "抬眼"
+      },
+      {
+       "count": 1,
+       "inner": "拿刨子推过一块榆木板，木花卷着落下来"
+      },
+      {
+       "count": 1,
+       "inner": "把案板上那团发过头的面往旁边推了推"
+      },
+      {
+       "count": 1,
+       "inner": "把周家族谱摊在膝上，指腹压住刚描的“周”字"
+      },
+      {
+       "count": 1,
+       "inner": "把算盘往石桌上一搁"
+      },
+      {
+       "count": 1,
+       "inner": "把压腿的横杆又调低一格，脚尖抵着木地板慢慢往下沉"
+      }
+     ],
+     "unique_blocks": 193,
+     "unique_ratio": 0.984694
+    },
+    "text_ratio": {
+     "body_chars": 11295,
+     "mean_narration_chars_per_msg": 19.057592,
+     "narration_char_share": 0.322266,
+     "narration_chars": 3640,
+     "onscreen_chars": 7655
+    }
+   }
+  },
+  "ROUND1-default-ON": {
+   "L_wording": {
+    "L-2_narration_rate_proxy": 0.863874,
+    "L-3_paren_block_any": 0.91623,
+    "L-6_dup_exact_rate": 0.0,
+    "L-7_dup_ngram8_rate": 0.209424
+   },
+   "admission": {
+    "checks": {
+     "B-10_provider": {
+      "detail": "openai_compat",
+      "pass": true
+     },
+     "B-11_real_calls": {
+      "detail": {
+       "dialogue_calls": 191
+      },
+      "pass": true
+     },
+     "B-12_degraded_ratio": {
+      "detail": {
+       "calls": 2252,
+       "degraded": 0,
+       "ratio": 0.0
+      },
+      "pass": true
+     },
+     "B-13_event_families": {
+      "detail": {
+       "missing": []
+      },
+      "pass": true
+     },
+     "B-15_msg_fields": {
+      "detail": {
+       "empty_body": [],
+       "required_keys": [
+        "from",
+        "to",
+        "body",
+        "msg_id",
+        "day",
+        "slot",
+        "place",
+        "tag_hints"
+       ]
+      },
+      "pass": true
+     },
+     "B-15_msg_volume": {
+      "detail": {
+       "dm_threads": 32,
+       "floor": "MSG>=150 且 MSG_DM>=100 且 DM 会话线>=12（v1.2）",
+       "messages": 191,
+       "msg_dm": 167
+      },
+      "pass": true
+     },
+     "B-16_round_dense": {
+      "detail": {
+       "max": 23,
+       "min": 0,
+       "n": 24
+      },
+      "pass": true
+     },
+     "B-17_hash_chain": {
+      "detail": {
+       "hash_links_ok": true,
+       "n": 33845,
+       "seq_dense": true
+      },
+      "pass": true
+     },
+     "B-19_provider_distribution": {
+      "detail": {
+       "providers": {
+        "openai_compat": 2252
+       },
+       "rule": "全部 LLM_CALL.provider 必须为 openai_compat"
+      },
+      "pass": true
+     },
+     "B-20_model_no_mock": {
+      "detail": {
+       "models": [
+        "DeepSeek-Flash"
+       ],
+       "rule": "model 去重集合不得含 mock"
+      },
+      "pass": true
+     },
+     "B-21_body_not_template": {
+      "detail": {
+       "L-5_template_hit_rate": 0.0,
+       "L-6_dup_exact_rate": 0.0,
+       "rule": "模板命中率<50% 且 完全重复率<50%；另需人工抽样双查"
+      },
+      "pass": true
+     },
+     "B-2b_manifest_effective": {
+      "detail": {
+       "note": "",
+       "rounds_effective": 24,
+       "rounds_per_slot_effective": 3
+      },
+      "pass": true
+     },
+     "B-7_files": {
+      "detail": "meta.json 存在",
+      "pass": true
+     },
+     "B-8_parse": {
+      "detail": [],
+      "pass": true
+     },
+     "B-9_event_count": {
+      "detail": {
+       "actual_lines": 33845,
+       "meta.events": 33845
+      },
+      "pass": true
+     }
+    },
+    "evidence_level": "evidence",
+    "manifest_profile": "strict",
+    "verdict": "ADMITTED"
+   },
+   "cached_over_total": "1387/2252",
+   "code_sha": "dfe6d5b283a9e37f9d3f2373e1b8224fd15d609f",
+   "f_den": {
+    "F-1": 191,
+    "F-2": 125,
+    "F-2b": 66,
+    "F-3": 6,
+    "F-4": 5,
+    "F-5": 16,
+    "F-6": 191,
+    "F-6_onscreen_only": 191,
+    "F-7a": 191,
+    "F-7b": null
+   },
+   "f_rows": [
+    {
+     "den": 191,
+     "evidence_level": "evidence",
+     "metric": "F-1",
+     "num": 145,
+     "source_key": "F-1_chatter.nonfunctional_chatter_rate",
+     "unit": "per-message",
+     "value": 0.759162
+    },
+    {
+     "den": 125,
+     "evidence_level": "evidence",
+     "metric": "F-2",
+     "num": 88,
+     "source_key": "F-2_content_drift.drift_rate",
+     "unit": "per-adjacent-pair",
+     "value": 0.704
+    },
+    {
+     "den": 66,
+     "evidence_level": "evidence",
+     "metric": "F-2b",
+     "num": 0,
+     "source_key": "F-2b_multi_topic_threads.multi_topic_thread_ratio",
+     "unit": "per-thread",
+     "value": 0.0
+    },
+    {
+     "den": 6,
+     "evidence_level": "probe",
+     "metric": "F-3",
+     "num": 1,
+     "source_key": "F-3_emotion_echo.echo_rate",
+     "unit": "per-adjacent-pair",
+     "value": 0.166667
+    },
+    {
+     "den": 5,
+     "evidence_level": "probe",
+     "metric": "F-4",
+     "num": 0,
+     "source_key": "F-4_tension_repair.closed_loop_rate",
+     "unit": "per-event",
+     "value": 0.0
+    },
+    {
+     "den": 16,
+     "evidence_level": "probe",
+     "metric": "F-5",
+     "num": 0,
+     "source_key": "F-5_habit_repetition.habit_strength",
+     "unit": "per-agent",
+     "value": 0.0
+    },
+    {
+     "den": 191,
+     "evidence_level": "evidence",
+     "metric": "F-6",
+     "num": 33,
+     "source_key": "F-6_crossday_memory.timeref_rate",
+     "unit": "per-message",
+     "value": 0.172775
+    },
+    {
+     "den": 191,
+     "evidence_level": "evidence",
+     "metric": "F-7a",
+     "num": 28,
+     "source_key": "F-7a_offscreen_mention.offscreen_mention_rate",
+     "unit": "per-message",
+     "value": 0.146597
+    },
+    {
+     "den": null,
+     "evidence_level": "未验证",
+     "metric": "F-7b",
+     "missing_premise": {
+      "下一轮接手前提": "新开分支写 judge 脚本 + 选受检样本（可按线程分层）+ obs llm-cost 取证；在此之前任何『旁白没有带来编造』的说法都不成立",
+      "为什么本轮没跑": "本轮任务书锁死零 LLM、零跑批（只读既有日志）；judge 调用属 LLM 调用，因此 F-7b 只能留 None/未验证，不得估算、不得用 F-7a 冒充",
+      "需要什么判据": "按 F-7 定义（reports/R4-life-texture.md:39-40，F-7 行）：judge 拿到该线程时段内**真实发生的事件摘要**，逐条判该消息是否编造了日志中不存在的事件；率 = 编造条数 / 受检条数。F-7a 只测『引用了当时不在场的人』（规则可测），F-7b 测『引用了不可能知道/不存在的事件』（规则不可测）",
+      "需要什么脚本": "仓库内**没有** F-7b 实现：tools/metrics 与 tools/d5 下只有规则版 F-7a；需新写一个 judge 脚本（读 run.jsonl 抽事件摘要 → 喂 judge → 按 msg_uid 记录判定），并遵循团队纪律『真 LLM 调用必须用 obs llm-cost 验证真实性』"
+     },
+     "note": "F-7b 编造事件率无法用规则算，必须 judge 判定；本轮不跑，故恒为 None",
+     "num": null,
+     "source_key": "（仓库内无实现）",
+     "unit": "per-message",
+     "value": null
+    },
+    {
+     "den": 191,
+     "evidence_level": "diagnostic",
+     "metric": "F-6_onscreen_only",
+     "num": 32,
+     "source_key": "compute(strip_paren) → F-6_crossday_memory.timeref_rate",
+     "unit": "per-message",
+     "value": 0.167539
+    }
+   ],
+   "llm_cached": 1387,
+   "llm_cached_ratio": 0.6159,
+   "llm_calls": 2252,
+   "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round1_narration_default_n16r24_s42/run.jsonl",
+   "meta": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round1_narration_default_n16r24_s42/meta.json",
+   "narration": {
+    "any_paren": {
+     "msgs_with_any_open_paren": 175,
+     "rate": 0.91623,
+     "regex": "[（(]"
+    },
+    "denominator_msg_total": 191,
+    "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round1_narration_default_n16r24_s42/run.jsonl",
+    "log_parse": {
+     "bad_lines": [],
+     "n_bad": 0
+    },
+    "log_sha256": "sha256:ca108da9f90031f7d8b9dbc346518898e48976c33ec0965737ca80255cb6e37b",
+    "paired": {
+     "action_blocks": 144,
+     "action_share_of_blocks": 0.702439,
+     "blocks_per_msg": 1.073298,
+     "blocks_total": 205,
+     "coverage_rate": 0.91623,
+     "msgs_with_paired_paren": 175,
+     "regex": "（[^（）]{1,120}）|\\([^()]{1,120}\\)",
+     "repeat_blocks": 3,
+     "repeated_occurrences": 9,
+     "samples_action": [
+      "拿刨子推过木料，木花卷着落下来",
+      "眯眼看了看",
+      "把沾着面粉的手在围裙上蹭了蹭",
+      "往案板上撒了把干粉，把醒好的面团翻了个面",
+      "把裁纸刀往桌角一搁",
+      "把木剑往地上一戳，歪头看桂婶手里的菜篮"
+     ],
+     "samples_other": [
+      "把算盘珠子拨回原位",
+      "顿了顿",
+      "把压腿的脚尖从把杆上收回来，顺手抹了把额角的汗",
+      "把烧红的锄头往水桶里一按，白汽直冒",
+      "把压腿的脚尖往横杆上又蹭了蹭",
+      "捏着半截粉笔在石板上画铃铛草图"
+     ],
+     "top_blocks": [
+      {
+       "count": 4,
+       "inner": "把算盘珠子拨回原位"
+      },
+      {
+       "count": 3,
+       "inner": "抬眼"
+      },
+      {
+       "count": 2,
+       "inner": "把沾着面粉的手在围裙上蹭了蹭"
+      },
+      {
+       "count": 1,
+       "inner": "拿刨子推过木料，木花卷着落下来"
+      },
+      {
+       "count": 1,
+       "inner": "眯眼看了看"
+      },
+      {
+       "count": 1,
+       "inner": "往案板上撒了把干粉，把醒好的面团翻了个面"
+      },
+      {
+       "count": 1,
+       "inner": "把裁纸刀往桌角一搁"
+      },
+      {
+       "count": 1,
+       "inner": "顿了顿"
+      }
+     ],
+     "unique_blocks": 199,
+     "unique_ratio": 0.970732
+    },
+    "text_ratio": {
+     "body_chars": 11211,
+     "mean_narration_chars_per_msg": 17.968586,
+     "narration_char_share": 0.306128,
+     "narration_chars": 3432,
+     "onscreen_chars": 7779
+    }
+   }
+  }
+ },
+ "arms_role": {
+  "OFF": "baseline",
+  "ON": "treatment",
+  "ROUND1-default-ON": "reference_only",
+  "__baseline__": "OFF",
+  "__treatment__": "ON"
+ },
+ "caliber_sources": {
+  "F_metrics": {
+   "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/dialogue_metrics.py",
+   "sha256": "sha256:1d914735f3a13cf4e1640bd694f1d0e070096c9f50abfdefa7359417df551271"
+  },
+  "narration_regex_and_action_words": {
+   "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d9i/narration_stats.py",
+   "sha256": "sha256:8ddb9111072c9ef71e7853dc7b455d618352b2baf44492d0576e440467627e85"
+  }
+ },
+ "generated_by": {
+  "script": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/metrics/narration_hedge.py",
+  "script_sha256": "sha256:4494e1cfa766f01b78aa836c890cbc9e70aebe30dcc0feaa5e6334b4929a4132"
+ },
+ "judgement": {
+  "baseline_arm": "OFF",
+  "caveats": [
+   "OFF 臂 cached/total = 2252/2252（llm_cached_ratio=1.0）：全部命中缓存，响应是历史真 LLM 产物、本批未重生成 ⇒ 本对照是**两份日志正文的文本统计对比**，不是两次独立采样",
+   "ON 臂 cached/total = 2209/2252（llm_cached_ratio=0.9809）：大部分为缓存回放",
+   "不可判维度原因见 unjudgeable"
+  ],
+  "delta_threshold": 0.02,
+  "deltas": {
+   "F-1": {
+    "delta": -0.026178,
+    "den_baseline": 191,
+    "den_treatment": 191,
+    "direction": 1,
+    "favorable": false,
+    "num_baseline": 148,
+    "num_treatment": 143,
+    "value_baseline": 0.774869,
+    "value_treatment": 0.748691
+   },
+   "F-2": {
+    "delta": 0.016,
+    "den_baseline": 125,
+    "den_treatment": 125,
+    "direction": 0,
+    "favorable": null,
+    "num_baseline": 85,
+    "num_treatment": 87,
+    "value_baseline": 0.68,
+    "value_treatment": 0.696
+   },
+   "F-2b": {
+    "delta": 0.0,
+    "den_baseline": 66,
+    "den_treatment": 66,
+    "direction": 1,
+    "favorable": false,
+    "num_baseline": 0,
+    "num_treatment": 0,
+    "value_baseline": 0.0,
+    "value_treatment": 0.0
+   },
+   "F-3": {
+    "delta": -0.090909,
+    "den_baseline": 11,
+    "den_treatment": 1,
+    "direction": 1,
+    "favorable": false,
+    "num_baseline": 1,
+    "num_treatment": 0,
+    "value_baseline": 0.090909,
+    "value_treatment": 0.0
+   },
+   "F-4": {
+    "delta": 0.0,
+    "den_baseline": 8,
+    "den_treatment": 1,
+    "direction": 1,
+    "favorable": false,
+    "num_baseline": 0,
+    "num_treatment": 0,
+    "value_baseline": 0.0,
+    "value_treatment": 0.0
+   },
+   "F-5": {
+    "delta": 0.0,
+    "den_baseline": 16,
+    "den_treatment": 16,
+    "direction": 1,
+    "favorable": false,
+    "num_baseline": 0,
+    "num_treatment": 0,
+    "value_baseline": 0.0,
+    "value_treatment": 0.0
+   },
+   "F-6": {
+    "L-6_delta": 0.0,
+    "L-7_delta": 0.083769,
+    "delta": 0.115183,
+    "den_baseline": 191,
+    "den_treatment": 191,
+    "direction": 1,
+    "favorable": true,
+    "num_baseline": 11,
+    "num_treatment": 33,
+    "value_baseline": 0.057592,
+    "value_treatment": 0.172775
+   },
+   "F-7a": {
+    "delta": 0.041885,
+    "den_baseline": 191,
+    "den_treatment": 191,
+    "direction": -1,
+    "favorable": false,
+    "num_baseline": 19,
+    "num_treatment": 27,
+    "value_baseline": 0.099476,
+    "value_treatment": 0.141361
+   }
+  },
+  "disqualified": {
+   "F-6": [
+    "R4 陷阱1（reports/R4-life-texture.md:86-89 第1条）：F-1/F-6 升高**同时**旁白率也升高（旁白 0.0→0.926702）⇒ 判为「用旁白换生活气息」，不算改善",
+    "R4 陷阱2（reports/R4-life-texture.md:86-89 第2条）：F-6 升高的同时措辞层重复率恶化（L-6 Δ=0.0, L-7 Δ=0.083769 ≥ 0.02）⇒ 不算改善"
+   ]
+  },
+  "hedge_verdict": "swap_only",
+  "judgeable_improvements": [],
+  "judgeable_regressions": [
+   "F-1",
+   "F-7a"
+  ],
+  "missing_premises": [
+   "F-7b（编造事件率）需 judge 判定；本工具零 LLM ⇒ 恒为 None/未验证",
+   "独立重采样（两臂均为缓存回放，不能支撑显著性/批间方差结论）"
+  ],
+  "narration_coverage_baseline": 0.0,
+  "narration_coverage_treatment": 0.926702,
+  "narration_lift": 0.926702,
+  "significance": {
+   "p_value": null,
+   "reason": "两臂为同一 prompt 集的缓存回放（见 caveats 的 cached/total），非独立重采样，样本不满足独立性假设 ⇒ 按纪律不给 p 值/置信区间，任何『显著』说法都不成立",
+   "test": null
+  },
+  "swap_evidence": {
+   "F-6": {
+    "delta_full_body": 0.115183,
+    "delta_onscreen_only": 0.115183,
+    "explicit_statement": "剥掉成对括号旁白后，ON 臂 F-6 仍是 33/191（OFF 臂 11/191），delta 存活比 = 1.0 ⇒ 这次 F-6 的移动**落在台词正文，不在旁白文字本身**；但它与旁白开关同时发生且伴随 L-7 ngram8 重复率恶化，按 reports/R4-life-texture.md:86-89 陷阱1/2 的文字口径仍判『不算改善』",
+    "note": "这是本轮唯一有诊断价值的线索：旁白不是靠『写景物』把 F-6 顶上去的，而是改变了台词里对『昨天/上次』的提及；要证实它，需要独立重采样 + F-7b judge，本轮两臂均为缓存回放，做不到",
+    "num_full_body": "11/191 → 33/191",
+    "num_onscreen_only": "11/191 → 33/191",
+    "share_of_delta_surviving_paren_strip": 1.0
+   }
+  },
+  "treatment_arm": "ON",
+  "unjudgeable": {
+   "F-2": "方向不唯一（漂移高低本身不是好坏判据），只报不判",
+   "F-3": "分母 <30（b=11, t=1），本规模下不可判",
+   "F-4": "分母 <30（b=8, t=1），本规模下不可判",
+   "F-5": "分母 <30（b=16, t=16），本规模下不可判"
+  },
+  "verdict_reason": "旁白有实质增量（0.0 → 0.926702），但去掉 R4 陷阱1/2 后**没有任何可判 F 指标构成同向改善**；被取消改善资格的读数：F-6（R4 陷阱1（reports/R4-life-texture.md:86-89 第1条）：F-1/F-6 升高**同时**旁白率也升高（旁白 0.0→0.926702）⇒ 判为「用旁白换生活气息」，不算改善 | R4 陷阱2（reports/R4-life-texture.md:86-89 第2条）：F-6 升高的同时措辞层重复率恶化（L-6 Δ=0.0, L-7 Δ=0.083769 ≥ 0.02）⇒ 不算改善）；另有可判同向恶化：F-1、F-7a"
+ },
+ "recompute_command": "python3 tools/metrics/narration_hedge.py \\\n  --log v2/evidence/d9m-ab-off_n16r24_s42 --label OFF \\\n  --log v2/evidence/d9m-ab-on_n16r24_s42 --label ON \\\n  --log v2/evidence/round1_narration_default_n16r24_s42 --label ROUND1-default-ON \\\n  --baseline-arm OFF --treatment-arm ON \\\n  --out-json v2/evidence/narration_hedge/readings.json --out-md v2/evidence/narration_hedge/table.md",
+ "schema_version": "narration-hedge/1.0"
+}

@@ -1,0 +1,97 @@
+{
+  "batch_id": "cycle29-f3-on-emoOn",
+  "fail_count": 0,
+  "generated_at": "2026-10-30T00:31:33+08:00",
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/emo-on-20261029/run.jsonl",
+  "log_sha256": "2aa6c774b2e6d019f8b4e258ddec0861d7de05f7ac416e3dacf90a0f874f5ffe",
+  "ok_count": 2,
+  "policy": {
+    "blank_check": "自行像素自检（distinct_colors/top_color_frac/non_bg_frac 逐张落盘）；未沿用 shot.py 的单色判据——该判据对深色 dialogue.html 会假红（实测 80.09% 误判）",
+    "code_untouched": "服务根为临时目录 + 符号链接；未在 code/frontend 下写入任何文件",
+    "no_reuse": "输出同名 PNG 若已存在则先删除，只认本次现截",
+    "no_stitching": "每张图独立截图，禁止拼图/跨批混拼"
+  },
+  "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/emo-on-20261029",
+  "run_sha256_in_threads": "2aa6c774b2e6d019f8b4e258ddec0861d7de05f7ac416e3dacf90a0f874f5ffe",
+  "schema_version": "render-shots/1.0",
+  "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle29_shots/on/threads_cycle29-f3-on-emoOn.json",
+  "threads_json_sha256": "c6792ecf9d369907050a2b8641aba1cf85571523a8e17b9f796a095be79b085d",
+  "views": [
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 23419,
+        "height": 900,
+        "non_bg_frac": 0.5117,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.1774,
+        "width": 1400
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle29_shots/on/cycle29-f3-on-emoOn-chat-2aa6c774.png",
+      "png_bytes": 278505,
+      "png_mtime_iso": "2026-10-30T00:31:29+08:00",
+      "png_mtime_ns": 1793291489527898837,
+      "png_sha256": "4ce681428b92c6ff9705a07fdec1b7580f858468826b0a0ace50d1e12327832b",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/emo-on-20261029/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/emo-on-20261029/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle29_shots/on/threads_cycle29-f3-on-emoOn.json --label cycle29-f3-on-emoOn",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/emo-on-20261029/run.jsonl",
+        "log_sha256": "2aa6c774b2e6d019f8b4e258ddec0861d7de05f7ac416e3dacf90a0f874f5ffe",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:43267/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_cycle29-f3-on-emoOn/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle29_shots/on/cycle29-f3-on-emoOn-chat-2aa6c774.png --width 1400 --height 900 --timeout 180.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/emo-on-20261029",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle29_shots/on/threads_cycle29-f3-on-emoOn.json",
+        "threads_json_sha256": "c6792ecf9d369907050a2b8641aba1cf85571523a8e17b9f796a095be79b085d"
+      },
+      "view": "chat"
+    },
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 20935,
+        "height": 1050,
+        "non_bg_frac": 0.3884,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.3707,
+        "width": 1300
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle29_shots/on/cycle29-f3-on-emoOn-rhythm-2aa6c774.png",
+      "png_bytes": 280659,
+      "png_mtime_iso": "2026-10-30T00:31:31+08:00",
+      "png_mtime_ns": 1793291491954153979,
+      "png_sha256": "f74b8b4ab3ccd4323f041f71b39b6b5add33b7d2555d12d83030d2096d9de7bc",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/emo-on-20261029/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/emo-on-20261029/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle29_shots/on/threads_cycle29-f3-on-emoOn.json --label cycle29-f3-on-emoOn",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/emo-on-20261029/run.jsonl",
+        "log_sha256": "2aa6c774b2e6d019f8b4e258ddec0861d7de05f7ac416e3dacf90a0f874f5ffe",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:43267/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_cycle29-f3-on-emoOn/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle29_shots/on/cycle29-f3-on-emoOn-rhythm-2aa6c774.png --width 1300 --height 1050 --timeout 180.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/emo-on-20261029",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/cycle29_shots/on/threads_cycle29-f3-on-emoOn.json",
+        "threads_json_sha256": "c6792ecf9d369907050a2b8641aba1cf85571523a8e17b9f796a095be79b085d"
+      },
+      "view": "rhythm"
+    }
+  ]
+}

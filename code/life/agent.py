@@ -13,9 +13,11 @@ The agent never mutates world state.
 """
 from __future__ import annotations
 
+import json
 import os
 import re
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 from . import constants as C
@@ -35,6 +37,7 @@ from . import anti_repeat as AR   # R12：L-7 去重臂（env LIFE_PROMPT_MEMORY
 from . import l7_structural as L7S  # L-7 结构臂（env LIFE_PROMPT_L7_STRUCT，**默认 ON**）
 from . import topic_breadth as TB  # R19 话题宽度臂（env LIFE_PROMPT_TOPIC_BREADTH，**默认 OFF**）
 from . import scene_anchor as SA  # 处境锚臂（env LIFE_PROMPT_SCENE，**默认 OFF**）
+from . import weather as WX  # 天气臂（env HITT_WEATHER，**默认 OFF**）：今儿的天进提示词
 from .policy import (social_enabled, exchange_enabled, m2b_judge_mode, m2b_importance_mode,
                      narrative_persist_enabled)
 from .ports import (
@@ -74,6 +77,224 @@ MEMORY_F6_SEMANTIC_QUOTA = 1
 def memory_f6_enabled() -> bool:
     """F-6 臂开关（env `LIFE_PROMPT_MEMORY_F6` ∈ {1,true,yes,on}）；默认关。"""
     return os.environ.get(MEMORY_F6_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+# N-15 称呼演化臂开关（env `LIFE_PROMPT_ADDR_EVOLVE`）：**只影响对话提示词（`_dialogue_prompt`）一行文本**，默认 OFF。
+# 预登记：`v2/refs/N15-prereg-addr-evolve-20261030.md`（主判据 `S-1 = addr_swing_pairs_rate`，可检出线 `Δ ≥ +20pp`）。
+# 单变量约束（预登记 §8.1/§8.4）：**只**注入 `_dialogue_prompt`，**不**改 `_reply_prompt`；**不**做称呼替换表 /
+# 轮换池 / 定时换称呼；**不**读关系值数值阈值做分支。缺省 / 空串 / 其它值 ⇒ OFF，且 OFF 态与改动前逐字节相同。
+ADDR_EVOLVE_ENV = "LIFE_PROMPT_ADDR_EVOLVE"
+
+#: 注入行（**实现时冻结**；≤1 句、无示例、无轮换、无多行模板）。其 sha256 记入回执与证据。
+ADDR_EVOLVE_LINE = "\n跟一个人处得越熟，叫法就该跟着变一变——熟了以后别再一直用最初那个称呼。"
+
+
+def addr_evolve_enabled() -> bool:
+    """N-15 臂开关（env `LIFE_PROMPT_ADDR_EVOLVE` ∈ {1,true,yes,on}）；默认关。"""
+    return os.environ.get(ADDR_EVOLVE_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+# 旁白/动作神态通道开关：**只影响 prompt 收尾指令的文本**。
+# D9i 阶段它是「仅靠 env 的实验开关、默认 0 = 禁旁白」；ROUND1（本分支 feat/narration-default-on）把它
+# **默认化**：默认值改由 `config/life_v2.json` 的 `prompt.narration.enabled` 提供（文件内写 true）,
+# env `LIFE_PROMPT_NARRATION` 仍是**显式覆盖**（`=0/false/off/no` 即关闭，`=1/true/yes/on` 即打开），
+# 未设时读配置 ⇒ 默认**开**。
+# 硬约束（v2/refs/D9i-prereg-narration-toggle.md）：默认化**只改默认值**，两条收尾指令的字面量
+# （`_NARRATION_TAIL_OFF` / `_NARRATION_TAIL_ON`）一字未动 ⇒ `LIFE_PROMPT_NARRATION=0` 仍与改动前
+# **逐字节相同**；不改阈值 / 事件结构 / 调度 / 其它措辞。
+NARRATION_ENV = "LIFE_PROMPT_NARRATION"
+
+#: 默认值落点：`code/config/life_v2.json` 的 `prompt.narration.enabled`（与 life 其它段同样直读盘）。
+NARRATION_CONFIG_PATH = Path(__file__).resolve().parents[1] / "config" / "life_v2.json"
+
+#: 配置文件缺失 / 缺键 / 类型非法时的兜底默认值（默认化后为 True）。
+NARRATION_DEFAULT_ENABLED = True
+
+#: env 真值集（与既有臂保持同一套字面量；其余已设值一律按关处理 = D9i 老语义）
+_ENV_TRUE = frozenset({"1", "true", "yes", "on"})
+
+
+def narration_config_default() -> bool:
+    """读 `config/life_v2.json :: prompt.narration.enabled`（缺文件/缺键/非 bool ⇒ 兜底 True）。"""
+    try:
+        data = json.loads(NARRATION_CONFIG_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return NARRATION_DEFAULT_ENABLED
+    if not isinstance(data, dict):
+        return NARRATION_DEFAULT_ENABLED
+    sec = data.get("prompt")
+    sec = sec.get("narration") if isinstance(sec, dict) else None
+    if not isinstance(sec, dict):
+        return NARRATION_DEFAULT_ENABLED
+    v = sec.get("enabled", NARRATION_DEFAULT_ENABLED)
+    return v if isinstance(v, bool) else NARRATION_DEFAULT_ENABLED
+
+#: 显式关（env 已设且非真值，如 `=0`）时的收尾指令（= 改动前的字面量，逐字节保留；单测据此做 sha256 等价断言）
+_NARRATION_TAIL_OFF = {
+    "initiate": "\n只写台词本身（一句家常话）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。",
+    "reply": "\n只写台词本身（接着刚才的话往下说一句）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。",
+}
+
+#: env=1 时的收尾指令：放开「成对括号的动作/神态/眼前景」，但**不得**放开到心理独白或旁白叙事。
+_NARRATION_TAIL_ON = {
+    "initiate": "\n只写台词本身（一句家常话，用成对的（）补一句动作、神态或眼前的景，如（把围裙往腰后一掖），但不要写心理独白或旁白叙事，不要用方括号或星号）：不要解释也不要总结；用口语短句，别反复用同一句口头禅。",
+    "reply": "\n只写台词本身（接着刚才的话往下说一句，用成对的（）补一句动作、神态或眼前的景，如（低头刨木，木屑卷起），但不要写心理独白或旁白叙事，不要用方括号或星号）：不要解释也不要总结；用口语短句，别反复用同一句口头禅。",
+}
+
+
+def narration_enabled() -> bool:
+    """旁白通道开关：**env 显式值 > `config/life_v2.json` 默认值**。
+
+    * env ∈ {1,true,yes,on} ⇒ 开；其它**任何已设值**（含 `0` / ``空串`` / `false` / `off` / `no` / `2`）⇒ 关
+      （= D9i 老语义，逐字未改）；
+    * **只有 env 完全未设**时读配置 `prompt.narration.enabled`（默认化后 = True）。
+      区分「未设」与「设为空串」是刻意的：显式 `LIFE_PROMPT_NARRATION=`（空）仍算显式关闭，
+      这样老臂「置空即禁旁白」的历史行为不被默认化改写。
+    """
+    raw = os.environ.get(NARRATION_ENV)
+    if raw is None:
+        return narration_config_default()
+    return raw.strip().lower() in _ENV_TRUE
+
+
+# D9m 臂开关（旁白**示例句**确定性轮换）：只动 D9i 「旁白 ON」模板里 `如（…）` 那**一个示例句**，
+# 其余字面量（删禁令、`成对（）`、`不要写心理独白或旁白叙事`、`不要用方括号或星号`、句尾口头禅）
+# **逐字节不动**。默认关 ⇒ 直接返回 `_NARRATION_TAIL_ON` 常量对象 ⇒ 与 D9i ON 逐字节相同。
+# 与 `LIFE_PROMPT_NARRATION` 的组合语义（四种）：
+#   NARRATION 关 + 旋转任意  ⇒ `_NARRATION_TAIL_OFF`（禁旁白；旋转开关在此组合下**无效果**）
+#   NARRATION 开 + 旋转关    ⇒ `_NARRATION_TAIL_ON`（D9i 原固定示例，常量对象）
+#   NARRATION 开 + 旋转开    ⇒ `_NARRATION_TAIL_ON` 的示例句换成词表选句（唯一差异）
+ROTATION_ENV = "LIFE_PROMPT_NARRATION_ROTATION"
+
+#: 例句词表指纹（改词表 = 改行为，须重冻结；报告/runbook 侧按此对齐「尺子」身份）
+NARRATION_EXAMPLE_LEXICON_VERSION = "narration-rotation-v1"
+
+#: 示例句库（≥6 句，均为「动作 / 神态 / 眼前景」，只写人话、不出内部 token）。
+#: 硬约束：**不得**含 蹭 / 磨 / 抹 / 擦（易与 L-7 高频动词复读叠加）与
+#: 围裙 / 锉刀 / 木屑（D9i 固定示例里的旧道具，CYCLE-30 已登记为重复出现）。
+#: 单测以正则逐字断言（防未来回潮），并对旋转开的多回合输出全量扫描同一词表。
+NARRATION_EXAMPLES: tuple[str, ...] = (
+    "抬手把鬓角的碎发别到耳后",
+    "把袖口往上挽了一截",
+    "低头拢了拢衣襟",
+    "侧身让过挑担的街坊",
+    "往门槛上靠了靠",
+    "把竹篮往脚边挪了挪",
+    "抬眼望了望日头",
+    "伸手扇了扇风",
+    "把凳子往后撤了半步",
+)
+
+#: 轮换臂模板：与 `_NARRATION_TAIL_ON` **逐字节相同**，只把 `如（<示例>）` 的示例替换成 `{}`。
+#: 单测用 `_NARRATION_TAIL_ON_TPL[kind].format(_NARRATION_TAIL_ON_EXAMPLE[kind]) ==
+#: _NARRATION_TAIL_ON[kind]` 硬锁「除示例句外一字未改」。
+_NARRATION_TAIL_ON_TPL = {
+    "initiate": "\n只写台词本身（一句家常话，用成对的（）补一句动作、神态或眼前的景，如（{}），但不要写心理独白或旁白叙事，不要用方括号或星号）：不要解释也不要总结；用口语短句，别反复用同一句口头禅。",
+    "reply": "\n只写台词本身（接着刚才的话往下说一句，用成对的（）补一句动作、神态或眼前的景，如（{}），但不要写心理独白或旁白叙事，不要用方括号或星号）：不要解释也不要总结；用口语短句，别反复用同一句口头禅。",
+}
+
+#: D9i 原示例句（仅用于等价性自检；**不参与**轮换臂的输出）
+_NARRATION_TAIL_ON_EXAMPLE = {"initiate": "把围裙往腰后一掖", "reply": "低头刨木，木屑卷起"}
+
+
+def narration_rotation_enabled() -> bool:
+    """D9m 臂开关（env `LIFE_PROMPT_NARRATION_ROTATION` ∈ {1,true,yes,on}）；默认关。"""
+    return os.environ.get(ROTATION_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def narration_example(kind: str, agent_id: str | None = None,
+                      round_no: int | None = None) -> str:
+    """确定性选示例句：`sha256(seed|agent_id|round|kind)` 取词表下标。
+
+    稳定输入只有三个：`HITT_WORLD_SEED`（缺省 `"0"`；与 weather 臂共用同一 env key，
+    跑批时同批同一个 seed）、角色 id、回合号。**不读墙钟、不用 random** ⇒ replay 逐字节可复现。
+    契约：**缺省回落**——env 未设或空串一律按 `"0"`，此时全批恒为 seed=0 的那一套序列
+    （仍然确定；换 seed 则序列随 seed 变，不要误以为序列失稳）。
+    """
+    seed = (os.environ.get(WX.WORLD_SEED_ENV, "") or "0").strip() or "0"
+    rnd = 0 if round_no is None else int(round_no)
+    h = sha256_hex(f"narration-rotate|{seed}|{agent_id or ''}|{rnd}|{kind}")
+    return NARRATION_EXAMPLES[int(h[:8], 16) % len(NARRATION_EXAMPLES)]
+
+
+def narration_tail(kind: str, agent_id: str | None = None,
+                   round_no: int | None = None) -> str:
+    """返回对话 prompt 的收尾指令（D9i/D9m 唯一改动点）。
+
+    kind ∈ {"initiate"（开场白）, "reply"（接话）}。
+    NARRATION 关 ⇒ 改动前字面量（`_NARRATION_TAIL_OFF`，逐字节等价）；
+    NARRATION 开 + 旋转关 ⇒ `_NARRATION_TAIL_ON` **常量对象**（不做任何字符串拼装）；
+    NARRATION 开 + 旋转开 ⇒ 仅示例句换为 `narration_example(...)` 的确定性选句。
+    """
+    if not narration_enabled():
+        return _NARRATION_TAIL_OFF[kind]
+    if not narration_rotation_enabled():
+        return _NARRATION_TAIL_ON[kind]
+    return _NARRATION_TAIL_ON_TPL[kind].format(
+        narration_example(kind, agent_id, round_no))
+
+# ---- 同场偶遇搭话臂（encounter chat）-----------------------------------------
+# 缺口（**窄口径**，可复算）：同场共处本身**一直有机制**——`code/life/settlement.py:580` 的
+# `RELATION_ENCOUNTER` + `:583-584` 的 `copresence` 关系增量、`code/engine/wake.py:147` 的
+# W6 邻居(共处)唤醒都在跑；**但「同场 → 直接搭一句话」的通道在 HEAD 上为零**：
+# `_initiate()` 在 `template_id` 缺失时直接早退（见本文件 `_initiate` 首两行）
+# ⇒「两个人正好站在同一处」这件事实**永远不会变成一句话**。
+# 本臂把 life 层**已经可见**的 `PLACE_ARRIVED`（`config/perception_scope.json` 里是
+# `place_local`，同处即互相可见）当作「同场」判据，在没有模板的空档里发一句非任务性搭话。
+# 默认 OFF ⇒ 不新增任何事件、提示词逐字节不变（与接入前行为一致）。
+ENCOUNTER_ENV = "LIFE_PROMPT_ENCOUNTER_CHAT"
+ENCOUNTER_RATE_ENV = "LIFE_PROMPT_ENCOUNTER_CHAT_RATE"
+
+#: 搭话话题标签（**人话**，不是内部 token；L-13 纪律：不许把内部 id 递给模型）
+ENCOUNTER_TOPIC = "闲聊"
+
+#: 夜里不搭话（居民在睡觉；`residence` 夜里同处不是可搭话的「场合」）
+ENCOUNTER_SKIP_SLOTS = frozenset({"night"})
+
+#: 默认门率（整数百分比）：每个 (agent, slot) 掷一次确定性骰，命中才搭话。
+ENCOUNTER_RATE_DEFAULT = 50
+
+
+def encounter_enabled() -> bool:
+    """同场偶遇搭话臂开关（env `LIFE_PROMPT_ENCOUNTER_CHAT` ∈ {1,true,yes,on}）；默认关。"""
+    return os.environ.get(ENCOUNTER_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def encounter_rate() -> int:
+    """门率（0–100 整数百分比）；未设/非法 ⇒ `ENCOUNTER_RATE_DEFAULT`。关闭时不被读取。"""
+    raw = os.environ.get(ENCOUNTER_RATE_ENV, "").strip()
+    if not raw:
+        return ENCOUNTER_RATE_DEFAULT
+    try:
+        val = int(raw)
+    except ValueError:
+        return ENCOUNTER_RATE_DEFAULT
+    return max(0, min(100, val))
+
+
+def encounter_world_seed() -> str:
+    """与 weather / narration-rotation **共用同一个 seed env**（缺省回落 `"0"`，单一真源）。"""
+    return (os.environ.get(WX.WORLD_SEED_ENV, "") or "0").strip() or "0"
+
+
+def encounter_decision(agent_id: str, slot_id: str, peers: list) -> str | None:
+    """确定性「搭不搭话、跟谁搭」：不读墙钟、不用 random ⇒ replay 逐字节可复现。
+
+    步骤：① 候选 = 同处者去自去重后字典序（顺序与事件到达序无关，避免"谁先到谁被选中"）；
+    ② `sha256("encounter|seed|agent|slot")` 取 8 hex nibble 对 100 取模，≥ 门率 ⇒ 不搭；
+    ③ 命中后按 `sha256("encounter-pick|seed|agent|slot|peer")` 取最小值定序选人。
+    返回 partner 或 None（不搭话 / 无人同处）。
+    """
+    cands = sorted(p for p in (peers or []) if p and p != agent_id)
+    if not cands:
+        return None
+    seed = encounter_world_seed()
+    h = sha256_hex(f"encounter|{seed}|{agent_id}|{slot_id}")
+    if int(h[:8], 16) % 100 >= encounter_rate():
+        return None
+    return min(cands, key=lambda p: sha256_hex(
+        f"encounter-pick|{seed}|{agent_id}|{slot_id}|{p}"))
+
 
 _SALIENT_EVENTS = {
     "ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "PLACE_ARRIVED",
@@ -187,6 +408,13 @@ class LifeLayerAgent:
         # （**纯审计**，供 ctx 落盘追溯；不进 state_hash、不发事件、不参与决策；
         #  OFF 臂恒为 None ⇒ ctx.scene 不出现）。
         self._scene: dict | None = None
+        # 天气臂（weather）：本条消息生成时实际下发的那一行「今儿天怎么样」的审计快照
+        # （**纯审计**，只进 ctx；不进 state_hash、不发事件、不参与决策；
+        #  OFF 臂恒为 None ⇒ ctx.weather 不出现）。
+        self._weather: dict | None = None
+        # 同场偶遇搭话臂（encounter）：已在该 slot 掷过骰/搭过话的 slot_id 集合。
+        # **agent-local 表达层状态**（不进 state_hash、不发事件）；OFF 臂恒为空。
+        self._enc_slots: set = set()
 
     # ---- T288 / T276: 从账本单一真源恢复「只前向累积」的内部态 ---------------
     def restore(self, state, records) -> None:
@@ -872,7 +1100,11 @@ class LifeLayerAgent:
             target = self._pick_reply_target(wv, cfg, prefer_threads=prefer)
             if target is not None and self._send_reply(wv, target, cfg, slot_id):
                 return
-        self._initiate(wv, cfg, slot_id)
+        if self._initiate(wv, cfg, slot_id):
+            return
+        # 同场偶遇搭话臂（默认 OFF ⇒ 直接返回 False，事件流与接入前一致）：
+        # 只有「本 slot 没有模板对话」这个空档才会走到这里。
+        self._initiate_encounter(wv, cfg, slot_id)
 
     def _thread_max_turn(self, wv, tid: str) -> int:
         """线程内「已存在的最大 turn_index」（按可见事件；无则 -1）。多方可同时处于同一 turn。"""
@@ -995,6 +1227,11 @@ class LifeLayerAgent:
             # （时段/场所 id/活动 id + 该行 sha256）。关闭（LIFE_PROMPT_SCENE 未设）⇒
             # `_scene` 恒 None ⇒ 该键不出现 ⇒ payload 与接入前逐字节一致。
             ctx["scene"] = self._scene
+        if WX.enabled() and getattr(self, "_weather", None) is not None:
+            # 天气臂审计（additive）：本条生成时提示词里实际下发的那一行「今儿天怎么样」
+            # （weather/season/day/seed + 该行 sha256）。关闭（HITT_WEATHER 未设）⇒
+            # `_weather` 恒 None ⇒ 该键不出现 ⇒ payload 与接入前逐字节一致。
+            ctx["weather"] = self._weather
         return ctx
 
     def _dequp_body(self, prompt: str, body: str, meta: dict) -> str:
@@ -1115,10 +1352,15 @@ class LifeLayerAgent:
         return True
 
     # ---- 发起一段新对话 ----------------------------------------------------
-    def _initiate(self, wv, cfg, slot_id: str) -> None:
+    def _initiate(self, wv, cfg, slot_id: str) -> bool:
+        """按周计划里的模板发起一段新对话。**返回是否真的发了**（供偶遇臂判空档）。
+
+        无 `template_id` ⇒ 返回 False（不造事件）。返回值是本轮唯一新增语义：
+        OFF 臂下调用方只看它是否 True/False，事件流与接入前逐字节一致。
+        """
         entry = self._plan_slots.get(slot_id)
         if not entry or not entry.get("template_id"):
-            return
+            return False
         tid = entry["template_id"]
         parts = list(entry.get("participants") or [self.agent_id])
         partners = [p for p in parts if p != self.agent_id]
@@ -1141,7 +1383,7 @@ class LifeLayerAgent:
         res = self.llm.call("dialogue", prompt, meta=meta)
         body = (res.text or "").strip()
         if not body:
-            return
+            return False
         body = self._dequp_body(prompt, body, meta)   # R12：撞车一次性重生成（默认OFF ⇒ 原样返回）
         payload: dict = {"scope": scope, "body": body, "refs": [], "tag_hints": [tid]}
         if to:
@@ -1169,6 +1411,91 @@ class LifeLayerAgent:
         self._slot_msgs[slot_id] = int(self._slot_msgs.get(slot_id, 0)) + 1
         self._comm_slot = slot_id
         self.kernel.submit_intent(self.agent_id, Intent(INTENT_SOCIAL, self.agent_id, payload))
+        return True
+
+    # ---- 同场偶遇搭话（encounter chat，默认 OFF）--------------------------
+    def _co_present_peers(self, wv) -> list:
+        """本 slot 里「和我站在同一处」的居民（**只读** place_local 可见事件，不新开真相源）。
+
+        判据（唯一实现；与 `reports/02-dimension.md` 预登记口径一致）：
+          取 `wv.visible_events` 中 `PLACE_ARRIVED` 且同时满足
+            (i) `payload.place == wv.location`（同场所，**本人当前位置**为真源）；
+            (ii) `payload.day == wv.time.day` 且 `payload.slot == wv.time.slot`（同时段，
+                 缺字段时视为不约束——兼容不带 day/slot 的旧日志）；
+            (iii) `payload.agent_id != self`（不含自己）。
+          同一人多次出现**取并集**（集合语义，与事件到达序无关）。
+        **不读 `ACTIVITY_STARTED.participants`**：那里含「联合活动」名单，会把
+        「同活动」混进「同处」，与本臂要量的东西不是一件事（R23 §1.2 的副口径 `joint`
+        同理，只作敏感性口径、不作主判据）。
+        """
+        me = self.agent_id
+        peers = set()
+        for ev in wv.visible_events:
+            if ev.type != "PLACE_ARRIVED":
+                continue
+            p = ev.payload or {}
+            who = p.get("agent_id")
+            if not who or who == me:
+                continue
+            if p.get("place") != wv.location:
+                continue
+            if p.get("day") is not None and int(p["day"]) != int(wv.time.day):
+                continue
+            if p.get("slot") is not None and p["slot"] != wv.time.slot:
+                continue
+            peers.add(who)
+        return sorted(peers)
+
+    def _initiate_encounter(self, wv, cfg, slot_id: str) -> bool:
+        """同场偶遇搭话：本 slot **没有模板对话**的空档里，与同处一人搭一句话。
+
+        与 `_initiate` 的差别只有两处，其余（提示词装配 / 去重 / 线程字段）**完全复用**：
+          ① 不需要 `template_id`（这正是当前「没有模板就没有对话」的缺口）；
+          ② `ctx.trigger = "encounter"` / `ctx.initiator = self`，供读数器区分通道。
+
+        有界与纪律：
+          - 默认 OFF（`encounter_enabled()` 假 ⇒ 立刻 False，零事件零改动）；
+          - `night` 不搭话（`ENCOUNTER_SKIP_SLOTS`）；
+          - 同一 (agent, slot) **至多一次**（`self._enc_slots`，因为门率是 slot 级掷骰）；
+          - 仍受 `max_messages_per_slot` / `max_turns` 等既有上限约束（本方法不自带配额）；
+          - `tag_hints` 留空：非模板话题**不污染** 20 类模板普查（tag_hints 是模板口径）；
+          - 线程起点字段与 `_initiate` 同构 ⇒ 对方可经既有 `_pick_reply_target` 正常接话。
+        """
+        if not encounter_enabled():
+            return False
+        if wv.time.slot in ENCOUNTER_SKIP_SLOTS:
+            return False
+        if slot_id in self._enc_slots:
+            return False
+        partner = encounter_decision(self.agent_id, slot_id, self._co_present_peers(wv))
+        if not partner:
+            return False
+        self._enc_slots.add(slot_id)          # 掷过骰就作废本 slot（无论下文成败，防抖）
+        parts = [self.agent_id, partner]
+        dr_cfg = DR.load_params()
+        rift_line = None
+        if dr_cfg.get("enabled"):
+            rift_line = DR.context_line(self._rifts, partner, int(wv.round),
+                                        name=self._name(partner), params=dr_cfg)
+        prompt = self._dialogue_prompt(ENCOUNTER_TOPIC, parts, cfg, rift_line=rift_line, wv=wv)
+        meta = {"agent_id": self.agent_id, "round": wv.round, "template": ENCOUNTER_TOPIC}
+        body = (self.llm.call("dialogue", prompt, meta=meta).text or "").strip()
+        if not body:
+            return False
+        body = self._dequp_body(prompt, body, meta)
+        payload: dict = {
+            "scope": "private", "to": partner, "body": body, "refs": [],
+            "tag_hints": [],
+            "thread_id": DT.thread_id_dm(self.agent_id, partner, wv.round),
+            "turn_index": 0, "reply_to": None,
+            "participants": parts, "topic": ENCOUNTER_TOPIC,
+            "ctx": self._ctx_snapshot(partner, ENCOUNTER_TOPIC, trigger="encounter",
+                                      initiator=self.agent_id),
+        }
+        self._slot_msgs[slot_id] = int(self._slot_msgs.get(slot_id, 0)) + 1
+        self._comm_slot = slot_id
+        self.kernel.submit_intent(self.agent_id, Intent(INTENT_SOCIAL, self.agent_id, payload))
+        return True
 
     # ---- 提示词装配 --------------------------------------------------------
     def _gossip_hint(self, exclude: list | None = None) -> str:
@@ -1240,6 +1567,39 @@ class LifeLayerAgent:
         if not line:
             return ""
         self._scene = SA.audit(slot, place or None, activity or None, line)
+        return line
+
+    # ---- 天气臂（WX）：今儿天怎么样（季 + 天气）--------------------------
+    def _weather_line(self, wv) -> str:
+        """把「今儿天怎么样」渲染成**一行**人话（如「今儿天怎么样：开春了，阴着天。」）。
+
+        单变量约束（同 `_scene_line` / 日历臂的开关先例）：
+          - 开关关闭（默认 OFF）⇒ `self._weather=None`、返回空串 ⇒ 两条提示词**逐字节不变**、
+            `ctx.weather` 键不出现（payload 亦逐字节不变）；
+          - 打开 ⇒ 只在提示词中**插入一行**，并把本条的天候快照写进 `ctx.weather`（additive）。
+
+        素材**只读** `WorldView.time.day`（`engine/time.py::derive_time` 已确定性派生）；
+        天气由 `(HITT_WORLD_SEED, day)` 纯函数推出（同 seed 同 day 恒同天气，可 replay）。
+        **不读墙钟、不新增真相源、不发事件、不改 state_hash、不写记忆、不碰 config**。
+        字段缺失/非法 ⇒ 退化为「不加天气」，不打断对话。
+        """
+        self._weather = None
+        if wv is None or not WX.enabled():
+            return ""
+        try:
+            tc = getattr(wv, "time", None)
+            if tc is None:            # 没有时间坐标 ⇒ 不知道今天第几天 ⇒ 不加天气
+                return ""
+            day = int(getattr(tc, "day", 0))
+            rnd = int(getattr(wv, "round", 0))
+        except Exception:      # 世界视图字段缺失 ⇒ 退化为「不加天气」，不打断对话
+            return ""
+        seed = WX.world_seed()
+        line = WX.render(self.agent_id, rnd, day, seed)
+        if not line:
+            return ""
+        self._weather = WX.audit(day, WX.season_of_day(day), WX.weather_of_day(day, seed),
+                                 seed, line)
         return line
 
     def _memory_line(self, wv, exclude: list | None = None) -> str:
@@ -1445,12 +1805,15 @@ class LifeLayerAgent:
         return (self.persona.compressed_profile(self._current_goal())
                 + f"\n场景：{self._topic_label(tid)}；对象：{others}。{self._mood_line()}。"
                 + self._scene_line(wv)      # 处境锚臂：时段/场所/手上事（默认 OFF ⇒ 空串）
+                + self._weather_line(wv)    # 天气臂：季 + 今天什么天（默认 OFF ⇒ 空串）
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + self._gossip_hint(partners)  # G系列A1臂：可引用真人名单（默认OFF ⇒ 空串）
                 + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
                 + self._l7_struct_line(wv, partners, 0, "initiate")  # L-7 结构臂：开口/收束/禁忌开头（默认ON）
                 + AR.prompt_line()           # R12 去重臂：最近说过的话（默认OFF ⇒ 空串）
-                + "\n只写台词本身（一句家常话）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（零 config/结构改动）
+                + (ADDR_EVOLVE_LINE if addr_evolve_enabled() else "")  # N-15 臂：称呼随相处演化一行（默认OFF ⇒ 空串）
+                + narration_tail("initiate", self.agent_id,
+                                 0 if wv is None else getattr(wv, "round", 0)))  # D9i/D9m：收尾指令按 LIFE_PROMPT_NARRATION 二选一；旋转臂再按 LIFE_PROMPT_NARRATION_ROTATION 换示例（均默认关 ⇒ 与改动前逐字节相同）
 
     def _reply_prompt(self, partner: str | None, topic: str, history: list,
                       cfg: dict | None = None, rift_line: str | None = None,
@@ -1464,6 +1827,7 @@ class LifeLayerAgent:
         return (self.persona.compressed_profile(self._current_goal())
                 + f"\n你正在和{who}聊「{self._topic_label(topic)}」。{self._mood_line()}。"
                 + self._scene_line(wv)      # 处境锚臂：时段/场所/手上事（默认 OFF ⇒ 空串）
+                + self._weather_line(wv)    # 天气臂：季 + 今天什么天（默认 OFF ⇒ 空串）
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + (repair_line or "")        # R13：本线程旧账的「这一句把话说开」要求；关闭/无旧账为空串
                 + (echo_line or "")          # F-3：接住对方情绪的一句处境提示；关闭/不产为空串
@@ -1475,7 +1839,8 @@ class LifeLayerAgent:
                                        "reply")  # L-7 结构臂：开口/收束/禁忌开头（默认ON）
                 + self._topic_shift_line(wv, partner, tid, topic, turn)  # R19 话题宽度臂（默认OFF ⇒ 空串）
                 + AR.prompt_line()           # R12 去重臂：最近说过的话（默认OFF ⇒ 空串）
-                + "\n只写台词本身（接着刚才的话往下说一句）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。")  # A1 措辞臂：只改收尾指令（承载「承接上一轮」结构不变）
+                + narration_tail("reply", self.agent_id,
+                                 0 if wv is None else getattr(wv, "round", 0)))  # D9i/D9m：同上（旋转臂默认关 ⇒ 与 D9i ON 逐字节相同）
 
     # ---- economy: negotiation / offer / order-cancel (T133) ----------------
     def _maybe_negotiate(self, wv) -> None:

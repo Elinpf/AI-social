@@ -1,0 +1,108 @@
+{
+ "arm": "ON",
+ "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round1_narration_default_n16r24_s42/run.jsonl",
+ "denominator_msg_total": 191,
+ "paired": {
+  "regex": "（[^（）]{1,120}）|\\([^()]{1,120}\\)",
+  "msgs_with_paired_paren": 175,
+  "rate": 0.91623,
+  "blocks_total": 205,
+  "action_blocks": 144,
+  "emotion_or_other_blocks": 61,
+  "action_share_of_blocks": 0.702439,
+  "block_top": [
+   {
+    "inner": "把算盘珠子拨回原位",
+    "count": 4
+   },
+   {
+    "inner": "抬眼",
+    "count": 3
+   },
+   {
+    "inner": "把沾着面粉的手在围裙上蹭了蹭",
+    "count": 2
+   },
+   {
+    "inner": "拿刨子推过木料，木花卷着落下来",
+    "count": 1
+   },
+   {
+    "inner": "眯眼看了看",
+    "count": 1
+   },
+   {
+    "inner": "往案板上撒了把干粉，把醒好的面团翻了个面",
+    "count": 1
+   },
+   {
+    "inner": "把裁纸刀往桌角一搁",
+    "count": 1
+   },
+   {
+    "inner": "顿了顿",
+    "count": 1
+   },
+   {
+    "inner": "把压腿的脚尖从把杆上收回来，顺手抹了把额角的汗",
+    "count": 1
+   },
+   {
+    "inner": "把木剑往地上一戳，歪头看桂婶手里的菜篮",
+    "count": 1
+   },
+   {
+    "inner": "把手里那半截腌菜坛子往兰姐跟前一搁",
+    "count": 1
+   },
+   {
+    "inner": "把烧红的锄头往水桶里一按，白汽直冒",
+    "count": 1
+   },
+   {
+    "inner": "拿锉刀在铜片边上蹭了两下",
+    "count": 1
+   },
+   {
+    "inner": "把灶上那锅萝卜牛腩转成小火，拿筷子戳了戳肉块",
+    "count": 1
+   },
+   {
+    "inner": "掀开锅盖闻了闻，又撒了半勺糖",
+    "count": 1
+   }
+  ],
+  "samples_action": [
+   "拿刨子推过木料，木花卷着落下来",
+   "眯眼看了看",
+   "把沾着面粉的手在围裙上蹭了蹭",
+   "往案板上撒了把干粉，把醒好的面团翻了个面",
+   "把裁纸刀往桌角一搁",
+   "把木剑往地上一戳，歪头看桂婶手里的菜篮",
+   "把手里那半截腌菜坛子往兰姐跟前一搁",
+   "拿锉刀在铜片边上蹭了两下"
+  ],
+  "samples_emotion_or_other": [
+   "把算盘珠子拨回原位",
+   "顿了顿",
+   "把压腿的脚尖从把杆上收回来，顺手抹了把额角的汗",
+   "把烧红的锄头往水桶里一按，白汽直冒",
+   "把压腿的脚尖往横杆上又蹭了蹭",
+   "捏着半截粉笔在石板上画铃铛草图",
+   "把秤盘上的豆角拨到一边，腾出手来",
+   "用拇指试了试刚拼好的榫头，松了半分"
+  ]
+ },
+ "any_paren": {
+  "regex": "[（(]",
+  "msgs_with_any_open_paren": 175,
+  "rate": 0.91623,
+  "note": "任意左括号字符（含未闭合单侧、纯情绪标签）"
+ },
+ "cross_check_dialogue_metrics_L3": {
+  "regex": "(?:（[^）]{0,120}）|\\([^)]{0,120}\\))",
+  "msgs": 175,
+  "rate": 0.91623,
+  "note": "tools/d5/dialogue_metrics.py 的 PAREN_ANY_RE（同样要求成对，0 字符内容也算）"
+ }
+}
