@@ -1,0 +1,162 @@
+{
+  "arm": "A_only",
+  "ba_na_rate": 0.772277,
+  "blocks_total": 202,
+  "class_order": [
+    "c1_penal",
+    "c2_sp",
+    "c4_act",
+    "c5_adv",
+    "c6_interj",
+    "c3_nominal"
+  ],
+  "classification_priority": [
+    "c1_penal",
+    "c2_sp",
+    "c4_act",
+    "c5_adv",
+    "c6_interj",
+    "c3_nominal"
+  ],
+  "family_split": {
+    "assigned": {
+      "h4": {
+        "ba_na_rate": 0.816901,
+        "blocks_total": 71,
+        "count": {
+          "act": 5,
+          "ba": 44,
+          "na": 14,
+          "other": 8
+        },
+        "note": "旧 4 类口径，仅与 d9m-syntax-slot-monotony.md 对账，不参与判定",
+        "share": {
+          "act": 0.070423,
+          "ba": 0.619718,
+          "na": 0.197183,
+          "other": 0.112676
+        }
+      },
+      "six": {
+        "ba_na_rate": 0.816901,
+        "blocks_total": 71,
+        "count": {
+          "c1_penal": 58,
+          "c2_sp": 0,
+          "c3_nominal": 5,
+          "c4_act": 5,
+          "c5_adv": 0,
+          "c6_interj": 3
+        },
+        "head_entropy": 0.970352,
+        "max_head_share": 0.816901,
+        "n_nonempty_classes": 4,
+        "normalized_entropy": 0.375383,
+        "normalized_entropy_nonempty": 0.485176,
+        "share": {
+          "c1_penal": 0.816901,
+          "c2_sp": 0.0,
+          "c3_nominal": 0.070423,
+          "c4_act": 0.070423,
+          "c5_adv": 0.0,
+          "c6_interj": 0.042254
+        }
+      }
+    },
+    "note": "仅与 d9m 已登记值对账；不改变主读数口径",
+    "unassigned": {
+      "h4": {
+        "ba_na_rate": 0.748092,
+        "blocks_total": 131,
+        "count": {
+          "act": 15,
+          "ba": 90,
+          "na": 8,
+          "other": 18
+        },
+        "note": "旧 4 类口径，仅与 d9m-syntax-slot-monotony.md 对账，不参与判定",
+        "share": {
+          "act": 0.114504,
+          "ba": 0.687023,
+          "na": 0.061069,
+          "other": 0.137405
+        }
+      },
+      "six": {
+        "ba_na_rate": 0.748092,
+        "blocks_total": 131,
+        "count": {
+          "c1_penal": 98,
+          "c2_sp": 0,
+          "c3_nominal": 10,
+          "c4_act": 15,
+          "c5_adv": 0,
+          "c6_interj": 8
+        },
+        "head_entropy": 1.200872,
+        "max_head_share": 0.748092,
+        "n_nonempty_classes": 4,
+        "normalized_entropy": 0.464561,
+        "normalized_entropy_nonempty": 0.600436,
+        "share": {
+          "c1_penal": 0.748092,
+          "c2_sp": 0.0,
+          "c3_nominal": 0.076336,
+          "c4_act": 0.114504,
+          "c5_adv": 0.0,
+          "c6_interj": 0.061069
+        }
+      }
+    }
+  },
+  "h4": {
+    "ba_na_rate": 0.772277,
+    "blocks_total": 202,
+    "count": {
+      "act": 20,
+      "ba": 134,
+      "na": 22,
+      "other": 26
+    },
+    "note": "旧 4 类口径，仅与 d9m-syntax-slot-monotony.md 对账，不参与判定",
+    "share": {
+      "act": 0.09901,
+      "ba": 0.663366,
+      "na": 0.108911,
+      "other": 0.128713
+    }
+  },
+  "head_entropy": 1.125447,
+  "instrument": "tools/d9s/syntax_shape.py",
+  "instrument_sha256": "5962caa4d289e8eec02bf064a03ccb95bd9967a1890a64ec457f3d36c21f2942",
+  "log": "v2/evidence/d9n-rot-20261030/run.jsonl",
+  "log_sha256": "e4fd6db7f863fe2f6bcf6e06753600783ce57505b48a10d5c97247bf5866ece1",
+  "max_head_share": 0.772277,
+  "msgs_total": 191,
+  "normalized_entropy": 0.435382,
+  "six_class": {
+    "ba_na_rate": 0.772277,
+    "blocks_total": 202,
+    "count": {
+      "c1_penal": 156,
+      "c2_sp": 0,
+      "c3_nominal": 15,
+      "c4_act": 20,
+      "c5_adv": 0,
+      "c6_interj": 11
+    },
+    "head_entropy": 1.125447,
+    "max_head_share": 0.772277,
+    "n_nonempty_classes": 4,
+    "normalized_entropy": 0.435382,
+    "normalized_entropy_nonempty": 0.562724,
+    "share": {
+      "c1_penal": 0.772277,
+      "c2_sp": 0.0,
+      "c3_nominal": 0.074257,
+      "c4_act": 0.09901,
+      "c5_adv": 0.0,
+      "c6_interj": 0.054455
+    }
+  }
+}
