@@ -48,7 +48,8 @@ env -u LIFE_PROMPT_NARRATION_ROTATION LIFE_PROMPT_NARRATION=1 PYTHONPATH=/tmp/d2
 
 | 文件 | sha256 |
 |---|---|
-| `tools/d9n/narration_family_lexicon.json`（exp-designer 冻结，权威副本） | `9a87ebb5ee80bb8d991d2c54e1562e312810ed23f1081141e30b98b3f9933edd` |
+| `tools/d9n/narration_family_lexicon.json`（exp-designer 冻结，权威副本；**v1.1**，含增补 06 的 coverage/门限勘误） | `01e5533870f0f6b43300e6be6422130d958a01497a90d610620916f454489ed0` |
+| 同上 v1.0（已被 v1.1 取代，仅存档） | `9a87ebb5ee80bb8d991d2c54e1562e312810ed23f1081141e30b98b3f9933edd` |
 | `tools/d9n/narration_family.py` | `3dbca76f1f387cd7df6bd1810cb1a0dcd1e347fb17c26d9f23ea9654628ee636` |
 | `tools/d9n/narration_example_seq.py` | `e55a97bf254820648d2c85fa48557ca7263b47bf7006060afa6cd146b28fadbc` |
 | `tools/d9n/test_narration_family.py`（仪器自测，13 项） | `68b7ec740d443942bf4133a52623152da0969c2f22ba43e94d61a8b524ab7ffd` |
@@ -91,18 +92,22 @@ diff /tmp/s1.json /tmp/s2.json && echo "S-DET PASS"
 | **coverage** | **40/205 = 0.19512** | **66/205 = 0.321951** | ❌ 见 §6 |
 | **unassigned_verb_rate** | **0.80488** | **0.678049** | ❌ 见 §6 |
 
-## 6. 已上报的口径缺陷（未擅自改阈值）
+## 6. coverage 口径缺陷 —— 已修正（lexicon v1.1 / 增补 06）
 
-`baseline_reference.coverage = 40/205` 是**闭表 8 动词**口径的遗留值；而 `assignment_rules R2` 规定
-`V_judge` = 21 词。按 R2 实测：`assigned = 66`（闭表 40 + 旋转动词命中 26），`coverage = 0.321951`，
-`unassigned_verb_rate = 0.678049`。⇒ 冻结件里「基线 coverage / unassigned」与「R2 的 V_judge」**不同源**。
+v1.0 的 `baseline_reference.coverage = 40/205 = 0.19512` 是**闭表 8 动词**遗留值，而 R2 规定
+`V_judge` = 21 词 ⇒ 守卫必须用**与判定同口径**的 V_judge 重算。实测：`assigned = 66`
+（闭表 40 + 旋转动词命中 26），`coverage = 0.321951`，`unassigned_verb_rate = 0.678049`。
 
-按 R2 重算后的自洽取值（**待 exp-designer 以 amendment 确认，本工具不改 lexicon**）：
+leader 裁决：**按同口径重算，且构成收紧**（收紧可以、放宽不行）；exp-designer 已在
+`narration_family_lexicon.json` v1.1 与增补 06 中固化。修正后的门限：
 
-| 守卫 | 同口径基线 | 门限（沿用冻结件规则式） |
-|---|---|---|
-| coverage ≥ 0.60 × baseline | 0.321951（66/205） | **0.193171（≥ 40 片段）** |
-| unassigned ≤ baseline + 0.10 | 0.678049 | **0.778049** |
+| 守卫 | 同口径基线 | 旧门限（v1.0，已废） | **新门限（v1.1）** |
+|---|---|---|---|
+| coverage ≥ 0.60 × baseline | 0.321951（66/205） | ≥ 0.11707（≥24 片段） | **≥ 0.193171（≥ 40 片段）** |
+| unassigned ≤ baseline + 0.10 | 0.678049 | ≤ 0.90488 | **≤ 0.778049** |
 
-注：两套门限下**基线本身两条守卫都通过**（0.321951 ≥ 0.11707；0.678049 ≤ 0.90488），
-故该缺陷**不改变基线判定的三态结论**，只改变报告的守卫读数与「门槛是否需要重算」的可复算性。
+两条都**更严**（覆盖面要求从 ≥24 抬到 ≥40 片段；未命中率上限从 ≤90.488% 收紧到 ≤77.805%）。
+基线在两套门限下都通过，故该修正**不改变基线三态结论**，只改变守卫读数与门槛可复算性。
+
+仪器自测对两条口径都上锁：`test_coverage_under_v_judge_is_66_of_205`
+（V_judge 口径 66/205 + 闭表口径 40 均可复算 + `baseline_reference.coverage.assigned == 66`）。

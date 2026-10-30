@@ -67,9 +67,18 @@ def test_lexicon_structure():
 
 
 def test_lexicon_sha_recorded():
-    """lexicon 内容 sha256 应与 exp-designer 冻结值一致（9a87ebb5…）。"""
-    assert NF.sha256_file(LEX_PATH) == \
-        "9a87ebb5ee80bb8d991d2c54e1562e312810ed23f1081141e30b98b3f9933edd"
+    """lexicon 文件 sha256 必须与 GOLDEN.md 记录值一致。
+
+    GOLDEN.md 是「仪器身份」的唯一记录点：换了尺子就必须同步改 GOLDEN.md，
+    否则本断言红 ⇒ 尺子漂移不可能静默通过（比在代码里再钉一个副本更不易腐坏）。
+    """
+    txt = (HERE / "GOLDEN.md").read_text(encoding="utf-8")
+    row = [l for l in txt.splitlines() if "narration_family_lexicon.json" in l and "`" in l]
+    assert row, "GOLDEN.md 缺 lexicon sha256 记录行"
+    # 行形如：| `tools/d9n/...json`（说明） | `<64 位 sha256>` |  ⇒ 取最后一个反引号内的值
+    recorded = row[0].rstrip().rstrip("|").split("`")[-2].strip()
+    assert len(recorded) == 64, recorded
+    assert NF.sha256_file(LEX_PATH) == recorded
 
 
 # ---------------------------------------------------------------- T2 基线复现
@@ -128,7 +137,8 @@ def test_baseline_verdicts_three_state():
 def test_coverage_under_v_judge_is_66_of_205():
     """R2（V_judge=21）下实测 coverage = 66/205；lexicon 的 40/205 是闭表 8 遗留值。
 
-    该差异已上报 exp-designer 走 amendment（GOLDEN.md §6）。此处显式锁真实值，
+    该差异为 v1.0 缺陷，已由 leader 裁决「按同口径重算（构成收紧）」并由 exp-designer
+    在 lexicon v1.1 / 增补 06 中修正（GOLDEN.md §6）。此处显式锁真实值，
     防止未来把 40/205 当作 V_judge 口径继续使用。
     """
     j = _judgement()
@@ -138,7 +148,9 @@ def test_coverage_under_v_judge_is_66_of_205():
     closed_hits = sum(1 for b in _all_inners()
                       if any(v in b for v in _lex()["verbs_closed_8"]))
     assert closed_hits == 40
-    assert _lex()["baseline_reference"]["coverage"]["assigned"] == 40
+    # lexicon v1.1 起：baseline_reference.coverage 已改为同口径 66/205（增补 06 修正）
+    assert _lex()["baseline_reference"]["coverage"]["assigned"] == 66
+    assert _lex()["baseline_reference"]["coverage"]["rate"] == 0.321951
     # 两条守卫在当前门限下都通过（缺陷不改变基线三态）
     assert j["guards"]["coverage_ok"] is True
     assert j["guards"]["unassigned_ok"] is True
