@@ -104,9 +104,15 @@ done
 
 `repro-verifier` 报：C2 的「9 句里没有一句含『拍』」在 `tools/d9n/narration_family_lexicon.json` 里核不到 —— 因为**例句不在 lexicon 里**（lexicon 只含动词族表 `verbs_closed_8` / `verbs_rotation_13`）。正确出处是代码侧常量，全文逐字如下：
 
-出处：`code/life/agent.py:120-130`，`NARRATION_EXAMPLES: tuple[str, ...]`
-**所在提交**：`df29cf9abc056d7982f01a1ffe10e5c5b4ccd15b`（`v2/evidence/d9n-rot-20261030/meta.json` 的 `code_sha`，即 D9n 跑批时实际使用的代码版本）
-**所在分支**：`feat/life-narration-rotation`（本地头 `b144d06`，`df29cf9` 为其祖先）
+**三个定位值（缺一不可复算；由 `repro-verifier` 独立取证）**：
+
+| # | 定位量 | 值 |
+|---|---|---|
+| 1 | **分支** | `feat/life-narration-rotation`（tip `b144d06`；`df29cf9` 为其祖先） |
+| 2 | **代码提交（臂的 `meta.code_sha`）** | `df29cf9abc056d7982f01a1ffe10e5c5b4ccd15b` |
+| 3 | **词表全文** | 见下方代码块（本附录逐字副本 = master 内唯一出处） |
+
+⚠ **不要只用行号定位**：`code/life/agent.py` **在 `origin/master` 上不含该常量**（`git grep NARRATION_EXAMPLES origin/master -- code/life/agent.py` 无命中，`rc=1`；而 `git cat-file -e origin/master:code/life/agent.py` 为 OK ⇒ 文件在、常量不在）。**行号 `120-130` 只在 `df29cf9`/`b144d06` 上成立**，在 master 上会把人引到无关位置。**定位量必须与所在版本绑定。**
 
 ```
 NARRATION_EXAMPLES: tuple[str, ...] = (
