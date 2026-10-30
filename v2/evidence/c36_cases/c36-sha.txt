@@ -1,0 +1,17 @@
+# CYCLE-36 图 sha 与源日志 sha 的 sha256sum 原始输出
+# 生成时刻：2026-10-31T04:37:42+08:00；渲染时 HEAD：46cfd9e7a163fde88b0a9392c704a858b152d3aa（exp/n36-scene-anchor）
+# 生成命令：sha256sum <下列文件>（逐行原样，未改写）
+ecc6278afedef6fc927ba229b40d67fdb76b699ec7e873e20167c733a4797cb6  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/on/c36-on-chat-d74f7d00.png
+18d55a026e696013c61e9a305824808522b957ebeac4210580a988f8ac1008e9  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/on/c36-on-rhythm-d74f7d00.png
+d74f7d00104a60c6d835c4022ba4979e22e1b9136185cc104506296b1996fefd  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/n15-on_n16r84_s42/run.jsonl
+1eb4623402a66d604346ca40d73402126f0b087d58188b138aa5094afea42923  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/n15-on_n16r84_s42/meta.json
+adba1577cc794cafa334eaadfda961056cf687acae8163f43fb53c3541f2c31e  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/on/threads_c36-on.json
+55dfa4fdbff1bbe303f9527e84740f5ca1945362c054e70d7ed3ba8e91afb359  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/off/c36-off-chat-da4d2487.png
+3f80f74dc98b7094815f4bd36ee14c81b78c850f24cc82e83102dd0d7f3219d8  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/off/c36-off-rhythm-da4d2487.png
+da4d248785efefe2caf92fc08821109e44057932812b9012bcf203bc569729d0  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/n15-off_n16r84_s42/run.jsonl
+b0f3807c7161c7b0509b8130fb88b74257bce091f990b915d63b6b05e95a3813  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/n15-off_n16r84_s42/meta.json
+2be381ce9cf6d3a863c1d263e765f4423ea0a198d9b419603589414c51cfc1b2  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/off/threads_c36-off.json
+4861498ee5404e19866970d29e36cd69e1a926ae46b4691596f68837f071cf70  /root/.jiuwenswarm/.agent_teams/jiuwen_team_cron___1a18e814975_abda2a2213c6/team-workspace/c36/c36-cases.md
+e12314151004aa19fe24bccdef303299cc6d79830290dd52b9c0077b491665e4  /root/.jiuwenswarm/.agent_teams/jiuwen_team_cron___1a18e814975_abda2a2213c6/team-workspace/c36/c36-grep-checks.sh
+2bf9ddc506cef7e2e74718ce0e48b71decc63ef2b6447469f96b48bf96e88770  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_shots/render.log
+4283e5053a2ee386b4ed73b3689c1b6ed42fa3f359b68d86be4e747804bc3e8b  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c36_cases/extract_c36_cases.py
