@@ -13,6 +13,9 @@
 | 大小 / 行 | 17162812 B / 33839 | 17185113 B / ~33884 事件 |
 | MSG | 191（24 public + 167 DM） | 191（24 + 167） |
 | code_sha | `05526e0d` | `05526e0d` |
+
+**code_sha 更正（`repro-verifier` 指出，我原写作 `f384335` 是误引）**：两臂 `launch_cmd` 与 `meta.json` 全部为 **`05526e0d`**。`f384335` 是 `dialogue-core-dev` 后来报的工作分支 HEAD，**不是跑批时实际运行的代码版本**。
+**已核 `05526e0d` 确实含 S-1/S-2 与三处人设修正**：`git show 05526e0d:code/life/agent.py | grep -c "AGENT_OPENING_OVERRIDE\|ROLE_OPENINGS\|LIFE_PROMPT_NARRATION_SYNTAX"` = **8 处** ⇒ P001/P009/P002-P014 的 override 与 `ROLE_OPENINGS` 在跑批中**生效**。
 | env 差 | `SYNTAX=0` | `SYNTAX=1` |
 | `arm_config_guard` | — | **SAME_CONFIG** ✔ |
 
