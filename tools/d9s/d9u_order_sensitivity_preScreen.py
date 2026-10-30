@@ -51,11 +51,27 @@ ARMS = {
 
 
 def last_verbs_key(lex: dict) -> str:
-    """返回"最后一个动词表"的键名（V_judge 的尾部；v1.1=rotation_13，v2.0=expansion_22）。"""
-    for k in ("verbs_expansion_22", "verbs_rotation_13", "verbs_closed_8"):
-        if k in lex:
-            return k
-    raise KeyError("lexicon 里找不到任何 verbs_* 表")
+    """返回"最后一个动词表"的键名 —— **不写死键名**（v2.1 起是 verbs_expansion_25）。
+
+    顺序约定（见 lexicon `note_order_matters`）：closed_8 → rotation_13 → expansion_*（末尾）。
+    ⇒ 键名按"前缀 + 排序位"动态识别，避免表版本升版后再写死。
+    """
+    keys = [k for k in lex if str(k).startswith("verbs_")]
+    if not keys:
+        raise KeyError("lexicon 里找不到任何 verbs_* 表")
+    def rank(k: str) -> int:
+        if k == "verbs_closed_8":
+            return 0
+        if k == "verbs_rotation_13":
+            return 1
+        return 2          # 任何 expansion_* 都视为末尾
+    # 版本一致性：所有 verbs_* 的总数必须等于本次运行的 v_judge 长度（否则实现比词表旧/新）
+    total = sum(len(lex[k]) for k in keys)
+    if total != len(NF.v_judge(lex)):
+        raise SystemExit(
+            f"!! 版本不一致：lexicon 的 verbs_* 合计 {total} 词，但本次运行的 v_judge 只返回 "
+            f"{len(NF.v_judge(lex))} 词 ⇒ 实现与词表不同版本。请在该 lexicon 所属树的 code/ 下运行。")
+    return max(keys, key=lambda k: (rank(k), k))
 
 
 def extend(lex: dict, verbs: list) -> tuple[dict, str]:
@@ -74,12 +90,12 @@ def metrics(lex: dict, log: Path) -> dict:
 
 
 def main() -> int:
-    print("【口径强制声明】起点表版本见 --old-lexicon / 词数=52 / 口径=筛前(31 候选全收,非正式) / 本脚本读数不得作为正式判据")
-
     ap = argparse.ArgumentParser()
     ap.add_argument("--old-lexicon", default=str(DEFAULT_OLD),
                     help="旧表路径；传 'current' 表示用主仓当前 lexicon")
     ap.add_argument("--new-verbs", default=",".join(NEW_VERBS))
+    ap.add_argument("--new-lexicon", default=None,
+                    help="官方新表路径：给了就直接用它当'新表'（不再构造），用于核官方版本间的差分")
     a = ap.parse_args()
 
     old_path = Path(NF.DEFAULT_LEXICON) if a.old_lexicon == "current" else Path(a.old_lexicon)
@@ -95,9 +111,15 @@ def main() -> int:
             "   请在该 lexicon 所属的那棵树的 code/ 下运行本脚本（脚本会优先用 cwd 的 tools/d9n），\n"
             "   或改用 --old-lexicon 指向与本实现同版本的表。")
     cand = [w for w in a.new_verbs.split(",") if w]
-    fresh = [w for w in cand if w not in V_old]          # **自动剔除旧表已有**
-    skipped = [w for w in cand if w in V_old]
-    new, key = extend(old, fresh)
+    if a.new_lexicon:
+        new = NF.load_lexicon(Path(a.new_lexicon))
+        key = last_verbs_key(old) + f" → (官方新表 {last_verbs_key(new)})"
+        fresh = [w for w in NF.v_judge(new) if w not in V_old]
+        skipped = [w for w in cand if w in V_old]
+    else:
+        fresh = [w for w in cand if w not in V_old]          # **自动剔除旧表已有**
+        skipped = [w for w in cand if w in V_old]
+        new, key = extend(old, fresh)
 
     print(f"旧表: {old_path}  V_judge={len(V_old)} 词  最后一个动词表 = {key}")
     print(f"候选 {len(cand)} 个 → 新增 {len(fresh)} 个；旧表已含而跳过 {len(skipped)} 个 {skipped if skipped else ''}")
