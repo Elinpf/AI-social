@@ -15,6 +15,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from life.agent import GOSSIP_G1_ENV, LifeLayerAgent, gossip_g1_enabled
 from life.dialogue_threads import build_display_map, core_name
 from life.memory import HashEmbeddingModel, SideStore
@@ -26,6 +28,16 @@ CONFIG = CODE_DIR / "config"
 SEG_HEAD = "镇上还住着："
 SELF_ID = "P003"
 PARTNER_ID = "P002"
+
+#: ROUND1 旁白通道**默认化**后补的"臂环境钉死"：本文件的基线（`d9391a3` / R15 收尾指令字面量）
+#: 记录在**禁旁白**语境下，默认化只改了默认值没改任何字面量 ⇒ 这里显式 `=0` 把语境钉回禁旁白，
+#: 使「G1 臂 = 单变量」与「OFF 态 = 基线逐字节」两条断言仍然只检验 G1 臂自身，不被旁白默认值污染。
+NARRATION_ENV = "LIFE_PROMPT_NARRATION"
+
+
+@pytest.fixture(autouse=True)
+def _pin_narration_off(monkeypatch):
+    monkeypatch.setenv(NARRATION_ENV, "0")
 
 
 class _StubKernel:

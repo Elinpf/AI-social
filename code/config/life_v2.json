@@ -31,5 +31,10 @@
     "min_importance": 7,
     "min_windows": 2,
     "criterion": "natural"
+  },
+  "prompt": {
+    "narration": {
+      "enabled": true
+    }
   }
 }

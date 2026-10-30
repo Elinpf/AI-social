@@ -85,9 +85,23 @@ def tmp_side(tmp_path):
     return tmp_path
 
 
-def test_env_unset_is_byte_identical_to_baseline(tmp_side, monkeypatch):
-    """硬约束 2：env 未设 ⇒ 两条 prompt 与改动前逐字节等价（sha256 常量比对）。"""
+def test_env_unset_uses_config_default(tmp_side, monkeypatch):
+    """ROUND1 默认化：env **未设** ⇒ 走配置默认值（`prompt.narration.enabled=true`）⇒ 两条 prompt 为 ON 臂。
+
+    默认化前这里是「env 未设 = 与基线逐字节等价」；该断言已下移为
+    `test_env_explicit_zero_is_byte_identical_to_baseline`（默认化后只有显式 `=0` 才是禁旁白）。
+    """
     monkeypatch.delenv(NARRATION_ENV, raising=False)
+    p_init, p_reply = _prompts(tmp_side)
+    assert p_init.endswith(narration_tail("initiate"))
+    assert p_reply.endswith(narration_tail("reply"))
+    assert narration_tail("initiate") != OFF_INITIATE_TAIL
+    assert narration_tail("reply") != OFF_REPLY_TAIL
+
+
+def test_env_explicit_zero_is_byte_identical_to_baseline(tmp_side, monkeypatch):
+    """硬约束 2（默认化后仍成立）：显式 `LIFE_PROMPT_NARRATION=0` ⇒ 与改动前逐字节等价。"""
+    monkeypatch.setenv(NARRATION_ENV, "0")
     p_init, p_reply = _prompts(tmp_side)
     assert hashlib.sha256(p_init.encode()).hexdigest() == GOLDEN_INITIATE_SHA256
     assert hashlib.sha256(p_reply.encode()).hexdigest() == GOLDEN_REPLY_SHA256
@@ -98,7 +112,7 @@ def test_env_unset_is_byte_identical_to_baseline(tmp_side, monkeypatch):
 
 @pytest.mark.parametrize("val", ["0", "", "false", "off", "2"])
 def test_env_zero_is_byte_identical_to_baseline(tmp_side, monkeypatch, val):
-    """硬约束 2：env=0（及其它非真值）⇒ 与未设时完全一致。"""
+    """硬约束 2：env=0（及其它非真值，含显式空串）⇒ 仍与改动前逐字节一致。"""
     monkeypatch.setenv(NARRATION_ENV, val)
     p_init, p_reply = _prompts(tmp_side)
     assert hashlib.sha256(p_init.encode()).hexdigest() == GOLDEN_INITIATE_SHA256
@@ -107,7 +121,7 @@ def test_env_zero_is_byte_identical_to_baseline(tmp_side, monkeypatch, val):
 
 def test_env_one_allows_narration_only_in_tail(tmp_side, monkeypatch):
     """硬约束 3：env=1 ⇒ 只换收尾指令这一段（单变量），且允许成对括号、仍禁心理独白/旁白叙事。"""
-    monkeypatch.delenv(NARRATION_ENV, raising=False)
+    monkeypatch.setenv(NARRATION_ENV, "0")
     off_init, off_reply = _prompts(tmp_side)
 
     monkeypatch.setenv(NARRATION_ENV, "1")
@@ -132,12 +146,15 @@ def test_env_one_allows_narration_only_in_tail(tmp_side, monkeypatch):
 
 
 def test_narration_enabled_parsing(monkeypatch):
-    """开关解析：真值 {1,true,yes,on} 开；其余（含未设/0）关。"""
+    """开关解析：真值 {1,true,yes,on} 开；其余**已设**值（含 0 / 空串）关；未设 ⇒ 配置默认（本轮为开）。"""
     for v in ["1", "true", "TRUE", "yes", "On", " 1 "]:
         monkeypatch.setenv(NARRATION_ENV, v)
         assert narration_enabled() is True
     for v in ["0", "", "false", "off", "no", "2", "enabled"]:
         monkeypatch.setenv(NARRATION_ENV, v)
         assert narration_enabled() is False
+    # ROUND1 默认化：未设不再是"关"，而是回落配置文件（`prompt.narration.enabled=true`）
     monkeypatch.delenv(NARRATION_ENV, raising=False)
-    assert narration_enabled() is False
+    from life.agent import narration_config_default
+    assert narration_config_default() is True
+    assert narration_enabled() is True

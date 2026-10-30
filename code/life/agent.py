@@ -13,9 +13,11 @@ The agent never mutates world state.
 """
 from __future__ import annotations
 
+import json
 import os
 import re
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 from . import constants as C
@@ -77,13 +79,42 @@ def memory_f6_enabled() -> bool:
     return os.environ.get(MEMORY_F6_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
 
 
-# D9i 臂开关（旁白/动作神态通道）：**只影响 prompt 收尾指令的文本**，默认 0 = 现状（禁旁白）。
-# 目的：OFF/ON 用同一份代码跑，两臂之间只剩「收尾指令允不允许成对括号旁白」这一个差异。
-# 硬约束（v2/refs/D9i-prereg-narration-toggle.md）：env 未设或 =0 时，提示词与改动前**逐字节相同**；
-# 只改这两处收尾指令，不改阈值 / 事件结构 / 调度 / 其它措辞。
+# 旁白/动作神态通道开关：**只影响 prompt 收尾指令的文本**。
+# D9i 阶段它是「仅靠 env 的实验开关、默认 0 = 禁旁白」；ROUND1（本分支 feat/narration-default-on）把它
+# **默认化**：默认值改由 `config/life_v2.json` 的 `prompt.narration.enabled` 提供（文件内写 true）,
+# env `LIFE_PROMPT_NARRATION` 仍是**显式覆盖**（`=0/false/off/no` 即关闭，`=1/true/yes/on` 即打开），
+# 未设时读配置 ⇒ 默认**开**。
+# 硬约束（v2/refs/D9i-prereg-narration-toggle.md）：默认化**只改默认值**，两条收尾指令的字面量
+# （`_NARRATION_TAIL_OFF` / `_NARRATION_TAIL_ON`）一字未动 ⇒ `LIFE_PROMPT_NARRATION=0` 仍与改动前
+# **逐字节相同**；不改阈值 / 事件结构 / 调度 / 其它措辞。
 NARRATION_ENV = "LIFE_PROMPT_NARRATION"
 
-#: env 未设/=0 时的收尾指令（= 改动前的字面量，逐字节保留；单测据此做 sha256 等价断言）
+#: 默认值落点：`code/config/life_v2.json` 的 `prompt.narration.enabled`（与 life 其它段同样直读盘）。
+NARRATION_CONFIG_PATH = Path(__file__).resolve().parents[1] / "config" / "life_v2.json"
+
+#: 配置文件缺失 / 缺键 / 类型非法时的兜底默认值（默认化后为 True）。
+NARRATION_DEFAULT_ENABLED = True
+
+#: env 真值集（与既有臂保持同一套字面量；其余已设值一律按关处理 = D9i 老语义）
+_ENV_TRUE = frozenset({"1", "true", "yes", "on"})
+
+
+def narration_config_default() -> bool:
+    """读 `config/life_v2.json :: prompt.narration.enabled`（缺文件/缺键/非 bool ⇒ 兜底 True）。"""
+    try:
+        data = json.loads(NARRATION_CONFIG_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return NARRATION_DEFAULT_ENABLED
+    if not isinstance(data, dict):
+        return NARRATION_DEFAULT_ENABLED
+    sec = data.get("prompt")
+    sec = sec.get("narration") if isinstance(sec, dict) else None
+    if not isinstance(sec, dict):
+        return NARRATION_DEFAULT_ENABLED
+    v = sec.get("enabled", NARRATION_DEFAULT_ENABLED)
+    return v if isinstance(v, bool) else NARRATION_DEFAULT_ENABLED
+
+#: 显式关（env 已设且非真值，如 `=0`）时的收尾指令（= 改动前的字面量，逐字节保留；单测据此做 sha256 等价断言）
 _NARRATION_TAIL_OFF = {
     "initiate": "\n只写台词本身（一句家常话）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。",
     "reply": "\n只写台词本身（接着刚才的话往下说一句）：不要用括号、方括号或星号写动作、神态或心理旁白，不要解释也不要总结；用口语短句，别反复用同一句口头禅。",
@@ -97,8 +128,18 @@ _NARRATION_TAIL_ON = {
 
 
 def narration_enabled() -> bool:
-    """D9i 臂开关（env `LIFE_PROMPT_NARRATION` ∈ {1,true,yes,on}）；默认关（=禁旁白，与改动前逐字节一致）。"""
-    return os.environ.get(NARRATION_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
+    """旁白通道开关：**env 显式值 > `config/life_v2.json` 默认值**。
+
+    * env ∈ {1,true,yes,on} ⇒ 开；其它**任何已设值**（含 `0` / ``空串`` / `false` / `off` / `no` / `2`）⇒ 关
+      （= D9i 老语义，逐字未改）；
+    * **只有 env 完全未设**时读配置 `prompt.narration.enabled`（默认化后 = True）。
+      区分「未设」与「设为空串」是刻意的：显式 `LIFE_PROMPT_NARRATION=`（空）仍算显式关闭，
+      这样老臂「置空即禁旁白」的历史行为不被默认化改写。
+    """
+    raw = os.environ.get(NARRATION_ENV)
+    if raw is None:
+        return narration_config_default()
+    return raw.strip().lower() in _ENV_TRUE
 
 
 # D9m 臂开关（旁白**示例句**确定性轮换）：只动 D9i 「旁白 ON」模板里 `如（…）` 那**一个示例句**，

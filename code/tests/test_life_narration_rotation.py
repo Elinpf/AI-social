@@ -29,6 +29,7 @@ print({k: hashlib.sha256(narration_tail(k).encode()).hexdigest() for k in ('init
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 from pathlib import Path
 
@@ -55,7 +56,7 @@ from life.tests.test_narration_toggle import (  # 复用同一装配路径，避
 
 WORLD_SEED_ENV = "HITT_WORLD_SEED"
 
-#: d2a6fa9 现场导出：env 未设时 narration_tail 两段输出（= 禁旁白）
+#: d2a6fa9 现场导出：禁旁白臂（ROUND1 默认化前=未设，默认化后须显式 `LIFE_PROMPT_NARRATION=0`）两段输出
 GOLDEN_OFF_INITIATE_SHA256 = "3646f04995a961b12573157ccd7dc70fa4fef1828c1415209f197aab0972a77c"
 GOLDEN_OFF_REPLY_SHA256 = "ce2cfb8757b1a053b1a9e811e070c7ef91aa3a90cac2c5b6161dff6543ad324d"
 
@@ -80,27 +81,57 @@ def base_env(monkeypatch):
         monkeypatch.delenv(k, raising=False)
 
 
+@pytest.fixture()
+def off_env(base_env, monkeypatch):
+    """ROUND1 默认化后，「禁旁白」不再等于"未设"，必须**显式** `LIFE_PROMPT_NARRATION=0`。"""
+    monkeypatch.setenv(NARRATION_ENV, "0")
+
+
 # ---------------------------------------------------------------- A. 默认关等价
-def test_default_off_tail_byte_identical(base_env):
+def test_env_zero_tail_byte_identical(off_env):
     assert narration_tail("initiate") == _NARRATION_TAIL_OFF["initiate"] == OFF_INITIATE_TAIL
     assert narration_tail("reply") == _NARRATION_TAIL_OFF["reply"] == OFF_REPLY_TAIL
     assert _sha(narration_tail("initiate")) == GOLDEN_OFF_INITIATE_SHA256
     assert _sha(narration_tail("reply")) == GOLDEN_OFF_REPLY_SHA256
 
 
-def test_default_off_prompt_sha_unchanged(base_env, tmp_path):
-    """默认关：整条 prompt 的 sha256 仍等于 D9i 基线（同输入同装配路径）。"""
+def test_env_zero_prompt_sha_unchanged(off_env, tmp_path):
+    """显式关：整条 prompt 的 sha256 仍等于 D9i 基线（同输入同装配路径）。"""
     p_init, p_reply = _prompts(tmp_path)
     assert _sha(p_init) == GOLDEN_INITIATE_SHA256
     assert _sha(p_reply) == GOLDEN_REPLY_SHA256
 
 
-def test_rotation_on_without_narration_is_off_wording(base_env, monkeypatch):
-    """F. 组合语义：NARRATION 关 × 旋转开 ⇒ 仍为禁旁白 OFF 文案（旋转无效果）。"""
+def test_rotation_on_with_narration_off_is_off_wording(off_env, monkeypatch):
+    """F. 组合语义：NARRATION 显式关 × 旋转开 ⇒ 仍为禁旁白 OFF 文案（旋转无效果）。"""
     monkeypatch.setenv(ROTATION_ENV, "1")
     for k in KINDS:
         assert narration_tail(k, "P003", 7) is _NARRATION_TAIL_OFF[k]
     assert _sha(narration_tail("initiate", "P003", 7)) == GOLDEN_OFF_INITIATE_SHA256
+
+
+# ------------------------------------- A2. ROUND1 默认化（env 未设 ⇒ 配置默认开）
+def test_narration_default_on_when_env_unset(base_env):
+    """默认化硬验收：env 未设时两条收尾指令 = D9i ON 常量对象（配置 `prompt.narration.enabled=true`）。"""
+    for k in KINDS:
+        assert narration_tail(k, "P003", 7) is _NARRATION_TAIL_ON[k]
+    assert _sha(narration_tail("initiate", "P003", 7)) == GOLDEN_ON_INITIATE_SHA256
+    assert _sha(narration_tail("reply", "P003", 7)) == GOLDEN_ON_REPLY_SHA256
+
+
+def test_config_default_is_true_and_readable():
+    """配置落点存在且为 true（默认化的事实来源，供报告复算）。"""
+    cfg = json.loads((Path(__file__).resolve().parents[1] / "config" / "life_v2.json")
+                     .read_text(encoding="utf-8"))
+    assert cfg["prompt"]["narration"]["enabled"] is True
+    from life.agent import narration_config_default
+    assert narration_config_default() is True
+
+
+def test_env_zero_still_disables_under_config_default_on(off_env):
+    """默认化不得吃掉显式关闭能力：`LIFE_PROMPT_NARRATION=0` 仍走 OFF 文案。"""
+    for k in KINDS:
+        assert narration_tail(k, "P003", 7) is _NARRATION_TAIL_OFF[k]
 
 
 # ---------------------------------------------- B. 旋转关 == D9i ON（硬验收）
