@@ -1,0 +1,12 @@
+# switch_proof（/proc/<pid>/environ 真值）captured_at=2026-10-30T15:12:56+08:00
+--- bash pid=3530205
+LIFE_PROMPT_NARRATION_ROTATION=1
+LIFE_PROMPT_NARRATION_SYNTAX=1
+LIFE_PROMPT_NARRATION=1
+LIFE_PROMPT_NARRATION_ACTION=1
+--- python child pid=3530346 cmdline=python3 -m orchestration run --life --seed 42 --agents 16 --rounds 24 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/d9s-syntax-diversity/runs/d9s-on2_n16r24_s42/run.jsonl --flush-every 2 --side-root /tmp/d9s_on2_n16r24_s42 
+LIFE_PROMPT_NARRATION_ROTATION=1
+LIFE_PROMPT_NARRATION_SYNTAX=1
+HITT_LLM_PROVIDER=openai_compat
+LIFE_PROMPT_NARRATION=1
+LIFE_PROMPT_NARRATION_ACTION=1

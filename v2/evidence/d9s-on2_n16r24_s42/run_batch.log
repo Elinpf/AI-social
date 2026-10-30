@@ -1,0 +1,2 @@
+PASS preflight sha=f2b3230d(feat/d9s-syntax-diversity) ts=2026-10-30T15:12:52+08:00 concurrency=0 frozen_tree=clean log=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/d9s-syntax-diversity/v2/evidence/preflight/preflight_20261030T071252Z_f2b3230d_run_batch.log
+[d2] run: python3 -m orchestration run --life --seed 42 --agents 16 --rounds 24 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/d9s-syntax-diversity/runs/d9s-on2_n16r24_s42/run.jsonl --flush-every 2 --side-root /tmp/d9s_on2_n16r24_s42
