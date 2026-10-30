@@ -55,6 +55,27 @@
 1. **`(d2)` 从 12 → 31（OFF）/ 3 → 31（ON2）** —— 远超门槛 10 ⇒ **`(d2)≥10` 这条护栏在扩表后几乎自动满足**，**失去区分力**（与 `③≥10%` 那次同型）。⇒ **下游若继续用 `(d2)≥10`，必须重新标定**；
 2. **`max_v` 换主角**（预登记 §5 已写"不是退步"）：OFF 从 `蹭 15` 变成 `搁 32`；ON2 从 `蹭 3` 变成 `压 31`。⇒ **`(d) max_v ≤5` 这类绝对阈值全部作废**，需按新表重定。
 
+## 4.5 判据 4（六类指标新旧差 ≤15pp）：**天然满足，但有前提**
+
+**先查代码**：`tools/d9s/syntax_shape.py:203-206`
+```python
+lex = v = parts = objs = None
+if split_family:                    # ← 仅 --split-family 时才加载
+    lex = nf.load_lexicon(DEFAULT_LEXICON)
+    v = nf.v_judge(lex)
+```
+⇒ **六类分类（`classify`）与 `classify_h4` 都不读 lexicon**；lexicon **只用于 `--split-family` 的 assigned/unassigned 侧别统计**。
+
+**⇒ 因此**：
+| 情形 | 判据 4 结果 |
+|---|---|
+| **不加 `--split-family`**（判据 4 的正常跑法） | **差 0**，天然满足 ✅ |
+| **加 `--split-family`** | `fam6`/`fam_old` 的 assigned/unassigned 分布**会随 lexicon 变**（因 `assign_family` 依赖 `V_judge`）⇒ **不可比** |
+
+**实测（ON2，不加 `--split-family`）**：`c1 12.07 / c2 0 / c3 70.11 / c4 6.32 / c5 7.47 / c6 4.02`，`H/log₂6 = 0.5591`，`blocks 174` —— **与扩表前逐位相同** ✅
+
+**⇒ 结论：判据 4 满足；但任何引用 `--split-family` 侧别统计的件，扩表前后不可比。**
+
 ## 5. 复算
 ```bash
 # 旧版快照需临时复制成 .py 才能加载（脚本依赖 HERE.parents[1]）
