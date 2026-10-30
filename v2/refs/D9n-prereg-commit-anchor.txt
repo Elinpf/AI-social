@@ -1,0 +1,12 @@
+prereg_file=v2/refs/D9n-prereg-narration-example-rotation.md
+prereg_sha256=0d10450232b04327fe7980ddbaa68b694fba9b1b827b433b5b54b5d7c1b06643
+prereg_add_commit=c164e2b
+prereg_commit_committer_time=2026-10-30T08:13:42+08:00
+rename_commit=5f302dc
+impl_commit=5d20cc5
+impl_file_sha256[code/life/agent.py]=da6f5b8ae37dc15020cc979733c4697ae2e7a98c989f42bec67af2dacf9b152c
+impl_file_sha256[code/tests/test_life_narration_rotation.py]=6183242291e90056fbc1a939af9082aa7f1e582c88e2275759128664b69fa442
+branch=feat/life-narration-rotation
+base_commit=d2a6fa99b7eb978185a965b3f5c77675a7533498
+rationale=与并行线 v2/refs/D9m-prereg-narration-action-diversity.md（master 0938f14）编号冲突，仅改名，内容未改（sha256 前后一致）
+note=本文件为外部锚定回执，不修改冻结件正文；冻结件内容 sha256 即上列 prereg_sha256
