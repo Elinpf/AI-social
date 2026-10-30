@@ -101,14 +101,81 @@ def narration_enabled() -> bool:
     return os.environ.get(NARRATION_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
 
 
-def narration_tail(kind: str) -> str:
-    """返回对话 prompt 的收尾指令（本臂唯一改动点）。
+# D9m 臂开关（旁白**示例句**确定性轮换）：只动 D9i 「旁白 ON」模板里 `如（…）` 那**一个示例句**，
+# 其余字面量（删禁令、`成对（）`、`不要写心理独白或旁白叙事`、`不要用方括号或星号`、句尾口头禅）
+# **逐字节不动**。默认关 ⇒ 直接返回 `_NARRATION_TAIL_ON` 常量对象 ⇒ 与 D9i ON 逐字节相同。
+# 与 `LIFE_PROMPT_NARRATION` 的组合语义（四种）：
+#   NARRATION 关 + 旋转任意  ⇒ `_NARRATION_TAIL_OFF`（禁旁白；旋转开关在此组合下**无效果**）
+#   NARRATION 开 + 旋转关    ⇒ `_NARRATION_TAIL_ON`（D9i 原固定示例，常量对象）
+#   NARRATION 开 + 旋转开    ⇒ `_NARRATION_TAIL_ON` 的示例句换成词表选句（唯一差异）
+ROTATION_ENV = "LIFE_PROMPT_NARRATION_ROTATION"
+
+#: 例句词表指纹（改词表 = 改行为，须重冻结；报告/runbook 侧按此对齐「尺子」身份）
+NARRATION_EXAMPLE_LEXICON_VERSION = "narration-rotation-v1"
+
+#: 示例句库（≥6 句，均为「动作 / 神态 / 眼前景」，只写人话、不出内部 token）。
+#: 硬约束：**不得**含 蹭 / 磨 / 抹 / 擦（易与 L-7 高频动词复读叠加）与
+#: 围裙 / 锉刀 / 木屑（D9i 固定示例里的旧道具，CYCLE-30 已登记为重复出现）。
+#: 单测以正则逐字断言（防未来回潮），并对旋转开的多回合输出全量扫描同一词表。
+NARRATION_EXAMPLES: tuple[str, ...] = (
+    "抬手把鬓角的碎发别到耳后",
+    "把袖口往上挽了一截",
+    "低头拢了拢衣襟",
+    "侧身让过挑担的街坊",
+    "往门槛上靠了靠",
+    "把竹篮往脚边挪了挪",
+    "抬眼望了望日头",
+    "伸手扇了扇风",
+    "把凳子往后撤了半步",
+)
+
+#: 轮换臂模板：与 `_NARRATION_TAIL_ON` **逐字节相同**，只把 `如（<示例>）` 的示例替换成 `{}`。
+#: 单测用 `_NARRATION_TAIL_ON_TPL[kind].format(_NARRATION_TAIL_ON_EXAMPLE[kind]) ==
+#: _NARRATION_TAIL_ON[kind]` 硬锁「除示例句外一字未改」。
+_NARRATION_TAIL_ON_TPL = {
+    "initiate": "\n只写台词本身（一句家常话，用成对的（）补一句动作、神态或眼前的景，如（{}），但不要写心理独白或旁白叙事，不要用方括号或星号）：不要解释也不要总结；用口语短句，别反复用同一句口头禅。",
+    "reply": "\n只写台词本身（接着刚才的话往下说一句，用成对的（）补一句动作、神态或眼前的景，如（{}），但不要写心理独白或旁白叙事，不要用方括号或星号）：不要解释也不要总结；用口语短句，别反复用同一句口头禅。",
+}
+
+#: D9i 原示例句（仅用于等价性自检；**不参与**轮换臂的输出）
+_NARRATION_TAIL_ON_EXAMPLE = {"initiate": "把围裙往腰后一掖", "reply": "低头刨木，木屑卷起"}
+
+
+def narration_rotation_enabled() -> bool:
+    """D9m 臂开关（env `LIFE_PROMPT_NARRATION_ROTATION` ∈ {1,true,yes,on}）；默认关。"""
+    return os.environ.get(ROTATION_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def narration_example(kind: str, agent_id: str | None = None,
+                      round_no: int | None = None) -> str:
+    """确定性选示例句：`sha256(seed|agent_id|round|kind)` 取词表下标。
+
+    稳定输入只有三个：`HITT_WORLD_SEED`（缺省 `"0"`；与 weather 臂共用同一 env key，
+    跑批时同批同一个 seed）、角色 id、回合号。**不读墙钟、不用 random** ⇒ replay 逐字节可复现。
+    契约：**缺省回落**——env 未设或空串一律按 `"0"`，此时全批恒为 seed=0 的那一套序列
+    （仍然确定；换 seed 则序列随 seed 变，不要误以为序列失稳）。
+    """
+    seed = (os.environ.get(WX.WORLD_SEED_ENV, "") or "0").strip() or "0"
+    rnd = 0 if round_no is None else int(round_no)
+    h = sha256_hex(f"narration-rotate|{seed}|{agent_id or ''}|{rnd}|{kind}")
+    return NARRATION_EXAMPLES[int(h[:8], 16) % len(NARRATION_EXAMPLES)]
+
+
+def narration_tail(kind: str, agent_id: str | None = None,
+                   round_no: int | None = None) -> str:
+    """返回对话 prompt 的收尾指令（D9i/D9m 唯一改动点）。
 
     kind ∈ {"initiate"（开场白）, "reply"（接话）}。
-    env 未设或 =0 ⇒ 返回改动前的字面量（逐字节等价）；env=1 ⇒ 允许成对括号的动作/神态/眼前景。
+    NARRATION 关 ⇒ 改动前字面量（`_NARRATION_TAIL_OFF`，逐字节等价）；
+    NARRATION 开 + 旋转关 ⇒ `_NARRATION_TAIL_ON` **常量对象**（不做任何字符串拼装）；
+    NARRATION 开 + 旋转开 ⇒ 仅示例句换为 `narration_example(...)` 的确定性选句。
     """
-    table = _NARRATION_TAIL_ON if narration_enabled() else _NARRATION_TAIL_OFF
-    return table[kind]
+    if not narration_enabled():
+        return _NARRATION_TAIL_OFF[kind]
+    if not narration_rotation_enabled():
+        return _NARRATION_TAIL_ON[kind]
+    return _NARRATION_TAIL_ON_TPL[kind].format(
+        narration_example(kind, agent_id, round_no))
 
 _SALIENT_EVENTS = {
     "ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "PLACE_ARRIVED",
@@ -1528,7 +1595,8 @@ class LifeLayerAgent:
                 + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
                 + self._l7_struct_line(wv, partners, 0, "initiate")  # L-7 结构臂：开口/收束/禁忌开头（默认ON）
                 + AR.prompt_line()           # R12 去重臂：最近说过的话（默认OFF ⇒ 空串）
-                + narration_tail("initiate"))  # D9i 旁白通道臂：收尾指令按 env LIFE_PROMPT_NARRATION 二选一（env 未设/=0 时与 A1 原字面量逐字节相同）
+                + narration_tail("initiate", self.agent_id,
+                                 0 if wv is None else getattr(wv, "round", 0)))  # D9i/D9m：收尾指令按 LIFE_PROMPT_NARRATION 二选一；旋转臂再按 LIFE_PROMPT_NARRATION_ROTATION 换示例（均默认关 ⇒ 与改动前逐字节相同）
 
     def _reply_prompt(self, partner: str | None, topic: str, history: list,
                       cfg: dict | None = None, rift_line: str | None = None,
@@ -1554,7 +1622,8 @@ class LifeLayerAgent:
                                        "reply")  # L-7 结构臂：开口/收束/禁忌开头（默认ON）
                 + self._topic_shift_line(wv, partner, tid, topic, turn)  # R19 话题宽度臂（默认OFF ⇒ 空串）
                 + AR.prompt_line()           # R12 去重臂：最近说过的话（默认OFF ⇒ 空串）
-                + narration_tail("reply"))  # D9i 旁白通道臂：收尾指令按 env LIFE_PROMPT_NARRATION 二选一（env 未设/=0 时与 A1 原字面量逐字节相同）
+                + narration_tail("reply", self.agent_id,
+                                 0 if wv is None else getattr(wv, "round", 0)))  # D9i/D9m：同上（旋转臂默认关 ⇒ 与 D9i ON 逐字节相同）
 
     # ---- economy: negotiation / offer / order-cancel (T133) ----------------
     def _maybe_negotiate(self, wv) -> None:
