@@ -17,7 +17,11 @@
 
 四条必须先于任何数字被读者读到的前置限定：
 
-1. **两臂是缓存回放，不是两次独立采样**：OFF 臂 `cached/total = 2252/2252`（100% 命中，`tokens_in/out = 0`），ON 臂 `2209/2252`（98.09%）。响应是历史真 LLM 产物，但**本批未重新生成** ⇒ 本报告的可引用范围是「**两份日志正文的文本统计对比**」，**不是**「两次独立采样实验」；因此本报告**不给 p 值、不给置信区间**，任何「显著」说法一律不成立。
+1. **两臂是缓存回放，不是两次独立采样；且提示并非完全相同**（按 runtime-ops 复核意见修正措辞）：**88.32% 的调用共用同一 prompt 键 / 11.68%（263/2252）的提示不同**（旁白开关改写了提示尾部）；两臂非独立重采样，故**不给 p 值 / 置信区间**。三条必须原样带上、缺一即变成「把回放当实验」的事实：
+   - OFF 臂 `cached = 2252/2252 = 100%`、`tokens_total = 0` ⇒ **零真实调用，纯回放**；
+   - ON 臂 `cached = 2209/2252 = 98.09%`（`in 16069 / out 16538`）；
+   - 两臂**不是独立重采样** ⇒ 不给 p 值 / 置信区间，任何「显著」说法一律不成立。
+   因此本报告的可引用范围是「**两份日志正文的文本统计对比**」，**不是**「两次独立采样实验」。
 2. **单 seed 42 / n16×24 回合 / 191 条消息**：全部数字只作**点估计**，不外推。
 3. **F-3 / F-4 / F-5 分母 < 30**：按全族纪律只报事件数，一律写**不可判**，**不顺百分比讲趋势**；F-7b（编造事件率）需 judge，本轮零 LLM ⇒ **恒为 `None` / 未验证**。
 4. **`round1_narration_default_n16r24_s42`（`code_sha dfe6d5b2…`）只作参照，不参与判决**（§3.4），任何人不得把它当第三臂。
@@ -105,8 +109,11 @@ sed -n '34,38p' code/config/life_v2.json; grep -n 'NARRATION_ENV = \|NARRATION_D
 ### 2.3 选臂甄别（先证明「唯一可用的旁白对照臂是哪一对」）
 
 ```bash
-grep -rl "LIFE_PROMPT_NARRATION" v2/evidence/*/switch_proof.txt v2/evidence/*/meta.json 2>/dev/null | head
+grep -rl "LIFE_PROMPT_NARRATION" v2/evidence/*/switch_proof.txt 2>/dev/null | head
+grep -l  "LIFE_PROMPT_NARRATION" v2/evidence/*/meta.json 2>/dev/null | wc -l   # 实测 0 ⇒ meta 不跟踪该开关
 ```
+
+真实输出（第一条，节选）：`d9m-ab-off_n16r24_s42/switch_proof.txt`、`d9m-ab-on_n16r24_s42/switch_proof.txt`、`d9n-rot-20261030/…`、`d9s-off_n16r24_s42/…`、`narr-off/on-20261030/…` 等；第二条 **`0`** ——**即 `meta.json` 完全不含该开关，meta 不能用来证明旁白开关生效**（与 §2.4 末段一致）。
 
 实测结论：
 
@@ -138,7 +145,14 @@ on : LIFE_PROMPT_NARRATION_ROTATION=1 / LIFE_PROMPT_NARRATION=1 / LIFE_PROMPT_NA
 
 ⇒ 两臂唯一差异是 `LIFE_PROMPT_NARRATION`（0 vs 1），旋转/动作子开关相同 ⇒ **单变量成立**；两臂 `provider=openai_compat`、无 mock 混入、均 **ADMITTED（strict / evidence）**（B-9 事件数自检 PASS、B-17 哈希链 PASS）。
 
-**【必须披露的限定】** OFF 臂 `cached=2252/2252`、`tokens_in/out = 0` ⇒ **整臂是缓存回放**；ON 臂 `cached=2209/2252`（dialogue 172/191 命中）。故本报告可引用范围 = 「**两份日志正文的文本统计对比**」，**不是**「两次独立采样实验」。
+**【必须披露的限定 · 三句原样带上】**
+1. OFF 臂 `cached = 2252/2252 = 100%`、`tokens_total = 0` ⇒ **零真实调用，纯回放**（命中不计费，`freeze/llm_client.py` 命中分支写 `tokens_in=0, tokens_out=0, cached=True`）；
+2. ON 臂 `cached = 2209/2252 = 98.09%`、`in 16069 / out 16538`；
+3. 两臂**不是独立重采样** ⇒ **不给 p 值 / 置信区间**，任何「显著」说法不成立。
+
+**【提示并非完全相同（复核纠正后的准确表述）】** 早先版本写「两臂为同一 prompt 集的缓存回放」是**不精确**的：按 `LLM_CALL.payload.cache_key` 集合比对，两臂各 865 个唯一键、交集 602、各独有 263 ⇒ **88.32% 的调用共用同一 prompt 键 / 11.68%（263/2252）的提示因旁白开关而不同**。因果链条必须按此表述（输入提示也有 11.68% 变了，不是"输入全同、只输出不同"）。也就是说：可引用范围 = 「**两份日志正文的文本统计对比**」，**不是**「两次独立采样实验」。
+
+**【不得越界：meta 不能证明开关生效】** `meta.json` 的 `switch_declared` / `switch_effective` **根本不跟踪 `LIFE_PROMPT_NARRATION`**（只含 `HITT_WEATHER` / `EMOTION_ECHO` / `REPAIR`）。因此本报告**不主张**「meta 证明旁白开关生效」；开关生效只由两件事共同支持：① `switch_proof.txt` 的 env diff（仅该开关 `0 → 1`）；② 日志侧覆盖率差异（OFF `0/191` vs ON `177/191`）。§2.5 引用的 `meta` 字段只用于 `code_sha` / n / rounds / seed / provider / events，**不用于**开关生效证明。
 
 ### 2.5 日志清单与指纹
 
@@ -280,7 +294,7 @@ F-4 +0.000000 | F-5 +0.000000 | F-6 +0.115183 | F-7a +0.041885   ← 8/8 与 met
    - **陷阱 1**：F-6 升高**同时**旁白率也升高（`0.0 → 0.926702`）⇒ 判为「用旁白换生活气息」，不算改善。
    - **陷阱 2**：F-6 升高的同时措辞层重复率恶化（`L-7` 8-gram 撞车率 `0.214660 → 0.298429`，**Δ = +8.377pp ≈ +8.4pp**，远超出数器 `delta_threshold = 0.02`；`L-6` 完全重复率持平 `0.0`）⇒ 按 `R4:89` 不算改善。
    - **对冲结论（必须同时写）**：即使 §3.3 证明提升不在旁白文字里，按 R4 判据的**文字口径**，只要「旁白率同升 + 重复率恶化」两件事同时成立，这一维就**不得记为改善**。
-4. **显著性无法给出**：`p_value = None`。原因不是缺技术，而是**样本不满足独立性**（两臂为同一 prompt 集的缓存回放，§2.4）。任何「显著提升/显著改善」的写法在本报告一律不成立。
+4. **显著性无法给出**：`p_value = None`。原因不是缺技术，而是**样本不满足独立性**（两臂 88.32% 调用共用同一 prompt 键、11.68% 提示不同；OFF 臂 100% 纯回放 ⇒ 非独立重采样，§2.4）。任何「显著提升/显著改善」的写法在本报告一律不成立。
 
 ### 4.3 一句话判决（可直接引用）
 
@@ -294,11 +308,11 @@ F-4 +0.000000 | F-5 +0.000000 | F-6 +0.115183 | F-7a +0.041885   ← 8/8 与 met
 2. **旁白语义质量（是否贴合当场）未由人读评判**：本轮只有「唯一率 98.47%」这种机器近似；**去重率高 ≠ 不套路**，也不等于「贴合这一刻的场景」。需下一轮人工抽样双查（≥30 条）。
 3. **F-7a 上升的归因未验证**：越界提及 `19/191 → 27/191`，但是否由旁白句引入（旁白里提到不在场的人）**未做逐条归因**，只有总量事实。
 4. **F-6 +11.52pp 的机制未验证**：`F-6_onscreen_only` 只证明了「不在旁白文字里」，**没有证明它是"更会提过去"还是"更套路地塞时间词"**；按 R4 陷阱 2 的取向怀疑后者（L-7 恶化），但**未逐条归因**。
-5. **两臂不可作独立重采样**：OFF 臂 100% 缓存回放、ON 臂 98.09% ⇒ 不能推批间方差、不能给 CI/p 值。
+5. **两臂不可作独立重采样**：OFF 臂 `cached 2252/2252 = 100%`、`tokens_total=0`（零真实调用）；ON 臂 `2209/2252 = 98.09%`；且 88.32% 调用共用同一 prompt 键、11.68% 提示不同 ⇒ 不能推批间方差、不能给 CI/p 值。
 6. **单 seed / 单规模不外推**：seed 42、n16×24 回合、191 条消息；结论只到「这一批的文本统计形态」。
 7. **日志所属代码树 ≠ 分析基准**：读数绑定 `3176048a`（worktree `narration-action-diversity`），不是当前 HEAD `0b14183a`；**不得把本报告数字挪用到 `0b14183a`**。
 8. **`F-5 习惯强度` 结构性为 0**：本批只跑 1 个模拟日（`max_repeat_days_mean = 1.75`，`<3 天`），该维度在本规模下**天然不可能非零**，不是旁白导致的下降。
-9. **runtime-ops 独立复核（t-crosscheck-narration）未回填**：本轮 push 时该复核结论尚未落盘 ⇒ 见 `round-crosscheck-narration-hedge.md`（待补）。**本报告不替它写任何结论。**
+9. **runtime-ops 第三方独立复核：PASS（已回填）**。判决 **PASS**、逐字段对拍 **0 差异**（两侧 `readings.json` sha256 同为 `1574aaca3529935efe428abf64e7faeb404686792ce8c656787eee43237be95e`；`canonical` 排序 JSON 等值、递归 diff 0 条、float 容差 1e-12 内 0 差异），三条 FAIL 硬线（混入 `run_r1_batch`/`ENCOUNTER_CHAT`、不披露 cached/total、给显著性）均未触碰。**唯一一处措辞**经复核指出不精确（「同一 prompt 集」→ 实为 88.32% 同键 / 11.68% 提示不同），已按复核意见在本报告 §0/§2.4/§4.2/§5 全部改正，**判决不受影响**。复核报告：`team-workspace/reports/round-crosscheck-narration-hedge.md`。**该复核是第三方复核，与第 10 条所述"同作者第二实现"性质不同，二者不得互相顶替。**
 10. **「第二实现」的性质必须读对**：`v2/evidence/narration_hedge/recompute_by_round_scribe.py` 是**同一作者（round-scribe）**另写的实现，只做**代码级对拍**（换一套代码路径、同一 d5 口径复算同一批日志），**不构成第三方独立复核**。它的价值是「排除单点实现错误」，不是「外部验证」。**真正的第三方复核以 runtime-ops 的 `round-crosscheck-narration-hedge.md` 为准**（截至本提交未回填）；两件事不得混为一谈，也不得拿前者顶替后者。
 
 ---
@@ -353,9 +367,10 @@ size: (2912, 4806)   mean_brightness: 243.0
 - 出数器：`tools/metrics/narration_hedge.py`（metrics-dev；零 LLM，F 口径全部转调 d5）
 - 机读读数：`v2/evidence/narration_hedge/readings.json`；人读表：`v2/evidence/narration_hedge/table.md`
 - **同作者第二实现**（代码级对拍，**不构成第三方复核**）：`v2/evidence/narration_hedge/recompute_by_round_scribe.py` + `readings_by_round_scribe.json` / `table_by_round_scribe.md` / `crosscheck_by_round_scribe.md`（8/8 delta 一致、判决一致）
+  - 两种核对的性质必须分清，且**不得互相顶替**：同作者第二实现 = 「排除单点实现错误」；第三方复核（runtime-ops）= 「外部独立验证」，已 PASS。
 - 截图：`v2/evidence/narration_hedge_shots/narration_hedge_table.png` + `render_table_shot.py`
 - 上游口径：`reports/R4-life-texture.md:28-44`（定义式）、`:86-89`（三条「不算改善」陷阱）
-- 待补：`round-crosscheck-narration-hedge.md`（runtime-ops 独立复核，本轮 push 时未回填）
+- **第三方独立复核（已回填，判决 PASS / 0 字段差异）**：`team-workspace/reports/round-crosscheck-narration-hedge.md`（runtime-ops）。复核指出并已修正的唯一措辞问题见 §2.4 / §5 第 9 条。
 - 提交：分支 `feat/round-narration-hedge`（基于 `0b14183a`），**不动 master**；
   内容提交 sha = **`117ad1ee03338b0e806850d77b72abd0e5fa5b80`**（已 push，`git ls-remote origin feat/round-narration-hedge` 可复核）；
   master 仍为 `b737b30f688608bb4fcd66a25e50cb821f8a28c2`（未动）。
