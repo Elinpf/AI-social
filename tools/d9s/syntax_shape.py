@@ -28,6 +28,16 @@ D9s 的**主判据** = 「`ba_na_rate`（①把·拿·用 占比）」与「`hea
 
 **③ 只按"不是其他五类 + 长度>6"判定，不做任何语义规则**（不查"是否含数字/气味词"），避免造出第二套标准。
 
+**③ 的子类（Leader 2026-10-30 追加，机械可判；不改动 ①②④⑤⑥）**
+- `c3a_result_first`（结果/话题先行）当且仅当满足下列之一：
+  - **(a) 名词性短语 + 逗号 + 主谓**：片段含 `，`，且**首个分句**（至首个 `，。；`）以趋向/结果结尾词
+    （`下来/出来/起来/上了/过了/开了/过来/回来`）或 `了/着` 结尾 —— "结果先落地、再出人"；
+  - **(b) 方位先行**：以方位词（`灶上/院里/门口/屋里/桌上/窗/墙/地上/门槛/街口`）起首 且 首分句含 `了`；
+  - **(c) 数字起首且非账目句**：首字属数字集；**账目句 = 同时含 `账|钱|两|百` 之一与 `平|对|算` 之一** ⇒ 落 `c3b`。
+    ⇒ `三两七钱，对上了` **属账目句 ⇒ c3b，不进 c3a**。
+- `c3b_other_nominal`：其余 ③ 片段。
+- 输出另给 `c3a_share` / `c3b_share`（各占 `blocks_total`）。
+
 指标（输出字段固定）
 --------------------
 * `ba_na_rate` = ① 的 share = `count(c1_penal) / blocks_total`  ← 主判据之一
@@ -82,6 +92,14 @@ C4_RE = re.compile(r"^(?:抬手|伸手|低头|侧身|抬眼|蹲在|站在|掀开
 C5_RE = re.compile(r"^(?:随手|顺手|先|又|刚|正|就|还|已|再|一|两)")
 C6_RE = re.compile(r"^(?:嗯|哎|唉|哦|唔|嗨|嘿)")
 SHORT_LEN = 6
+
+#: ③ 子类常量（机械可判，不做语义判断）
+C3A_TREND_END = ("下来", "出来", "起来", "上了", "过了", "开了", "过来", "回来")
+C3A_LOC_START = ("灶上", "院里", "门口", "屋里", "桌上", "窗", "墙", "地上", "门槛", "街口")
+C3_DIGITS = set("一二三四五六七八九十百千两零") | set("0123456789")
+C3_ACCOUNT_CHARS = set("账钱两百")
+C3_ACCOUNT_MARK = set("平对算")
+C3_FIRST_CLAUSE_RE = re.compile(r"^[^，,。；;：:]*")
 
 #: 旧 4 类（`h4` 对账专用）：与 `d9m-syntax-slot-monotony.md` §1 内联口径一致（只按首字）
 H4_ACT_RE = re.compile(r"^(?:抬手|伸手|低头|侧身|抬眼|蹲在|站在|掀开|手里|指腹)")
@@ -139,6 +157,26 @@ def classify_h4(inner: str) -> str:
     return "other"
 
 
+def classify_c3(inner: str) -> str:
+    """③ 子类：c3a_result_first / c3b_other_nominal（仅对已归 ③ 的片段调用）。"""
+    s = (inner or "").strip()
+    if not s:
+        return "c3b_other_nominal"
+    head = C3_FIRST_CLAUSE_RE.match(s).group(0)
+    has_comma = bool(re.search(r"[，,]", s))
+    if s[0] in C3_DIGITS:
+        is_account = bool(set(s) & C3_ACCOUNT_CHARS) and bool(set(s) & C3_ACCOUNT_MARK)
+        return "c3b_other_nominal" if is_account else "c3a_result_first"
+    head_not_subject = not re.match(r"^(?:他们|她们|咱们|他|她|它|我|你)", head)
+    result_marker = (head.endswith(C3A_TREND_END) or head.endswith(("了", "着"))
+                     or ("了" in head) or ("着" in head))
+    if has_comma and head_not_subject and result_marker:
+        return "c3a_result_first"
+    if s.startswith(C3A_LOC_START) and "了" in head:
+        return "c3a_result_first"
+    return "c3b_other_nominal"
+
+
 def entropy_bits(counts: Counter, total: int) -> float:
     if total <= 0:
         return 0.0
@@ -155,6 +193,7 @@ def measure(log_path: Path, arm: str, split_family: bool) -> dict:
     msgs = extract_messages(nf.read_log(log_path))
 
     c6 = Counter()
+    c3sub = Counter()
     c4old = Counter()
     blocks_total = 0
     fam6 = {"assigned": Counter(), "unassigned": Counter()}
@@ -177,6 +216,8 @@ def measure(log_path: Path, arm: str, split_family: bool) -> dict:
             k6 = classify(inner)
             k4 = classify_h4(inner)
             c6[k6] += 1
+            if k6 == "c3_nominal":
+                c3sub[classify_c3(inner)] += 1
             c4old[k4] += 1
             if split_family:
                 asg = nf.assign_family(inner, v, parts, objs)
@@ -201,6 +242,13 @@ def measure(log_path: Path, arm: str, split_family: bool) -> dict:
             "n_nonempty_classes": n_nonempty,
             "normalized_entropy_nonempty": (round(hb / math.log2(n_nonempty), 6)
                                             if total and n_nonempty else 0.0),
+            # ③ 的子类（Leader 2026-10-30 追加）：c3a=c3_nominal 中未被判为 c3b 的部分
+            "c3_count": {
+                "c3a_result_first": c3sub.get("c3a_result_first", 0),
+                "c3b_other_nominal": c3sub.get("c3b_other_nominal", 0),
+            },
+            "c3a_share": round(c3sub.get("c3a_result_first", 0) / total, 6) if total else 0.0,
+            "c3b_share": round(c3sub.get("c3b_other_nominal", 0) / total, 6) if total else 0.0,
         }
 
     def pack4(c: Counter, total: int) -> dict:
@@ -232,6 +280,8 @@ def measure(log_path: Path, arm: str, split_family: bool) -> dict:
         "head_entropy": six["head_entropy"],
         "normalized_entropy": six["normalized_entropy"],
         "max_head_share": six["max_head_share"],
+        "c3a_share": six["c3a_share"],
+        "c3b_share": six["c3b_share"],
     })
     if split_family:
         out["family_split"] = {
@@ -269,6 +319,18 @@ EXPECT_BANA = 0.2
 EXPECT_MAX = 0.2
 
 
+#: ③ 子类自测（≥6 条，含 `三两七钱，对上了` 必须落 c3b 的边界）
+SELFTEST_C3 = [
+    ("木花卷着落下来，刨子还在推", "c3a_result_first"),
+    ("锅里那股焦香先冒出来，他掀了盖", "c3a_result_first"),
+    ("门轴响了一声，他抬头", "c3a_result_first"),
+    ("灶台上落了一层灰，他没动", "c3a_result_first"),
+    ("三两七钱，对上了", "c3b_other_nominal"),
+    ("屋里的灯灭了，他还在写", "c3a_result_first"),
+    ("案板上的面醒得正好", "c3b_other_nominal"),
+]
+
+
 def selftest() -> int:
     counts = Counter()
     fails = []
@@ -290,9 +352,32 @@ def selftest() -> int:
         and abs(shares["c1_penal"] - EXPECT_BANA) < 1e-9
         and abs(max(shares.values()) - EXPECT_MAX) < 1e-9
     )
+    # ③ 子类断言
+    c3_fails = []
+    c3_counts = Counter()
+    for text, want in SELFTEST_C3:
+        six_cls = classify(text)
+        if six_cls != "c3_nominal":
+            c3_fails.append({"fragment": text, "expect_six": "c3_nominal", "got_six": six_cls})
+            continue
+        got = classify_c3(text)
+        c3_counts[got] += 1
+        if got != want:
+            c3_fails.append({"fragment": text, "expect": want, "got": got})
+    expect_c3 = {"c3a_result_first": 5, "c3b_other_nominal": 2}   # 7 条子类样本
+    c3_ok = (not c3_fails
+             and {k: c3_counts.get(k, 0) for k in expect_c3} == expect_c3)
+    ok = ok and c3_ok
+
     print(json.dumps({
         "selftest": "PASS" if ok else "FAIL",
         "n": total,
+        "c3_subtest": {
+            "n": len(SELFTEST_C3),
+            "count": {k: c3_counts.get(k, 0) for k in ("c3a_result_first", "c3b_other_nominal")},
+            "expect_count": expect_c3,
+            "mismatches": c3_fails,
+        },
         "count": got_count,
         "expect_count": EXPECT_COUNT,
         "ba_na_rate": round(shares["c1_penal"], 6),

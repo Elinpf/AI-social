@@ -2,6 +2,8 @@
   "arm": "A_only",
   "ba_na_rate": 0.772277,
   "blocks_total": 202,
+  "c3a_share": 0.024752,
+  "c3b_share": 0.049505,
   "class_order": [
     "c1_penal",
     "c2_sp",
@@ -40,6 +42,12 @@
       "six": {
         "ba_na_rate": 0.816901,
         "blocks_total": 71,
+        "c3_count": {
+          "c3a_result_first": 5,
+          "c3b_other_nominal": 10
+        },
+        "c3a_share": 0.070423,
+        "c3b_share": 0.140845,
         "count": {
           "c1_penal": 58,
           "c2_sp": 0,
@@ -85,6 +93,12 @@
       "six": {
         "ba_na_rate": 0.748092,
         "blocks_total": 131,
+        "c3_count": {
+          "c3a_result_first": 5,
+          "c3b_other_nominal": 10
+        },
+        "c3a_share": 0.038168,
+        "c3b_share": 0.076336,
         "count": {
           "c1_penal": 98,
           "c2_sp": 0,
@@ -128,7 +142,7 @@
   },
   "head_entropy": 1.125447,
   "instrument": "tools/d9s/syntax_shape.py",
-  "instrument_sha256": "5962caa4d289e8eec02bf064a03ccb95bd9967a1890a64ec457f3d36c21f2942",
+  "instrument_sha256": "17dae11da4b6fa2b99c9ff4eec11c9b72d651289b141b422976ee3e2e7629c41",
   "log": "v2/evidence/d9n-rot-20261030/run.jsonl",
   "log_sha256": "e4fd6db7f863fe2f6bcf6e06753600783ce57505b48a10d5c97247bf5866ece1",
   "max_head_share": 0.772277,
@@ -137,6 +151,12 @@
   "six_class": {
     "ba_na_rate": 0.772277,
     "blocks_total": 202,
+    "c3_count": {
+      "c3a_result_first": 5,
+      "c3b_other_nominal": 10
+    },
+    "c3a_share": 0.024752,
+    "c3b_share": 0.049505,
     "count": {
       "c1_penal": 156,
       "c2_sp": 0,
