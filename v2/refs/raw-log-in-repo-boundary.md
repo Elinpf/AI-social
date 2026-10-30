@@ -42,11 +42,16 @@ git cat-file -e origin/master:<arm_dir>/run.jsonl && echo IN_REPO || echo NOT_IN
 
 配套：
 1. **入库原始日志必须 `git add -f`**（绕 `.gitignore:8`），且入库后**必须回读三值**（sha / 行 / 字节 + 与本地 `diff`）；
-2. **件内表述分档**（不得混写）：
+2. **存在性判定只能用它，不得用字节数**（由 `repro-verifier` 指出）：
+   ```bash
+   arm=v2/evidence/<arm_dir>; git cat-file -e origin/master:$arm/run.jsonl 2>/dev/null && echo "可复算：在库" || echo "仅本机：master 无"
+   # ✗ 反例：git show origin/master:$arm/run.jsonl | wc -c   —— 路径不存在时得 0，与"空文件"同形，无法区分
+   ```
+3. **件内表述分档**（不得混写）：
    - `已入库可复算`：`cat-file -e` 通过 **且** 仪器 sha + 词表 sha + `--arm` 名三件齐；
    - `本机复算一致·入库不可复算`：`cat-file -e` 失败；
    - 两者**不得合并**为"已独立复算"。
-3. **不修改 `.gitignore`**：全局忽略 `*.jsonl` 有其理由（防止跑批中间产物污染）。正确做法是**按件 `-f` 强制入库被引用的臂**，而不是放开规则。
+4. **不修改 `.gitignore`**：全局忽略 `*.jsonl` 有其理由（防止跑批中间产物污染）。正确做法是**按件 `-f` 强制入库被引用的臂**，而不是放开规则。
 
 ## 4. 当前状态（截至 `446939e`）
 
