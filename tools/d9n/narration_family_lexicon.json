@@ -1,5 +1,5 @@
 {
-  "schema": "d9m-family-lexicon/2.0",
+  "schema": "d9m-family-lexicon/2.1",
   "frozen_at": "2026-10-30T08:20:00+08:00",
   "frozen_by": "exp-designer",
   "authority": "v2/refs/D9m-prereg-narration-rotation.md §4.1（主件） + v2/refs/D9m-prereg-amendment-02-family-lexicon.md（本词表内容首次冻结；D9j §3 只给数量 6/13，未给内容）",
@@ -156,8 +156,8 @@
     }
   },
   "precedence": "本文件与主件/增补冲突时：词表内容与顺序以本文件为准；阈值与判定条件以主件 + 增补 01/02 为准。",
-  "revision_note": "v2.0（2026-10-30，D9u 扩表）：新增 `verbs_expansion_22`（22 个光杆动词，追加在 verbs_rotation_13 **之后**，顺序=closed8 → rotation13 → expansion22，保证历史臂首次命中位置不变）。依据：v2/refs/D9u-prereg-lexicon-expansion.md §3.1 + v2/evidence/d9u-step1-verb-candidates.md（37 候选，方法=v2 动词白名单∩语料频次）。筛词由 eval-researcher 逐词判（收22/拒9），逐词理由见 v2/evidence/d9u-step2-verb-screening.md。**parts_6/objs_13/规则 R1-R8/两份旧动词表一字未改**；旧表 v1.1 sha256 见 v2/evidence/d9u-step2-verb-screening.md §1。",
-  "verbs_expansion_22": [
+  "revision_note": "v2.1（2026-10-30，D9u.1 勘误）：`verbs_expansion_22` → `verbs_expansion_25`，**末尾追加 `刨/锉/掰`**（各 23/19/12 次，合计 54 次）。缘由：step1 误把'6 个候选'写成'6 个已在 V_judge'（实际只有 挪/蹭/靠 在表），导致筛词时把 `掰/刨/锉` 当成'已入表'跳过 ⇒ 这两词在两版词表里都缺失。**顺序不变**（closed8 → rotation13 → expansion25），旧词首次命中位置不受影响。见 v2/evidence/d9u1-errata-expansion-25.md。",
+  "verbs_expansion_25": [
     "搁",
     "压",
     "推",
@@ -179,6 +179,9 @@
     "磨",
     "蒸",
     "烧",
-    "咬"
+    "咬",
+    "刨",
+    "锉",
+    "掰"
   ]
 }

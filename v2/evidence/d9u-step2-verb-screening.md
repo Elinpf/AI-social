@@ -1,4 +1,9 @@
-# D9u 第二步：人工筛词（37 候选 → 收 22 / 拒 9 / 已在表 6）+ 第三步改表 + 第四步新旧对照
+# D9u 第二步：人工筛词
+
+> **状态：D9u 已关账（2026-10-30）；D9u.1 勘误：词表 22→25（追加 `掰/刨/锉`）。**
+> 勘误件：`v2/evidence/d9u1-errata-expansion-25.md`（新 lexicon sha `9c2129de…b76`，schema 2.1）。本件正文的 22 词表为 **v2.0 关账版**，其"6 个已在 V_judge"一句已被 step1 误数更正为 **3 个（挪/蹭/靠）**。
+
+（37 候选 → 收 22 / 拒 9 / 已在表 6）+ 第三步改表 + 第四步新旧对照
 
 > 作者：eval-researcher｜2026-10-30｜依据：`v2/refs/D9u-prereg-lexicon-expansion.md`（`3cb8abd`）§3.1/§4 + `v2/evidence/d9u-step1-verb-candidates.md`（`6f98907`）
 > **本件只改词表，不跑批、不产生新数据；不做语义判读上的"好坏"结论。**
