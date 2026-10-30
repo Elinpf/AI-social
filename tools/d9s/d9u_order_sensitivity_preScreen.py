@@ -33,7 +33,30 @@ for _c in _CAND_D9N:
 import narration_family as NF  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
-REPO = Path(__file__).resolve().parents[4]          # 主仓根（本脚本可能在工作树里跑）
+
+
+def _find_repo() -> Path:
+    """定位**数据所在的主仓根**（不写死层数、不靠 cwd 猜）。
+
+    规则：候选 = [cwd.parent（若 cwd 名为 code）] + [脚本所在位置的每一级上溯]，
+    逐个用**哨兵路径**验证（`v2/evidence/narr-on-20261030/run.jsonl` 必须存在），
+    取第一个命中的；全不命中 ⇒ 报错并列出试过的候选（不静默降级）。
+    """
+    SENTINEL = Path("v2/evidence/narr-on-20261030/run.jsonl")
+    cands: list[Path] = []
+    cwd = Path.cwd().resolve()
+    if cwd.name == "code":
+        cands.append(cwd.parent)
+    cands += [p for p in [HERE, *HERE.parents] if p not in cands]
+    for par in cands:
+        if (par / SENTINEL).exists():
+            return par
+    raise SystemExit(
+        "找不到数据所在的主仓根（哨兵 v2/evidence/narr-on-20261030/run.jsonl 不存在）。\n"
+        "试过的候选：\n" + "\n".join(f"  - {p}" for p in cands))
+
+
+REPO = _find_repo()
 DEFAULT_OLD = HERE / "lexicon_v1.1_snapshot.json"   # v1.1（21 词）逐字节快照，sha256 01e55338…
 
 #: D9u 第一步的 31 个真新增候选；运行时**自动剔除旧表里已有的**（v2.0 下只剩 9 个）
