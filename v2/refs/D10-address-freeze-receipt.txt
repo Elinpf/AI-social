@@ -1,0 +1,15 @@
+# D10 C-A 称呼词表「冻结回执」（**本文件必须先于第一次出数存在**）
+# 用途：证明时序——词表落盘 → 记 sha256 → 之后才跑 address_drift.py
+# 修订记录：v1 回执作废重记（同一次冻结窗口内把 next_chars 增收 你/您，见 yaml §三 注释）；
+#           重记发生在任何真实日志出数之前，故不构成「事后调尺」。
+frozen_at_iso=2026-10-30T18:04:39+08:00
+frozen_at_epoch=1793354679
+lexicon_path=v2/refs/address-ordinal.yaml
+lexicon_sha256=dc4ce327ff8e0a77d34545903e8589ea97429a30c9b26bf0ed9d972eda122d95
+lexicon_bytes=4782
+lexicon_mtime_iso=2026-10-30T18:04:37+08:00
+git_head_at_freeze=fe7816cfa80900f8439817a6a7cfeb90e941b57e
+git_branch_at_freeze=feat/round-D10-address-drift
+declared_by=life-texture-dev
+note=出数（tools/metrics/address_drift.py 首次运行于真实日志）发生在本文件落盘之后；本文件不随后续出数修改。
+first_measurement_pending=YES（写本文件时尚未对任何真实日志出数）
