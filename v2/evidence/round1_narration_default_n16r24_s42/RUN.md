@@ -42,6 +42,17 @@ preflight（`tools/d5/preflight.sh --tag run_batch`）：
 - 参照：D9i 显式 `LIFE_PROMPT_NARRATION=1` 臂为 179/191 = 93.7%、动作神态类 147/205 = 71.7%。
   ⇒ 两批同量级（分母同为 191 条 MSG）；默认化后**未设 env 也能拿到 D9i ON 的量级**。
 
+## 抽样件（`narration_samples.md`，40 条人工读样本）
+
+由 `tools/round1/export_narration_samples.py` 确定性导出（口径复用 `tools/d9i/narration_stats.py` 的 `PAIRED_RE`）：
+25 条旁白/动作神态 + 15 条纯台词，每条带 `actor / R{round} / seq / thread_id / turn_index / msg_uid`。
+
+> **抽样局限**：抽样为确定性顺序取前 N（按 `msg_uid` 序、`body` 首次出现去重），**非分层抽样**，
+> 故样本偏向靠前轮次与靠前出场角色；结论只作定性阅读材料，**不作分布推断**。
+
+`msg_uid` 唯一性实测：**`len(set)=191` == `len=191`**（全批无碰撞；`body` 亦 191/191 全不同，
+本批去重未删任何一条）⇒ 「按 uid 排序 + body 去重」等价于「按发言顺序取前 N」，无同毫秒撞 uid 误删风险。
+
 ## 复算
 
 ```bash

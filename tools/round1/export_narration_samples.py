@@ -16,6 +16,13 @@
   * 一类取满 `--n-narration` / `--n-plain` 条即停；
   * 不做随机，不读墙钟 ⇒ 同输入必然同输出。
 
+⚠️ **抽样局限（必须随件一起读）**：上面的"顺序取前 N"**不是分层抽样**，
+⇒ 样本**偏向靠前轮次与靠前出场角色**；本件只作定性阅读材料，**不作分布推断**。
+
+`msg_uid` 唯一性（去重会不会误删的依据）：`muid = seed:mono_ts`，本函数在导出时实测
+`len(set(msg_uid)) == len(msg_uid)` 并写进 md 与 stdout（不等即 fail-loud：
+同毫秒同角色两次发言会撞 uid，那时"按 uid 排序 + body 去重"就不再等价于"按发言顺序"）。
+
 用法：
     PYTHONPATH=code python3 tools/round1/export_narration_samples.py \
         --log v2/evidence/round1_narration_default_n16r24_s42/run.jsonl \
@@ -104,6 +111,15 @@ def main(argv=None) -> int:
 
     n_paired = sum(1 for r in msgs if PAIRED_RE.search(r["body"]))
 
+    # msg_uid 唯一性（去重与排序都依赖它）：实测并写进产物；不唯一即 fail-loud，不静默继续
+    uids = [r["msg_uid"] for r in msgs]
+    n_uid, n_uid_distinct = len(uids), len(set(uids))
+    if n_uid != n_uid_distinct:
+        dup = sorted({u for u in uids if uids.count(u) > 1})
+        raise SystemExit(f"[export] FAIL: msg_uid 不唯一（{n_uid_distinct}/{n_uid}），"
+                         f"重复值示例={dup[:5]}；本工具的去重/排序口径不再成立，停止导出。")
+    bodies = [r["body"] for r in msgs]
+
     def esc(s) -> str:
         return str(s).replace("|", "\\|").replace("\n", " ")
 
@@ -117,6 +133,11 @@ def main(argv=None) -> int:
         f"- 含成对括号（旁白/动作神态）MSG 数：**{n_paired}**（{n_paired / total:.1%}）"
         if total else "",
         f"- 本文件抽：旁白类 **{len(nar)}** 条 + 纯台词类 **{len(plain)}** 条",
+        f"- `msg_uid` 唯一性实测：**`len(set)= {n_uid_distinct}` == `len = {n_uid}`**（全批无碰撞）"
+        f"；`body` 去重：`len(set)= {len(set(bodies))}` / `len = {len(bodies)}`（本批去重未删掉任何一条）",
+        "",
+        "> **抽样局限**：抽样为确定性顺序取前 N（按 `msg_uid` 序、`body` 首次出现去重），"
+        "**非分层抽样**，故样本偏向靠前轮次与靠前出场角色；结论只作定性阅读材料，**不作分布推断**。",
         "",
         "定位字段说明：`actor`（= `P{id}`） = 说话角色；`R{round}` = 世界回合；`seq` = 事件序号（run.jsonl 内唯一）；"
         "`thread_id` = 对话线程；`turn_index` = 线程内第几轮；`msg_uid` = `seed:mono_ts`（回原始日志用 grep 定位）。",
@@ -156,7 +177,10 @@ def main(argv=None) -> int:
     Path(args.out).write_text("\n".join(l for l in lines if l is not None), encoding="utf-8")
     print(json.dumps({"log": args.log, "out": args.out, "msg_total": total,
                       "paired_total": n_paired, "narration_picked": len(nar),
-                      "plain_picked": len(plain)}, ensure_ascii=False))
+                      "plain_picked": len(plain), "uid_total": n_uid,
+                      "uid_distinct": n_uid_distinct,
+                      "body_total": len(bodies), "body_distinct": len(set(bodies)),
+                      "sampling": "deterministic_prefix_not_stratified"}, ensure_ascii=False))
     return 0
 
 
