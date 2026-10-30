@@ -1,0 +1,553 @@
+{
+ "schema": "d9m.judgement/1",
+ "lexicon": {
+  "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d9n/narration_family_lexicon.json",
+  "sha256": "01e5533870f0f6b43300e6be6422130d958a01497a90d610620916f454489ed0",
+  "lexicon_schema": "d9m-family-lexicon/1.1"
+ },
+ "log": {
+  "path": "v2/evidence/d9n-rot-20261030/run.jsonl",
+  "sha256": "e4fd6db7f863fe2f6bcf6e06753600783ce57505b48a10d5c97247bf5866ece1"
+ },
+ "blocks_total": 202,
+ "msgs_total": 191,
+ "density": 1.057592,
+ "coverage": {
+  "assigned": 71,
+  "blocks_total": 202,
+  "rate": 0.351485
+ },
+ "unassigned_verb_rate": 0.648515,
+ "verb_counts": {
+  "蹭": 24,
+  "搓": 3,
+  "抹": 5,
+  "擦": 3,
+  "拂": 0,
+  "拍": 8,
+  "抿": 0,
+  "揉": 1,
+  "别": 0,
+  "挽": 0,
+  "拢": 4,
+  "让": 0,
+  "靠": 7,
+  "挪": 12,
+  "望": 0,
+  "扇": 0,
+  "撤": 0,
+  "抬": 3,
+  "低": 2,
+  "伸": 2,
+  "侧": 2
+ },
+ "max_v": {
+  "value": 24,
+  "verb": "蹭"
+ },
+ "max_exact_dup": 3,
+ "exact_dup_top": [
+  {
+   "inner": "把算盘珠子拨回原位",
+   "count": 3
+  },
+  {
+   "inner": "蹲在田埂上捏碎一块土坷垃",
+   "count": 2
+  },
+  {
+   "inner": "把手里那半块冷馍掰开又合上",
+   "count": 2
+  },
+  {
+   "inner": "拿刨子推过木料，木花卷起来",
+   "count": 1
+  },
+  {
+   "inner": "吹掉木屑",
+   "count": 1
+  },
+  {
+   "inner": "把沾了面粉的手在围裙上蹭了蹭",
+   "count": 1
+  },
+  {
+   "inner": "把刚裁齐的公文纸角按平",
+   "count": 1
+  },
+  {
+   "inner": "把算盘往石桌上一搁",
+   "count": 1
+  },
+  {
+   "inner": "把压腿的脚尖从把杆上收回来，顺手抹了把额角的汗",
+   "count": 1
+  },
+  {
+   "inner": "把木桩上的沙袋扶正，又拍了拍手上的灰",
+   "count": 1
+  }
+ ],
+ "families_b": [
+  {
+   "family": "拍|手",
+   "total": 8,
+   "by_agent": {
+    "P011": 1,
+    "P016": 3,
+    "P007": 2,
+    "P012": 1,
+    "P001": 1
+   },
+   "n_ge2": 2
+  },
+  {
+   "family": "挪|null",
+   "total": 7,
+   "by_agent": {
+    "P010": 1,
+    "P016": 1,
+    "P004": 1,
+    "P006": 1,
+    "P008": 2,
+    "P007": 1
+   },
+   "n_ge2": 1
+  },
+  {
+   "family": "蹭|手",
+   "total": 7,
+   "by_agent": {
+    "P004": 3,
+    "P001": 1,
+    "P015": 2,
+    "P013": 1
+   },
+   "n_ge2": 2
+  },
+  {
+   "family": "蹭|锉刀",
+   "total": 6,
+   "by_agent": {
+    "P013": 3,
+    "P014": 2,
+    "P002": 1
+   },
+   "n_ge2": 2
+  },
+  {
+   "family": "靠|null",
+   "total": 6,
+   "by_agent": {
+    "P010": 2,
+    "P003": 2,
+    "P005": 1,
+    "P001": 1
+   },
+   "n_ge2": 2
+  },
+  {
+   "family": "蹭|null",
+   "total": 5,
+   "by_agent": {
+    "P010": 1,
+    "P002": 3,
+    "P014": 1
+   },
+   "n_ge2": 1
+  },
+  {
+   "family": "拢|null",
+   "total": 4,
+   "by_agent": {
+    "P002": 1,
+    "P008": 1,
+    "P012": 1,
+    "P016": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "抹|手",
+   "total": 2,
+   "by_agent": {
+    "P010": 1,
+    "P004": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "抹|指腹",
+   "total": 2,
+   "by_agent": {
+    "P008": 1,
+    "P002": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "挪|手",
+   "total": 2,
+   "by_agent": {
+    "P008": 2
+   },
+   "n_ge2": 1
+  },
+  {
+   "family": "搓|手",
+   "total": 2,
+   "by_agent": {
+    "P009": 1,
+    "P013": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "擦|手",
+   "total": 2,
+   "by_agent": {
+    "P004": 1,
+    "P015": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "蹭|手背",
+   "total": 2,
+   "by_agent": {
+    "P003": 1,
+    "P015": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "伸|手",
+   "total": 1,
+   "by_agent": {
+    "P011": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "低|null",
+   "total": 1,
+   "by_agent": {
+    "P011": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "侧|null",
+   "total": 1,
+   "by_agent": {
+    "P004": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "抬|null",
+   "total": 1,
+   "by_agent": {
+    "P001": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "抬|锉刀",
+   "total": 1,
+   "by_agent": {
+    "P014": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "抹|null",
+   "total": 1,
+   "by_agent": {
+    "P016": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "挪|碗",
+   "total": 1,
+   "by_agent": {
+    "P015": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "挪|竹篮",
+   "total": 1,
+   "by_agent": {
+    "P012": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "揉|null",
+   "total": 1,
+   "by_agent": {
+    "P011": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "搓|指腹",
+   "total": 1,
+   "by_agent": {
+    "P005": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "擦|null",
+   "total": 1,
+   "by_agent": {
+    "P005": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "蹭|围裙",
+   "total": 1,
+   "by_agent": {
+    "P015": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "蹭|指头",
+   "total": 1,
+   "by_agent": {
+    "P014": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "蹭|指腹",
+   "total": 1,
+   "by_agent": {
+    "P014": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "蹭|袖口",
+   "total": 1,
+   "by_agent": {
+    "P008": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "靠|手指",
+   "total": 1,
+   "by_agent": {
+    "P010": 1
+   },
+   "n_ge2": 0
+  }
+ ],
+ "b1": {
+  "max": {
+   "family": "蹭|null",
+   "agent": "P002",
+   "count": 3,
+   "total": 5,
+   "share": 0.6
+  },
+  "offenders": [
+   {
+    "family": "蹭|手",
+    "agent": "P004",
+    "count": 3,
+    "total": 7,
+    "share": 0.428571
+   },
+   {
+    "family": "拍|手",
+    "agent": "P016",
+    "count": 3,
+    "total": 8,
+    "share": 0.375
+   },
+   {
+    "family": "蹭|null",
+    "agent": "P002",
+    "count": 3,
+    "total": 5,
+    "share": 0.6
+   },
+   {
+    "family": "蹭|锉刀",
+    "agent": "P013",
+    "count": 3,
+    "total": 6,
+    "share": 0.5
+   }
+  ]
+ },
+ "b2p": {
+  "offenders": [
+   {
+    "family": "拍|手",
+    "total": 8,
+    "n_ge2": 2,
+    "by_agent": {
+     "P011": 1,
+     "P016": 3,
+     "P007": 2,
+     "P012": 1,
+     "P001": 1
+    }
+   },
+   {
+    "family": "拢|null",
+    "total": 4,
+    "n_ge2": 0,
+    "by_agent": {
+     "P002": 1,
+     "P008": 1,
+     "P012": 1,
+     "P016": 1
+    }
+   },
+   {
+    "family": "挪|null",
+    "total": 7,
+    "n_ge2": 1,
+    "by_agent": {
+     "P010": 1,
+     "P016": 1,
+     "P004": 1,
+     "P006": 1,
+     "P008": 2,
+     "P007": 1
+    }
+   },
+   {
+    "family": "蹭|null",
+    "total": 5,
+    "n_ge2": 1,
+    "by_agent": {
+     "P010": 1,
+     "P002": 3,
+     "P014": 1
+    }
+   },
+   {
+    "family": "蹭|手",
+    "total": 7,
+    "n_ge2": 2,
+    "by_agent": {
+     "P004": 3,
+     "P001": 1,
+     "P015": 2,
+     "P013": 1
+    }
+   },
+   {
+    "family": "蹭|锉刀",
+    "total": 6,
+    "n_ge2": 2,
+    "by_agent": {
+     "P013": 3,
+     "P014": 2,
+     "P002": 1
+    }
+   },
+   {
+    "family": "靠|null",
+    "total": 6,
+    "n_ge2": 2,
+    "by_agent": {
+     "P010": 2,
+     "P003": 2,
+     "P005": 1,
+     "P001": 1
+    }
+   }
+  ]
+ },
+ "e_dist": {
+  "0": 9,
+  "1": 163,
+  "2": 18,
+  "3": 1
+ },
+ "max_k": 3,
+ "a_caliber_diagnostic_top": [
+  {
+   "family_literal": "蹭|手",
+   "count": 9
+  },
+  {
+   "family_literal": "蹭|围裙",
+   "count": 8
+  },
+  {
+   "family_literal": "拍|手",
+   "count": 8
+  },
+  {
+   "family_literal": "蹭|锉刀",
+   "count": 7
+  },
+  {
+   "family_literal": "挪|手",
+   "count": 3
+  },
+  {
+   "family_literal": "抹|手",
+   "count": 2
+  },
+  {
+   "family_literal": "拍|围裙",
+   "count": 2
+  },
+  {
+   "family_literal": "抹|指腹",
+   "count": 2
+  },
+  {
+   "family_literal": "擦|手",
+   "count": 2
+  },
+  {
+   "family_literal": "擦|围裙",
+   "count": 2
+  }
+ ],
+ "guards": {
+  "sample_ok": true,
+  "coverage_ok": true,
+  "coverage_threshold_abs": 0.193171,
+  "unassigned_ok": true,
+  "unassigned_threshold_abs": 0.778049
+ },
+ "verdicts": {
+  "a_exact_dup": "失败",
+  "b1_share": "失败",
+  "b2p": "失败",
+  "c1_density": "成立",
+  "c2_bite": "不可判",
+  "d_max_v": "失败",
+  "e_max_k": "失败"
+ },
+ "verdict_basis": {
+  "c2_bite": "咬合率无文字化判据 + 无冻结实现 ⇒ 本轮恒为不可判（主件 §4.4）",
+  "b1_share": "本轮降级为辅助读数：n 小、口径敏感（主件 §4.3）"
+ },
+ "samples_unassigned": [
+  "拿刨子推过木料，木花卷起来",
+  "吹掉木屑",
+  "把刚裁齐的公文纸角按平",
+  "把算盘往石桌上一搁",
+  "手里捏着半截没编完的竹篮，往兰姐跟前凑了凑",
+  "把竹篮递过去",
+  "把烧红的锄头翻了个面，锤子敲了两下",
+  "把灶上那锅萝卜牛腩转成小火，拿筷子戳了戳肉块"
+ ],
+ "arm": "A_ONLY_ROT"
+}

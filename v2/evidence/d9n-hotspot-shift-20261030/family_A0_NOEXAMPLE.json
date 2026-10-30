@@ -1,0 +1,952 @@
+{
+ "schema": "d9m.judgement/1",
+ "lexicon": {
+  "path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d9n/narration_family_lexicon.json",
+  "sha256": "01e5533870f0f6b43300e6be6422130d958a01497a90d610620916f454489ed0",
+  "lexicon_schema": "d9m-family-lexicon/1.1"
+ },
+ "log": {
+  "path": "v2/evidence/run_d2_after_n16_seed42/run.jsonl",
+  "sha256": "643f13a528c288d3e9677cb8ac100139224afbd0b46c0f7da0c3a5ed85b13141"
+ },
+ "blocks_total": 633,
+ "msgs_total": 686,
+ "density": 0.922741,
+ "coverage": {
+  "assigned": 269,
+  "blocks_total": 633,
+  "rate": 0.424961
+ },
+ "unassigned_verb_rate": 0.575039,
+ "verb_counts": {
+  "蹭": 10,
+  "搓": 49,
+  "抹": 7,
+  "擦": 18,
+  "拂": 0,
+  "拍": 19,
+  "抿": 3,
+  "揉": 38,
+  "别": 0,
+  "挽": 0,
+  "拢": 2,
+  "让": 1,
+  "靠": 7,
+  "挪": 13,
+  "望": 11,
+  "扇": 2,
+  "撤": 0,
+  "抬": 39,
+  "低": 73,
+  "伸": 4,
+  "侧": 1
+ },
+ "max_v": {
+  "value": 73,
+  "verb": "低"
+ },
+ "max_exact_dup": 12,
+ "exact_dup_top": [
+  {
+   "inner": "压低声音",
+   "count": 12
+  },
+  {
+   "inner": "把铁锤往砧上一搁",
+   "count": 10
+  },
+  {
+   "inner": "笑着摆手",
+   "count": 6
+  },
+  {
+   "inner": "眼睛一亮",
+   "count": 6
+  },
+  {
+   "inner": "整理药柜时停下手，望着窗外",
+   "count": 5
+  },
+  {
+   "inner": "搓了搓手",
+   "count": 5
+  },
+  {
+   "inner": "一边揉着面团，一边朝窗外望了望",
+   "count": 4
+  },
+  {
+   "inner": "刨子没停",
+   "count": 4
+  },
+  {
+   "inner": "搓了搓手上的泥",
+   "count": 4
+  },
+  {
+   "inner": "手上刨子没停",
+   "count": 4
+  }
+ ],
+ "families_b": [
+  {
+   "family": "低|null",
+   "total": 51,
+   "by_agent": {
+    "P002": 6,
+    "P008": 8,
+    "P007": 6,
+    "P001": 2,
+    "P012": 1,
+    "P004": 3,
+    "P015": 3,
+    "P010": 5,
+    "P006": 6,
+    "P013": 1,
+    "P003": 3,
+    "P014": 4,
+    "P009": 2,
+    "P016": 1
+   },
+   "n_ge2": 11
+  },
+  {
+   "family": "搓|手",
+   "total": 42,
+   "by_agent": {
+    "P007": 18,
+    "P001": 9,
+    "P003": 7,
+    "P002": 2,
+    "P013": 2,
+    "P014": 1,
+    "P012": 2,
+    "P015": 1
+   },
+   "n_ge2": 6
+  },
+  {
+   "family": "揉|null",
+   "total": 36,
+   "by_agent": {
+    "P010": 4,
+    "P011": 8,
+    "P012": 1,
+    "P014": 2,
+    "P002": 1,
+    "P006": 7,
+    "P007": 2,
+    "P016": 2,
+    "P005": 1,
+    "P009": 4,
+    "P004": 4
+   },
+   "n_ge2": 8
+  },
+  {
+   "family": "抬|null",
+   "total": 27,
+   "by_agent": {
+    "P001": 2,
+    "P016": 5,
+    "P008": 3,
+    "P009": 1,
+    "P005": 5,
+    "P002": 8,
+    "P013": 1,
+    "P003": 2
+   },
+   "n_ge2": 6
+  },
+  {
+   "family": "擦|手",
+   "total": 12,
+   "by_agent": {
+    "P004": 6,
+    "P012": 2,
+    "P016": 1,
+    "P015": 3
+   },
+   "n_ge2": 3
+  },
+  {
+   "family": "挪|null",
+   "total": 11,
+   "by_agent": {
+    "P005": 2,
+    "P007": 1,
+    "P016": 1,
+    "P010": 5,
+    "P006": 2
+   },
+   "n_ge2": 3
+  },
+  {
+   "family": "抬|手",
+   "total": 10,
+   "by_agent": {
+    "P005": 1,
+    "P002": 2,
+    "P016": 7
+   },
+   "n_ge2": 2
+  },
+  {
+   "family": "拍|null",
+   "total": 10,
+   "by_agent": {
+    "P015": 2,
+    "P012": 4,
+    "P016": 2,
+    "P007": 1,
+    "P014": 1
+   },
+   "n_ge2": 3
+  },
+  {
+   "family": "蹭|手",
+   "total": 8,
+   "by_agent": {
+    "P002": 3,
+    "P004": 2,
+    "P001": 1,
+    "P013": 2
+   },
+   "n_ge2": 3
+  },
+  {
+   "family": "抹|null",
+   "total": 6,
+   "by_agent": {
+    "P013": 4,
+    "P016": 1,
+    "P001": 1
+   },
+   "n_ge2": 1
+  },
+  {
+   "family": "拍|手",
+   "total": 6,
+   "by_agent": {
+    "P013": 1,
+    "P002": 2,
+    "P012": 1,
+    "P004": 2
+   },
+   "n_ge2": 2
+  },
+  {
+   "family": "擦|null",
+   "total": 6,
+   "by_agent": {
+    "P001": 3,
+    "P012": 1,
+    "P005": 2
+   },
+   "n_ge2": 2
+  },
+  {
+   "family": "望|手",
+   "total": 5,
+   "by_agent": {
+    "P005": 5
+   },
+   "n_ge2": 1
+  },
+  {
+   "family": "靠|null",
+   "total": 4,
+   "by_agent": {
+    "P010": 4
+   },
+   "n_ge2": 1
+  },
+  {
+   "family": "搓|null",
+   "total": 3,
+   "by_agent": {
+    "P003": 3
+   },
+   "n_ge2": 1
+  },
+  {
+   "family": "搓|围裙",
+   "total": 3,
+   "by_agent": {
+    "P012": 2,
+    "P003": 1
+   },
+   "n_ge2": 1
+  },
+  {
+   "family": "靠|手指",
+   "total": 3,
+   "by_agent": {
+    "P010": 3
+   },
+   "n_ge2": 1
+  },
+  {
+   "family": "伸|手",
+   "total": 2,
+   "by_agent": {
+    "P013": 1,
+    "P006": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "低|手指",
+   "total": 2,
+   "by_agent": {
+    "P008": 1,
+    "P010": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "扇|手",
+   "total": 2,
+   "by_agent": {
+    "P012": 2
+   },
+   "n_ge2": 1
+  },
+  {
+   "family": "抿|null",
+   "total": 2,
+   "by_agent": {
+    "P006": 1,
+    "P012": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "拍|手背",
+   "total": 2,
+   "by_agent": {
+    "P016": 1,
+    "P012": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "揉|手",
+   "total": 2,
+   "by_agent": {
+    "P004": 1,
+    "P015": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "望|null",
+   "total": 2,
+   "by_agent": {
+    "P012": 2
+   },
+   "n_ge2": 1
+  },
+  {
+   "family": "低|木屑",
+   "total": 1,
+   "by_agent": {
+    "P002": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "抬|手指",
+   "total": 1,
+   "by_agent": {
+    "P016": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "抹|壶",
+   "total": 1,
+   "by_agent": {
+    "P013": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "抿|碗",
+   "total": 1,
+   "by_agent": {
+    "P002": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "拍|围裙",
+   "total": 1,
+   "by_agent": {
+    "P004": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "拢|null",
+   "total": 1,
+   "by_agent": {
+    "P016": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "拢|手",
+   "total": 1,
+   "by_agent": {
+    "P012": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "挪|手",
+   "total": 1,
+   "by_agent": {
+    "P007": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "搓|木屑",
+   "total": 1,
+   "by_agent": {
+    "P002": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "让|手",
+   "total": 1,
+   "by_agent": {
+    "P015": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "蹭|null",
+   "total": 1,
+   "by_agent": {
+    "P002": 1
+   },
+   "n_ge2": 0
+  },
+  {
+   "family": "蹭|手背",
+   "total": 1,
+   "by_agent": {
+    "P013": 1
+   },
+   "n_ge2": 0
+  }
+ ],
+ "b1": {
+  "max": {
+   "family": "望|手",
+   "agent": "P005",
+   "count": 5,
+   "total": 5,
+   "share": 1.0
+  },
+  "offenders": [
+   {
+    "family": "擦|手",
+    "agent": "P004",
+    "count": 6,
+    "total": 12,
+    "share": 0.5
+   },
+   {
+    "family": "擦|手",
+    "agent": "P015",
+    "count": 3,
+    "total": 12,
+    "share": 0.25
+   },
+   {
+    "family": "挪|null",
+    "agent": "P010",
+    "count": 5,
+    "total": 11,
+    "share": 0.454545
+   },
+   {
+    "family": "抬|null",
+    "agent": "P016",
+    "count": 5,
+    "total": 27,
+    "share": 0.185185
+   },
+   {
+    "family": "抬|null",
+    "agent": "P008",
+    "count": 3,
+    "total": 27,
+    "share": 0.111111
+   },
+   {
+    "family": "抬|null",
+    "agent": "P005",
+    "count": 5,
+    "total": 27,
+    "share": 0.185185
+   },
+   {
+    "family": "抬|null",
+    "agent": "P002",
+    "count": 8,
+    "total": 27,
+    "share": 0.296296
+   },
+   {
+    "family": "低|null",
+    "agent": "P002",
+    "count": 6,
+    "total": 51,
+    "share": 0.117647
+   },
+   {
+    "family": "低|null",
+    "agent": "P008",
+    "count": 8,
+    "total": 51,
+    "share": 0.156863
+   },
+   {
+    "family": "低|null",
+    "agent": "P007",
+    "count": 6,
+    "total": 51,
+    "share": 0.117647
+   },
+   {
+    "family": "低|null",
+    "agent": "P004",
+    "count": 3,
+    "total": 51,
+    "share": 0.058824
+   },
+   {
+    "family": "低|null",
+    "agent": "P015",
+    "count": 3,
+    "total": 51,
+    "share": 0.058824
+   },
+   {
+    "family": "低|null",
+    "agent": "P010",
+    "count": 5,
+    "total": 51,
+    "share": 0.098039
+   },
+   {
+    "family": "低|null",
+    "agent": "P006",
+    "count": 6,
+    "total": 51,
+    "share": 0.117647
+   },
+   {
+    "family": "低|null",
+    "agent": "P003",
+    "count": 3,
+    "total": 51,
+    "share": 0.058824
+   },
+   {
+    "family": "低|null",
+    "agent": "P014",
+    "count": 4,
+    "total": 51,
+    "share": 0.078431
+   },
+   {
+    "family": "搓|手",
+    "agent": "P007",
+    "count": 18,
+    "total": 42,
+    "share": 0.428571
+   },
+   {
+    "family": "搓|手",
+    "agent": "P001",
+    "count": 9,
+    "total": 42,
+    "share": 0.214286
+   },
+   {
+    "family": "搓|手",
+    "agent": "P003",
+    "count": 7,
+    "total": 42,
+    "share": 0.166667
+   },
+   {
+    "family": "抬|手",
+    "agent": "P016",
+    "count": 7,
+    "total": 10,
+    "share": 0.7
+   },
+   {
+    "family": "拍|null",
+    "agent": "P012",
+    "count": 4,
+    "total": 10,
+    "share": 0.4
+   },
+   {
+    "family": "蹭|手",
+    "agent": "P002",
+    "count": 3,
+    "total": 8,
+    "share": 0.375
+   },
+   {
+    "family": "擦|null",
+    "agent": "P001",
+    "count": 3,
+    "total": 6,
+    "share": 0.5
+   },
+   {
+    "family": "揉|null",
+    "agent": "P010",
+    "count": 4,
+    "total": 36,
+    "share": 0.111111
+   },
+   {
+    "family": "揉|null",
+    "agent": "P011",
+    "count": 8,
+    "total": 36,
+    "share": 0.222222
+   },
+   {
+    "family": "揉|null",
+    "agent": "P006",
+    "count": 7,
+    "total": 36,
+    "share": 0.194444
+   },
+   {
+    "family": "揉|null",
+    "agent": "P009",
+    "count": 4,
+    "total": 36,
+    "share": 0.111111
+   },
+   {
+    "family": "揉|null",
+    "agent": "P004",
+    "count": 4,
+    "total": 36,
+    "share": 0.111111
+   },
+   {
+    "family": "望|手",
+    "agent": "P005",
+    "count": 5,
+    "total": 5,
+    "share": 1.0
+   },
+   {
+    "family": "靠|null",
+    "agent": "P010",
+    "count": 4,
+    "total": 4,
+    "share": 1.0
+   },
+   {
+    "family": "抹|null",
+    "agent": "P013",
+    "count": 4,
+    "total": 6,
+    "share": 0.666667
+   },
+   {
+    "family": "靠|手指",
+    "agent": "P010",
+    "count": 3,
+    "total": 3,
+    "share": 1.0
+   },
+   {
+    "family": "搓|围裙",
+    "agent": "P012",
+    "count": 2,
+    "total": 3,
+    "share": 0.666667
+   },
+   {
+    "family": "搓|null",
+    "agent": "P003",
+    "count": 3,
+    "total": 3,
+    "share": 1.0
+   }
+  ]
+ },
+ "b2p": {
+  "offenders": [
+   {
+    "family": "低|null",
+    "total": 51,
+    "n_ge2": 11,
+    "by_agent": {
+     "P002": 6,
+     "P008": 8,
+     "P007": 6,
+     "P001": 2,
+     "P012": 1,
+     "P004": 3,
+     "P015": 3,
+     "P010": 5,
+     "P006": 6,
+     "P013": 1,
+     "P003": 3,
+     "P014": 4,
+     "P009": 2,
+     "P016": 1
+    }
+   },
+   {
+    "family": "抬|null",
+    "total": 27,
+    "n_ge2": 6,
+    "by_agent": {
+     "P001": 2,
+     "P016": 5,
+     "P008": 3,
+     "P009": 1,
+     "P005": 5,
+     "P002": 8,
+     "P013": 1,
+     "P003": 2
+    }
+   },
+   {
+    "family": "抬|手",
+    "total": 10,
+    "n_ge2": 2,
+    "by_agent": {
+     "P005": 1,
+     "P002": 2,
+     "P016": 7
+    }
+   },
+   {
+    "family": "抹|null",
+    "total": 6,
+    "n_ge2": 1,
+    "by_agent": {
+     "P013": 4,
+     "P016": 1,
+     "P001": 1
+    }
+   },
+   {
+    "family": "拍|null",
+    "total": 10,
+    "n_ge2": 3,
+    "by_agent": {
+     "P015": 2,
+     "P012": 4,
+     "P016": 2,
+     "P007": 1,
+     "P014": 1
+    }
+   },
+   {
+    "family": "拍|手",
+    "total": 6,
+    "n_ge2": 2,
+    "by_agent": {
+     "P013": 1,
+     "P002": 2,
+     "P012": 1,
+     "P004": 2
+    }
+   },
+   {
+    "family": "挪|null",
+    "total": 11,
+    "n_ge2": 3,
+    "by_agent": {
+     "P005": 2,
+     "P007": 1,
+     "P016": 1,
+     "P010": 5,
+     "P006": 2
+    }
+   },
+   {
+    "family": "揉|null",
+    "total": 36,
+    "n_ge2": 8,
+    "by_agent": {
+     "P010": 4,
+     "P011": 8,
+     "P012": 1,
+     "P014": 2,
+     "P002": 1,
+     "P006": 7,
+     "P007": 2,
+     "P016": 2,
+     "P005": 1,
+     "P009": 4,
+     "P004": 4
+    }
+   },
+   {
+    "family": "搓|手",
+    "total": 42,
+    "n_ge2": 6,
+    "by_agent": {
+     "P007": 18,
+     "P001": 9,
+     "P003": 7,
+     "P002": 2,
+     "P013": 2,
+     "P014": 1,
+     "P012": 2,
+     "P015": 1
+    }
+   },
+   {
+    "family": "擦|null",
+    "total": 6,
+    "n_ge2": 2,
+    "by_agent": {
+     "P001": 3,
+     "P012": 1,
+     "P005": 2
+    }
+   },
+   {
+    "family": "擦|手",
+    "total": 12,
+    "n_ge2": 3,
+    "by_agent": {
+     "P004": 6,
+     "P012": 2,
+     "P016": 1,
+     "P015": 3
+    }
+   },
+   {
+    "family": "望|手",
+    "total": 5,
+    "n_ge2": 1,
+    "by_agent": {
+     "P005": 5
+    }
+   },
+   {
+    "family": "蹭|手",
+    "total": 8,
+    "n_ge2": 3,
+    "by_agent": {
+     "P002": 3,
+     "P004": 2,
+     "P001": 1,
+     "P013": 2
+    }
+   },
+   {
+    "family": "靠|null",
+    "total": 4,
+    "n_ge2": 1,
+    "by_agent": {
+     "P010": 4
+    }
+   }
+  ]
+ },
+ "e_dist": {
+  "0": 96,
+  "1": 548,
+  "2": 41,
+  "3": 1
+ },
+ "max_k": 3,
+ "a_caliber_diagnostic_top": [
+  {
+   "family_literal": "搓|手",
+   "count": 42
+  },
+  {
+   "family_literal": "擦|手",
+   "count": 12
+  },
+  {
+   "family_literal": "低|手",
+   "count": 12
+  },
+  {
+   "family_literal": "擦|围裙",
+   "count": 11
+  },
+  {
+   "family_literal": "抬|手",
+   "count": 11
+  },
+  {
+   "family_literal": "蹭|手",
+   "count": 9
+  },
+  {
+   "family_literal": "拍|手",
+   "count": 8
+  },
+  {
+   "family_literal": "蹭|围裙",
+   "count": 7
+  },
+  {
+   "family_literal": "望|手",
+   "count": 5
+  },
+  {
+   "family_literal": "伸|手",
+   "count": 4
+  }
+ ],
+ "guards": {
+  "sample_ok": true,
+  "coverage_ok": true,
+  "coverage_threshold_abs": 0.193171,
+  "unassigned_ok": true,
+  "unassigned_threshold_abs": 0.778049
+ },
+ "verdicts": {
+  "a_exact_dup": "失败",
+  "b1_share": "失败",
+  "b2p": "失败",
+  "c1_density": "失败",
+  "c2_bite": "不可判",
+  "d_max_v": "失败",
+  "e_max_k": "失败"
+ },
+ "verdict_basis": {
+  "c2_bite": "咬合率无文字化判据 + 无冻结实现 ⇒ 本轮恒为不可判（主件 §4.4）",
+  "b1_share": "本轮降级为辅助读数：n 小、口径敏感（主件 §4.3）"
+ },
+ "samples_unassigned": [
+  "刨子推过木料，卷起薄薄一层刨花",
+  "整理着药柜，自言自语",
+  "拨着算盘",
+  "调整着吉他背带，语气随意",
+  "独自抡锤，节奏平稳",
+  "掂了掂手里的木刀",
+  "把摊布往边上一撩，冲陈医扬了扬下巴",
+  "接过糕点，咬了一口"
+ ],
+ "arm": "A0_NOEXAMPLE"
+}
