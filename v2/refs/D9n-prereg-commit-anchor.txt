@@ -10,3 +10,17 @@ branch=feat/life-narration-rotation
 base_commit=d2a6fa99b7eb978185a965b3f5c77675a7533498
 rationale=与并行线 v2/refs/D9m-prereg-narration-action-diversity.md（master 0938f14）编号冲突，仅改名，内容未改（sha256 前后一致）
 note=本文件为外部锚定回执，不修改冻结件正文；冻结件内容 sha256 即上列 prereg_sha256
+
+# ---- 追加 2026-10-30 08:25（exp-designer）：判据增补件入 git 留痕 ----
+prereg_amendments_commit=5a9b5a2bbc22d31f035293c5738b34c168b2f919
+amendments_commit_committer_time=$(date -d @$(git show -s --format=%ct 5a9b5a2) '+%Y-%m-%dT%H:%M:%S%z')
+note_amendments=NUMBERS: 01=seed/guards/renumbering/six-criteria; 02=guard-thresholds(原D9m-AM-01); 03=family-lexicon(原D9m-AM-02); 04=d9j-provenance(原D9m-AM-1); 05=paths-and-renames
+sha256[D9n-prereg-amendment-01.md]=3b055ffa518e07e61375d2f2b0c1c9259c4ec47d21f8fdd46100a4afc602bbd9
+sha256[D9n-prereg-amendment-02-guard-thresholds.md]=401617edc2bbb5dcb04e8291df30e8df315200bd9af676146a4108b959988095
+sha256[D9n-prereg-amendment-03-family-lexicon.md]=fa5af47dc53f8a272dde9238b741db67a69fa9ac00537ad8bf6cb944862898cf
+sha256[D9n-prereg-amendment-04-d9j-provenance.md]=1cc362c2be1705e8a8b424b348c13119685fd4c469caa8ee4bdd5e64e11896d5
+sha256[D9n-prereg-amendment-05-paths-and-renames.md]=5c465b0e83acc5766a6cb63ac2a45031095fa66dfb468c823ccb3a2f108252d9
+sha256[tools/d9n/narration_family_lexicon.json]=9a87ebb5ee80bb8d991d2c54e1562e312810ed23f1081141e30b98b3f9933edd
+note_lexicon_path=tools/d9m/ -> tools/d9n/ （内容字节不变，sha256 同上）
+note_main_file=主件 D9n-prereg-narration-example-rotation.md 内容 sha256 仍 0d10450232b04327fe7980ddbaa68b694fba9b1b827b433b5b54b5d7c1b06643（未改一字；内文残留 D9m 编号 8 处 / tools/d9m 路径 7 处，映射见增补 05）
+note_rename_sha_invariance=改名前=改名后：02=401617ed / 03=fa5af47d / 04=1cc362c2 / lexicon=9a87ebb5 全部逐字节相同
