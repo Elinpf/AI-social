@@ -32,7 +32,18 @@ line 34: /proc/3455477/environ: No such file or directory
 **引用纪律（写死，以后所有件适用）**：
 > 「`SYNTAX=1` 仅在 `launch_cmd.txt` / `meta.json` 有记录；`switch_proof` 缺失 ⇒ **单变量未自证**，**不得写"开关已自证"**。」
 
-⇒ 本判定的"单变量"依据只剩 `meta.json`（`code_sha=05526e0d`、`provider=openai_compat`、`started 14:10:39 / finished 14:16:05`）+ `arm_config_guard SAME_CONFIG`（比的是 `code_sha`，**不含 env**）。**因此本判定只能记「方向性判定」，不得作为最终结论**；最终结论须待重跑臂的完整取证。
+> 上句只对**旧 ON 臂（14:10，`switch_proof` 213 B 已损坏）**成立。
+
+**记录臂已补齐物证（`repro-verifier` 复核）**：`d9s-syntax-off` 与 `d9s-on2` **两侧 `switch_proof.txt` 都在**，且都是**原始 `/proc/<pid>/environ`**（679 B / 672 B，12 行，含 bash 段 + python child 段）：
+
+| 键 | OFF_run1 | ON2 |
+|---|---|---|
+| `LIFE_PROMPT_NARRATION_SYNTAX` | **0** | **1** |
+| `NARRATION` / `ROTATION` / `ACTION` / `HITT_LLM_PROVIDER` | 1 / 1 / 1 / `openai_compat` | **逐字相同** |
+
+加上已核的 `git diff --stat -- code/` **为空**（`05526e0d` 与 `f2b3230d` 的 `agent.py` 同 sha `233cd608…`）⇒ **单变量在 env 与代码两侧均成立，且有执行层物证。**
+
+⇒ **因此本判定升为「可作最终结论」**（不再只是方向性）；仍保留的限定见 §7（单 seed、r24、抖动不可测）。
 
 ## 2. 主表 → **见 §3.1**（旧表已删除，避免两套判法并存）
 
@@ -87,7 +98,7 @@ line 34: /proc/3455477/environ: No such file or directory
 
 ## 3.5 ON2 缺 `meta.json` —— 是「缺件」，不是「不可比」
 
-`v2/evidence/d9s-on2_n16r24_s42/` 实测只有 `launch_cmd.txt / run.jsonl / run_batch.log / switch_proof.txt`，**无 `meta.json`**（`run_batch.sh` 未写）。
+**两侧记录臂均无 `meta.json`**：`d9s-syntax-off_n16r24_s42/` 与 `d9s-on2_n16r24_s42/` 实测都只有 `launch_cmd.txt / run.jsonl / run_batch.log / switch_proof.txt`（`run_batch.sh` 未写）。⇒ **不存在"OFF 侧有 meta 可作收尾标记"这回事**（此前只写 ON2，易被误读）。
 
 **两句定稿（可直接引用）**：
 > ① `d9s-on2` **缺 `meta.json`** ⇒ 其「跑完」只能由 `run.jsonl` 末行、文件大小（15022975 B）与 183 MSG 判断，**无官方收尾标记**；按 `repro-verifier` 口径记 **`CANNOT-VERIFY（缺件）`**。
@@ -157,6 +168,6 @@ line 34: /proc/3455477/environ: No such file or directory
 ## 7. 边界
 
 1. **单 seed、n=183（两侧一致）**：`①` 的效应（−63.19pp）远超噪声——**但本线抖动"不可测"（§3.3）**，只能按保守上界 3.17pp 折算 = **19.9×**；`H/log₂6` 的 +10.5pp ÷ 3.17 = **3.3×**。其余指标须谨慎。
-2. **ON 臂 env 取证被覆盖** ⇒ 单变量性只由 `meta.json` + `arm_config_guard` 支持，**不完整**。
+2. **单变量已自证**（两侧原始 `/proc` switch_proof + `code/` 零 diff，见上文）。**但两侧记录臂均缺 `meta.json`** ⇒ "是否正常收尾"仍无官方标记（`CANNOT-VERIFY（缺件）`）；这是**缺件**，不是单变量问题。
 3. **两臂 `run.jsonl` 已入库**（`118eaf3`）⇒ 本件数据**任何人可复算**（`git cat-file -e` 通过）。
 4. **未跑 r84**：本件是步骤 1（r24），只判方向与护栏；**绝对阈值判定留待 r84**。
