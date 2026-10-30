@@ -19,7 +19,18 @@
 | env 差 | `SYNTAX=0` | `SYNTAX=1` |
 | `arm_config_guard` | — | **SAME_CONFIG** ✔ |
 
-⚠ **取证缺口（必须同屏）**：ON 臂的 `switch_proof.txt` / `launch_cmd.txt` / `run_batch.log` 在 14:40 被一次**被 preflight 拦下的重复启动覆盖**（`dialogue-core-dev` 已自报），现存 `switch_proof.txt` 仅 213 B，**不是原始 `/proc` 取证**。⇒ 本判定的"单变量"依据只剩 `meta.json`（`code_sha=05526e0d`、`provider=openai_compat`、`started 14:10:39 / finished 14:16:05`）+ `arm_config_guard SAME_CONFIG`。**这一条使本判定只能记「方向性判定」，不得作为最终结论。**
+⚠ **取证缺口（必须同屏，`repro-verifier` 已复核）**：ON 臂的 `switch_proof.txt` / `launch_cmd.txt` / `run_batch.log` 在 14:40 被一次**被 preflight 拦下的重复启动覆盖**。现存 `switch_proof.txt` 仅 **213 B**，内容为：
+```
+captured_at …
+line 34: /proc/3455477/environ: No such file or directory
+(bash environ 取不到)
+```
+⇒ **不是执行层取证**（`/proc` 已取不到），`arm_config_guard` 的 env 维度应为 **`CANNOT-VERIFY`**。
+
+**引用纪律（写死，以后所有件适用）**：
+> 「`SYNTAX=1` 仅在 `launch_cmd.txt` / `meta.json` 有记录；`switch_proof` 缺失 ⇒ **单变量未自证**，**不得写"开关已自证"**。」
+
+⇒ 本判定的"单变量"依据只剩 `meta.json`（`code_sha=05526e0d`、`provider=openai_compat`、`started 14:10:39 / finished 14:16:05`）+ `arm_config_guard SAME_CONFIG`（比的是 `code_sha`，**不含 env**）。**因此本判定只能记「方向性判定」，不得作为最终结论**；最终结论须待重跑臂的完整取证。
 
 ## 2. 主表（冻结仪器 `tools/d9s/syntax_shape.py` sha `ca545723…`）
 
@@ -43,7 +54,8 @@
 | `(b2′)` 违例族 | 5 | 0 | −5 |
 | `max_v`（蹭） | 15 | 5 | −10 |
 
-**⚠ 来源标注（必须同屏）**：表中 `(d2)`、`(e) max_k`、`(b2′)`、`max_v` 四项**由 `dialogue-core-dev` 用 `assign_family` 报出，本件未独立重算**（六类那半边是我用冻结仪器 `syntax_shape.py` 自己跑的）。⇒ **护栏 2 / 护栏 3 的判定依赖这 4 个数**，请 `repro-verifier` 独立核；若不符，本节护栏结论须改，但**主判据 ① 与判据 2 不受影响**（它们出自仪器直读）。
+**来源说明（已闭合）**：表中 `(d2)`、`(e) max_k`、`(b2′)`、`max_v` 四项原由 `dialogue-core-dev` 用 `assign_family` 报出；**`repro-verifier` 已独立重算，四项全部一致**（`(d2)=7`：伸5/蹭4/揉2/挪2/抹1/拢1；`max_k=7`；`(b2′)=0`；`max_v=5`（伸））⇒ **护栏 2/3 确实不过，"不通过"不依赖未核数**。
+六类那半边（①/③/`H/log₂6`/密度/`n_nonempty`/`c3a`）由我用冻结仪器 `syntax_shape.py` 跑出，`repro-verifier` 亦逐项复算一致（① 14.7368%、`H/log₂6` 0.567913、密度 0.9948、③ 130/190=68.42%）。
 
 ## 3. 判定（按预登记 v8 四条同看）
 
