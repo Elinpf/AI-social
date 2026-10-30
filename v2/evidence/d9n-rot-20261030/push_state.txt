@@ -65,3 +65,14 @@ our_commits_on_remote=accad13(在) 22f166a(在) 5af48e6(在)   # 作为远端尖
 decision_B_feasible=no   # 若不 force-push（把远端 ref 回退到 5af48e6）则无法实现「远端只含我方提交」
 force_push_performed=no  # 明确未执行：回退远端 ref 属历史改写，禁止
 push_final=我方受审提交已在 origin（作为 db808ea 的祖先链）；但我们并未自行推送，且远端尖端含非本团队提交 db808ea —— 该状态由他方推送造成，非本团队动作
+
+## 追加（最终推送结果，2026-10-30T08:53:24+08:00）
+pushC_cmd=timeout 60 git push origin 9e1398b:refs/heads/feat/life-narration-rotation
+pushC_rc=0
+pushC_output=db808ea..9e1398b  9e1398b -> feat/life-narration-rotation   （fast-forward，无 force）
+lsremote_cmd=timeout 25 git ls-remote --heads origin feat/life-narration-rotation
+lsremote_rc=0
+remote_sha_now=9e1398b4d26714cc13397ebe32df5d1d193674c2
+push_final=已推送（远端 sha=9e1398b4d26714cc13397ebe32df5d1d193674c2；本地受审链 accad13→22f166a→5af48e6 全部在其祖先链上）
+caveat=远端历史中仍含非本团队提交 db808ea（他方先推）；本次为 fast-forward，**未移除**该提交（移除需 force-push，已明确禁止）。如后续要剔除，须由他队或 Leader 决策，不在本岗范围
+force_push_performed=no
