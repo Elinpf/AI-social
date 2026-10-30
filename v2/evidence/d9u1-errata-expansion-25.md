@@ -80,7 +80,8 @@ verbs_expansion_25 = [搁 压 推 摊 翻 蹲 按 掀 拨 捏 敲 插 夹 凿 �
 
 `dialogue-core-dev` 用**独立实现**（同一 `narration_family.py::analyse`，但另写脚本）出了五臂四项交叉表：
 `/root/.jiuwenswarm/.agent_teams/<team>/team-workspace/artifacts/d9u-lexicon-v2.1-five-arm-crosscheck.md`
-（**3614 B / 55 行 / sha256 `c20296a98d1d54f500782c067bc6dd18a3485174f81e531ee588485dcd55b79e`**，双 sha 表头 `lexicon 9c2129de…` + `instrument 30ff4aa3…`）。
+（**4353 B / 65 行 / sha256 `0d26601b3b45c01118d69134ab72a341227708b19c829686aaf5afd5d0c8771e`**，双 sha 表头 `lexicon 9c2129de…` + `instrument 30ff4aa3…`；含 §5 失效条件与引用纪律）。
+> **旧版 `c20296a9…`（3614 B / 55 行）已被本版取代**，引用一律用 `0d26601b…`。
 
 **我已逐格复核：与本件 §3/§3.1 全部一致**（含 `ON2` 的 `max_v` 主角是 **`压`**、`搁` 仅 20）。
 ⇒ 报告引用该表时，**应引这份"两实现互核"件，不要引我的单侧表**（更强）。
