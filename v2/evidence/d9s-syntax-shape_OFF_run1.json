@@ -1,0 +1,79 @@
+{
+  "arm": "OFF1",
+  "ba_na_rate": 0.752577,
+  "blocks_total": 194,
+  "c3a_share": 0.020619,
+  "c3b_share": 0.087629,
+  "class_order": [
+    "c1_penal",
+    "c2_sp",
+    "c4_act",
+    "c5_adv",
+    "c6_interj",
+    "c3_nominal"
+  ],
+  "classification_priority": [
+    "c1_penal",
+    "c2_sp",
+    "c4_act",
+    "c5_adv",
+    "c6_interj",
+    "c3_nominal"
+  ],
+  "h4": {
+    "ba_na_rate": 0.752577,
+    "blocks_total": 194,
+    "count": {
+      "act": 19,
+      "ba": 123,
+      "na": 23,
+      "other": 29
+    },
+    "note": "旧 4 类口径，仅与 d9m-syntax-slot-monotony.md 对账，不参与判定",
+    "share": {
+      "act": 0.097938,
+      "ba": 0.634021,
+      "na": 0.118557,
+      "other": 0.149485
+    }
+  },
+  "head_entropy": 1.173811,
+  "instrument": "tools/d9s/syntax_shape.py",
+  "instrument_sha256": "ca54572380ee53824528c4c31a3e1ff45321dd345c3fd1be90e42d9e169ad1fd",
+  "log": ".worktrees/d9s-syntax-diversity/runs/d9s-syntax-off_n16r24_s42/run.jsonl",
+  "log_sha256": "ba6812a1828c3c8f6289be37adf81e3d5fb46892aaa1c12ea5fa4a54cb36c389",
+  "max_head_share": 0.752577,
+  "msgs_total": 183,
+  "normalized_entropy": 0.454092,
+  "six_class": {
+    "ba_na_rate": 0.752577,
+    "blocks_total": 194,
+    "c3_count": {
+      "c3a_result_first": 4,
+      "c3b_other_nominal": 17
+    },
+    "c3a_share": 0.020619,
+    "c3b_share": 0.087629,
+    "count": {
+      "c1_penal": 146,
+      "c2_sp": 0,
+      "c3_nominal": 21,
+      "c4_act": 19,
+      "c5_adv": 0,
+      "c6_interj": 8
+    },
+    "head_entropy": 1.173811,
+    "max_head_share": 0.752577,
+    "n_nonempty_classes": 4,
+    "normalized_entropy": 0.454092,
+    "normalized_entropy_nonempty": 0.586906,
+    "share": {
+      "c1_penal": 0.752577,
+      "c2_sp": 0.0,
+      "c3_nominal": 0.108247,
+      "c4_act": 0.097938,
+      "c5_adv": 0.0,
+      "c6_interj": 0.041237
+    }
+  }
+}

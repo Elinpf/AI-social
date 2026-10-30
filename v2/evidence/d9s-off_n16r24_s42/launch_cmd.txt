@@ -1,0 +1,5 @@
+arm=off out=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/d9s-syntax-diversity/runs/d9s-off_n16r24_s42 seed=42 agents=16 rounds=24
+HEAD=05526e0d9ec9775876b6c7c5764fa70fa4c5b26a
+LIFE_PROMPT_NARRATION=1 ROTATION=1 ACTION=1 SYNTAX=0
+bash_pid=3319295
+finished_at=2026-10-30T13:42:15+08:00 rc=0

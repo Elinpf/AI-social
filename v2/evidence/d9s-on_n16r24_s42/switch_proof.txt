@@ -1,0 +1,4 @@
+# switch_proof（/proc/<pid>/environ 真值）captured_at=2026-10-30T14:40:23+08:00
+--- bash pid=3455477
+tools/d9s/launch_arm.sh: line 34: /proc/3455477/environ: No such file or directory
+(bash environ 取不到)

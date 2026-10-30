@@ -1,0 +1,2 @@
+[preflight] FAIL exit=9 reasons=concurrency:orchestration_run=1 concurrency:run_batch=2
+[preflight] log: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/d9s-syntax-diversity/v2/evidence/preflight/preflight_20261030T064019Z_05526e0d_run_batch.log

@@ -1,0 +1,17 @@
+PASS preflight sha=05526e0d(feat/d9s-syntax-diversity) ts=2026-10-30T13:40:10+08:00 concurrency=0 frozen_tree=clean log=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/d9s-syntax-diversity/v2/evidence/preflight/preflight_20261030T054010Z_05526e0d_run_batch.log
+[d2] run: python3 -m orchestration run --life --seed 42 --agents 16 --rounds 24 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/d9s-syntax-diversity/runs/d9s-off_n16r24_s42/run.jsonl --flush-every 2 --side-root /tmp/d9s_off_n16r24_s42
+[life] n_agents=16 rounds=24 events=33839 seconds=119.9851 log_bytes=17162812
+  unknown_event_types=[]
+  chain_ok=True replay_parity=True first_run_equals_replay=True
+  conservation_ok=True final_state_hash=sha256:15c8620afa268a88bdf02e8200dd7c079d3d4f4e3ea53b96c79f603e82c0d1bd
+  log written: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/d9s-syntax-diversity/runs/d9s-off_n16r24_s42/run.jsonl
+[meta] /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/d9s-syntax-diversity/runs/d9s-off_n16r24_s42/meta.json
+[meta] events=33839 llm_calls=2252 cached_ratio=0.9885 provider={'openai_compat': 2252} model={'DeepSeek-Flash': 2252}
+[meta] seed_in_log=42 n_in_log=16 rounds_effective=24
+[meta] switch_effective.HITT_WEATHER=off ctx_weather_msgs=0 declared=None
+[meta] switch_effective.HITT_DIALOGUE_EMOTION_ECHO=off ctx_echo_msgs=0 declared=None
+[meta] switch_effective.HITT_DIALOGUE_REPAIR=off n_dialogue_rift_key=0 n_dialogue_repair_key=0 declared=None
+[meta] OK: 真跑判定通过
+[d2] self-check wc -l=33839 meta.events=33839
+{"engine_log":{"by_provider":{"openai_compat":2252},"by_purpose":{"dialogue":{"cached":184,"calls":191,"degraded":0,"thinking":0,"tokens_in":2665,"tokens_out":345},"importance":{"cached":1523,"calls":1523,"degraded":0,"thinking":0,"tokens_in":0,"tokens_out":0},"judge":{"cached":420,"calls":425,"degraded":0,"thinking":425,"tokens_in":748,"tokens_out":9960},"negotiation":{"cached":7,"calls":7,"degraded":0,"thinking":0,"tokens_in":0,"tokens_out":0},"plan":{"cached":16,"calls":16,"degraded":0,"thinking":0,"tokens_in":0,"tokens_out":0},"reflect":{"cached":76,"calls":90,"degraded":0,"thinking":0,"tokens_in":5949,"tokens_out":900}},"llm_judgment_by_dimension":{"affection":132,"rel_affinity":13,"respect":132,"stance":132,"weekly_focus":16},"source":"engine_log(LLM_CALL)","total":{"cached":2226,"calls":2252,"degraded":0,"thinking":425,"tokens_in":9362,"tokens_out":11205,"tokens_total":20567}},"provider_guard":{"by_provider":{"openai_compat":2252},"expected":"openai_compat","ok":true,"policy":"计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。","problems":[]}}
+[d2] OK
