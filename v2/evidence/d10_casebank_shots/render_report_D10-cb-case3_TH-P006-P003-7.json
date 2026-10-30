@@ -1,0 +1,39 @@
+{
+ "schema_version": "d10-thread-shot/1.0",
+ "batch_id": "D10-cb-case3",
+ "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round1_narration_default_n16r24_s42",
+ "log_sha256": "ca108da9f90031f7d8b9dbc346518898e48976c33ec0965737ca80255cb6e37b",
+ "threads_json_sha256": "c04e7790f0dcc411bd35679a4cf87e6a5eaad95685043a67ed63e763243d0761",
+ "shot": {
+  "thread_id": "TH-P006-P003-7",
+  "view": "chat",
+  "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d10_casebank_shots/D10-cb-case3-chat-TH-P006-P003-7-ca108da9.png",
+  "rc": 0,
+  "url": "http://127.0.0.1:40615/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_D10-cb-case3/threads.json&thread=TH-P006-P003-7",
+  "triplet": {
+   "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round1_narration_default_n16r24_s42",
+   "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round1_narration_default_n16r24_s42/run.jsonl",
+   "log_sha256": "ca108da9f90031f7d8b9dbc346518898e48976c33ec0965737ca80255cb6e37b",
+   "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d10_casebank_shots/threads_D10-cb-case3_subset1.json",
+   "threads_json_sha256": "c04e7790f0dcc411bd35679a4cf87e6a5eaad95685043a67ed63e763243d0761",
+   "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round1_narration_default_n16r24_s42/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/round1_narration_default_n16r24_s42/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d10_casebank_shots/threads_D10-cb-case3.json --label D10-cb-case3",
+   "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:40615/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_D10-cb-case3/threads.json&thread=TH-P006-P003-7 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d10_casebank_shots/D10-cb-case3-chat-TH-P006-P003-7-ca108da9.png --width 1400 --height 900 --timeout 180.0 --retry-blank 2"
+  },
+  "png_sha256": "3c42a32fbf7011a44e8a22c4016ae07f3da5869e2fde07c178f18c88679143ef",
+  "png_bytes": 290903,
+  "pixel_selfcheck": {
+   "status": "OK",
+   "width": 1400,
+   "height": 900,
+   "distinct_colors": 22951,
+   "top_color": [
+    19,
+    25,
+    34
+   ],
+   "top_color_frac": 0.1789,
+   "non_bg_frac": 0.5375,
+   "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）"
+  }
+ }
+}
