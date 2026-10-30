@@ -42,10 +42,14 @@ git cat-file -e origin/master:<arm_dir>/run.jsonl && echo IN_REPO || echo NOT_IN
 
 配套：
 1. **入库原始日志必须 `git add -f`**（绕 `.gitignore:8`），且入库后**必须回读三值**（sha / 行 / 字节 + 与本地 `diff`）；
-2. **存在性判定只能用它，不得用字节数**（由 `repro-verifier` 指出）：
+2. **存在性与同源性是两个问题，必须分开答**（`repro-verifier` 指出）：
+   - `cat-file -e` **只答"在不在"**，答不了"是不是同一份"；
+   - "是不是同一份"仍须 `sha256sum` + `wc -lc` + `diff`（R-9 四条）。
    ```bash
-   arm=v2/evidence/<arm_dir>; git cat-file -e origin/master:$arm/run.jsonl 2>/dev/null && echo "可复算：在库" || echo "仅本机：master 无"
+   arm=v2/evidence/<arm_dir>
+   git cat-file -e origin/master:$arm/run.jsonl 2>/dev/null && echo "可复算：在库" || echo "仅本机：master 无"   # 在不在
    # ✗ 反例：git show origin/master:$arm/run.jsonl | wc -c   —— 路径不存在时得 0，与"空文件"同形，无法区分
+   # 通过"在不在"之后，仍须：git show … > /tmp/rb && sha256sum /tmp/rb && wc -lc < /tmp/rb && diff -q /tmp/rb <本地>
    ```
 3. **件内表述分档**（不得混写）：
    - `已入库可复算`：`cat-file -e` 通过 **且** 仪器 sha + 词表 sha + `--arm` 名三件齐；
