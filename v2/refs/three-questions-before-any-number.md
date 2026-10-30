@@ -214,11 +214,17 @@ git show --stat <新提交>          # 除本意文件外，不应出现大面�
 前三道都在推送**前**，第 4 道在推送**同一命令里**：
 
 ```bash
-EXPECT=$(git rev-parse origin/master:v2/refs/D9t-prereg-opening-menu.md)   # 变更后该等于什么
+# EXPECT 取「变更后的内容」本身（⚠ 不能取 origin/master:<path> —— 那是推送前的旧值，见 9.1.1）
+EXPECT=$(git hash-object <path>)          # 或 git rev-parse <新sha>:<path>
 git push origin <新sha>:refs/heads/master; echo "push rc=$?"
+git fetch -q origin master:master
 echo "server=$(git ls-remote origin refs/heads/master | cut -f1)"
 echo "blob  =$(git rev-parse origin/master:<path>)"
+test "$(git rev-parse origin/master:<path>)" = "$EXPECT" && echo BLOB_OK || echo BLOB_MISMATCH
 ```
+
+**9.1.1 我按这条第一次实跑就写错了（留档）**：我写成 `EXPECT=$(git rev-parse origin/master:<path>)`，得到 `9512a8f1…`（**推送前的旧值**），推送后 `blob=47ae3693…` ⇒ 表面"不一致"，实为**检查命令错、推送没错**。
+⇒ **纪律**：`EXPECT` 必须取**变更后的内容**（`git hash-object <path>` 或 `<新sha>:<path>`），**绝不能取 `origin/master:<path>`** —— 后者在推送前必然是旧值，这个检查会 100% 假报警；而假报警多了，人就会开始忽略真报警。
 
 > **「变更后该等于什么」只有写在同一命令里才防得住**；写进文档，就还是"靠记得去比"。
 > 这是"规则与依据分处两地"的下一层：**规则要贴着执行点，不能贴在文档里。**
