@@ -79,6 +79,21 @@ def memory_f6_enabled() -> bool:
     return os.environ.get(MEMORY_F6_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
 
 
+# N-15 称呼演化臂开关（env `LIFE_PROMPT_ADDR_EVOLVE`）：**只影响对话提示词（`_dialogue_prompt`）一行文本**，默认 OFF。
+# 预登记：`v2/refs/N15-prereg-addr-evolve-20261030.md`（主判据 `S-1 = addr_swing_pairs_rate`，可检出线 `Δ ≥ +20pp`）。
+# 单变量约束（预登记 §8.1/§8.4）：**只**注入 `_dialogue_prompt`，**不**改 `_reply_prompt`；**不**做称呼替换表 /
+# 轮换池 / 定时换称呼；**不**读关系值数值阈值做分支。缺省 / 空串 / 其它值 ⇒ OFF，且 OFF 态与改动前逐字节相同。
+ADDR_EVOLVE_ENV = "LIFE_PROMPT_ADDR_EVOLVE"
+
+#: 注入行（**实现时冻结**；≤1 句、无示例、无轮换、无多行模板）。其 sha256 记入回执与证据。
+ADDR_EVOLVE_LINE = "\n跟一个人处得越熟，叫法就该跟着变一变——熟了以后别再一直用最初那个称呼。"
+
+
+def addr_evolve_enabled() -> bool:
+    """N-15 臂开关（env `LIFE_PROMPT_ADDR_EVOLVE` ∈ {1,true,yes,on}）；默认关。"""
+    return os.environ.get(ADDR_EVOLVE_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
 # 旁白/动作神态通道开关：**只影响 prompt 收尾指令的文本**。
 # D9i 阶段它是「仅靠 env 的实验开关、默认 0 = 禁旁白」；ROUND1（本分支 feat/narration-default-on）把它
 # **默认化**：默认值改由 `config/life_v2.json` 的 `prompt.narration.enabled` 提供（文件内写 true）,
@@ -1796,6 +1811,7 @@ class LifeLayerAgent:
                 + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
                 + self._l7_struct_line(wv, partners, 0, "initiate")  # L-7 结构臂：开口/收束/禁忌开头（默认ON）
                 + AR.prompt_line()           # R12 去重臂：最近说过的话（默认OFF ⇒ 空串）
+                + (ADDR_EVOLVE_LINE if addr_evolve_enabled() else "")  # N-15 臂：称呼随相处演化一行（默认OFF ⇒ 空串）
                 + narration_tail("initiate", self.agent_id,
                                  0 if wv is None else getattr(wv, "round", 0)))  # D9i/D9m：收尾指令按 LIFE_PROMPT_NARRATION 二选一；旋转臂再按 LIFE_PROMPT_NARRATION_ROTATION 换示例（均默认关 ⇒ 与改动前逐字节相同）
 

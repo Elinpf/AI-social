@@ -423,6 +423,10 @@ def main(argv=None) -> int:
             # F-3 / F-4 对话臂（impl-101）：同一套 env 逃生口 + 运行期反推取证
             "HITT_DIALOGUE_EMOTION_ECHO": _declared_switch("HITT_DIALOGUE_EMOTION_ECHO"),
             "HITT_DIALOGUE_REPAIR": _declared_switch("HITT_DIALOGUE_REPAIR"),
+            # N-15 称呼演化臂（R01）：**纯提示词开关**，称呼文本不进 payload ⇒ 无结构字段可反推。
+            # 预登记 §4 已写死：本开关的 ON/OFF 判定只认 M2（prompt 渲染 sha）/ M3（prompt_hash 集合）
+            # / M4（进程 environ），**不得**用 switch_effective 反推「开关没开」。
+            "LIFE_PROMPT_ADDR_EVOLVE": _declared_switch("LIFE_PROMPT_ADDR_EVOLVE"),
         },
     }
     # 运行期反推（强证据）：在 meta 落盘前算，overwrite 上面的占位
@@ -455,6 +459,24 @@ def main(argv=None) -> int:
                                       "命中==0 ⇒ off（声明 ON 则 cannot-verify，非 OFF 证据）")
     meta["switch_effective"].update(_dlg_eff)
 
+    # --- 开关取证（N-15 称呼演化臂，R01）：**只能记 cannot-verify** ---------------------------
+    # 理由（预登记 §4 硬约束）：称呼文本**不进** MSG payload，`_ctx_snapshot()` 里没有任何
+    # 由本开关产生的结构字段 ⇒ 运行期无法从日志反推 ON/OFF。
+    # 因此 ON/OFF 的判定**只认** M2（`tools/d9/addr_evolve_wiring.py` 静态 prompt sha）、
+    # M3（两臂 `purpose=dialogue` 的 `LLM_CALL.payload.prompt_hash` 集合交集为空）、
+    # M4（`switch_proof.txt` 从 `/proc/<pid>/environ` 取真值）。
+    # 把声明值并列写出，供 M4 对拍；`effective` 恒为 `cannot-verify`（不是「开关没开」的证据）。
+    _ae_decl = meta["switch_declared"]["LIFE_PROMPT_ADDR_EVOLVE"]["normalized_effective"]
+    meta["switch_effective"]["LIFE_PROMPT_ADDR_EVOLVE"] = {
+        "effective": "cannot-verify",
+        "declared_on": _ae_decl,
+        "state_rule": ("恒 cannot-verify：本开关只改提示词文本，称呼文本不进 MSG payload，"
+                       "无结构字段可反推；ON/OFF 判定只认 M2(prompt 渲染 sha)/M3(prompt_hash 集合)/M4(/proc/<pid>/environ)。"
+                       "**不得**用 effective=cannot-verify 反推「开关没开」。"),
+        "evidence_pointers": ["tools/d9/addr_evolve_wiring.py", "switch_proof.txt",
+                              "LLM_CALL.payload.prompt_hash"],
+    }
+
     drops = Counter((r["payload"].get("reason"), r["payload"].get("type"))
                     for r in recs if r["type"] == "DROPPED")
     # 跑批窗口内 code/ 是否被改动（起跑快照 vs 结束快照，只比 code 路径）
@@ -486,6 +508,11 @@ def main(argv=None) -> int:
           f"n_dialogue_rift_key={meta['switch_effective']['HITT_DIALOGUE_REPAIR']['n_dialogue_rift_key']} "
           f"n_dialogue_repair_key={meta['switch_effective']['HITT_DIALOGUE_REPAIR']['n_dialogue_repair_key']} "
           f"declared={meta['switch_declared']['HITT_DIALOGUE_REPAIR']['raw']!r}")
+    print(f"[meta] switch_effective.LIFE_PROMPT_ADDR_EVOLVE="
+          f"{meta['switch_effective']['LIFE_PROMPT_ADDR_EVOLVE']['effective']} "
+          f"declared_on={meta['switch_declared']['LIFE_PROMPT_ADDR_EVOLVE']['normalized_effective']} "
+          f"declared={meta['switch_declared']['LIFE_PROMPT_ADDR_EVOLVE']['raw']!r}"
+          f"  (恒 cannot-verify：称呼文本不入 payload；判据见 M2/M3/M4)")
 
     # 可选硬闸：只有显式传 --require-weather-state 才拦（缺省 ⇒ 只记录，返回码不变，exit 8 专用）
     if a.require_weather_state is not None:
