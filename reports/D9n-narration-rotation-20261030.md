@@ -94,7 +94,7 @@
 
 ---
 
-## ① 预登记引用（主件 + 5 增补，共 6 枚哈希 + anchor）
+## ① 预登记引用（主件 + **6 增补**，共 **7 枚哈希** + anchor）
 
 | 编号 | 路径 | sha256 |
 |---|---|---|
@@ -103,8 +103,9 @@
 | 增补 02（守卫阈值来源 + 修恒假） | `v2/refs/D9n-prereg-amendment-02-guard-thresholds.md` | `401617edc2bbb5dcb04e8291df30e8df315200bd9af676146a4108b959988095` |
 | 增补 03（族词表内容 + meta 口径） | `v2/refs/D9n-prereg-amendment-03-family-lexicon.md` | `fa5af47dc53f8a272dde9238b741db67a69fa9ac00537ad8bf6cb944862898cf` |
 | 增补 04（D9j 版本化勘误；原文件名 `…amendment1-d9j-provenance.md`，无连字符） | `v2/refs/D9n-prereg-amendment-04-d9j-provenance.md` | `1cc362c2be1705e8a8b424b348c13119685fd4c469caa8ee4bdd5e64e11896d5` |
-| 增补 05（路径与改名对照；`v1.1`） | `v2/refs/D9n-prereg-amendment-05-paths-and-renames.md` | `5c465b0e83acc5766a6cb63ac2a45031095fa66dfb468c823ccb3a2f108252d9` |
-| anchor | `v2/refs/D9n-prereg-commit-anchor.txt` | `29cd708113c14b59aee88a46eed48f89963fb99059df26b0609c9d8dc310663b` |
+| 增补 05（路径与改名对照；**`v1.1`**） | `v2/refs/D9n-prereg-amendment-05-paths-and-renames.md` | **`3da0f4b63fc646e362febfdf8de60b0bf37bce2ffec241b172d50594cf6f8eeb`**（v1.1 现行值；旧 v1.0 值 `5c465b0e83acc5766a6cb63ac2a45031095fa66dfb468c823ccb3a2f108252d9` 已被取代，仅作 SUPERSEDED 留痕） |
+| 增补 06（守卫基线须用同口径 `V_judge` 重算；新旧门限对照 + 收紧论证） | `v2/refs/D9n-prereg-amendment-06-guard-anchor-same-caliber.md` | `543cfd1e6b2da0c592f0c6f3d01d285e59e962ab98ca3157e29455f9a17c3962`（commit `de4649c`） |
+| anchor | `v2/refs/D9n-prereg-commit-anchor.txt` | **`4344f4afff8589d0eb2309cecf7a9ac090408ec54da6075ec2f6395381a4f531`**（`ba002ca` 重锚后现行值；旧值 `29cd708113c14b59aee88a46eed48f89963fb99059df26b0609c9d8dc310663b` 已被取代，仅作 SUPERSEDED 留痕） |
 
 **冻结时序（三行 commit 溯源，回答「判据是否跑前冻结」）**：
 - 增补 01 入库 commit = **`52336b9`**；增补 02–05 入库 commit = **`5a9b5a2`**；anchor 回填 commit = `f1e758a`。
@@ -148,7 +149,7 @@
 2. **journal 里留存 attempt#1 的内联 argv 原文**（`bash -lc "… bash tools/d2/run_batch.sh --out-dir v2/evidence/d9n-rot-20261030 …"`）——这是「`pgrep -f` 命中的是启动器自身」的**第一手记录**，比任何转述都硬；本节根因判断即以此为准。
 3. 「0 LLM 调用」有**间接**落盘依据（该 attempt 无 `run.jsonl` ⇒ 0 事件），但**没有**直接成本件（无对应 `llm_cost.json`）⇒ 写作「0 事件（无 `run.jsonl`）级证据」，不升级为「`obs llm-cost` 实测 0 调用」。
 
-**结论（限定）**：串行闸门在本轮**确实拦下了一次误报**，且**代价为零算力、约 21 秒墙钟**；这不等于「闸门设计无误」（误报本身来自 `pgrep -f` 的 argv 自匹配，属已知类缺陷）。
+**结论（限定）**：串行闸门在本轮**确实拦下了一次误报**，且**代价为零算力、约 1 秒墙钟**（systemd journal：`08:26:04 Starting` → `08:26:05 Deactivated/Finished`）；这不等于「闸门设计无误」（误报本身来自 `pgrep -f` 的 argv 自匹配，属已知类缺陷）。
 
 ---
 
@@ -275,6 +276,8 @@
 **(iii) 新模板而非新动作**〔引文件〕
 - `拍` 共 8 条，其中 **7 条**同构为「`拍了拍` + 部位/器物 + `上的` + 碎屑名词」（`手上的灰`/`围裙上的碎叶`/`手上的碎叶子`/`麻袋上的灰`/`手上的面`/`手上的碎屑`/…）⇒ **单一模板的 7 次复制**，语义仍是「掸掉手上灰」。
 - 「`往{桌角|边上|旁边|脚边|膝头}挪了挪`」模板：基线 **4** → 本臂 **10**（+6）；其中 `把竹篮往膝头挪了挪`（P012 r3）与旋转词表第 6 句「把竹篮往脚边挪了挪」**同构到只差一个方位词**。
+  **正则原文（本报告口径，作者实跑可复现）**：`往(?:桌角|边上|旁边|脚边|膝头)挪了挪`（对旁白片段计数，分母 205 / 202）⇒ **4 → 10**。
+  **更宽口径对照**：`往[^，。）、]{0,8}挪了挪` ⇒ **5 → 11**（多出的 1 条为 `往膝盖上挪了挪`，方位词不在窄表内）。**两口径差值同为 +6**，结论不依赖口径选择。
 
 **(iv) 反向指标：集中度上升**〔引文件〕
 
@@ -402,7 +405,7 @@ O 臂 **6 条**（`total=6`；逐角色 P013 3 / P014 2 / P002 1 ⇒ `n_ge2=2`�
 | 3 | P014 | 7 | 6955 | DM | 拿锉刀蹭了蹭鱼尾的毛边 |
 | 4 | P002 | 13 | 20276 | DM | 拿锉刀蹭了蹭刚削的竹钉尖 |
 | 5 | P013 | 13 | 21056 | PUBLIC | 拿锉刀蹭了蹭砧子边角 |
-| 6 | P014 | 19 | 25856 | DM | 拿锉刀蹭了蹭锁舌上的毛刺 |
+| 6 | P014 | 19 | 25856 | DM | 拿锉刀背蹭了蹭锁舌上的毛刺 |
 
 复算脚本（内联，读日志 → 归族 → 打印逐条）：
 ```bash
@@ -455,7 +458,7 @@ EOF
 
 **分层两句（必须分开读，不得合并成一句）**
 - **机制层：成功。** 守卫双过（`coverage 0.351485 ≥ 0.193171`、`unassigned 0.648515 ≤ 0.778049`）+ `degraded=0` + `replay_parity=True` + `provider={openai_compat:2252}` ⇒ **测具与装置正常，非测具失效**。
-- **行为层：未改善。** `(b2′)` 未达成立条件、`(d)` 基线即不可行、`(e)` 新增越线 1 条、禁用词面反增 ⇒ 无任何「语言/生活气息变好」的可判证据。
+- **行为层：未改善。** `(b2′)` 未达成立条件、`(d)` 基线即不可行、`(e)` 新增越线 1 条、禁用词面**未下降** ⇒ 无任何「语言/生活气息变好」的可判证据。
 
 **机制层（可数、可复算，本节全部结论只到此为止）**
 - 开关生效：轮换 env 在启动器内联环境为 `1`（§0.4）；`蹭` 31→24、`蹭｜锉刀` 9→6 ⇒ **示例句替换在生成面上确实起了作用**。
@@ -494,7 +497,12 @@ EOF
   git ls-tree -r --name-only HEAD | grep -c 'D9m-'               # 期望 0
   git ls-tree -r --name-only HEAD | grep -c 'D9n-'               # 期望 ≥1
   ```
-  **实测（提交前 HEAD）**：`action-diversity` = **0**；`D9m-` = **0**；`D9n-` = **3**（主件 / 增补 01 / anchor；增补 02–05 于 `5a9b5a2` 入库后计入）。
+  **实测（在报告 commit `accad13` 上重跑，作者实跑）**：`action-diversity` = **0**；`D9m-` = **0**；`D9n-` = **9**（主件 + 增补 01–06 + anchor 等，随 `5a9b5a2`/`de4649c` 等提交计入）。
+  ```bash
+  git ls-tree -r --name-only accad13 | grep -c 'action-diversity'   # 0
+  git ls-tree -r --name-only accad13 | grep -c 'D9m-'               # 0
+  git ls-tree -r --name-only accad13 | grep -c 'D9n-'               # 9
+  ```
 - 提交内容（**路径限定 add，禁 `-A`/`.`**）：本报告 + `tools/metrics/d9m_wilson_ci.py` + `tools/metrics/d9n_poisson_ci.py` + 本报告所引截图与 `render_report`。
 - 提交前自检：`git status --porcelain` 与 `git diff --cached --name-status` 的 staged 清单**只含上述文件**（不含他人在编的 `code/life/agent.py`）。
 - 时序前提：impl 两枚 commit（`5d20cc5` 实现、`df29cf9` 测试同步）已在分支上，报告 commit 晚于二者。
@@ -507,5 +515,5 @@ EOF
 1. **我独立复算并逐位对上的**：两臂 `(a)(b1)(b2′)(c-1)(d)(e)` 全部读写（实跑 `narration_family.py` 两臂，rc=0）；`(b2′)` 9 条 / 6 条逐条片段（自写内联脚本，落 `/tmp/rw_d9n/b2p_fragments.txt`）；`(e)` 越线条目定位（P013 r3 seq 2209，三段片段与动词 `压/夹/敲`）；`蹭/挪/拍/擦` 四项计数；两臂 `run.jsonl` sha256；`meta.json` 关键字段（events 33826、code_sha、seed、rounds、llm_calls 2252、fallback false）；`llm_cost.json` 的 `dialogue.cached=0`、`by_provider`、`degraded=0`；Wilson/Poisson 两套区间（各自 `--selftest` 通过）；`D9n-prereg-*` 六枚 sha256；`tools/d9n/` 五件 blob sha（`5f20612`）。
 2. **我未独立复算、仅引文件的**：`dialogue_metrics.json` 的 `L-1/L-3/L-7` 明细（引官方工具输出，未逐条重算 8-gram）；基线语料的 `code_sha=47a7da9` 『与 base 在 `code/` 零差异』这一等价性（引 `d9m_baseline_judgement.json::corpus.code_identity_note`）。
 3. **明示为「不可判 / 证据不足」而未据此下结论的**：`(c-2)` 咬合率；行为层语言质量；`(b2′)` 的「下降」统计主张（区间重叠、`p≈0.44`）；回执终版 sha；`meta` 级开关取证。
-4. **我明确改写的两处口头数**：①起跑失败代价按落盘写「约 21 秒」，而非口述「43 秒」；②`(b2′)` 区间并列 Wald 与 Garwood 两套，不单方面采用其中一套。
+4. **我明确改写的两处口头数**：①起跑失败代价一律以 systemd journal 为唯一来源、写「**约 1 秒**」（曾误写 21 秒、口述 43 秒，均与 journal 不符，已在 §①-2 记录该三次更正）；②`(b2′)` 区间并列 Wald 与 Garwood 两套，不单方面采用其中一套。
 5. **锚定**：本报告基于 `code_sha=df29cf9abc056d7982f01a1ffe10e5c5b4ccd15b`（O 臂，分支 `feat/life-narration-rotation`）与基线语料 `47a7da9`（`v2/evidence/narr-on-20261030/run.jsonl`，sha256 `fdb31c7e…`）。若提交前 HEAD 前进，§⓪ 的身份段需重新核对。
