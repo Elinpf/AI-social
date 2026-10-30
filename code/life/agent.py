@@ -177,6 +177,69 @@ def narration_tail(kind: str, agent_id: str | None = None,
     return _NARRATION_TAIL_ON_TPL[kind].format(
         narration_example(kind, agent_id, round_no))
 
+# ---- 同场偶遇搭话臂（encounter chat）-----------------------------------------
+# 缺口（**窄口径**，可复算）：同场共处本身**一直有机制**——`code/life/settlement.py:580` 的
+# `RELATION_ENCOUNTER` + `:583-584` 的 `copresence` 关系增量、`code/engine/wake.py:147` 的
+# W6 邻居(共处)唤醒都在跑；**但「同场 → 直接搭一句话」的通道在 HEAD 上为零**：
+# `_initiate()` 在 `template_id` 缺失时直接早退（见本文件 `_initiate` 首两行）
+# ⇒「两个人正好站在同一处」这件事实**永远不会变成一句话**。
+# 本臂把 life 层**已经可见**的 `PLACE_ARRIVED`（`config/perception_scope.json` 里是
+# `place_local`，同处即互相可见）当作「同场」判据，在没有模板的空档里发一句非任务性搭话。
+# 默认 OFF ⇒ 不新增任何事件、提示词逐字节不变（与接入前行为一致）。
+ENCOUNTER_ENV = "LIFE_PROMPT_ENCOUNTER_CHAT"
+ENCOUNTER_RATE_ENV = "LIFE_PROMPT_ENCOUNTER_CHAT_RATE"
+
+#: 搭话话题标签（**人话**，不是内部 token；L-13 纪律：不许把内部 id 递给模型）
+ENCOUNTER_TOPIC = "闲聊"
+
+#: 夜里不搭话（居民在睡觉；`residence` 夜里同处不是可搭话的「场合」）
+ENCOUNTER_SKIP_SLOTS = frozenset({"night"})
+
+#: 默认门率（整数百分比）：每个 (agent, slot) 掷一次确定性骰，命中才搭话。
+ENCOUNTER_RATE_DEFAULT = 50
+
+
+def encounter_enabled() -> bool:
+    """同场偶遇搭话臂开关（env `LIFE_PROMPT_ENCOUNTER_CHAT` ∈ {1,true,yes,on}）；默认关。"""
+    return os.environ.get(ENCOUNTER_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def encounter_rate() -> int:
+    """门率（0–100 整数百分比）；未设/非法 ⇒ `ENCOUNTER_RATE_DEFAULT`。关闭时不被读取。"""
+    raw = os.environ.get(ENCOUNTER_RATE_ENV, "").strip()
+    if not raw:
+        return ENCOUNTER_RATE_DEFAULT
+    try:
+        val = int(raw)
+    except ValueError:
+        return ENCOUNTER_RATE_DEFAULT
+    return max(0, min(100, val))
+
+
+def encounter_world_seed() -> str:
+    """与 weather / narration-rotation **共用同一个 seed env**（缺省回落 `"0"`，单一真源）。"""
+    return (os.environ.get(WX.WORLD_SEED_ENV, "") or "0").strip() or "0"
+
+
+def encounter_decision(agent_id: str, slot_id: str, peers: list) -> str | None:
+    """确定性「搭不搭话、跟谁搭」：不读墙钟、不用 random ⇒ replay 逐字节可复现。
+
+    步骤：① 候选 = 同处者去自去重后字典序（顺序与事件到达序无关，避免"谁先到谁被选中"）；
+    ② `sha256("encounter|seed|agent|slot")` 取 8 hex nibble 对 100 取模，≥ 门率 ⇒ 不搭；
+    ③ 命中后按 `sha256("encounter-pick|seed|agent|slot|peer")` 取最小值定序选人。
+    返回 partner 或 None（不搭话 / 无人同处）。
+    """
+    cands = sorted(p for p in (peers or []) if p and p != agent_id)
+    if not cands:
+        return None
+    seed = encounter_world_seed()
+    h = sha256_hex(f"encounter|{seed}|{agent_id}|{slot_id}")
+    if int(h[:8], 16) % 100 >= encounter_rate():
+        return None
+    return min(cands, key=lambda p: sha256_hex(
+        f"encounter-pick|{seed}|{agent_id}|{slot_id}|{p}"))
+
+
 _SALIENT_EVENTS = {
     "ACTIVITY_STARTED", "ACTIVITY_COMPLETED", "PLACE_ARRIVED",
     "MSG_PUBLIC", "MSG_DM", "MSG_GROUP", "RELATION_ENCOUNTER", "RELATION_CHANGE",
@@ -293,6 +356,9 @@ class LifeLayerAgent:
         # （**纯审计**，只进 ctx；不进 state_hash、不发事件、不参与决策；
         #  OFF 臂恒为 None ⇒ ctx.weather 不出现）。
         self._weather: dict | None = None
+        # 同场偶遇搭话臂（encounter）：已在该 slot 掷过骰/搭过话的 slot_id 集合。
+        # **agent-local 表达层状态**（不进 state_hash、不发事件）；OFF 臂恒为空。
+        self._enc_slots: set = set()
 
     # ---- T288 / T276: 从账本单一真源恢复「只前向累积」的内部态 ---------------
     def restore(self, state, records) -> None:
@@ -978,7 +1044,11 @@ class LifeLayerAgent:
             target = self._pick_reply_target(wv, cfg, prefer_threads=prefer)
             if target is not None and self._send_reply(wv, target, cfg, slot_id):
                 return
-        self._initiate(wv, cfg, slot_id)
+        if self._initiate(wv, cfg, slot_id):
+            return
+        # 同场偶遇搭话臂（默认 OFF ⇒ 直接返回 False，事件流与接入前一致）：
+        # 只有「本 slot 没有模板对话」这个空档才会走到这里。
+        self._initiate_encounter(wv, cfg, slot_id)
 
     def _thread_max_turn(self, wv, tid: str) -> int:
         """线程内「已存在的最大 turn_index」（按可见事件；无则 -1）。多方可同时处于同一 turn。"""
@@ -1226,10 +1296,15 @@ class LifeLayerAgent:
         return True
 
     # ---- 发起一段新对话 ----------------------------------------------------
-    def _initiate(self, wv, cfg, slot_id: str) -> None:
+    def _initiate(self, wv, cfg, slot_id: str) -> bool:
+        """按周计划里的模板发起一段新对话。**返回是否真的发了**（供偶遇臂判空档）。
+
+        无 `template_id` ⇒ 返回 False（不造事件）。返回值是本轮唯一新增语义：
+        OFF 臂下调用方只看它是否 True/False，事件流与接入前逐字节一致。
+        """
         entry = self._plan_slots.get(slot_id)
         if not entry or not entry.get("template_id"):
-            return
+            return False
         tid = entry["template_id"]
         parts = list(entry.get("participants") or [self.agent_id])
         partners = [p for p in parts if p != self.agent_id]
@@ -1252,7 +1327,7 @@ class LifeLayerAgent:
         res = self.llm.call("dialogue", prompt, meta=meta)
         body = (res.text or "").strip()
         if not body:
-            return
+            return False
         body = self._dequp_body(prompt, body, meta)   # R12：撞车一次性重生成（默认OFF ⇒ 原样返回）
         payload: dict = {"scope": scope, "body": body, "refs": [], "tag_hints": [tid]}
         if to:
@@ -1280,6 +1355,91 @@ class LifeLayerAgent:
         self._slot_msgs[slot_id] = int(self._slot_msgs.get(slot_id, 0)) + 1
         self._comm_slot = slot_id
         self.kernel.submit_intent(self.agent_id, Intent(INTENT_SOCIAL, self.agent_id, payload))
+        return True
+
+    # ---- 同场偶遇搭话（encounter chat，默认 OFF）--------------------------
+    def _co_present_peers(self, wv) -> list:
+        """本 slot 里「和我站在同一处」的居民（**只读** place_local 可见事件，不新开真相源）。
+
+        判据（唯一实现；与 `reports/02-dimension.md` 预登记口径一致）：
+          取 `wv.visible_events` 中 `PLACE_ARRIVED` 且同时满足
+            (i) `payload.place == wv.location`（同场所，**本人当前位置**为真源）；
+            (ii) `payload.day == wv.time.day` 且 `payload.slot == wv.time.slot`（同时段，
+                 缺字段时视为不约束——兼容不带 day/slot 的旧日志）；
+            (iii) `payload.agent_id != self`（不含自己）。
+          同一人多次出现**取并集**（集合语义，与事件到达序无关）。
+        **不读 `ACTIVITY_STARTED.participants`**：那里含「联合活动」名单，会把
+        「同活动」混进「同处」，与本臂要量的东西不是一件事（R23 §1.2 的副口径 `joint`
+        同理，只作敏感性口径、不作主判据）。
+        """
+        me = self.agent_id
+        peers = set()
+        for ev in wv.visible_events:
+            if ev.type != "PLACE_ARRIVED":
+                continue
+            p = ev.payload or {}
+            who = p.get("agent_id")
+            if not who or who == me:
+                continue
+            if p.get("place") != wv.location:
+                continue
+            if p.get("day") is not None and int(p["day"]) != int(wv.time.day):
+                continue
+            if p.get("slot") is not None and p["slot"] != wv.time.slot:
+                continue
+            peers.add(who)
+        return sorted(peers)
+
+    def _initiate_encounter(self, wv, cfg, slot_id: str) -> bool:
+        """同场偶遇搭话：本 slot **没有模板对话**的空档里，与同处一人搭一句话。
+
+        与 `_initiate` 的差别只有两处，其余（提示词装配 / 去重 / 线程字段）**完全复用**：
+          ① 不需要 `template_id`（这正是当前「没有模板就没有对话」的缺口）；
+          ② `ctx.trigger = "encounter"` / `ctx.initiator = self`，供读数器区分通道。
+
+        有界与纪律：
+          - 默认 OFF（`encounter_enabled()` 假 ⇒ 立刻 False，零事件零改动）；
+          - `night` 不搭话（`ENCOUNTER_SKIP_SLOTS`）；
+          - 同一 (agent, slot) **至多一次**（`self._enc_slots`，因为门率是 slot 级掷骰）；
+          - 仍受 `max_messages_per_slot` / `max_turns` 等既有上限约束（本方法不自带配额）；
+          - `tag_hints` 留空：非模板话题**不污染** 20 类模板普查（tag_hints 是模板口径）；
+          - 线程起点字段与 `_initiate` 同构 ⇒ 对方可经既有 `_pick_reply_target` 正常接话。
+        """
+        if not encounter_enabled():
+            return False
+        if wv.time.slot in ENCOUNTER_SKIP_SLOTS:
+            return False
+        if slot_id in self._enc_slots:
+            return False
+        partner = encounter_decision(self.agent_id, slot_id, self._co_present_peers(wv))
+        if not partner:
+            return False
+        self._enc_slots.add(slot_id)          # 掷过骰就作废本 slot（无论下文成败，防抖）
+        parts = [self.agent_id, partner]
+        dr_cfg = DR.load_params()
+        rift_line = None
+        if dr_cfg.get("enabled"):
+            rift_line = DR.context_line(self._rifts, partner, int(wv.round),
+                                        name=self._name(partner), params=dr_cfg)
+        prompt = self._dialogue_prompt(ENCOUNTER_TOPIC, parts, cfg, rift_line=rift_line, wv=wv)
+        meta = {"agent_id": self.agent_id, "round": wv.round, "template": ENCOUNTER_TOPIC}
+        body = (self.llm.call("dialogue", prompt, meta=meta).text or "").strip()
+        if not body:
+            return False
+        body = self._dequp_body(prompt, body, meta)
+        payload: dict = {
+            "scope": "private", "to": partner, "body": body, "refs": [],
+            "tag_hints": [],
+            "thread_id": DT.thread_id_dm(self.agent_id, partner, wv.round),
+            "turn_index": 0, "reply_to": None,
+            "participants": parts, "topic": ENCOUNTER_TOPIC,
+            "ctx": self._ctx_snapshot(partner, ENCOUNTER_TOPIC, trigger="encounter",
+                                      initiator=self.agent_id),
+        }
+        self._slot_msgs[slot_id] = int(self._slot_msgs.get(slot_id, 0)) + 1
+        self._comm_slot = slot_id
+        self.kernel.submit_intent(self.agent_id, Intent(INTENT_SOCIAL, self.agent_id, payload))
+        return True
 
     # ---- 提示词装配 --------------------------------------------------------
     def _gossip_hint(self, exclude: list | None = None) -> str:
