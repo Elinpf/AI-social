@@ -1,5 +1,5 @@
 {
-  "schema": "d9m-family-lexicon/1.1",
+  "schema": "d9m-family-lexicon/2.0",
   "frozen_at": "2026-10-30T08:20:00+08:00",
   "frozen_by": "exp-designer",
   "authority": "v2/refs/D9m-prereg-narration-rotation.md §4.1（主件） + v2/refs/D9m-prereg-amendment-02-family-lexicon.md（本词表内容首次冻结；D9j §3 只给数量 6/13，未给内容）",
@@ -156,5 +156,29 @@
     }
   },
   "precedence": "本文件与主件/增补冲突时：词表内容与顺序以本文件为准；阈值与判定条件以主件 + 增补 01/02 为准。",
-  "revision_note": "v1.1（2026-10-30 08:28，跑前）：仅更正两处基线锚（coverage 40→66、unassigned 0.80488→0.678049）与随之的守卫门限；词表内容(21动词/parts_6/objs_13)、规则 R1-R8、顺序 一字未改。v1.0 sha256=9a87ebb5ee80bb8d991d2c54e1562e312810ed23f1081141e30b98b3f9933edd。"
+  "revision_note": "v2.0（2026-10-30，D9u 扩表）：新增 `verbs_expansion_22`（22 个光杆动词，追加在 verbs_rotation_13 **之后**，顺序=closed8 → rotation13 → expansion22，保证历史臂首次命中位置不变）。依据：v2/refs/D9u-prereg-lexicon-expansion.md §3.1 + v2/evidence/d9u-step1-verb-candidates.md（37 候选，方法=v2 动词白名单∩语料频次）。筛词由 eval-researcher 逐词判（收22/拒9），逐词理由见 v2/evidence/d9u-step2-verb-screening.md。**parts_6/objs_13/规则 R1-R8/两份旧动词表一字未改**；旧表 v1.1 sha256 见 v2/evidence/d9u-step2-verb-screening.md §1。",
+  "verbs_expansion_22": [
+    "搁",
+    "压",
+    "推",
+    "摊",
+    "翻",
+    "蹲",
+    "按",
+    "掀",
+    "拨",
+    "捏",
+    "敲",
+    "插",
+    "夹",
+    "凿",
+    "绕",
+    "停",
+    "码",
+    "摸",
+    "磨",
+    "蒸",
+    "烧",
+    "咬"
+  ]
 }

@@ -78,14 +78,24 @@ def load_lexicon(path: Path) -> dict:
     for k, n in (("verbs_closed_8", 8), ("verbs_rotation_13", 13),
                  ("parts_6", 6), ("objs_13", 13)):
         if len(lex[k]) != n:
-            raise SystemExit(f"[d9n] lexicon 规模不符: {k}={len(lex[k])} 期望 {n}")
-        if len(set(lex[k])) != len(lex[k]):
-            raise SystemExit(f"[d9n] lexicon 有重复项: {k}")
+            raise SystemExit(f"[d9n] lexicon {k} 长度应为 {n}，实际 {len(lex[k])}")
+    # D9u 追加项：可缺省（v1.x 词表无此键 ⇒ 行为不变），有则必须恰好 22 且无重复
+    if "verbs_expansion_22" in lex:
+        exp = lex["verbs_expansion_22"]
+        if len(exp) != 22:
+            raise SystemExit("[d9n] lexicon verbs_expansion_22 长度应为 22")
+        if len(set(exp)) != len(exp):
+            raise SystemExit("[d9n] lexicon verbs_expansion_22 有重复项")
+        allv = list(lex["verbs_closed_8"]) + list(lex["verbs_rotation_13"]) + list(exp)
+        if len(set(allv)) != len(allv):
+            raise SystemExit("[d9n] lexicon 扩展后动词总表有重复项")
     return lex
 
 
 def v_judge(lex: dict) -> list:
-    return list(lex["verbs_closed_8"]) + list(lex["verbs_rotation_13"])
+    """V_judge 顺序：closed_8 → rotation_13 → expansion_22（D9u 追加项恒在末尾）。"""
+    return (list(lex["verbs_closed_8"]) + list(lex["verbs_rotation_13"])
+            + list(lex.get("verbs_expansion_22", [])))
 
 
 def read_log(path: Path) -> list:
