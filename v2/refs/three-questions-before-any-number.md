@@ -208,3 +208,26 @@ git show --stat <新提交>          # 除本意文件外，不应出现大面�
 **回读纪律（`repro-verifier` 补）**：读 master 上的件，必须把 `git rev-parse origin/master` 与 blob 读数**打在同一个输出里**；ref 更新前后各读一次会得出"一会儿有一会儿没有"的假象。
 
 **事故件**：`v2/evidence/d9t-A2-overwritten-by-d5c386e-alert-by-verifier.md`（`dd704a0b…`，105 行）。
+
+### 9.1 V-6 第 4 道：把「期望值」钉在推送命令旁（`repro-verifier` 补）
+
+前三道都在推送**前**，第 4 道在推送**同一命令里**：
+
+```bash
+EXPECT=$(git rev-parse origin/master:v2/refs/D9t-prereg-opening-menu.md)   # 变更后该等于什么
+git push origin <新sha>:refs/heads/master; echo "push rc=$?"
+echo "server=$(git ls-remote origin refs/heads/master | cut -f1)"
+echo "blob  =$(git rev-parse origin/master:<path>)"
+```
+
+> **「变更后该等于什么」只有写在同一命令里才防得住**；写进文档，就还是"靠记得去比"。
+> 这是"规则与依据分处两地"的下一层：**规则要贴着执行点，不能贴在文档里。**
+
+### 9.2 N-1 证据时点纪律：错误中间态不得引用（`repro-verifier` 提出）
+
+`d5c386e`（V-4 §7.2）与 `d7dab02`（V-5）是**错误中间态**：在这两点上读 `D9t-prereg-opening-menu.md` 会拿到 `08fc1099…`（§4 无 `G7`、A2 不存在），复核件也不存在。它们**长得像正常提交**，看不出异常。
+
+⇒ **纪律**：
+1. **D9t 证据时点一律 ≥ `27b825b`**；`d5c386e` / `d7dab02` **不得作为证据时点引用**；
+2. 每个错误中间态在本地打 `git notes`（`A2 缺失态，勿引用`），`--notes` 显示、不改内容与树；
+3. 引用历史提交上的件时，**先 `git cat-file -e <sha>:<path>` 再读**——"提交存在"不等于"该件在该提交上是正确版本"。
