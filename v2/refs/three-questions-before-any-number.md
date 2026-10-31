@@ -250,3 +250,23 @@ test "$(git rev-parse origin/master:<path>)" = "$EXPECT" && echo BLOB_OK || echo
 - 表现：`fatal: unable to access … GnuTLS recv error (-110)` 之后仍打印 `push_rc=0`，让人误判"推成功了"；
 - 纪律：**`push` 不要串管道**；必须 `git push …; echo "push rc=$?"`，再用 `git ls-remote` 复核服务端真实状态。
 - 实例（本件作者本人）：`refs/notes/commits` 那次"看起来推了、`ls-remote` 却为空"，回到无管道形式重推并 `ls-remote` 复核后才是真推上（`aa8e4f2f…`）。
+
+### 9.4 `pipefail` 与脚本化（`repro-verifier` 补，Leader 采纳并已固化脚本）
+
+9.3② 说"push 不要串管道"是对的，但它让「看输出」和「拿真 rc」不可兼得。实测复现：
+
+```bash
+$ bash -c 'false | tail -1; echo rc=$?'                   # rc=0   ← 假成功
+$ bash -c 'set -o pipefail; false | tail -1; echo rc=$?'   # rc=1   ← 真实结果
+```
+
+⇒ **脚本头统一 `set -uo pipefail`**；或用 `if ! git push …; then echo PUSH_FAIL; fi`（`if` 天然不被 `$?` 覆盖）。
+
+**但终局判据仍只有 `ls-remote`**：`rc` 只证明"命令没报错"，证明不了"服务端真变了"。
+
+**已固化**：`scripts/push_and_verify.sh <sha> <path>...`（头 `set -uo pipefail`），一次给出四样 + 退出码：
+`rc` / `ls-remote`（`SERVER_OK|MISMATCH`）/ 逐文件 blob（`BLOB_OK|MISMATCH`）/ `ALL_OK`。
+> 手拼一次错一次——今晚同类已两次（内容倒退、假 rc）。**规则要落到可执行文件，才算落地。**
+
+**脚本自身也踩了一个坑（留档）**：首次干跑传入短 sha `bde6aed`，而 `ls-remote` 返 40 位 ⇒ 假报警 `SERVER_MISMATCH`。已加 `SHA=$(git rev-parse --verify "$SHA^{commit}")` 归一化。
+⇒ **连"检查工具的检查"也要实跑一次**；否则工具本身会成为新的假报警源。
