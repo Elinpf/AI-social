@@ -1,0 +1,90 @@
+{
+  "version": "market-day-labels/baseline-13-v1",
+  "frozen_at": "2026-10-31T22:50:00+08:00",
+  "author": "repo-scout（T1b 逐条人工判读；单读者，未经盲判复核）",
+  "note": "人工真值标注：只覆盖 T1b 审计命中的 13 条（原式 R_C 命中集）。key=<arm 名>|<seq>，arm 名必须与 --arm 的 name 完全一致。",
+  "label_space": {
+    "TP": "把集市与当天/特定日子绑定（今早集上 / 今儿没来集上 / 明天逢集），对『集日感知』是必要条件",
+    "FP": "对该构念不成立：纯地点语义 / 惯用比喻 / 市价 / 回声复读 / 回忆传闻 / 量词"
+  },
+  "items": [
+    {
+      "key": "C42-OFF|28708",
+      "label": "FP",
+      "kind": "纯地点",
+      "verdict": "『得去集上把最后两筐青椒清了』——无任何日子信息，非集日同样成立"
+    },
+    {
+      "key": "C42-ON|3594",
+      "label": "FP",
+      "kind": "idiom",
+      "verdict": "『挤得跟赶集似的』——惯用比喻，语义是人多"
+    },
+    {
+      "key": "C42-ON|6179",
+      "label": "FP",
+      "kind": "past-recall",
+      "verdict": "『上回…追到集上骂三条街』——回忆/泛指地点"
+    },
+    {
+      "key": "C42-ON|25786",
+      "label": "FP",
+      "kind": "echo",
+      "verdict": "『你刚说「赶集」』——明确引用对方刚说过的话，回声复读"
+    },
+    {
+      "key": "C43-weather-ON|19327",
+      "label": "FP",
+      "kind": "past-recall",
+      "verdict": "『他媳妇上回赶集还跟我媳妇念叨过』——回忆/传闻"
+    },
+    {
+      "key": "C43-weather-ON|20663",
+      "label": "FP",
+      "kind": "past-recall",
+      "verdict": "与 C43-weather-ON|19327 几乎逐字相同，跨 agent 复制同一条事实"
+    },
+    {
+      "key": "C43-d9t-ON|2107",
+      "label": "TP",
+      "kind": "time-adjacent",
+      "verdict": "『今早集上』——时间词与集市词邻接，绑定当天"
+    },
+    {
+      "key": "C43-d9t-ON|4967",
+      "label": "TP",
+      "kind": "time-adjacent",
+      "verdict": "『今早那趟集上』——同上；与 |2107 同人同行句式"
+    },
+    {
+      "key": "C43-d9t-ON|7127",
+      "label": "FP",
+      "kind": "price",
+      "verdict": "『按集上价给你』——市价语义"
+    },
+    {
+      "key": "C43-d9t-ON|8828",
+      "label": "TP",
+      "kind": "negated-absent",
+      "verdict": "『今儿又没来集上』——隐含今天有集，但语义是缺席（极性 -1）"
+    },
+    {
+      "key": "C43-d9t-ON|23906",
+      "label": "TP",
+      "kind": "time-adjacent",
+      "verdict": "『今早集上听人说』——同 |2107 句式"
+    },
+    {
+      "key": "C28-weather-ON|4967",
+      "label": "FP",
+      "kind": "纯地点",
+      "verdict": "『刚从集上拎了半袋新茶回来』——无时间词"
+    },
+    {
+      "key": "C28-weather-ON|32905",
+      "label": "FP",
+      "kind": "纯地点",
+      "verdict": "『刚从集上捎了半斤红枣』——无时间词"
+    }
+  ]
+}

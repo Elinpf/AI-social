@@ -315,9 +315,10 @@ def _load_readings():
 def test_mechanism_rule_equals_readings_daily_set(tmp_path):
     """**机制集日集合 == 读数器集日集合**（逐日全等）。
 
-    读数器把集日写死 `day % market_every == market_offset`；本臂写死 `day % 3 == 0`。
+    读数器把集日写死 `day % every == offset`（默认 every=3 / offset=0，来自外置词表
+    `market_day_lexicon.json::market_day_rule`）；本臂写死 `day % 3 == 0`。
     两边若不同步（period 或 offset 不一致），两臂分母就会静默错位、对比直接作废。
-    这里合成 day0..day47 的 run.jsonl，走读数器**真实的 scan_run / main 默认参数**路径。
+    这里合成 day0..day47 的 run.jsonl，走读数器**真实 API 与真实默认参数**。
     """
     mod = _load_readings()
     run = tmp_path / "run.jsonl"
@@ -327,7 +328,26 @@ def test_mechanism_rule_equals_readings_daily_set(tmp_path):
                                 "payload": {"day": d, "body": "今儿个天气不赖。",
                                             "msg_id": f"m{d}"}}, ensure_ascii=False) + "\n")
 
-    # ① 读数器默认参数（--market-every 3 / --market-offset 0）下的集日集合
+    lex = mod.Lexicon(mod.DEFAULT_LEXICON)
+    # ① 外置词表里写死的集日规则必须与机制一致
+    assert lex.market_every == MK.MARKET_PERIOD_DAYS == 3
+    assert lex.market_offset == 0
+
+    # ② 读数器扫描出的集日集合（走 scan_run 真路径）
+    acc = mod.scan_run(run, lex, lex.market_every, lex.market_offset)
+    tool_days = set(acc["market"]["by_day"].keys())
+
+    # ③ 机制侧的集日集合
+    mech_days = {d for d in range(48) if MK.is_market_day(d)}
+
+    # ④ 逐日全等（并显式点名 day0/day3 是集日、day1/day2 不是）
+    assert tool_days == mech_days, (
+        f"机制与读数器的集日集合不一致：仅机制有 {sorted(mech_days - tool_days)}，"
+        f"仅读数器有 {sorted(tool_days - mech_days)}")
+    assert {0, 3} <= mech_days and not ({1, 2} & mech_days)
+    assert set(acc["nonmarket"]["by_day"].keys()) == set(range(48)) - mech_days
+
+    # ⑤ 命令行默认参数也必须是 3 / 0（防 main 的默认值与词表脱节）
     import contextlib
     import io as _io
     buf = _io.StringIO()
@@ -335,19 +355,50 @@ def test_mechanism_rule_equals_readings_daily_set(tmp_path):
         rc = mod.main(["--arm", f"off={run}"])
     assert rc == 0, buf.getvalue()
     out = json.loads(buf.getvalue())
-    assert out["subset"]["market_every"] == MK.MARKET_PERIOD_DAYS == 3
-    assert out["subset"]["market_offset"] == 0
-    tool_days = set(int(d) for d in out["arms"]["off"]["by_day"].keys())
+    assert out["subset"]["market_every"] == 3 and out["subset"]["market_offset"] == 0
 
-    # ② 机制侧的集日集合
-    mech_days = {d for d in range(48) if MK.is_market_day(d)}
 
-    # ③ 逐日全等（并显式点名 day0/day3 是集日、day1/day2 不是）
-    assert tool_days == mech_days, (
-        f"机制与读数器的集日集合不一致：仅机制有 {sorted(mech_days - tool_days)}，"
-        f"仅读数器有 {sorted(tool_days - mech_days)}")
-    assert {0, 3} <= mech_days and not ({1, 2} & mech_days)
+# ---------------------------------------------------------------- 插行位置 / 仪器隔离（硬约束）
+def test_insert_position_locked_in_prompt_assembly():
+    """插行位置硬锁：`_market_line` 必须紧跟 `_weather_line`、在 `rift_line` 之前，
+    且**先于同一条 prompt 里的 `l7_struct_line` 与 `narration_tail`**（末段必须是收尾指令）。
+    """
+    src = (CODE_DIR / "life" / "agent.py").read_text(encoding="utf-8").split("\n")
+    idx = [i for i, ln in enumerate(src) if "_market_line(wv)" in ln]
+    assert len(idx) == 2, f"_market_line 应恰有两处接线（dialogue/reply），实测 {len(idx)}"
+    l7 = [i for i, ln in enumerate(src) if "_l7_struct_line(" in ln]
+    narr = [i for i, ln in enumerate(src) if 'narration_tail("' in ln]
+    for i in idx:
+        assert "_weather_line(wv)" in src[i - 1], f"第 {i+1} 行上一行不是 _weather_line"
+        assert "rift_line or" in src[i + 1], f"第 {i+1} 行下一行不是 rift_line"
+        next_l7 = min(j for j in l7 if j > i)
+        next_narr = min(j for j in narr if j > i)
+        assert next_l7 < next_narr, f"第 {i+1} 行插入点之后 l7 不在 narration_tail 之前"
+        assert i < next_l7, f"第 {i+1} 行插到了 l7_struct_line 之后"
+        # 插入点之后、下一个 l7 之前不得夹着 narration_tail（否则等于插进收尾段）
+        assert not any(i < j < next_l7 for j in narr), f"第 {i+1} 行插进收尾段"
 
-    # ④ scan_run 直调也必须同集合（防 main 的参数默认值与 scan_run 口径脱节）
-    acc = mod.scan_run(run, MK.MARKET_PERIOD_DAYS, 0, "market")
-    assert set(acc["by_day_msgs"]) == mech_days
+
+def test_code_never_imports_judgment_instruments():
+    """仪器隔离硬锁：`code/` 运行时**不得 import** `tools/metrics/` 下的判据仪器。
+
+    读数器/词表只在跑完后做后处理；若被 `code/` 运行时 import，词表 bug 会同时污染两臂
+    且无人察觉（词表 v1 的 `|` 优先级 bug 就是这么暴露的）。
+    只扫**真实 import 语句**（注释/文档串里提到文件名不算），并跳过 `tests/` 自身。
+    """
+    import re as _re
+    pat = _re.compile(r"^\s*(?:from|import)\s+([A-Za-z0-9_.]+)")
+    bad_mods = ("market_day_readings", "market_day_lexicon", "market_day_labels",
+                "tools.metrics", "tools")
+    offenders = []
+    for py in CODE_DIR.rglob("*.py"):
+        if "__pycache__" in str(py) or "/tests/" in str(py).replace("\\", "/"):
+            continue
+        for lineno, line in enumerate(py.read_text(encoding="utf-8", errors="ignore").split("\n"), 1):
+            m = pat.match(line)
+            if not m:
+                continue
+            mod = m.group(1)
+            if any(mod == b or mod.startswith(b + ".") for b in bad_mods):
+                offenders.append(f"{py.relative_to(CODE_DIR)}:{lineno} ← {line.strip()}")
+    assert not offenders, "code/ 运行时 import 了判据仪器：" + "; ".join(offenders)

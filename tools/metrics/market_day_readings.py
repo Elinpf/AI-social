@@ -1,105 +1,106 @@
 #!/usr/bin/env python3
 """market_day_readings.py —— market-day 臂（CYCLE-44）**只读**读数器（零 LLM）。
 
-设计纪律（对齐仓库既有读数器：tools/metrics/weather_readings.py、v2/evidence/r37_readings.py）：
-  - **只读** `run.jsonl`（+ 冻结词表），不 import `code/`、不写 run 目录、不改任何运行时源码；
-  - 判据口径**写死在代码里**并有 `LEXICON_VERSION`，任何改动必须先走预登记 Amendment；
-  - 输出**成组**读数（主判据 + 探针 + 极性 + 去重），不做任何"提升/改善"式措辞。
+仓库内目标路径：`tools/metrics/market_day_readings.py`
+判据词表真源：`tools/metrics/market_day_lexicon.json`（**判据词表/负例表全部外置，不在本文件硬编码**）
 
-三档口径（T1b 审计裁决：原式 69.2% 假阳性，已否决）：
-  - R_A 显式日历档  `集日|逢三|赶集日|逢集日`            → 只作「注入被采纳」探针
-  - R_B 时间邻接档  `(今儿|今天|今早|…|逢三) ⇄ 集市词 ≤6 字` → **主判据**
-  - R_C 宽档（= 已被否决的原式）                          → 仅作召回探索，不作判据
+纪律（对齐 tools/metrics/weather_readings.py、v2/evidence/r37_readings.py）：
+  - 只读 `run.jsonl`（+ 词表 + 可选人工标注），不 import `code/`、不写 run 目录、不改运行时源码；
+  - 输出里附**词表文件与标注文件的 sha256**（可冻结、可对表）；
+  - 输出 JSON + Markdown 两份；措辞只有预登记的判定映射，不写"提升/改善"。
 
-用法（在仓库根，或任意目录，脚本只读文件）：
-  # 单臂
-  python3 tools/metrics/market_day_readings.py --arm off=<off>/run.jsonl --json out_off.json
-  # 两臂对照（主判据 Δ + 两臂 Wilson CI + 判据表）
+三档口径（T1b 审计裁决：原式假阳性 69.2%，已否决）：
+  R_A 显式日历档 → 只作「注入被采纳」探针
+  R_B 时间邻接档 → **主判据**
+  R_C 宽档（原式） → 仅作召回探索
+
+用法（任意目录可跑，一行命令）：
+  python3 tools/metrics/market_day_readings.py --selftest
   python3 tools/metrics/market_day_readings.py \
-      --arm off=<off>/run.jsonl --arm on=<on>/run.jsonl --json out_pair.json
-  # 只看集日子集（默认 --market-every 3 --market-offset 0，即 day%3==0）
-  ... --subset market      # 亦支持 --subset all
+      --arm off=<off>/run.jsonl --arm on=<on>/run.jsonl \
+      --json v2/evidence/cycle44_market_readings.json \
+      --md   v2/evidence/cycle44_market_readings.md
+  ... --subset market|nonmarket|all|both      # both=集日/非集日分列（默认）
+  ... --labels tools/metrics/market_day_labels_baseline13.json   # 算真阳/假阳
 
 退出码：0 正常；2 参数/文件错；3 词表自检失败。
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import re
 import sys
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
 
-LEXICON_VERSION = "market-day-lexicon/R-B-v1 (T1b audit 2026-10-31)"
-
-# ---------------------------------------------------------------- 集市词 / 时间词
-MK = r"(?:赶集|逢集|集日|集上|集市|市集|赶场)"
-TW = (r"(?:今儿|今天|今日|今早|今晨|今午|今晚|当日|当天|当天里|明天|明日|明儿|"
-      r"后日|后天|逢三|初三|初六|初九|这个日子|这日子)")
-# 窗口 ≤6 字、不跨句读（。！？；换行）
-R_A = re.compile(r"集日|逢三|赶集日|逢集日")
-R_B = re.compile(rf"{TW}[^。！？；\n]{{0,6}}{MK}|{MK}[^。！？；\n]{{0,6}}{TW}")
-R_C = re.compile(r"赶集|逢集|集市|集上|摆摊|卖货|买(点|些|个)")
-
-# ---------------------------------------------------------------- 负例表（T1b §3.1）
-NEG_IDIOM = re.compile(r"(跟|像|似|如同)[^，。！？\n]{0,6}赶集")                    # 挤得跟赶集似的
-NEG_PRICE = re.compile(r"(集上|市集|集市)(价|的价|行情|价儿)")                      # 集上价 = 市价
-NEG_PAST = re.compile(r"(上回|上次|昨天|昨儿|前儿|前阵子|以前|小时候|那年|当年)")   # 回忆/传闻
-NEG_ECHO = re.compile(r"(你刚说|你说的|你方才说|刚说|听你说|照你说)[^。！？\n]{0,8}" + MK)  # 回声复读
-NEG_NEG = re.compile(
-    rf"(不|没|别)[^。！？；\n]{{0,6}}{MK}|{MK}[^。！？；\n]{{0,6}}(不|没)(来|去|赶|摆|开)"
-)
-# 显式不采（T1b 裁决：任何日子都成立，纯噪声）
-DROPPED_TOKENS = ["买点", "买些", "买个", "卖货"]
-
-HARD_NEG = [("idiom", NEG_IDIOM), ("price", NEG_PRICE), ("echo", NEG_ECHO), ("past-recall", NEG_PAST)]
-
 MSG_TYPES = {"MSG_PUBLIC", "MSG_DM", "MSG_PRIVATE", "MSG"}
+DEFAULT_LEXICON = Path(__file__).resolve().parent / "market_day_lexicon.json"
 
 
-def wilson(k: int, n: int, z: float = 1.959964) -> tuple[float, float]:
+# ------------------------------------------------------------------ 工具
+def sha256_of(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def wilson(k: int, n: int, z: float = 1.959964) -> list[float]:
     """Wilson 95% 区间（与仓库其余读数器同式）。"""
     if n <= 0:
-        return (0.0, 0.0)
+        return [0.0, 0.0]
     p = k / n
     d = 1 + z * z / n
     c = (p + z * z / (2 * n)) / d
     h = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d
-    return (max(0.0, c - h), min(1.0, c + h))
+    return [max(0.0, c - h), min(1.0, c + h)]
 
 
-def classify(body: str) -> dict:
-    """单条正文 → 口径判定。返回 hit / 口径档案 / 极性 / 剔除理由。"""
-    flags = [name for name, rx in HARD_NEG if rx.search(body)]
-    negated = bool(NEG_NEG.search(body))
-    r_a = bool(R_A.search(body))
-    r_b_raw = bool(R_B.search(body))
-    r_c = bool(R_C.search(body))
-    r_b = bool(r_b_raw and not flags)          # 主判据：邻接 + 非硬负例
-    return {
-        "hit_R_A": r_a,
-        "hit_R_B_raw": r_b_raw,
-        "hit_R_B": r_b,
-        "hit_R_C": r_c,
-        "flags": flags,
-        "polarity": (-1 if negated else +1) if r_b else 0,
-    }
+# ------------------------------------------------------------------ 词表（外置 JSON）
+class Lexicon:
+    def __init__(self, path: Path):
+        self.path = path
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        self.raw = raw
+        self.version = raw["version"]
+        mk, tw = raw["market_words_re"], raw["time_words_re"]
+        cal = raw["calibers"]
+        self.R_A = re.compile(cal["R_A"]["re"])
+        self.R_B = re.compile(cal["R_B"]["re_template"].format(TW=tw, MK=mk))
+        self.R_C = re.compile(cal["R_C"]["re"])
+        self.hard_negatives = [(d["name"], re.compile(d["re"])) for d in raw["hard_negatives"]]
+        self.negation = re.compile(raw.get("negation_re") or r"(?!x)x")
+        self.dropped_tokens = list((raw.get("dropped_tokens") or {}).keys())
+        rule = (raw.get("market_day_rule") or {}).get("params") or {}
+        self.market_every = int(rule.get("every", 3))
+        self.market_offset = int(rule.get("offset", 0))
+        self.sha256 = sha256_of(path)
+
+    def classify(self, body: str) -> dict:
+        flags = [name for name, rx in self.hard_negatives if rx.search(body)]
+        r_a = bool(self.R_A.search(body))
+        r_b_raw = bool(self.R_B.search(body))
+        r_c = bool(self.R_C.search(body))
+        r_b = bool(r_b_raw and not flags)          # 主判据：邻接 + 非硬负例
+        negated = bool(self.negation.search(body))
+        return {"hit_R_A": r_a, "hit_R_B_raw": r_b_raw, "hit_R_B": r_b, "hit_R_C": r_c,
+                "flags": flags, "polarity": (-1 if negated else 1) if r_b else 0}
 
 
-def scan_run(path: Path, market_every: int, market_offset: int, subset: str) -> dict:
-    """扫一份 run.jsonl，按口径累计。"""
-    acc = {
-        "msgs": 0,                    # 参与分母的正文条数（已按 subset 过滤）
-        "msgs_all": 0,
-        "hit_R_A": 0, "hit_R_B": 0, "hit_R_B_raw": 0, "hit_R_C": 0,
-        "hit_R_B_pos": 0, "hit_R_B_neg": 0,
-        "flag_counts": Counter(),
-        "by_day_msgs": Counter(), "by_day_hit": Counter(),
-        "cells": set(), "cells_hit": set(),      # (author, day) 去重用
-        "samples": [], "negatives": [],
-    }
+# ------------------------------------------------------------------ 扫描
+def _blank() -> dict:
+    return {"msgs": 0, "hit_R_A": 0, "hit_R_B": 0, "hit_R_B_raw": 0, "hit_R_C": 0,
+            "pos": 0, "neg": 0, "cells": set(), "cells_hit": set(),
+            "by_day": Counter(), "by_day_hit": Counter()}
+
+
+def scan_run(path: Path, lex: Lexicon, every: int, offset: int) -> dict:
+    acc = {"msgs_all": 0, "market": _blank(), "nonmarket": _blank(),
+           "flags": Counter(), "hits": []}
     with path.open("r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
@@ -115,139 +116,236 @@ def scan_run(path: Path, market_every: int, market_offset: int, subset: str) -> 
             body = p.get("body") or ""
             if not body:
                 continue
-            acc["msgs_all"] += 1
             day = p.get("day")
-            is_market_day = (isinstance(day, int) and day % market_every == market_offset)
-            if subset == "market" and not is_market_day:
-                continue
-            acc["msgs"] += 1
-            acc["by_day_msgs"][day] += 1
-            acc["cells"].add((e.get("actor"), day))
-            c = classify(body)
-            for key in ("hit_R_A", "hit_R_B", "hit_R_B_raw", "hit_R_C"):
-                if c[key]:
-                    acc[key] += 1
+            acc["msgs_all"] += 1
+            key = "market" if (isinstance(day, int) and day % every == offset) else "nonmarket"
+            sub = acc[key]
+            sub["msgs"] += 1
+            sub["by_day"][day] += 1
+            sub["cells"].add((e.get("actor"), day))
+            c = lex.classify(body)
+            for k in ("hit_R_A", "hit_R_B", "hit_R_B_raw", "hit_R_C"):
+                if c[k]:
+                    sub[k] += 1
             if c["hit_R_B"]:
-                acc["by_day_hit"][day] += 1
-                acc["cells_hit"].add((e.get("actor"), day))
-                acc["hit_R_B_pos" if c["polarity"] > 0 else "hit_R_B_neg"] += 1
-                if len(acc["samples"]) < 40:
-                    acc["samples"].append({
-                        "seq": e.get("seq"), "day": day, "actor": e.get("actor"),
-                        "topic": (p.get("ctx") or {}).get("topic"),
-                        "msg_id": p.get("msg_id"), "msg_uid": p.get("msg_uid"),
-                        "polarity": c["polarity"], "text": body,
-                    })
+                sub["by_day_hit"][day] += 1
+                sub["cells_hit"].add((e.get("actor"), day))
+                sub["pos" if c["polarity"] > 0 else "neg"] += 1
             for fl in c["flags"]:
-                acc["flag_counts"][fl] += 1
-                if len(acc["negatives"]) < 40:
-                    acc["negatives"].append({"flag": fl, "seq": e.get("seq"),
-                                             "actor": e.get("actor"), "msg_id": p.get("msg_id"),
-                                             "text": body})
+                acc["flags"][fl] += 1
+            if c["hit_R_C"]:
+                acc["hits"].append({
+                    "seq": e.get("seq"), "day": day, "actor": e.get("actor"),
+                    "msg_id": p.get("msg_id"), "msg_uid": p.get("msg_uid"), "subset": key,
+                    "hit_R_A": c["hit_R_A"], "hit_R_B": c["hit_R_B"],
+                    "hit_R_B_raw": c["hit_R_B_raw"], "hit_R_C": c["hit_R_C"],
+                    "polarity": c["polarity"],
+                    "flags": c["flags"], "text": body})
     return acc
 
 
-def summarize(name: str, acc: dict) -> dict:
-    n = acc["msgs"]
+# ------------------------------------------------------------------ 人工标注 → TP/FP
+def apply_labels(acc: dict, arm: str, labels: dict | None) -> dict | None:
+    if not labels:
+        return None
+    by_key = {it["key"]: it for it in (labels.get("items") or [])}
+    tp = fp = unlabeled = 0
+    detail = []
+    for h in acc["hits"]:
+        k = f"{arm}|{h['seq']}"
+        it = by_key.get(k)
+        if not it:
+            unlabeled += 1
+            continue
+        if it["label"] == "TP":
+            tp += 1
+        else:
+            fp += 1
+        detail.append({"key": k, "label": it["label"], "kind": it.get("kind"),
+                       "hit_R_B": h["hit_R_B"], "hit_R_C": h["hit_R_C"]})
+    n = tp + fp
+    return {"labels_version": labels.get("version"), "n_labeled": n, "tp": tp, "fp": fp,
+            "fp_rate": (fp / n) if n else None, "unlabeled_hits": unlabeled, "detail": detail}
+
+
+# ------------------------------------------------------------------ 汇总
+def _block(sub: dict) -> dict:
+    n = sub["msgs"]
+    return {
+        "denominator_msgs": n,
+        "main_R_B": {"num": sub["hit_R_B"], "den": n,
+                     "rate": (sub["hit_R_B"] / n) if n else None,
+                     "wilson95": wilson(sub["hit_R_B"], n)},
+        "probe_R_A": {"num": sub["hit_R_A"], "den": n,
+                      "rate": (sub["hit_R_A"] / n) if n else None,
+                      "wilson95": wilson(sub["hit_R_A"], n)},
+        "explore_R_C": {"num": sub["hit_R_C"], "den": n,
+                        "rate": (sub["hit_R_C"] / n) if n else None},
+        "narrative_R_B_raw": {"num": sub["hit_R_B_raw"], "den": n},
+        "polarity": {"positive": sub["pos"], "negated": sub["neg"]},
+        "dedup": {"cells": len(sub["cells"]), "cells_with_hit": len(sub["cells_hit"]),
+                  "rate_cell_level": (len(sub["cells_hit"]) / len(sub["cells"]))
+                  if sub["cells"] else None},
+        "by_day": {str(d): {"msgs": sub["by_day"][d], "hit": sub["by_day_hit"][d]}
+                   for d in sorted(sub["by_day"], key=lambda x: (x is None, x))},
+    }
+
+
+def summarize_arm(name: str, acc: dict, lex: Lexicon, labels: dict | None,
+                  labels_path: str | None, arm_path: Path) -> dict:
     out = {
         "arm": name,
-        "lexicon_version": LEXICON_VERSION,
-        "denominator_msgs": n,
+        "run_jsonl": str(arm_path),
+        "run_sha256": sha256_of(arm_path),
+        "lexicon": {"version": lex.version, "path": str(lex.path), "sha256": lex.sha256},
+        "labels": ({"path": labels_path, "sha256": sha256_of(Path(labels_path)),
+                    "version": (labels or {}).get("version")} if labels_path else None),
         "msgs_all": acc["msgs_all"],
-        "main_R_B": {"num": acc["hit_R_B"], "den": n,
-                     "rate": acc["hit_R_B"] / n if n else None,
-                     "wilson95": wilson(acc["hit_R_B"], n)},
-        "probe_R_A": {"num": acc["hit_R_A"], "den": n,
-                      "rate": acc["hit_R_A"] / n if n else None,
-                      "wilson95": wilson(acc["hit_R_A"], n)},
-        "explore_R_C": {"num": acc["hit_R_C"], "den": n,
-                        "rate": acc["hit_R_C"] / n if n else None},
-        "narrative_R_B_raw": {"num": acc["hit_R_B_raw"], "den": n},
-        "polarity": {"positive": acc["hit_R_B_pos"], "negated": acc["hit_R_B_neg"]},
-        "hard_negative_flags": dict(acc["flag_counts"]),
-        "dedup_cells": {"cells": len(acc["cells"]), "cells_with_hit": len(acc["cells_hit"]),
-                        "rate_cell_level": (len(acc["cells_hit"]) / len(acc["cells"])
-                                            if acc["cells"] else None)},
-        "by_day": {str(d): {"msgs": acc["by_day_msgs"][d], "hit": acc["by_day_hit"][d]}
-                   for d in sorted(acc["by_day_msgs"], key=lambda x: (x is None, x))},
-        "samples_hit": acc["samples"],
-        "samples_negative": acc["negatives"],
-        "dropped_tokens": DROPPED_TOKENS,
+        "market": _block(acc["market"]),
+        "nonmarket": _block(acc["nonmarket"]),
+        "hard_negative_flags": dict(acc["flags"]),
+        "dropped_tokens": lex.dropped_tokens,
+        "hit_detail_R_C": acc["hits"][:60],
     }
+    lab = apply_labels(acc, name, labels)
+    if lab:
+        out["tp_fp"] = lab
     return out
 
 
-def compare(a: dict, b: dict) -> dict:
-    """两臂对照：Δ（绝对）、两臂 Wilson、判据表（照预登记 §10 映射，不写"提升"）。"""
-    ma, mb = a["main_R_B"], b["main_R_B"]
-    if not (ma["den"] and mb["den"]):
-        return {"verdict": "CANNOT-JUDGE（分母为 0）"}
-    delta = mb["rate"] - ma["rate"]
-    lo_a, hi_a = ma["wilson95"]
-    lo_b, hi_b = mb["wilson95"]
+def compare(off: dict, on: dict, key: str) -> dict:
+    a, b = off[key]["main_R_B"], on[key]["main_R_B"]
+    if not (a["den"] and b["den"]):
+        return {"subset": key, "verdict": "CANNOT-JUDGE（分母为 0）"}
+    delta = b["rate"] - a["rate"]
+    lo_a, hi_a = a["wilson95"]
+    lo_b, hi_b = b["wilson95"]
     overlap = not (lo_b > hi_a or lo_a > hi_b)
-    if mb["num"] == 0 and ma["num"] == 0:
-        note = "两臂 R_B 命中均为 0：本轮只能报『注入未被台词采纳』，不得判机制无效。"
+    if a["num"] == 0 and b["num"] == 0:
+        v = "两臂 R_B 命中均为 0：只能报『注入未被台词采纳』，不得判机制无效。"
     elif delta >= 0.05 and not overlap:
-        note = "达 +5pp 且 CI 不重叠 ⇒ 判『成立（仅限本构念/本规模）』。"
+        v = "Δ≥+5.0pp 且 CI 不重叠 ⇒ 判『成立（仅限本构念与本规模）』。"
     elif delta >= 0.05 and overlap:
-        note = "方向达标但 CI 重叠 ⇒ 判『不可分（统计不足）』，不得写成立。"
+        v = "方向达标但 CI 重叠 ⇒ 判『不可分（统计不足）』，不得写成成立。"
     elif delta > 0:
-        note = "Δ<+5pp ⇒ 判『未达阈值』。"
+        v = "Δ<+5.0pp ⇒ 判『未达阈值』。"
     else:
-        note = "Δ≤0 ⇒ 判『未达阈值（方向为负）』。"
-    return {
-        "delta_pp": round(delta * 100, 2),
-        "arm_off_rate_pct": round(ma["rate"] * 100, 2),
-        "arm_on_rate_pct": round(mb["rate"] * 100, 2),
-        "off_wilson95_pct": [round(lo_a * 100, 2), round(hi_a * 100, 2)],
-        "on_wilson95_pct": [round(lo_b * 100, 2), round(hi_b * 100, 2)],
-        "ci_overlap": overlap,
-        "verdict": note,
-        "reading_rule": "Δ 与 CI 只描述『集日提及率』之差，不描述生活气息、不描述行为。",
-    }
+        v = "Δ≤0 ⇒ 判『未达阈值（方向为负）』。"
+    return {"subset": key, "delta_pp": round(delta * 100, 2),
+            "off_rate_pct": round(a["rate"] * 100, 2), "on_rate_pct": round(b["rate"] * 100, 2),
+            "off_wilson95_pct": [round(lo_a * 100, 2), round(hi_a * 100, 2)],
+            "on_wilson95_pct": [round(lo_b * 100, 2), round(hi_b * 100, 2)],
+            "ci_overlap": overlap, "verdict": v,
+            "reading_rule": "Δ 与 CI 只描述『集日提及率』之差；不描述生活气息、不描述行为。"}
 
 
-def selftest() -> int:
-    """词表自检：用 T1b 审计的 13 条真语料命中断言 R_B 只放 4 条。"""
+# ------------------------------------------------------------------ Markdown
+def to_markdown(res: dict) -> str:
+    L = ["# market-day 读数（自动生成，勿手改）", ""]
+    first = next(iter(res["arms"].values()))
+    lx = first["lexicon"]
+    L += [f"- 词表：`{lx['version']}`　sha256 `{lx['sha256']}`",
+          f"- 词表文件：`{lx['path']}`",
+          "- 集日定义：`" + res["subset"]["rule"] + f"`（every={res['subset']['market_every']}, "
+          f"offset={res['subset']['market_offset']}）",
+          "- 口径：主判据 `R_B`（时间邻接 + 硬负例）；`R_A` 探针；`R_C` 仅探索（已否决）", "",
+          "## 各臂读数（集日 / 非集日分列）", "",
+          "| 臂 | 子集 | 分母 MSG | **R_B** | R_B 率 | Wilson 95% | R_A | R_C | 阳性/否定 | 去重单元(命中/总) |",
+          "|---|---|---|---|---|---|---|---|---|---|"]
+    for name, arm in res["arms"].items():
+        for key, label in (("market", "集日"), ("nonmarket", "非集日")):
+            b = arm[key]
+            mb = b["main_R_B"]
+            rate = "-" if mb["rate"] is None else f"{mb['rate']*100:.2f}%"
+            ci = f"[{mb['wilson95'][0]*100:.2f}%, {mb['wilson95'][1]*100:.2f}%]"
+            L.append(f"| {name} | {label} | {mb['den']} | **{mb['num']}** | {rate} | {ci} | "
+                     f"{b['probe_R_A']['num']} | {b['explore_R_C']['num']} | "
+                     f"{b['polarity']['positive']}/{b['polarity']['negated']} | "
+                     f"{b['dedup']['cells_with_hit']}/{b['dedup']['cells']} |")
+    L.append("")
+    if "pair" in res:
+        L += ["## 两臂对照（主判据）", ""]
+        for p in res["pair"]:
+            L.append(f"- **{p['subset']}**：off {p.get('off_rate_pct')}% → on {p.get('on_rate_pct')}%，"
+                     f"Δ **{p.get('delta_pp')}pp**，CI {'重叠' if p.get('ci_overlap') else '不重叠'} ⇒ {p.get('verdict')}")
+        L.append("")
+    tps = [(n, a["tp_fp"]) for n, a in res["arms"].items() if "tp_fp" in a]
+    if tps:
+        L += ["## 人工标注对表（真阳/假阳，仅覆盖已标注命中）", "",
+              "| 臂 | 已标注 | TP | FP | 假阳性率 | 未标注命中 |", "|---|---|---|---|---|---|"]
+        for n, t in tps:
+            fr = "-" if t["fp_rate"] is None else f"{t['fp_rate']*100:.1f}%"
+            L.append(f"| {n} | {t['n_labeled']} | {t['tp']} | {t['fp']} | {fr} | {t['unlabeled_hits']} |")
+        L.append("")
+    L += ["## 硬负例剔除计数", ""]
+    for name, arm in res["arms"].items():
+        L.append(f"- {name}: `{json.dumps(arm['hard_negative_flags'], ensure_ascii=False)}`")
+    L += ["", f"## 已从判据剔除的 token", f"`{'`, `'.join(first['dropped_tokens'])}`", ""]
+    return "\n".join(L)
+
+
+# ------------------------------------------------------------------ 自检
+def selftest(lex: Lexicon) -> int:
     cases = [
-        ("（拿围裙角蹭了蹭手）我这会儿得去集上把最后两筐青椒清了", False),          # 纯地点
-        ("这两天铺子前头挤得跟赶集似的", False),                                   # 比喻
-        ("她上回为半垄菜地能追到集上骂三条街", False),                             # 回忆
-        ('你刚说"赶集"，我倒想起桂香家那口子', False),                             # 回声
-        ("布角还沾着今早集上的泥点子", True),                                       # 邻接
-        ("今早那趟集上碰见你三叔", True),                                           # 邻接
-        ("那两把葱我按集上价给你", False),                                          # 市价
-        ("他娘今儿又没来集上", True),                                               # 邻接（极性 -1）
-        ("我刚从集上拎了半袋新茶回来", False),                                      # 纯地点
-        ("买点盐，回头再买些菜", False),                                            # 已剔除 token
-        ("明天逢集，得早点去占位", True),                                           # 日历词
+        ("（拿围裙角蹭了蹭手）我这会儿得去集上把最后两筐青椒清了", False),
+        ("这两天铺子前头挤得跟赶集似的", False),
+        ("她上回为半垄菜地能追到集上骂三条街", False),
+        ('你刚说"赶集"，我倒想起桂香家那口子', False),
+        ("布角还沾着今早集上的泥点子", True),
+        ("今早那趟集上碰见你三叔", True),
+        ("那两把葱我按集上价给你", False),
+        ("他娘今儿又没来集上", True),
+        ("我刚从集上拎了半袋新茶回来", False),
+        ("买点盐，回头再买些菜", False),
+        ("明天逢集，得早点去占位", True),
     ]
     bad = 0
     for text, expect in cases:
-        got = classify(text)["hit_R_B"]
+        got = lex.classify(text)["hit_R_B"]
         if got != expect:
             print(f"  SELFTEST FAIL: expect={expect} got={got} :: {text}", file=sys.stderr)
             bad += 1
-    print(f"selftest: {len(cases) - bad}/{len(cases)} passed ({LEXICON_VERSION})")
+    if lex.R_A.search("今早集上"):
+        print("  SELFTEST FAIL: R_A 不应命中『今早集上』", file=sys.stderr)
+        bad += 1
+    print(f"selftest: {len(cases)+1-bad}/{len(cases)+1} passed | lexicon={lex.version} "
+          f"sha256={lex.sha256[:16]}")
     return 0 if bad == 0 else 3
 
 
+# ------------------------------------------------------------------ main
 def main(argv: list[str]) -> int:
-    ap = argparse.ArgumentParser(description="market-day 臂只读读数器（零 LLM）")
-    ap.add_argument("--arm", action="append", default=[],
-                    help="name=path/to/run.jsonl，可给两次（如 off=… on=…）")
-    ap.add_argument("--json", dest="json_out", default=None, help="结果落盘路径")
-    ap.add_argument("--subset", choices=["market", "all"], default="market",
-                    help="market=只取集日回合（day%%market_every==market_offset，默认 day%%3==0）")
-    ap.add_argument("--market-every", type=int, default=3)
-    ap.add_argument("--market-offset", type=int, default=0)
-    ap.add_argument("--max-samples", type=int, default=40)
+    ap = argparse.ArgumentParser(description="market-day 臂只读读数器（零 LLM，词表外置）")
+    ap.add_argument("--arm", action="append", default=[], help="name=path/to/run.jsonl（可给两次）")
+    ap.add_argument("--lexicon", default=str(DEFAULT_LEXICON), help="判据词表 JSON 路径")
+    ap.add_argument("--labels", default=None, help="人工标注 JSON（算 TP/FP）")
+    ap.add_argument("--json", dest="json_out", default=None)
+    ap.add_argument("--md", dest="md_out", default=None)
+    ap.add_argument("--subset", choices=["market", "nonmarket", "all", "both"], default="both")
+    ap.add_argument("--market-every", type=int, default=None)
+    ap.add_argument("--market-offset", type=int, default=None)
     ap.add_argument("--selftest", action="store_true")
     args = ap.parse_args(argv)
 
+    lex_path = Path(args.lexicon)
+    if not lex_path.exists():
+        print(f"FATAL: 找不到词表 {lex_path}", file=sys.stderr)
+        return 2
+    lex = Lexicon(lex_path)
     if args.selftest:
-        return selftest()
+        return selftest(lex)
+
+    every = args.market_every if args.market_every is not None else lex.market_every
+    offset = args.market_offset if args.market_offset is not None else lex.market_offset
+
+    labels = None
+    if args.labels:
+        lp = Path(args.labels)
+        if not lp.exists():
+            print(f"FATAL: 找不到标注文件 {lp}", file=sys.stderr)
+            return 2
+        labels = json.loads(lp.read_text(encoding="utf-8"))
+
     if not args.arm:
         ap.error("至少给一个 --arm name=path")
 
@@ -260,26 +358,23 @@ def main(argv: list[str]) -> int:
         if not p.exists():
             print(f"FATAL: 找不到 {p}", file=sys.stderr)
             return 2
-        acc = scan_run(p, args.market_every, args.market_offset, args.subset)
-        acc["samples"] = acc["samples"][: args.max_samples]
-        acc["negatives"] = acc["negatives"][: args.max_samples]
-        arms[name] = summarize(name, acc)
+        acc = scan_run(p, lex, every, offset)
+        arms[name] = summarize_arm(name, acc, lex, labels, args.labels, p)
         order.append(name)
 
-    result = {
-        "lexicon_version": LEXICON_VERSION,
-        "subset": {"mode": args.subset, "market_every": args.market_every,
-                   "market_offset": args.market_offset,
-                   "rule": "集日 = day % market_every == market_offset"},
-        "arms": arms,
-    }
+    res = {"lexicon_version": lex.version,
+           "subset": {"mode": args.subset, "market_every": every, "market_offset": offset,
+                      "rule": "集日 = day % every == offset"},
+           "arms": arms}
     if len(order) == 2:
-        result["pair"] = compare(arms[order[0]], arms[order[1]])
-        result["pair"]["pair_note"] = f"{order[0]} → {order[1]}"
+        res["pair"] = [compare(arms[order[0]], arms[order[1]], k) for k in ("market", "nonmarket")]
+        res["pair_note"] = f"{order[0]} → {order[1]}"
 
-    text = json.dumps(result, ensure_ascii=False, indent=1, default=str)
+    text = json.dumps(res, ensure_ascii=False, indent=1, default=str)
     if args.json_out:
         Path(args.json_out).write_text(text, encoding="utf-8")
+    if args.md_out:
+        Path(args.md_out).write_text(to_markdown(res), encoding="utf-8")
     print(text)
     return 0
 
