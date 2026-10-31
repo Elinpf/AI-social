@@ -66,7 +66,7 @@ echo "== 扫 $FILE（rev=$REV）=="
 mapfile -t RAW < <(grep -nEo '\b[0-9a-f]{7,40}\b' "$FILE")
 TREE_BLOBS=$(git ls-tree -r "$REV" 2>/dev/null | awk '{print $3}')
 
-seen=""; bad=0; count=0; c_ok=0; c_pend=0; c_decl=0
+seen=""; bad=0; count=0; c_ok=0; c_pend=0; c_decl=0; c_und=0
 for entry in "${RAW[@]}"; do
   lineno="${entry%%:*}"; tok="${entry#*:}"
   case "$tok" in *[a-f]*) ;; *) continue ;; esac
@@ -120,15 +120,23 @@ for entry in "${RAW[@]}"; do
   else
     # 书写约定（审计 faeba4be 提，Leader 采纳）：**引用必须同行带路径**；无路径的纯 sha 一律视为"本件实测值"。
     # 于是：strict 下仍算漏（判定件/refs 件要求 0 待审）；非 strict 下记"实测值·免核"并计入豁免 N。
-    if [ "$STRICT" -eq 1 ]; then
-      echo "  **BAD** L$lineno  $tok  ← 非对象、无路径（引用须带路径；实测值见非 strict 模式）"; count=$((count+1)); bad=$((bad+1))
-    else
+    # 豁免要付费（审计 dd04dbe1）：无路径的 sha 必须同行含「实测值」或「内容 sha」才豁免，
+    # 否则记"待审（未声明）"——非 strict 不算漏但必须报；strict 算漏。
+    # 理由："没写路径" ≠ "证明是实测值"，而是"没提供证据"；免费豁免 = 空检查。
+    if printf '%s' "$line_text" | grep -qE '实测值|内容 sha'; then
       echo "  content(实测值·免核) L$lineno  $tok"; count=$((count+1)); c_pend=$((c_pend+1))
+    else
+      if [ "$STRICT" -eq 1 ]; then
+        echo "  **BAD** L$lineno  $tok  ← 无路径且未声明「实测值/内容 sha」"; count=$((count+1)); bad=$((bad+1))
+      else
+        echo "  **待审(未声明)** L$lineno  $tok  ← 无路径且未声明；非 strict 不算漏，但须补标注"; count=$((count+1)); c_und=$((c_und+1))
+      fi
     fi
   fi
 done
 
-echo "== 共 $count 个：可核 $c_ok（其中已声明 $c_decl），待审 $c_pend（豁免），漏 $bad =="
+echo "== 共 $count 个：可核 $c_ok（其中已声明 $c_decl），豁免 $c_pend，未声明待审 $c_und，漏 $bad =="
+# 注：--strict 只管"是否解释过"，不管"解释得对不对"；"已声明"算可解释，但声明正确性机器判不了。
 # 豁免必须"看得见"：非 strict 下也打印豁免项数，供抽查取靶子（审计 faeba4be 建议）
 [ "$c_pend" -gt 0 ] && echo "== 豁免 $c_pend 项（实测值·内容 sha，未逐个核）——N 异常大即值得抽一条看 =="
 [ "$bad" -gt 0 ] && { echo "结论: HAS_UNEXPLAINED"; exit 1; }
