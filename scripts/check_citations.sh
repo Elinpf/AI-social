@@ -3,7 +3,7 @@
 #
 # 由来：一晚"引用纪律"事故 5 次（旧 sha 返工×3、口径混用×2）——共同点是"知道规则却漏一处"。
 # 审计（repro-verifier, 4d17cc71）指出本脚本第一版两个漏洞，均已修：
-#   ① 整行有一个白名单词 ⇒ 该行所有 sha 免检    → 改为**只作用于 token 前后 20 字窗口**
+#   ① 整行有一个白名单词 ⇒ 该行所有 sha 免检    → 改为"紧跟该 sha 的括号"（窗口化仍会辐射到相邻 sha）
 #   ② object 判 OK 但可能是历史版 blob          → 区分 object(当前版) / object(历史版)，后者须显式标注
 #
 # 六分类：
@@ -21,7 +21,7 @@ set -uo pipefail
 if [ "${1:-}" = "--selftest" ]; then
   T=$(mktemp); RC=0
   cat > "$T" <<'EOF'
-L3 deadbeef12345678 修订史（死 sha，应被抓）
+L3 deadbeef12345678（死 sha，无标注，应被抓）
 L4 cafebabe1234 与 badbadbad999 历史版（前者坏，应被抓）
 L5 feedface9999（无标注，应被抓）
 EOF
@@ -29,12 +29,23 @@ EOF
   bash "$0" "$T" > /tmp/st1.out 2>&1; bad=$(grep -c '\*\*BAD' /tmp/st1.out || true)
   grep '\*\*BAD' /tmp/st1.out || true
   echo "== selftest ②：--strict 下'已声明'的也必须列入待审（期望≥1）=="
-  bash "$0" "$T" --strict > /tmp/st2.out 2>&1; pend=$(grep -c '需人工确认' /tmp/st2.out || true)
-  grep '需人工确认' /tmp/st2.out || true
-  if [ "${bad:-0}" -ge 2 ] && [ "${pend:-0}" -ge 1 ]; then
-    echo "selftest PASS（无标注抓到 $bad 个；strict 待审 $pend 个）"; RC=0
+  T1b=$(mktemp); printf 'L9 cafebabe1234（历史版）\n' > "$T1b"
+  bash "$0" "$T1b" --strict > /tmp/st2.out 2>&1; pend=$(grep -c '需人工确认' /tmp/st2.out || true)
+  grep '需人工确认' /tmp/st2.out || true; rm -f "$T1b"
+  echo "== selftest ③：标注不得辐射到相邻 sha（期望 2 个 BAD）=="
+  T2=$(mktemp)
+  cat > "$T2" <<'EOT'
+L2 badbadbad999（历史版）与 cafebabe1234 相邻
+L3 cafebabe1234 与 badbadbad999（历史版）
+EOT
+  bash "$0" "$T2" > /tmp/st3.out 2>&1
+  rad=$(grep -c '\*\*BAD' /tmp/st3.out || true)
+  grep '\*\*BAD' /tmp/st3.out || true
+  rm -f "$T2"
+  if [ "${bad:-0}" -ge 2 ] && [ "${pend:-0}" -ge 1 ] && [ "${rad:-0}" -ge 2 ]; then
+    echo "selftest PASS（无标注 $bad；strict 待审 $pend；辐射检查抓到 $rad）"; RC=0
   else
-    echo "selftest FAIL（无标注 $bad <2 或 strict 待审 $pend <1）"; RC=1
+    echo "selftest FAIL（无标注 $bad<2 / strict 待审 $pend<1 / 辐射 $rad<2）"; RC=1
   fi
   rm -f "$T"; exit $RC
 fi
@@ -63,10 +74,11 @@ for entry in "${RAW[@]}"; do
   seen="$seen $key"
   line_text=$(sed -n "${lineno}p" "$FILE")
   # 紧邻窗口（不是整行）
-  ctx=$(printf '%s' "$line_text" | grep -oE ".{0,20}${tok}.{0,20}" | head -1)
-  [ -n "$ctx" ] || ctx="$line_text"
-  declared=0
-  printf '%s' "$ctx" | grep -qE "$ANN" && declared=1
+  # 标注必须"贴在它自己身上"：取该 token 之后紧接的 14 个字符（含括号）再判白名单。
+  # 用参数展开取"第一个出现位置之后"，避免 sed 贪婪匹配把整行吃掉；也避免 ±20 窗口把标注辐射给相邻 sha。
+  # 标注规则：必须出现在**紧跟该 sha 的那个括号里**，且该括号内不得含另一个 sha（防辐射）。
+  # 用内联 python 判（bash 截字符+正则易错：cut 按字节、sed 贪婪会吃掉 token）。
+  declared=$(printf '%s\n' "$line_text" | TOK="$tok" ANN="$ANN" python3 "$(dirname "$0")/_ann.py")
 
   if git cat-file -e "${tok}^{commit}" 2>/dev/null; then
     echo "  commit         L$lineno  $tok"; count=$((count+1)); c_ok=$((c_ok+1)); continue
