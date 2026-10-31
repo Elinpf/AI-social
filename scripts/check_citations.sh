@@ -60,6 +60,11 @@ REV="origin/master"
 for a in "$@"; do
   case "$a" in --strict) STRICT=1 ;; *) REV="$a" ;; esac
 done
+# 执行上下文必须可核（research-writer 2026-10-31 实测）：把件与脚本拷到 /tmp 跑，靠 git show 解析的"内容 sha"
+# 会全部解析失败 ⇒ 同一份件在两个目录得到相反结论。故：不在仓库内直接 FATAL，并把上下文打进输出首行。
+ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || {
+  echo "FATAL: 当前目录不在 git 仓库内（本脚本依赖 git show <rev>:<path>，离开仓库会产出假 BAD）" >&2; exit 4; }
+echo "== 执行上下文 repo=$ROOT rev=$REV file=$FILE =="
 
 ANN='不存在|已废弃|作废|未入库|未落地|MISSING|文本切片|字符串级|内容 sha|历史版|旧版|非当前版'
 echo "== 扫 $FILE（rev=$REV）=="
