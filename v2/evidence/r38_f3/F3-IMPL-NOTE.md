@@ -152,8 +152,10 @@ setsid env HITT_DIALOGUE_EMOTION_ECHO=1 bash tools/d2/run_batch.sh --out-dir $OU
 echo "on_rc=$? on_end=$(date -Is)" >> /tmp/r38_f3_timeline.txt
 
 # 5) 真调用验真（**必须 cd code/**，仓库根会 ModuleNotFoundError）
-cd "$REPO/code" && python3 -m obs llm-cost "$REPO/$OUT/on" --require-provider openai_compat --out /tmp/r38_llm_cost_on.json
-cd "$REPO/code" && python3 -m obs llm-cost "$REPO/$OUT/off" --require-provider openai_compat --out /tmp/r38_llm_cost_off.json
+#    注意：obs llm-cost **只有 --log，没有位置参数**（obs/cli.py:282-287）——
+#    把目录当位置参数传会 `obs: error: unrecognized arguments`，不产 json（复核方实测拦下）。
+cd "$REPO/code" && python3 -m obs llm-cost --log "$REPO/$OUT/on/run.jsonl"  --require-provider openai_compat --out /tmp/r38_llm_cost_on.json
+cd "$REPO/code" && python3 -m obs llm-cost --log "$REPO/$OUT/off/run.jsonl" --require-provider openai_compat --out /tmp/r38_llm_cost_off.json
 
 # 6) 内容层主口径（与冻结口径同命令行同参数）
 cd "$REPO" && python3 v2/evidence/f3_audit_echo.py \
