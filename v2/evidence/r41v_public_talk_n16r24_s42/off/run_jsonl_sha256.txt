@@ -1,0 +1,6 @@
+# run.jsonl / meta.json sha256（OFF 臂，本文件由 sha256sum 实测生成）
+50def26301c3761b30670d26b3b1fdd4d1af8aac9c26c5000197733aa88b0ef8  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/off/run.jsonl
+aca5dce9ecd0e9debb2e7989afef959cd4c63b779a48dffc1b407a567dd4afef  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/off/meta.json
+228767b1df246318c70b552e3ed822ce70d6e96ff3cda9c53d7d6e03bcb67312  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/off/llm_cost.txt
+# lines: 33853
+# meta.events: 33853

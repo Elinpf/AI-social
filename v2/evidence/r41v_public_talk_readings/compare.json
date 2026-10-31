@@ -1,0 +1,306 @@
+{
+  "all_hold": false,
+  "arms": {
+    "off": {
+      "arm": "off",
+      "code_sha": "f365255faf77141e33da9bb170850cf55d5b121c",
+      "log_path": "v2/evidence/r41v_public_talk_n16r24_s42/off/run.jsonl",
+      "log_sha256": "50def26301c3761b30670d26b3b1fdd4d1af8aac9c26c5000197733aa88b0ef8",
+      "log_sha256_8": "50def263",
+      "meta_run_sha256_matches_log": true,
+      "msg_graph_degree": {
+        "isolated_nodes": true,
+        "pub_in_degree_total": 0,
+        "pub_out_degree_reply_nonnull": 0,
+        "pub_out_degree_zero": true
+      },
+      "msg_public_instances": 24,
+      "p_reply": null,
+      "p_reply_wilson95": null,
+      "participants_length_histogram": {
+        "1": 24
+      },
+      "place_adjacency": {
+        "coverage": null,
+        "denominator": null,
+        "denominator_pairs": 23,
+        "nonnull_place_records": 0,
+        "numerator_same_place_pairs": null,
+        "ratio_same_place": null,
+        "status": "UNVERIFIED"
+      },
+      "probe": true,
+      "ratio_suppressed_because_den_lt_30": true,
+      "ratio_suppressed_reason": "分母 n=24 < 30：按预登记 §3.2 只报计数，不报比率/区间",
+      "readings_path": "v2/evidence/r41v_public_talk_readings/readings_off.json",
+      "readings_sha256": "efb6219c7b065014dbf07eb4e327cad53b11a2d60b3e1346b67d7f063644cea6",
+      "reply_real_message_id": 0,
+      "reply_to_forms": {
+        "empty_string": 0,
+        "json_null": 24,
+        "missing_key": 0,
+        "other": 0,
+        "real_message_id": 0,
+        "string_None": 0
+      },
+      "thread_ids_distinct": 24,
+      "turn_index_histogram": {
+        "0": 24
+      }
+    },
+    "on": {
+      "arm": "on",
+      "code_sha": "f365255faf77141e33da9bb170850cf55d5b121c",
+      "log_path": "v2/evidence/r41v_public_talk_n16r24_s42/on/run.jsonl",
+      "log_sha256": "c8a7f546238ad801129708fd9a8f9a4676b28702709d77440ea7769f8ecb5c5f",
+      "log_sha256_8": "c8a7f546",
+      "meta_run_sha256_matches_log": true,
+      "msg_graph_degree": {
+        "isolated_nodes": false,
+        "pub_in_degree_total": 0,
+        "pub_out_degree_reply_nonnull": 7,
+        "pub_out_degree_zero": false
+      },
+      "msg_public_instances": 30,
+      "p_reply": 0.0,
+      "p_reply_wilson95": {
+        "hi": 0.113513,
+        "lo": 0.0
+      },
+      "participants_length_histogram": {
+        "1": 23,
+        "2": 7
+      },
+      "place_adjacency": {
+        "coverage": null,
+        "denominator": null,
+        "denominator_pairs": 29,
+        "nonnull_place_records": null,
+        "numerator_same_place_pairs": 11,
+        "ratio_same_place": null,
+        "status": "MEASURED"
+      },
+      "probe": true,
+      "ratio_suppressed_because_den_lt_30": false,
+      "ratio_suppressed_reason": null,
+      "readings_path": "v2/evidence/r41v_public_talk_readings/readings_on.json",
+      "readings_sha256": "ec4f4cbd6d7e65ad9a415ee7a9d225c667078d862687fbb27bac90f2dae58f2c",
+      "reply_real_message_id": 0,
+      "reply_to_forms": {
+        "empty_string": 0,
+        "json_null": 23,
+        "missing_key": 0,
+        "other": 7,
+        "real_message_id": 0,
+        "string_None": 0
+      },
+      "thread_ids_distinct": 23,
+      "turn_index_histogram": {
+        "0": 23,
+        "1": 7
+      }
+    }
+  },
+  "descriptive": {
+    "caveat": "descriptive 段不是判据（not_a_judgment=true）：只描述「结构缺口本来有多大 / ON 臂打开了多少」，不参与 C1..C5 的任何达标判定；两个口径（by_message / by_pair）分母不同，引用时必须写明用哪个。",
+    "reply_to_semantics_off": {
+      "classified": {},
+      "not_a_judgment": true,
+      "pub_with_nonnull_reply_to": 0,
+      "reply_to_is_msg_uid_hit": 0,
+      "reply_to_is_msg_uid_hit_and_same_thread_id": 0,
+      "target_types": {},
+      "why": "跑完后发现：ruler 的 `real_message_id` 判定用的是 MSG_PUBLIC 的 msg_id 集合，而 `reply_to` 实际存 msg_uid ⇒ 真实接话被算进 `other`。本段用日志自身核对，只作「尺子待修」证据，**不替换预登记分子**（换分子须 prereg amendment）。"
+    },
+    "reply_to_semantics_on": {
+      "classified": {
+        "msg_uid_hit": 7
+      },
+      "not_a_judgment": true,
+      "pub_with_nonnull_reply_to": 7,
+      "reply_to_is_msg_uid_hit": 7,
+      "reply_to_is_msg_uid_hit_and_same_thread_id": 7,
+      "target_types": {
+        "42:167": "MSG_PUBLIC",
+        "42:189": "MSG_PUBLIC",
+        "42:19241": "MSG_PUBLIC",
+        "42:19807": "MSG_PUBLIC"
+      },
+      "why": "跑完后发现：ruler 的 `real_message_id` 判定用的是 MSG_PUBLIC 的 msg_id 集合，而 `reply_to` 实际存 msg_uid ⇒ 真实接话被算进 `other`。本段用日志自身核对，只作「尺子待修」证据，**不替换预登记分子**（换分子须 prereg amendment）。"
+    },
+    "struct_gap_off": {
+      "by_message": {
+        "best_case_co_present_place_blocked_all_candidates": 24,
+        "denominator": "MSG_PUBLIC 条数",
+        "pub_instances": 24,
+        "type_whitelist_blocked_all_candidates": 24,
+        "type_whitelist_passed_any_candidate": 0
+      },
+      "by_pair": {
+        "best_case_co_present_place_blocked_pairs": 360,
+        "candidate_agents": 16,
+        "denominator": "MSG_PUBLIC 条 × 每个非作者候选 agent（判定对总数）",
+        "pairs_total": 360,
+        "type_whitelist_blocked_pairs": 360
+      },
+      "co_present_assumption": "最宽松：假设我在场有同伴（['CO-PRESENT']），只暴露 place 缺口",
+      "co_present_is_upper_bound": true,
+      "not_a_judgment": true,
+      "note": "结构缺口规模（描述性旁证，不进任何判据）：ON 臂读数应显示该缺口被打开；本段用仓库真实实现 life.dialogue_threads.is_replyable 与 life.public_talk.is_replyable_public 逐条判定，不是语义复刻。",
+      "stat_unit": "两个口径并列，必须标清分母，不得混用",
+      "upper_bound_note": "**这是上界口径**：连「假设在场有同伴」都过不去的判定，在真实 co_present 下只会更严；引用时不得读成「实测结果」，它是结构缺口的上界估计。"
+    },
+    "struct_gap_on": {
+      "by_message": {
+        "best_case_co_present_place_blocked_all_candidates": 0,
+        "denominator": "MSG_PUBLIC 条数",
+        "pub_instances": 30,
+        "type_whitelist_blocked_all_candidates": 30,
+        "type_whitelist_passed_any_candidate": 0
+      },
+      "by_pair": {
+        "best_case_co_present_place_blocked_pairs": 0,
+        "candidate_agents": 16,
+        "denominator": "MSG_PUBLIC 条 × 每个非作者候选 agent（判定对总数）",
+        "pairs_total": 450,
+        "type_whitelist_blocked_pairs": 450
+      },
+      "co_present_assumption": "最宽松：假设我在场有同伴（['CO-PRESENT']），只暴露 place 缺口",
+      "co_present_is_upper_bound": true,
+      "not_a_judgment": true,
+      "note": "结构缺口规模（描述性旁证，不进任何判据）：ON 臂读数应显示该缺口被打开；本段用仓库真实实现 life.dialogue_threads.is_replyable 与 life.public_talk.is_replyable_public 逐条判定，不是语义复刻。",
+      "stat_unit": "两个口径并列，必须标清分母，不得混用",
+      "upper_bound_note": "**这是上界口径**：连「假设在场有同伴」都过不去的判定，在真实 co_present 下只会更严；引用时不得读成「实测结果」，它是结构缺口的上界估计。"
+    }
+  },
+  "discipline": {
+    "not_a_quality_claim": "本对比只证「公开面接话通道在 ON 臂被触发」，不证「生活气息提升/接话质量更好」，不写「显著」",
+    "probe_threshold_denominator": 68,
+    "ratio_min_denominator": 30
+  },
+  "generator": {
+    "newcombe_impl": "tools/metrics/weather_readings.py::newcombe95",
+    "newcombe_impl_sha256": "19f6a3137ec1a388ef28fec7cdfac5515095c78d9ec8e6ba43f867ab9c8ea11c",
+    "ruler": "tools/public_talk/public_talk_metrics.py",
+    "ruler_sha256": "15e7f0481c5ba307b8c7f39184dd7cbe747be3f9ac7d2777c443ea8ddba44a77",
+    "script": "tools/public_talk/compare_arms.py",
+    "script_sha256": "92c61593b356dc23472dd80b0a7633c2fc2d6d015540d4c326b03342632a2db4",
+    "wilson_tool": "tools/metrics/d9m_wilson_ci.py",
+    "wilson_tool_sha256": "b3b17206e710ce333ca62b946858de960befe9a41d668b9e123f02c1144040f4"
+  },
+  "prereg": "v2/refs/prereg-r41v-public-talk-verify.md",
+  "schema": "r41v-public-talk-compare/1.0",
+  "verdicts": {
+    "R41V-C1_main_rate_diff": {
+      "denominator_discipline": {
+        "denominators": {
+          "n_off": 24,
+          "n_on": 30
+        },
+        "denominators_sufficient": false,
+        "forbidden": "不得为凑分母放宽 MSG_PUBLIC 定义、不得把 DM/GROUP 并入分母、不得合并两臂分母",
+        "ratio_min_denominator": 30,
+        "what_is_reported": "只报计数（k_on / n_on / k_off / n_off）与上界口径；**不报比率、不报区间**"
+      },
+      "hold": false,
+      "judgeable": false,
+      "observed": {
+        "counts_only_reason": "两臂分母未同时 >= 30 ⇒ 按预登记 §3.2 只报计数 k/n，不报比率与区间",
+        "diff_p_on_minus_p_off": null,
+        "k_off": 0,
+        "k_on": 0,
+        "n_off": 24,
+        "n_on": 30,
+        "newcombe95": null,
+        "p_off": null,
+        "p_on": null
+      },
+      "probe_note": "M实例 n_on=30/n_off=24；分母 <68 ⇒ probe=true，结论只能写「方向性」，不得写「显著」",
+      "spec": "p_on - p_off 的 Newcombe 95% 区间下界 > 0，且 k_on>=1，k_off=0",
+      "status": "不可判（分母不足）"
+    },
+    "R41V-C2_off_equivalence": {
+      "hold": true,
+      "observed": {
+        "k_off": 0,
+        "pub_out_degree_zero": true
+      },
+      "spec": "OFF 臂 k=0 且 pub_out_degree_zero=true",
+      "status": "达标"
+    },
+    "R41V-C3_place_judgeability": {
+      "hold": true,
+      "observed": {
+        "coverage_off": null,
+        "coverage_on": null,
+        "status_off": "UNVERIFIED",
+        "status_on": "MEASURED"
+      },
+      "spec": "ON 臂 place 非 null 覆盖 100% 且 OFF 仍 UNVERIFIED",
+      "status": "达标"
+    },
+    "R41V-C4_quota_guard": {
+      "hold": false,
+      "observed": {
+        "off": {
+          "agent_quota_ok": true,
+          "limit_per_agent_per_slot": 1,
+          "limit_per_place_per_slot": 2,
+          "max_pub_per_place_round": 0,
+          "max_pub_per_place_slot": 0,
+          "max_replies_per_agent_slot": 0,
+          "note": "配额口径按 code/life/public_talk.py 的 public_count_at / agent_quota_ok 语义复刻：place 为 null 的条目不参与场所配额（代码侧 `if not place: return 0`），故 OFF 臂（place 全 null）判 not_applicable；ON 臂应 assessable。",
+          "place_grouped_records": 0,
+          "place_quota_ok": true,
+          "place_quota_status": "not_applicable",
+          "pub_instances": 24,
+          "pub_replies": 0,
+          "records_missing_place": 24,
+          "stat_unit": "MSG_PUBLIC 条（按 day × slot × place 分组；不按 round 分组）",
+          "worst_place_round": null,
+          "worst_place_slot": null
+        },
+        "on": {
+          "agent_quota_ok": true,
+          "limit_per_agent_per_slot": 1,
+          "limit_per_place_per_slot": 2,
+          "max_pub_per_place_round": 3,
+          "max_pub_per_place_slot": 5,
+          "max_replies_per_agent_slot": 1,
+          "note": "配额口径按 code/life/public_talk.py 的 public_count_at / agent_quota_ok 语义复刻：place 为 null 的条目不参与场所配额（代码侧 `if not place: return 0`），故 OFF 臂（place 全 null）判 not_applicable；ON 臂应 assessable。",
+          "place_grouped_records": 30,
+          "place_quota_ok": false,
+          "place_quota_status": "assessable",
+          "pub_instances": 30,
+          "pub_replies": 7,
+          "records_missing_place": 0,
+          "stat_unit": "MSG_PUBLIC 条（按 day × slot × place 分组；不按 round 分组）",
+          "worst_place_round": {
+            "count": 3,
+            "day": 0,
+            "place": "farm",
+            "round": 1,
+            "slot": "morning"
+          },
+          "worst_place_slot": {
+            "count": 5,
+            "day": 0,
+            "place": "bank",
+            "slot": "afternoon"
+          }
+        }
+      },
+      "spec": "两臂 MAX_PER_PLACE_PER_SLOT<=2 且 MAX_PER_AGENT_PER_SLOT<=1",
+      "status": "不成立"
+    },
+    "R41V-C5_no_collapse": {
+      "hold": true,
+      "observed": {
+        "n_off": 24,
+        "n_on": 30
+      },
+      "spec": "ON 臂 MSG_PUBLIC 条数 >= OFF 臂",
+      "status": "达标"
+    }
+  }
+}

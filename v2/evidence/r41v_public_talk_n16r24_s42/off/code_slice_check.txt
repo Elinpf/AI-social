@@ -1,0 +1,6 @@
+# 冻结区代码切片 sha256（本臂实际执行的树）
+f365255faf77141e33da9bb170850cf55d5b121c
+53b66b0a3a638b235a03b690c92b7d135e6f9c620da099d4f7df2b71aa7f23bb  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/life/public_talk.py
+5608d8bb65c419ed5424978dbbe3c069dcf65da758de9dc5cfc5dd44471cde78  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/life/agent.py
+7d82a19d2db760f1a8a2c17f4d2de88673c9ac10604c75c7d1875d68480a622f  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/orchestration/integration.py
+339ca4d9aeb6375c7fe674ab0fdd08ad5acda48600587ca6daffe4057c5777a0  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d2/run_batch.sh

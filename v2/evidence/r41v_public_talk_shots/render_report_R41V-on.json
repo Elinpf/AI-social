@@ -1,0 +1,97 @@
+{
+  "batch_id": "R41V-on",
+  "fail_count": 0,
+  "generated_at": "2026-11-01T02:52:07+08:00",
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on/run.jsonl",
+  "log_sha256": "c8a7f546238ad801129708fd9a8f9a4676b28702709d77440ea7769f8ecb5c5f",
+  "ok_count": 2,
+  "policy": {
+    "blank_check": "自行像素自检（distinct_colors/top_color_frac/non_bg_frac 逐张落盘）；未沿用 shot.py 的单色判据——该判据对深色 dialogue.html 会假红（实测 80.09% 误判）",
+    "code_untouched": "服务根为临时目录 + 符号链接；未在 code/frontend 下写入任何文件",
+    "no_reuse": "输出同名 PNG 若已存在则先删除，只认本次现截",
+    "no_stitching": "每张图独立截图，禁止拼图/跨批混拼"
+  },
+  "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on",
+  "run_sha256_in_threads": "c8a7f546238ad801129708fd9a8f9a4676b28702709d77440ea7769f8ecb5c5f",
+  "schema_version": "render-shots/1.0",
+  "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_shots/threads_R41V-on.json",
+  "threads_json_sha256": "188e2d00de3b0c7965276181c04a662f88584f6d5463fff3cc30ae6edbcbb0d0",
+  "views": [
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 23964,
+        "height": 900,
+        "non_bg_frac": 0.5389,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.1491,
+        "width": 1400
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_shots/R41V-on-chat-c8a7f546.png",
+      "png_bytes": 310649,
+      "png_mtime_iso": "2026-11-01T02:52:03+08:00",
+      "png_mtime_ns": 1793472723702598510,
+      "png_sha256": "8fab63509dbdea90d423170504572b5843ea1fab978b3f194b18c091dcb9d739",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_shots/threads_R41V-on.json --label R41V-on",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on/run.jsonl",
+        "log_sha256": "c8a7f546238ad801129708fd9a8f9a4676b28702709d77440ea7769f8ecb5c5f",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:36805/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_R41V-on/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_shots/R41V-on-chat-c8a7f546.png --width 1400 --height 900 --timeout 180.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_shots/threads_R41V-on.json",
+        "threads_json_sha256": "188e2d00de3b0c7965276181c04a662f88584f6d5463fff3cc30ae6edbcbb0d0"
+      },
+      "view": "chat"
+    },
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 20912,
+        "height": 1050,
+        "non_bg_frac": 0.387,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.3708,
+        "width": 1300
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_shots/R41V-on-rhythm-c8a7f546.png",
+      "png_bytes": 280949,
+      "png_mtime_iso": "2026-11-01T02:52:06+08:00",
+      "png_mtime_ns": 1793472726109443270,
+      "png_sha256": "e12d9b9176bb02f29f7dfbab106e24226248921e1f0329dc7fb172b48f872736",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_shots/threads_R41V-on.json --label R41V-on",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on/run.jsonl",
+        "log_sha256": "c8a7f546238ad801129708fd9a8f9a4676b28702709d77440ea7769f8ecb5c5f",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:36805/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_R41V-on/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_shots/R41V-on-rhythm-c8a7f546.png --width 1300 --height 1050 --timeout 180.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_shots/threads_R41V-on.json",
+        "threads_json_sha256": "188e2d00de3b0c7965276181c04a662f88584f6d5463fff3cc30ae6edbcbb0d0"
+      },
+      "view": "rhythm"
+    }
+  ]
+}
