@@ -1,0 +1,29 @@
+written: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r38_f3_batch/f3_audit_echo.json
+
+### 四档口径（事件 / 去重 / 分母 / 率 / Wilson95 / band）
+| arm | sha8 | scope | tier | 事件 | 去重 | Δ | 分母 | 率 | Wilson95 | band |
+|---|---|---|---|---|---|---|---|---|---|---|
+| off | 6d06506f | all_messages | loose | 0 | 0 | 0 | 7 | 0.0 | [0.0, 0.35433] | count_only |
+| off | 6d06506f | all_messages | loose_no_agree | 0 | 0 | 0 | 7 | 0.0 | [0.0, 0.35433] | count_only |
+| off | 6d06506f | all_messages | polarity_match | 0 | 0 | 0 | 7 | 0.0 | [0.0, 0.35433] | count_only |
+| off | 6d06506f | all_messages | marker_based | 0 | 0 | 0 | 7 | 0.0 | [0.0, 0.35433] | count_only |
+| off | 6d06506f | reply_path | loose | 0 | 0 | 0 | 7 | 0.0 | [0.0, 0.35433] | count_only |
+| off | 6d06506f | reply_path | loose_no_agree | 0 | 0 | 0 | 7 | 0.0 | [0.0, 0.35433] | count_only |
+| off | 6d06506f | reply_path | polarity_match | 0 | 0 | 0 | 7 | 0.0 | [0.0, 0.35433] | count_only |
+| off | 6d06506f | reply_path | marker_based | 0 | 0 | 0 | 7 | 0.0 | [0.0, 0.35433] | count_only |
+| on | af120876 | all_messages | loose | 0 | 0 | 0 | 4 | 0.0 | [0.0, 0.489891] | count_only |
+| on | af120876 | all_messages | loose_no_agree | 0 | 0 | 0 | 4 | 0.0 | [0.0, 0.489891] | count_only |
+| on | af120876 | all_messages | polarity_match | 0 | 0 | 0 | 4 | 0.0 | [0.0, 0.489891] | count_only |
+| on | af120876 | all_messages | marker_based | 0 | 0 | 0 | 4 | 0.0 | [0.0, 0.489891] | count_only |
+| on | af120876 | reply_path | loose | 0 | 0 | 0 | 4 | 0.0 | [0.0, 0.489891] | count_only |
+| on | af120876 | reply_path | loose_no_agree | 0 | 0 | 0 | 4 | 0.0 | [0.0, 0.489891] | count_only |
+| on | af120876 | reply_path | polarity_match | 0 | 0 | 0 | 4 | 0.0 | [0.0, 0.489891] | count_only |
+| on | af120876 | reply_path | marker_based | 0 | 0 | 0 | 4 | 0.0 | [0.0, 0.489891] | count_only |
+
+### 机制侧（payload.ctx.echo）
+- off (6d06506f): echo_rows=0 ratio=0.0 absent=True top_level=0 src={} tier={} 词表接住={"loose": 0, "loose_no_agree": 0, "polarity_match": 0, "marker_based": 0} 给了但四档全不命中=0
+- on (af120876): echo_rows=110 ratio=0.575916 absent=False top_level=0 src={"text": 31, "mood": 20, "text+mood": 58, "cue+mood": 1} tier={"明显": 39, "轻": 12, "很强": 59} 词表接住={"loose": 0, "loose_no_agree": 0, "polarity_match": 0, "marker_based": 0} 给了但四档全不命中=4
+
+off 机会密度 {"per_message": 0.036649, "per_round": 0.318182, "n_rounds_seen": 22} | 回复路径 125/191 | 标记词 {}
+
+on 机会密度 {"per_message": 0.020942, "per_round": 0.181818, "n_rounds_seen": 22} | 回复路径 125/191 | 标记词 {}

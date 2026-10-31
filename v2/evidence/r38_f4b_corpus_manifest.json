@@ -1,0 +1,434 @@
+[
+ {
+  "log": "cycle33_f3_off_n16r84_seed42/run.jsonl",
+  "sha8": "8bf3a536"
+ },
+ {
+  "log": "cycle34_f3_on_n16r84_seed42/run.jsonl",
+  "sha8": "b6cacdaf"
+ },
+ {
+  "log": "cycle35_f3_off_n16r84_seed42/run.jsonl",
+  "sha8": "15664c49"
+ },
+ {
+  "log": "cycle36_f3_off_n16r84_seed42/run.jsonl",
+  "sha8": "f7ace309"
+ },
+ {
+  "log": "d5_synth_schema_test/run.jsonl",
+  "sha8": "41649e2b"
+ },
+ {
+  "log": "d9m-ab-off_n16r24_s42/run.jsonl",
+  "sha8": "5f1dda97"
+ },
+ {
+  "log": "d9m-ab-on_n16r24_s42/run.jsonl",
+  "sha8": "2edc751c"
+ },
+ {
+  "log": "d9n-rot-20261030/run.jsonl",
+  "sha8": "e4fd6db7"
+ },
+ {
+  "log": "d9s-off_n16r24_s42/run.jsonl",
+  "sha8": "bd6623c2"
+ },
+ {
+  "log": "d9s-on2_n16r24_s42/run.jsonl",
+  "sha8": "912ee077"
+ },
+ {
+  "log": "d9s-on_n16r24_s42/run.jsonl",
+  "sha8": "0a50484d"
+ },
+ {
+  "log": "d9s-syntax-off_n16r24_s42/run.jsonl",
+  "sha8": "ba6812a1"
+ },
+ {
+  "log": "emo-off-20261030/run.jsonl",
+  "sha8": "c27691d9"
+ },
+ {
+  "log": "emo-on-20261029/run.jsonl",
+  "sha8": "2aa6c774"
+ },
+ {
+  "log": "f2b_v2_n16r60_seed42/run_off/run.jsonl",
+  "sha8": "1f80d789"
+ },
+ {
+  "log": "l3-encounter-20261030/mock60_off/run.jsonl",
+  "sha8": "ccbe673c"
+ },
+ {
+  "log": "l3-encounter-20261030/mock60_on/run.jsonl",
+  "sha8": "22165432"
+ },
+ {
+  "log": "l3-encounter-20261030/mock_off/run.jsonl",
+  "sha8": "66c570c9"
+ },
+ {
+  "log": "l3-encounter-20261030/mock_on/run.jsonl",
+  "sha8": "ed1c6b8e"
+ },
+ {
+  "log": "l3-encounter-20261030/on_real/run.jsonl",
+  "sha8": "b0ef3d1a"
+ },
+ {
+  "log": "mock_d12a_off_n16r84_seed42/run.jsonl",
+  "sha8": "ad08b52a"
+ },
+ {
+  "log": "mock_d12a_on_n16r84_seed42/run.jsonl",
+  "sha8": "f6274292"
+ },
+ {
+  "log": "mock_d9b_rw2_ctrl_n16r84_seed42/run.jsonl",
+  "sha8": "bd00afd9"
+ },
+ {
+  "log": "mock_d9b_rw4_treat_n16r84_seed42/run.jsonl",
+  "sha8": "4a6aca5d"
+ },
+ {
+  "log": "mock_d9c_oldest_n16r84_seed42/run.jsonl",
+  "sha8": "569e5fd4"
+ },
+ {
+  "log": "mock_d9c_recent_n16r84_seed42/run.jsonl",
+  "sha8": "880ff24e"
+ },
+ {
+  "log": "mock_dr_on_n16r84_seed42/run.jsonl",
+  "sha8": "880ff24e"
+ },
+ {
+  "log": "mock_maxturns_2_n16r84_seed42/run.jsonl",
+  "sha8": "c21a0093"
+ },
+ {
+  "log": "mock_maxturns_4_n16r84_seed42/run.jsonl",
+  "sha8": "f5f3d08f"
+ },
+ {
+  "log": "mock_maxturns_6_n16r84_seed42/run.jsonl",
+  "sha8": "a343d868"
+ },
+ {
+  "log": "mock_pref_ctrl_n16r84_seed42/run.jsonl",
+  "sha8": "787f36e5"
+ },
+ {
+  "log": "mock_pref_treat_n16r84_seed42/run.jsonl",
+  "sha8": "00863b48"
+ },
+ {
+  "log": "mock_rw2_ctrl_n16r84_seed42/run.jsonl",
+  "sha8": "787f36e5"
+ },
+ {
+  "log": "mock_rw4_treat_n16r84_seed42/run.jsonl",
+  "sha8": "2e9a4031"
+ },
+ {
+  "log": "mock_slots_2_n16r84_seed42/run.jsonl",
+  "sha8": "c17eb0fa"
+ },
+ {
+  "log": "mock_slots_3_n16r84_seed42/run.jsonl",
+  "sha8": "0765bba3"
+ },
+ {
+  "log": "mock_slots_4_n16r84_seed42/run.jsonl",
+  "sha8": "113aa8f1"
+ },
+ {
+  "log": "mock_tpr_2_n16r84_seed42/run.jsonl",
+  "sha8": "06432fa5"
+ },
+ {
+  "log": "mock_tpr_3_n16r84_seed42/run.jsonl",
+  "sha8": "04fb9749"
+ },
+ {
+  "log": "mock_tpr_4_n16r84_seed42/run.jsonl",
+  "sha8": "9a84634b"
+ },
+ {
+  "log": "mock_trigA1_n16r84_seed42/run.jsonl",
+  "sha8": "d101c89a"
+ },
+ {
+  "log": "mock_trigA1_off_n16r84_seed42/run.jsonl",
+  "sha8": "75656524"
+ },
+ {
+  "log": "mock_trigA2_n16r84_seed42/run.jsonl",
+  "sha8": "20032ca2"
+ },
+ {
+  "log": "n15-off_n16r84_s42/run.jsonl",
+  "sha8": "da4d2487"
+ },
+ {
+  "log": "n15-on_n16r84_s42/run.jsonl",
+  "sha8": "d74f7d00"
+ },
+ {
+  "log": "n36-on_n16r84_s42/run.jsonl",
+  "sha8": "954d5d37"
+ },
+ {
+  "log": "narr-off-20261030/run.jsonl",
+  "sha8": "a5aac9cd"
+ },
+ {
+  "log": "narr-on-20261030/run.jsonl",
+  "sha8": "fdb31c7e"
+ },
+ {
+  "log": "r19_topicbreadth_n8r24_seed42/run_off/run.jsonl",
+  "sha8": "4dfc26e1"
+ },
+ {
+  "log": "r19_topicbreadth_n8r24_seed42/run_on/run.jsonl",
+  "sha8": "6e08b25f"
+ },
+ {
+  "log": "r19_topicbreadth_pilot_n8r24_seed42/mock_off/run.jsonl",
+  "sha8": "298dc9e8"
+ },
+ {
+  "log": "r19_topicbreadth_pilot_n8r24_seed42/mock_on/run.jsonl",
+  "sha8": "f3d4ef2f"
+ },
+ {
+  "log": "r38_f3_batch/on/run.jsonl",
+  "sha8": "af120876"
+ },
+ {
+  "log": "round1_narration_default_n16r24_s42/run.jsonl",
+  "sha8": "ca108da9"
+ },
+ {
+  "log": "run_a1_wording_n4r60_seed42/run.jsonl",
+  "sha8": "ae969198"
+ },
+ {
+  "log": "run_a1budget_real_n16r42_seed42/run.jsonl",
+  "sha8": "0bc80cd2"
+ },
+ {
+  "log": "run_a1wording_n16r42_seed42/run.jsonl",
+  "sha8": "800ab1f8"
+ },
+ {
+  "log": "run_a5_real_n16r42_seed42/run.jsonl",
+  "sha8": "aa6edc35"
+ },
+ {
+  "log": "run_baseline_n4r2_20261020T220207/run.jsonl",
+  "sha8": "34870464"
+ },
+ {
+  "log": "run_d12a_q_a_off_seed7_n16r24/run.jsonl",
+  "sha8": "252a5b42"
+ },
+ {
+  "log": "run_d12a_q_a_on_seed7_n16r24/run.jsonl",
+  "sha8": "a1d1b4cb"
+ },
+ {
+  "log": "run_d12a_real_n16r24_seed42/run.jsonl",
+  "sha8": "64f9da4b"
+ },
+ {
+  "log": "run_d12b_off_seed7_n16r24/run.jsonl",
+  "sha8": "b4350c5d"
+ },
+ {
+  "log": "run_d12b_on_seed7_n16r24/run.jsonl",
+  "sha8": "223cb9f8"
+ },
+ {
+  "log": "run_d12c_off_n16r60_seed42/run.jsonl",
+  "sha8": "3c814121"
+ },
+ {
+  "log": "run_d12c_on_n16r60_seed42/run.jsonl",
+  "sha8": "bd2df77f"
+ },
+ {
+  "log": "run_d12d_on_n16r60_seed42/run.jsonl",
+  "sha8": "ad0c939f"
+ },
+ {
+  "log": "run_d1_f6off_seed42_n16r84/run.jsonl",
+  "sha8": "dbff7b97"
+ },
+ {
+  "log": "run_d1_f6on_seed42_n16r84/run.jsonl",
+  "sha8": "5c28dd85"
+ },
+ {
+  "log": "run_d27_C_n16r60_seed42/run.jsonl",
+  "sha8": "1fbb9ef5"
+ },
+ {
+  "log": "run_d28_C_s43_n16r60_seed43/run.jsonl",
+  "sha8": "e3518b63"
+ },
+ {
+  "log": "run_d2_after_n16_seed42/run.jsonl",
+  "sha8": "643f13a5"
+ },
+ {
+  "log": "run_d2_before_n16_seed42/run.jsonl",
+  "sha8": "c1f86bf6"
+ },
+ {
+  "log": "run_d4_P1_n16r12/run.jsonl",
+  "sha8": "ee3142f0"
+ },
+ {
+  "log": "run_d4_P2_n16r12/run.jsonl",
+  "sha8": "15664c49"
+ },
+ {
+  "log": "run_d8_armA_n4r60_seed42/run.jsonl",
+  "sha8": "a17ffcfa"
+ },
+ {
+  "log": "run_d8_armB_n4r60_seed42/run.jsonl",
+  "sha8": "3966309f"
+ },
+ {
+  "log": "run_d9_a1_n16r84_seed42/run.jsonl",
+  "sha8": "abefdf73"
+ },
+ {
+  "log": "run_dequant_baseline_n16r60_seed42/run.jsonl",
+  "sha8": "086939dd"
+ },
+ {
+  "log": "run_dequant_baseline_n8r16_seed42/run.jsonl",
+  "sha8": "2255888c"
+ },
+ {
+  "log": "run_dequant_on_n16r60_seed42/run.jsonl",
+  "sha8": "27c16f4f"
+ },
+ {
+  "log": "run_dequant_on_n8r16_seed42/run.jsonl",
+  "sha8": "8ebb0475"
+ },
+ {
+  "log": "run_dr_round1_arm-ctrl_n16r60_seed42/run.jsonl",
+  "sha8": "99c92d4b"
+ },
+ {
+  "log": "run_f3_off_n16r60_seed42/run.jsonl",
+  "sha8": "19d5cb03"
+ },
+ {
+  "log": "run_f3_on_n16r60_seed42/run.jsonl",
+  "sha8": "087072f8"
+ },
+ {
+  "log": "run_f4_on_n16r60_seed42/run.jsonl",
+  "sha8": "faeba580"
+ },
+ {
+  "log": "run_f6_dequp_n16r60_seed42/run.jsonl",
+  "sha8": "6bf3ec88"
+ },
+ {
+  "log": "run_f6_off_n16r60_seed42/run.jsonl",
+  "sha8": "c73bead6"
+ },
+ {
+  "log": "run_f6_off_n16r84_seed42_VOID/run.jsonl",
+  "sha8": "4c8ef41e"
+ },
+ {
+  "log": "run_f6_on_n16r60_seed42/run.jsonl",
+  "sha8": "7de6a7be"
+ },
+ {
+  "log": "run_f6off_cycle06_seed42_n16r84/run.jsonl",
+  "sha8": "efb8b30f"
+ },
+ {
+  "log": "run_g1_a1_n16r60_seed42/run.jsonl",
+  "sha8": "6d95332e"
+ },
+ {
+  "log": "run_g1_b0_n16r60_seed42/run.jsonl",
+  "sha8": "6db62e8a"
+ },
+ {
+  "log": "run_l7struct_on_n16r60_seed42/run.jsonl",
+  "sha8": "4df89f4a"
+ },
+ {
+  "log": "run_l7v2_on_n16r60_seed42/run.jsonl",
+  "sha8": "ee3d28bc"
+ },
+ {
+  "log": "run_meal_on_n16r60_seed42/run.jsonl",
+  "sha8": "e45a25c7"
+ },
+ {
+  "log": "run_r10e2e_n16r60_seed42/run.jsonl",
+  "sha8": "f20f6822"
+ },
+ {
+  "log": "run_r1_batch_off_n16r24_seed42/run.jsonl",
+  "sha8": "c4925411"
+ },
+ {
+  "log": "run_r1_batch_on_n16r24_seed42/run.jsonl",
+  "sha8": "da75ef01"
+ },
+ {
+  "log": "run_r6_treat_n16_seed42/run.jsonl",
+  "sha8": "d42e2d92"
+ },
+ {
+  "log": "run_scene_anchor_off_seed42_n16r24/run.jsonl",
+  "sha8": "4d70674e"
+ },
+ {
+  "log": "run_scene_anchor_on_seed42_n16r24/run.jsonl",
+  "sha8": "8a5a88ac"
+ },
+ {
+  "log": "run_weather_off_n16r24_seed42/run.jsonl",
+  "sha8": "b9853035"
+ },
+ {
+  "log": "run_weather_off_n16r24_seed42_c28/run.jsonl",
+  "sha8": "e9a03f2e"
+ },
+ {
+  "log": "run_weather_on_n16r24_seed42/run.jsonl",
+  "sha8": "15664c49"
+ },
+ {
+  "log": "run_weather_on_n16r24_seed42_c28/run.jsonl",
+  "sha8": "87eaa92e"
+ },
+ {
+  "log": "run_worldline_c1_a1_n16r84_seed42/run.jsonl",
+  "sha8": "ac9fa312"
+ },
+ {
+  "log": "run_worldline_c1_ctrl_n16r84_seed42/run.jsonl",
+  "sha8": "4c840b5b"
+ }
+]
