@@ -1,0 +1,402 @@
+{
+  "author_topic_crosstab": {
+    "authors_total": 10,
+    "authors_with_breadth_le_2": 9,
+    "by_author": {
+      "P001": {
+        "skill_practice": 1
+      },
+      "P002": {
+        "skill_practice": 1
+      },
+      "P004": {
+        "skill_practice": 1
+      },
+      "P005": {
+        "savings": 1,
+        "skill_practice": 2
+      },
+      "P006": {
+        "skill_practice": 1
+      },
+      "P008": {
+        "job_choice": 1,
+        "savings": 1,
+        "skill_practice": 1
+      },
+      "P010": {
+        "job_choice": 2,
+        "savings": 1
+      },
+      "P012": {
+        "savings": 1
+      },
+      "P013": {
+        "job_choice": 1,
+        "skill_practice": 1
+      },
+      "P015": {
+        "skill_practice": 1
+      }
+    },
+    "not_a_judgment": true,
+    "per_author_topic_breadth": {
+      "P001": 1,
+      "P002": 1,
+      "P004": 1,
+      "P005": 2,
+      "P006": 1,
+      "P008": 3,
+      "P010": 2,
+      "P012": 1,
+      "P013": 2,
+      "P015": 1
+    },
+    "probe": true,
+    "stat_unit": "M实例（MSG_PUBLIC 条）",
+    "topic_totals": {
+      "job_choice": 4,
+      "savings": 4,
+      "skill_practice": 9
+    },
+    "usage_note": "作为下一轮「接话」提示词设计的输入（同场不同话题的人才有接话空间）；不进任何判据"
+  },
+  "cross_batch_invariance": [],
+  "diagnostics": {
+    "author_list": [
+      "P001",
+      "P002",
+      "P004",
+      "P005",
+      "P006",
+      "P008",
+      "P010",
+      "P012",
+      "P013",
+      "P015"
+    ],
+    "distinct_authors": 10,
+    "distinct_thread_ids": 13,
+    "each_msg_owns_thread": false,
+    "each_msg_owns_thread_note": "true = 无任何 thread_id 被复用（每条消息独占一个线程）；旧字段 thread_id_reuse 语义相反、已删除",
+    "note": "仅作旁证，不构成任何判据；分母 55 < 68，全部 probe",
+    "refs_length_histogram": {
+      "0": 17
+    },
+    "scope_histogram": {
+      "global": 17
+    },
+    "stat_unit": "M实例（MSG_PUBLIC 条）",
+    "topic_histogram": {
+      "job_choice": 4,
+      "savings": 4,
+      "skill_practice": 9
+    },
+    "turn_index_histogram": {
+      "0": 13,
+      "1": 4
+    }
+  },
+  "discipline": {
+    "probe_threshold_denominator": 68,
+    "ratio_min_denominator": 30,
+    "rules": [
+      "分母 < 30：只报事件数，不报比率",
+      "分母 < 68：probe=true，占比只作点估计",
+      "单 seed 点估计：不写显著、不给 CI、不跨批比较（跨批只做结构不变性自检）",
+      "读数不回改口径；口径与实现同文件共存，改动须同步改头部注释与变更记录",
+      "code_sha 一律取 meta.json；scale 一律从 meta 读；读不到写 UNKNOWN"
+    ]
+  },
+  "inputs": {
+    "code_sha": "8f42eeede0f52baa94046f8c0cd9889ac3f0dc10",
+    "code_sha_source": "meta.json:code_sha（跑批时点代码身份）",
+    "extra_log_count": 0,
+    "log_bytes": 16860398,
+    "log_lines": 33228,
+    "log_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d47-ruler-f2-20261101_n16r24_s42/run.jsonl",
+    "log_sha256": "5d1a3f72074c49bc293b9f15797a3560ec8c7280b60ef1b023c1c9daa79ebbc7",
+    "meta_bytes": 43308,
+    "meta_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d47-ruler-f2-20261101_n16r24_s42/meta.json",
+    "meta_run_sha256": "5d1a3f72074c49bc293b9f15797a3560ec8c7280b60ef1b023c1c9daa79ebbc7",
+    "meta_run_sha256_matches_log": true,
+    "meta_sha256": "429d9ddd7ff45ff545f7da6c96b54247b48d43f1ecca67e5a6a190f5e3631ede",
+    "msg_public_type": "MSG_PUBLIC",
+    "repo_head_declared": null,
+    "repo_head_declared_note": "**使用者声明的仓库 HEAD**（`--repo-head` 传入，缺省 null），**不是运行时实测值**、不参与任何计算；脚本内部不调用 git，故读数与当前 HEAD 无关（D8）。引用跑批身份请用 code_sha；本字段只用于人工声明对照。",
+    "repo_head_declared_valid": false,
+    "script_path": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/public_talk/public_talk_metrics.py",
+    "script_sha256": "1018202cead936c0cafce2bc5c146001971919ffa9148b07c09f9cfcdd607736"
+  },
+  "invariance_note": {
+    "becomes_nonzero_after_wiring": true,
+    "claim": "在 D2 schema 及之后的各批（d27_C / r10e2e / d28_C_s43 / d12c_on）上，「MSG_PUBLIC 条数 / participants 长度直方图 / reply_to 形态」三项量是**结构不变量**，对「生活气息」没有鉴别力：数值完全相同而对话内容完全不同。它们现在只能证明「公开面未接线（无接话通道、无在场多人）」；将来接线后才会从 0/55 变成非零。",
+    "hard_constraint": "本不变量不得被用于论证改造无效或改造有效，只能证「公开面未接线」；任何以「三项量没变」为由否定某次改造的写法都属误用。",
+    "no_discrimination_before_wiring": true,
+    "not_a_quality_metric": true,
+    "scope": "D2 schema 及之后、n16r60 的 4 批；v0-anchor（schema 断代，48 条且无键）不在数值比较范围内",
+    "v0_anchor_note": "v0-anchor 只比结构存在性（participants / reply_to 键存在数 = 0），不比数值 48 vs 55"
+  },
+  "invariance_summary": {
+    "all_extra_batches_identical_to_main": null,
+    "identical_among_schema_compatible_batches": null,
+    "identical_scope_note": "all_extra_batches_identical_to_main 会把 schema 断代批（v0-anchor）算成 false；判断「不变量成立范围」应看 identical_among_schema_compatible_batches",
+    "main_batch_signature": {
+      "msg_public_total": 17,
+      "participants_length_histogram": {
+        "1": 13,
+        "2": 4
+      },
+      "reply_to_forms": {
+        "empty_string": 0,
+        "json_null": 13,
+        "missing_key": 0,
+        "other": 0,
+        "real_message_id": 4,
+        "real_message_id_legacy_msg_id": 0,
+        "string_None": 0
+      }
+    },
+    "numeric_comparison_scope": "只有「schema_compatible=true 且条数一致」的批次可参与数值比较；v0-anchor 属 schema 断代批（48≠55、键存在数 0），只能比结构存在性",
+    "per_batch_identical_to_main": {},
+    "per_batch_numerically_comparable_to_main": {},
+    "schema_incompatible_batches": []
+  },
+  "invocation": {
+    "argv": [
+      "tools/public_talk/public_talk_metrics.py",
+      "--log",
+      "v2/evidence/d47-ruler-f2-20261101_n16r24_s42/run.jsonl",
+      "--meta",
+      "v2/evidence/d47-ruler-f2-20261101_n16r24_s42/meta.json",
+      "--out",
+      "<OUT>"
+    ],
+    "argv_joined": "tools/public_talk/public_talk_metrics.py --log v2/evidence/d47-ruler-f2-20261101_n16r24_s42/run.jsonl --meta v2/evidence/d47-ruler-f2-20261101_n16r24_s42/meta.json --out <OUT>",
+    "normalization": "D7：输出路径已归一化为占位符 <OUT>（`--out` 与 `--out=` 两种写法都处理），使读数 sha256 不依赖输出文件路径；其余参数（--log / --meta / 全部 --extra-log）原样保留，故 argv_joined 仍是可直接复制的命令，只是把 --out 换成你自己的路径即可。",
+    "note": "本读数由该命令行产生；复算必须使用同一条命令（尤其 --meta，否则 inputs 会缺 3 个键）",
+    "out_path_redacted": true
+  },
+  "judgeability": {
+    "can_judge_as_descriptive": true,
+    "cannot_judge": [
+      "place_adjacency：payload.place 恒 null，本规模下无法判定",
+      "任何跨批/跨臂的「变好/变差」比较：三项量本身是结构不变量，且本批单 seed 无对照",
+      "任何「显著」「因果」结论：无重复、无 CI",
+      "「公开渠道不存在多人对话」的普适结论：只能写「本批未观测到可见集合 >1 的公开消息」，且 participants 是可见集合而非收件人"
+    ],
+    "scale_desc": "seed=42 agents_n=16 rounds=24 （来源 meta.json）；M实例 n=17；单批单次、无对照"
+  },
+  "msg_graph_degree": {
+    "denominator_dm_reply": 117,
+    "dm_reply_to_hit_dm_msg_uid": 117,
+    "dm_reply_to_hit_pub_msg_uid": 0,
+    "dm_reply_to_nonnull": 117,
+    "isolated_nodes": false,
+    "not_a_judgment": true,
+    "note": "DM 的 reply_to 非空 117 条全部命中 DM msg_uid（117/117），命中 PUB msg_uid = 0 ⇒ 公开消息在消息图里入度 0、出边 0，是孤立节点",
+    "probe": true,
+    "pub_in_degree_total": 0,
+    "pub_in_degree_zero": true,
+    "pub_out_degree_refs_nonempty": 0,
+    "pub_out_degree_reply_nonnull": 4,
+    "pub_out_degree_zero": false,
+    "stat_unit": "边（reply_to 引用关系）"
+  },
+  "msg_public_total": {
+    "denominator": null,
+    "field_source": "顶层字段 type == 'MSG_PUBLIC'",
+    "line_span_in_log": {
+      "first": 54,
+      "last": 21793
+    },
+    "numerator": 17,
+    "probe": true,
+    "probe_reason": "本量自身即分母；以它为分母的比率，分母 17 < 68 ⇒ 一律 probe",
+    "ratio": null,
+    "stat_unit": "MSG_PUBLIC 事件条数（1 条 = 1 行 jsonl = 1 次公开发言）",
+    "value": 17
+  },
+  "participants_length_dist": {
+    "bucket_policy": "histogram 仅含「键存在且为数组」的样本；缺键/非数组单列，绝不并入 \"0\" 桶",
+    "denominator": 17,
+    "field_source": "payload.participants（数组，取 len）",
+    "histogram_sample_denominator": 17,
+    "length_histogram": {
+      "1": 13,
+      "2": 4
+    },
+    "length_values_set": [
+      1,
+      2
+    ],
+    "numerator_len_gt_1": 4,
+    "probe": true,
+    "probe_reason": "分母 17 < 68：占比只作点估计，不可作判据，不得写「显著」",
+    "ratio_len_gt_1": null,
+    "ratio_suppressed_because_den_lt_30": true,
+    "records_missing_key": 0,
+    "records_nonarray": 0,
+    "semantics_note": "participants 为**线程参与者集合**（同一 thread_id 内取值恒定，本批实测 58 个线程中不一致者 4 个），**不是收件人**（DM 的收件人是 `to`），也不是消息级可见性开关；长度 > 1 不代表多人群聊、也不代表多人接话。",
+    "sender_in_participants": {
+      "denominator": 179,
+      "note": "发送方 = MSG_PUBLIC 的 author / MSG_DM 的 from；DM 无 author 字段，不可用 author 判定",
+      "numerator": 179
+    },
+    "stat_unit": "M实例（MSG_PUBLIC 条）",
+    "thread_consistency": {
+      "definition": "按 (事件类型, thread_id) 分组，组内 participants 元组是否唯一",
+      "threads_checked": 58,
+      "threads_with_inconsistent_participants": 4
+    }
+  },
+  "place_adjacency": {
+    "denominator_pairs": 16,
+    "field_source": "payload.place",
+    "numerator_same_place_pairs": 3,
+    "probe": true,
+    "ratio_same_place": null,
+    "stat_unit": "msg_adjacent_pair（MSG 子序列上相邻两条 MSG_PUBLIC 构成 1 对）",
+    "status": "MEASURED"
+  },
+  "pub_next_to_dm": {
+    "adjacent_next_msg_same_author": 0,
+    "definition_official": "在 MSG_DM/MSG_PUBLIC/MSG_GROUP 子序列上取紧邻下一条（跳过非消息事件）",
+    "denominator": 17,
+    "next_msg_type_histogram": {
+      "MSG_DM": 16,
+      "MSG_PUBLIC": 1
+    },
+    "not_a_judgment": true,
+    "numerator_next_is_dm": 16,
+    "probe": true,
+    "ratio_next_is_dm": null,
+    "raw_row_definition": {
+      "definition": "原始 jsonl 行序上的下一行事件类型（不跳过任何事件）",
+      "next_raw_event_type_histogram": {
+        "LLM_CALL": 1,
+        "MEMORY_RETRIEVE": 5,
+        "MEMORY_WRITE": 8,
+        "OFFER_ACCEPTED": 3
+      },
+      "note": "原始行序口径下紧邻的通常是 MEMORY_WRITE/OFFER_ACCEPTED 等事件，与子序列口径差异极大；引用必须写明口径",
+      "numerator_next_raw_is_dm": 0,
+      "within_next_3_raw_rows_contains_dm": 0
+    },
+    "stat_unit": "M实例（MSG_PUBLIC 条）",
+    "within_next_3_msgs_contains_dm": 17
+  },
+  "reply_to_forms": {
+    "denominator": 17,
+    "field_source": "payload.reply_to（键可能缺失 / 值可能为 null / 字符串）",
+    "forms": {
+      "empty_string": 0,
+      "json_null": 13,
+      "missing_key": 0,
+      "other": 0,
+      "real_message_id": 4,
+      "real_message_id_legacy_msg_id": 0,
+      "string_None": 0
+    },
+    "match_key_policy": {
+      "candidate_msg_ids_n": 6,
+      "candidate_uids_n": 179,
+      "legacy_fallback_key": "payload.msg_id（命中单记 real_message_id_legacy_msg_id，不并入分子）",
+      "primary_key": "payload.msg_uid（任一消息事件 DM/PUB/GROUP）",
+      "ruler_version": "ruler-f2/1",
+      "why": "reply_to 装 msg_uid；msg_id 在真实日志里不唯一（PUB 30 条仅 8 个不同值）"
+    },
+    "note": "CYCLE-22 §4.3 自述的「取值集合恒 ['None']」= Python repr(None) = 本表 json_null；本表把 缺键 / JSON null / 字符串 'None' / 空串 分开计数，四者不可合并。F-2：`real_message_id` 自 ruler-f2/1 起按 msg_uid 匹配（旧实现按 msg_id ⇒ 恒 0）",
+    "numerator_nonnull_reply_to": 4,
+    "other_examples": [],
+    "probe": true,
+    "ratio_nonnull_reply_to": null,
+    "stat_unit": "M实例（MSG_PUBLIC 条）"
+  },
+  "ruler": "public_talk/descriptive-4（描述性尺子；不发明编号，仅本文件内自解释命名）",
+  "scale": {
+    "agents_n": 16,
+    "complete": true,
+    "model": "DeepSeek-Flash",
+    "provider": "openai_compat",
+    "rounds": 24,
+    "seed": 42,
+    "source": "meta.json",
+    "unknown_fields": []
+  },
+  "schema_gate": {
+    "key_presence": {
+      "MSG_DM": {
+        "author": 0,
+        "body": 162,
+        "events": 162,
+        "msg_id": 162,
+        "msg_uid": 162,
+        "participants": 162,
+        "place": 162,
+        "refs": 162,
+        "reply_to": 162,
+        "scope": 0,
+        "thread_id": 162,
+        "topic": 162,
+        "turn_index": 162
+      },
+      "MSG_GROUP": {
+        "author": 0,
+        "body": 0,
+        "events": 0,
+        "msg_id": 0,
+        "msg_uid": 0,
+        "participants": 0,
+        "place": 0,
+        "refs": 0,
+        "reply_to": 0,
+        "scope": 0,
+        "thread_id": 0,
+        "topic": 0,
+        "turn_index": 0
+      },
+      "MSG_PUBLIC": {
+        "author": 17,
+        "body": 17,
+        "events": 17,
+        "msg_id": 17,
+        "msg_uid": 17,
+        "participants": 17,
+        "place": 17,
+        "refs": 17,
+        "reply_to": 17,
+        "scope": 17,
+        "thread_id": 17,
+        "topic": 17,
+        "turn_index": 17
+      }
+    },
+    "meta_required": true,
+    "missing_key_events": {
+      "any_of_participants_or_reply_to": 0,
+      "participants": 0,
+      "place": 0,
+      "reply_to": 0
+    },
+    "msg_public_events": 17,
+    "policy": "取键先判 `key in payload`：缺失显式计入 missing_key_events 并置 schema_compatible=false；绝不静默按 0 处理，也不 KeyError 崩溃；缺键样本不并入任何数值桶。v0-anchor 批（log sha c1f86bf6…、code_sha dc93c9d9、n16 r84）MSG_DM=132 / MSG_GROUP=7 / MSG_PUBLIC=48 的 participants、reply_to 键存在数均为 0，正是本闸要拦的形态。",
+    "required_keys": [
+      "participants",
+      "reply_to",
+      "place"
+    ],
+    "schema_compatible": true,
+    "schema_incompatible_reasons": []
+  },
+  "thread_isolation": {
+    "dm_thread_ids": 45,
+    "intersection_count": 0,
+    "isolated": true,
+    "not_a_judgment": true,
+    "note": "交集为 0 ⇒ 公开线程与私聊线程完全隔离，公开面自成一套线程，不流入对话线",
+    "probe": true,
+    "pub_thread_ids": 13,
+    "stat_unit": "thread_id 集合"
+  }
+}

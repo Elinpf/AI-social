@@ -1,0 +1,55 @@
+{
+ "ruler": "d47/derive_gap/1（非仓内固化尺子，仅描述性）",
+ "input": "v2/evidence/d47-ruler-f2-20261101_n16r24_s42/run.jsonl",
+ "pub_total": 17,
+ "pub_missing_round": 0,
+ "pub_reply_to_nonnull": 4,
+ "gap_distribution": {
+  "1": 4
+ },
+ "same_round_gap0": 0,
+ "cross_round_gap_ge1": 4,
+ "dangling": 0,
+ "detail": [
+  {
+   "self_uid": "42:487",
+   "self_round": 1,
+   "reply_to": "42:189",
+   "target_round": 0,
+   "target_type": "MSG_PUBLIC",
+   "same_thread": true,
+   "gap": 1
+  },
+  {
+   "self_uid": "42:760",
+   "self_round": 1,
+   "reply_to": "42:167",
+   "target_round": 0,
+   "target_type": "MSG_PUBLIC",
+   "same_thread": true,
+   "gap": 1
+  },
+  {
+   "self_uid": "42:20292",
+   "self_round": 13,
+   "reply_to": "42:18982",
+   "target_round": 12,
+   "target_type": "MSG_PUBLIC",
+   "same_thread": true,
+   "gap": 1
+  },
+  {
+   "self_uid": "42:20598",
+   "self_round": 13,
+   "reply_to": "42:19548",
+   "target_round": 12,
+   "target_type": "MSG_PUBLIC",
+   "same_thread": true,
+   "gap": 1
+  }
+ ],
+ "dm_messages_total": 162,
+ "dm_reply_to_nonnull_reference_from_metrics": "见 readings_d47_newruler.json: msg_graph_degree.dm_reply_to_nonnull = 117",
+ "not_a_judgment": true,
+ "note": "gap = 本条 round − reply_to 目标消息 round；单批单 seed 无对照，只作描述性读数"
+}

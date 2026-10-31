@@ -1,0 +1,26 @@
+================ D47 起批证据（单臂 HITT_DIALOGUE_PUBLIC_REPLY=1，只改尺子） ================
+采集时刻: 2026-11-01T06:11:08+08:00
+repo:      /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+branch:    fix/place-talk-quota-r43
+HEAD:      8f42eeede0f52baa94046f8c0cd9889ac3f0dc10
+out_dir:   /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d47-ruler-f2-20261101_n16r24_s42
+side_root: /tmp/d47_ruler_f2_n16r24_s42_side
+params:    seed=42 agents=16 rounds=24 flush_every=2
+臂:        ON（HITT_DIALOGUE_PUBLIC_REPLY=1），与 r41v ON 臂同配置
+---- [闸门1] 三重并发检查（原文） ----
+$ ps -eo pid,args | grep -E 'orchestration run|run_batch\.sh|nightly\.py' | grep -v grep
+ps_grep_rc=1 (1=无命中)
+  pgrep -f '/orchestration[[:space:]]+run/' => 无命中 PASS
+  pgrep -f '/[r]un_[b]atch/' => 无命中 PASS
+  pgrep -f '/[n]ightly\.py/' => 无命中 PASS
+PASS preflight sha=8f42eeed(fix/place-talk-quota-r43) ts=2026-11-01T06:11:08+08:00 concurrency=0 frozen_tree=clean log=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d47-ruler-f2-20261101_n16r24_s42/preflight_20261031T221108Z_8f42eeed_d47.log
+---- [闸门2] check_clean_tree verdict=PASS ----
+# 读数器 / 渲染器指纹（本轮修复对象是 public_talk_metrics.py）
+1018202cead936c0cafce2bc5c146001971919ffa9148b07c09f9cfcdd607736  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/public_talk/public_talk_metrics.py
+a85f2711a46bfe150d0d162361cfa7584d8d7aea9ec2fb01b344d3ec879e0b34  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/metrics/render_shots.py
+472f05b1fdc69770093b3e593dbb77432946657c2f84c3d8f1e764aac231bfdb  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/preflight.sh
+e7c71dcdae9a924616abd70eff6329facd57323872d7566311bbdf9188eca6ae  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/check_clean_tree.py
+闸门2b PASS：.env.local 未混入开关变量
+---- [启动自证] ----
+setsid_pid=542159
+start_epoch=1793484669 captured_at=2026-11-01T06:11:09+08:00

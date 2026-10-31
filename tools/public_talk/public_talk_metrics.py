@@ -38,9 +38,18 @@
     分子 = 每种 reply_to 形态各自的条数；分母 = M实例 总数
     字段 = `payload.reply_to`
     形态判定（互斥；先判**键是否存在**，再判类型，最后判值）：
-        missing_key / json_null / string_None / empty_string / real_message_id / other
+        missing_key / json_null / string_None / empty_string / real_message_id
+        / real_message_id_legacy_msg_id / other
     注：CYCLE-22 §4.3 自述的「取值集合恒 ['None']」= Python repr(None) = 本表 json_null；
         字符串 'None' 一条都没有。四者不可合并。
+    **F-2 修复（口径版本 `ruler-f2/1`）**：`reply_to` 实际装的是被引用消息的
+        `msg_uid`（形如 `"42:189"`），不是 `msg_id`；旧实现拿 `payload.msg_id` 集合去比
+        ⇒ `real_message_id` **恒 0**（恒假阴性，不是「真的没人接话」）。
+        现口径：`real_message_id` = `reply_to` 命中**任一消息事件（MSG_DM / MSG_PUBLIC /
+        MSG_GROUP）的 `payload.msg_uid`**。`msg_id` 降级为**兼容回退**，命中单记
+        `real_message_id_legacy_msg_id`，**不并入** `real_message_id` 分子 —— 因为真实日志里
+        `msg_id` 不唯一（r41v ON 臂 PUB 30 条只有 8 个不同值，`"P-0-0"` 占绝大多数），
+        按它算会把不同消息认成同一条。
 
 第 4 组  place_adjacency
     口径 = 相邻两条 MSG_PUBLIC 是否同一 place；分母 = 相邻对数（M实例-1）
@@ -124,6 +133,13 @@
        缺省 null）；脚本不再调用 git，读数与当前 HEAD 解耦。官方口径 = 显式钉住 40 位 sha。
     新增 schema_gate / cross_batch_invariance / invariance_note / thread_isolation /
        msg_graph_degree / pub_next_to_dm / author_topic_crosstab。
+    F-2 (v5，口径版本 `ruler-f2/1`) `real_message_id` 匹配键由 `payload.msg_id` 改为
+       `payload.msg_uid`（任一消息事件 DM/PUB/GROUP）。原实现恒 0：`reply_to` 装的是
+       `msg_uid`（形如 `"42:189"`），而集合里放的是 `msg_id`，且 `msg_id` 在真实日志里
+       **不唯一**。`msg_id` 降级为 `real_message_id_legacy_msg_id` 单列（不并入分子）。
+       附带修正 `msg_graph_degree.pub_out_degree_reply_nonnull` 把该回退项一并计入。
+       **口径改动不等于改善**：旧读数（含 `v2/evidence/r41v_public_talk_readings/*`）
+       系旧口径，不得与新读数直接比大小。
 """
 from __future__ import annotations
 
@@ -177,7 +193,19 @@ def probe_flag(den: int) -> bool:
     return den < PROBE_DEN
 
 
-def reply_to_form(payload: dict, msg_ids: set) -> str:
+def reply_to_form(payload: dict, msg_ids: set | None = None,
+                  msg_uids: set | None = None) -> str:
+    """`payload.reply_to` 的形态判定（互斥；F-2 修复后按 `msg_uid` 匹配）。
+
+    * `msg_uids`（主键口径）：**任一消息事件**（MSG_DM / MSG_PUBLIC / MSG_GROUP）的
+      `payload.msg_uid` 集合。`reply_to` 装的就是它（实测形如 `"42:189"`），命中记
+      `real_message_id`。
+    * `msg_ids`（兼容回退）：`payload.msg_id` 集合。真实日志里 `msg_id` **不唯一**
+      （r41v ON 臂：PUB 30 条只有 8 个不同 msg_id，其中 `"P-0-0"` 承担绝大多数），
+      因此命中只记 `real_message_id_legacy_msg_id`，**不并入** `real_message_id` 分子，
+      仅用于「上游确实按 msg_id 写的日志」的可审计回退。
+    * 两个集合都不命中 ⇒ `other`（**不得**因集合为空/键名写错而误判成 `real_message_id`）。
+    """
     if "reply_to" not in payload:
         return "missing_key"
     v = payload["reply_to"]
@@ -188,8 +216,10 @@ def reply_to_form(payload: dict, msg_ids: set) -> str:
             return "string_None"
         if v == "":
             return "empty_string"
-        if v in msg_ids:
+        if msg_uids and v in msg_uids:
             return "real_message_id"
+        if msg_ids and v in msg_ids:
+            return "real_message_id_legacy_msg_id"
         return "other"
     return "other"
 
@@ -201,6 +231,7 @@ def empty_forms() -> dict:
         "string_None": 0,
         "empty_string": 0,
         "real_message_id": 0,
+        "real_message_id_legacy_msg_id": 0,
         "other": 0,
     }
 
@@ -257,6 +288,8 @@ def scan_extra_log(path: Path) -> dict:
         t: {"events": 0, **{f: 0 for f in ("participants", "reply_to", "place")}} for t in MSG_TYPES
     }
     msg_ids: set = set()
+    # F-2：`reply_to` 装的是 `msg_uid` ⇒ 候选集合取**任一消息事件**的 msg_uid（不限于 PUB）
+    msg_uids: set = set()
     keep: list[dict] = []
     with path.open("r", encoding="utf-8") as f:
         for raw in f:
@@ -273,6 +306,9 @@ def scan_extra_log(path: Path) -> dict:
             for fld in ("participants", "reply_to", "place"):
                 if fld in pl:
                     kp[fld] += 1
+            uid = pl.get("msg_uid")
+            if isinstance(uid, str) and uid:
+                msg_uids.add(uid)
             if t != MSG_PUBLIC:
                 continue
             n += 1
@@ -294,10 +330,10 @@ def scan_extra_log(path: Path) -> dict:
             place_null += 1
         else:
             place_nonnull += 1
-    # 统一累加 reply_to 形态（需要在拿到完整 msg_ids 集合后再判 real_message_id）
+    # 统一累加 reply_to 形态（需要在拿到完整 msg_uids / msg_ids 集合后再判 real_message_id）
     forms = empty_forms()
     for pl in keep:
-        forms[reply_to_form(pl, msg_ids)] += 1
+        forms[reply_to_form(pl, msg_ids, msg_uids)] += 1
     meta = load_meta(path.parent / "meta.json")
     return {
         "log_path": str(path.resolve()),
@@ -420,6 +456,9 @@ def main() -> int:
     n = len(pub_payloads)
 
     msg_ids = {pl["msg_id"] for pl in pub_payloads if isinstance(pl.get("msg_id"), str)}
+    # F-2：`reply_to` 装的是 `msg_uid` ⇒ 候选集合取**任一消息事件**（DM/PUB/GROUP）的 msg_uid。
+    # 只取 PUB 会漏掉「公开面接的是私聊消息」这一类边（本批为 0，但口径不得先天排他）。
+    msg_uids = {pl["msg_uid"] for _, _, pl in rows_msg if isinstance(pl.get("msg_uid"), str) and pl["msg_uid"]}
     kp_pub = key_presence[MSG_PUBLIC]
     missing = {
         "participants": n - kp_pub["participants"],
@@ -534,7 +573,7 @@ def main() -> int:
     forms = empty_forms()
     other_examples: list[dict] = []
     for pl in pub_payloads:
-        fname = reply_to_form(pl, msg_ids)
+        fname = reply_to_form(pl, msg_ids, msg_uids)
         forms[fname] += 1
         if fname == "other" and len(other_examples) < 5:
             other_examples.append({"repr": repr(pl.get("reply_to"))})
@@ -548,9 +587,18 @@ def main() -> int:
         "denominator": n,
         "ratio_nonnull_reply_to": frac(n_nonnull, n),
         "probe": probe_flag(n),
+        "match_key_policy": {
+            "ruler_version": "ruler-f2/1",
+            "primary_key": "payload.msg_uid（任一消息事件 DM/PUB/GROUP）",
+            "legacy_fallback_key": "payload.msg_id（命中单记 real_message_id_legacy_msg_id，不并入分子）",
+            "why": "reply_to 装 msg_uid；msg_id 在真实日志里不唯一（PUB 30 条仅 8 个不同值）",
+            "candidate_uids_n": len(msg_uids),
+            "candidate_msg_ids_n": len(msg_ids),
+        },
         "note": (
             "CYCLE-22 §4.3 自述的「取值集合恒 ['None']」= Python repr(None) = 本表 json_null；"
-            "本表把 缺键 / JSON null / 字符串 'None' / 空串 分开计数，四者不可合并"
+            "本表把 缺键 / JSON null / 字符串 'None' / 空串 分开计数，四者不可合并。"
+            "F-2：`real_message_id` 自 ruler-f2/1 起按 msg_uid 匹配（旧实现按 msg_id ⇒ 恒 0）"
         ),
     }
 
@@ -690,7 +738,10 @@ def main() -> int:
     dm_reply = [pl.get("reply_to") for pl in dm_payloads if "reply_to" in pl and pl.get("reply_to") is not None]
     dm_hit_dm = sum(1 for v in dm_reply if v in dm_uid)
     dm_hit_pub = sum(1 for v in dm_reply if v in pub_uid)
-    pub_out_reply = forms["real_message_id"] + forms["other"]
+    # F-2：旧口径用 `real_message_id + other` 近似「reply_to 非空条数」；新增
+    # `real_message_id_legacy_msg_id` 后必须并入，否则 msg_id 回退命中的边会凭空消失（出度变小）。
+    pub_out_reply = (forms["real_message_id"] + forms["real_message_id_legacy_msg_id"]
+                     + forms["other"])
     pub_out_refs = sum(1 for pl in pub_payloads if isinstance(pl.get("refs"), (list, tuple)) and len(pl["refs"]) > 0)
     msg_graph_degree = {
         "stat_unit": "边（reply_to 引用关系）",

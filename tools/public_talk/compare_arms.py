@@ -181,6 +181,10 @@ def reply_to_semantics(log: Path) -> dict:
 
     纪律：这是跑完之后才发现的尺子口径差异，**不得**用它替换预登记分子；
     只能作为「尺子待修」的证据单列，替换分子须走预登记修订（prereg amendment）。
+
+    **F-2 已修**：`public_talk_metrics.py` 自口径版本 `ruler-f2/1` 起，`real_message_id`
+    改按 `msg_uid` 匹配。本函数**保留原样**，作「修复前」的独立旁证（它本来就按 `msg_uid`
+    核对，不受旧 bug 影响）；不要因为尺子修好就删这段证据链。
     """
     uid: dict[str, tuple] = {}
     pubs: list[dict] = []

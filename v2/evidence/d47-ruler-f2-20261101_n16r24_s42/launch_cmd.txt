@@ -1,0 +1,4 @@
+[d47] launcher=v2/evidence/d47-ruler-f2-20261101_n16r24_s42/launch_d47.sh mode=setsid
+[d47] INLINE_ENV=HITT_LLM_PROVIDER=openai_compat HITT_WORLD_SEED=42 HITT_DIALOGUE_PUBLIC_REPLY=1
+[d47] code_sha=8f42eeede0f52baa94046f8c0cd9889ac3f0dc10 branch=fix/place-talk-quota-r43
+[d47] started_at=2026-11-01T06:11:09+08:00
