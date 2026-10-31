@@ -64,3 +64,24 @@ git merge-base --is-ancestor feat/d9s-syntax-diversity origin/master ; # rc=1（
 
 > **"复用旧臂"不是"引用一个目录"，是"引用一个 commit + 一组 env"。**
 > 不读 `launch_cmd.txt` / `switch_proof.txt` 就宣布"OFF 已就位"，等于用一个不知道出处的数字做基线。
+
+## 8. 复核方结论与此阻断的关系（必须同屏，防误读）
+
+`repro-verifier` 已对 `167cb41` 出独立复核件 `v2/evidence/d9t-167cb41-impl-verified-by-verifier.md`（`e73e4d47…` / 108 行），四项 + 反向检查全 PASS，并写下闸门句「**这些证据足以支撑两臂配对链**」。
+
+**该结论在本件之前成立，在本件之后必须改写**：
+
+| 命题 | 真值 |
+|---|---|
+| `167cb41` 未改变 **`origin/master`** 的 OFF 行为（6 组逐字节 + 3 hunk 全 append） | **真**（复核 PASS，且用结构证明而非抽样） |
+| **OFF 臂 `d9s-on2` 的产出 = `origin/master` 的产出** | **假**（它是 `f2b3230d` 跑的，见 §1） |
+
+⇒ **"足以支撑配对链"依赖一个为假的前提**。正确表述应为：
+> **在"OFF 臂 = `origin/master` 代码"这一前提下，证据足以支撑配对链；而该前提为假 ⇒ 结论撤回，须在 `f2b3230d` 之上重做实现与复核。**
+
+这不是复核方失职：**他核的是"分支有没有改 master 的行为"，这件事他核对了**；错的是**派件时给的比较基准**（Leader 的责任，见件头）。
+
+## 9. 反向收获：两个可以直接沿用的结论
+
+1. **`narration_enabled()` 在 env 完全未设时读 `code/config/life_v2.json::prompt.narration.enabled`（现值 `true`）⇒「未设」= ON**。所以真值表里「未设」与「`=1`」输出相同（98/105）是设计，不是 bug。**起跑时必须显式 `LIFE_PROMPT_NARRATION=1`，不得靠"未设"。**
+2. 复核方用的**结构证明**（`grep -c "^-[^-]"` = 0、3 个 hunk 全为 append）比"抽一条比 hash"更强，建议固化为 L1 的可接受证据形式之一。
