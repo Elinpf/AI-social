@@ -223,7 +223,8 @@ echo "blob  =$(git rev-parse origin/master:<path>)"
 test "$(git rev-parse origin/master:<path>)" = "$EXPECT" && echo BLOB_OK || echo BLOB_MISMATCH
 ```
 
-**9.1.1 我按这条第一次实跑就写错了（留档）**：我写成 `EXPECT=$(git rev-parse origin/master:<path>)`，得到 `9512a8f1…`（**推送前的旧值**），推送后 `blob=47ae3693…` ⇒ 表面"不一致"，实为**检查命令错、推送没错**。
+**9.1.1 片段本身写错了（留档；归因已更正）**：`repro-verifier` 提供的片段 `EXPECT=$(git rev-parse origin/master:<path>)` 在推送前**必然**取旧值 ⇒ 100% 假报警。Leader 照抄实跑即发现：`EXPECT=9512a8f1…`（旧值）、推送后 `blob=47ae3693…` ⇒ 表面"不一致"，**实为检查命令错、推送没错**；改成 `git hash-object <path>` / `git rev-parse <新sha>:<path>` 后 **BLOB_OK**。
+> **留档价值不在"谁手误"，而在这句**：**贴着执行点的规则，提供者也会写错——必须实跑一次才算立住。** 归因写反会把这层信息退化成个人失误。
 ⇒ **纪律**：`EXPECT` 必须取**变更后的内容**（`git hash-object <path>` 或 `<新sha>:<path>`），**绝不能取 `origin/master:<path>`** —— 后者在推送前必然是旧值，这个检查会 100% 假报警；而假报警多了，人就会开始忽略真报警。
 
 > **「变更后该等于什么」只有写在同一命令里才防得住**；写进文档，就还是"靠记得去比"。
@@ -237,3 +238,15 @@ test "$(git rev-parse origin/master:<path>)" = "$EXPECT" && echo BLOB_OK || echo
 1. **D9t 证据时点一律 ≥ `27b825b`**；`d5c386e` / `d7dab02` **不得作为证据时点引用**；
 2. 每个错误中间态在本地打 `git notes`（`A2 缺失态，勿引用`），`--notes` 显示、不改内容与树；
 3. 引用历史提交上的件时，**先 `git cat-file -e <sha>:<path>` 再读**——"提交存在"不等于"该件在该提交上是正确版本"。
+
+### 9.3 两个"本地成立、远端不成立"的坑（`repro-verifier` 2026-10-31 核出）
+
+**① `git notes` 只在本地 —— 别人和你看到的不是同一套注记。**
+- 必须显式推：`git push origin refs/notes/commits:refs/notes/commits`；
+- 且**别人 fetch 默认不拉 notes**（`refs/notes/*` 不在默认 refspec 里）⇒ 要全组可见，各人需 `git fetch origin refs/notes/commits:refs/notes/commits`，或在 `.git/config` 加 `fetch = +refs/notes/*:refs/notes/*`。
+⇒ **"我打了 notes" 不等于 "团队看得到"**；不写这条，这句就只对作者自己成立。
+
+**② `git push … | tail -N; echo $?` 拿到的是 `tail` 的退出码，不是 `push` 的。**
+- 表现：`fatal: unable to access … GnuTLS recv error (-110)` 之后仍打印 `push_rc=0`，让人误判"推成功了"；
+- 纪律：**`push` 不要串管道**；必须 `git push …; echo "push rc=$?"`，再用 `git ls-remote` 复核服务端真实状态。
+- 实例（本件作者本人）：`refs/notes/commits` 那次"看起来推了、`ls-remote` 却为空"，回到无管道形式重推并 `ls-remote` 复核后才是真推上（`aa8e4f2f…`）。
