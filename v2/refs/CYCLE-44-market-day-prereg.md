@@ -13,10 +13,10 @@
 | 项 | 值 | 取法 |
 |---|---|---|
 | 预登记文件 | `v2/refs/CYCLE-44-market-day-prereg.md` | 本文件 |
-| **本件自身 sha256**（本行自指无法收敛，用**归一化口径**，可机械复算） | `1e774551223edb74d06b63edb8f65aaf325d0bbddbea9cb1856c1a5e5f37dac8` —— 复算：把本行那个 64 位十六进制值替换成字面量 `<SELF>` 后 `sha256sum` （即 `sed` 替换后取摘要；另以**入库 commit sha** 为第二锚） | `sha256sum` |
+| **本件自身 sha256**（本行自指无法收敛，用**归一化口径**，可机械复算） | `f6026a326780716963d16200634cc5cab28d7c2354c586fa0f92f3df543cfdda` —— 复算：把本行那个 64 位十六进制值替换成字面量 `<SELF>` 后 `sha256sum` （即 `sed` 替换后取摘要；另以**入库 commit sha** 为第二锚） | `sha256sum` |
 | 交付分支 | `life/market-day` | `git branch --show-current` |
 | **起手 sha（两臂共同基）** | `<b3358fb2adaf452b307e181aaa8f40f4c792f33f>` | `git rev-parse HEAD` |
-| **两臂 `code/` 树（两臂必须相同）** | `5c641e080b24f03e82b28c837e73ca27fec15c03` | `git rev-parse HEAD:code` |
+| **两臂 `code/` 树同源、差异受限（见 §A1-1）** | OFF = `5c641e08…`；ON = `3039ed21…`；差异仅限 §0「改动边界」所列文件 | `git rev-parse HEAD:code` |
 | 判据词表（数据文件，唯一真源） | `tools/metrics/market_day_lexicon.json`，sha256 `8649d09e04ca6dc59d0cef153ea2a5b82b38e886eadc59868d4abe194a2c16d8`，版本 `market-day-lexicon/R-B-v1` | `sha256sum` |
 | 读数器（只读，零 LLM） | `tools/metrics/market_day_readings.py`，sha256 `150c94487cbf2d42e16f7c128bd13fffa48aacc7ce904d3cf1ba8c5320c2b339` | `sha256sum` |
 | 读数器自检 | `python3 tools/metrics/market_day_readings.py --selftest` → **12/12 passed**（基线判据，改坏即失败） | 实测 |
@@ -223,12 +223,12 @@ scripts/check_citations.sh v2/refs/CYCLE-44-market-day-prereg.md --strict
 | **② run sha** | OFF `run.jsonl` sha256 `<待填>` / ON `<待填>`；起手 `b3358fb`；`code/` 树 `5c641e08` |
 | **③ report commit sha** | `<待填>` @ `<ISO 时间>` |
 
-**时序可证**：用 **commit 锚**（`git log -1 --format='%h %ad' --date=iso -- v2/refs/CYCLE-44-market-day-prereg.md`）证明 pre-reg 提交时间 **早于** 两臂 `started_at`；**不得**使用文件 mtime（批量 checkout 会让 mtime 同值，CYCLE-43 已把这条写死）。
+**时序可证**：用 **commit 锚**（`git log -1 --format='%h %ad' --date=iso -- v2/refs/CYCLE-44-market-day-prereg.md`）证明 pre-reg 提交时间 **早于** 处理组（ON 臂）`started_at`；**不得**使用文件 mtime（批量 checkout 会让 mtime 同值，CYCLE-43 已把这条写死）。
 
 ### 状态清单
 
-- [ ] 代码接线（`code/life/market.py` + `agent.py::_market_line`，插行位置见 §0 硬约束）
-- [ ] 单测（`code/life/tests/test_market_arm.py`：开关关 ⇒ 两条 prompt **逐字节不变**、`ctx.market` 不出现；开关开 ⇒ 只插一行 + `ctx.market` 快照；非集日 ⇒ 不插行）
+- [ ] 代码接线（`code/life/market_day.py` + `agent.py::_market_line`，插行位置见 §0 硬约束）
+- [ ] 单测（`code/life/tests/test_market_day_arm.py`：开关关 ⇒ 两条 prompt **逐字节不变**、`ctx.market` 不出现；开关开 ⇒ 只插一行 + `ctx.market` 快照；非集日 ⇒ 不插行）
 - [ ] OFF 逐字节等价对拍（照 `tools/weather/off_equiv_prompts.py` 的做法）
 - [ ] 读数器 + 词表 + 标注三件入库，sha256 填进 §0
 - [ ] 本件 commit（**早于起跑**）
@@ -347,3 +347,14 @@ E3 的 100% 阈值本身、E4（非集日不外溢）、E5（真 LLM + 串行）
 
 **A2-3 · Amendment 预算自律（登记意图）**：本件已用 A1、A2 两次跑批前勘误；
 **第三次 Amendment 须为严重错误才允许**，不得把预登记变成橡皮图章（Leader 22:34 明示）。
+
+---
+
+## §A3 Amendment（**封版**；2026-10-31 22:50 +0800；早于 ON 臂 `started_at`）
+
+§A3（第三类：**字面事实勘误 / 口径不一致修正**）：仅修改 C1（§11 时序条件「两臂」→「处理组（ON 臂）」）、C2（§0 两臂代码树表述）、C3（状态清单两处文件名）。**未改**：E1–E5、§3 三层映射、§4 护栏阈值（G-L7/G-L2/G-L13/G-LEN/G-BEH）、§6 规模与统计力（MDE/DE）、§7 外推限制、§0 冻结 sha 清单、主判据阈值（Δ≥+5.0pp / CI 不重叠 / ≥8 绝对条数）、分母（n=208 / DE=1.5 / DE=2 敏感性）、词表与负例表 sha。**判据/阈值/分母/词表未改一字。**
+
+- **C1**（§11「时序可证」）：`早于两臂 started_at` → `早于处理组（ON 臂）started_at`（§A2 晚于 OFF 臂起跑的 49 秒披露属**报告正文**事项，未写进本件，避免第二处改动）
+- **C2**（§0）：`两臂 code/ 树（两臂必须相同）= 5c641e08…` → `两臂 code/ 树同源、差异受限（见 §A1-1）：OFF = 5c641e08…；ON = 3039ed21…；差异仅限 §0「改动边界」所列文件`
+- **C3**（状态清单 230/231 行）：`market.py` → `market_day.py`；`tests/test_market_arm.py` → `code/life/tests/test_market_day_arm.py`
+- 机器可核：`git diff 3347c93 <A3sha> -- v2/refs/` 应只含 C1/C2/C3 三处字面 + 本 §A3 段自身。
