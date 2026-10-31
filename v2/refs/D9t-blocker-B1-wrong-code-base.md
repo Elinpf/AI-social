@@ -85,3 +85,41 @@ git merge-base --is-ancestor feat/d9s-syntax-diversity origin/master ; # rc=1（
 
 1. **`narration_enabled()` 在 env 完全未设时读 `code/config/life_v2.json::prompt.narration.enabled`（现值 `true`）⇒「未设」= ON**。所以真值表里「未设」与「`=1`」输出相同（98/105）是设计，不是 bug。**起跑时必须显式 `LIFE_PROMPT_NARRATION=1`，不得靠"未设"。**
 2. 复核方用的**结构证明**（`grep -c "^-[^-]"` = 0、3 个 hunk 全为 append）比"抽一条比 hash"更强，建议固化为 L1 的可接受证据形式之一。
+
+## 10. 基准错位的量化（`repro-verifier` 独立复算，Leader 复核一致）
+
+```bash
+git diff --stat origin/master f2b3230d -- code/
+# 14 files changed, 435 insertions(+), 37795 deletions(-)
+```
+
+| 方向 | 量 | 含义 |
+|---|---|---|
+| `+435` | `f2b3230d` 有、master 没有 | 含 **`SYNTAX` 整套**（D9s 的 S-1/S-2） |
+| `−37795` | **master 有**、`f2b3230d` 没有 | master 后来 30+ 提交的功能 |
+
+⇒ 若在 master 上做 D9t，两臂至少差 **三样**（`OPENINGS` + `SYNTAX` + 37795 行功能差）——
+**那不是"双干预"，是"多变量"，任何差值都不可归因。** 这是 P-A 为唯一可行路径的**量的依据**，不再只是"看起来更干净"。
+
+## 11. 一个必须分清的区分（`repro-verifier` 主动指出，Leader 采纳）
+
+| 命题 | 真值 | 用途 |
+|---|---|---|
+| `05526e0d` 与 `f2b3230d` 之间 `code/` 零 diff ⇒ **D9s 线内部两臂运行同源** | **真** | 支撑 D9s 的臂间可比 |
+| `origin/master` 与 `f2b3230d` 同源 | **假** | 不可用于 D9t 配对 |
+
+⇒ **"同一分支内两臂同源"≠"不同分支同源"。** 今晚这两件事被混成了一件，是 B-1 的直接成因。
+
+## 12. 下一轮复核的三道前置（`repro-verifier` 提出，Leader 采纳为派件必附条件）
+
+派 P-A 复核件时，对方须**先跑**：
+1. `launch_cmd.txt` 里的 `HEAD=` 与派件 sha **逐字相同**；
+2. 新分支以 `f2b3230d` 为祖先（`git merge-base --is-ancestor`）；
+3. `git diff --stat f2b3230d..新分支 -- code/` **只含 `OPENINGS` 相关**，无 `SYNTAX` 增减。
+**任一不过 ⇒ 直接 `CANNOT-VERIFY`，不跑矩阵**（避免再一次"证明了一个错前提"）。
+
+## 13. 责任归属（写清，避免"全算派件错"）
+
+- **Leader**：预登记写"复用 `d9s-on2`"却未读该臂 `launch_cmd.txt`；派件时把比较基准写成 `origin/master`；
+- **复核方**：L1 原文写的是"与 **`d9s-on2` 那版代码**逐字节相同"，他引用了这句话但未核"那版代码是哪个 commit"——**核了动作，没核主语**。
+⇒ 两边各错一层；**制度修法在 §12 的三道前置**（把它变成"派件必附 + 复核必跑"的机械动作）。
