@@ -83,3 +83,54 @@ sed '/^## 4\./,/^## 5\./d' v2/refs/D9t-prereg-opening-menu.md | grep -nE "$P" \
 4. **G7 的规模是否落在 `174±10`**（L7）。
 
 四条答不全 ⇒ 不出判定件，先补证据。
+
+## 9. 本轮补充（2026-10-31 11:4x，P-A 复核后定稿）
+
+### 9.1 L0 基座闸门（**先于一切**，B-1 的产物）
+
+```bash
+grep '^HEAD=' v2/evidence/<OFF臂>/launch_cmd.txt     # 必须与实现分支的基座逐字相同
+git merge-base --is-ancestor <该HEAD> <实现分支>; echo rc=$?   # 必须 0
+```
+⇒ **不读 `launch_cmd.txt` 就宣布"OFF 可复用"= 用一个不知道出处的数字当基线。**（B-1 的成因）
+
+### 9.2 L1 的口径必须写**五元组**
+
+```
+(HITT_WORLD_SEED, agent_id, round, role_id, ROTATION 状态)
+```
+
+本轮实证：同一棵树、同一 `agent_id=P004`、同一 `round=7`、`seed` 未设，仅 `role_id` 不同：
+| `role_id` | 四开 + `OPENINGS` 未设 | 来源 |
+|---|---|---|
+| `None`（默认 `ROLE_OPENINGS_DEFAULT`） | **200** / `f2c994a1` · **206** / `f50325c7` | Leader + 复核方 |
+| `"cook"` | **203** / `6837dc56` · **209** / `fbdabb58` | 实现方旧表 |
+
+⇒ **只写"长度不同"不写五元组，是不可判的争议。** `narration_tail` 签名已含 `role_id`（`f2b3230d` 起）。
+
+### 9.3 L1 的证据形式：`ast` 函数级比对 > "删除行 0"
+
+派件原写"删除行 0"，实测 `cef1c58` 有 **9 行删除**（全是加 `drop_s1` 参数与短路 `ROTATION` 所必需）⇒ **原判据会误杀正确改动**。
+改用（`repro-verifier` 提出，采纳）：
+```
+73 个共有函数：变更 3（narration_tail / syntax_clause / _apply_syntax_clause）
+              新增 2（openings_enabled / openings_clause）
+              未变 70、被删 0
+```
+⇒ 更强：同时排除"行数抵消但逻辑被改"。
+
+### 9.4 `drop_s1` 的三句话（判定件必须照写）
+
+1. **是干预的一部分**：`OPENINGS=1` 时 S-1 禁令句**由 OPENINGS 段的轮换要求替代**（预登记 §2 原话即"表述被替换"）；
+2. **OFF 路径的 S-1 一字未动**（`S1_CLAUSE` 字面量两版同 `64405139…`；`drop_s1=openings_enabled()`）；
+3. ⇒ `OPENINGS=1` 与基线之差 = **S-1 让位（−45 字）+ `openings_clause`（+266 字）+ 示例句回原句（+1/+2）**，**不得单归因给"8 个出口"**。
+
+### 9.5 已复核通过的状态（`master` 侧可引）
+
+| 项 | 值 |
+|---|---|
+| 实现分支 | `feat/d9t-openings-2 @ cef1c58`（**冻结**） |
+| 基座 | `f2b3230d`（产生 OFF 臂的同一 commit） |
+| 独立复核件 | `v2/evidence/d9t-cef1c58-PA-verified-by-verifier.md`（`5ca75d76…` / 120 行） |
+| 复核结论 | 五项全 PASS + 闸门句"足以支撑两臂配对链" |
+| 实测 | 四开 200/206 → `OPENINGS=1` 422/429；`O=1` 时 `R` 无效；`tools/`、`code/config/` 零 diff |
