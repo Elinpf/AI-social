@@ -1,4 +1,9 @@
-# 预登记（**DRAFT v2，未冻结**）：D9w · 骨架族重复上限
+# 预登记（**已撤销 —— 本轮不立项**）：D9w · 骨架族重复上限
+
+> **⚠ 结论：撤本轮（2026-10-31 21:4x，Leader 提议 + `research-writer` 判 (c)，一致通过）。**
+> **理由（一句）**：目标子群只有 **13 条片段**，按本族分母纪律（<30 只报事件数、不作比率判定）**不可能判出"改善"**；而**全臂口径已无头部空间**（`top1` 3.85% / `Hill N1` 88.29）⇒ **当前规模下不存在可判定的增量**。
+> **本件保留为"判据设计反例"**：它记录了"把局部塌陷当整臂问题"的完整误读链，**不得引用为已立项预登记**。
+> 留档产出见 `v2/refs/D9v-preconditions-before-preregistration.md` §7–§8。
 
 > 状态：**DRAFT —— 不得起跑**。冻结前须经 `prompt-linguist`（口径）、`repro-verifier`（可核性）两道复核。
 > 上游：`v2/refs/D9v-preconditions-before-preregistration.md`（三门）+ `v2/evidence/d9t-obs-skeleton-concentration.md`（三级集中度）+ `v2/evidence/d9t-judgement-20261031.md`（D9t 不通过）
