@@ -1,0 +1,44 @@
+# CYCLE-40 · push 重试留痕（append-only；每条记录含命令原文 + rc + 原始输出）
+# 说明：P3 复核项指出前几次失败的原始输出已不可查（重定向到 /tmp/push.out 时为空文件 0 字节）。
+# 本文件把当时仍留在 /tmp 的原始输出逐字节抄录，并记录最终成功的一次 push 与其后的 ls-remote。
+# 机器：本机；分支：feat/f3-emotion-echo-r38；remote：https://github.com/Elinpf/AI-social.git
+
+[attempt 1] 命令: timeout 90 git push origin feat/f3-emotion-echo-r38 > /tmp/push.out 2>&1; echo rc=$?
+rc=124
+输出(/tmp/push.out, 0 字节): <空 —— 被 timeout 掐断，无任何 stdout/stderr>
+
+[attempt 2] 命令: timeout 180 git push origin feat/f3-emotion-echo-r38 > /tmp/push2.out 2>&1; echo rc=$?
+rc=128
+输出(/tmp/push2.out, 142 字节):
+fatal: unable to access 'https://github.com/Elinpf/AI-social.git/': GnuTLS recv error (-110): The TLS connection was non-properly terminated.
+
+[ls-remote 1] 命令: timeout 25 git ls-remote --heads origin 'refs/heads/feat/f3*' > /tmp/lsremote.out 2>&1
+rc=124, 输出 0 行 (/tmp/lsremote.out, 0 字节)
+
+[attempt 3] 命令: timeout 120 git push origin feat/f3-emotion-echo-r38 > /tmp/push3.out 2>&1; echo rc=$?
+rc=124
+输出(/tmp/push3.out, 0 字节): <空>
+
+[attempt 4] 命令: timeout 120 git push origin feat/f3-emotion-echo-r38 > /tmp/push4.out 2>&1; echo rc=$?
+rc=124
+输出(/tmp/push4.out, 0 字节): <空>
+
+[ls-remote 2] 命令: timeout 25 git ls-remote --heads origin 'refs/heads/feat/f3*' > /tmp/ls3.out 2>&1
+rc=0, 输出 1 行 (/tmp/ls3.out, 77 字节):
+a2eba676e14c5bf37e191c5353b25ae915c48341	refs/heads/feat/f3-emotion-echo-r38
+结论：此时远端 = a2eba67（= 推送前基线），**确认 d6bb727/64fa39e 未落远端**。
+
+[attempt 5 · 成功] 命令: timeout 150 git push origin feat/f3-emotion-echo-r38 > /tmp/push5.out 2>&1; echo rc=$?
+rc=0
+输出(/tmp/push5.out, 185 字节):
+[pre-push] OK：无祖先错位 / 无文件删除 / 无大块删除
+To https://github.com/Elinpf/AI-social.git
+   a2eba67..64fa39e  feat/f3-emotion-echo-r38 -> feat/f3-emotion-echo-r38
+
+[ls-remote 3 · push 后实测] 命令: timeout 25 git ls-remote --heads origin 'refs/heads/feat/f3*' > /tmp/ls4.out 2>&1
+rc=0, 输出 1 行 (/tmp/ls4.out, 77 字节):
+64fa39e88d0c6f1c0fd34e9c5e0fb2ba5a93ca3d	refs/heads/feat/f3-emotion-echo-r38
+结论：远端 = 64fa39e = 本地 HEAD（推送前那一刻），**推送成功且经 ls-remote 实测确认**。
+
+# 之后本文件所在勘误提交的推送结果，记录在该提交之后的下一轮（避免日志自指）：
+# 命令与路径：timeout 150 git push origin feat/f3-emotion-echo-r38 > /tmp/push_final.out 2>&1
