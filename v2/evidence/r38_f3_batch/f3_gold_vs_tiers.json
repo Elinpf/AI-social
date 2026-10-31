@@ -1,0 +1,136 @@
+{
+ "schema": "f3-gold-vs-tiers/1",
+ "annotator": "town-implementer / DeepSeek-V4.1-Flash-1017 (LLM 辅助标注)",
+ "annotator_kind": "llm_assisted",
+ "annotator_declaration": "LLM 辅助标注，不是人工金标注；未做双人独立标注，无 kappa。",
+ "n_rows": 110,
+ "gold": {
+  "y": 75,
+  "n": 21,
+  "x": 14,
+  "E": 96
+ },
+ "min_den": 30,
+ "A_inhouse_opportunity_set": {
+  "source": "v2/evidence/f3_audit_echo.py（机会集口径）",
+  "n_echo_rows": 110,
+  "n_in_opportunity_set": 4,
+  "tier_hit": {
+   "loose": 0,
+   "loose_no_agree": 0,
+   "polarity_match": 0,
+   "marker_based": 0
+  },
+  "never_hit_any_tier": 4,
+  "coverage_of_echo_rows": 0.036364,
+  "gold_pos_in_opportunity_set": 3,
+  "gold_labels_in_opportunity_set": [
+   {
+    "row_no": 2,
+    "seq": 675,
+    "gold": "x"
+   },
+   {
+    "row_no": 50,
+    "seq": 19258,
+    "gold": "y"
+   },
+   {
+    "row_no": 57,
+    "seq": 20669,
+    "gold": "y"
+   },
+   {
+    "row_no": 97,
+    "seq": 27736,
+    "gold": "y"
+   }
+  ],
+  "recall_on_opportunity_set": {
+   "num": 0,
+   "den": 4,
+   "reportable": false
+  }
+ },
+ "B_extended_all_rows": {
+  "loose": {
+   "hits": 1,
+   "tp": 1,
+   "fp": 0,
+   "hit_on_na": 0,
+   "precision": 1.0,
+   "precision_den": 1,
+   "precision_reportable": false,
+   "recall": 0.013333,
+   "recall_wilson95": [
+    0.002358,
+    0.071734
+   ],
+   "hit_rows": [
+    {
+     "row_no": 75,
+     "seq": 23354,
+     "gold": "y",
+     "markers": []
+    }
+   ],
+   "recall_den": 75,
+   "recall_reportable": true,
+   "precision_verdict": "分母不足（1 < 30）⇒ 停用该精确率"
+  },
+  "loose_no_agree": {
+   "hits": 0,
+   "tp": 0,
+   "fp": 0,
+   "hit_on_na": 0,
+   "precision": null,
+   "precision_den": 0,
+   "precision_reportable": false,
+   "recall": 0.0,
+   "recall_wilson95": [
+    0.0,
+    0.048724
+   ],
+   "hit_rows": [],
+   "recall_den": 75,
+   "recall_reportable": true,
+   "precision_verdict": "分母不足（0 < 30）⇒ 停用该精确率"
+  },
+  "polarity_match": {
+   "hits": 0,
+   "tp": 0,
+   "fp": 0,
+   "hit_on_na": 0,
+   "precision": null,
+   "precision_den": 0,
+   "precision_reportable": false,
+   "recall": 0.0,
+   "recall_wilson95": [
+    0.0,
+    0.048724
+   ],
+   "hit_rows": [],
+   "recall_den": 75,
+   "recall_reportable": true,
+   "precision_verdict": "分母不足（0 < 30）⇒ 停用该精确率"
+  },
+  "marker_based": {
+   "hits": 0,
+   "tp": 0,
+   "fp": 0,
+   "hit_on_na": 0,
+   "precision": null,
+   "precision_den": 0,
+   "precision_reportable": false,
+   "recall": 0.0,
+   "recall_wilson95": [
+    0.0,
+    0.048724
+   ],
+   "hit_rows": [],
+   "recall_den": 75,
+   "recall_reportable": true,
+   "precision_verdict": "分母不足（0 < 30）⇒ 停用该精确率"
+  }
+ }
+}

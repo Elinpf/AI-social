@@ -1,0 +1,302 @@
+{
+ "schema": "true-run-verdict/1",
+ "bucket": "dialogue",
+ "criteria": {
+  "1_bucket": "判据桶 cached==0 且 tokens_in>0（CYCLE-39:474-480 计划 4 ①）",
+  "2_rc_mtime": "run_batch.rc mtime 严格晚于 run.jsonl mtime（同计划 4 ②）",
+  "3_provider": "by_provider 无 mock 且通过 provider 校验（反假绿护栏，防 --mock 路径被判真跑）"
+ },
+ "results": [
+  {
+   "batch_dir": "v2/evidence/r38_f3_batch/on",
+   "bucket": "dialogue",
+   "files": {
+    "run.jsonl": {
+     "exists": true,
+     "mtime": "2026-10-31 11:14:47",
+     "bytes": 17185321
+    },
+    "run_batch.rc": {
+     "exists": true,
+     "mtime": "2026-10-31 11:14:49",
+     "content": "0"
+    },
+    "llm_cost.json": {
+     "exists": true
+    }
+   },
+   "criterion_1_bucket": {
+    "calls": 191,
+    "tokens_in": 65747,
+    "tokens_out": 9731,
+    "cached": 0,
+    "degraded": 0,
+    "thinking": 0
+   },
+   "criterion_2_rc_newer_than_log": true,
+   "criterion_3_provider_clean": true,
+   "provider": {
+    "openai_compat": 2252
+   },
+   "cost_source": "recomputed_from_run.jsonl",
+   "notes": [],
+   "llm_cost_json_matches_recompute": true,
+   "total_llm_calls": {
+    "calls": 2252,
+    "tokens_in": 164970,
+    "tokens_out": 153152,
+    "cached": 1387,
+    "degraded": 0,
+    "thinking": 425,
+    "tokens_total": 318122
+   },
+   "criterion_1_pass": true,
+   "provider_guard": {
+    "ok": true,
+    "expected": "openai_compat",
+    "by_provider": {
+     "openai_compat": 2252
+    },
+    "problems": [],
+    "policy": "计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。"
+   },
+   "mtime_delta_sec_rc_minus_log": 1.725,
+   "verdict": "真跑",
+   "reason": "两条判据同时满足，且 provider 桶无 mock"
+  },
+  {
+   "batch_dir": "v2/evidence/r38_f3_batch/off",
+   "bucket": "dialogue",
+   "files": {
+    "run.jsonl": {
+     "exists": true,
+     "mtime": "2026-10-31 12:26:37",
+     "bytes": 17181929
+    },
+    "run_batch.rc": {
+     "exists": true,
+     "mtime": "2026-10-31 12:26:38",
+     "content": "0"
+    },
+    "llm_cost.json": {
+     "exists": true
+    }
+   },
+   "criterion_1_bucket": {
+    "calls": 191,
+    "tokens_in": 62224,
+    "tokens_out": 10019,
+    "cached": 0,
+    "degraded": 0,
+    "thinking": 0
+   },
+   "criterion_2_rc_newer_than_log": true,
+   "criterion_3_provider_clean": true,
+   "provider": {
+    "openai_compat": 2252
+   },
+   "cost_source": "recomputed_from_run.jsonl",
+   "notes": [],
+   "llm_cost_json_matches_recompute": true,
+   "total_llm_calls": {
+    "calls": 2252,
+    "tokens_in": 161581,
+    "tokens_out": 148840,
+    "cached": 1387,
+    "degraded": 0,
+    "thinking": 425,
+    "tokens_total": 310421
+   },
+   "criterion_1_pass": true,
+   "provider_guard": {
+    "ok": true,
+    "expected": "openai_compat",
+    "by_provider": {
+     "openai_compat": 2252
+    },
+    "problems": [],
+    "policy": "计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。"
+   },
+   "mtime_delta_sec_rc_minus_log": 1.785,
+   "verdict": "真跑",
+   "reason": "两条判据同时满足，且 provider 桶无 mock"
+  },
+  {
+   "batch_dir": "v2/evidence/r38_f3_batch/off_INVALID_cached_replay",
+   "bucket": "dialogue",
+   "files": {
+    "run.jsonl": {
+     "exists": true,
+     "mtime": "2026-10-31 12:03:26",
+     "bytes": 17170727
+    },
+    "run_batch.rc": {
+     "exists": true,
+     "mtime": "2026-10-31 10:48:06",
+     "content": "0"
+    },
+    "llm_cost.json": {
+     "exists": false
+    }
+   },
+   "criterion_1_bucket": {
+    "calls": 191,
+    "tokens_in": 0,
+    "tokens_out": 0,
+    "cached": 191,
+    "degraded": 0,
+    "thinking": 0
+   },
+   "criterion_2_rc_newer_than_log": false,
+   "criterion_3_provider_clean": true,
+   "provider": {
+    "openai_compat": 2252
+   },
+   "cost_source": "recomputed_from_run.jsonl",
+   "notes": [],
+   "total_llm_calls": {
+    "calls": 2252,
+    "tokens_in": 0,
+    "tokens_out": 0,
+    "cached": 2252,
+    "degraded": 0,
+    "thinking": 425,
+    "tokens_total": 0
+   },
+   "criterion_1_pass": false,
+   "provider_guard": {
+    "ok": true,
+    "expected": "openai_compat",
+    "by_provider": {
+     "openai_compat": 2252
+    },
+    "problems": [],
+    "policy": "计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。"
+   },
+   "mtime_delta_sec_rc_minus_log": -4519.468,
+   "verdict": "未验真",
+   "reason": "判据桶 `dialogue` 为 cached=191 / tokens_in=0（要求 cached==0 且 tokens_in>0）⇒ 缓存回放/零真实调用，属假绿"
+  },
+  {
+   "batch_dir": "v2/evidence/f5_round1/official/off",
+   "bucket": "dialogue",
+   "files": {
+    "run.jsonl": {
+     "exists": false,
+     "mtime": null,
+     "bytes": null
+    },
+    "run_batch.rc": {
+     "exists": true,
+     "mtime": "2026-10-31 08:54:57",
+     "content": "0"
+    },
+    "llm_cost.json": {
+     "exists": true
+    }
+   },
+   "criterion_1_bucket": {
+    "cached": 0,
+    "calls": 397,
+    "degraded": 0,
+    "thinking": 0,
+    "tokens_in": 3176,
+    "tokens_out": 3176
+   },
+   "criterion_2_rc_newer_than_log": null,
+   "criterion_3_provider_clean": false,
+   "provider": {
+    "mock": 2646
+   },
+   "cost_source": "llm_cost.json(无 run.jsonl 可复算)",
+   "notes": [],
+   "total_llm_calls": {
+    "cached": 1396,
+    "calls": 2646,
+    "degraded": 0,
+    "thinking": 579,
+    "tokens_in": 10000,
+    "tokens_out": 10000,
+    "tokens_total": 20000
+   },
+   "criterion_1_pass": true,
+   "provider_guard": {
+    "ok": false,
+    "expected": "openai_compat",
+    "by_provider": {
+     "mock": 2646
+    },
+    "problems": [
+     "出现非预期 provider：['mock']（预期仅 openai_compat）",
+     "预期 provider openai_compat 计数为 0"
+    ],
+    "policy": "计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。"
+   },
+   "verdict": "未验真",
+   "reason": "provider 桶含 mock 或未通过 provider 校验 （by_provider={'mock': 2646}）⇒ --mock 路径不构成真跑"
+  },
+  {
+   "batch_dir": "v2/evidence/f5_round1/official/on",
+   "bucket": "dialogue",
+   "files": {
+    "run.jsonl": {
+     "exists": false,
+     "mtime": null,
+     "bytes": null
+    },
+    "run_batch.rc": {
+     "exists": true,
+     "mtime": "2026-10-31 08:54:57",
+     "content": "0"
+    },
+    "llm_cost.json": {
+     "exists": true
+    }
+   },
+   "criterion_1_bucket": {
+    "cached": 0,
+    "calls": 447,
+    "degraded": 0,
+    "thinking": 0,
+    "tokens_in": 3576,
+    "tokens_out": 3576
+   },
+   "criterion_2_rc_newer_than_log": null,
+   "criterion_3_provider_clean": false,
+   "provider": {
+    "mock": 2653
+   },
+   "cost_source": "llm_cost.json(无 run.jsonl 可复算)",
+   "notes": [],
+   "total_llm_calls": {
+    "cached": 1399,
+    "calls": 2653,
+    "degraded": 0,
+    "thinking": 528,
+    "tokens_in": 10032,
+    "tokens_out": 10032,
+    "tokens_total": 20064
+   },
+   "criterion_1_pass": true,
+   "provider_guard": {
+    "ok": false,
+    "expected": "openai_compat",
+    "by_provider": {
+     "mock": 2653
+    },
+    "problems": [
+     "出现非预期 provider：['mock']（预期仅 openai_compat）",
+     "预期 provider openai_compat 计数为 0"
+    ],
+    "policy": "计划用真 LLM 时必须显式校验 provider 计数 > 0 且无 mock 混入。"
+   },
+   "verdict": "未验真",
+   "reason": "provider 桶含 mock 或未通过 provider 校验 （by_provider={'mock': 2653}）⇒ --mock 路径不构成真跑"
+  }
+ ],
+ "summary": {
+  "n": 5,
+  "true_run": 2,
+  "unverified": 3
+ }
+}
