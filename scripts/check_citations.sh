@@ -104,7 +104,12 @@ for entry in "${RAW[@]}"; do
     if [ "$actual" = "$tok" ]; then
       echo "  content(核过)  L$lineno  $tok  <- $path"; count=$((count+1)); c_ok=$((c_ok+1))
     else
-      echo "  **BAD(content 不符)** L$lineno  $tok  <- $path 实际 $actual"; count=$((count+1)); bad=$((bad+1))
+      if [ "$declared" -eq 1 ]; then
+        # 同行有路径但内容不符，且该 sha 已在紧邻括号里声明为"该时点值/历史值" ⇒ 可解释
+        echo "  content(历史值·已声明) L$lineno  $tok  <- $path 现值 $actual"; count=$((count+1)); c_ok=$((c_ok+1)); c_decl=$((c_decl+1))
+      else
+        echo "  **BAD(content 不符)** L$lineno  $tok  <- $path 实际 $actual"; count=$((count+1)); bad=$((bad+1))
+      fi
     fi
     continue
   fi
