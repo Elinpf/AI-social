@@ -6,8 +6,8 @@
 > 修订史（引用旧 sha 时须能对上"那是哪一版"）：
 > | sha256（前16） | 时点 | 变化 |
 > |---|---|---|
-> | `d28d9d00` | 08:1x | 初版 L1–L7（85 行） |
-> | `fa0b9344` | 12:2x | +§9.1–9.7（L0 基座闸门 / 五元组 / ast 证据 / 分侧证据 / 不对称三分类） |
+> | `d28d9d00`（本件历史版 sha256sum） | 08:1x | 初版 L1–L7（85 行） |
+> | `fa0b9344`（本件历史版 sha256sum） | 12:2x | +§9.1–9.7（L0 基座闸门 / 五元组 / ast 证据 / 分侧证据 / 不对称三分类） |
 > | *（不复写自身 sha）* | 12:4x | +本修订表 / §9.7 三分类机械判据（缺件·未采集·结构性）——行内不写自身 sha，避免「改了 sha 就变」的自指循环；该版 sha 见引入它的提交说明 |
 > | 现取 | — | 每次修订都会变；判定件只写"现取"，并在此表追加一行 |
 >
@@ -103,8 +103,8 @@ sed '/^## 4\./,/^## 5\./d' v2/refs/D9t-prereg-opening-menu.md | grep -nE "$P" \
 
 实例（本文件自己，同一版本两个身份）：
 ```
-git show origin/master:v2/refs/D9t-launch-checklist.md | sha256sum   → a41e3b40a054d666   ← 对外口径
-git rev-parse origin/master:v2/refs/D9t-launch-checklist.md          → 26cd47d8da1e53d8   ← git blob
+git show origin/master:v2/refs/D9t-launch-checklist.md | sha256sum   → <64 位 hex>。对外口径（每次修订都变，故此处不写具体值）
+git rev-parse origin/master:v2/refs/D9t-launch-checklist.md          → <40 位 hex>。git blob（仅供内部翻查）
 ```
 ⇒ **「现取」只解决"取最新"，没解决"取哪个函数"**：取错函数，取到的仍是不同东西。
 ⇒ 与"自我引用 sha 不可能自洽"并列看：一个管**何时取**，一个管**取什么**；两条都写死才算可用。
@@ -126,8 +126,8 @@ git merge-base --is-ancestor <该HEAD> <实现分支>; echo rc=$?   # 必须 0
 本轮实证：同一棵树、同一 `agent_id=P004`、同一 `round=7`、`seed` 未设，仅 `role_id` 不同：
 | `role_id` | 四开 + `OPENINGS` 未设 | 来源 |
 |---|---|---|
-| `None`（默认 `ROLE_OPENINGS_DEFAULT`） | **200** / `f2c994a1` · **206** / `f50325c7` | Leader + 复核方 |
-| `"cook"` | **203** / `6837dc56` · **209** / `fbdabb58` | 实现方旧表 |
+| `None`（默认 `ROLE_OPENINGS_DEFAULT`） | **200** / `f2c994a1` · **206** / `f50325c7`（内容 sha·字符串级） | Leader + 复核方 |
+| `"cook"` | **203** / `6837dc56` · **209** / `fbdabb58`（内容 sha·字符串级） | 实现方旧表 |
 
 ⇒ **只写"长度不同"不写五元组，是不可判的争议。** `narration_tail` 签名已含 `role_id`（`f2b3230d` 起）。
 
