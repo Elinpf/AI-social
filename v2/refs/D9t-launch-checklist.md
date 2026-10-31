@@ -95,6 +95,20 @@ sed '/^## 4\./,/^## 5\./d' v2/refs/D9t-prereg-opening-menu.md | grep -nE "$P" \
 
 ## 9. 本轮补充（2026-10-31 11:4x，P-A 复核后定稿）
 
+### 9.0 身份口径：一个文件只有一个指纹（本线统一 `sha256sum`）
+
+> **本线统一 `sha256sum`。`git blob sha` 只用于 git 内部翻查，不得作为文件指纹报给人。**
+> 现取时必须**连口径一起写**：`sha256sum <path>`。
+> 若必须报 blob，写全称「**git blob sha**」，且**不得与 sha256 值并列在同一列**。
+
+实例（本文件自己，同一版本两个身份）：
+```
+git show origin/master:v2/refs/D9t-launch-checklist.md | sha256sum   → a41e3b40a054d666   ← 对外口径
+git rev-parse origin/master:v2/refs/D9t-launch-checklist.md          → 26cd47d8da1e53d8   ← git blob
+```
+⇒ **「现取」只解决"取最新"，没解决"取哪个函数"**：取错函数，取到的仍是不同东西。
+⇒ 与"自我引用 sha 不可能自洽"并列看：一个管**何时取**，一个管**取什么**；两条都写死才算可用。
+
 ### 9.1 L0 基座闸门（**先于一切**，B-1 的产物）
 
 ```bash
