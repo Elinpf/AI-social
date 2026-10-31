@@ -195,8 +195,13 @@ launch_cmd.txt  run.jsonl  run_batch.log  switch_proof.txt      ← 没有 meta.
 ### 9.8 L2 的具体做法：目录级指纹（`repro-verifier` 提供，采纳）
 
 ```bash
-FP() { find code/life code/orchestration code/config code/engine -type f \( -name '*.py' -o -name '*.json' \) \
-        -print0 | sort -z | xargs -0 sha256sum | sha256sum; }
+# ⚠ 补丁版（repro-verifier 2026-10-31 自我更正 b421b645（内容 sha·自件件头））：必须先证明"数到了文件"
+FP() {
+  local dirs="code/life code/orchestration code/config code/engine" n
+  n=$(find $dirs -type f \( -name '*.py' -o -name '*.json' \) 2>/dev/null | wc -l)
+  [ "$n" -ge 100 ] || { echo "FATAL: FP 只找到 $n 个文件（期望 ≥100）——路径错或不在跑批那份代码上" >&2; return 3; }
+  find $dirs -type f \( -name '*.py' -o -name '*.json' \) -print0 | sort -z | xargs -0 sha256sum | sha256sum
+}
 FP > /tmp/d9t_code_fp_before.txt && cat /tmp/d9t_code_fp_before.txt
 # 跑批结束后
 FP > /tmp/d9t_code_fp_after.txt && diff /tmp/d9t_code_fp_before.txt /tmp/d9t_code_fp_after.txt && echo CODE_UNCHANGED
@@ -206,6 +211,13 @@ FP > /tmp/d9t_code_fp_after.txt && diff /tmp/d9t_code_fp_before.txt /tmp/d9t_cod
 1. **必须在"跑批实际使用的那份代码"上取**（ON 臂 = `cef1c58`）。
    在 `master` 上取只能证明 master 没动，**证明不了跑批那份没动** —— 与 B-1 同一族错（比较对象错）。
 2. 跑到一半有人切分支/改文件，`FP` 必然变。**变了就报「跑批期代码被动过」，不得解释成"无害改动"。**
+
+**③ 取指纹前必须先证明"数到了文件"（低于阈值 FATAL，不得输出指纹）。**
+
+> **为什么必须有第三条**：`FP` 在**路径写错 / 目录为空**时不报错，而是输出一个**稳定但无意义**的指纹（实测空目录 = `abcfa6a9…`（实测值·内容 sha），`rc=0`）。
+> 跑批前后两次都取这个值 ⇒ `diff` 相等 ⇒ 报 `CODE_UNCHANGED` **假通过**，而且它**长得和真通过一模一样**。
+> 阈值依据：当前工作区实测 **121** 个（`cef1c58` 那份只多不少）⇒ 取 **≥100** 留安全余量。
+> 三条合起来才闭环：**①比的是对的对象 ②变了会报 ③"什么都没比到"不会被当成"没变"。**
 
 > 与 L2 原条文（`git diff --stat` + `--numstat` + 删除文件数）互为补充：
 > `git diff` 证明**已提交**的差异，`FP` 证明**工作区实际被读到的内容** —— 后者才是跑批真正用的东西。
