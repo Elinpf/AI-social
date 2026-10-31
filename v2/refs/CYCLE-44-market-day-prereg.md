@@ -13,7 +13,7 @@
 | 项 | 值 | 取法 |
 |---|---|---|
 | 预登记文件 | `v2/refs/CYCLE-44-market-day-prereg.md` | 本文件 |
-| **本件自身 sha256**（本行自指无法收敛，用**归一化口径**，可机械复算） | `7e234ea3002fae94fcdf6b66ce9e253483b4e9fff1824641307f5dd9e4b3c78d` —— 复算：把本行那个 64 位十六进制值替换成字面量 `<SELF>` 后 `sha256sum` （即 `sed` 替换后取摘要；另以**入库 commit sha** 为第二锚） | `sha256sum` |
+| **本件自身 sha256**（本行自指无法收敛，用**归一化口径**，可机械复算） | `f4c50166949e1b12d6b8f6f81442a759085d5bc89ff7b03f58a855a263ba2118` —— 复算：把本行那个 64 位十六进制值替换成字面量 `<SELF>` 后 `sha256sum` （即 `sed` 替换后取摘要；另以**入库 commit sha** 为第二锚） | `sha256sum` |
 | 交付分支 | `life/market-day` | `git branch --show-current` |
 | **起手 sha（两臂共同基）** | `<b3358fb2adaf452b307e181aaa8f40f4c792f33f>` | `git rev-parse HEAD` |
 | **两臂 `code/` 树（两臂必须相同）** | `5c641e080b24f03e82b28c837e73ca27fec15c03` | `git rev-parse HEAD:code` |
@@ -127,7 +127,7 @@ market_day_hit := R_B 命中（时间词与集市词双向邻接 ≤6 字、不�
 
 | 闸 | 判据 | 取法 |
 |---|---|---|
-| **E1 同 sha + 单变量** | 两臂 `git rev-parse HEAD:code` 相同且 = `5c641e08…`；`env_dump.txt` 两臂只差 `HITT_MARKET_DAY` | `git rev-parse`；`diff env_dump` |
+| **E1 同源 + 差异受限 + 单变量**（§A1 修订） | OFF 臂 `HEAD:code` = `5c641e08…`；ON 臂 `HEAD:code` = `3039ed21…`；两臂代码差异**仅限** §0「改动边界」列出的文件（逐文件列出 + 附 `git diff --stat` 输出）；`env_dump.txt` 两臂只差 `HITT_MARKET_DAY` | `git rev-parse`；`git diff --stat <OFF-code-tree> <ON-code-tree>`；`diff env_dump` |
 | **E2 无污染（OFF 哨兵）** | **OFF 臂集日 R_B < 8/208**；若 ≥8 ⇒ 停判，先查污染（词表/任务混臂/缓存回放） | 读数器 |
 | **E3 注入到达（prompt 层，唯一硬性）** | ON 臂 **`ctx.market` 字段数 = 集日回合数**（逐条可数）；OFF 臂该字段**不出现**。**`R_A > 0` 不是必要条件**（`R_A` 只测「模型有没有用『逢三/集日』这类显式日历词」；模型完全可能用「今早集上」表达同一事实而 `R_A=0`）——见 §12 A1 | `run.jsonl` / 读数器 |
 | **E4 机制不外溢** | **非集日子集**：两臂 R_B 命中相同（预期 0=0）且 MSG 条数量级一致（±5%） | 读数器 `nonmarket` 分列 |
@@ -282,3 +282,37 @@ scripts/check_citations.sh v2/refs/CYCLE-44-market-day-prereg.md --strict
 > **对 Leader 报备的不一致（未自行改动，等裁决）**：
 > 1. §0「两臂 `code/` 树（两臂必须相同）= `5c641e08…`」与 §5 闸 V1 同款断言，和「ON 臂必须带本臂改动」**结构上互斥**（ON 臂 `HEAD:code` 必然 ≠ `5c641e08`）。建议裁决口径：OFF 臂 `code/` = `5c641e08…`、ON 臂 `code/` = 本臂分支树，并把 V1 改为「两臂 diff 只落在 §0『改动边界』列出的文件上」。
 > 2. 落实 Leader 的三条实现约束（本件登记备查，均已在代码与单测中体现）：① `audit()` 只记 key + `line_sha256`、**不记人话**（照 `weather.py` 写法）；② OFF 臂 `ctx` 里**键不存在**（非空串）——单测 `test_off_prompt_and_ctx_untouched` 断言；③ 仪器隔离——`code/` 运行时**不得 import** `tools/metrics/*`，单测 `test_code_never_imports_judgment_instruments` 硬锁。
+
+---
+
+## §A1 Amendment（跑批前登记；**判据 / 阈值 / 分母 / 词表 / 三层映射一律未动**）
+
+> 时点：2026-10-31 22:2x（两臂 `started_at` 之前，跑批未开始）。
+> 依据 §10 允许的第 ① 类改动（**事实性勘误：sha / 路径 / 行号**）。触发者：Leader 22:24 裁决（采纳 §A0 第 1 条建议）。
+> §A0 第 1 条的「待裁决」自本条起**已裁决并关闭**。
+
+**A1-1 · §5 闸 E1 的可行性修订（原条件结构上不可能成立）**
+
+- 原文：E1 = 「两臂 `git rev-parse HEAD:code` **相同且** = `5c641e08…`」。
+- 问题：ON 臂必须携带本臂改动（`code/life/market_day.py` 新增、`agent.py` 接线）⇒ ON 臂 `HEAD:code` **在数学上必然** ≠ `5c641e08`。原条件**永远不可能满足**，等于把本轮判成必然 `invalid`；这是预登记的可行性缺陷，不是实验设计问题。
+- 修订后（**更可机械验证，不是放水**）：
+
+  > **E1（修订）**：OFF 臂 `HEAD:code` = `5c641e08…`；ON 臂 `HEAD:code` = `3039ed21…`；两臂代码差异**仅限** §0「改动边界」列出的文件，且**逐文件列出**并附 `git diff --stat` 输出；`env_dump.txt` 两臂只差 `HITT_MARKET_DAY`。
+
+- 验证命令（校验员可一行复跑）：
+
+  ```bash
+  git rev-parse 5c641e080b24f03e82b28c837e73ca27fec15c03  # OFF 臂 code 树
+  git rev-parse 3039ed21e5a2b74d595aab850e7adde34cbbffd0  # ON 臂 code 树
+  git diff --stat 5c641e080b24f03e82b28c837e73ca27fec15c03 3039ed21e5a2b74d595aab850e7adde34cbbffd0
+  # 实测（2026-10-31 22:2x，本臂树）name-status：
+  #   M  life/agent.py                      +45
+  #   A  life/market_day.py                 +128
+  #   A  life/tests/test_market_day_arm.py  +404
+  # ⇒ 3 files changed, 577 insertions(+)，全部落在 `code/life/` 之内（含其 tests/ 子目录），
+  #   与 §0「改动边界」一致；`tools/metrics/*`、`v2/refs/*`、`tools/market_day/*` 落在 code/ 树之外，
+  #   不进本 diff（其 sha256 另由 §0 逐件冻结）。
+  ```
+- **未动**：E2（OFF 哨兵 <8/208）、E3（L1 `ctx.market` 字段数 = 集日回合数）、E4（非集日不外溢）、E5（真 LLM + 串行）、§3 三层判据、§4 护栏阈值、§6 规模、§7 外推限制，**逐条字符未改**。
+
+**A1-2 · 旁注（不构成判据变更）**：本臂 `HEAD:code = 3039ed21…` 对应分支 tip `b5d8d5b` 之前的功能提交 `ba823db` 之后的树；若 ON 臂起跑时分支再有新提交（例如本 Amendment 自身），`3039ed21` 需按起跑钉住的 commit 重新取值并在报告 §9 三段 sha 处如实并列。
