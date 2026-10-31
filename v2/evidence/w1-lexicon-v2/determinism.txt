@@ -1,0 +1,69 @@
+# 复算确定性证明（同一日志跑两次，逐字节相等）
+
+> 取数时点：2026-11-01 00:1x +0800｜执行人：metrics-engineer（测量口径专家）
+> 设备/环境：`linux`，`python3`（标准库），**零 LLM、零跑批、无 sleep、未起常驻进程**
+> 被测脚本：`tools/metrics/weather_readings.py`
+> `sha256(tools/metrics/weather_readings.py) = 19f6a3137ec1a388ef28fec7cdfac5515095c78d9ec8e6ba43f867ab9c8ea11c`
+
+## 1. 命令（可直接复制；仓库根执行）
+
+```bash
+REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+OFF=/root/.jiuwenswarm/.agent_teams/jiuwen_team_cron___1a19166dd30_6c48da9fc832/team-workspace/evidence/CYCLE-42/off/run.jsonl
+ON=/root/.jiuwenswarm/.agent_teams/jiuwen_team_cron___1a191d4ba2f_8d7a2fd82f04/team-workspace/round-01/evidence/on/run.jsonl
+cd "$REPO"
+python3 tools/metrics/weather_readings.py --arm off=$OFF --arm on=$ON --json /tmp/det_a.json
+python3 tools/metrics/weather_readings.py --arm off=$OFF --arm on=$ON --json /tmp/det_b.json
+cmp /tmp/det_a.json /tmp/det_b.json && echo BYTE-IDENTICAL
+sha256sum /tmp/det_a.json /tmp/det_b.json
+```
+
+## 2. 实测输出（原文）
+
+```
+BYTE-IDENTICAL
+3959e03704c38c1eb9aac1d5f157260e601cf01c105deb74c6ac348edede4159  /tmp/det_a.json
+3959e03704c38c1eb9aac1d5f157260e601cf01c105deb74c6ac348edede4159  /tmp/det_b.json
+```
+
+**期望**：`BYTE-IDENTICAL`，两个 sha256 同值。
+
+## 3. 补充：与入库读数件同值
+
+```bash
+sha256sum v2/evidence/w1-lexicon-v2/readings_pair.json
+```
+
+```
+3959e03704c38c1eb9aac1d5f157260e601cf01c105deb74c6ac348edede4159  v2/evidence/w1-lexicon-v2/readings_pair.json
+```
+
+⇒ 入库的 `readings_pair.json` 与上面两次运行的输出**逐字节相同**（同一个 sha256），
+即：**报告里引用的每个 v2 数字都可由一条命令逐字节复现**。
+
+## 4. 其余入库读数件的 sha256（同期生成）
+
+```bash
+sha256sum v2/evidence/w1-lexicon-v2/*
+```
+
+```
+0b7bf79448bc4e0f6fae241b38256f71bb95992b11b9e936712e24875ca3ab0c  build_tables.py
+2ee53bd8a411618cf45f1a2b0ecce09ffd3b94fd76f8bdf688e325493a52e520  fp-attribution.md
+c202fb1ed37d9f356ad5ac2c1490ce641a32bb339a4db07d649f323438060984  hist-recompute.md
+cabff601e6424833738e83ac1d804231b9f939885036c0fe8f25225373581d00  hist_c28_off.json
+6223283fcb9c1847ca06e129c8d186f3d74ac73beebe72c0fb3bd26c3c37fa24  hist_c28_on.json
+58b990228e53d5e45ec0399bfb4cad4e694bc6f8fa00c3f321cae806023f2c66  hist_f3_off_n16r84.json
+3f8b9712a122451f1cd8874946ad8b9e4329c6cf42b6d869d08f72e2e02820b7  hist_l7struct_on_n16r60.json
+0a18bc9c02ebc069782c64d53009c545da7ec798eb03186ff1a2994c44e34b12  readings_off.json
+3e53be9d04df223c8f88c183713d62dc511b651b8f7cc9a9a19cfa93873179c3  readings_on.json
+3959e03704c38c1eb9aac1d5f157260e601cf01c105deb74c6ac348edede4159  readings_pair.json
+```
+
+## 5. 确定性来自什么（为什么不是"碰巧相等"）
+
+1. 输入只有 `run.jsonl`（只读），**不读时间、不读随机源、不读网络、不读环境变量**；
+2. 所有 dict 输出要么按键排序（`sorted(...)`），要么按文件行序（file order）遍历；
+3. `json.dumps(..., ensure_ascii=False, indent=2)` 固定序列化参数，无浮点 `repr` 抖动之外的来源
+   （浮点只来自统计函数，输入完全一致 ⇒ 输出完全一致）；
+4. `build_tables.py` 只读上面的 JSON，同样无外部状态。

@@ -1,0 +1,1217 @@
+{
+  "ruler": {
+    "ruler_version": 2,
+    "ruler_doc_v2": "v2/refs/W-1-lexicon-v2.md（词组级上下文约束，2026-11-01 冻结）",
+    "weather_phenomena": [
+      "下雨",
+      "雨天",
+      "落雨",
+      "雨丝",
+      "雨点",
+      "雨",
+      "晴",
+      "日头",
+      "晒",
+      "风大",
+      "刮风",
+      "有风",
+      "风里",
+      "起风",
+      "风",
+      "阴天",
+      "阴着",
+      "阴沉",
+      "天阴",
+      "云",
+      "雪",
+      "雾",
+      "霜",
+      "雷",
+      "潮气",
+      "湿"
+    ],
+    "weather_phenomena_v2_strong": [
+      "下雨",
+      "雨天",
+      "落雨",
+      "雨丝",
+      "雨点",
+      "雨",
+      "晴",
+      "日头",
+      "阴天",
+      "阴着",
+      "阴沉",
+      "天阴",
+      "雪",
+      "雾",
+      "雷",
+      "潮气"
+    ],
+    "weather_phenomena_v2_phrases": {
+      "晒": [
+        "日头",
+        "太阳",
+        "太晒",
+        "好晒",
+        "晒得人",
+        "晒得慌",
+        "晒得发懒",
+        "晒不着",
+        "晒不到",
+        "晒进来",
+        "晒东西",
+        "晒货",
+        "晒衣裳",
+        "晒被子",
+        "晒被褥",
+        "晒蔫",
+        "晒死",
+        "晒化",
+        "晒黑",
+        "晒成",
+        "晒得难受",
+        "晒得烫"
+      ],
+      "湿": [
+        "湿气",
+        "潮湿",
+        "湿冷",
+        "湿得",
+        "太湿",
+        "好湿",
+        "很湿",
+        "湿透",
+        "湿漉",
+        "湿了"
+      ],
+      "云": [
+        "云彩",
+        "乌云",
+        "云层",
+        "云压",
+        "云低",
+        "云厚",
+        "云散",
+        "云开",
+        "云影",
+        "云头"
+      ],
+      "风": [
+        "风大",
+        "刮风",
+        "起风",
+        "有风",
+        "风里",
+        "风一刮",
+        "风刮",
+        "风吹",
+        "风扯",
+        "风还是",
+        "风往",
+        "风能",
+        "风从",
+        "风压",
+        "阵风",
+        "寒风",
+        "热风",
+        "风沙"
+      ],
+      "霜": [
+        "霜"
+      ]
+    },
+    "weather_phenomena_v2_deny": {
+      "晒": [
+        "晒干",
+        "晒场",
+        "晒谷场",
+        "晒盐",
+        "晒台",
+        "晒席",
+        "晒网",
+        "晒的",
+        "晒好",
+        "晒了一半",
+        "晒晒",
+        "晒得干爽",
+        "晒得皮都",
+        "晒得皮起",
+        "晒得很干"
+      ],
+      "湿": [
+        "湿布",
+        "湿泥",
+        "湿面",
+        "湿柴",
+        "湿衣",
+        "湿手",
+        "湿巾",
+        "湿土",
+        "湿抹布",
+        "风湿"
+      ],
+      "云": [
+        "云手",
+        "云吞",
+        "云鬓",
+        "云集",
+        "云游",
+        "云纹",
+        "云锦"
+      ],
+      "风": [
+        "风箱",
+        "风门",
+        "风干",
+        "防风",
+        "风头",
+        "跟风",
+        "风气",
+        "风味",
+        "风凉话",
+        "漏风",
+        "带风",
+        "挡风",
+        "避风",
+        "风车",
+        "风铃",
+        "风灯",
+        "风镜",
+        "风湿",
+        "风衣",
+        "风帽",
+        "风袋"
+      ],
+      "霜": [
+        "糖霜",
+        "柿霜",
+        "盐霜",
+        "霜糖"
+      ]
+    },
+    "v2_borderline_phrases": [
+      "晒不着",
+      "晒不到"
+    ],
+    "weather_feel": [
+      "冷",
+      "热",
+      "凉",
+      "闷",
+      "燥",
+      "冻",
+      "晒"
+    ],
+    "season_words": [
+      "春天",
+      "春天",
+      "开春",
+      "入夏",
+      "夏天",
+      "秋",
+      "入秋",
+      "冬天",
+      "入冬",
+      "冬"
+    ],
+    "prompt_mark": "今儿天怎么样",
+    "direction_groups": {
+      "rain": [
+        "下雨",
+        "雨天",
+        "落雨",
+        "雨丝",
+        "雨点",
+        "雨"
+      ],
+      "clear": [
+        "晴",
+        "日头"
+      ],
+      "cloudy": [
+        "阴天",
+        "阴着",
+        "阴沉",
+        "天阴",
+        "云"
+      ],
+      "snow": [
+        "雪"
+      ],
+      "wind": [
+        "风大",
+        "刮风",
+        "有风",
+        "起风",
+        "风里",
+        "风"
+      ]
+    },
+    "undetermined_words": [
+      "雾",
+      "霜",
+      "雷",
+      "潮气",
+      "湿",
+      "晒"
+    ],
+    "non_weather_patterns": [
+      "漏风",
+      "带风",
+      "风一吹",
+      "风干",
+      "晒干",
+      "通风",
+      "风头",
+      "跟风",
+      "风气",
+      "风味",
+      "风凉话"
+    ],
+    "kind_to_group": {
+      "clear": "clear",
+      "cloudy": "cloudy",
+      "overcast": "cloudy",
+      "windy": "wind",
+      "rain": "rain",
+      "snow": "snow"
+    },
+    "situational_enabled": true,
+    "world_seed": 42
+  },
+  "arms": {
+    "c28_on": {
+      "run": "v2/evidence/run_weather_on_n16r24_seed42_c28/run.jsonl",
+      "n_msgs": 191,
+      "n_bodies": 191,
+      "body_chars_avg": 42.84,
+      "weather_mention_strict": {
+        "count": 22,
+        "n": 191,
+        "rate": 0.11518324607329843,
+        "wilson95": [
+          0.07730625344216072,
+          0.1682347398570115
+        ]
+      },
+      "weather_mention_strict_v2": {
+        "count": 17,
+        "n": 191,
+        "rate": 0.08900523560209424,
+        "wilson95": [
+          0.05631222614360499,
+          0.13790502520312997
+        ]
+      },
+      "weather_mention_strict_v2_no_borderline": {
+        "count": 17,
+        "n": 191,
+        "rate": 0.08900523560209424,
+        "wilson95": [
+          0.05631222614360499,
+          0.13790502520312997
+        ]
+      },
+      "v2_guard": {
+        "v2_only_hits": 0,
+        "v2_subset_of_v1": true,
+        "v2_dropped_hits_total": 6,
+        "v1_hit_bodies": 22,
+        "v2_hit_bodies": 17
+      },
+      "weather_words_top_v2": [
+        [
+          "阴天",
+          4
+        ],
+        [
+          "潮气",
+          3
+        ],
+        [
+          "雨",
+          3
+        ],
+        [
+          "云",
+          2
+        ],
+        [
+          "天阴",
+          2
+        ],
+        [
+          "晴",
+          2
+        ],
+        [
+          "雪",
+          2
+        ],
+        [
+          "下雨",
+          1
+        ],
+        [
+          "阴着",
+          1
+        ]
+      ],
+      "v2_fp_attribution": [
+        {
+          "msg_uid": "42:53",
+          "day": 0,
+          "legacy_words": [
+            "下雨",
+            "雨",
+            "云",
+            "潮气"
+          ],
+          "v2_is_weather": true,
+          "v2_kept_strong": [
+            "下雨",
+            "雨",
+            "潮气"
+          ],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [
+            {
+              "word": "云",
+              "reason": "no_weather_phrase",
+              "matched": []
+            }
+          ],
+          "v2_borderline_only": false,
+          "body": "这云看着要下雨。手里这把椅子还差最后一道榫，得赶在潮气上来前收好。慢工出细活。"
+        },
+        {
+          "msg_uid": "42:73",
+          "day": 0,
+          "legacy_words": [
+            "晴"
+          ],
+          "v2_is_weather": true,
+          "v2_kept_strong": [
+            "晴"
+          ],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [],
+          "v2_borderline_only": false,
+          "body": "这开春半阴半晴的，你那炉子今天顺不顺当？我这儿一屉枣泥酥总差点意思，想跟你讨个准头。你手上忙着呢？"
+        },
+        {
+          "msg_uid": "42:84",
+          "day": 0,
+          "legacy_words": [
+            "晒"
+          ],
+          "v2_is_weather": false,
+          "v2_kept_strong": [],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [
+            {
+              "word": "晒",
+              "reason": "denylist_compound",
+              "matched": [
+                "晒干"
+              ]
+            }
+          ],
+          "v2_borderline_only": false,
+          "body": "哎，这黄芪片子切得薄是薄了点，可晒干了药性才出得来，急不得吧。"
+        },
+        {
+          "msg_uid": "42:189",
+          "day": 0,
+          "legacy_words": [
+            "云"
+          ],
+          "v2_is_weather": false,
+          "v2_kept_strong": [],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [
+            {
+              "word": "云",
+              "reason": "no_weather_phrase",
+              "matched": []
+            }
+          ],
+          "v2_borderline_only": false,
+          "body": "今儿这云看着要散不散的，你那边灶上还顺当吧？我这儿正拿老李家的豆腐试手，想少放点酱、多搁一撮糖，看能不能把那股豆腥压下去。火候还得再盯盯。"
+        },
+        {
+          "msg_uid": "42:831",
+          "day": 0,
+          "legacy_words": [
+            "潮气"
+          ],
+          "v2_is_weather": true,
+          "v2_kept_strong": [
+            "潮气"
+          ],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [],
+          "v2_borderline_only": false,
+          "body": "哟，正拿砂纸磨这旧砚台呢，春天潮气重，不拾掇怕是要起霉斑——你家那方砚台还搁着没动吧？"
+        },
+        {
+          "msg_uid": "42:3601",
+          "day": 0,
+          "legacy_words": [
+            "晴"
+          ],
+          "v2_is_weather": true,
+          "v2_kept_strong": [
+            "晴"
+          ],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [],
+          "v2_borderline_only": false,
+          "body": "这春天半阴半晴的，我刚把上个月的账本翻出来对了一遍，想着再省点，年底那笔定期就能凑齐了。你家最近开销大不大？"
+        },
+        {
+          "msg_uid": "42:4869",
+          "day": 0,
+          "legacy_words": [
+            "云"
+          ],
+          "v2_is_weather": true,
+          "v2_kept_strong": [],
+          "v2_kept_words": [
+            "云"
+          ],
+          "v2_kept_phrases": [
+            "云厚"
+          ],
+          "v2_dropped": [],
+          "v2_borderline_only": false,
+          "body": "云厚是厚，地里的墒情倒还成，我给阿禾捎把新蒜苗吧。"
+        },
+        {
+          "msg_uid": "42:4946",
+          "day": 0,
+          "legacy_words": [
+            "晒"
+          ],
+          "v2_is_weather": false,
+          "v2_kept_strong": [],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [
+            {
+              "word": "晒",
+              "reason": "denylist_compound",
+              "matched": [
+                "晒的"
+              ]
+            }
+          ],
+          "v2_borderline_only": false,
+          "body": "哎，阿禾，我这儿多带了一小包去年晒的桂花干，你拿回去泡水喝吧。"
+        },
+        {
+          "msg_uid": "42:5065",
+          "day": 0,
+          "legacy_words": [
+            "云"
+          ],
+          "v2_is_weather": true,
+          "v2_kept_strong": [],
+          "v2_kept_words": [
+            "云"
+          ],
+          "v2_kept_phrases": [
+            "云彩"
+          ],
+          "v2_dropped": [],
+          "v2_borderline_only": false,
+          "body": "云彩压着炉子，火苗都蔫。我正给张家那把锄头回火，铁还没红透。那小子蹲就蹲吧。"
+        },
+        {
+          "msg_uid": "42:6004",
+          "day": 0,
+          "legacy_words": [
+            "晒"
+          ],
+          "v2_is_weather": false,
+          "v2_kept_strong": [],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [
+            {
+              "word": "晒",
+              "reason": "denylist_compound",
+              "matched": [
+                "晒好"
+              ]
+            }
+          ],
+          "v2_borderline_only": false,
+          "body": "这阵子忙得过来吗？我这儿多带了一小包晒好的陈皮，想着你泡水喝正好，顺路给你搁门口了。你最近是不是又熬夜了？"
+        },
+        {
+          "msg_uid": "42:18789",
+          "day": 1,
+          "legacy_words": [
+            "阴天"
+          ],
+          "v2_is_weather": true,
+          "v2_kept_strong": [
+            "阴天"
+          ],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [],
+          "v2_borderline_only": false,
+          "body": "这阴天闷得人发慌，我正给西头老赵家修犁头呢，你那边咋样了？"
+        },
+        {
+          "msg_uid": "42:19103",
+          "day": 1,
+          "legacy_words": [
+            "天阴"
+          ],
+          "v2_is_weather": true,
+          "v2_kept_strong": [
+            "天阴"
+          ],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [],
+          "v2_borderline_only": false,
+          "body": "老周，你这咳嗽拖了半个月，我给你配的枇杷叶膏子得按时吃，别嫌苦就搁下了。今儿天阴，气管更受不住。药得吃完。"
+        },
+        {
+          "msg_uid": "42:19322",
+          "day": 1,
+          "legacy_words": [
+            "阴着",
+            "天阴"
+          ],
+          "v2_is_weather": true,
+          "v2_kept_strong": [
+            "阴着",
+            "天阴"
+          ],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [],
+          "v2_borderline_only": false,
+          "body": "这天阴着倒不碍事，我把南街那户的契书摊在桌上晾着呢，先抽你一张薄棉纸垫底下。"
+        },
+        {
+          "msg_uid": "42:19671",
+          "day": 1,
+          "legacy_words": [
+            "阴天"
+          ],
+          "v2_is_weather": true,
+          "v2_kept_strong": [
+            "阴天"
+          ],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [],
+          "v2_borderline_only": false,
+          "body": "这阴天里你蹲在门口磨啥呢，是给谁家赶的活计？"
+        },
+        {
+          "msg_uid": "42:21824",
+          "day": 1,
+          "legacy_words": [
+            "潮气"
+          ],
+          "v2_is_weather": true,
+          "v2_kept_strong": [
+            "潮气"
+          ],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [],
+          "v2_borderline_only": false,
+          "body": "我这儿刚把西头那垄的豆角架绑完，手还沾着泥，你收萝卜干别让潮气返上来吧。"
+        },
+        {
+          "msg_uid": "42:23960",
+          "day": 1,
+          "legacy_words": [
+            "风"
+          ],
+          "v2_is_weather": false,
+          "v2_kept_strong": [],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [
+            {
+              "word": "风",
+              "reason": "no_weather_phrase",
+              "matched": []
+            }
+          ],
+          "v2_borderline_only": false,
+          "body": "这布条颜色倒鲜亮，我拿它把窗台上那盆蒜苗绑一绑，省得风一吹就倒。"
+        },
+        {
+          "msg_uid": "42:24011",
+          "day": 1,
+          "legacy_words": [
+            "阴天"
+          ],
+          "v2_is_weather": true,
+          "v2_kept_strong": [
+            "阴天"
+          ],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [],
+          "v2_borderline_only": false,
+          "body": "这阴天闷得人心里发潮，我这儿正把刘家那袋木耳倒出来挑沙子呢，你说干货的事，是等陈家老太太那锅牛腩吃完再说，还是我明儿一早给你送过去？"
+        },
+        {
+          "msg_uid": "42:24853",
+          "day": 1,
+          "legacy_words": [
+            "阴天"
+          ],
+          "v2_is_weather": true,
+          "v2_kept_strong": [
+            "阴天"
+          ],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [],
+          "v2_borderline_only": false,
+          "body": "这阴天闷得人心里发沉，我正给李家的小孙子分药，一包一包数着呢。萝卜糕先搁桌上吧。"
+        },
+        {
+          "msg_uid": "42:26056",
+          "day": 1,
+          "legacy_words": [
+            "雪"
+          ],
+          "v2_is_weather": true,
+          "v2_kept_strong": [
+            "雪"
+          ],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [],
+          "v2_borderline_only": false,
+          "body": "腌笃鲜回炉这主意好，老周家那笋我认得，根根都是黄泥拱出来的，炖到后头比肉还鲜。你肯再试，我摊子后头那坛子雪里蕻你拿去，就搁在秤底下，回头你顺路拎走。"
+        },
+        {
+          "msg_uid": "42:27136",
+          "day": 1,
+          "legacy_words": [
+            "雨"
+          ],
+          "v2_is_weather": true,
+          "v2_kept_strong": [
+            "雨"
+          ],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [],
+          "v2_borderline_only": false,
+          "body": "哎，红薯先搁着，我把西头老赵家那垄沟再理两锹。天要压雨。"
+        },
+        {
+          "msg_uid": "42:28587",
+          "day": 1,
+          "legacy_words": [
+            "雪"
+          ],
+          "v2_is_weather": true,
+          "v2_kept_strong": [
+            "雪"
+          ],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [],
+          "v2_borderline_only": false,
+          "body": "雪里蕻我拎走，秤底下那坛子我认得，上回你给的那半坛我拿来炒了蚕豆。这回我先把笋尖单切出来，拿你那坛子卤水吊个底，回头炖好了先给你盛一碗搁摊子边上。"
+        },
+        {
+          "msg_uid": "42:31385",
+          "day": 1,
+          "legacy_words": [
+            "雨"
+          ],
+          "v2_is_weather": true,
+          "v2_kept_strong": [
+            "雨"
+          ],
+          "v2_kept_words": [],
+          "v2_kept_phrases": [],
+          "v2_dropped": [],
+          "v2_borderline_only": false,
+          "body": "这雨要是真下来，老赵家那垄沟又得白忙活。我这儿刚把灶上那锅红薯添了把火，等会儿给你捎两块过去，你理完沟正好垫垫肚子。"
+        }
+      ],
+      "weather_mention_feel": {
+        "count": 16,
+        "n": 191,
+        "rate": 0.08376963350785341,
+        "wilson95": [
+          0.05221902383087239,
+          0.13173347912537514
+        ]
+      },
+      "season_mention": {
+        "count": 11,
+        "n": 191,
+        "rate": 0.05759162303664921,
+        "wilson95": [
+          0.03245883882759533,
+          0.10016992217621494
+        ]
+      },
+      "weather_words_top": [
+        [
+          "云",
+          4
+        ],
+        [
+          "阴天",
+          4
+        ],
+        [
+          "晒",
+          3
+        ],
+        [
+          "潮气",
+          3
+        ],
+        [
+          "雨",
+          3
+        ],
+        [
+          "天阴",
+          2
+        ],
+        [
+          "晴",
+          2
+        ],
+        [
+          "雪",
+          2
+        ],
+        [
+          "下雨",
+          1
+        ],
+        [
+          "阴着",
+          1
+        ]
+      ],
+      "feel_words_top": [
+        [
+          "凉",
+          6
+        ],
+        [
+          "闷",
+          5
+        ],
+        [
+          "晒",
+          3
+        ],
+        [
+          "热",
+          2
+        ],
+        [
+          "冻",
+          1
+        ]
+      ],
+      "season_words_top": [
+        [
+          "春天",
+          8
+        ],
+        [
+          "开春",
+          7
+        ]
+      ],
+      "ctx_weather": {
+        "msgs_with_ctx_weather": 191,
+        "share_of_msgs": 1.0,
+        "weather_dist": {
+          "cloudy": 98,
+          "overcast": 93
+        },
+        "season_dist": {
+          "spring": 191
+        },
+        "seeds": [
+          42
+        ]
+      },
+      "l7_first_clause": {
+        "unique": 158,
+        "total": 191,
+        "dup_rate": 0.17277486910994766,
+        "top10": [
+          {
+            "clause": "铁头",
+            "n": 6
+          },
+          {
+            "clause": "老周",
+            "n": 5
+          },
+          {
+            "clause": "兰姐",
+            "n": 4
+          },
+          {
+            "clause": "秀娘",
+            "n": 4
+          },
+          {
+            "clause": "金先生",
+            "n": 4
+          },
+          {
+            "clause": "五味啊",
+            "n": 3
+          },
+          {
+            "clause": "小满",
+            "n": 3
+          },
+          {
+            "clause": "开春了",
+            "n": 3
+          },
+          {
+            "clause": "老石",
+            "n": 3
+          },
+          {
+            "clause": "阿禾",
+            "n": 3
+          }
+        ]
+      },
+      "prompt_mark_leak_in_body": 0,
+      "situational_consistency": {
+        "rules_doc": "v2/evidence/weather_c28_adjudication_rules.md（先固化后看 ON，2026-10-29T20:39）",
+        "world_seed": 42,
+        "direction_consistent": 10,
+        "direction_inconsistent": 6,
+        "undetermined_direction": 4,
+        "non_weather": 171,
+        "unclassified": 0,
+        "denominator_direction_claims": 16,
+        "denominator_bodies": 191,
+        "consistency_rate_among_direction_claims": 0.625,
+        "said_vs_expected_pairs": {
+          "expected=cloudy->said=clear": 2,
+          "expected=cloudy->said=cloudy": 10,
+          "expected=cloudy->said=rain": 3,
+          "expected=cloudy->said=snow": 2
+        },
+        "derived_vs_ctx_mismatch": 0,
+        "by_day": {
+          "0": {
+            "msgs": 98,
+            "derived_kind": "cloudy",
+            "direction_consistent": 4,
+            "direction_inconsistent": 2,
+            "undetermined_direction": 3
+          },
+          "1": {
+            "msgs": 93,
+            "derived_kind": "overcast",
+            "direction_consistent": 6,
+            "direction_inconsistent": 4,
+            "undetermined_direction": 1
+          }
+        },
+        "examples": {
+          "direction_consistent": [
+            {
+              "day": 0,
+              "msg_uid": "42:53",
+              "derived_kind": "cloudy",
+              "expected_group": "cloudy",
+              "said_groups": [
+                "cloudy",
+                "rain"
+              ],
+              "hit_words": [
+                "下雨",
+                "雨",
+                "云"
+              ],
+              "undetermined_words": [
+                "潮气"
+              ],
+              "body": "这云看着要下雨。手里这把椅子还差最后一道榫，得赶在潮气上来前收好。慢工出细活。"
+            },
+            {
+              "day": 0,
+              "msg_uid": "42:189",
+              "derived_kind": "cloudy",
+              "expected_group": "cloudy",
+              "said_groups": [
+                "cloudy"
+              ],
+              "hit_words": [
+                "云"
+              ],
+              "undetermined_words": [],
+              "body": "今儿这云看着要散不散的，你那边灶上还顺当吧？我这儿正拿老李家的豆腐试手，想少放点酱、多搁一撮糖，看能不能把那股豆腥压下去。火候还得再盯盯。"
+            },
+            {
+              "day": 0,
+              "msg_uid": "42:4869",
+              "derived_kind": "cloudy",
+              "expected_group": "cloudy",
+              "said_groups": [
+                "cloudy"
+              ],
+              "hit_words": [
+                "云"
+              ],
+              "undetermined_words": [],
+              "body": "云厚是厚，地里的墒情倒还成，我给阿禾捎把新蒜苗吧。"
+            },
+            {
+              "day": 0,
+              "msg_uid": "42:5065",
+              "derived_kind": "cloudy",
+              "expected_group": "cloudy",
+              "said_groups": [
+                "cloudy"
+              ],
+              "hit_words": [
+                "云"
+              ],
+              "undetermined_words": [],
+              "body": "云彩压着炉子，火苗都蔫。我正给张家那把锄头回火，铁还没红透。那小子蹲就蹲吧。"
+            },
+            {
+              "day": 1,
+              "msg_uid": "42:18789",
+              "derived_kind": "overcast",
+              "expected_group": "cloudy",
+              "said_groups": [
+                "cloudy"
+              ],
+              "hit_words": [
+                "阴天"
+              ],
+              "undetermined_words": [],
+              "body": "这阴天闷得人发慌，我正给西头老赵家修犁头呢，你那边咋样了？"
+            }
+          ],
+          "direction_inconsistent": [
+            {
+              "day": 0,
+              "msg_uid": "42:73",
+              "derived_kind": "cloudy",
+              "expected_group": "cloudy",
+              "said_groups": [
+                "clear"
+              ],
+              "hit_words": [
+                "晴"
+              ],
+              "undetermined_words": [],
+              "body": "这开春半阴半晴的，你那炉子今天顺不顺当？我这儿一屉枣泥酥总差点意思，想跟你讨个准头。你手上忙着呢？"
+            },
+            {
+              "day": 0,
+              "msg_uid": "42:3601",
+              "derived_kind": "cloudy",
+              "expected_group": "cloudy",
+              "said_groups": [
+                "clear"
+              ],
+              "hit_words": [
+                "晴"
+              ],
+              "undetermined_words": [],
+              "body": "这春天半阴半晴的，我刚把上个月的账本翻出来对了一遍，想着再省点，年底那笔定期就能凑齐了。你家最近开销大不大？"
+            },
+            {
+              "day": 1,
+              "msg_uid": "42:26056",
+              "derived_kind": "overcast",
+              "expected_group": "cloudy",
+              "said_groups": [
+                "snow"
+              ],
+              "hit_words": [
+                "雪"
+              ],
+              "undetermined_words": [],
+              "body": "腌笃鲜回炉这主意好，老周家那笋我认得，根根都是黄泥拱出来的，炖到后头比肉还鲜。你肯再试，我摊子后头那坛子雪里蕻你拿去，就搁在秤底下，回头你顺路拎走。"
+            },
+            {
+              "day": 1,
+              "msg_uid": "42:27136",
+              "derived_kind": "overcast",
+              "expected_group": "cloudy",
+              "said_groups": [
+                "rain"
+              ],
+              "hit_words": [
+                "雨"
+              ],
+              "undetermined_words": [],
+              "body": "哎，红薯先搁着，我把西头老赵家那垄沟再理两锹。天要压雨。"
+            },
+            {
+              "day": 1,
+              "msg_uid": "42:28587",
+              "derived_kind": "overcast",
+              "expected_group": "cloudy",
+              "said_groups": [
+                "snow"
+              ],
+              "hit_words": [
+                "雪"
+              ],
+              "undetermined_words": [],
+              "body": "雪里蕻我拎走，秤底下那坛子我认得，上回你给的那半坛我拿来炒了蚕豆。这回我先把笋尖单切出来，拿你那坛子卤水吊个底，回头炖好了先给你盛一碗搁摊子边上。"
+            }
+          ],
+          "undetermined_direction": [
+            {
+              "day": 0,
+              "msg_uid": "42:831",
+              "derived_kind": "cloudy",
+              "expected_group": "cloudy",
+              "said_groups": [],
+              "hit_words": [],
+              "undetermined_words": [
+                "潮气"
+              ],
+              "body": "哟，正拿砂纸磨这旧砚台呢，春天潮气重，不拾掇怕是要起霉斑——你家那方砚台还搁着没动吧？"
+            },
+            {
+              "day": 0,
+              "msg_uid": "42:4946",
+              "derived_kind": "cloudy",
+              "expected_group": "cloudy",
+              "said_groups": [],
+              "hit_words": [],
+              "undetermined_words": [
+                "晒"
+              ],
+              "body": "哎，阿禾，我这儿多带了一小包去年晒的桂花干，你拿回去泡水喝吧。"
+            },
+            {
+              "day": 0,
+              "msg_uid": "42:6004",
+              "derived_kind": "cloudy",
+              "expected_group": "cloudy",
+              "said_groups": [],
+              "hit_words": [],
+              "undetermined_words": [
+                "晒"
+              ],
+              "body": "这阵子忙得过来吗？我这儿多带了一小包晒好的陈皮，想着你泡水喝正好，顺路给你搁门口了。你最近是不是又熬夜了？"
+            },
+            {
+              "day": 1,
+              "msg_uid": "42:21824",
+              "derived_kind": "overcast",
+              "expected_group": "cloudy",
+              "said_groups": [],
+              "hit_words": [],
+              "undetermined_words": [
+                "潮气"
+              ],
+              "body": "我这儿刚把西头那垄的豆角架绑完，手还沾着泥，你收萝卜干别让潮气返上来吧。"
+            }
+          ],
+          "non_weather": [
+            {
+              "day": 0,
+              "msg_uid": "42:84",
+              "derived_kind": "cloudy",
+              "expected_group": "cloudy",
+              "said_groups": [],
+              "hit_words": [],
+              "undetermined_words": [],
+              "body": "哎，这黄芪片子切得薄是薄了点，可晒干了药性才出得来，急不得吧。"
+            },
+            {
+              "day": 0,
+              "msg_uid": "42:113",
+              "derived_kind": "cloudy",
+              "expected_group": "cloudy",
+              "said_groups": [],
+              "hit_words": [],
+              "undetermined_words": [],
+              "body": "周公文，这天回暖了，我正把上月的户籍册按村分好，你那边材料收齐了没有？"
+            },
+            {
+              "day": 0,
+              "msg_uid": "42:124",
+              "derived_kind": "cloudy",
+              "expected_group": "cloudy",
+              "said_groups": [],
+              "hit_words": [],
+              "undetermined_words": [],
+              "body": "秀娘，你那灶上的火还旺着吗？我这账要平。"
+            },
+            {
+              "day": 0,
+              "msg_uid": "42:135",
+              "derived_kind": "cloudy",
+              "expected_group": "cloudy",
+              "said_groups": [],
+              "hit_words": [],
+              "undetermined_words": [],
+              "body": "金先生，我把第三段和声又改了两遍，你听听顺不顺。先这样吧。"
+            },
+            {
+              "day": 0,
+              "msg_uid": "42:145",
+              "derived_kind": "cloudy",
+              "expected_group": "cloudy",
+              "said_groups": [],
+              "hit_words": [],
+              "undetermined_words": [],
+              "body": "您这蹲马步的架势，倒比我家院里那棵歪脖子枣树还稳当呢。"
+            }
+          ],
+          "unclassified": []
+        }
+      },
+      "by_day": {
+        "0": {
+          "msgs": 98,
+          "phen_hit": 10,
+          "weather": "cloudy",
+          "season": "spring"
+        },
+        "1": {
+          "msgs": 93,
+          "phen_hit": 12,
+          "weather": "overcast",
+          "season": "spring"
+        }
+      }
+    }
+  }
+}
