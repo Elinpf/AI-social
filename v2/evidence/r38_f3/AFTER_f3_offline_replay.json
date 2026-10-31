@@ -1,0 +1,453 @@
+{
+ "schema": "f3-offline-replay/1",
+ "script_sha256": "f775d27b7a63d3de7545dc7326fe48ad02c989856a9210861b090ce22faafe24",
+ "emotion_echo_sha256": "30a0facb5c3ce16e8881e815d4fdd13420d1b592130114cc666862caa1cdee79",
+ "code_sha": "94e272a1f8858c5a476a286b6a8fe62f34248288",
+ "forced_enabled": true,
+ "params": {
+  "enabled": true,
+  "criterion": "natural",
+  "min_intensity": 30,
+  "text_hit_intensity": 60,
+  "mood_bonus_div": 2,
+  "tier_cuts": [
+   45,
+   70
+  ],
+  "dialogue_cues": true,
+  "cue_hit_intensity": 45
+ },
+ "arms": [
+  {
+   "label": "emooff",
+   "log": "v2/evidence/emo-off-20261030/run.jsonl",
+   "log_sha8": "c27691d9",
+   "exists": true,
+   "n_messages": 191,
+   "n_threads": 66,
+   "bad_lines": 0,
+   "n_reply_messages": 125,
+   "opportunities": {
+    "n": 7,
+    "planned": 6,
+    "rate": 0.857143,
+    "by_source": {
+     "text+mood": 1,
+     "cue": 3,
+     "mood": 1,
+     "cue+mood": 1
+    },
+    "by_kind": {
+     "soothe": 6
+    },
+    "by_sign": {
+     "-1": 6
+    }
+   },
+   "all_reply_messages": {
+    "n": 125,
+    "planned": 91,
+    "rate": 0.728,
+    "by_source": {
+     "mood": 67,
+     "text+mood": 10,
+     "text": 8,
+     "cue": 4,
+     "cue+mood": 2
+    },
+    "by_kind": {
+     "soothe": 91
+    },
+    "by_sign": {
+     "-1": 91
+    }
+   },
+   "opportunity_rows": [
+    {
+     "thread": "m:T|TH-P007-P005-19",
+     "prev_seq": 26537,
+     "cur_seq": 27718,
+     "round": 21,
+     "p_prev": -1,
+     "p_cur": 0,
+     "prev_mood": "饥饿",
+     "prev_body": "刚把李木匠家小子的退烧药包好，手上还沾着药碾子的苦味，你搁下的陈皮我瞧见了，先搁着吧，等会儿拿它煮水正好压压我这空了一上午的胃，你铺子那边今天进的货都归置妥了没？",
+     "cur_body": "陈医，我那铺子后头还堆着两筐新到的山货没拆呢，等会儿回去再慢慢归置吧。",
+     "detect": {
+      "sign": -1,
+      "intensity": 87,
+      "source": "text+mood",
+      "mood": "饥饿",
+      "tier": "很强",
+      "kind": "soothe"
+     },
+     "planned": true,
+     "plan": {
+      "sign": -1,
+      "intensity": 87,
+      "source": "text+mood",
+      "mood": "饥饿",
+      "tier": "很强",
+      "kind": "soothe"
+     }
+    },
+    {
+     "thread": "m:T|TH-P009-P004-0",
+     "prev_seq": 124,
+     "cur_seq": 675,
+     "round": 1,
+     "p_prev": 1,
+     "p_cur": 0,
+     "prev_mood": "平和",
+     "prev_body": "秀娘，你家那口子这阵子还咳得厉害吗？账要平。",
+     "cur_body": "哎，他咳得轻些了，我刚把炉子里的桂圆红枣糕翻了个面，等会儿给金先生你切一块尝尝。",
+     "detect": {
+      "sign": -1,
+      "intensity": 45,
+      "source": "cue",
+      "mood": "平和",
+      "tier": "明显",
+      "kind": "soothe"
+     },
+     "planned": true,
+     "plan": {
+      "sign": -1,
+      "intensity": 45,
+      "source": "cue",
+      "mood": "平和",
+      "tier": "明显",
+      "kind": "soothe"
+     }
+    },
+    {
+     "thread": "m:T|TH-P012-P001-18",
+     "prev_seq": 28277,
+     "cur_seq": 29483,
+     "round": 22,
+     "p_prev": -1,
+     "p_cur": 0,
+     "prev_mood": "饥饿",
+     "prev_body": "锄头搁田埂上不怕丢，我这儿正给桂英家择韭菜呢，她明儿办席。你手没洗就先歇歇。",
+     "cur_body": "我刚把西头那块田的排水沟清完，裤腿上全是泥，你给桂英家择韭菜这事我听着呢。",
+     "detect": {
+      "sign": -1,
+      "intensity": 55,
+      "source": "mood",
+      "mood": "饥饿",
+      "tier": "明显",
+      "kind": "soothe"
+     },
+     "planned": true,
+     "plan": {
+      "sign": -1,
+      "intensity": 55,
+      "source": "mood",
+      "mood": "饥饿",
+      "tier": "明显",
+      "kind": "soothe"
+     }
+    },
+    {
+     "thread": "m:T|TH-P012-P016-0",
+     "prev_seq": 156,
+     "cur_seq": 1632,
+     "round": 1,
+     "p_prev": -1,
+     "p_cur": -1,
+     "prev_mood": "平和",
+     "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+     "cur_body": "哎，我正翻着刘家那筐新到的干辣椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾半干再码盐。你试试。",
+     "detect": {
+      "sign": -1,
+      "intensity": 45,
+      "source": "cue",
+      "mood": "平和",
+      "tier": "明显",
+      "kind": "soothe"
+     },
+     "planned": true,
+     "plan": {
+      "sign": -1,
+      "intensity": 45,
+      "source": "cue",
+      "mood": "平和",
+      "tier": "明显",
+      "kind": "soothe"
+     }
+    },
+    {
+     "thread": "m:T|TH-P012-P016-0",
+     "prev_seq": 1632,
+     "cur_seq": 2196,
+     "round": 3,
+     "p_prev": -1,
+     "p_cur": 0,
+     "prev_mood": "平和",
+     "prev_body": "哎，我正翻着刘家那筐新到的干辣椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾半干再码盐。你试试。",
+     "cur_body": "哟，我正搓着周家送来的那簸箕萝卜条呢，听你这么一说，那我下回先泡足钟头再晾。盐得晚点撒。",
+     "detect": {
+      "sign": -1,
+      "intensity": 45,
+      "source": "cue",
+      "mood": "平和",
+      "tier": "明显",
+      "kind": "soothe"
+     },
+     "planned": true,
+     "plan": {
+      "sign": -1,
+      "intensity": 45,
+      "source": "cue",
+      "mood": "平和",
+      "tier": "明显",
+      "kind": "soothe"
+     }
+    },
+    {
+     "thread": "m:T|TH-P016-P002-7",
+     "prev_seq": 16947,
+     "cur_seq": 17418,
+     "round": 11,
+     "p_prev": 1,
+     "p_cur": 0,
+     "prev_mood": "紧绷",
+     "prev_body": "手都磨出泡了还惦记蒜。我这儿刚剥了一辫子，你拿两头去，回头把萝卜汤盛一碗给巷口老周家孙子，那孩子这两天咳得厉害。",
+     "cur_body": "哎，蒜我拿两头，萝卜汤盛出来先给老周家孙子晾着。",
+     "detect": {
+      "sign": -1,
+      "intensity": 65,
+      "source": "cue+mood",
+      "mood": "紧绷",
+      "tier": "明显",
+      "kind": "soothe"
+     },
+     "planned": true,
+     "plan": {
+      "sign": -1,
+      "intensity": 65,
+      "source": "cue+mood",
+      "mood": "紧绷",
+      "tier": "明显",
+      "kind": "soothe"
+     }
+    },
+    {
+     "thread": "m:T|TH-P016-P005-0",
+     "prev_seq": 5096,
+     "cur_seq": 5893,
+     "round": 7,
+     "p_prev": -1,
+     "p_cur": 0,
+     "prev_mood": "平和",
+     "prev_body": "刚把新到的陈皮翻晒完，风一吹满摊子都是那股子苦香，陈医你那戥子称完当归，手也该歇歇了。称得准。",
+     "cur_body": "这戥子一响啊，倒让我想起年轻时跟师父练功，一站就是半炷香，腿肚子直打颤呢。",
+     "detect": {
+      "sign": 0,
+      "intensity": 0,
+      "source": "none",
+      "mood": "平和",
+      "tier": "轻",
+      "kind": "none"
+     },
+     "planned": false,
+     "plan": null
+    }
+   ]
+  },
+  {
+   "label": "v0",
+   "log": "v2/evidence/run_d2_before_n16_seed42/run.jsonl",
+   "log_sha8": "c1f86bf6",
+   "exists": true,
+   "n_messages": 187,
+   "n_threads": 136,
+   "bad_lines": 0,
+   "n_reply_messages": 0,
+   "opportunities": {
+    "n": 6,
+    "planned": 5,
+    "rate": 0.833333,
+    "by_source": {
+     "text": 5
+    },
+    "by_kind": {
+     "soothe": 5
+    },
+    "by_sign": {
+     "-1": 5
+    }
+   },
+   "all_reply_messages": {
+    "n": 0,
+    "planned": 0,
+    "rate": null,
+    "by_source": {},
+    "by_kind": {},
+    "by_sign": {}
+   },
+   "opportunity_rows": [
+    {
+     "thread": "m:0|dm|P002-P004",
+     "prev_seq": 73,
+     "cur_seq": 4662,
+     "round": 6,
+     "p_prev": 1,
+     "p_cur": 1,
+     "prev_mood": null,
+     "prev_body": "秀娘笑眯眯地递过一块刚出炉的桂花糕：“来，尝尝这个，我新调的方子——你要是喜欢，回头我教你做，咱们街坊里就数你手巧。”",
+     "cur_body": "秀娘笑盈盈地把刚出炉的桂花糕塞到对方手里：“快尝尝，还热乎着呢，我特意少放了糖，就想着你爱吃这口。”",
+     "detect": {
+      "sign": 0,
+      "intensity": 0,
+      "source": "none",
+      "mood": null,
+      "tier": "轻",
+      "kind": "none"
+     },
+     "planned": false,
+     "plan": null
+    },
+    {
+     "thread": "m:0|public|-",
+     "prev_seq": 189,
+     "cur_seq": 1939,
+     "round": 3,
+     "p_prev": -1,
+     "p_cur": 0,
+     "prev_mood": null,
+     "prev_body": "（独自在灶台前，盯着锅里翻滚的汤，自言自语）嗯……这次少放半勺盐，多加一撮糖，说不定能成——反正上次那锅也有人夸，怕什么。",
+     "cur_body": "（整理着药柜，自言自语）这药钱攒了三十年，够是够了……可人这一辈子，光攒钱又图个啥呢。",
+     "detect": {
+      "sign": -1,
+      "intensity": 60,
+      "source": "text",
+      "mood": null,
+      "tier": "明显",
+      "kind": "soothe"
+     },
+     "planned": true,
+     "plan": {
+      "sign": -1,
+      "intensity": 60,
+      "source": "text",
+      "mood": null,
+      "tier": "明显",
+      "kind": "soothe"
+     }
+    },
+    {
+     "thread": "m:3|dm|P006-P011",
+     "prev_seq": 55286,
+     "cur_seq": 59296,
+     "round": 42,
+     "p_prev": 1,
+     "p_cur": -1,
+     "prev_mood": null,
+     "prev_body": "（摆出架势，笑嘻嘻地）P006，来嘛来嘛，别手下留情——我倒要看看，我离出镇子还差几拳！",
+     "cur_body": "（轻声）P011，你刚才那个问题问得特别好——别怕问错，肯动脑筋的孩子才学得扎实。",
+     "detect": {
+      "sign": -1,
+      "intensity": 60,
+      "source": "text",
+      "mood": null,
+      "tier": "明显",
+      "kind": "soothe"
+     },
+     "planned": true,
+     "plan": {
+      "sign": -1,
+      "intensity": 60,
+      "source": "text",
+      "mood": null,
+      "tier": "明显",
+      "kind": "soothe"
+     }
+    },
+    {
+     "thread": "m:3|public|-",
+     "prev_seq": 54681,
+     "cur_seq": 54765,
+     "round": 36,
+     "p_prev": 1,
+     "p_cur": 0,
+     "prev_mood": null,
+     "prev_body": "（一边揉面一边自言自语）哎，这新配方的桂花糖放多了些，不过街坊们应该会喜欢吧，等会儿烤好了给王婶送两块去。",
+     "cur_body": "（整理药柜时自言自语）这些药方子用了大半辈子，可每次看到病人痊愈，还是觉得值得。",
+     "detect": {
+      "sign": -1,
+      "intensity": 60,
+      "source": "text",
+      "mood": null,
+      "tier": "明显",
+      "kind": "soothe"
+     },
+     "planned": true,
+     "plan": {
+      "sign": -1,
+      "intensity": 60,
+      "source": "text",
+      "mood": null,
+      "tier": "明显",
+      "kind": "soothe"
+     }
+    },
+    {
+     "thread": "m:4|public|-",
+     "prev_seq": 81186,
+     "cur_seq": 81269,
+     "round": 48,
+     "p_prev": 1,
+     "p_cur": 0,
+     "prev_mood": null,
+     "prev_body": "（一边揉面一边自言自语）哎，这新配方的桂花糖放多了些，不过街坊们应该会喜欢吧，等会儿烤好了给王婶送两块去。",
+     "cur_body": "（整理药柜时自言自语）这些药方子用了大半辈子，可每次看到病人痊愈，还是觉得值得。",
+     "detect": {
+      "sign": -1,
+      "intensity": 60,
+      "source": "text",
+      "mood": null,
+      "tier": "明显",
+      "kind": "soothe"
+     },
+     "planned": true,
+     "plan": {
+      "sign": -1,
+      "intensity": 60,
+      "source": "text",
+      "mood": null,
+      "tier": "明显",
+      "kind": "soothe"
+     }
+    },
+    {
+     "thread": "m:6|public|-",
+     "prev_seq": 151530,
+     "cur_seq": 151786,
+     "round": 75,
+     "p_prev": -1,
+     "p_cur": 0,
+     "prev_mood": null,
+     "prev_body": "各位，我琢磨着咱们镇上该有个固定的义诊日，谁家有个头疼脑热的不用硬扛着，我这边也能提前备好药，大家觉得呢？",
+     "cur_body": "（把铁锤往砧上一搁）我就一句：要干可以，先把退路和规矩定死，别又让我一个人扛。",
+     "detect": {
+      "sign": -1,
+      "intensity": 60,
+      "source": "text",
+      "mood": null,
+      "tier": "明显",
+      "kind": "soothe"
+     },
+     "planned": true,
+     "plan": {
+      "sign": -1,
+      "intensity": 60,
+      "source": "text",
+      "mood": null,
+      "tier": "明显",
+      "kind": "soothe"
+     }
+    }
+   ]
+  }
+ ]
+}

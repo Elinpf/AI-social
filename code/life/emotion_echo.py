@@ -11,14 +11,20 @@
   * 只做两件事：① 确定性判定「对方此刻是什么情绪、多强」；② 把结论作为一句
     **处境提示**插进回复提示词（+ 一个只追加的审计字段），措辞仍由 LLM 自己产出。
 
-判据（两条确定性来源，优先级固定）：
+判据（三条确定性来源，优先级固定）：
   1. **语面极性** `life/emotion.emotion_sign(对方上一句)`（**单一真源复用**，不另写一份）
      → `+1 / -1 / 0`；
   2. **处境情绪** 入站消息 `payload["ctx"]["mood"]`（发送方生成时由
      `dialogue_threads.mood_label(其自身 needs)` 算出的确定性标签）→ 查表得极性与严重度。
+  3. **对话语域线索**（R38 新增，`DIALOGUE_NEG_CUES` / `DIALOGUE_POS_CUES`）——**只在 ① 判 0 时**才看。
+     存在原因有实测依据：`emotion.NATURAL_*` 是给 reflection 正文写的**抽象心理词表**，而真实对话是
+     "盐放多了有点发苦 / 手都磨出泡了 / 孩子这两天咳得厉害"这类**具体口述**，① 在对话上几乎恒 0
+     ⇒ 只能靠 ②，而 ② 一旦是「平和」就彻底不产（实测 7 次机会里 4 次如此，见 `v2/evidence/r38_f3/`）。
+     整表可消融：`config/emotion_echo.json::dialogue_cues=false` ⇒ 逐字节退回 R14 行为。
   合成规则：**语面有极性则语面优先**（"ta 刚说的这句话"比"ta 的处境"更贴近当下），
-  否则用处境情绪；两者都为 0 → 不呼应（宁缺毋滥）。
-  强度：语面命中 ⇒ `text_hit_intensity + mood_severity // mood_bonus_div`；仅处境 ⇒ 严重度；
+  其次对话线索，其次处境情绪；全为 0 → 不呼应（宁缺毋滥）。
+  强度：语面命中 ⇒ `text_hit_intensity + mood_severity // mood_bonus_div`；线索命中 ⇒
+  `cue_hit_intensity + mood_severity // mood_bonus_div`；仅处境 ⇒ 严重度；
   再与 `min_intensity` 比，**低于阈值不产**。
 
 开关（单 env 开关 + 单配置文件，沿用 `code/config/dialogue_repair.json` 先例）：
@@ -57,7 +63,39 @@ from . import emotion as E
 ECHO_ENV = "HITT_DIALOGUE_EMOTION_ECHO"
 
 #: 信号版本（写进 payload，便于按版本复算）
-VERSION = "f3/1"
+VERSION = "f3/2"
+
+#: 对话语域线索（**R38 新增的第三来源，只在 `emotion.emotion_sign` 判 0 时才用**）。
+#:
+#: 为什么需要它（可复算的实测缺口，见 `v2/evidence/r38_f3/BEFORE_f3_offline_replay.json`）：
+#: `life/emotion.py::NATURAL_*` 的词表是为 **`MEMORY_WRITE kind=="reflection"`** 正文设计的
+#: ——里面是「担心/遗憾/疲惫/委屈」这类**抽象心理词**；而对话正文是**具体的市井口述**
+#: （"盐放多了有点发苦"、"手都磨出泡了"、"孩子这两天咳得厉害"），一个抽象心理词都不含。
+#: 于是 `emotion_sign` 在真实对话上退回 0 ⇒ F-3 的语面通道几乎恒空，只能靠 `ctx.mood` 兜底，
+#: 而 `ctx.mood` 一旦是「平和」就彻底不产（emo-off 语料 7 次机会里 4 次如此）。
+#:
+#: 纪律（三条，缺一不可）：
+#:   1. **不碰 `life/emotion.py`**：那是 reflection 判定的单一真源，alter 它会让 R/T333
+#:      历史读数不可比。本表是**对话语域的补充**，只在本模块生效、可整表消融（`dialogue_cues`）；
+#:   2. **方向语义与 `emotion_sign` 一致**（−1 负向需安抚 / +1 正向可顺着接），不引入第三极性；
+#:   3. **只在 `emotion_sign == 0` 时启用**（不覆盖单一真源的任何判断），且线索**只取具体搭配**
+#:      （不收「累/苦/病」这类单字，避免"说话不带情绪"被误判成有事）。
+#: 【未验证】：本表未经人工标注集校验，只由 `tools/f3/f3_offline_replay.py` 做落点覆盖回放。
+DIALOGUE_NEG_CUES: tuple[str, ...] = (
+    # 身体/病痛
+    "咳得", "咳嗽", "发烧", "发热", "头晕", "腰酸", "腿软", "喘不上", "磨出泡", "起了泡",
+    "睡不着", "没睡好", "熬了", "撑不住", "直打颤", "手抖", "犯了病", "疼得", "肿了",
+    # 劳作/亏损/不顺
+    "发苦", "发涩", "馊了", "坏了", "烂了", "漏了", "赔了", "亏了", "砸了", "白忙",
+    "欠着", "不够使", "漏雨", "散了架", "找不着",
+    # 情绪外显（口述）
+    "犯愁", "发愁", "心急", "发慌", "难受", "心里堵", "没了主意",
+)
+DIALOGUE_POS_CUES: tuple[str, ...] = (
+    # 正向线索只收**陈述式**结果（"顺当"在"还顺当吗？"里是对别人的问候、不是自身好事，故不收）
+    "办成了", "办妥", "卖完了", "卖出", "找着了", "考中", "添丁", "夸你", "高兴",
+    "痛快", "妥了", "赚了", "修好了", "说定了",
+)
 
 #: 情绪标签 → (极性, 严重度)。标签来源限定为 `dialogue_threads.mood_label` 的枚举
 #: （六个最匮乏需求维度的映射 + 平和），**未知标签一律 (0, 0) = 不呼应**。
@@ -78,6 +116,9 @@ DEFAULTS = {
     "text_hit_intensity": 60,  # 语面命中情感词的基础强度
     "mood_bonus_div": 2,       # 语面命中时，处境严重度按此除数作加成
     "tier_cuts": [45, 70],     # 强度分档切点（→ 轻 / 明显 / 很强）；只用于文案，不进数值判定
+    # R38：对话语域线索（第三来源，只在 emotion_sign==0 时用；`False` ⇒ 逐字节退回 R14 行为）
+    "dialogue_cues": True,
+    "cue_hit_intensity": 45,   # 线索命中的基础强度（≥ min_intensity 才会真产）
 }
 
 _CFG_PATH = Path(__file__).resolve().parents[1] / "config" / "emotion_echo.json"
@@ -117,6 +158,8 @@ def load_params(path: str | Path | None = None) -> dict:
     out["min_intensity"] = int(out["min_intensity"])
     out["text_hit_intensity"] = int(out["text_hit_intensity"])
     out["mood_bonus_div"] = max(1, int(out["mood_bonus_div"]))
+    out["dialogue_cues"] = bool(out["dialogue_cues"])
+    out["cue_hit_intensity"] = max(0, min(100, int(out["cue_hit_intensity"])))
     cuts = [int(x) for x in (out["tier_cuts"] or DEFAULTS["tier_cuts"])]
     out["tier_cuts"] = cuts[:2] if len(cuts) >= 2 else list(DEFAULTS["tier_cuts"])
     if path is None:
@@ -166,10 +209,23 @@ def detect(mood_label: str | None, partner_text: str | None,
     mood = (mood_label or "").strip() or None
     m_sign, m_sev = MOOD_PROFILE.get(mood or "", (0, 0))
     sign_txt = int(E.emotion_sign(partner_text or "", criterion=p["criterion"]))
+    cue_sign = 0
+    if sign_txt == 0 and p.get("dialogue_cues", True):
+        # 第三来源（R38）：对话语域线索，**只在单一真源判 0 时**兜底；不覆盖任何既有判断。
+        # 负向线索优先判（"发苦还笑了一下"这类混合句按需安抚处理，宁缺毋滥）。
+        low = (partner_text or "").lower()
+        if any(c in low for c in DIALOGUE_NEG_CUES):
+            cue_sign = -1
+        elif any(c in low for c in DIALOGUE_POS_CUES):
+            cue_sign = 1
     if sign_txt != 0:
         sign = sign_txt
         source = "text+mood" if m_sev > 0 else "text"
         intensity = int(p["text_hit_intensity"]) + (m_sev // int(p["mood_bonus_div"]))
+    elif cue_sign != 0:
+        sign = cue_sign
+        source = "cue+mood" if m_sev > 0 else "cue"
+        intensity = int(p["cue_hit_intensity"]) + (m_sev // int(p["mood_bonus_div"]))
     elif m_sign != 0:
         sign = m_sign
         source = "mood"

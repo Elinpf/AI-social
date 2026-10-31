@@ -1,0 +1,720 @@
+{
+ "schema": "f3-audit-echo/2",
+ "script_sha256": "2e80809597dfdddb0354660c1e6a384f6ce40d847b011cd5ec2081e1d60f617f",
+ "empathy_markers": [
+  "我懂",
+  "我也",
+  "别难过",
+  "恭喜",
+  "辛苦",
+  "真惨",
+  "太好了",
+  "确实",
+  "是啊",
+  "可不是"
+ ],
+ "agreement_only_excluded": [
+  "我懂",
+  "确实",
+  "是啊",
+  "可不是"
+ ],
+ "arms": [
+  {
+   "meta": {
+    "label": "v0",
+    "log": "v2/evidence/run_d2_before_n16_seed42/run.jsonl",
+    "log_sha8": "c1f86bf6",
+    "n_messages": 187,
+    "n_threads": 136,
+    "bad_lines": 0,
+    "n_messages_reply_path": 0,
+    "emotion_lexicon_sha256": "8427245cdf65550c6fb80d10616a01d9054d3d4fe97842b4b81feed7afd4a996"
+   },
+   "tier_definitions": {
+    "loose": "极性相同 ∪ 任意 EMPATHY_MARKERS（= tools/d5 原式；与 R1–R13 可比）",
+    "loose_no_agree": "极性相同 ∪ 标记剔 `我懂`（中间列，保留供历史对齐）",
+    "polarity_match": "只认极性一致（标记一律不算）——技术对照，**禁止称「严格」**；负→负假阳性保留",
+    "marker_based": "**主指标**：只认真回应标记（剔 我懂/确实/是啊/可不是），不要求极性一致；依赖词表⇒系统性低估"
+   },
+   "main_metric": "marker_based",
+   "dropped": {
+    "union_of_polarity_and_marker": "已弃用（并集不构成第三种标准）"
+   },
+   "tiers": {
+    "loose": {
+     "all_messages": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 6,
+      "rate": 0.166667,
+      "wilson95": [
+       0.030053,
+       0.563503
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 73,
+        "cur_seq": 4662,
+        "p_prev": 1,
+        "p_cur": 1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "秀娘笑眯眯地递过一块刚出炉的桂花糕：“来，尝尝这个，我新调的方子——你要是喜欢，回头我教你做，咱们街坊里就数你手巧。”",
+        "cur_body": "秀娘笑盈盈地把刚出炉的桂花糕塞到对方手里：“快尝尝，还热乎着呢，我特意少放了糖，就想着你爱吃这口。”"
+       }
+      ]
+     },
+     "reply_path": {
+      "events": 0,
+      "dedup_by_body": 0,
+      "dup_delta": 0,
+      "denominator": 0,
+      "rate": null,
+      "wilson95": null,
+      "band": "empty",
+      "samples": []
+     }
+    },
+    "loose_no_agree": {
+     "all_messages": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 6,
+      "rate": 0.166667,
+      "wilson95": [
+       0.030053,
+       0.563503
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 73,
+        "cur_seq": 4662,
+        "p_prev": 1,
+        "p_cur": 1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "秀娘笑眯眯地递过一块刚出炉的桂花糕：“来，尝尝这个，我新调的方子——你要是喜欢，回头我教你做，咱们街坊里就数你手巧。”",
+        "cur_body": "秀娘笑盈盈地把刚出炉的桂花糕塞到对方手里：“快尝尝，还热乎着呢，我特意少放了糖，就想着你爱吃这口。”"
+       }
+      ]
+     },
+     "reply_path": {
+      "events": 0,
+      "dedup_by_body": 0,
+      "dup_delta": 0,
+      "denominator": 0,
+      "rate": null,
+      "wilson95": null,
+      "band": "empty",
+      "samples": []
+     }
+    },
+    "polarity_match": {
+     "all_messages": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 6,
+      "rate": 0.166667,
+      "wilson95": [
+       0.030053,
+       0.563503
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 73,
+        "cur_seq": 4662,
+        "p_prev": 1,
+        "p_cur": 1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "秀娘笑眯眯地递过一块刚出炉的桂花糕：“来，尝尝这个，我新调的方子——你要是喜欢，回头我教你做，咱们街坊里就数你手巧。”",
+        "cur_body": "秀娘笑盈盈地把刚出炉的桂花糕塞到对方手里：“快尝尝，还热乎着呢，我特意少放了糖，就想着你爱吃这口。”"
+       }
+      ]
+     },
+     "reply_path": {
+      "events": 0,
+      "dedup_by_body": 0,
+      "dup_delta": 0,
+      "denominator": 0,
+      "rate": null,
+      "wilson95": null,
+      "band": "empty",
+      "samples": []
+     }
+    },
+    "marker_based": {
+     "all_messages": {
+      "events": 0,
+      "dedup_by_body": 0,
+      "dup_delta": 0,
+      "denominator": 6,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.390334
+      ],
+      "band": "count_only",
+      "samples": []
+     },
+     "reply_path": {
+      "events": 0,
+      "dedup_by_body": 0,
+      "dup_delta": 0,
+      "denominator": 0,
+      "rate": null,
+      "wilson95": null,
+      "band": "empty",
+      "samples": []
+     }
+    }
+   },
+   "marker_hits": {},
+   "agreement_only_excluded": [
+    "我懂",
+    "确实",
+    "是啊",
+    "可不是"
+   ],
+   "opportunity_density": {
+    "per_message": 0.032086,
+    "per_round": 0.285714,
+    "n_rounds_seen": 21
+   },
+   "mechanism": {
+    "field_path": "payload.ctx.echo",
+    "echo_rows_n": 0,
+    "echo_rows_ratio_per_message": 0.0,
+    "top_level_dialogue_echo_rows": 0,
+    "ctx_echo_key_absent_on_all_msgs": true,
+    "versions": [],
+    "prompted_all_true": null,
+    "by_source": {},
+    "by_tier": {},
+    "by_sign": {},
+    "by_kind": {},
+    "n_threads": 0,
+    "echo_rows_tier_hit": {
+     "loose": 0,
+     "loose_no_agree": 0,
+     "polarity_match": 0,
+     "marker_based": 0
+    },
+    "echo_rows_in_opportunities": 0,
+    "echo_rows_never_hit_any_tier": 0,
+    "activation_checks": {
+     "v_all_f3_1": false,
+     "sign_dist_nonempty": false,
+     "source_dist": {},
+     "prompted_eq_field_present": null,
+     "verdict": "off_or_not_activated",
+     "note": "四项齐（v=f3/1 / sign 非空 / source 构成 / prompted==present）才认『ON 确实 ON』；echo_rows=0 时**无法区分**「开关关着」与「开关没生效」，不能写『机制无效』"
+    },
+    "rows": []
+   },
+   "rows": [
+    {
+     "thread": "m:0|dm|P002-P004",
+     "prev_seq": 73,
+     "cur_seq": 4662,
+     "round": 6,
+     "cur_is_reply": false,
+     "p_prev": 1,
+     "p_cur": 1,
+     "same_polarity": true,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "秀娘笑眯眯地递过一块刚出炉的桂花糕：“来，尝尝这个，我新调的方子——你要是喜欢，回头我教你做，咱们街坊里就数你手巧。”",
+     "cur_body": "秀娘笑盈盈地把刚出炉的桂花糕塞到对方手里：“快尝尝，还热乎着呢，我特意少放了糖，就想着你爱吃这口。”",
+     "tier_loose": true,
+     "tier_loose_no_agree": true,
+     "tier_polarity_match": true,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:0|public|-",
+     "prev_seq": 189,
+     "cur_seq": 1939,
+     "round": 3,
+     "cur_is_reply": false,
+     "p_prev": -1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "（独自在灶台前，盯着锅里翻滚的汤，自言自语）嗯……这次少放半勺盐，多加一撮糖，说不定能成——反正上次那锅也有人夸，怕什么。",
+     "cur_body": "（整理着药柜，自言自语）这药钱攒了三十年，够是够了……可人这一辈子，光攒钱又图个啥呢。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:3|dm|P006-P011",
+     "prev_seq": 55286,
+     "cur_seq": 59296,
+     "round": 42,
+     "cur_is_reply": false,
+     "p_prev": 1,
+     "p_cur": -1,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "（摆出架势，笑嘻嘻地）P006，来嘛来嘛，别手下留情——我倒要看看，我离出镇子还差几拳！",
+     "cur_body": "（轻声）P011，你刚才那个问题问得特别好——别怕问错，肯动脑筋的孩子才学得扎实。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:3|public|-",
+     "prev_seq": 54681,
+     "cur_seq": 54765,
+     "round": 36,
+     "cur_is_reply": false,
+     "p_prev": 1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "（一边揉面一边自言自语）哎，这新配方的桂花糖放多了些，不过街坊们应该会喜欢吧，等会儿烤好了给王婶送两块去。",
+     "cur_body": "（整理药柜时自言自语）这些药方子用了大半辈子，可每次看到病人痊愈，还是觉得值得。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:4|public|-",
+     "prev_seq": 81186,
+     "cur_seq": 81269,
+     "round": 48,
+     "cur_is_reply": false,
+     "p_prev": 1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "（一边揉面一边自言自语）哎，这新配方的桂花糖放多了些，不过街坊们应该会喜欢吧，等会儿烤好了给王婶送两块去。",
+     "cur_body": "（整理药柜时自言自语）这些药方子用了大半辈子，可每次看到病人痊愈，还是觉得值得。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:6|public|-",
+     "prev_seq": 151530,
+     "cur_seq": 151786,
+     "round": 75,
+     "cur_is_reply": false,
+     "p_prev": -1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "各位，我琢磨着咱们镇上该有个固定的义诊日，谁家有个头疼脑热的不用硬扛着，我这边也能提前备好药，大家觉得呢？",
+     "cur_body": "（把铁锤往砧上一搁）我就一句：要干可以，先把退路和规矩定死，别又让我一个人扛。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    }
+   ]
+  },
+  {
+   "meta": {
+    "label": "emooff",
+    "log": "v2/evidence/emo-off-20261030/run.jsonl",
+    "log_sha8": "c27691d9",
+    "n_messages": 191,
+    "n_threads": 66,
+    "bad_lines": 0,
+    "n_messages_reply_path": 125,
+    "emotion_lexicon_sha256": "8427245cdf65550c6fb80d10616a01d9054d3d4fe97842b4b81feed7afd4a996"
+   },
+   "tier_definitions": {
+    "loose": "极性相同 ∪ 任意 EMPATHY_MARKERS（= tools/d5 原式；与 R1–R13 可比）",
+    "loose_no_agree": "极性相同 ∪ 标记剔 `我懂`（中间列，保留供历史对齐）",
+    "polarity_match": "只认极性一致（标记一律不算）——技术对照，**禁止称「严格」**；负→负假阳性保留",
+    "marker_based": "**主指标**：只认真回应标记（剔 我懂/确实/是啊/可不是），不要求极性一致；依赖词表⇒系统性低估"
+   },
+   "main_metric": "marker_based",
+   "dropped": {
+    "union_of_polarity_and_marker": "已弃用（并集不构成第三种标准）"
+   },
+   "tiers": {
+    "loose": {
+     "all_messages": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 7,
+      "rate": 0.142857,
+      "wilson95": [
+       0.02568,
+       0.513128
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 156,
+        "cur_seq": 1632,
+        "p_prev": -1,
+        "p_cur": -1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+        "cur_body": "哎，我正翻着刘家那筐新到的干辣椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾半干再码盐。你试试。"
+       }
+      ]
+     },
+     "reply_path": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 7,
+      "rate": 0.142857,
+      "wilson95": [
+       0.02568,
+       0.513128
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 156,
+        "cur_seq": 1632,
+        "p_prev": -1,
+        "p_cur": -1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+        "cur_body": "哎，我正翻着刘家那筐新到的干辣椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾半干再码盐。你试试。"
+       }
+      ]
+     }
+    },
+    "loose_no_agree": {
+     "all_messages": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 7,
+      "rate": 0.142857,
+      "wilson95": [
+       0.02568,
+       0.513128
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 156,
+        "cur_seq": 1632,
+        "p_prev": -1,
+        "p_cur": -1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+        "cur_body": "哎，我正翻着刘家那筐新到的干辣椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾半干再码盐。你试试。"
+       }
+      ]
+     },
+     "reply_path": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 7,
+      "rate": 0.142857,
+      "wilson95": [
+       0.02568,
+       0.513128
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 156,
+        "cur_seq": 1632,
+        "p_prev": -1,
+        "p_cur": -1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+        "cur_body": "哎，我正翻着刘家那筐新到的干辣椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾半干再码盐。你试试。"
+       }
+      ]
+     }
+    },
+    "polarity_match": {
+     "all_messages": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 7,
+      "rate": 0.142857,
+      "wilson95": [
+       0.02568,
+       0.513128
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 156,
+        "cur_seq": 1632,
+        "p_prev": -1,
+        "p_cur": -1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+        "cur_body": "哎，我正翻着刘家那筐新到的干辣椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾半干再码盐。你试试。"
+       }
+      ]
+     },
+     "reply_path": {
+      "events": 1,
+      "dedup_by_body": 1,
+      "dup_delta": 0,
+      "denominator": 7,
+      "rate": 0.142857,
+      "wilson95": [
+       0.02568,
+       0.513128
+      ],
+      "band": "count_only",
+      "samples": [
+       {
+        "prev_seq": 156,
+        "cur_seq": 1632,
+        "p_prev": -1,
+        "p_cur": -1,
+        "markers": [],
+        "genuine_markers": [],
+        "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+        "cur_body": "哎，我正翻着刘家那筐新到的干辣椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾半干再码盐。你试试。"
+       }
+      ]
+     }
+    },
+    "marker_based": {
+     "all_messages": {
+      "events": 0,
+      "dedup_by_body": 0,
+      "dup_delta": 0,
+      "denominator": 7,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.35433
+      ],
+      "band": "count_only",
+      "samples": []
+     },
+     "reply_path": {
+      "events": 0,
+      "dedup_by_body": 0,
+      "dup_delta": 0,
+      "denominator": 7,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.35433
+      ],
+      "band": "count_only",
+      "samples": []
+     }
+    }
+   },
+   "marker_hits": {},
+   "agreement_only_excluded": [
+    "我懂",
+    "确实",
+    "是啊",
+    "可不是"
+   ],
+   "opportunity_density": {
+    "per_message": 0.036649,
+    "per_round": 0.318182,
+    "n_rounds_seen": 22
+   },
+   "mechanism": {
+    "field_path": "payload.ctx.echo",
+    "echo_rows_n": 0,
+    "echo_rows_ratio_per_message": 0.0,
+    "top_level_dialogue_echo_rows": 0,
+    "ctx_echo_key_absent_on_all_msgs": true,
+    "versions": [],
+    "prompted_all_true": null,
+    "by_source": {},
+    "by_tier": {},
+    "by_sign": {},
+    "by_kind": {},
+    "n_threads": 0,
+    "echo_rows_tier_hit": {
+     "loose": 0,
+     "loose_no_agree": 0,
+     "polarity_match": 0,
+     "marker_based": 0
+    },
+    "echo_rows_in_opportunities": 0,
+    "echo_rows_never_hit_any_tier": 0,
+    "activation_checks": {
+     "v_all_f3_1": false,
+     "sign_dist_nonempty": false,
+     "source_dist": {},
+     "prompted_eq_field_present": null,
+     "verdict": "off_or_not_activated",
+     "note": "四项齐（v=f3/1 / sign 非空 / source 构成 / prompted==present）才认『ON 确实 ON』；echo_rows=0 时**无法区分**「开关关着」与「开关没生效」，不能写『机制无效』"
+    },
+    "rows": []
+   },
+   "rows": [
+    {
+     "thread": "m:T|TH-P007-P005-19",
+     "prev_seq": 26537,
+     "cur_seq": 27718,
+     "round": 21,
+     "cur_is_reply": true,
+     "p_prev": -1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "刚把李木匠家小子的退烧药包好，手上还沾着药碾子的苦味，你搁下的陈皮我瞧见了，先搁着吧，等会儿拿它煮水正好压压我这空了一上午的胃，你铺子那边今天进的货都归置妥了没？",
+     "cur_body": "陈医，我那铺子后头还堆着两筐新到的山货没拆呢，等会儿回去再慢慢归置吧。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P009-P004-0",
+     "prev_seq": 124,
+     "cur_seq": 675,
+     "round": 1,
+     "cur_is_reply": true,
+     "p_prev": 1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "秀娘，你家那口子这阵子还咳得厉害吗？账要平。",
+     "cur_body": "哎，他咳得轻些了，我刚把炉子里的桂圆红枣糕翻了个面，等会儿给金先生你切一块尝尝。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P012-P001-18",
+     "prev_seq": 28277,
+     "cur_seq": 29483,
+     "round": 22,
+     "cur_is_reply": true,
+     "p_prev": -1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "锄头搁田埂上不怕丢，我这儿正给桂英家择韭菜呢，她明儿办席。你手没洗就先歇歇。",
+     "cur_body": "我刚把西头那块田的排水沟清完，裤腿上全是泥，你给桂英家择韭菜这事我听着呢。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P012-P016-0",
+     "prev_seq": 156,
+     "cur_seq": 1632,
+     "round": 1,
+     "cur_is_reply": true,
+     "p_prev": -1,
+     "p_cur": -1,
+     "same_polarity": true,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "兰姐，我这几天在家腌那坛萝卜，盐放多了有点发苦，想问问你以前是怎么弄的。你教教我。",
+     "cur_body": "哎，我正翻着刘家那筐新到的干辣椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾半干再码盐。你试试。",
+     "tier_loose": true,
+     "tier_loose_no_agree": true,
+     "tier_polarity_match": true,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P012-P016-0",
+     "prev_seq": 1632,
+     "cur_seq": 2196,
+     "round": 3,
+     "cur_is_reply": true,
+     "p_prev": -1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "哎，我正翻着刘家那筐新到的干辣椒，你腌萝卜发苦啊，是盐下早了。头道水先泡两个钟头，捞出来晾半干再码盐。你试试。",
+     "cur_body": "哟，我正搓着周家送来的那簸箕萝卜条呢，听你这么一说，那我下回先泡足钟头再晾。盐得晚点撒。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P016-P002-7",
+     "prev_seq": 16947,
+     "cur_seq": 17418,
+     "round": 11,
+     "cur_is_reply": true,
+     "p_prev": 1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "手都磨出泡了还惦记蒜。我这儿刚剥了一辫子，你拿两头去，回头把萝卜汤盛一碗给巷口老周家孙子，那孩子这两天咳得厉害。",
+     "cur_body": "哎，蒜我拿两头，萝卜汤盛出来先给老周家孙子晾着。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    },
+    {
+     "thread": "m:T|TH-P016-P005-0",
+     "prev_seq": 5096,
+     "cur_seq": 5893,
+     "round": 7,
+     "cur_is_reply": true,
+     "p_prev": -1,
+     "p_cur": 0,
+     "same_polarity": false,
+     "markers": [],
+     "genuine_markers": [],
+     "no_agree_markers": [],
+     "prev_body": "刚把新到的陈皮翻晒完，风一吹满摊子都是那股子苦香，陈医你那戥子称完当归，手也该歇歇了。称得准。",
+     "cur_body": "这戥子一响啊，倒让我想起年轻时跟师父练功，一站就是半炷香，腿肚子直打颤呢。",
+     "tier_loose": false,
+     "tier_loose_no_agree": false,
+     "tier_polarity_match": false,
+     "tier_marker_based": false
+    }
+   ]
+  }
+ ]
+}
