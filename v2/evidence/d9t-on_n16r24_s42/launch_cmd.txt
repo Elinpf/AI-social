@@ -1,0 +1,13 @@
+arm=ON run_id=191408
+out=/tmp/d9t_on_n16r24_s42_out.191408
+side=/tmp/d9t_on_side_191408
+HEAD=cef1c58c448d400c0fe98736634cc0891b0a78e6
+started_at=2026-10-31T19:14:08+08:00
+--- concurrent_before (raw) ---
+(empty)
+faulthandler=dump_traceback_later(600, repeat=True) -> fault.log + stderr
+fp_before_rc=0 fp_before=fd8a8f983c99d4b134258730985da3628b948a2b7aa0bc9fb713cda20ed78391 files=282
+pid=3213351
+finished_at=2026-10-31T19:36:13+08:00 rc=0
+fp_after=fd8a8f983c99d4b134258730985da3628b948a2b7aa0bc9fb713cda20ed78391
+fp_equal=YES
