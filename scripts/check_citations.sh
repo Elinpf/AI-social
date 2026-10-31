@@ -28,21 +28,21 @@ L4 cafebabe1234 与 badbadbad999 历史版（前者坏，应被抓）
 L5 feedface9999（无标注，应被抓）
 EOF
   echo "== selftest ①：无标注死 sha 必须被抓（期望≥2）=="
-  bash "$0" "$T" > /tmp/st1.out 2>&1; bad=$(grep -c '\*\*BAD' /tmp/st1.out || true)
-  grep '\*\*BAD' /tmp/st1.out || true
+  O1=$(mktemp); bash "$0" "$T" > "$O1" 2>&1; bad=$(grep -c '\*\*BAD' "$O1" || true)
+  grep '\*\*BAD' "$O1" || true; rm -f "$O1"
   echo "== selftest ②：--strict 下'已声明'的也必须列入待审（期望≥1）=="
   T1b=$(mktemp); printf 'L9 cafebabe1234（历史版）\n' > "$T1b"
-  bash "$0" "$T1b" --strict > /tmp/st2.out 2>&1; pend=$(grep -c '需人工确认' /tmp/st2.out || true)
-  grep '需人工确认' /tmp/st2.out || true; rm -f "$T1b"
+  O2=$(mktemp); bash "$0" "$T1b" --strict > "$O2" 2>&1; pend=$(grep -c '需人工确认' "$O2" || true)
+  grep '需人工确认' "$O2" || true; rm -f "$O2" "$T1b"
   echo "== selftest ③：标注不得辐射到相邻 sha（期望 2 个 BAD）=="
   T2=$(mktemp)
   cat > "$T2" <<'EOT'
 L2 badbadbad999（历史版）与 cafebabe1234 相邻
 L3 cafebabe1234 与 badbadbad999（历史版）
 EOT
-  bash "$0" "$T2" > /tmp/st3.out 2>&1
-  rad=$(grep -c '\*\*BAD' /tmp/st3.out || true)
-  grep '\*\*BAD' /tmp/st3.out || true
+  O3=$(mktemp); bash "$0" "$T2" > "$O3" 2>&1
+  rad=$(grep -c '\*\*BAD' "$O3" || true)
+  grep '\*\*BAD' "$O3" || true; rm -f "$O3"
   rm -f "$T2"
   if [ "${bad:-0}" -ge 2 ] && [ "${pend:-0}" -ge 1 ] && [ "${rad:-0}" -ge 2 ]; then
     echo "selftest PASS（无标注 $bad；strict 待审 $pend；辐射检查抓到 $rad）"; RC=0
