@@ -123,7 +123,10 @@ for entry in "${RAW[@]}"; do
     # 豁免要付费（审计 dd04dbe1）：无路径的 sha 必须同行含「实测值」或「内容 sha」才豁免，
     # 否则记"待审（未声明）"——非 strict 不算漏但必须报；strict 算漏。
     # 理由："没写路径" ≠ "证明是实测值"，而是"没提供证据"；免费豁免 = 空检查。
-    if printf '%s' "$line_text" | grep -qE '实测值|内容 sha'; then
+    # ⚠ 必须复用同一个归属函数 _ann.py（审计 4611d83c）：早先用 grep 整行匹配，
+    # 等于把"整行白名单"那个已修漏洞原样搬回来——说明文字里出现"实测值"三字就把该行 sha 豁免了。
+    own_meas=$(printf '%s\n' "$line_text" | TOK="$tok" ANN='实测值|内容 sha' ADJ=1 python3 "$DIR/_ann.py")
+    if [ "$own_meas" = "1" ]; then
       echo "  content(实测值·免核) L$lineno  $tok"; count=$((count+1)); c_pend=$((c_pend+1))
     else
       if [ "$STRICT" -eq 1 ]; then

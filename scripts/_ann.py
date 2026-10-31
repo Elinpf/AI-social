@@ -23,6 +23,14 @@ def nearest_token(pos):
         if best is None or d < best[0]: best = (d, s, e)
     return best
 
+
+# ADJ=1：仅接受"紧邻"标注（token 前后 6 字内），用于"实测值/内容 sha"这类**词本身很常见**的标注。
+# 理由：这类词在讨论机制的文档里必然大量出现，最近邻归属会把说明文字当标注（审计 4611d83c）。
+if os.environ.get("ADJ") == "1":
+    near = line[max(0, i-6):i] + line[end:end+6]
+    print(1 if re.search(ANN, near) else 0)
+    sys.exit(0)
+
 # A) 紧跟 token 后 8 字内开始的括号：里面的标注算这个 token 的
 after = line[end:]
 if re.search(r"[（(]", after[:8]):
