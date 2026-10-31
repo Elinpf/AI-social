@@ -11,7 +11,7 @@
 | 项 | 值 |
 |---|---|
 | ON 臂 | `cef1c58` + `NARRATION/ROTATION/ACTION/SYNTAX/OPENINGS = 1`，`rc=0` |
-| `run.jsonl` | 33,877 行 / sha256 `af4c44d11dd22eb8…`（`v2/evidence/d9t-on_n16r24_s42/run.jsonl`） |
+| ON 臂日志 | 33,877 行 / sha256 `af4c44d11dd22eb8…`，件 `v2/evidence/d9t-on_n16r24_s42/run.jsonl` |
 | **四数（`dialogue` 口径）** | **191 / 191 / 191 / 0**（`dialogue` 侧 **100% 真跑**，**无一次回放**） |
 | **四数（全 `purpose` 口径）** | **191 / 191 / 865 / 1387**（总账 2252；`tokens_in 213728` / `tokens_out 149991`） |
 | OFF 臂（复用） | `d9s-on2 @ f2b3230d`：MSG **183**、片段 **174** |
@@ -78,6 +78,6 @@
 ## 5. 边界
 
 1. 本判定只对 **`cef1c58` 这一版实现 + 这一批数据**成立；
-2. **OFF 臂是复用**（`f2b3230d`），其与 ON 的 `code_sha` 不同，配对链由 `cef1c58` 的等价复核（内容 sha·实测值 `5ca75d76…`，件 `d9t-cef1c58-PA-verified-by-verifier.md`）承担；
+2. **OFF 臂是复用**（`f2b3230d`），其与 ON 的 `code_sha` 不同，配对链由 `cef1c58` 的等价复核（内容 sha·实测值 `5ca75d76…`，件 `v2/evidence/d9t-cef1c58-PA-verified-by-verifier.md`）承担；
 3. **前五次"卡死"判断已作废**（见 `d9t-on-NODATA-20261031.md` 件头）：`run.jsonl` 行数不动 ≠ 卡死；
 4. 本件不涉及 `G7` 通过与否，也不涉及任何"生活气息整体提升"的说法。

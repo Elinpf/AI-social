@@ -66,7 +66,7 @@ ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || {
   echo "FATAL: 当前目录不在 git 仓库内（本脚本依赖 git show <rev>:<path>，离开仓库会产出假 BAD）" >&2; exit 4; }
 echo "== 执行上下文 repo=$ROOT rev=$REV file=$FILE =="
 
-ANN='不存在|已废弃|作废|未入库|未落地|MISSING|文本切片|字符串级|内容 sha|历史版|旧版|非当前版'
+ANN='不存在|已废弃|作废|未入库|未落地|MISSING|文本切片|字符串级|内容 sha|历史版|旧版|非当前版|时点值|时点快照'
 echo "== 扫 $FILE（rev=$REV）=="
 mapfile -t RAW < <(grep -nEo '\b[0-9a-f]{7,40}\b' "$FILE")
 TREE_BLOBS=$(git ls-tree -r "$REV" 2>/dev/null | awk '{print $3}')
