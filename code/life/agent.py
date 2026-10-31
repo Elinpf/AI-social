@@ -30,6 +30,7 @@ from .persona import Persona
 from . import persona_drift as PD
 from . import emotion as E
 from . import emotion_echo as EE   # F-3：情绪呼应臂（env HITT_DIALOGUE_EMOTION_ECHO，默认 OFF）
+from . import public_talk as PT   # R41：公开面接话臂（env HITT_DIALOGUE_PUBLIC_REPLY，默认 OFF）
 from . import dialogue_threads as DT
 from . import dialogue_repair as DR
 from . import sleep_window as _sleep
@@ -373,6 +374,8 @@ class LifeLayerAgent:
         # D2 线程化（agent-local 表达层状态；不进 state_hash、不发事件）
         self._peer_names = dict(peer_names or {})   # persona_id -> 提示词显示名（只读注入）
         self._slot_msgs: dict = {}                  # slot_id -> 本 slot 已发 MSG 条数（上限见配置）
+        # R41：slot_id -> 本 slot 已发出的**公开接话**条数（默认 OFF 时恒空、不参与任何判断）
+        self._slot_public_replies: dict = {}
         self._thread_replied_turn: dict = {}        # thread_id -> 我已回复到的最大 turn
         self._replied_msg_ids: set = set()          # 已回复过的 msg_id（防重复回同一条）
         self._round_replies = 0                     # 本回合已发出的回复数（K 上限）
@@ -1109,8 +1112,10 @@ class LifeLayerAgent:
     def _thread_max_turn(self, wv, tid: str) -> int:
         """线程内「已存在的最大 turn_index」（按可见事件；无则 -1）。多方可同时处于同一 turn。"""
         mx = -1
+        # R41：开启时把「公开消息」也算进线程轮数（关闭 ⇒ 白名单与接入前逐字节一致）
+        types = ("MSG_DM", "MSG_GROUP", "MSG_PUBLIC") if PT.enabled() else ("MSG_DM", "MSG_GROUP")
         for ev in wv.visible_events:
-            if ev.type not in ("MSG_DM", "MSG_GROUP"):
+            if ev.type not in types:
                 continue
             p = ev.payload or {}
             if p.get("thread_id") != tid:
@@ -1132,12 +1137,25 @@ class LifeLayerAgent:
         window = int(cfg.get("reply_window_rounds", 2))
         max_turns = int(cfg.get("max_turns", 6))
         fallback = None
+        # R41 公开面接话臂（默认 OFF ⇒ 下面三行全是空/假，循环体走原路径）：
+        pub_on = PT.enabled()
+        co_present = self._co_present_peers(wv) if pub_on else []
+        pub_slot = f"day{wv.time.day_of_week}-{wv.time.slot}"
         for ev in reversed(list(wv.visible_events)):
-            if ev.type not in ("MSG_DM", "MSG_GROUP"):
-                continue
             p = ev.payload or {}
-            if not DT.is_replyable(ev.type, p, self.agent_id):
-                continue
+            if pub_on and ev.type == "MSG_PUBLIC":
+                # 四条有界条件见 life/public_talk.py：作者非我 / 在场者非空 / 同处 / 双配额
+                if not PT.is_replyable_public(p, self.agent_id, wv.location, co_present):
+                    continue
+                if not PT.agent_quota_ok(self._slot_public_replies, pub_slot):
+                    continue
+                if not PT.place_quota_ok(wv.visible_events, PT.place_of(p), pub_slot):
+                    continue
+            else:
+                if ev.type not in ("MSG_DM", "MSG_GROUP"):
+                    continue
+                if not DT.is_replyable(ev.type, p, self.agent_id):
+                    continue
             tid = p.get("thread_id")
             if not tid:
                 continue                      # 旧格式（无线程字段）不接话：保持向后兼容
@@ -1162,8 +1180,10 @@ class LifeLayerAgent:
     def _thread_history(self, wv, tid: str, cfg) -> list:
         """同线程最近 `history_turns` 条（(说话人名字, body)），文本总长受 `max_thread_chars` 限。"""
         rows = []
+        # R41：开启时线程历史里包含公开消息（关闭 ⇒ 白名单与接入前逐字节一致）
+        types = ("MSG_DM", "MSG_GROUP", "MSG_PUBLIC") if PT.enabled() else ("MSG_DM", "MSG_GROUP")
         for ev in wv.visible_events:
-            if ev.type not in ("MSG_DM", "MSG_GROUP"):
+            if ev.type not in types:
                 continue
             p = ev.payload or {}
             if p.get("thread_id") != tid:
@@ -1284,7 +1304,7 @@ class LifeLayerAgent:
         p = ev.payload or {}
         tid = p["thread_id"]
         turn = self._thread_max_turn(wv, tid) + 1
-        partner = p.get("from")
+        partner = p.get("from") or p.get("author")   # R41：公开消息的作者字段是 author 而非 from
         parts = [x for x in (p.get("participants") or [partner, p.get("to")]) if x]
         if self.agent_id not in parts:
             parts.append(self.agent_id)
@@ -1316,7 +1336,10 @@ class LifeLayerAgent:
         tb_tag = self._topic_shift_tag(body)
         tb_audit = TB.audit(getattr(self, "_tb", None), bool(tb_tag)) if TB.enabled() else None
         payload: dict = {
-            "scope": "private" if ev.type == "MSG_DM" else "place_group",
+            # R41：回公开消息必须落回 `global`（否则会被投成 place_group，错频道）；
+            # 默认 OFF ⇒ 下面的条件恒假 ⇒ 该表达式与接入前逐字节等价。
+            "scope": (PT.reply_scope(ev.type) if (PT.enabled() and ev.type == "MSG_PUBLIC")
+                      else ("private" if ev.type == "MSG_DM" else "place_group")),
             "body": body, "refs": [],
             "tag_hints": list(p.get("tag_hints") or []) + ([tb_tag] if tb_tag else []),
             "thread_id": tid, "turn_index": turn,
@@ -1339,8 +1362,14 @@ class LifeLayerAgent:
                 payload["dialogue_repair"] = ra
         if ev.type == "MSG_DM":
             payload["to"] = partner
-        else:
+        elif ev.type == "MSG_GROUP":
             payload["group_id"] = p.get("group_id")
+        elif PT.enabled() and ev.type == "MSG_PUBLIC":
+            # R41：只追加的审计键（关闭/不产时该键不出现 ⇒ payload 与接入前逐字节一致）
+            payload["ctx"]["public_reply"] = PT.audit(
+                ev.type, self._co_present_peers(wv), PT.place_of(p))
+            self._slot_public_replies[slot_id] = \
+                int(self._slot_public_replies.get(slot_id, 0)) + 1
         self._round_replies += 1
         self._thread_replied_turn[tid] = turn
         mid = p.get("msg_uid") or p.get("msg_id")

@@ -167,6 +167,27 @@ def _msg_uid(seed: int, seq: int) -> str:
     return f"{seed}:{seq}"
 
 
+def _r41_public_place(agent_id: str, st) -> str | None:
+    """R41（additive）：臂开启时返回**发言者当前位置**，用于 `MSG_PUBLIC.payload.place`。
+
+    为什么需要它：在此之前 `MSG_PUBLIC.payload.place` 恒为 `None`
+    （`tools/public_talk/public_talk_metrics.py` 第 4 组 `place_adjacency` 因此长期
+    `UNVERIFIED`，见 `v2/evidence/r41_public_talk/pubtalk_r38on_METRICS_BASELINE.json`），
+    而「同 place 同 slot 公开消息上限」「是否与听者同处」两个有界判据都需要 place。
+
+    纪律：
+      * **臂关闭（默认）⇒ 恒返回 None** ⇒ `payload["place"]` 的取值与接入前**完全一致**；
+      * 只读 `state.agents[id].location`（已有事实），不新增真相源、不改可见性、不进 state_hash。
+    """
+    try:
+        from life import public_talk as PT
+        if not PT.enabled():
+            return None
+    except Exception:  # noqa: BLE001  —— 生命周期/测试桩环境下绝不因此崩批
+        return None
+    return st.agents.get(agent_id, {}).get("location")
+
+
 def _thread_fields(p: dict) -> dict:
     """D2 线程字段装配（只追加键；缺省 None/[] ⇒ 旧 intent 走同一路径也不会报错）。
 
@@ -847,7 +868,13 @@ class KernelAdapter:
             payload = {"msg_id": f"P-{r}-{n_a}", "author": agent_id,
                        "topic": p.get("topic"),
                        "body": body, "body_ref": body_ref, "refs": refs, "tag_hints": tags,
-                       "place": None, "scope": "global", "day": t["day"], "slot": t["slot"]}
+                       # R41（additive）：臂开启时把**发言者当前位置**写进 place，供
+                       # `life/public_talk.py` 判「同 place 同 slot 上限」与「是否同处」，
+                       # 同时解开 `tools/public_talk/public_talk_metrics.py` 第 4 组
+                       # `place_adjacency` 的 UNVERIFIED。臂关闭（默认）⇒ 仍写 None，
+                       # 事件与接入前**逐字节一致**（既有键的取值也不变，只是不再恒为 None）。
+                       "place": _r41_public_place(agent_id, st), "scope": "global",
+                       "day": t["day"], "slot": t["slot"]}
             payload.update(_thread_fields(p))   # D2：线程字段（只追加）
         else:  # place_group
             gid = p.get("group_id")
