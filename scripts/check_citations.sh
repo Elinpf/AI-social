@@ -103,7 +103,7 @@ for entry in "${RAW[@]}"; do
     continue
   fi
 
-  path=$(printf '%s' "$line_text" | grep -oE '[A-Za-z0-9_./-]+\.(md|py|json|sh|txt|yaml|yml)' | head -1)
+  path=$(printf '%s' "$line_text" | grep -oE '[A-Za-z0-9_./-]+\.(jsonl|ndjson|md|py|json|sh|txt|yaml|yml)' | head -1)
   if [ -n "$path" ] && git cat-file -e "$REV:$path" 2>/dev/null; then
     actual=$(git show "$REV:$path" | sha256sum | cut -c1-${#tok})
     if [ "$actual" = "$tok" ]; then
