@@ -1,0 +1,23 @@
+{
+  "report": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/CYCLE-45-cases/shots/render_report_c45-off-n16r24-s42.json",
+  "report_sha256": "f90b31b7037674ae94033b4723060cd8bc64b013a96b286686e1670dd1d49f9d",
+  "threads_json_sha256": "01312a5be99b3cde1c03c6cf6d141540f44d5630aa99fadf06036d20fa00eafb",
+  "ok_count": 2,
+  "fail_count": 0,
+  "pngs": [
+    {
+      "view": "chat",
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/CYCLE-45-cases/shots/c45-off-n16r24-s42-chat-e9a03f2e.png",
+      "rc": 0,
+      "png_sha256": "6903d33283f3c900c1d399c778f8dcf6568d1942699e025c70380089404439c1",
+      "png_bytes": 276847
+    },
+    {
+      "view": "rhythm",
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/CYCLE-45-cases/shots/c45-off-n16r24-s42-rhythm-e9a03f2e.png",
+      "rc": 0,
+      "png_sha256": "d1e1dd136541f276f4af6457a126d15144773dd194301fa4442d6bd9ad288b56",
+      "png_bytes": 280220
+    }
+  ]
+}

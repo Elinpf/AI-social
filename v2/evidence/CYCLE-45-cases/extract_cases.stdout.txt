@@ -1,0 +1,82 @@
+==============================================================================
+BATCH ON  run_weather_on_n16r24_seed42_c28
+RUN_DIR v2/evidence/run_weather_on_n16r24_seed42_c28
+RUN_JSONL_SHA256 87eaa92e6ab98dd255519049c436c773b3ffbebc77c08df4a0651588d813b03b
+RUN_JSONL_LINES 33835
+-- seq 73 type=MSG_DM round=0 phase=3 line_sha256=b8a2de67145d69a776a92808e6a0d101387f7d34b641f7cad27b8b3892b9b4ef
+   struct {"author": null, "day": 0, "from": "P004", "msg_uid": "42:73", "participants": ["P002", "P004"], "place": "library", "reply_to": null, "scope": null, "slot": "morning", "thread_id": "TH-P004-P002-0", "to": "P002", "topic": "mentorship", "turn_index": 0}
+   ctx.weather {"day": 0, "line_sha256": "c2e9bc42341c45521cafad44c0adfca020a8129598d069efd5e2b5b7e794417c", "season": "spring", "seed": 42, "weather": "cloudy"}
+   ctx.l7struct {"end": 1, "end_name": "用很短的一句收", "mode": "initiate", "n_banned": 0, "open": 2, "open_name": "先问对方一句", "v": "l7-struct/1"}
+   body: 这开春半阴半晴的，你那炉子今天顺不顺当？我这儿一屉枣泥酥总差点意思，想跟你讨个准头。你手上忙着呢？
+-- seq 549 type=MSG_DM round=1 phase=3 line_sha256=d881e465e3a9195b2e4182bcf2f8d58b316fded63c819f19f69caf96c25894a9
+   struct {"author": null, "day": 0, "from": "P002", "msg_uid": "42:549", "participants": ["P002", "P004"], "place": "library", "reply_to": "42:73", "scope": null, "slot": "morning", "thread_id": "TH-P004-P002-0", "to": "P004", "topic": "mentorship", "turn_index": 1}
+   ctx.weather {"day": 0, "line_sha256": "a20b4129d8fb31263e2510974bccd51978995c000e3e4f67f51aa2da74f3f8c3", "season": "spring", "seed": 42, "weather": "cloudy"}
+   ctx.l7struct {"end": 0, "end_name": "以问句收", "mode": "reply", "n_banned": 4, "open": 3, "open_name": "用语气词起头", "v": "l7-struct/1"}
+   body: 哦，正给赵家小子上榫头呢，枣泥酥那火候我拿不准，你揉面时手沾不沾油？
+-- seq 2090 type=MSG_DM round=3 phase=3 line_sha256=9f5a3b3dc7ffc8b8b3597ac161b3a69c7f09496ae85d50bb032dfe13c46a44c5
+   struct {"author": null, "day": 0, "from": "P004", "msg_uid": "42:2090", "participants": ["P002", "P004"], "place": "market", "reply_to": "42:549", "scope": null, "slot": "afternoon", "thread_id": "TH-P004-P002-0", "to": "P002", "topic": "mentorship", "turn_index": 2}
+   ctx.weather {"day": 0, "line_sha256": "a20b4129d8fb31263e2510974bccd51978995c000e3e4f67f51aa2da74f3f8c3", "season": "spring", "seed": 42, "weather": "cloudy"}
+   ctx.l7struct {"end": 0, "end_name": "以问句收", "mode": "reply", "n_banned": 4, "open": 2, "open_name": "先问对方一句", "v": "l7-struct/1"}
+   body: 枣泥酥那火候我也常犯难，你揉面时手沾不沾油？我这儿正给孙家老太太试新配的桂花馅，手上黏着面呢，你那边榫头打得顺不顺？
+==============================================================================
+BATCH ON  run_weather_on_n16r24_seed42_c28
+RUN_DIR v2/evidence/run_weather_on_n16r24_seed42_c28
+RUN_JSONL_SHA256 87eaa92e6ab98dd255519049c436c773b3ffbebc77c08df4a0651588d813b03b
+RUN_JSONL_LINES 33835
+-- seq 2230 type=MSG_DM round=3 phase=3 line_sha256=0b5ed488b8ba0d381949a104637dd872dc643726540ec35388976371b509f474
+   struct {"author": null, "day": 0, "from": "P014", "msg_uid": "42:2230", "participants": ["P011", "P014"], "place": "workshop", "reply_to": "42:1198", "scope": null, "slot": "afternoon", "thread_id": "TH-P014-P011-0", "to": "P011", "topic": "combat_training", "turn_index": 2}
+   ctx.weather {"day": 0, "line_sha256": "5e79ab9ff400ca8ea1500c55a0db7a64a49948a7b53f33cbf7b345527a93e31f", "season": "spring", "seed": 42, "weather": "cloudy"}
+   ctx.l7struct {"end": 1, "end_name": "用很短的一句收", "mode": "reply", "n_banned": 4, "open": 2, "open_name": "先问对方一句", "v": "l7-struct/1"}
+   body: 你那陀螺削得咋样了？我这儿正给老石家小孙子磨木剑呢，顺手。稳了没？
+-- seq 3982 type=MSG_DM round=4 phase=3 line_sha256=8486c5d3cf2b62577f05f1b1ebb678efd6b7e0c9414235bed0fcc539fd160fea
+   struct {"author": null, "day": 0, "from": "P011", "msg_uid": "42:3982", "participants": ["P011", "P014"], "place": "bank", "reply_to": "42:2230", "scope": null, "slot": "afternoon", "thread_id": "TH-P014-P011-0", "to": "P014", "topic": "combat_training", "turn_index": 3}
+   ctx.weather {"day": 0, "line_sha256": "b8e3180989d8c1010db3d1530d876a33ebb7372624b83b1b3fe252292cd0c188", "season": "spring", "seed": 42, "weather": "cloudy"}
+   ctx.l7struct {"end": 0, "end_name": "以问句收", "mode": "reply", "n_banned": 4, "open": 5, "open_name": "先一句感慨再落到具体事", "v": "l7-struct/1"}
+   body: 开春了，手还僵着呢。我刚把陀螺底下的钢珠敲进去，转起来歪歪扭扭的。你那木剑磨到哪一步了？
+-- seq 5070 type=MSG_DM round=6 phase=3 line_sha256=d2bbd94c6cb6acdc32716fd0e6d230cacb873db5ac2750b2b3cd91c673c18c23
+   struct {"author": null, "day": 0, "from": "P014", "msg_uid": "42:5070", "participants": ["P011", "P014"], "place": "plaza", "reply_to": "42:3982", "scope": null, "slot": "evening", "thread_id": "TH-P014-P011-0", "to": "P011", "topic": "combat_training", "turn_index": 4}
+   ctx.weather {"day": 0, "line_sha256": "3705570ca5cc42822999fc30bbe1c4385cf3edfb7b44d3e6aaf689af4c319441", "season": "spring", "seed": 42, "weather": "cloudy"}
+   ctx.l7struct {"end": 0, "end_name": "以问句收", "mode": "reply", "n_banned": 4, "open": 2, "open_name": "先问对方一句", "v": "l7-struct/1"}
+   body: 你那陀螺歪，是不是钢珠没敲正？我这儿正给老石修那把豁了口的刨子，顺手削了根枣木剑坯，纹理还挺顺——你陀螺试过在青石板上转没？
+==============================================================================
+BATCH ON  run_weather_on_n16r24_seed42_c28
+RUN_DIR v2/evidence/run_weather_on_n16r24_seed42_c28
+RUN_JSONL_SHA256 87eaa92e6ab98dd255519049c436c773b3ffbebc77c08df4a0651588d813b03b
+RUN_JSONL_LINES 33835
+-- seq 135 type=MSG_DM round=0 phase=3 line_sha256=f6881eea4bf50ffa4cb52c050c6ade43ab7e3a9ac5dc7400447af10a69388e0d
+   struct {"author": null, "day": 0, "from": "P010", "msg_uid": "42:135", "participants": ["P009", "P010"], "place": "park", "reply_to": null, "scope": null, "slot": "morning", "thread_id": "TH-P010-P009-0", "to": "P009", "topic": "combat_training", "turn_index": 0}
+   ctx.weather {"day": 0, "line_sha256": "5e79ab9ff400ca8ea1500c55a0db7a64a49948a7b53f33cbf7b345527a93e31f", "season": "spring", "seed": 42, "weather": "cloudy"}
+   ctx.l7struct {"end": 1, "end_name": "用很短的一句收", "mode": "initiate", "n_banned": 0, "open": 0, "open_name": "先叫对方一声再开口", "v": "l7-struct/1"}
+   body: 金先生，我把第三段和声又改了两遍，你听听顺不顺。先这样吧。
+-- seq 954 type=MSG_DM round=1 phase=3 line_sha256=fa1a450af5141d646cc35f8bacdd7fc0e91592d33bceae32cc091e9b6ec88919
+   struct {"author": null, "day": 0, "from": "P009", "msg_uid": "42:954", "participants": ["P009", "P010"], "place": "park", "reply_to": "42:135", "scope": null, "slot": "morning", "thread_id": "TH-P010-P009-0", "to": "P010", "topic": "combat_training", "turn_index": 1}
+   ctx.weather {"day": 0, "line_sha256": "b99e875e7128fd460b8ad1ff38a2393efee252a5c13cfed339c56b1d92be4514", "season": "spring", "seed": 42, "weather": "cloudy"}
+   ctx.l7struct {"end": 1, "end_name": "用很短的一句收", "mode": "reply", "n_banned": 4, "open": 4, "open_name": "接住上一句里的词", "v": "l7-struct/1"}
+   body: 和声改两遍，账要平。我这儿正拨着算盘对利息，你唱吧。
+-- seq 2162 type=MSG_DM round=3 phase=3 line_sha256=0cfc867f5018fedd440a3bad505ad222aaac8e3cccd266ba7cdd08aff760ebf1
+   struct {"author": null, "day": 0, "from": "P010", "msg_uid": "42:2162", "participants": ["P009", "P010"], "place": "farm", "reply_to": "42:954", "scope": null, "slot": "afternoon", "thread_id": "TH-P010-P009-0", "to": "P009", "topic": "combat_training", "turn_index": 2}
+   ctx.weather {"day": 0, "line_sha256": "69da79495319278bfd2e9804518e267a9f124f1fe2bef91566f39c66dbfb5a03", "season": "spring", "seed": 42, "weather": "cloudy"}
+   ctx.l7struct {"end": 0, "end_name": "以问句收", "mode": "reply", "n_banned": 4, "open": 3, "open_name": "用语气词起头", "v": "l7-struct/1"}
+   body: 哎，我正把谱子摊在琴盖上，铅笔头都咬秃了，第三段那个转调还是卡着——你说这练功到底图个啥，是图台下那几声好，还是图自己心里过得去？
+==============================================================================
+BATCH OFF run_weather_off_n16r24_seed42_c28
+RUN_DIR v2/evidence/run_weather_off_n16r24_seed42_c28
+RUN_JSONL_SHA256 e9a03f2ef4a4a9740939960acd024b7d86f6036b3dea7c1fa5c10c1152117f38
+RUN_JSONL_LINES 33862
+-- seq 73 type=MSG_DM round=0 phase=3 line_sha256=c599c013f023da07443a8df049839acae2b99e6eddfee39cb42fa11fa2c6e164
+   struct {"author": null, "day": 0, "from": "P004", "msg_uid": "42:73", "participants": ["P002", "P004"], "place": "library", "reply_to": null, "scope": null, "slot": "morning", "thread_id": "TH-P004-P002-0", "to": "P002", "topic": "mentorship", "turn_index": 0}
+   ctx.weather null
+   ctx.l7struct {"end": 1, "end_name": "用很短的一句收", "mode": "initiate", "n_banned": 0, "open": 2, "open_name": "先问对方一句", "v": "l7-struct/1"}
+   body: 这炉桃酥我总烤不出你家的脆劲儿，你最近忙得过来吗？教教我。
+-- seq 549 type=MSG_DM round=1 phase=3 line_sha256=4aa18238ef8840e87f0a5ca54c87046a240e310864c75aa752fc5343e8d7732c
+   struct {"author": null, "day": 0, "from": "P002", "msg_uid": "42:549", "participants": ["P002", "P004"], "place": "library", "reply_to": "42:73", "scope": null, "slot": "morning", "thread_id": "TH-P004-P002-0", "to": "P004", "topic": "mentorship", "turn_index": 1}
+   ctx.weather null
+   ctx.l7struct {"end": 0, "end_name": "以问句收", "mode": "reply", "n_banned": 4, "open": 3, "open_name": "用语气词起头", "v": "l7-struct/1"}
+   body: 哟，我正刨着刘家那根榆木梁，手头活紧，你先把炉温压到一百六，等我这刨子走完这趟，再过去帮你瞅瞅火候，行不？
+-- seq 2090 type=MSG_DM round=3 phase=3 line_sha256=b8b65a70922cf93d91252b316c51ecc50951071f67a205a8fb5399b8a7249c4a
+   struct {"author": null, "day": 0, "from": "P004", "msg_uid": "42:2090", "participants": ["P002", "P004"], "place": "market", "reply_to": "42:549", "scope": null, "slot": "afternoon", "thread_id": "TH-P004-P002-0", "to": "P002", "topic": "mentorship", "turn_index": 2}
+   ctx.weather null
+   ctx.l7struct {"end": 0, "end_name": "以问句收", "mode": "reply", "n_banned": 4, "open": 2, "open_name": "先问对方一句", "v": "l7-struct/1"}
+   body: 刘家那根榆木梁刨起来费劲不？我这边刚把桂花糕上了笼，正掐着表等火候，你要是腾出手来，帮我瞄一眼这炉温够不够？
+==============================================================================
+EXTRACT_RC=0

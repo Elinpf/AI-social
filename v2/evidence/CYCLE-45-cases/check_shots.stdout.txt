@@ -1,0 +1,34 @@
+==============================================================================
+REPORT render_report_c45-off-n16r24-s42.json
+REPORT_SHA256 f90b31b7037674ae94033b4723060cd8bc64b013a96b286686e1670dd1d49f9d
+BATCH_ID c45-off-n16r24-s42  ok=2 fail=0
+LOG /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_weather_off_n16r24_seed42_c28/run.jsonl
+LOG_SHA256 e9a03f2ef4a4a9740939960acd024b7d86f6036b3dea7c1fa5c10c1152117f38
+-- view=chat rc=0
+   png /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/CYCLE-45-cases/shots/c45-off-n16r24-s42-chat-e9a03f2e.png
+   png_sha256(record)=6903d33283f3c900c1d399c778f8dcf6568d1942699e025c70380089404439c1
+   png_sha256(recompute)=6903d33283f3c900c1d399c778f8dcf6568d1942699e025c70380089404439c1  match=True
+   pixels 1400x900 distinct_colors=23240 top_color_frac=0.1723 non_bg_frac=0.5169 status=OK
+-- view=rhythm rc=0
+   png /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/CYCLE-45-cases/shots/c45-off-n16r24-s42-rhythm-e9a03f2e.png
+   png_sha256(record)=d1e1dd136541f276f4af6457a126d15144773dd194301fa4442d6bd9ad288b56
+   png_sha256(recompute)=d1e1dd136541f276f4af6457a126d15144773dd194301fa4442d6bd9ad288b56  match=True
+   pixels 1300x1050 distinct_colors=20876 top_color_frac=0.3707 non_bg_frac=0.3883 status=OK
+==============================================================================
+REPORT render_report_c45-on-n16r24-s42.json
+REPORT_SHA256 5f64a010423d1c7087bd79fd831266d85db2b523c1bea6412fe7000ae7df2c02
+BATCH_ID c45-on-n16r24-s42  ok=2 fail=0
+LOG /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_weather_on_n16r24_seed42_c28/run.jsonl
+LOG_SHA256 87eaa92e6ab98dd255519049c436c773b3ffbebc77c08df4a0651588d813b03b
+-- view=chat rc=0
+   png /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/CYCLE-45-cases/shots/c45-on-n16r24-s42-chat-87eaa92e.png
+   png_sha256(record)=82df20e0111d62d5ebf3cbf6d9bcce7f085b8ec9762f4fb4e7f928b419013ada
+   png_sha256(recompute)=82df20e0111d62d5ebf3cbf6d9bcce7f085b8ec9762f4fb4e7f928b419013ada  match=True
+   pixels 1400x900 distinct_colors=23159 top_color_frac=0.1669 non_bg_frac=0.5222 status=OK
+-- view=rhythm rc=0
+   png /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/CYCLE-45-cases/shots/c45-on-n16r24-s42-rhythm-87eaa92e.png
+   png_sha256(record)=cc16c4ba5bc736a28d8a29eea0af5b8dd8b2c4a89ee4883619307710a4ef12cd
+   png_sha256(recompute)=cc16c4ba5bc736a28d8a29eea0af5b8dd8b2c4a89ee4883619307710a4ef12cd  match=True
+   pixels 1300x1050 distinct_colors=20902 top_color_frac=0.3707 non_bg_frac=0.3882 status=OK
+==============================================================================
+CHECK_RC=0

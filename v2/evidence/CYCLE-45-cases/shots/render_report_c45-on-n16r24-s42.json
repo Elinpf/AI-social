@@ -1,0 +1,97 @@
+{
+  "batch_id": "c45-on-n16r24-s42",
+  "fail_count": 0,
+  "generated_at": "2026-11-01T00:32:54+08:00",
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_weather_on_n16r24_seed42_c28/run.jsonl",
+  "log_sha256": "87eaa92e6ab98dd255519049c436c773b3ffbebc77c08df4a0651588d813b03b",
+  "ok_count": 2,
+  "policy": {
+    "blank_check": "自行像素自检（distinct_colors/top_color_frac/non_bg_frac 逐张落盘）；未沿用 shot.py 的单色判据——该判据对深色 dialogue.html 会假红（实测 80.09% 误判）",
+    "code_untouched": "服务根为临时目录 + 符号链接；未在 code/frontend 下写入任何文件",
+    "no_reuse": "输出同名 PNG 若已存在则先删除，只认本次现截",
+    "no_stitching": "每张图独立截图，禁止拼图/跨批混拼"
+  },
+  "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_weather_on_n16r24_seed42_c28",
+  "run_sha256_in_threads": "87eaa92e6ab98dd255519049c436c773b3ffbebc77c08df4a0651588d813b03b",
+  "schema_version": "render-shots/1.0",
+  "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/CYCLE-45-cases/shots/threads_c45-on-n16r24-s42.json",
+  "threads_json_sha256": "a90928f0c32bbfd5f7afe14df6eb883ddc6ed3cec9543dd87dd87d432eda7ad2",
+  "views": [
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 23159,
+        "height": 900,
+        "non_bg_frac": 0.5222,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.1669,
+        "width": 1400
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/CYCLE-45-cases/shots/c45-on-n16r24-s42-chat-87eaa92e.png",
+      "png_bytes": 283780,
+      "png_mtime_iso": "2026-11-01T00:32:50+08:00",
+      "png_mtime_ns": 1793464370897453778,
+      "png_sha256": "82df20e0111d62d5ebf3cbf6d9bcce7f085b8ec9762f4fb4e7f928b419013ada",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_weather_on_n16r24_seed42_c28/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_weather_on_n16r24_seed42_c28/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/CYCLE-45-cases/shots/threads_c45-on-n16r24-s42.json --label c45-on-n16r24-s42",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_weather_on_n16r24_seed42_c28/run.jsonl",
+        "log_sha256": "87eaa92e6ab98dd255519049c436c773b3ffbebc77c08df4a0651588d813b03b",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:37091/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_c45-on-n16r24-s42/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/CYCLE-45-cases/shots/c45-on-n16r24-s42-chat-87eaa92e.png --width 1400 --height 900 --timeout 180.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_weather_on_n16r24_seed42_c28",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/CYCLE-45-cases/shots/threads_c45-on-n16r24-s42.json",
+        "threads_json_sha256": "a90928f0c32bbfd5f7afe14df6eb883ddc6ed3cec9543dd87dd87d432eda7ad2"
+      },
+      "view": "chat"
+    },
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 20902,
+        "height": 1050,
+        "non_bg_frac": 0.3882,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.3707,
+        "width": 1300
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/CYCLE-45-cases/shots/c45-on-n16r24-s42-rhythm-87eaa92e.png",
+      "png_bytes": 280272,
+      "png_mtime_iso": "2026-11-01T00:32:53+08:00",
+      "png_mtime_ns": 1793464373303573857,
+      "png_sha256": "cc16c4ba5bc736a28d8a29eea0af5b8dd8b2c4a89ee4883619307710a4ef12cd",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_weather_on_n16r24_seed42_c28/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_weather_on_n16r24_seed42_c28/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/CYCLE-45-cases/shots/threads_c45-on-n16r24-s42.json --label c45-on-n16r24-s42",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_weather_on_n16r24_seed42_c28/run.jsonl",
+        "log_sha256": "87eaa92e6ab98dd255519049c436c773b3ffbebc77c08df4a0651588d813b03b",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:37091/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_c45-on-n16r24-s42/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/CYCLE-45-cases/shots/c45-on-n16r24-s42-rhythm-87eaa92e.png --width 1300 --height 1050 --timeout 180.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_weather_on_n16r24_seed42_c28",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/CYCLE-45-cases/shots/threads_c45-on-n16r24-s42.json",
+        "threads_json_sha256": "a90928f0c32bbfd5f7afe14df6eb883ddc6ed3cec9543dd87dd87d432eda7ad2"
+      },
+      "view": "rhythm"
+    }
+  ]
+}
