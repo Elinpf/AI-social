@@ -1,0 +1,97 @@
+{
+  "batch_id": "r43",
+  "fail_count": 0,
+  "generated_at": "2026-11-01T04:24:31+08:00",
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on/run.jsonl",
+  "log_sha256": "c8a7f546238ad801129708fd9a8f9a4676b28702709d77440ea7769f8ecb5c5f",
+  "ok_count": 2,
+  "policy": {
+    "blank_check": "自行像素自检（distinct_colors/top_color_frac/non_bg_frac 逐张落盘）；未沿用 shot.py 的单色判据——该判据对深色 dialogue.html 会假红（实测 80.09% 误判）",
+    "code_untouched": "服务根为临时目录 + 符号链接；未在 code/frontend 下写入任何文件",
+    "no_reuse": "输出同名 PNG 若已存在则先删除，只认本次现截",
+    "no_stitching": "每张图独立截图，禁止拼图/跨批混拼"
+  },
+  "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on",
+  "run_sha256_in_threads": "c8a7f546238ad801129708fd9a8f9a4676b28702709d77440ea7769f8ecb5c5f",
+  "schema_version": "render-shots/1.0",
+  "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/reports/figures/threads_r43.json",
+  "threads_json_sha256": "8379ab3f0ef176ca60571d0caaaeb0b157ca6568c3245ffd8adfed3acfc22bdd",
+  "views": [
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 23919,
+        "height": 900,
+        "non_bg_frac": 0.5386,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.1491,
+        "width": 1400
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/reports/figures/r43-chat-c8a7f546.png",
+      "png_bytes": 309998,
+      "png_mtime_iso": "2026-11-01T04:24:27+08:00",
+      "png_mtime_ns": 1793478267753777045,
+      "png_sha256": "cd2c18c14a9114710464906253c2e082710302dcc61088079b559e4cd85bd137",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/reports/figures/threads_r43.json --label r43",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on/run.jsonl",
+        "log_sha256": "c8a7f546238ad801129708fd9a8f9a4676b28702709d77440ea7769f8ecb5c5f",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:40535/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_r43/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/reports/figures/r43-chat-c8a7f546.png --width 1400 --height 900 --timeout 180.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/reports/figures/threads_r43.json",
+        "threads_json_sha256": "8379ab3f0ef176ca60571d0caaaeb0b157ca6568c3245ffd8adfed3acfc22bdd"
+      },
+      "view": "chat"
+    },
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 20867,
+        "height": 1050,
+        "non_bg_frac": 0.3867,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.3708,
+        "width": 1300
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/reports/figures/r43-rhythm-c8a7f546.png",
+      "png_bytes": 280341,
+      "png_mtime_iso": "2026-11-01T04:24:30+08:00",
+      "png_mtime_ns": 1793478270177006193,
+      "png_sha256": "d9898ffea9e5e51d1f342cc40b7c864eaec51b161b4eb3141ea4fb8ea66e9353",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/reports/figures/threads_r43.json --label r43",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on/run.jsonl",
+        "log_sha256": "c8a7f546238ad801129708fd9a8f9a4676b28702709d77440ea7769f8ecb5c5f",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:40535/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_r43/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/reports/figures/r43-rhythm-c8a7f546.png --width 1300 --height 1050 --timeout 180.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r41v_public_talk_n16r24_s42/on",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/reports/figures/threads_r43.json",
+        "threads_json_sha256": "8379ab3f0ef176ca60571d0caaaeb0b157ca6568c3245ffd8adfed3acfc22bdd"
+      },
+      "view": "rhythm"
+    }
+  ]
+}
