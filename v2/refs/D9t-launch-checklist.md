@@ -191,3 +191,21 @@ launch_cmd.txt  run.jsonl  run_batch.log  switch_proof.txt      ← 没有 meta.
    > 前两类可机械判（查文件 / key 即可）；第三类**必须给机制出处**——否则"结构性"会变成"我看到是 0 就说是结构性"的借口。
 2. 该侧记 `CANNOT-VERIFY`，**另一侧照常报**，不得因一侧缺而整项作废；
 3. **不得**把"缺"当"0"，也不得把"缺"当"不可比"。
+
+### 9.8 L2 的具体做法：目录级指纹（`repro-verifier` 提供，采纳）
+
+```bash
+FP() { find code/life code/orchestration code/config code/engine -type f \( -name '*.py' -o -name '*.json' \) \
+        -print0 | sort -z | xargs -0 sha256sum | sha256sum; }
+FP > /tmp/d9t_code_fp_before.txt && cat /tmp/d9t_code_fp_before.txt
+# 跑批结束后
+FP > /tmp/d9t_code_fp_after.txt && diff /tmp/d9t_code_fp_before.txt /tmp/d9t_code_fp_after.txt && echo CODE_UNCHANGED
+```
+
+**两条必须同屏的前提**：
+1. **必须在"跑批实际使用的那份代码"上取**（ON 臂 = `cef1c58`）。
+   在 `master` 上取只能证明 master 没动，**证明不了跑批那份没动** —— 与 B-1 同一族错（比较对象错）。
+2. 跑到一半有人切分支/改文件，`FP` 必然变。**变了就报「跑批期代码被动过」，不得解释成"无害改动"。**
+
+> 与 L2 原条文（`git diff --stat` + `--numstat` + 删除文件数）互为补充：
+> `git diff` 证明**已提交**的差异，`FP` 证明**工作区实际被读到的内容** —— 后者才是跑批真正用的东西。
