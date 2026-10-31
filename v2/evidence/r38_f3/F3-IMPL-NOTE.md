@@ -107,32 +107,61 @@ EE.enabled()=False | plan("饥饿","盐放多了有点发苦") -> None | prompt_
 audit(None) -> None
 ```
 
-## 6. 拟用跑批命令（**本轮不执行**，供 r01-batch）
+## 6. 跑批命令（**严格串行，已按复核意见修正**）
 
-前置：**先 commit**（`tools/d5/preflight.sh` 会查 clean tree，未提交改动会被判不干净）；
-`git fetch origin` 若仍网络失败，基线按本地跟踪 ref `94e272a` 计并在汇报里写明。
+**v1（作废，留痕）**：初版把 OFF/ON 两臂用 `setsid ... &` 同时起跑 —— **错**。
+`tools/d2/run_batch.sh:41` 内嵌 `bash tools/d5/preflight.sh --tag run_batch || exit 9`，
+preflight 的三重并发检查含 `run_batch` 一项且**只排除自身祖先链**；第二臂是**兄弟进程**，
+必被判 `concurrency:run_batch=1` ⇒ 第二臂退出码 9、拿不到结果。感谢 `evidence-verifier` 预审拦下。
+
+**v2（现行）**：严格串行 + 每臂起止 ISO 时间戳 + `env` 包裹开关。
 
 ```bash
 REPO=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
 OUT=v2/evidence/r38_f3_batch
 cd "$REPO"
 
-# 1) 并发判定（两条都空才算无并发；不用 pgrep -cf，自匹配假阳性）
-pgrep -af 'python3 -m orchestration run' | grep -v pgrep || echo "(空)"
-ps -eo pid,ppid,etime,args | grep -E 'orchestration (run|world)' | grep -v grep || echo "(空)"
+# 1) 起跑前并发双重确认（两条都必须为空；不用 pgrep -cf 以免自匹配）
+pgrep -af 'orchestration run' | grep -v pgrep || echo "(空)"
+pgrep -af run_batch            | grep -v pgrep || echo "(空)"
 
-# 2) OFF 臂（与基线同配置）
+# 2) 探活（短超时 ≤15s，失败即止，不长 sleep 重试）
+cd code && . ./.env.local && python3 - <<'EOF'
+import json,os,urllib.request,time
+ep=os.environ.get("LLM_ENDPOINT","http://172.16.3.41:31809/v1")
+b=json.dumps({"model":os.environ.get("LLM_MODEL","DeepSeek-Flash"),
+              "messages":[{"role":"user","content":"说一句话"}],"max_tokens":8}).encode()
+r=urllib.request.urlopen(urllib.request.Request(ep.rstrip("/")+"/chat/completions",data=b,
+    headers={"Content-Type":"application/json","Authorization":"Bearer "+os.environ.get("LLM_API_KEY","")}),timeout=15)
+print("PROBE_OK",r.status)
+EOF
+cd "$REPO"
+
+# 3) OFF 臂（前台跑完再起下一臂）
+echo "off_start=$(date -Is)" >> /tmp/r38_f3_timeline.txt
 setsid bash tools/d2/run_batch.sh --out-dir $OUT/off \
   --seed 42 --agents 16 --rounds 24 --side-root /tmp/r38_f3_side_off \
-  > /tmp/r38_f3_off.stdout 2>&1 < /dev/null &
+  > /tmp/r38_f3_off.stdout 2>&1 < /dev/null
+echo "off_rc=$? off_end=$(date -Is)" >> /tmp/r38_f3_timeline.txt
 
-# 3) ON 臂（只翻 F-3 一个开关；与 OFF 同 seed/n/rounds/side-root 骨架）
-HITT_DIALOGUE_EMOTION_ECHO=1 setsid bash tools/d2/run_batch.sh --out-dir $OUT/on \
+# 4) ON 臂（只翻 F-3 一个开关；写完立刻确认真的打开了）
+echo "on_start=$(date -Is)" >> /tmp/r38_f3_timeline.txt
+setsid env HITT_DIALOGUE_EMOTION_ECHO=1 bash tools/d2/run_batch.sh --out-dir $OUT/on \
   --seed 42 --agents 16 --rounds 24 --side-root /tmp/r38_f3_side_on \
-  > /tmp/r38_f3_on.stdout 2>&1 < /dev/null &
+  > /tmp/r38_f3_on.stdout 2>&1 < /dev/null
+echo "on_rc=$? on_end=$(date -Is)" >> /tmp/r38_f3_timeline.txt
 
-# 4) 真调用验真（必须在 code/ 下跑，仓库根会 ModuleNotFoundError）
-cd $REPO/code && python3 -m obs llm-cost $REPO/$OUT/on --require-provider openai_compat --out /tmp/r38_llm_cost_on.json
+# 5) 真调用验真（**必须 cd code/**，仓库根会 ModuleNotFoundError）
+cd "$REPO/code" && python3 -m obs llm-cost "$REPO/$OUT/on" --require-provider openai_compat --out /tmp/r38_llm_cost_on.json
+cd "$REPO/code" && python3 -m obs llm-cost "$REPO/$OUT/off" --require-provider openai_compat --out /tmp/r38_llm_cost_off.json
+
+# 6) 内容层主口径（与冻结口径同命令行同参数）
+cd "$REPO" && python3 v2/evidence/f3_audit_echo.py \
+  --off $OUT/off/run.jsonl --on $OUT/on/run.jsonl --out-json $OUT/f3_audit_echo.json
+
+# 7) 机制层落点（cue 臂对照；OFF 臂 ctx.echo 构造性为 0，不能只跑 OFF）
+python3 tools/f3/f3_offline_replay.py --arm on=$OUT/on/run.jsonl --arm off=$OUT/off/run.jsonl \
+  --out-json $OUT/f3_offline_replay_batch.json
 ```
 
 ## 7. 与主口径的关系（必须成对读懂）
