@@ -39,6 +39,7 @@ from . import l7_structural as L7S  # L-7 结构臂（env LIFE_PROMPT_L7_STRUCT�
 from . import topic_breadth as TB  # R19 话题宽度臂（env LIFE_PROMPT_TOPIC_BREADTH，**默认 OFF**）
 from . import scene_anchor as SA  # 处境锚臂（env LIFE_PROMPT_SCENE，**默认 OFF**）
 from . import weather as WX  # 天气臂（env HITT_WEATHER，**默认 OFF**）：今儿的天进提示词
+from . import market_day as MK  # 集日臂（env HITT_MARKET_DAY，**默认 OFF**）：今儿逢不逢集进提示词
 from .policy import (social_enabled, exchange_enabled, m2b_judge_mode, m2b_importance_mode,
                      narrative_persist_enabled)
 from .ports import (
@@ -415,6 +416,10 @@ class LifeLayerAgent:
         # （**纯审计**，只进 ctx；不进 state_hash、不发事件、不参与决策；
         #  OFF 臂恒为 None ⇒ ctx.weather 不出现）。
         self._weather: dict | None = None
+        # 集日臂（market_day）：本条消息生成时实际下发的那一行「今儿镇上的日子」的审计快照
+        # （**纯审计**，只进 ctx；不进 state_hash、不发事件、不参与决策；
+        #  OFF 臂／非集日恒为 None ⇒ ctx.market 不出现）。
+        self._market: dict | None = None
         # 同场偶遇搭话臂（encounter）：已在该 slot 掷过骰/搭过话的 slot_id 集合。
         # **agent-local 表达层状态**（不进 state_hash、不发事件）；OFF 臂恒为空。
         self._enc_slots: set = set()
@@ -1252,6 +1257,11 @@ class LifeLayerAgent:
             # （weather/season/day/seed + 该行 sha256）。关闭（HITT_WEATHER 未设）⇒
             # `_weather` 恒 None ⇒ 该键不出现 ⇒ payload 与接入前逐字节一致。
             ctx["weather"] = self._weather
+        if MK.enabled() and getattr(self, "_market", None) is not None:
+            # 集日臂审计（additive）：本条生成时提示词里实际下发的那一行「今儿镇上的日子」
+            # （day/is_market_day/period + 该行 sha256）。关闭（HITT_MARKET_DAY 未设）或非集日
+            # ⇒ `_market` 恒 None ⇒ 该键不出现 ⇒ payload 与接入前逐字节一致。
+            ctx["market"] = self._market
         return ctx
 
     def _dequp_body(self, prompt: str, body: str, meta: dict) -> str:
@@ -1631,6 +1641,39 @@ class LifeLayerAgent:
                                  seed, line)
         return line
 
+    # ---- 集日臂（MK）：今儿逢不逢集 ---------------------------------------
+    def _market_line(self, wv) -> str:
+        """把「今儿是不是集日」渲染成**一行**人话（如「今儿镇上的日子：今儿逢集。」）。
+
+        单变量约束（同 `_weather_line` / `_scene_line` 的开关先例）：
+          - 开关关闭（默认 OFF）⇒ `self._market=None`、返回空串 ⇒ 两条提示词**逐字节不变**、
+            `ctx.market` 键不出现（payload 亦逐字节不变）；
+          - 打开但**非集日** ⇒ 同样返回空串 ⇒ ON 臂与 OFF 臂的非集日提示词**逐字节相等**
+            （结构性保证「不外溢」：只有集日差一行）；
+          - 打开且在集日 ⇒ 只在提示词中**插入一行**，并把该条的日历快照写进 `ctx.market`。
+
+        素材**只读** `WorldView.time.day`（`engine/time.py::derive_time` 已确定性派生）；
+        集日由 `day % MARKET_PERIOD_DAYS == 0` 纯函数判定（同日恒同日，可 replay）。
+        **不读墙钟、不新增真相源、不发事件、不改 state_hash、不写记忆、不碰 config**。
+        字段缺失/非法 ⇒ 退化为「不加日子」，不打断对话。
+        """
+        self._market = None
+        if wv is None or not MK.enabled():
+            return ""
+        try:
+            tc = getattr(wv, "time", None)
+            if tc is None:            # 没有时间坐标 ⇒ 不知道今天第几天 ⇒ 不加日子
+                return ""
+            day = int(getattr(tc, "day", 0))
+            rnd = int(getattr(wv, "round", 0))
+        except Exception:      # 世界视图字段缺失 ⇒ 退化为「不加日子」，不打断对话
+            return ""
+        line = MK.render(self.agent_id, rnd, day)
+        if not line:
+            return ""
+        self._market = MK.audit(day, line)
+        return line
+
     def _memory_line(self, wv, exclude: list | None = None) -> str:
         """F-6 臂（跨天记忆进对话）：把「**本人**前些天记下的事」原样接进提示词。
 
@@ -1835,6 +1878,7 @@ class LifeLayerAgent:
                 + f"\n场景：{self._topic_label(tid)}；对象：{others}。{self._mood_line()}。"
                 + self._scene_line(wv)      # 处境锚臂：时段/场所/手上事（默认 OFF ⇒ 空串）
                 + self._weather_line(wv)    # 天气臂：季 + 今天什么天（默认 OFF ⇒ 空串）
+                + self._market_line(wv)     # 集日臂：今儿逢不逢集（默认 OFF／非集日 ⇒ 空串）
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + self._gossip_hint(partners)  # G系列A1臂：可引用真人名单（默认OFF ⇒ 空串）
                 + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
@@ -1857,6 +1901,7 @@ class LifeLayerAgent:
                 + f"\n你正在和{who}聊「{self._topic_label(topic)}」。{self._mood_line()}。"
                 + self._scene_line(wv)      # 处境锚臂：时段/场所/手上事（默认 OFF ⇒ 空串）
                 + self._weather_line(wv)    # 天气臂：季 + 今天什么天（默认 OFF ⇒ 空串）
+                + self._market_line(wv)     # 集日臂：今儿逢不逢集（默认 OFF／非集日 ⇒ 空串）
                 + (rift_line or "")          # R6-T2：处境（事实+选项）；关闭/无旧账时为空串
                 + (repair_line or "")        # R13：本线程旧账的「这一句把话说开」要求；关闭/无旧账为空串
                 + (echo_line or "")          # F-3：接住对方情绪的一句处境提示；关闭/不产为空串
