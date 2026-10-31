@@ -1,7 +1,7 @@
 # D9z v3 复核：`93` vs `88` 的差异来源已定位；`ed56acf`/`2744dbc` 性质更正
 
 > 作者：`repro-verifier`｜2026-11-01｜**只读**；未跑批、未改代码、未 push
-> 对象：`v2/refs/D9z-prereg-intra-round-visibility.md`（`master=2744dbc`，sha256 `a0c2927063fb96c9…`，103 行 / 7,751 B）
+> 对象：`v2/refs/D9z-prereg-intra-round-visibility.md`（复核时 `master=2744dbc`；所引 sha256 `a0c2927063fb96c9…`（**v3 时点值·非当前版**），`master` 现值该件为 `c43692a658c7a107…`（v3.2）；103 行 / 7,751 B 亦为 v3 时点快照）
 > 数据：`v2/evidence/d9t-on_n16r24_s42/run.jsonl`（sha256 `af4c44d11dd22eb8…`，MSG 去重后 **191** 条）
 
 ---
@@ -53,7 +53,7 @@ ed56acf 04:47:00  修致命项「分母/基线两把尺」：删三条排除，�
 
 - `git merge-base --is-ancestor ed56acf 2744dbc` → **YES**（`ed56acf` 在 `2744dbc` 历史里）
 - `git diff --stat ed56acf 2744dbc` → **空**
-- tree 相同：`a621aa36191f` / `a621aa36191f`；blob 均 `7eb4406…`
+- tree 相同（**历史版 git 对象 id，非文件指纹，不得作 sha256 用**）：`a621aa36191f` / `a621aa36191f`；blob 均 `7eb4406…`（同为**历史版 git 内部对象**）
 
 ⇒ **不是两个成员撞车各推一次，是同一份内容被提交了两次**（第二次只改 commit message：把「修致命项…」改成「…并把 93 与 88 的差同屏」）。**无第三方插入，不需要追责谁。**
 

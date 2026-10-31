@@ -11,10 +11,29 @@
 | 项 | 值 |
 |---|---|
 | ON 臂 | `cef1c58` + `NARRATION/ROTATION/ACTION/SYNTAX/OPENINGS = 1`，`rc=0` |
-| `run.jsonl` | 33,877 行 / sha256 `af4c44d1…` |
-| **MSG / dialogue / 真调用 / 缓存回放** | **191 / 191 / 191 / 0**（`dialogue` 侧 **100% 真跑**） |
+| `run.jsonl` | 33,877 行 / sha256 `af4c44d11dd22eb8…`（`v2/evidence/d9t-on_n16r24_s42/run.jsonl`） |
+| **四数（`dialogue` 口径）** | **191 / 191 / 191 / 0**（`dialogue` 侧 **100% 真跑**，**无一次回放**） |
+| **四数（全 `purpose` 口径）** | **191 / 191 / 865 / 1387**（总账 2252；`tokens_in 213728` / `tokens_out 149991`） |
 | OFF 臂（复用） | `d9s-on2 @ f2b3230d`：MSG **183**、片段 **174** |
 | ON 臂片段 | **208** |
+
+> ### 1.1 勘误（2026-11-01 05:2x）：四数**必须双口径并列**
+> 原表只写 `191 / 191 / 191 / 0`，**未标分母 = `purpose=dialogue`**。在该口径下这句完全正确；但**全 `purpose` 口径下"缓存回放 0"不成立**（回放 **1387** 次）。
+> 数据：`v2/evidence/d9t-on-purpose-split.md`（`2ac85b63…`／42 行／2,556 B，`dialogue-core-dev` 出）；**Leader 已独立重算，六行与合计逐格一致**（`v2/evidence/d9t-on_n16r24_s42/run.jsonl`，`LLM_CALL` 事件 2252 条）：
+>
+> | purpose | calls | real(`tokens_in>0`) | cached | `tokens_in` | `tokens_out` |
+> |---|---:|---:|---:|---:|---:|
+> | importance | 1523 | 136 | **1387** | 2312 | 32473 |
+> | judge | 425 | 425 | 0 | 51730 | 97993 |
+> | dialogue | **191** | **191** | **0** | 112369 | 11793 |
+> | reflect | 90 | 90 | 0 | 45031 | 6510 |
+> | plan | 16 | 16 | 0 | 1447 | 955 |
+> | negotiation | 7 | 7 | 0 | 839 | 267 |
+> | **合计** | **2252** | **865** | **1387** | **213728** | **149991** |
+>
+> **回放 1387 次全部来自 `importance`**（`judge/reflect/plan/negotiation` 回放均为 0）。
+> 性质已核：`side-root=/tmp/d9t_on_side_191408` 起跑前不存在（**非历史缓存复用**）；`importance` 1523 次调用只有 **136 个不同 `prompt_hash`**、各**首次真执行一次**，`1387 = 1523 − 136`；单 key 最大回放 **15** 次（16 agents 同一 `importance` 提示 ⇒ 1 真调 + 15 回放）。属**同批内同 prompt 去重**。
+> **判据不变**：本件全部判定用的是 `dialogue` 口径（`G0` 的 `H` 只依赖旁白片段，与 `importance` 无关）；双口径只为不再让"缓存回放 0"被读成全批无回放。
 
 ⇒ **分母各自带**：ON `191 MSG / 208 片段`，OFF `183 MSG / 174 片段`。**任何按 MSG 或片段计的比例都不得跨臂直接相减。**
 
@@ -59,6 +78,6 @@
 ## 5. 边界
 
 1. 本判定只对 **`cef1c58` 这一版实现 + 这一批数据**成立；
-2. **OFF 臂是复用**（`f2b3230d`），其与 ON 的 `code_sha` 不同，配对链由 `cef1c58` 的等价复核（`5ca75d76…`）承担；
+2. **OFF 臂是复用**（`f2b3230d`），其与 ON 的 `code_sha` 不同，配对链由 `cef1c58` 的等价复核（内容 sha·实测值 `5ca75d76…`，件 `d9t-cef1c58-PA-verified-by-verifier.md`）承担；
 3. **前五次"卡死"判断已作废**（见 `d9t-on-NODATA-20261031.md` 件头）：`run.jsonl` 行数不动 ≠ 卡死；
 4. 本件不涉及 `G7` 通过与否，也不涉及任何"生活气息整体提升"的说法。
