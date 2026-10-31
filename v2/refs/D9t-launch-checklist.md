@@ -122,7 +122,7 @@ git merge-base --is-ancestor <该HEAD> <实现分支>; echo rc=$?   # 必须 0
 ### 9.4 `drop_s1` 的三句话（判定件必须照写）
 
 1. **是干预的一部分**：`OPENINGS=1` 时 S-1 禁令句**由 OPENINGS 段的轮换要求替代**（预登记 §2 原话即"表述被替换"）；
-2. **OFF 路径的 S-1 一字未动**（`S1_CLAUSE` 字面量两版同 `64405139…`；`drop_s1=openings_enabled()`）；
+2. **OFF 路径的 S-1 一字未动**（`S1_CLAUSE` 两版相同，**两条独立证据、均为源码文本口径**：①文本切片 `dc85c62b…`（`grep -A2 "^S1_CLAUSE" | head -3 | sha256sum`）②文本正则 `64405139…`；**运行时对象长度 44、无缩进换行**——不要把运行时值和文本哈希混引）；`drop_s1=openings_enabled()`；
 3. ⇒ `OPENINGS=1` 与基线之差 = **S-1 让位（−45 字）+ `openings_clause`（+266 字）+ 示例句回原句（+1/+2）**，**不得单归因给"8 个出口"**。
 
 ### 9.5 已复核通过的状态（`master` 侧可引）
