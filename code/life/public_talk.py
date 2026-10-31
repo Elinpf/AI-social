@@ -24,9 +24,14 @@
 ## 有界（四条硬上限，全部写死为模块常量，不塞进 `config/`）
 
   ① `MAX_PER_AGENT_PER_SLOT = 1`：同一 agent 同一 slot 至多接 1 条公开话；
-  ② `MAX_PER_PLACE_PER_SLOT = 2`：同一 place 同一 slot 内**公开消息总数**至多 2 条
-     （防止 16 个 agent 同处一地时瞬间刷屏；公开消息的 place 由 R41 在
-     `orchestration/integration.py` 里 additive 补上，见报告「顺带修复」一节）；
+  ② `MAX_PER_PLACE_PER_SLOT = 2`：同一 `day` + 同一 `slot` + 同一 place 内**公开消息总数**
+     至多 2 条（防止 16 个 agent 同处一地时瞬间刷屏；公开消息的 place 由 R41 在
+     `orchestration/integration.py` 里 additive 补上，见报告「顺带修复」一节）。
+     **R43 修复**：这条不再由调用方各自数一遍，唯一判定函数是 `place_quota_gate()`，
+     唯一**强制**点是 `integration._do_social()` 的 `scope=="global"` 分支（写入口、串行、
+     含本回合 arbiter 缓冲）。R41 把它放在 `agent._pick_reply_target()` 里、对着
+     **决策时点可见集**判 ⇒ ①首发公开消息完全不经过它；②同轮他人刚落的消息不可见 ⇒
+     多个接话者各自看到「1 < 2」同时放行（实测越界见 `reports/R41b-public-talk-verify.md` §2.3）。
   ③ **在场者 > 0**：复用 `agent.py::_co_present_peers()`（`PLACE_ARRIVED` 的 place_local 可见性，
      同场偶遇臂的现成实现）。独处里的「公开发言」是自言自语，是噪声不是生活气息 ⇒ 不接；
   ④ 仍受既有上限约束：`max_messages_per_slot` / `max_turns_per_round` / `max_turns`。
@@ -98,30 +103,77 @@ def is_replyable_public(payload: dict, me: str, my_place: str | None,
     return True
 
 
-def public_count_at(slot_events, place: str | None, slot_id: str) -> int:
-    """同一 place 同一 slot 内**已经存在的** `MSG_PUBLIC` 条数（只读可见事件，不新增真相源）。
+#: 场所配额闸版本（写进 DROPPED 审计字段，便于按版本复算）
+GATE_VERSION = "r43/1"
 
-    `slot_events`：可迭代的事件视图（需有 `.type` / `.payload`）。
-    `place` 为 None ⇒ 无法按场所归一，返回 0（保守：不做全局截断以外的额外限制）。
+
+def _type_of(ev) -> str:
+    """统一取事件类型：兼容 `EventView`（属性）与 `state.event_index` 记录（dict）。"""
+    t = getattr(ev, "type", None)
+    if t is None and isinstance(ev, dict):
+        t = ev.get("type")
+    return str(t or "")
+
+
+def _payload_of(ev) -> dict:
+    p = getattr(ev, "payload", None)
+    if p is None and isinstance(ev, dict):
+        p = ev.get("payload")
+    return p or {}
+
+
+def place_slot_count(records, place: str | None, day=None, slot=None) -> int:
+    """**唯一**的场所配额计数（R43）：同一 `place` + 同一 `day` + 同一 `slot` 的 `MSG_PUBLIC` 条数。
+
+    R43 根因修复（R41V-C4 越界的直接原因见 `reports/R41b-public-talk-verify.md` §2.3）：
+
+      * `day` / `slot` 显式入键。R41 的实现只比 `place` 与 `slot`（不区分 `day`），
+        却把「同一时段」当键 ⇒ 键粒度与判据不一致；R43 把 `day` 补进键，**键 = 判据**。
+      * `records` 既可以是 `WorldState.event_index.values()`（**含本回合 arbiter 缓冲**，
+        见 `engine/arbiter.py::emit` → `replay.apply_event` 已写 `event_index`），
+        也可以是 agent 侧 `wv.visible_events`（决策时点视图）。
+        唯一**强制**点是写入口（`orchestration/integration.py::_do_social`），
+        那里的 `event_index` 是串行的、含本回合已放行消息的真源 ⇒ 不会「各自看到 1 条、各自放行」。
+      * `place` 为 None ⇒ 无法按场所归一，返回 0（与 R41 一致：不做额外截断）。
+      * 旧记录缺 `day` / `slot` 键 ⇒ 该维度视为通配（向后兼容 R41 之前的日志），
+        但只要记录带该字段就严格比对 ⇒ 现存日志（`integration` 恒写 `day`/`slot`）比对是精确的。
     """
     if not place:
         return 0
     n = 0
-    for ev in slot_events or ():
-        if getattr(ev, "type", "") != "MSG_PUBLIC":
+    for ev in records or ():
+        if _type_of(ev) != "MSG_PUBLIC":
             continue
-        p = getattr(ev, "payload", None) or {}
+        p = _payload_of(ev)
         if place_of(p) != str(place):
             continue
-        if p.get("slot") is not None and str(p.get("slot")) != str(slot_id.split("-", 1)[-1]):
+        if day is not None and p.get("day") is not None and str(p.get("day")) != str(day):
+            continue
+        if slot is not None and p.get("slot") is not None and str(p.get("slot")) != str(slot):
             continue
         n += 1
     return n
 
 
-def place_quota_ok(slot_events, place: str | None, slot_id: str) -> bool:
-    """② 同 place 同 slot 公开消息总数是否仍有余额。"""
-    return public_count_at(slot_events, place, slot_id) < MAX_PER_PLACE_PER_SLOT
+def place_quota_gate(records, place: str | None, day=None, slot=None) -> tuple[bool, int]:
+    """② 唯一判定函数：`(是否放行, 当前已占条数)`。所有调用点都必须走它，不得各自数一遍。"""
+    n = place_slot_count(records, place, day, slot)
+    return (n < MAX_PER_PLACE_PER_SLOT, n)
+
+
+def public_count_at(slot_events, place: str | None, slot_id: str) -> int:
+    """R41 兼容包装（不区分 `day`）：等价于 `place_slot_count(..., day=None, slot=slot)`。
+
+    保留它只为不改变既有调用/测试的语义；**判定**请直接用 `place_quota_gate`。
+    """
+    slot = str(slot_id).split("-", 1)[-1] if slot_id else None
+    return place_slot_count(slot_events, place, None, slot)
+
+
+def place_quota_ok(slot_events, place: str | None, slot_id: str, day=None) -> bool:
+    """R41 兼容包装：同 place 同 slot（可选再限 day）公开消息总数是否仍有余额。"""
+    slot = str(slot_id).split("-", 1)[-1] if slot_id else None
+    return place_quota_gate(slot_events, place, day, slot)[0]
 
 
 def agent_quota_ok(slot_public_replies: dict, slot_id: str) -> bool:

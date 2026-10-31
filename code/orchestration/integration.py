@@ -188,6 +188,38 @@ def _r41_public_place(agent_id: str, st) -> str | None:
     return st.agents.get(agent_id, {}).get("location")
 
 
+def _r43_place_gate(st, place, day, slot) -> tuple[bool, int]:
+    """R43（additive）：场所配额的**唯一强制点**（唯一判定函数在 `life/public_talk.py`）。
+
+    返回 `(是否放行, 当前已占条数)`；臂关闭（默认）⇒ 恒 `(True, -1)`，不数、不放事件
+    ⇒ 事件流与接入前逐字节一致（`code/life/tests/test_r41_public_talk.py` 的 OFF 等价性守住）。
+
+    数据源是 `state.event_index`（**不是**某个 agent 的 perceive 可见集）：
+      * 已提交记录 + 本回合 arbiter 缓冲都在里面（`engine/arbiter.py::emit` 调
+        `replay.apply_event` 时即写索引）⇒ 本回合**已放行**的公开消息立刻可见；
+      * intent 是逐条应用的 ⇒ 这就是 leader 要求的「本轮已决定开口的集合」的全局聚合点，
+        首发与接话两条路径在此汇合，不会再出现「各自看到 1 条、各自放行」。
+
+    纪律：只读；不新增真相源、不改可见性、不进 `state_hash`。
+    """
+    try:
+        from life import public_talk as PT
+    except ImportError:      # 极简桩环境（无 life 包）⇒ 退化为原路径，不崩批
+        return True, -1
+    if not PT.enabled():
+        return True, -1
+    return PT.place_quota_gate(st.event_index.values(), place, day, slot)
+
+
+def _r43_gate_version() -> str | None:
+    """R43 闸版本串（写进 `DROPPED{quota_place}`，便于按版本复算）；取不到 ⇒ None。"""
+    try:
+        from life import public_talk as PT
+        return getattr(PT, "GATE_VERSION", None)
+    except ImportError:
+        return None
+
+
 def _thread_fields(p: dict) -> dict:
     """D2 线程字段装配（只追加键；缺省 None/[] ⇒ 旧 intent 走同一路径也不会报错）。
 
@@ -865,6 +897,21 @@ class KernelAdapter:
                                              "author": agent_id, "day": t["day"], "slot": t["slot"]},
                                  phase=PHASE_COMMUNICATE, actor=agent_id)
                 return IntentResult(ok=False, reason="quota_global", event_seqs=(seq,))
+            place = _r41_public_place(agent_id, st)
+            # R43：场所配额**唯一强制点**。R41V-C4 越界的根因是「闸在 agent 决策时点、
+            # 对着各自的 perceive 可见集判」，而 (a) 首发公开消息根本不经过它、(b) 同轮
+            # 他人刚落的消息对后决策者不可见 ⇒ 多个接话者各看到「1 < 2」同时放行。
+            # 这里改在**写入口**判：`state.event_index` 含本回合 arbiter 缓冲
+            # （`engine/arbiter.py::emit` → `replay.apply_event` 已落索引），且 intent 逐条
+            # 应用 ⇒ 首发与接话**汇入同一道闸**、串行计数，不再各自数一遍。
+            place_ok, place_n = _r43_place_gate(st, place, t["day"], t["slot"])
+            if not place_ok:   # 同 day×slot×place 已满 ⇒ 确定性截断 + DROPPED{quota_place}
+                seq = self._emit("DROPPED", {"type": "MSG_PUBLIC", "reason": "quota_place",
+                                             "author": agent_id, "day": t["day"],
+                                             "slot": t["slot"], "place": place,
+                                             "n_place": place_n, "gate": _r43_gate_version()},
+                                 phase=PHASE_COMMUNICATE, actor=agent_id)
+                return IntentResult(ok=False, reason="quota_place", event_seqs=(seq,))
             payload = {"msg_id": f"P-{r}-{n_a}", "author": agent_id,
                        "topic": p.get("topic"),
                        "body": body, "body_ref": body_ref, "refs": refs, "tag_hints": tags,
@@ -873,7 +920,7 @@ class KernelAdapter:
                        # 同时解开 `tools/public_talk/public_talk_metrics.py` 第 4 组
                        # `place_adjacency` 的 UNVERIFIED。臂关闭（默认）⇒ 仍写 None，
                        # 事件与接入前**逐字节一致**（既有键的取值也不变，只是不再恒为 None）。
-                       "place": _r41_public_place(agent_id, st), "scope": "global",
+                       "place": place, "scope": "global",
                        "day": t["day"], "slot": t["slot"]}
             payload.update(_thread_fields(p))   # D2：线程字段（只追加）
         else:  # place_group

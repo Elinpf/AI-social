@@ -1149,7 +1149,12 @@ class LifeLayerAgent:
                     continue
                 if not PT.agent_quota_ok(self._slot_public_replies, pub_slot):
                     continue
-                if not PT.place_quota_ok(wv.visible_events, PT.place_of(p), pub_slot):
+                # R43：这里只是「省一次 LLM」的**预过滤**（判据/口径与写入口同一函数
+                # `PT.place_quota_ok` → `PT.place_quota_gate`，键同为 day+slot+place）；
+                # **裁决点**在写入口 `orchestration/integration.py::_do_social`，
+                # 因为它才看得到本回合已放行的消息（本函数只有决策时点可见集）。
+                if not PT.place_quota_ok(wv.visible_events, PT.place_of(p), pub_slot,
+                                         day=wv.time.day):
                     continue
             else:
                 if ev.type not in ("MSG_DM", "MSG_GROUP"):
