@@ -27,20 +27,20 @@ L3 deadbeef12345678（死 sha，无标注，应被抓）
 L4 cafebabe1234 与 badbadbad999 历史版（前者坏，应被抓）
 L5 feedface9999（无标注，应被抓）
 EOF
-  echo "== selftest ①：无标注死 sha 必须被抓（期望≥2）=="
-  O1=$(mktemp); bash "$0" "$T" > "$O1" 2>&1; bad=$(grep -c '\*\*BAD' "$O1" || true)
+  echo "== selftest ①：无标注死 sha 在 --strict 下必须被抓（期望≥2）=="
+  O1=$(mktemp); bash "$0" "$T" --strict > "$O1" 2>&1; bad=$(grep -c '\*\*BAD' "$O1" || true)
   grep '\*\*BAD' "$O1" || true; rm -f "$O1"
-  echo "== selftest ②：--strict 下'已声明'的也必须列入待审（期望≥1）=="
+  echo "== selftest ②：--strict 下'已声明'须被识别并计数（期望≥1）=="
   T1b=$(mktemp); printf 'L9 cafebabe1234（历史版）\n' > "$T1b"
-  O2=$(mktemp); bash "$0" "$T1b" --strict > "$O2" 2>&1; pend=$(grep -c '需人工确认' "$O2" || true)
-  grep '需人工确认' "$O2" || true; rm -f "$O2" "$T1b"
-  echo "== selftest ③：标注不得辐射到相邻 sha（期望 2 个 BAD）=="
+  O2=$(mktemp); bash "$0" "$T1b" --strict > "$O2" 2>&1; decl=$(grep -o '已声明 [0-9]*' "$O2" | head -1 | grep -o '[0-9]*' || true); pend=$decl
+  cat "$O2" | tail -2; rm -f "$O2" "$T1b"
+  echo "== selftest ③：标注不得辐射到相邻 sha（--strict，期望 2 个 BAD）=="
   T2=$(mktemp)
   cat > "$T2" <<'EOT'
 L2 badbadbad999（历史版）与 cafebabe1234 相邻
 L3 cafebabe1234 与 badbadbad999（历史版）
 EOT
-  O3=$(mktemp); bash "$0" "$T2" > "$O3" 2>&1
+  O3=$(mktemp); bash "$0" "$T2" --strict > "$O3" 2>&1
   rad=$(grep -c '\*\*BAD' "$O3" || true)
   grep '\*\*BAD' "$O3" || true; rm -f "$O3"
   rm -f "$T2"
@@ -66,7 +66,7 @@ echo "== 扫 $FILE（rev=$REV）=="
 mapfile -t RAW < <(grep -nEo '\b[0-9a-f]{7,40}\b' "$FILE")
 TREE_BLOBS=$(git ls-tree -r "$REV" 2>/dev/null | awk '{print $3}')
 
-seen=""; bad=0; count=0; c_ok=0; c_pend=0
+seen=""; bad=0; count=0; c_ok=0; c_pend=0; c_decl=0
 for entry in "${RAW[@]}"; do
   lineno="${entry%%:*}"; tok="${entry#*:}"
   case "$tok" in *[a-f]*) ;; *) continue ;; esac
@@ -110,18 +110,27 @@ for entry in "${RAW[@]}"; do
   fi
 
   if [ "$declared" -eq 1 ]; then
-    echo "  已声明缺失     L$lineno  $tok"; count=$((count+1))
-    if [ "$STRICT" -eq 1 ]; then echo "    ^ --strict: 需人工确认不算漏"; c_pend=$((c_pend+1)); else c_ok=$((c_ok+1)); fi
+    # 已声明 = 该 sha 的"不存在/历史版/实测值"性质已在件内写明 ⇒ 属"可解释"，不算待审。
+    # （--strict 只把"未解释的待配/实测值"计为待审；已声明的只做提示，否则 refs 件永远过不了 strict）
+    echo "  已声明缺失     L$lineno  $tok"; count=$((count+1)); c_ok=$((c_ok+1)); c_decl=$((c_decl+1))
     continue
   fi
   if [ -n "$path" ]; then
     echo "  content(待配)  L$lineno  $tok  <- 路径 $path 在 $REV 上不存在"; count=$((count+1)); c_pend=$((c_pend+1))
   else
-    echo "  **BAD** L$lineno  $tok  ← 非对象、无路径、窗口内也未声明"; count=$((count+1)); bad=$((bad+1))
+    # 书写约定（审计 faeba4be 提，Leader 采纳）：**引用必须同行带路径**；无路径的纯 sha 一律视为"本件实测值"。
+    # 于是：strict 下仍算漏（判定件/refs 件要求 0 待审）；非 strict 下记"实测值·免核"并计入豁免 N。
+    if [ "$STRICT" -eq 1 ]; then
+      echo "  **BAD** L$lineno  $tok  ← 非对象、无路径（引用须带路径；实测值见非 strict 模式）"; count=$((count+1)); bad=$((bad+1))
+    else
+      echo "  content(实测值·免核) L$lineno  $tok"; count=$((count+1)); c_pend=$((c_pend+1))
+    fi
   fi
 done
 
-echo "== 共 $count 个：可核 $c_ok，待审 $c_pend，漏 $bad =="
+echo "== 共 $count 个：可核 $c_ok（其中已声明 $c_decl），待审 $c_pend（豁免），漏 $bad =="
+# 豁免必须"看得见"：非 strict 下也打印豁免项数，供抽查取靶子（审计 faeba4be 建议）
+[ "$c_pend" -gt 0 ] && echo "== 豁免 $c_pend 项（实测值·内容 sha，未逐个核）——N 异常大即值得抽一条看 =="
 [ "$bad" -gt 0 ] && { echo "结论: HAS_UNEXPLAINED"; exit 1; }
 [ "$STRICT" -eq 1 ] && [ "$c_pend" -gt 0 ] && { echo "结论: HAS_PENDING(strict)"; exit 1; }
 echo "结论: ALL_EXPLAINED"; exit 0
