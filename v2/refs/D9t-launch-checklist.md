@@ -134,3 +134,30 @@ git merge-base --is-ancestor <该HEAD> <实现分支>; echo rc=$?   # 必须 0
 | 独立复核件 | `v2/evidence/d9t-cef1c58-PA-verified-by-verifier.md`（`5ca75d76…` / 120 行） |
 | 复核结论 | 五项全 PASS + 闸门句"足以支撑两臂配对链" |
 | 实测 | 四开 200/206 → `OPENINGS=1` 422/429；`O=1` 时 `R` 无效；`tools/`、`code/config/` 零 diff |
+
+### 9.6 L3 的证据规格：两侧分开写（**OFF 侧无 `meta.json`**）
+
+实测（`git ls-tree origin/master:v2/evidence/d9s-on2_n16r24_s42/`）：
+```
+launch_cmd.txt  run.jsonl  run_batch.log  switch_proof.txt      ← 没有 meta.json
+```
+
+⇒ L3 的"两臂 `code_sha`"必须**分侧写**，不得写成一格：
+
+| 侧 | 证据 | 取不到时 |
+|---|---|---|
+| **ON（新臂）** | `meta.json` 的 `code_sha`（应为 `cef1c58`） | 取不到 ⇒ 报**缺件** + 改用 `launch_cmd.txt` 现取 |
+| **OFF（复用臂）** | **无 `meta.json`** ⇒ 只有两条：`launch_cmd.txt` 的 `HEAD=f2b3230d` + `switch_proof.txt`（原始 `/proc` 取证） | 记 **`CANNOT-VERIFY（缺件）`** |
+
+**⚠ 术语纪律**：`CANNOT-VERIFY（缺件）` **≠「不可比」**。
+- 缺件 = 该字段本就不存在（记录臂的历史形态），**不影响可比性**——可比性由 `cef1c58` 的等价复核（`5ca75d76…`）承担；
+- 不可比 = 两臂分母/口径/实现不同。
+⇒ **两者混写会把"没这个文件"读成"这组数据不能用"**，那是过度否定。
+
+### 9.7 判据与证据的"两侧不对称"是本线常态
+
+已出现两次同型：`max_k`（`(d2)` 分母只有 9）、`F-8a`（OFF 侧结构性零）。
+⇒ **凡"一臂有、另一臂无"的量，处理方式统一为**：
+1. 写明**哪侧缺**、**为什么缺**（结构性 / 缺件 / 未采集三者须区分）；
+2. 该侧记 `CANNOT-VERIFY`，**另一侧照常报**，不得因一侧缺而整项作废；
+3. **不得**把"缺"当"0"，也不得把"缺"当"不可比"。
