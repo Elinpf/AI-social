@@ -38,6 +38,28 @@ else
   echo "FAIL: $SHA 不以 $REMOTE/$BRANCH 为祖先（会倒退内容）"; fail=1
 fi
 
+echo "== 0b) V-6 第 3 道：树快照不得有非本意删除（不依赖调用方传哪些路径）=="
+# 由来：d5c386e 的伤害有两层——文件被删（复核件整个消失）+ 内容回退。
+# 只验传入路径只能抓第二层；第一层必须在这里抓。
+DELS=$(git show --diff-filter=D --name-only --format="" "$SHA" | wc -l | tr -d ' ')
+if [ "$DELS" != "0" ]; then
+  echo "FAIL: 本提交删除了 $DELS 个文件（若非本意即内容倒退）："
+  git show --diff-filter=D --name-only --format="" "$SHA"
+  fail=1
+else
+  echo "删除文件数 = 0 ✓"
+fi
+BIG=$(git show --numstat --format="" "$SHA" | awk '$2>50' | wc -l | tr -d ' ')
+if [ "$BIG" != "0" ]; then
+  echo "FAIL: 有 $BIG 个文件的删除行 >50（疑似回退，逐条看）:"
+  git show --numstat --format="" "$SHA" | awk '$2>50'
+  fail=1
+else
+  echo "大删除（>50 行）文件数 = 0 ✓"
+fi
+echo "-- 触及路径清单（人眼过一遍）--"
+git show --name-status --format="" "$SHA"
+
 echo "== 1) 记录 EXPECT（变更后的内容本身；绝不取 $REMOTE/$BRANCH:<path>）=="
 # bash3 兼容：用并行数组
 EXPECTS=()
