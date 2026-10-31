@@ -330,7 +330,7 @@ a6470a1  ← 本轮起点（CYCLE-40 末提交）
 
 **不 add**：`run.jsonl`（`.gitignore:8 **/*.jsonl` 命中）、`*.log`、`v2/evidence/r41_public_talk/off_ABORTED_concurrent_1642/`（作废半批）、以及工作区中 200+ 条他人未提交项与 `M v2/refs/D9t-launch-checklist.md`（非本轮）。
 
-`git show --stat <报告 commit>` 实测输出见 §5.4 回填。
+`git show --stat a950153` 实测输出见 §5.4。
 
 > **分支含他团队提交**：`feat/life-public-talk-r41` 上另有另一团队的 CYCLE-41 报告提交（其 sha 经该团队多次 amend 变化，提交时 HEAD 为 `330778d` 系列）。本团队**仅追加自身提交**，不 rebase、不 reset、不 force。
 
@@ -348,12 +348,15 @@ timeout 25 git ls-remote --heads origin 'refs/heads/feat/life-public-talk-r41' >
 
 ### 5.4 回填：提交与推送实测（成稿后补，只补状态不动读数）
 
-| 项 | 值 |
-|---|---|
-| 报告 commit | 见交付汇报（提交后由 `git log -1 --format=%h -- reports/R41-public-talk.md` 取得） |
-| push rc | 见交付汇报（原始输出落 `/tmp/r41_push.txt`） |
-| ls-remote | 见交付汇报（`rc=0` 且 1 行真实 ref 才算成功；「空输出 + rc=0」记未验证） |
-| 未推 master | 见下 |
+| 项 | 实测值 | 取证 |
+|---|---|---|
+| 报告 commit | `a950153`（`git log -1 --format=%H -- reports/R41-public-talk.md` → `a9501532a16ec056af0c6ddcfd26edf487df9b26`） | 本机实测 |
+| `git show --stat a950153` | `reports/R41-public-talk.md 377+`、`reports/README.md 1+`、2 张 PNG（279,700 B / 387,565 B）、`tools/metrics/round_figures.py 835+`；**5 files changed, 1213 insertions(+)** | 实测 |
+| push rc | **`0`**，原始输出：`[pre-push] OK：无祖先错位 / 无文件删除 / 无大块删除` + `596eee0..a950153  feat/life-public-talk-r41 -> feat/life-public-talk-r41` | `/tmp/r41_push.txt` |
+| push 后 `ls-remote` | **`rc=0`、1 行真实 ref**：`a9501532a16ec056af0c6ddcfd26edf487df9b26  refs/heads/feat/life-public-talk-r41` ⇒ **远端 = 本地 HEAD = `a950153`** | `/tmp/r41_lsremote.txt` |
+| scope-guard | 首次提交被拦（3 个离群旧路径：2 张 PNG + 脚本，16:19 由 evidence-viz 产出、比 README 编辑老 >1800s）；经 `COMMIT_SCOPE_ACK` 显式确认后放行，提交说明内已注明理由 | 提交输出原文 |
+| 未推 master | **未推**。`git push --dry-run origin HEAD:refs/heads/master` → `push_rc=1`、`! [rejected] HEAD -> master (non-fast-forward)`；`git rev-list --left-right --count origin/master...HEAD` → `23 15`（master 领先 23 条、本分支领先 15 条）⇒ 按仓库近例推特性分支 | 实测 |
+| 分支含他团队提交 | `feat/life-public-talk-r41` 上除本团队 `2af557f`/`425b0af`/`a950153` 外，另有另一团队的 CYCLE-41 报告提交（`825496a`→…→`596eee0` 系列，其间多次 amend）。本次 push 一并推送，**未 rebase / 未 reset / 未 force** | `git log --oneline` |
 
 ### 5.5 preflight 复核（报告侧独立执行，重定向取 rc，不串管道）
 
