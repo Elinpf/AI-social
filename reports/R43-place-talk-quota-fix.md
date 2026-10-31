@@ -114,7 +114,7 @@ git show --stat --oneline HEAD        # 或 git diff --name-only ad3538f..HEAD
 | **R43-M3** 断言有牙（阈值探针） | ① `MAX_PER_PLACE_PER_SLOT` 改 3 ⇒ 同一输入 `gate(2条)` 由 `False` 变 `True`；② 上限改 1 ⇒ 写入口第 2 条即 `quota_place` | 函数级 + 行为级各 1 条用例，均通过 | **成立**（单测级） | `test_threshold_probe_moves_with_constant` / `test_do_social_threshold_moves_with_constant` |
 | **R43-M4** 语义回滚探针 | 把生产闸 monkeypatch 回旧语义（决策时点可见集 + 不区分 day）⇒ 同一断言必须变红 | **撰写者独立复跑**（命令与原文见下）⇒ `1 failed, 10 deselected` | **成立**（单测级，证明非自证循环） | 附录 B·B4 |
 | **R43-M5** 基线摘除对照 | 只把**新测试**投到基线代码树（`git archive ad3538f code`），承重点须以 `AssertionError`（failed，非 error）失败 | 基线树 **`9 failed, 2 passed`**；承重点 `test_do_social_caps_third_public_message_at_same_place` = `AssertionError`（第 123 行），另 2 条断言级红（第 141/152 行），余 6 条为 `AttributeError`（新符号缺失，只承担细粒度） | **成立**（对照组级） | 附录 B·B5（撰写者独立复跑） |
-| **R43-M6** 回归不破坏 | 既有相关测试 + 跨层测试仍绿 | `test_r41_public_talk.py` **29/29**；两文件合并 **40/40**；跨层 `test_e2e_integration.py` 6/6、`test_conservation.py` 4/4、`test_dialogue_repair.py` 21/21（**跨层三件为转述实现方结果，撰写者未独立复跑**）；**全量 `life/tests` 在 300s 门下未跑完 ⇒ 标「未完成」，不写「全绿」** | **成立（相关子集）/ 未完成（全量）** | 附录 B·B2/B6 |
+| **R43-M6** 回归不破坏 | 既有相关测试 + 跨层测试仍绿 | `test_r41_public_talk.py` **29/29**；两文件合并 **40/40**；跨层三件（路径在 `code/tests/`，不在 `life/tests/`）：`test_e2e_integration.py` + `test_conservation.py` + `test_dialogue_repair.py` ⇒ **31 passed**（**`evidence-auditor` 独立复跑**，实测 `31 passed in 19.70s`；实现方分项 6/4/21 与之相加一致）；**全量 `life/tests` 在 300s 门下未跑完 ⇒ 标「未完成」，不写「全绿」** | **成立（相关子集）/ 未完成（全量）** | 附录 B·B2/B6 |
 
 **M4 的两条命令必须并列贴（只贴 `11 passed` 不足以证明该探针——常规 `11 passed` 只说明「恒绿面」，不证明「回滚会红」；该探针在常规 pytest 下恒绿，只有 `R43_ROLLBACK=1` 才变红）**：
 
@@ -370,7 +370,7 @@ git archive ad3538f code | tar -x -C /tmp/r43_baseline
 cp code/life/tests/test_r43_place_talk_quota.py /tmp/r43_baseline/code/life/tests/
 cd /tmp/r43_baseline/code && python3 -m pytest life/tests/test_r43_place_talk_quota.py -q --tb=line ; cd - >/dev/null
 
-# B6 跨层回归（R43-M6，实现方实测值见 §2.1；本组撰写者未独立复跑）
+# B6 跨层回归（R43-M6；路径在 code/tests/，期望 31 passed；本组由 evidence-auditor 独立复跑）
 cd code && python3 -m pytest tests/test_e2e_integration.py tests/test_conservation.py tests/test_dialogue_repair.py -q ; cd ..
 
 # B7 离线复算 + 四粒度（对照 §2.2；**旧日志 + 新函数静态重放，不是修复后读数**）
@@ -466,4 +466,4 @@ git ls-remote origin refs/heads/fix/place-talk-quota-r43      # 期望：无输�
 | B11 尺子缺陷 | 撰写者独立复跑：`pub=30 / reply_to nonnull=7 / hit msg_id=0 / hit msg_uid=7`（与 audit-1 §6.2 同值） |
 | B12 双口径反事实 | 撰写者独立复跑：`accept=17 / drop=13`；`place×slot`（冻结口径）**= 4**、`day×slot×place`（修订口径）**= 2**、`round×day×slot×place` = 2 |
 | B13 上游 | `master=94e272a`、`origin/master=0345742`、`origin/master...HEAD = 72 / 45`；远端无 `fix/place-talk-quota-r43` 分支（首次 push 无覆盖风险）。**差异影响未评估** |
-| 未执行项 | ① `obs llm-cost`（无新批，无需验真）；② 跨层三件（B6）未独立复跑（转述实现方）；③ `test_life_encounter_chat.py` 未复跑（见 §③ P-12）；④ **全量 `life/tests` 未跑完**（§③ P-9）；⑤ **上游 72 提交差异未评估**（§③ P-1b） |
+| 未执行项 | ① `obs llm-cost`（无新批，无需验真）；② 跨层三件（B6）由 `evidence-auditor` 独立复跑得 **31 passed**（本报告代为引用，撰写者未亲自复跑）；③ `test_life_encounter_chat.py` 未复跑（见 §③ P-12）；④ **全量 `life/tests` 未跑完**（§③ P-9）；⑤ **上游 72 提交差异未评估**（§③ P-1b） |
