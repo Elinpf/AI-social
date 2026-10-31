@@ -26,8 +26,8 @@ LIFE_PROMPT_NARRATION_ACTION=1
 
 ```bash
 grep -rn "LIFE_PROMPT_NARRATION_SYNTAX" code/     # 空
-git rev-parse origin/master:code/life/agent.py    # e23ae53d…
-git rev-parse feat/d9s-syntax-diversity:code/life/agent.py  # fe473b9d…
+git rev-parse origin/master:code/life/agent.py    # e23ae53d…（该时点 blob，非当前版）
+git rev-parse feat/d9s-syntax-diversity:code/life/agent.py  # fe473b9d…（该时点 blob，非当前版）
 git merge-base --is-ancestor feat/d9s-syntax-diversity origin/master ; # rc=1（不在 master）
 ```
 ⇒ **D9s 的 S-1/S-2（`SYNTAX`）、`ACTION` 三个开关从未进过 master。**

@@ -126,8 +126,8 @@ git merge-base --is-ancestor <该HEAD> <实现分支>; echo rc=$?   # 必须 0
 本轮实证：同一棵树、同一 `agent_id=P004`、同一 `round=7`、`seed` 未设，仅 `role_id` 不同：
 | `role_id` | 四开 + `OPENINGS` 未设 | 来源 |
 |---|---|---|
-| `None`（默认 `ROLE_OPENINGS_DEFAULT`） | **200** / `f2c994a1` · **206** / `f50325c7`（内容 sha·字符串级） | Leader + 复核方 |
-| `"cook"` | **203** / `6837dc56` · **209** / `fbdabb58`（内容 sha·字符串级） | 实现方旧表 |
+| `None`（默认 `ROLE_OPENINGS_DEFAULT`） | **200** / `f2c994a1`（内容 sha）· **206** / `f50325c7`（内容 sha） | Leader + 复核方 |
+| `"cook"` | **203** / `6837dc56`（内容 sha）· **209** / `fbdabb58`（内容 sha） | 实现方旧表 |
 
 ⇒ **只写"长度不同"不写五元组，是不可判的争议。** `narration_tail` 签名已含 `role_id`（`f2b3230d` 起）。
 
@@ -173,7 +173,7 @@ launch_cmd.txt  run.jsonl  run_batch.log  switch_proof.txt      ← 没有 meta.
 | **OFF（复用臂）** | **无 `meta.json`** ⇒ 只有两条：`launch_cmd.txt` 的 `HEAD=f2b3230d` + `switch_proof.txt`（原始 `/proc` 取证） | 记 **`CANNOT-VERIFY（缺件）`** |
 
 **⚠ 术语纪律**：`CANNOT-VERIFY（缺件）` **≠「不可比」**。
-- 缺件 = 该字段本就不存在（记录臂的历史形态），**不影响可比性**——可比性由 `cef1c58` 的等价复核（`5ca75d76…`）承担；
+- 缺件 = 该字段本就不存在（记录臂的历史形态），**不影响可比性**——可比性由 `cef1c58` 的等价复核（内容 sha·字符串级 `5ca75d76…`，见 `v2/evidence/d9t-cef1c58-PA-verified-by-verifier.md`）承担；
 - 不可比 = 两臂分母/口径/实现不同。
 ⇒ **两者混写会把"没这个文件"读成"这组数据不能用"**，那是过度否定。
 
