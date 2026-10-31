@@ -1,0 +1,3 @@
+=== 并发发现 2026-10-31T16:42:59+08:00
+2861039 2861034       00:20 python3 -m orchestration run --life --seed 42 --agents 16 --rounds 24 --out /tmp/d9t_on_n16r24_s42_out/run.jsonl --flush-every 2 --s
+2861258 2861254       00:17 python3 -m orchestration run --life --seed 42 --agents 8 --rounds 8 --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-expe

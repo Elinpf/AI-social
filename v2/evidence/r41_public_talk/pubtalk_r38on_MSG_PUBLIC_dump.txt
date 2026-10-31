@@ -1,0 +1,48 @@
+seq=53 round=0 author=P002 day=0 slot=morning place=None thread=TH-P002-PUB-0-0 turn=0 reply_to=None participants=['P002'] topic=skill_practice
+  （拿刨子推过木料，木花卷着落下来）慢点来，急不得。张家那扇窗，榫头得再收半厘。（眯眼比了比）手比尺准。
+seq=84 round=0 author=P005 day=0 slot=morning place=None thread=TH-P005-PUB-0-0 turn=0 reply_to=None participants=['P005'] topic=skill_practice
+  唉，我把李婶家那包艾草再搓细一点，手上这味儿洗都洗不掉呢。
+seq=113 round=0 author=P008 day=0 slot=morning place=None thread=TH-P008-PUB-0-0 turn=0 reply_to=None participants=['P008'] topic=skill_practice
+  （把裁纸刀往桌角一搁）老陈，这摞户籍誊本我正按门牌号排呢——你家二小子的那份，是搁前头还是后头？
+seq=167 round=0 author=P013 day=0 slot=morning place=None thread=TH-P013-PUB-0-0 turn=0 reply_to=None participants=['P013'] topic=skill_practice
+  （把烧红的锄头往水桶里一浸，滋啦冒白烟）这锄头是东头老周家的，刃口卷了，我正给他回火。你那边咋样？先顾好自己。
+seq=189 round=0 author=P015 day=0 slot=morning place=None thread=TH-P015-PUB-0-0 turn=0 reply_to=None participants=['P015'] topic=skill_practice
+  （把灶上那锅萝卜牛腩的火拧小，拿筷子戳了戳肉）你这阵子忙得脚不沾地，还顾得上好好吃饭不？我这儿炖着李婶家送来的牛腩，火候还差一截。先尝口汤。
+seq=831 round=1 author=P008 day=0 slot=morning place=None thread=TH-P008-PUB-1-0 turn=0 reply_to=None participants=['P008'] topic=skill_practice
+  （哎，这墨锭磨了半天还是稀，周家二小子昨儿送来的方子怕是不顶用。）你说这手艺活，是不是还得自己慢慢试？
+seq=1326 round=1 author=P013 day=0 slot=morning place=None thread=TH-P013-PUB-1-0 turn=0 reply_to=None participants=['P013'] topic=skill_practice
+  （拿锉刀蹭着犁头边上的毛刺）这阵子忙哪块地呢，犁铧都豁了口才送来——你家那几亩坡田，今年还种花生不？
+seq=1509 round=1 author=P015 day=0 slot=morning place=None thread=TH-P015-PUB-1-0 turn=0 reply_to=None participants=['P015'] topic=skill_practice
+  （拿筷子尖挑了点酱汁尝）这味儿还是差一截。老周家闺女昨天送来的那罐豆瓣，我搁了半勺进去，颜色倒是红亮。（把灶边那碗切好的姜末推远了些）
+seq=2095 round=3 author=P005 day=0 slot=afternoon place=None thread=TH-P005-PUB-3-0 turn=0 reply_to=None participants=['P005'] topic=savings
+  （把抽屉里那沓零钱又数了一遍，指头在票子边上压了压）攒钱这事啊，急不来，我这一分一毛都是给老周家孙子留的诊金，他爹上回赊的账还没清呢。（顿了顿）慢慢来吧。
+seq=2120 round=3 author=P008 day=0 slot=afternoon place=None thread=TH-P008-PUB-3-0 turn=0 reply_to=None participants=['P008'] topic=savings
+  （把账本往桌角挪了挪）老周啊，这月薪俸一到手，先扣出三成存进钱庄，剩下的才敢动呢。
+seq=2209 round=3 author=P013 day=0 slot=afternoon place=None thread=TH-P013-PUB-3-0 turn=0 reply_to=None participants=['P013'] topic=savings
+  （把铁钳往水桶里一浸，白汽腾起来）攒钱这事，跟打铁一个理，火候不到别急着下锤。（摸出腰里那串铜板掂了掂）再熬俩月。
+seq=3601 round=4 author=P008 day=0 slot=afternoon place=None thread=TH-P008-PUB-4-0 turn=0 reply_to=None participants=['P008'] topic=savings
+  （把算盘珠子拨回原位）这月又剩不下几个子儿，刚给周家小子上完户口页。（抬眼）你说，这钱怎么就越攒越薄呢？
+seq=4182 round=4 author=P013 day=0 slot=afternoon place=None thread=TH-P013-PUB-4-0 turn=0 reply_to=None participants=['P013'] topic=savings
+  （拿锉刀蹭了蹭犁头边）这钱攒得比铁还硬。老周家那把锄头还欠着。先干活。
+seq=19112 round=12 author=P005 day=1 slot=morning place=None thread=TH-P005-PUB-12-0 turn=0 reply_to=None participants=['P005'] topic=skill_practice
+  （把药碾子里的黄芪又碾过一遍）老周家那小子烧退了，我这心里才落下一块石头。再把这批陈皮翻翻。
+seq=19467 round=12 author=P010 day=1 slot=morning place=None thread=TH-P010-PUB-12-0 turn=0 reply_to=None participants=['P010'] topic=job_choice
+  （把吉他盒往脚边一靠，手指还捻着刚断的第三根弦）这镇上最近还有谁家办席要人唱两段的吗？我这一天就啃了半块饼，肚子都开始打拍子了——你这边最近手头有活儿没？
+seq=19682 round=12 author=P013 day=1 slot=morning place=None thread=TH-P013-PUB-12-0 turn=0 reply_to=None participants=['P013'] topic=job_choice
+  （把铁钳往水桶里一浸，滋啦冒起白烟）听说你东家那批锄头催得紧，我这炉子空着也是空着——你那边还缺人手不？
+seq=20503 round=13 author=P005 day=1 slot=morning place=None thread=TH-P005-PUB-13-0 turn=0 reply_to=None participants=['P005'] topic=skill_practice
+  （把抽屉里那卷旧纱布又倒出来，对着灯看线头）线头，你说这线头，我剪了三十年还是剪不齐。老周家孙子昨天磕了膝盖，我给他缠了两圈，他嫌紧，自己扯松了，回去又渗血。手艺这东西，越练越觉得手笨。（把纱布卷回去）慢慢来吧。
+seq=20872 round=13 author=P010 day=1 slot=morning place=None thread=TH-P010-PUB-13-0 turn=0 reply_to=None participants=['P010'] topic=job_choice
+  （把袖口往上撸了撸，露出沾着松香的手腕）这日子过得，连口热乎的都赶不上。刚给赵家小儿子婚礼上拉完琴，人家塞了俩喜糖，我揣兜里还没舍得吃。你说镇上最近还有谁家办席缺个弹唱的？
+seq=21073 round=13 author=P013 day=1 slot=morning place=None thread=TH-P013-PUB-13-0 turn=0 reply_to=None participants=['P013'] topic=job_choice
+  （拿锉刀蹭了蹭犁头边上的毛刺）活儿？赵家老二前天来问过，说想打把开荒的镢头。你也要？
+seq=21296 round=13 author=P016 day=1 slot=morning place=None thread=TH-P016-PUB-13-0 turn=0 reply_to=None participants=['P016'] topic=skill_practice
+  （把竹筛里的花椒壳一颗颗拣出来）你说“练手艺”，我倒觉得手艺这东西，练到后来是练心。就像我筛这花椒，手一抖，壳和籽就分不匀，急不得。你那边最近练的什么，也这么磨人吗？
+seq=21938 round=15 author=P010 day=1 slot=afternoon place=None thread=TH-P010-PUB-15-0 turn=0 reply_to=None participants=['P010'] topic=savings
+  （把吉他往墙角一靠）饿得前胸贴后背了，今天礼堂那场唱完，管事的塞给我六十块，说下礼拜咖啡馆的场子先别排了。（蹲下来数了数铁盒里的零票，又抽出一张十块的压在杯底）
+seq=21968 round=15 author=P012 day=1 slot=afternoon place=None thread=TH-P012-PUB-15-0 turn=0 reply_to=None participants=['P012'] topic=savings
+  （把晒了一半的萝卜干往竹匾中间拢了拢）我这几天光顾着翻萝卜干，手都酸了，你家那口子前阵子说腰疼，好些了吧。
+seq=23019 round=16 author=P010 day=1 slot=afternoon place=None thread=TH-P010-PUB-16-0 turn=0 reply_to=None participants=['P010'] topic=savings
+  （把零钱罐倒过来磕了磕，滚出两枚硬币）攒钱这事吧，越攒越觉得像在跟自己较劲。刚在礼堂唱完一场，嗓子还热着，路过王婶摊子闻见葱油饼味儿，愣是没舍得买。你说我这是图啥呢？
+seq=23169 round=16 author=P012 day=1 slot=afternoon place=None thread=TH-P012-PUB-16-0 turn=0 reply_to=None participants=['P012'] topic=savings
+  （手里攥着半块凉红薯，蹲在灶台边）你那边灶上还烧着水没？我这儿刚把桂英家借的簸箕还回去，顺道拐进来歇口气。（咬了口红薯）饿得前胸贴后背了。先垫垫。
