@@ -18,6 +18,8 @@
 set -uo pipefail
 
 # ---------- 自测：检查工具必须用"已知会失败"的输入验一次 ----------
+DIR="$(cd "$(dirname "$0")" && pwd)"
+[ -f "$DIR/_ann.py" ] || { echo "FATAL: 缺 $DIR/_ann.py（依赖未就位，不是件的问题）" >&2; exit 3; }
 if [ "${1:-}" = "--selftest" ]; then
   T=$(mktemp); RC=0
   cat > "$T" <<'EOF'
@@ -78,7 +80,7 @@ for entry in "${RAW[@]}"; do
   # 用参数展开取"第一个出现位置之后"，避免 sed 贪婪匹配把整行吃掉；也避免 ±20 窗口把标注辐射给相邻 sha。
   # 标注规则：必须出现在**紧跟该 sha 的那个括号里**，且该括号内不得含另一个 sha（防辐射）。
   # 用内联 python 判（bash 截字符+正则易错：cut 按字节、sed 贪婪会吃掉 token）。
-  declared=$(printf '%s\n' "$line_text" | TOK="$tok" ANN="$ANN" python3 "$(dirname "$0")/_ann.py")
+  declared=$(printf '%s\n' "$line_text" | TOK="$tok" ANN="$ANN" python3 "$DIR/_ann.py")
 
   if git cat-file -e "${tok}^{commit}" 2>/dev/null; then
     echo "  commit         L$lineno  $tok"; count=$((count+1)); c_ok=$((c_ok+1)); continue
