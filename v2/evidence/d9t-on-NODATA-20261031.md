@@ -36,8 +36,12 @@
 
 ## 4. 对后续所有真 LLM 臂的系统性含义（**比 D9t 本身重要**）
 
-> **客户端没有读超时 ⇒ 任何真 LLM 批都可能"挂到天荒地老"而不报错。**
-> 症状是"行数不动、日志 0 字节、进程 S 态"，**看起来像卡死，实际在重试**。
+> **观测事实**：进程 `poll` 等 socket、连接 `ESTAB`、本地源端口变化（超时重连），`run.log` 0 字节。
+> **但"无限挂"这一条尚未验证**——代码里 `providers.py:25 DEFAULT_TIMEOUT = 60`、`max_retries = 2`（有界）：
+> `grep -n "DEFAULT_TIMEOUT\|max_retries" code/freeze/providers.py` ⇒ `25: DEFAULT_TIMEOUT = 60`、`237: max_retries: int = 2`。
+> ⇒ **重试是有界的**，理论上 3 次尝试（≈3×(60s+backoff)）后会抛错落 `SYSTEM_ERROR`；
+> 而我们两次都在 ~2–4 分钟内 kill，**可能没等到它自己报错**。
+> **⇒ 结论改成：卡点在"超时重连循环"这一点确定；"它会不会自己结束"未验证（我们把进程杀了）。**
 
 ⇒ **修法（下一次跑批前必须先做）**：
 1. 给 HTTP 客户端设**读超时 + 有限重试**（例如 `read=120s`、`retries=3`），超时即抛错并落 `SYSTEM_ERROR`；
