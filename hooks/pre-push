@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# hooks/pre-push —— 挡住"内容倒退"的推送（V-6 第 1/2/3 道）
+#
+# 背景：同一机制一晚上三次覆盖（d5c386e / a6b6d32 …）——都是从**旧快照**造树，
+# 历史不断、内容倒退，事后只能靠人眼发现。把检查放到 pre-push，才不需要"记得去查"。
+#
+# 装：bash scripts/install_hooks.sh
+# 绕过：git push --no-verify（须在提交说明里写明为什么）
+set -uo pipefail
+
+ZERO=0000000000000000000000000000000000000000
+fail=0
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ "$local_sha" = "$ZERO" ] && continue          # 删除分支，跳过
+
+  if [ "$remote_sha" = "$ZERO" ]; then            # 新分支：对父提交做差（不能对工作区）
+    if git rev-parse --verify -q "$local_sha^" >/dev/null; then
+      range="$local_sha^..$local_sha"
+    else
+      continue                                   # 根提交，无父可比
+    fi
+  else
+    # ① 服务端最新必须是本提交的祖先（"历史里有"不够，要"最新点上是"）
+    if ! git merge-base --is-ancestor "$remote_sha" "$local_sha"; then
+      echo "[pre-push] FAIL: $local_sha 不以服务端最新 $remote_sha 为祖先 ⇒ 会倒退内容" >&2
+      echo "[pre-push] 修：git fetch origin && 在本提交之上重建（read-tree origin/master）" >&2
+      fail=1
+      continue
+    fi
+    range="$remote_sha..$local_sha"
+  fi
+
+  # ② 不得有文件被删除
+  dels=$(git diff --diff-filter=D --name-only "$range" | wc -l | tr -d ' ')
+  if [ "$dels" != "0" ]; then
+    echo "[pre-push] FAIL: 本次推送删除了 $dels 个文件：" >&2
+    git diff --diff-filter=D --name-only "$range" >&2
+    fail=1
+  fi
+
+  # ③ 不得有 >50 行的成块删除（内容回退的指纹）
+  big=$(git diff --numstat "$range" | awk '$2>50' | wc -l | tr -d ' ')
+  if [ "$big" != "0" ]; then
+    echo "[pre-push] FAIL: 有 $big 个文件删除行 >50（疑似回退）：" >&2
+    git diff --numstat "$range" | awk '$2>50' >&2
+    fail=1
+  fi
+done
+
+if [ "$fail" != "0" ]; then
+  echo "[pre-push] 已阻止（确认无误请用 --no-verify 并在说明里写明原因）" >&2
+  exit 1
+fi
+echo "[pre-push] OK：无祖先错位 / 无文件删除 / 无大块删除"
+exit 0
