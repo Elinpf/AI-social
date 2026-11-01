@@ -1,0 +1,96 @@
+{
+  "env": {
+    "HITT_SCENE_FRESH": "1",
+    "LIFE_PROMPT_NARRATION": "0",
+    "LIFE_PROMPT_SCENE": "1"
+  },
+  "fixtures": {
+    "no_move": {
+      "activity": "self_care",
+      "ctx_keys": [
+        "l7struct",
+        "mood",
+        "need",
+        "relation",
+        "scene",
+        "topic"
+      ],
+      "ctx_sha256": "b2a9bf9042d8bb259969f00f094e6f0f76368ac7b8c1347a4ca7eea5c20edc98",
+      "dialogue_prompt_len": 437,
+      "dialogue_prompt_sha256": "be1baf74f6d8cc96d0c2dacd2281bc7e510c98a483c9bcce06e9dc5777c975af",
+      "live_place": "residence",
+      "live_place_name_cn": "住宅",
+      "reply_prompt_len": 447,
+      "reply_prompt_sha256": "882c0cce9ce374d4a9767ca779b593d09303e26febb36f2a2cea610823672a62",
+      "scene_audit": {
+        "activity": "self_care",
+        "line_sha256": "9325ff82bec7c908698b2dea572181294ec45e1d36d062b57687159bf09732ae",
+        "place": "residence",
+        "place_src": "live",
+        "slot": "afternoon"
+      },
+      "scene_line": "你眼下的光景：午后这会儿，你在住宅，刚收拾利索。（这些只是你眼下的底子：顺口带一句就够，别生硬地报地名，也别在这上面多解释；说不着就不提。）",
+      "scene_line_sha256": "9a504f4c310e65886db7cf8a3db5862a22498891e053468ee920a09088a3ab30",
+      "snapshot_place": "residence",
+      "snapshot_place_name_cn": "住宅"
+    },
+    "stale": {
+      "activity": "learn",
+      "ctx_keys": [
+        "l7struct",
+        "mood",
+        "need",
+        "relation",
+        "scene",
+        "topic"
+      ],
+      "ctx_sha256": "5d6f1a5726118b6a4573255c3d7fa9393ec45fb9072edb3f6713f500eee027c4",
+      "dialogue_prompt_len": 438,
+      "dialogue_prompt_sha256": "fe4d42e3ea7ff74b472e330911df7bf5dabe45107c0abe6f55648d0a58bd6cc8",
+      "live_place": "library",
+      "live_place_name_cn": "图书馆",
+      "reply_prompt_len": 448,
+      "reply_prompt_sha256": "9d80563c997aa0df1fbc661257462df64cf02b890118dc42f200d8f93929200b",
+      "scene_audit": {
+        "activity": "learn",
+        "line_sha256": "57e8af740cd60144ba4c679c7011ed4ea66354f1b2196f4492a446d2b27b4bc6",
+        "place": "library",
+        "place_src": "live",
+        "slot": "afternoon"
+      },
+      "scene_line": "你眼下的光景：午后这会儿，你在图书馆，正学着东西。（这些只是你眼下的底子：顺口带一句就够，别生硬地报地名，也别在这上面多解释；说不着就不提。）",
+      "scene_line_sha256": "c60653048f828f20e9aec85fc669b95fe7e51b5c56c987c8cfe06b1231dcdafc",
+      "snapshot_place": "residence",
+      "snapshot_place_name_cn": "住宅"
+    },
+    "stale_no_act": {
+      "activity": null,
+      "ctx_keys": [
+        "l7struct",
+        "mood",
+        "need",
+        "relation",
+        "scene",
+        "topic"
+      ],
+      "ctx_sha256": "881131a5f442d004535c058c4aed09ab537bd7d7a6202f69eb75577a00243844",
+      "dialogue_prompt_len": 432,
+      "dialogue_prompt_sha256": "6d5dfe8efce36f8217b83e6807080ad53e64f39f5be31abb3ee5389b3cdefd63",
+      "live_place": "library",
+      "live_place_name_cn": "图书馆",
+      "reply_prompt_len": 442,
+      "reply_prompt_sha256": "72fd33f8933e170ec089cf3a1bdd9d70bb1412608480d0938da42fd19b4762c6",
+      "scene_audit": {
+        "line_sha256": "db17ae8a58e7c4e7b897bf26415c700d754385757674788bf897208849be62cc",
+        "place": "library",
+        "place_src": "live",
+        "slot": "afternoon"
+      },
+      "scene_line": "你眼下的光景：午后这会儿，你在图书馆。（这些只是你眼下的底子：顺口带一句就够，别生硬地报地名，也别在这上面多解释；说不着就不提。）",
+      "scene_line_sha256": "2ea3b3edb85a2a0cbc116fc1b8de8f1cf6a62e0a80394227a09371c6ae151167",
+      "snapshot_place": "residence",
+      "snapshot_place_name_cn": "住宅"
+    }
+  },
+  "label": "post-change-fresh"
+}
