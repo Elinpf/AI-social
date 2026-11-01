@@ -19,7 +19,12 @@ B-8 的缺陷是**时序**问题：`ctx.scene.place` 取自本轮 perceive 阶�
 ## 口径（先冻结，再读数；改这里 = 改尺子）
 
   * 样本 = `run.jsonl` 里 `type ∈ {MSG_PUBLIC, MSG_DM}` 的记录（与 C1 预登记卡 §3.1 一致）。
-  * 机制层分母 = 其中 `payload.ctx.scene` 为 dict 的条目；分子 = `scene.place` 与 `payload.place` 相等的条目。
+  * 机制层分母 = 其中 `payload.ctx.scene` 为 dict **且 `payload.place` 非空**的条目；
+    分子 = `scene.place` 与 `payload.place` 相等的条目。
+    **v1.1 修正（D-1，见报告 §3）**：v1 把 `payload.place` 为空的条目也算进分母，
+    与空串比较在语义上不成立（必然判"错位"），属尺子口径伪影。v1.1 把这类条目单列为
+    `anchor_missing_place` 并从分母剔除；同时仍输出 v1 口径的 `anchor_fresh_strict` 供对账。
+    词表（效果层 `lexicon_sha256`）未动 ⇒ 判据未漂移。
   * 错位归因：`anchor_eq_from_place` = 错位条目里 `scene.place == 同轮内前一次 PLACE_MOVE.from_place`
     （结构性证据：锚点 = 上一站）；`neither` = 既非 from 也非 to（**判伪反例**，>0 即推翻"移动前快照"解释）。
   * 两侧比率都给 Wilson95；两臂差异给 Fisher 精确检验双侧 p（纯标准库）。
@@ -44,7 +49,7 @@ sys.path.insert(0, str(_HERE))
 
 import place_content_consistency as PCC  # noqa: E402  （冻结尺子，只 import 不复制）
 
-RULER_VERSION = "r52-scene-fresh-v1"
+RULER_VERSION = "r52-scene-fresh-v1.1"
 DIALOGUE_TYPES = ("MSG_PUBLIC", "MSG_DM")
 
 
@@ -97,7 +102,8 @@ def measure(path: str) -> dict:
             msgs.append(e)
 
     n_dialogue = len(msgs)
-    n_scene = n_match = 0
+    n_scene = n_match = n_match_strict = 0
+    n_missing_place_scene = 0
     stale = []
     for e in msgs:
         p = e.get("payload") or {}
@@ -108,6 +114,11 @@ def measure(path: str) -> dict:
         n_scene += 1
         anchor = str(scene.get("place") or "")
         msg_place = str(p.get("place") or "")
+        if anchor == msg_place:
+            n_match_strict += 1
+        if not msg_place:          # D-1：place 为空 ⇒ 与空串比较无意义，剔除分母、单列计数
+            n_missing_place_scene += 1
+            continue
         if anchor == msg_place:
             n_match += 1
             continue
@@ -148,7 +159,10 @@ def measure(path: str) -> dict:
         "run_sha256": run_sha,
         "n_dialogue": n_dialogue,
         "scene_key": n_scene,
-        "anchor_fresh": wilson95(n_match, n_scene),
+        "anchor_missing_place": n_missing_place_scene,
+        "anchor_denominator": n_scene - n_missing_place_scene,
+        "anchor_fresh": wilson95(n_match, n_scene - n_missing_place_scene),
+        "anchor_fresh_strict_v1": wilson95(n_match_strict, n_scene),
         "anchor_stale": n_stale,
         "anchor_eq_from_place": eq_from,
         "anchor_neither_from_nor_to": neither,
@@ -230,11 +244,14 @@ def compare(off_path: str, on_path: str) -> dict:
 
 def _render(label: str, m: dict) -> None:
     af, cs = m["anchor_fresh"], m["consistency"]
-    print("[%s] dialogue=%d scene_key=%d anchor_match=%s/%s fresh_rate=%s stale=%d "
-          "(eq_from=%d neither=%d) | judged=%d agree=%s rate=%s"
-          % (label, m["n_dialogue"], m["scene_key"],
+    st = m.get("anchor_fresh_strict_v1")
+    print("[%s] dialogue=%d scene_key=%d missing_place=%d anchor_match=%s/%s fresh_rate=%s "
+          "(v1_strict=%s/%s=%.4f) stale=%d (eq_from=%d neither=%d) | judged=%d agree=%s rate=%s"
+          % (label, m["n_dialogue"], m["scene_key"], m.get("anchor_missing_place", 0),
              (af or {}).get("k", 0), (af or {}).get("n", 0),
-             ("%.4f" % af["rate"]) if af else "NA", m["anchor_stale"],
+             ("%.4f" % af["rate"]) if af else "NA",
+             (st or {}).get("k", 0), (st or {}).get("n", 0), (st or {}).get("rate") or 0.0,
+             m["anchor_stale"],
              m["anchor_eq_from_place"], m["anchor_neither_from_nor_to"],
              m["judged"], (cs or {}).get("k", 0), ("%.4f" % cs["rate"]) if cs else "NA"))
 
