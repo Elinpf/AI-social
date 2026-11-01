@@ -1,0 +1,237 @@
+{
+  "tool": "tools/dr/d4_rates.py",
+  "card": "T-D4-RATES",
+  "definitions": {
+    "D4-1": "机制到位率 = dialogue_repair.prompted=true 的 MSG 条数 / 该 agent 存在未了结 rift 的 MSG 条数",
+    "D4-2": "和解率 = 同线程后续出现修复词而注销的 rift 数 / 登记的 rift 数",
+    "open_timing": "处理到 seq=e 的 MSG 时，发言方台账在吸收完所有 seq<e 的可见 MSG 后仍非空",
+    "zero_rule": "分母=0 ⇒ 输出 status=undefined + undefined_reason，**不输出 0%**"
+  },
+  "inputs": [
+    {
+      "log": "../v2/evidence/d9z-on_n16r56_s42/run.jsonl",
+      "events": 90532,
+      "msgs": 444,
+      "mode_a_observed": {
+        "note": "口径 A = 该臂运行期真值（字段只在 enabled=1 时出现）",
+        "msgs_total": 444,
+        "msgs_with_dialogue_rift": 0,
+        "msgs_with_rift_open_gt0": 0,
+        "msgs_with_dialogue_repair_prompted_true": 0,
+        "d4_1": {
+          "numerator": 0,
+          "denominator": 0,
+          "value": null,
+          "status": "undefined",
+          "undefined_reason": "本臂没有任何 MSG 处于「有未了结 rift」状态（DR 未开时必然为 0）⇒ D4-1 在本臂未定义，不是 0%"
+        }
+      },
+      "mode_b_replay": {
+        "note": "口径 B = 离线重放假想台账（enabled=True）⇒ 预估，不是该臂读数",
+        "replay_enabled": true,
+        "agents": 16,
+        "registered": 83,
+        "resolved": 0,
+        "pruned_dropped": 34,
+        "d4_1_denominator_estimate": 434,
+        "d4_1_estimate_note": "口径 B 只给分母：批内无 `dialogue_repair.prompted` 字段 ⇒ 分子不可观测，故不给比值（给了就是编数）",
+        "d4_2": {
+          "numerator": 0,
+          "denominator": 83,
+          "value": 0.0,
+          "status": "ok"
+        },
+        "open_msgs_by_agent": {
+          "P008": 26,
+          "P009": 28,
+          "P010": 29,
+          "P011": 29,
+          "P012": 25,
+          "P013": 26,
+          "P014": 32,
+          "P015": 24,
+          "P016": 36,
+          "P002": 30,
+          "P004": 30,
+          "P001": 29,
+          "P007": 29,
+          "P003": 19,
+          "P006": 24,
+          "P005": 18
+        },
+        "registered_by_agent": {
+          "P001": 5,
+          "P002": 7,
+          "P003": 3,
+          "P004": 6,
+          "P006": 6,
+          "P007": 3,
+          "P008": 5,
+          "P009": 8,
+          "P010": 4,
+          "P011": 7,
+          "P012": 6,
+          "P013": 4,
+          "P014": 4,
+          "P015": 4,
+          "P016": 5,
+          "P005": 6
+        },
+        "resolved_by_agent": {},
+        "registered_by_thread_top": {
+          "TH-P005-PUB-0-0": 15,
+          "TH-P010-PUB-13-0": 15,
+          "TH-P007-PUB-24-0": 15,
+          "TH-P003-PUB-48-0": 15,
+          "TH-P012-P002-31": 5,
+          "TH-P005-P006-30": 3,
+          "TH-P009-P006-39": 2,
+          "TH-P012-P016-1": 1,
+          "TH-P009-P004-0": 1,
+          "TH-P004-P007-15": 1
+        },
+        "dwell_rounds": {
+          "n": 0,
+          "min": null,
+          "max": null,
+          "mean": null
+        },
+        "open_at_end": 49
+      }
+    },
+    {
+      "log": "/tmp/d9z_rehearsal_n16r56.20261101T091443/run.jsonl",
+      "events": 91091,
+      "msgs": 444,
+      "mode_a_observed": {
+        "note": "口径 A = 该臂运行期真值（字段只在 enabled=1 时出现）",
+        "msgs_total": 444,
+        "msgs_with_dialogue_rift": 0,
+        "msgs_with_rift_open_gt0": 0,
+        "msgs_with_dialogue_repair_prompted_true": 0,
+        "d4_1": {
+          "numerator": 0,
+          "denominator": 0,
+          "value": null,
+          "status": "undefined",
+          "undefined_reason": "本臂没有任何 MSG 处于「有未了结 rift」状态（DR 未开时必然为 0）⇒ D4-1 在本臂未定义，不是 0%"
+        }
+      },
+      "mode_b_replay": {
+        "note": "口径 B = 离线重放假想台账（enabled=True）⇒ 预估，不是该臂读数",
+        "replay_enabled": true,
+        "agents": 16,
+        "registered": 0,
+        "resolved": 0,
+        "pruned_dropped": 0,
+        "d4_1_denominator_estimate": 0,
+        "d4_1_estimate_note": "口径 B 只给分母：批内无 `dialogue_repair.prompted` 字段 ⇒ 分子不可观测，故不给比值（给了就是编数）",
+        "d4_2": {
+          "numerator": 0,
+          "denominator": 0,
+          "value": null,
+          "status": "undefined",
+          "undefined_reason": "重放台账里没有任何 rift 登记 ⇒ 和解率未定义（不是 0%）"
+        },
+        "open_msgs_by_agent": {},
+        "registered_by_agent": {},
+        "resolved_by_agent": {},
+        "registered_by_thread_top": {},
+        "dwell_rounds": {
+          "n": 0,
+          "min": null,
+          "max": null,
+          "mean": null
+        },
+        "open_at_end": 0
+      }
+    },
+    {
+      "log": "/tmp/dr_new2_out/run.jsonl",
+      "events": 7541,
+      "msgs": 80,
+      "mode_a_observed": {
+        "note": "口径 A = 该臂运行期真值（字段只在 enabled=1 时出现）",
+        "msgs_total": 80,
+        "msgs_with_dialogue_rift": 0,
+        "msgs_with_rift_open_gt0": 0,
+        "msgs_with_dialogue_repair_prompted_true": 0,
+        "d4_1": {
+          "numerator": 0,
+          "denominator": 0,
+          "value": null,
+          "status": "undefined",
+          "undefined_reason": "本臂没有任何 MSG 处于「有未了结 rift」状态（DR 未开时必然为 0）⇒ D4-1 在本臂未定义，不是 0%"
+        }
+      },
+      "mode_b_replay": {
+        "note": "口径 B = 离线重放假想台账（enabled=True）⇒ 预估，不是该臂读数",
+        "replay_enabled": true,
+        "agents": 16,
+        "registered": 0,
+        "resolved": 0,
+        "pruned_dropped": 0,
+        "d4_1_denominator_estimate": 0,
+        "d4_1_estimate_note": "口径 B 只给分母：批内无 `dialogue_repair.prompted` 字段 ⇒ 分子不可观测，故不给比值（给了就是编数）",
+        "d4_2": {
+          "numerator": 0,
+          "denominator": 0,
+          "value": null,
+          "status": "undefined",
+          "undefined_reason": "重放台账里没有任何 rift 登记 ⇒ 和解率未定义（不是 0%）"
+        },
+        "open_msgs_by_agent": {},
+        "registered_by_agent": {},
+        "resolved_by_agent": {},
+        "registered_by_thread_top": {},
+        "dwell_rounds": {
+          "n": 0,
+          "min": null,
+          "max": null,
+          "mean": null
+        },
+        "open_at_end": 0
+      }
+    }
+  ],
+  "selftest": {
+    "case1_register_then_repair": {
+      "registered": 1,
+      "resolved": 1,
+      "rate": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0,
+        "status": "ok"
+      }
+    },
+    "case2_register_no_repair": {
+      "registered": 1,
+      "resolved": 0,
+      "rate": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0,
+        "status": "ok"
+      }
+    },
+    "case3_no_rift": {
+      "registered": 0,
+      "resolved": 0,
+      "rate": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": null,
+        "status": "undefined",
+        "undefined_reason": "分母=0：无 rift 登记 ⇒ 未定义"
+      }
+    },
+    "case4_d41_shape": {
+      "numerator": 2,
+      "denominator": 3,
+      "value": 0.666667,
+      "status": "ok"
+    },
+    "selftest_ok": true
+  }
+}
