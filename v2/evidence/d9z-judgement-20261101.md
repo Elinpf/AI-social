@@ -20,8 +20,18 @@
 | **`A` 真实性**：`gap=0` 绝对条数 | `≥ 12` | **133**（133/278 对） | **过** |
 | **`B` 充分性**：`gap≥2` 占比 | `≤ 0.2688` | **0.1727**（48/278） | **过**（相对 OFF 基线 `0.3840` 降 **55.0%**） |
 | **护栏①** `n ≥ 260` | — | **278** | 过 |
-| **护栏②** `places.json` sha 一致 | — | `c36c0f8776372f4e…`（两臂同值，内容 sha·实测值） | 过 |
+| **护栏②** `code/config/places.json` sha 一致 | — | `c36c0f8776372f4e…`（内容 sha·实测值）；**取证方式见 §1.1** | 过 |
 | **护栏③** `degraded = 0` | — | `LLM_CALL` 2,729 条**全为 `False`** | 过 |
+
+> ### 1.1 护栏② 的取证方式（**勘误：原写法不成立**）
+> 原写"两臂同值"——**错**：OFF 臂 `v2/evidence/d9t-on_n16r24_s42/launch_cmd.txt` **根本没有 `places_sha256` 字段**（`grep -in place` 零命中），**"同值"不是比出来的**。
+> 正确取证（Leader 独立复核，`git show <rev>:code/config/places.json | sha256sum`）：
+> ```
+> cef1c58  code/config/places.json 内容 sha·实测值 = c36c0f8776372f4e…
+> 43a56c1  code/config/places.json 内容 sha·实测值 = c36c0f8776372f4e…
+> ```
+> ⇒ **结论仍为"过"，但依据是 git 对象内容比对**，且必须同时写明 **"OFF 臂未记录该字段"**。
+> 教训：**"两臂一致"必须说清"用什么比的"**；没字段就没比，写"一致"属于把"没比到"当"比过了"。
 
 **三档自校验（L6 第一步，先于任何率）**：
 ```
@@ -34,7 +44,7 @@
 |---|---|
 | 臂 | `feat/d9z-intra-round` @ `43a56c1`（基 `cef1c58`），`HITT_INTRA_ROUND_VISIBILITY=1` + 五开关全 `=1` |
 | 参数 | `16 agents × 56 rounds`, `seed=42` |
-| 跑批 | `09:17:06 → 10:03:12`，`rc=0`，墙钟 **2,725.7 s（45.4 min）** |
+| 跑批 | `09:17:06 → 10:03:12`，`rc=0`；**内部 `run.log seconds=2,725.7 s`／外部窗 2,766 s（差 40 s = 启动开销）** |
 | 三真 | `chain_ok=True`、`replay_parity=True`、`conservation_ok=True` |
 | FP 三元组 | `(rev=feat/d9z-intra-round@43a56c1, files=283, sha256=3625502cf90c28c5…)`（内容 sha·实测值），**after 同值 `fp_equal=YES`** |
 | `LLM_CALL` | 2,729 条；`dialogue` **444 / 444 / 0 回放**（`MSG 444 = dialogue 444`，1:1） |
@@ -52,9 +62,9 @@
 ⇒ **本机制做的是"在原有 48 条迟回之外新增 133 条同轮回复"，不是"把迟回改写成同轮"。**
 ⇒ **禁止写法**："迟回减少 55%"、"书信感下降 55%"。**许可写法**："迟回**占比**降 55.0%；迟回**条数**不变（48 → 48）"。
 
-### 3.2 新增 155 对（278 − 125）的去向
+### 3.2 新增 **153** 对（278 − 125）的去向
 ```
-gap=0：  0 → 133  （+133，占新增 85.8%）
+gap=0：  0 → 133  （+133，占新增 86.9%）
 gap=1： 77 →  97  （+20）
 gap≥2： 48 →  48  （  +0）
 ```
@@ -82,16 +92,22 @@ gap≥2： 48 →  48  （  +0）
 **本判定的三条判据都不含 `H`**（`H` 是 D9t 的主判据，D9z 未使用）。
 若日后有人引用 `H` 讨论本臂：**`H` 是合成量**，本实验**不能分离**其三个来源，故一律写"**合成效应**"，**不得写"可见性机制有效"**：
 
-| # | 来源 | 依据（本臂代码 `code/life/agent.py`） |
+| # | 来源 | 依据（本臂代码 `code/life/**`） |
 |---|---|---|
 | ① | `OPENINGS` 出口清单本身（8 出口轮换） | `openings_clause()` 追加段（关着时零字符） |
 | ② | **`S-1` 让位**（"禁把/拿开头"被撤） | `_apply_syntax_clause(..., drop_s1=openings_enabled())` |
 | ③ | 读数语料本身变了（新增 133 条同轮消息） | 本批 `gap=0` 0 → 133 |
+| **④** | **L-7 结构臂的「禁用开头」随可见性实时变化** | `code/life/l7_structural.py`：`"banned": _banned_openers(recent)`；`recent` = 该 agent **可见**的最近台词（`recent_bodies(wv)`）；`seg += "\n这几个开头镇上最近已经有人用过了，别再用：…"`。`LIFE_PROMPT_L7_STRUCT` **默认 ON**（`code/life/agent.py`），本臂未关 ⇒ **可见性变宽 → `recent` 变 → `banned` 变 → prompt 变** |
 
 > ⚠ **修正（2026-11-01 10:4x，`dialogue-core-dev` 报代码事实，Leader 核后改）**：本节初稿写的是"`ROTATION` 黑名单输入变化"——**这是错的**。
 > 本臂 `OPENINGS=1` 时 `narration_tail` 在 `if not narration_rotation_enabled() or openings_enabled():` 处**短路**，
 > `narration_example(kind, agent_id, round_no)` **根本不被调用** ⇒ **`ROTATION` 输入通道在本臂是死的**。
 > 把"配置写了 `=1`"当成"通道生效"，正是我们反复在治的那类误读；**此条已改，旧表述作废**。
+>
+> **再补 ④（2026-11-01 10:5x，`repro-verifier` 指出，Leader 核后加）**：本节初稿表头限定"依据 `code/life/agent.py`"，
+> **锁死在单个文件里，漏掉了另一个模块**。`l7_structural.py` 的 `banned` 直接吃 `WorldView`（可见事件）里的最近台词，
+> 而该臂**默认 ON** ⇒ 它才是**唯一有 prompt diff 实证**的通道（`wiring_proof.json` 里 `早上好呀 → 抬手把刚…` 两行即出自此链）。
+> **教训：查"哪条通道在动"，不能只读你会想到的那个文件。**
 
 ## 7. 边界
 
