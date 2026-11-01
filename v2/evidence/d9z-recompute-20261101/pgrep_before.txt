@@ -1,0 +1,12 @@
+--- pat=orchestration ---
+rc=1
+--- pat=run_module ---
+rc=1
+--- pat=D9T_OUT ---
+rc=1
+--- pat=[r]un_[b]atch ---
+rc=1
+--- pat=[n]ightly\.py ---
+rc=1
+--- ps 全量筛 ---
+ps_rc=1

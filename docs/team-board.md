@@ -35,6 +35,8 @@
 | 15 | 公开面接话 | `HITT_DIALOGUE_PUBLIC_REPLY` | 机制层接通（ON 7/30 vs OFF 0/24）；效果层**不可判**（分母 <30） | `v2/evidence/r41v_public_talk_n16r24_s42/` | `reports/R41-public-talk.md`、`R41b-public-talk-verify.md` | `f365255` |
 | 16 | **C1 处境锚（本轮主推）** | `LIFE_PROMPT_SCENE` | **机制层已成立**（`ctx.scene` 0/191 → 191/191）；**效果层已出读数：`不成立`** —— A0 `58/174=0.3333` vs A1 `56/165=0.3394`，`Δ=+0.61pp`，Fisher 双侧 `p=0.9090`（单批单 seed，点估计，不外推）。**判定合法性已核**：预登记卡 §5 五条不可判条件**逐条未触发**（条件1 要求任一臂 `judged<30`，两臂 174/165 均 ≥30）；但两臂均 `<68` ⇒ 读数**必须标 `probe`**（弱证据，禁写"显著/有效/生活气息提升"） | `v2/evidence/c1-scene-a0-..._n16r24_s42/`、`..._a1-...`、`v2/evidence/r46-c1-effect-metrics/` | `reports/R46-c1-effect-metrics-20261101.md`（`R45` 仍 DRAFT，勿引） | **`8b64615`（两臂同树）**；⚠️ R46 报告 sha **待提交后回填** |
 
+| 17 | **D9z 同轮往返可见（本轮主推）** | `HITT_INTRA_ROUND_VISIBILITY` | **机制层 `已成立`**（`gap=0` 相邻对 OFF 0 → ON **133**；三档 `{0:133,1:97,2:48}` 合计 278 = 相邻对总数，自校验 PASS）；**时序判据 `已成立`**（`A` 133≥12 过、`B` 0.1727≤0.2688 过、`n=278` 过）；**「生活气息提升」`未测`且已有反向线索**（`gap=0` 中 **74/133 = 55.6% 跨地点**，属异地即时通信）。⚠ 三条必须与结论同屏：①`gap≥2` **绝对条数两臂相同 48 = 48**，占比降 55.0% **全部来自分母 125→278**；②两臂参数不同（24 vs 56 rounds）不可直接比规模；③该批**无 `meta.json`**，归属只用「`launch_cmd.txt` `HEAD=43a56c1` + `run.jsonl` sha `1f0fec69…` + `fp_equal=YES`」三元组，且 `43a56c1` **不是当前分支祖先**（当前 `code/` 无该实现） | `v2/evidence/d9z-on_n16r56_s42/`（ON）、`d9t-on_n16r24_s42/`（OFF）、`d9z-recompute-20261101/`（本轮复算件）、`d9z_shots/`（4 张现渲 PNG） | `reports/R47-d9z-intra-round-visibility.md` | 臂 `43a56c1`（基 `cef1c58`）；数据 `1f0fec69…`（ON）/ `af4c44d1…`（OFF） |
+
 > 周期报告族另计：`reports/CYCLE-<序号>-<日期>.md` 共 **49** 份（截至 CYCLE-48）。周期报告是「时间切片」，与上表的「维度切片」不互替。
 
 ---
@@ -51,6 +53,7 @@
 | A-2 | `meta.assertions.code_unchanged_during_run` 恒 `null` | 两臂 meta 均为 `None`（无 EXIT trap 断言） | 属 `run_batch.sh` 加固，非本维度阻塞项 |
 | A-3 | `msg_graph_degree.note` 文案硬化（N-1） | 写死「出边 0、孤立节点」，实测 `isolated_nodes=false` | 纯文案模板化，可小改 |
 | A-4 | **`meta.switch_effective` 缺 `LIFE_PROMPT_SCENE` 提取器** | 两臂 `meta.json` 的 `switch_effective` 只有 4 个键（`HITT_DIALOGUE_EMOTION_ECHO` / `HITT_DIALOGUE_REPAIR` / `HITT_WEATHER` / `LIFE_PROMPT_ADDR_EVOLVE`）—— **`LIFE_PROMPT_SCENE` 这个键根本不存在**（不是 `null`）。⇒ 该臂开关生效**不能引用 meta**，只能用 `run.jsonl` 的 `payload.ctx.scene` 覆盖率（0/191 → 191/191）证明（`emit_run_meta.py:133/181` 是既有提取器范式） | 照 `_weather_switch_effective` 再写一个 scene 版即可，工具链内部缺口，非阻塞项 |
+| **A-1（已收口，新增行不改历史）** | **A-1 已由 R46 / `63d3226` 收口** | 效果层读数已出且已定稿：A0 `58/174=0.3333` vs A1 `56/165=0.3394`、`Δ=+0.61pp`、Fisher `p=0.9090` ⇒ **`不成立`**（probe 级）。证据目录 `v2/evidence/c1-scene-a{0,1}-20261101_n16r24_s42/`、`v2/evidence/r46-c1-effect-metrics/`；报告 `reports/R46-c1-effect-metrics-20261101.md` | 本行只做收口登记，不回改上面 A-1 历史行（看板纪律：不得改历史行） |
 
 ### B. 需前置条件
 
@@ -74,7 +77,9 @@
 |---|---|---|---|---|---|
 | 2026-11-01 12:00 | R1-scout | 侦察 / 看板建立 | `8b64615`（HEAD）/ `d04b064`（origin/master tip 前） | 仓库地图 + 跑批/证据/obs 流程已还原；推荐本轮做 **C1 处境锚效果层读数**（零新增跑批） | `repo-scout` |
 | 2026-11-01 12:11 | R46 | C1 处境锚（`LIFE_PROMPT_SCENE`）效果层 | 数据锚 `8b64615`（两臂同树）；R46 报告 sha **待提交回填** | **`不成立`**：机制层 `ctx.scene` 0/191→191/191（成立），效果层 A0 `58/174=0.3333` vs A1 `56/165=0.3394`、`Δ=+0.61pp`、Fisher `p=0.9090` ⇒ 未达预登记 `Δ≥+15pp` 且 `rate≥0.55` 双门槛；同时登记锚点时序缺陷 87/191（见 B-8） | 读数 `life-impl` / 独立复算 `repo-scout` |
-| 2026-11-01 12:20 | R3+R4 | C1 处境锚（`LIFE_PROMPT_SCENE`）复核与定稿 | 数据锚 `8b64615`（两臂同树）；R46 定稿 sha：首交付 `dcf8c9d` / 勘误 `7a1cbbd` / 定稿见回填提交（§17.2） | **四条并列**：①机制接通 `ctx.scene` 0/191→191/191；②成本可测 2255 calls / `degraded=0`、dialogue `tokens_in` 63305→73040（+15.4%）；③效果层按预登记判据 **不成立**（A0 `58/174=0.3333` vs A1 `56/165=0.3394`、Δ`+0.61pp`、Fisher `p=0.9090`）；④根因 = **锚点时序缺陷 87/191（45.55%）** + **尺子不区分「提到」与「在做」**。措辞红线：只能写「本轮实现存在可定位缺陷，该假设尚未获得公允检验」，禁写任何方向性结论 | 复核/定稿 `run-observer` |
+| 2026-11-01 12:20 | R3+R4 | C1 处境锚（`LIFE_PROMPT_SCENE`）复核与定稿 | 数据锚 `8b64615`（两臂同树）；R46 定稿 sha：首交付 `dcf8c9d` / 勘误 `7a1cbbd` / **定稿 `63d3226`** | **四条并列**：①机制接通 `ctx.scene` 0/191→191/191；②成本可测 2255 calls / `degraded=0`、dialogue `tokens_in` 63305→73040（+15.4%）；③效果层按预登记判据 **不成立**（A0 `58/174=0.3333` vs A1 `56/165=0.3394`、Δ`+0.61pp`、Fisher `p=0.9090`）；④根因 = **锚点时序缺陷 87/191（45.55%）** + **尺子不区分「提到」与「在做」**。措辞红线：只能写「本轮实现存在可定位缺陷，该假设尚未获得公允检验」，禁写任何方向性结论 | 复核/定稿 `run-observer` |
+
+| 2026-11-01 14:0x | R1-impl（R47） | **D9z 同轮往返可见（定稿 + 登记）** | 臂 `43a56c1`（基 `cef1c58`）；数据 `1f0fec69…`（ON，90532 行）/ `af4c44d1…`（OFF，33877 行）；R47 入库 commit **待回填**（本轮不 commit） | **机制层 + 时序判据 `已成立`，生活气息 `未测`**：`gap=0` 0→133、`{0:133,1:97,2:48}` 合计 278、`A` 133≥12 过、`B` 0.1727≤0.2688 过、`n=278` 过、`degraded=0`（2729 calls）；**同屏硬约束三条**：`gap≥2` 48=48 一条没少、55.0% 全部来自分母 125→278、`gap=0` 中 55.6%（74/133）跨地点为反向信号。**本轮零新增跑批、零新增 LLM 调用**；新增复算器 `tools/metrics/d9z_gap_recompute.py`（同输入逐字节一致），4 张现渲 PNG 落 `v2/evidence/d9z_shots/` | `life-engineer` |
 
 > 后续每轮追加一行。格式固定：`日期 | 轮次 | 维度 | sha | 结论 | 记录人`。**不得改历史行**，只追加。
 >

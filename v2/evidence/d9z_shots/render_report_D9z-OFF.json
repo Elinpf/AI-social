@@ -1,0 +1,97 @@
+{
+  "batch_id": "D9z-OFF",
+  "fail_count": 0,
+  "generated_at": "2026-11-01T14:05:00+08:00",
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9t-on_n16r24_s42/run.jsonl",
+  "log_sha256": "af4c44d11dd22eb84ae9e6fd1f5d32417d128d34ff07ec54d2bb08bd61256dec",
+  "ok_count": 2,
+  "policy": {
+    "blank_check": "自行像素自检（distinct_colors/top_color_frac/non_bg_frac 逐张落盘）；未沿用 shot.py 的单色判据——该判据对深色 dialogue.html 会假红（实测 80.09% 误判）",
+    "code_untouched": "服务根为临时目录 + 符号链接；未在 code/frontend 下写入任何文件",
+    "no_reuse": "输出同名 PNG 若已存在则先删除，只认本次现截",
+    "no_stitching": "每张图独立截图，禁止拼图/跨批混拼"
+  },
+  "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9t-on_n16r24_s42",
+  "run_sha256_in_threads": "af4c44d11dd22eb84ae9e6fd1f5d32417d128d34ff07ec54d2bb08bd61256dec",
+  "schema_version": "render-shots/1.0",
+  "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9z_shots/threads_D9z-OFF.json",
+  "threads_json_sha256": "2709855f76ad19702abe3d48ada717e478eb171de9907922811db43ea1c8da00",
+  "views": [
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 23653,
+        "height": 900,
+        "non_bg_frac": 0.539,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.1491,
+        "width": 1400
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9z_shots/D9z-OFF-chat-af4c44d1.png",
+      "png_bytes": 303424,
+      "png_mtime_iso": "2026-11-01T14:04:56+08:00",
+      "png_mtime_ns": 1793513096959742804,
+      "png_sha256": "22e26894dc9b5a0cf9315bbeead7f93fb6d21e04827322e3acfeff45cdb622dc",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9t-on_n16r24_s42/run.jsonl --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9z_shots/threads_D9z-OFF.json --label D9z-OFF",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9t-on_n16r24_s42/run.jsonl",
+        "log_sha256": "af4c44d11dd22eb84ae9e6fd1f5d32417d128d34ff07ec54d2bb08bd61256dec",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:35401/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_D9z-OFF/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9z_shots/D9z-OFF-chat-af4c44d1.png --width 1400 --height 900 --timeout 180.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9t-on_n16r24_s42",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9z_shots/threads_D9z-OFF.json",
+        "threads_json_sha256": "2709855f76ad19702abe3d48ada717e478eb171de9907922811db43ea1c8da00"
+      },
+      "view": "chat"
+    },
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 20743,
+        "height": 1050,
+        "non_bg_frac": 0.3872,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.3707,
+        "width": 1300
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9z_shots/D9z-OFF-rhythm-af4c44d1.png",
+      "png_bytes": 279199,
+      "png_mtime_iso": "2026-11-01T14:04:59+08:00",
+      "png_mtime_ns": 1793513099332693539,
+      "png_sha256": "56d60a92d3520cd12273d6cbcbaf7d234eb8ab2d884572bf2532655c9882987a",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9t-on_n16r24_s42/run.jsonl --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9z_shots/threads_D9z-OFF.json --label D9z-OFF",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9t-on_n16r24_s42/run.jsonl",
+        "log_sha256": "af4c44d11dd22eb84ae9e6fd1f5d32417d128d34ff07ec54d2bb08bd61256dec",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:35401/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_D9z-OFF/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9z_shots/D9z-OFF-rhythm-af4c44d1.png --width 1300 --height 1050 --timeout 180.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9t-on_n16r24_s42",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/d9z_shots/threads_D9z-OFF.json",
+        "threads_json_sha256": "2709855f76ad19702abe3d48ada717e478eb171de9907922811db43ea1c8da00"
+      },
+      "view": "rhythm"
+    }
+  ]
+}

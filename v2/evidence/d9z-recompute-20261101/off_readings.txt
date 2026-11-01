@@ -1,0 +1,26 @@
+label=OFF
+run_jsonl_sha256=af4c44d11dd22eb84ae9e6fd1f5d32417d128d34ff07ec54d2bb08bd61256dec
+events_total=33877
+msgs_deduped=191
+msg_dm=167
+msg_public=24
+msg_group=0
+adjacent_pairs=125
+gap_dist={1:77, 2:48}
+gap0=0
+gap_ge2=48
+gap_ge2_rate=0.3840
+gap0_same_place=0
+gap0_cross_place=0
+gap0_place_none=0
+gap0_cross_place_rate=NA
+prior_dist_gap1={0:30, 1:43, 2:4}
+quota_full_gap1=4/77
+prior_dist_gap2={1:22, 2:26}
+quota_full_gap2=26/48
+quota_full_gap2_cross=25/47
+quota_full_gap2_same=1/1
+dm_opportunity_full=30/38 reply_rate=0.7895
+dm_opportunity_not_full=95/129 reply_rate=0.7364
+llm_calls=2252
+llm_degraded=0
