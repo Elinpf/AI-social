@@ -130,7 +130,19 @@ git grep -n "ALL_INTENT_CLASSES" $M -- code/
 
 ⇒ **全仓零遍历、零预分配、零初始化依赖**；`+1` 个成员**只影响 `in` 判定**。
 
-**⇒ 排查起点换成**：真出现 `RIFT_*` 时，**先查 `_do_rift` 的调用条件**（`obs = self._on_rift_event if dr.get("rift_events") else None` 那一行，以及 `submit_intent(INTENT_RIFT, ...)` 的触发点），**不要先怀疑集合加成员**（已排除）。
+#### 7.1.1a 闸的判据固定为**纯观测式**（`repro-verifier` 提，Leader 采纳）
+
+```
+VETO  ⇔  count(RIFT_OPEN) + count(RIFT_CLOSE) > 0      （在 rift_events 关的臂上）
+```
+
+**该判据不引用任何成因** —— 不提 `ALL_INTENT_CLASSES`、不提 `_do_rift`、不提 env 解析。好处：
+- 成因再排除几个，**闸的字面一个字都不用改**；
+- **闸判据与排查清单分离** ⇒ 不会出现"某个成因排除了，闸看起来松了"的错觉。
+
+**这条是"把能查到的当成要判的"这一类错误的防线**（今晚已多次踩同一件事）。
+
+**⇒ 排查起点（仅当 VETO 触发时用，不是判据的一部分）**：**先查 `_do_rift` 的调用条件**（`obs = self._on_rift_event if dr.get("rift_events") else None` 那一行，以及 `submit_intent(INTENT_RIFT, ...)` 的触发点），**不要先怀疑集合加成员**（已排除）。
 
 #### 7.1.2 附加子项：元组顺序未变（移植时须核）
 
