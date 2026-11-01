@@ -165,6 +165,34 @@ def main(argv: list[str] | None = None) -> int:
 
     no_cue_off_pp = off["no_cue"]["rate_pct"]
     no_cue_on_pp = on["no_cue"]["rate_pct"]
+
+    #: 「旧尺子到底怎么错的」——压缩效应量化（防止把它写成"只低估某一臂"）
+    compression = {"per_arm": {}}
+    for arm, blk in (("off", off), ("on", on)):
+        g = blk["opener6_gap"]
+        old_pp = blk["strata"]["opener6"]["rate_pct"]
+        new_pp = blk["strata"]["first_clause_skip"]["rate_pct"]
+        compression["per_arm"][arm] = {
+            "missed_by_opener6": g["opener6_missed_but_skip_hit"],
+            "skip_hit": g["skip_hit"],
+            "relative_miss_rate_pct": round(100.0 * g["opener6_missed_but_skip_hit"] / g["skip_hit"], 4),
+            "compression_factor_old_over_new": round(old_pp / new_pp, 4),
+        }
+    d_old = contrast["opener6"]["delta_pp"]
+    d_new = contrast["first_clause_skip"]["delta_pp"]
+    compression["delta"] = {
+        "delta_pp_opener6": d_old,
+        "delta_pp_first_clause_skip": d_new,
+        "retained_fraction": round(d_old / d_new, 4),
+        "compressed_away_pp": round(d_new - d_old, 4),
+        "compressed_away_pct": round(100.0 * (1 - d_old / d_new), 2),
+    }
+    compression["note"] = (
+        "两臂压缩因子近似相等（off 0.3750 vs on 0.3904）⇒ 旧尺子是**近似等比压缩**两臂，"
+        "不是专门低估某一臂；其后果是 Δ 被压缩约 56%，且 OFF 基线 p1 被低估 36.65pp（用于 MDE 的 p1 因此也错）。"
+        "相对漏判率 ON 略低于 OFF，绝对条数 89>70 纯属 ON 基数更大——不得写成「系统性低估干预臂」。"
+    )
+
     payload = {
         "artifact": "r50-calib-20261101",
         "ruler_version": R.RULER_VERSION,
@@ -191,6 +219,7 @@ def main(argv: list[str] | None = None) -> int:
         "arms": {"off": off, "on": on},
         "contrast": contrast,
         "mde_table": mde_table,
+        "compression_analysis": compression,
         "no_cue": {
             "off": {"num": off["no_cue"]["num"], "den": off["no_cue"]["den"], "rate_pct": no_cue_off_pp},
             "on": {"num": on["no_cue"]["num"], "den": on["no_cue"]["den"], "rate_pct": no_cue_on_pp},

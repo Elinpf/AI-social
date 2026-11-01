@@ -180,6 +180,30 @@
     }
   },
   "artifact": "r50-calib-20261101",
+  "compression_analysis": {
+    "delta": {
+      "compressed_away_pct": 55.88,
+      "compressed_away_pp": 9.9477,
+      "delta_pp_first_clause_skip": 17.8011,
+      "delta_pp_opener6": 7.8534,
+      "retained_fraction": 0.4412
+    },
+    "note": "两臂压缩因子近似相等（off 0.3750 vs on 0.3904）⇒ 旧尺子是**近似等比压缩**两臂，不是专门低估某一臂；其后果是 Δ 被压缩约 56%，且 OFF 基线 p1 被低估 36.65pp（用于 MDE 的 p1 因此也错）。相对漏判率 ON 略低于 OFF，绝对条数 89>70 纯属 ON 基数更大——不得写成「系统性低估干预臂」。",
+    "per_arm": {
+      "off": {
+        "compression_factor_old_over_new": 0.375,
+        "missed_by_opener6": 70,
+        "relative_miss_rate_pct": 62.5,
+        "skip_hit": 112
+      },
+      "on": {
+        "compression_factor_old_over_new": 0.3904,
+        "missed_by_opener6": 89,
+        "relative_miss_rate_pct": 60.9589,
+        "skip_hit": 146
+      }
+    }
+  },
   "contrast": {
     "anywhere": {
       "delta_pp": 2.0942,
