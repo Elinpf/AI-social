@@ -1,0 +1,97 @@
+{
+  "batch_id": "R51-on",
+  "fail_count": 0,
+  "generated_at": "2026-11-01T22:56:59+08:00",
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-need-speech-on-20261101_n16r24_s42/run.jsonl",
+  "log_sha256": "1b79cd2dce78093a08e69172bd2641178c97ced2fe74e6e0c2b660c74a64deb1",
+  "ok_count": 2,
+  "policy": {
+    "blank_check": "自行像素自检（distinct_colors/top_color_frac/non_bg_frac 逐张落盘）；未沿用 shot.py 的单色判据——该判据对深色 dialogue.html 会假红（实测 80.09% 误判）",
+    "code_untouched": "服务根为临时目录 + 符号链接；未在 code/frontend 下写入任何文件",
+    "no_reuse": "输出同名 PNG 若已存在则先删除，只认本次现截",
+    "no_stitching": "每张图独立截图，禁止拼图/跨批混拼"
+  },
+  "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-need-speech-on-20261101_n16r24_s42",
+  "run_sha256_in_threads": "1b79cd2dce78093a08e69172bd2641178c97ced2fe74e6e0c2b660c74a64deb1",
+  "schema_version": "render-shots/1.0",
+  "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-on_shots/threads_R51-on.json",
+  "threads_json_sha256": "7862f1426b9bfa5580fdb9dccbc7adb65e60764eeb1af326b4c6e132e040b63c",
+  "views": [
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 23227,
+        "height": 900,
+        "non_bg_frac": 0.5383,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.1499,
+        "width": 1400
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-on_shots/R51-on-chat-1b79cd2d.png",
+      "png_bytes": 287739,
+      "png_mtime_iso": "2026-11-01T22:56:56+08:00",
+      "png_mtime_ns": 1793545016225081660,
+      "png_sha256": "d78389c5dcf7c7c869471efc044a16b5f3a730e77652c8e50c5f7033e2057fe7",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-need-speech-on-20261101_n16r24_s42/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-need-speech-on-20261101_n16r24_s42/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-on_shots/threads_R51-on.json --label R51-on",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-need-speech-on-20261101_n16r24_s42/run.jsonl",
+        "log_sha256": "1b79cd2dce78093a08e69172bd2641178c97ced2fe74e6e0c2b660c74a64deb1",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:43649/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_R51-on/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-on_shots/R51-on-chat-1b79cd2d.png --width 1400 --height 900 --timeout 180.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-need-speech-on-20261101_n16r24_s42",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-on_shots/threads_R51-on.json",
+        "threads_json_sha256": "7862f1426b9bfa5580fdb9dccbc7adb65e60764eeb1af326b4c6e132e040b63c"
+      },
+      "view": "chat"
+    },
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 20767,
+        "height": 1050,
+        "non_bg_frac": 0.3872,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.3707,
+        "width": 1300
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-on_shots/R51-on-rhythm-1b79cd2d.png",
+      "png_bytes": 279562,
+      "png_mtime_iso": "2026-11-01T22:56:58+08:00",
+      "png_mtime_ns": 1793545018580881336,
+      "png_sha256": "1478c6f040c31c52249d678444d94950cbf884f42e152ab8fa5aee5471216506",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-need-speech-on-20261101_n16r24_s42/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-need-speech-on-20261101_n16r24_s42/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-on_shots/threads_R51-on.json --label R51-on",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-need-speech-on-20261101_n16r24_s42/run.jsonl",
+        "log_sha256": "1b79cd2dce78093a08e69172bd2641178c97ced2fe74e6e0c2b660c74a64deb1",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:43649/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_R51-on/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-on_shots/R51-on-rhythm-1b79cd2d.png --width 1300 --height 1050 --timeout 180.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-need-speech-on-20261101_n16r24_s42",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r51-on_shots/threads_R51-on.json",
+        "threads_json_sha256": "7862f1426b9bfa5580fdb9dccbc7adb65e60764eeb1af326b4c6e132e040b63c"
+      },
+      "view": "rhythm"
+    }
+  ]
+}

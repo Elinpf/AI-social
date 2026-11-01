@@ -1,0 +1,153 @@
+{
+  "dim_dist": {
+    "esteem": 13,
+    "leisure": 78,
+    "mastery": 3,
+    "satiety": 73,
+    "social": 24
+  },
+  "fatigue_hit": {
+    "den": 191,
+    "num": 6,
+    "rate": 0.031414,
+    "rate_pct": 3.1414,
+    "status": "ok",
+    "wilson95": {
+      "hi": 0.06683,
+      "lo": 0.014475,
+      "p": 0.031414
+    }
+  },
+  "fatigue_lexicon": [
+    "累",
+    "困",
+    "乏",
+    "歇",
+    "打盹",
+    "打哈欠",
+    "睁不开眼",
+    "缓口气"
+  ],
+  "fatigue_or_food_hit": {
+    "den": 191,
+    "num": 60,
+    "rate": 0.314136,
+    "rate_pct": 31.4136,
+    "status": "ok",
+    "wilson95": {
+      "hi": 0.38308,
+      "lo": 0.252521,
+      "p": 0.314136
+    }
+  },
+  "food_hit": {
+    "den": 191,
+    "num": 54,
+    "rate": 0.282723,
+    "rate_pct": 28.2723,
+    "status": "ok",
+    "wilson95": {
+      "hi": 0.350384,
+      "lo": 0.223629,
+      "p": 0.282723
+    }
+  },
+  "food_lexicon": [
+    "吃",
+    "饭",
+    "饿",
+    "面包",
+    "菜",
+    "汤",
+    "茶",
+    "粥",
+    "饼",
+    "干粮"
+  ],
+  "impl_sha256": "9516a7f753787dcf2d38fe314a64d3f774e097c2d03cbacc9b5e02d9733f32bc",
+  "inject_source": {
+    "noise": "observed_ctx_need_speech",
+    "urgent": "observed_ctx_need_speech"
+  },
+  "label": "r51-on",
+  "lexicon_sha256": "4b588b7aa3c0183685be9b10415fac80a9c16b630a5c1850fc38559d1b1708da",
+  "log": {
+    "path": "v2/evidence/r51-need-speech-on-20261101_n16r24_s42/run.jsonl",
+    "sha256": "1b79cd2dce78093a08e69172bd2641178c97ced2fe74e6e0c2b660c74a64deb1"
+  },
+  "mood_dist": {
+    "孤单": 11,
+    "平和": 69,
+    "紧绷": 43,
+    "饥饿": 68
+  },
+  "n_msgs": 191,
+  "n_with_need": 191,
+  "need_inject_rate": {
+    "den": 191,
+    "num": 191,
+    "rate": 1.0,
+    "rate_pct": 100.0,
+    "status": "ok",
+    "wilson95": {
+      "hi": 1.0,
+      "lo": 0.980283,
+      "p": 1.0
+    }
+  },
+  "need_value": {
+    "max": 58,
+    "median": 32,
+    "min": 0
+  },
+  "noise_inject_rate": {
+    "den": 69,
+    "num": 0,
+    "rate": 0.0,
+    "rate_pct": 0.0,
+    "status": "ok",
+    "wilson95": {
+      "hi": 0.052739,
+      "lo": 0.0,
+      "p": 0.0
+    }
+  },
+  "noise_need_rate": {
+    "den": 191,
+    "num": 69,
+    "rate": 0.361257,
+    "rate_pct": 36.1257,
+    "status": "ok",
+    "wilson95": {
+      "hi": 0.431498,
+      "lo": 0.296486,
+      "p": 0.361257
+    }
+  },
+  "ruler_version": "r51-need-speech-v1",
+  "urgent_keep_rate": {
+    "den": 122,
+    "num": 122,
+    "rate": 1.0,
+    "rate_pct": 100.0,
+    "status": "ok",
+    "wilson95": {
+      "hi": 1.0,
+      "lo": 0.969473,
+      "p": 1.0
+    }
+  },
+  "urgent_need_rate": {
+    "den": 191,
+    "num": 122,
+    "rate": 0.638743,
+    "rate_pct": 63.8743,
+    "status": "ok",
+    "wilson95": {
+      "hi": 0.703514,
+      "lo": 0.568502,
+      "p": 0.638743
+    }
+  },
+  "urgent_threshold": 40
+}
