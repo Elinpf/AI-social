@@ -12,6 +12,10 @@
 
 **这是对 Leader 自己判断的更正，不是对别人的更正。**
 
+> ### ⚠ 本表的适用范围（`repro-verifier` 2026-11-02 04:1x 提，Leader 采纳）
+> **本表核的是「合并树 / `efcf441`」，不是 `master`。** `master` 上 `observer` / `rift_ids` 在 `code/life/dialogue_repair.py` **零命中** —— 因为这些代码**还没进 master**。
+> ⇒ 读本表时不要问"master 上为什么找不到"，**本表回答的是"合并后会怎样"，不是"master 现在怎样"**。
+
 ## 2. 逐文件核查（每一行都给了判据）
 
 | # | 文件 | 合并带来的改动 | off 时是否原样 | 判据 |
@@ -32,6 +36,20 @@
 1. **`dialogue_repair.json` 追加键** —— 担心的"默认值解析被改"不成立：既有键未动，新键由 `_bool` / `_tri` 读，未设时分别回落到 `False` / `None`。
 2. **`EVENT_TYPES` 加成员** —— 担心的"事件类型集合被用于排序"不成立：它是 `set` 字面量，用法只有 `in` 校验。
 3. **`ALL_INTENT_CLASSES` 加成员** —— 担心的"意图枚举被落盘/计数"不成立：全仓唯一消费点 `integration.py:423` 是 `set(...)` 成员校验。
+
+## 3.5 若实测分叉：先按**事件类型**定模块，再用上表排除（`repro-verifier` 提，Leader 采纳）
+
+**排除法（上表）是"逐项排掉已排除项"，定位法是"直接指向模块"，两步并行更快：**
+
+| `first_divergence` 的事件类型 | 指向模块 |
+|---|---|
+| `OBSERVATION` / `perceive` 相关 | **D9z 感知侧**（`code/engine/perceive.py`） |
+| `MSG_*` / `LLM_CALL(purpose=dialogue)` | **对话侧**（`code/life/agent.py`） |
+| `MEMORY_WRITE` / `MEMORY_FORGET` / `MEMORY_CONSOLIDATE` | **记忆侧**（`code/orchestration/integration.py` 的 `_do_memory`） |
+| **`RIFT_*` 出现在 off 臂** | **rift 侧 off 未彻底 —— 最严重，直接定责** |
+| `TURN_SEAL` / `state_hash` 相关 | **引擎侧**（`code/engine/kernel.py` 的 commit 顺序） |
+
+⇒ **先看类型锁定模块，再在该模块内用 §2 那张表逐项排除。**
 
 ## 4. 这条静态结论**不能替代**实测（边界写死）
 
@@ -64,3 +82,13 @@ git grep -n "ALL_INTENT_CLASSES" $M -- code/
 | 外推式 | 假定不变的量 | 值来源 |
 |---|---|---|
 | 无 | 不适用 | 不适用 |
+
+## 6. 「双证」的措辞规则（`repro-verifier` 提，Leader 采纳为判定口径）
+
+| 情形 | 允许的写法 | 禁止的写法 |
+|---|---|---|
+| `A ≡ B` **且** 本表覆盖了该次分叉涉及的全部文件 | **「双证通过」**（静态 + 实测） | 不得只写"实测通过"而漏掉静态（那会让人以为是跑空） |
+| `A ≡ B` 但本表**未覆盖**某文件 | **「实测通过、静态未覆盖」** | **不得写"双证"** |
+| `A ≠ B` | 「实测不等 + 分叉点 + 归因到文件/符号」 | 不得写"基本等价""差异很小" |
+
+**理由**：`identical=true` 单独立着，读者无法区分"真跑空了"与"真等价"；**静态逐处核过 + 实测全等**才是双证。反过来，静态没覆盖就说双证，是把"没查"当成"查过"。
