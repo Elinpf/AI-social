@@ -1,0 +1,97 @@
+{
+  "batch_id": "r48-probe-mock-n16r24-s42",
+  "fail_count": 0,
+  "generated_at": "2026-11-01T16:14:33+08:00",
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-probe-mock-n16r24-s42/run.jsonl",
+  "log_sha256": "61fce5cef4ef64305b639559c1bbff0f1d78e9e2a4c3341afc3fe7d27c01ad05",
+  "ok_count": 2,
+  "policy": {
+    "blank_check": "自行像素自检（distinct_colors/top_color_frac/non_bg_frac 逐张落盘）；未沿用 shot.py 的单色判据——该判据对深色 dialogue.html 会假红（实测 80.09% 误判）",
+    "code_untouched": "服务根为临时目录 + 符号链接；未在 code/frontend 下写入任何文件",
+    "no_reuse": "输出同名 PNG 若已存在则先删除，只认本次现截",
+    "no_stitching": "每张图独立截图，禁止拼图/跨批混拼"
+  },
+  "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-probe-mock-n16r24-s42",
+  "run_sha256_in_threads": "61fce5cef4ef64305b639559c1bbff0f1d78e9e2a4c3341afc3fe7d27c01ad05",
+  "schema_version": "render-shots/1.0",
+  "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-place-mock_shots/threads_r48-probe-mock-n16r24-s42.json",
+  "threads_json_sha256": "2c53b8a21272775ff5912b826b49f42255cfd2cb2ff6186a7584318981591178",
+  "views": [
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 21905,
+        "height": 900,
+        "non_bg_frac": 0.4076,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.268,
+        "width": 1400
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-place-mock_shots/r48-probe-mock-n16r24-s42-chat-61fce5ce.png",
+      "png_bytes": 240403,
+      "png_mtime_iso": "2026-11-01T16:14:29+08:00",
+      "png_mtime_ns": 1793520869683965576,
+      "png_sha256": "d6ea2ee125f4b954a06733482e99f9fca24e6e8aca2e6a640d8532f640ff3a6b",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-probe-mock-n16r24-s42/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-probe-mock-n16r24-s42/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-place-mock_shots/threads_r48-probe-mock-n16r24-s42.json --label r48-probe-mock-n16r24-s42",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-probe-mock-n16r24-s42/run.jsonl",
+        "log_sha256": "61fce5cef4ef64305b639559c1bbff0f1d78e9e2a4c3341afc3fe7d27c01ad05",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:45335/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_r48-probe-mock-n16r24-s42/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-place-mock_shots/r48-probe-mock-n16r24-s42-chat-61fce5ce.png --width 1400 --height 900 --timeout 240.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-probe-mock-n16r24-s42",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-place-mock_shots/threads_r48-probe-mock-n16r24-s42.json",
+        "threads_json_sha256": "2c53b8a21272775ff5912b826b49f42255cfd2cb2ff6186a7584318981591178"
+      },
+      "view": "chat"
+    },
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 20876,
+        "height": 1050,
+        "non_bg_frac": 0.3889,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.3703,
+        "width": 1300
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-place-mock_shots/r48-probe-mock-n16r24-s42-rhythm-61fce5ce.png",
+      "png_bytes": 282109,
+      "png_mtime_iso": "2026-11-01T16:14:32+08:00",
+      "png_mtime_ns": 1793520872059925049,
+      "png_sha256": "f6d64b640a9d6ee748e4ffa35e53e0ff62e1900b7488dbf606defce8dadd74bd",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-probe-mock-n16r24-s42/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-probe-mock-n16r24-s42/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-place-mock_shots/threads_r48-probe-mock-n16r24-s42.json --label r48-probe-mock-n16r24-s42",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-probe-mock-n16r24-s42/run.jsonl",
+        "log_sha256": "61fce5cef4ef64305b639559c1bbff0f1d78e9e2a4c3341afc3fe7d27c01ad05",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:45335/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_r48-probe-mock-n16r24-s42/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-place-mock_shots/r48-probe-mock-n16r24-s42-rhythm-61fce5ce.png --width 1300 --height 1050 --timeout 240.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-probe-mock-n16r24-s42",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r48-place-mock_shots/threads_r48-probe-mock-n16r24-s42.json",
+        "threads_json_sha256": "2c53b8a21272775ff5912b826b49f42255cfd2cb2ff6186a7584318981591178"
+      },
+      "view": "rhythm"
+    }
+  ]
+}
