@@ -88,23 +88,64 @@ def _ratio(num: int, den: int, undefined_reason: str) -> dict:
 
 # ---------------------------------------------------------------- 口径 A
 def mode_a(recs: list) -> dict:
-    """批内可观测：直接读 MSG 上的 `dialogue_rift` / `dialogue_repair` 字段。"""
+    """批内可观测：直接读 MSG 上的 `dialogue_rift` / `dialogue_repair` 字段。
+
+    ⚠ **字段缺失 ≠ 观测到 0**：旧批次可能根本没有 `dialogue_repair` 键（R13 之前）。
+    这里显式统计"键是否存在"，并把缺键情形报为 `not_observable`，不当作 0 参与比值。
+    """
+    import life.dialogue_repair as DRm
+
     msgs = _msgs(recs)
-    with_rift = [m for m in msgs if isinstance((m.get("payload") or {}).get("dialogue_rift"), dict)]
-    open_gt0 = [m for m in with_rift
+    has_rift_key = [m for m in msgs if isinstance((m.get("payload") or {}).get("dialogue_rift"), dict)]
+    has_repair_key = [m for m in msgs if isinstance((m.get("payload") or {}).get("dialogue_repair"), dict)]
+    open_gt0 = [m for m in has_rift_key
                 if int(((m.get("payload") or {}).get("dialogue_rift") or {}).get("open") or 0) > 0]
+    # 按 route 分组：`dialogue_repair` 只在 reply 路径存在 ⇒ 分母必须给"全口径"与"reply 子口径"两个
+    open_reply = [m for m in open_gt0
+                  if ((m.get("payload") or {}).get("dialogue_rift") or {}).get("route") == "reply"]
+    open_initiate = [m for m in open_gt0
+                     if ((m.get("payload") or {}).get("dialogue_rift") or {}).get("route") == "initiate"]
     prompted = [m for m in msgs
                 if ((m.get("payload") or {}).get("dialogue_repair") or {}).get("prompted") is True]
-    denominator = len(open_gt0)
+    repair_word_msgs = sum(1 for m in msgs if DRm.has_repair((m.get("payload") or {}).get("body") or ""))
+    neg_word_msgs = sum(1 for m in msgs if DRm.is_gripe((m.get("payload") or {}).get("body") or ""))
+
+    # ⚠ 若 `dialogue_repair` 键根本不存在（历史版本早于 R13），分子**不可观测**
+    # ⇒ 必须报 undefined，**不能被算成 0.0**（否则就是"字段缺失伪装成 0%"）
+    not_obs = len(has_repair_key) == 0
+    d41_all = ({"numerator": None, "denominator": len(open_gt0), "value": None,
+                "status": "undefined",
+                "undefined_reason": "dialogue_repair 键在本批不存在（代码版本早于 R13）"
+                                    "⇒ 分子不可观测，**不是 0%**"}
+               if not_obs else
+               _ratio(len(prompted), len(open_gt0),
+                      "本臂没有一条 MSG 处于「有未了结 rift」状态 ⇒ D4-1 未定义"))
+    d41_reply = ({"numerator": None, "denominator": len(open_reply), "value": None,
+                  "status": "undefined",
+                  "undefined_reason": "dialogue_repair 键在本批不存在（代码版本早于 R13）"
+                                      "⇒ 分子不可观测，**不是 0%**"}
+                 if not_obs else
+                 _ratio(len(prompted), len(open_reply),
+                        "本臂没有「reply 路径且带未了结 rift」的 MSG ⇒ D4-1 未定义"))
     return {
         "note": "口径 A = 该臂运行期真值（字段只在 enabled=1 时出现）",
         "msgs_total": len(msgs),
-        "msgs_with_dialogue_rift": len(with_rift),
-        "msgs_with_rift_open_gt0": denominator,
+        "field_presence": {
+            "msgs_with_dialogue_rift": len(has_rift_key),
+            "msgs_with_dialogue_repair": len(has_repair_key),
+            "msgs_missing_dialogue_repair_key": len(msgs) - len(has_repair_key),
+            "dialogue_repair_not_observable": len(has_repair_key) == 0,
+            "note": "键不存在 ⇒ 该通道在本批不可观测（历史版本早于 R13），**不是 0**",
+        },
+        "msgs_with_rift_open_gt0": len(open_gt0),
+        "rift_open_gt0_by_route": {"reply": len(open_reply), "initiate": len(open_initiate)},
         "msgs_with_dialogue_repair_prompted_true": len(prompted),
-        "d4_1": _ratio(len(prompted), denominator,
-                       "本臂没有任何 MSG 处于「有未了结 rift」状态（DR 未开时必然为 0）"
-                       "⇒ D4-1 在本臂未定义，不是 0%"),
+        "word_hits": {"neg_word_msgs": neg_word_msgs, "repair_word_msgs": repair_word_msgs},
+        # D4-1 两个分母：全口径（下界，被 initiate 稀释）与 reply 子口径（公平值）
+        "d4_1_all_paths": d41_all,
+        "d4_1_reply_only": d41_reply,
+        "d4_1": d41_reply if d41_reply["status"] == "ok" else d41_all,
+        "d4_2_note": "口径 A 无法观测'注销'（`ingest_one` 的 pop 不落事件）⇒ D4-2 只看口径 B",
     }
 
 
@@ -181,8 +222,14 @@ def mode_b(recs: list) -> dict:
                 pruned += n0 - len(rifts[a])
         last_round = rnd
 
+    import life.dialogue_repair as _DR2
+    repair_word_msgs = sum(1 for m in msgs
+                           if _DR2.has_repair((m.get("payload") or {}).get("body") or ""))
+    neg_word_msgs = sum(1 for m in msgs
+                        if _DR2.is_gripe((m.get("payload") or {}).get("body") or ""))
     return {
         "note": "口径 B = 离线重放假想台账（enabled=True）⇒ 预估，不是该臂读数",
+        "word_hits": {"neg_word_msgs": neg_word_msgs, "repair_word_msgs": repair_word_msgs},
         "replay_enabled": True,
         "agents": len(agents),
         "registered": registered,
@@ -253,11 +300,45 @@ def selftest() -> dict:
     return out
 
 
+def export_slice(recs: list, out_path: str) -> dict:
+    """导出**可入库的复算底稿**：只留最有用的字段（<1MB 量级），不含 body/ctx 等大字段。"""
+    rows = []
+    for m in _msgs(recs):
+        p = m.get("payload") or {}
+        rift = p.get("dialogue_rift") if isinstance(p.get("dialogue_rift"), dict) else None
+        rep = p.get("dialogue_repair") if isinstance(p.get("dialogue_repair"), dict) else None
+        rows.append({
+            "msg_uid": p.get("msg_uid") or p.get("msg_id"),
+            "seq": int(m.get("seq", 0)),
+            "round": int(m.get("round", 0) or 0),
+            "type": m.get("type"),
+            "author": _sender(p),
+            "thread_id": p.get("thread_id"),
+            "reply_to": p.get("reply_to"),
+            "dialogue_rift": ({"prompted": bool(rift.get("prompted")), "open": int(rift.get("open") or 0),
+                               "route": rift.get("route"), "with": rift.get("with"),
+                               "threads": rift.get("threads"), "age_rounds": rift.get("age_rounds")}
+                              if rift else None),
+            "dialogue_repair": ({"prompted": bool(rep.get("prompted")), "rift_ids": rep.get("rift_ids"),
+                                 "trigger_seqs": rep.get("trigger_seqs"), "thread": rep.get("thread")}
+                                if rep else None),
+        })
+    payload = {"generated_by": "tools/dr/d4_rates.py", "card": "T-D4-RATES",
+               "note": "切片：只含复算 D4 所需字段；body 未导出（体积与隐私）", "msgs": len(rows),
+               "rows": rows}
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=1)
+    return {"slice_path": out_path, "slice_msgs": len(rows),
+            "slice_bytes": os.path.getsize(out_path)}
+
+
 def main(argv: list) -> int:
     ap = argparse.ArgumentParser(description="D4 臂内条件率（只读）")
     ap.add_argument("--log", action="append", required=True, help="run.jsonl（可多次）")
     ap.add_argument("--out", default=None)
     ap.add_argument("--skip-selftest", action="store_true")
+    ap.add_argument("--export-slice", default=None,
+                    help="导出切片 JSON 的路径（每个 --log 一个，用 {n} 占位序号）")
     args = ap.parse_args(argv[1:])
 
     result = {"tool": "tools/dr/d4_rates.py", "card": "T-D4-RATES",
@@ -273,6 +354,9 @@ def main(argv: list) -> int:
         recs = load(path)
         entry = {"log": path, "events": len(recs), "msgs": len(_msgs(recs)),
                  "mode_a_observed": mode_a(recs), "mode_b_replay": mode_b(recs)}
+        if args.export_slice:
+            sp = args.export_slice.replace("{n}", str(len(result["inputs"]) + 1))
+            entry["slice"] = export_slice(recs, sp)
         result["inputs"].append(entry)
 
     if not args.skip_selftest:

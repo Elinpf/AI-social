@@ -1,0 +1,9381 @@
+{
+ "generated_by": "tools/dr/d4_rates.py",
+ "card": "T-D4-RATES",
+ "note": "切片：只含复算 D4 所需字段；body 未导出（体积与隐私）",
+ "msgs": 683,
+ "rows": [
+  {
+   "msg_uid": "42:53",
+   "seq": 53,
+   "round": 0,
+   "type": "MSG_PUBLIC",
+   "author": "P002",
+   "thread_id": "TH-P002-PUB-0-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:73",
+   "seq": 73,
+   "round": 0,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P002-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:84",
+   "seq": 84,
+   "round": 0,
+   "type": "MSG_PUBLIC",
+   "author": "P005",
+   "thread_id": "TH-P005-PUB-0-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:113",
+   "seq": 113,
+   "round": 0,
+   "type": "MSG_PUBLIC",
+   "author": "P008",
+   "thread_id": "TH-P008-PUB-0-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:124",
+   "seq": 124,
+   "round": 0,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P009-P004-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:135",
+   "seq": 135,
+   "round": 0,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P009-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:145",
+   "seq": 145,
+   "round": 0,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P012-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:156",
+   "seq": 156,
+   "round": 0,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P012-P016-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:167",
+   "seq": 167,
+   "round": 0,
+   "type": "MSG_PUBLIC",
+   "author": "P013",
+   "thread_id": "TH-P013-PUB-0-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:178",
+   "seq": 178,
+   "round": 0,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P011-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:189",
+   "seq": 189,
+   "round": 0,
+   "type": "MSG_PUBLIC",
+   "author": "P015",
+   "thread_id": "TH-P015-PUB-0-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:200",
+   "seq": 200,
+   "round": 0,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P005-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:549",
+   "seq": 549,
+   "round": 1,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P004-P002-0",
+   "reply_to": "42:73",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:675",
+   "seq": 675,
+   "round": 1,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P009-P004-0",
+   "reply_to": "42:124",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:694",
+   "seq": 694,
+   "round": 1,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P016-P005-0",
+   "reply_to": "42:200",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:831",
+   "seq": 831,
+   "round": 1,
+   "type": "MSG_PUBLIC",
+   "author": "P008",
+   "thread_id": "TH-P008-PUB-1-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:954",
+   "seq": 954,
+   "round": 1,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P010-P009-0",
+   "reply_to": "42:135",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:1075",
+   "seq": 1075,
+   "round": 1,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P009-1",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:1198",
+   "seq": 1198,
+   "round": 1,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P014-P011-0",
+   "reply_to": "42:178",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:1264",
+   "seq": 1264,
+   "round": 1,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P011-P012-0",
+   "reply_to": "42:145",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:1326",
+   "seq": 1326,
+   "round": 1,
+   "type": "MSG_PUBLIC",
+   "author": "P013",
+   "thread_id": "TH-P013-PUB-1-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:1447",
+   "seq": 1447,
+   "round": 1,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P011-1",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:1509",
+   "seq": 1509,
+   "round": 1,
+   "type": "MSG_PUBLIC",
+   "author": "P015",
+   "thread_id": "TH-P015-PUB-1-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:1632",
+   "seq": 1632,
+   "round": 1,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P012-P016-0",
+   "reply_to": "42:156",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:2055",
+   "seq": 2055,
+   "round": 3,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P002-3",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:2068",
+   "seq": 2068,
+   "round": 3,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P002-P009-3",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:2090",
+   "seq": 2090,
+   "round": 3,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P002-0",
+   "reply_to": "42:549",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:2095",
+   "seq": 2095,
+   "round": 3,
+   "type": "MSG_PUBLIC",
+   "author": "P005",
+   "thread_id": "TH-P005-PUB-3-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:2107",
+   "seq": 2107,
+   "round": 3,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P007-P005-3",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:2120",
+   "seq": 2120,
+   "round": 3,
+   "type": "MSG_PUBLIC",
+   "author": "P008",
+   "thread_id": "TH-P008-PUB-3-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:2141",
+   "seq": 2141,
+   "round": 3,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P010-P009-1",
+   "reply_to": "42:1075",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:2162",
+   "seq": 2162,
+   "round": 3,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P009-0",
+   "reply_to": "42:954",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:2183",
+   "seq": 2183,
+   "round": 3,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P014-P011-1",
+   "reply_to": "42:1447",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:2196",
+   "seq": 2196,
+   "round": 3,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P012-P016-0",
+   "reply_to": "42:1632",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:2209",
+   "seq": 2209,
+   "round": 3,
+   "type": "MSG_PUBLIC",
+   "author": "P013",
+   "thread_id": "TH-P013-PUB-3-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:2230",
+   "seq": 2230,
+   "round": 3,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P011-0",
+   "reply_to": "42:1198",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:2262",
+   "seq": 2262,
+   "round": 3,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P005-0",
+   "reply_to": "42:694",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:2773",
+   "seq": 2773,
+   "round": 4,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P002-4",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:2914",
+   "seq": 2914,
+   "round": 4,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P004-P002-0",
+   "reply_to": "42:2090",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:3121",
+   "seq": 3121,
+   "round": 4,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P013-4",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:3271",
+   "seq": 3271,
+   "round": 4,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P016-P005-0",
+   "reply_to": "42:2262",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:3464",
+   "seq": 3464,
+   "round": 4,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P007-P005-4",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:3601",
+   "seq": 3601,
+   "round": 4,
+   "type": "MSG_PUBLIC",
+   "author": "P008",
+   "thread_id": "TH-P008-PUB-4-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:3760",
+   "seq": 3760,
+   "round": 4,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P010-P009-0",
+   "reply_to": "42:2162",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:3841",
+   "seq": 3841,
+   "round": 4,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P009-1",
+   "reply_to": "42:2141",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:3982",
+   "seq": 3982,
+   "round": 4,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P014-P011-0",
+   "reply_to": "42:2230",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:4039",
+   "seq": 4039,
+   "round": 4,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P012-P015-4",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:4182",
+   "seq": 4182,
+   "round": 4,
+   "type": "MSG_PUBLIC",
+   "author": "P013",
+   "thread_id": "TH-P013-PUB-4-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:4240",
+   "seq": 4240,
+   "round": 4,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P011-1",
+   "reply_to": "42:2183",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:4424",
+   "seq": 4424,
+   "round": 4,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P012-P016-0",
+   "reply_to": "42:2196",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P012"
+    ],
+    "threads": [
+     "TH-P012-P016-0"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:4766",
+   "seq": 4766,
+   "round": 5,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P012-P015-4",
+   "reply_to": "42:4039",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:4869",
+   "seq": 4869,
+   "round": 6,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P003-6",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:4890",
+   "seq": 4890,
+   "round": 6,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P001-P002-4",
+   "reply_to": "42:2773",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:4899",
+   "seq": 4899,
+   "round": 6,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P003-P014-6",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:4920",
+   "seq": 4920,
+   "round": 6,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P002-0",
+   "reply_to": "42:2914",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:4941",
+   "seq": 4941,
+   "round": 6,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P007-P005-4",
+   "reply_to": "42:3464",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:4946",
+   "seq": 4946,
+   "round": 6,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P003-6",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:4967",
+   "seq": 4967,
+   "round": 6,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P007-P004-6",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:4988",
+   "seq": 4988,
+   "round": 6,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P008-P007-6",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:5009",
+   "seq": 5009,
+   "round": 6,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P010-P009-1",
+   "reply_to": "42:3841",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-P009-1"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:5018",
+   "seq": 5018,
+   "round": 6,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P009-0",
+   "reply_to": "42:3760",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:5039",
+   "seq": 5039,
+   "round": 6,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P014-P011-1",
+   "reply_to": "42:4240",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:5044",
+   "seq": 5044,
+   "round": 6,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P012-P015-4",
+   "reply_to": "42:4766",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:5065",
+   "seq": 5065,
+   "round": 6,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P004-P013-4",
+   "reply_to": "42:3121",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:5070",
+   "seq": 5070,
+   "round": 6,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P011-0",
+   "reply_to": "42:3982",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:5096",
+   "seq": 5096,
+   "round": 6,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P005-0",
+   "reply_to": "42:3271",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P005"
+    ],
+    "threads": [
+     "TH-P016-P005-0"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:5497",
+   "seq": 5497,
+   "round": 7,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P002-4",
+   "reply_to": "42:4890",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:5556",
+   "seq": 5556,
+   "round": 7,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P004-P002-0",
+   "reply_to": "42:4920",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:5671",
+   "seq": 5671,
+   "round": 7,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P006-P003-6",
+   "reply_to": "42:4946",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:5732",
+   "seq": 5732,
+   "round": 7,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P013-4",
+   "reply_to": "42:5065",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:5893",
+   "seq": 5893,
+   "round": 7,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P016-P005-0",
+   "reply_to": "42:5096",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:6004",
+   "seq": 6004,
+   "round": 7,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P003-7",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:6049",
+   "seq": 6049,
+   "round": 7,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P008-P007-6",
+   "reply_to": "42:4988",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P008"
+    ],
+    "threads": [
+     "TH-P008-P007-6"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:6106",
+   "seq": 6106,
+   "round": 7,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P008-P007-7",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:6266",
+   "seq": 6266,
+   "round": 7,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P010-P009-0",
+   "reply_to": "42:5018",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-P009-1"
+    ],
+    "age_rounds": [
+     3
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:6421",
+   "seq": 6421,
+   "round": 7,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P009-1",
+   "reply_to": "42:5009",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:6525",
+   "seq": 6525,
+   "round": 7,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P014-P011-0",
+   "reply_to": "42:5070",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:6955",
+   "seq": 6955,
+   "round": 7,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P011-1",
+   "reply_to": "42:5039",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:7127",
+   "seq": 7127,
+   "round": 7,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P012-P015-4",
+   "reply_to": "42:5044",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:7271",
+   "seq": 7271,
+   "round": 7,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P002-7",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:7815",
+   "seq": 7815,
+   "round": 8,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P012-P015-4",
+   "reply_to": "42:7127",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P015"
+    ],
+    "threads": [
+     "TH-P012-P015-4"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:7844",
+   "seq": 7844,
+   "round": 8,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P004-P013-4",
+   "reply_to": "42:5732",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:8093",
+   "seq": 8093,
+   "round": 9,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P016-P002-7",
+   "reply_to": "42:7271",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:8148",
+   "seq": 8148,
+   "round": 9,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P006-P003-7",
+   "reply_to": "42:6004",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:8199",
+   "seq": 8199,
+   "round": 9,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P013-4",
+   "reply_to": "42:7844",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:8316",
+   "seq": 8316,
+   "round": 9,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P003-6",
+   "reply_to": "42:5671",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:8355",
+   "seq": 8355,
+   "round": 9,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P008-P007-7",
+   "reply_to": "42:6106",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P008"
+    ],
+    "threads": [
+     "TH-P008-P007-6"
+    ],
+    "age_rounds": [
+     3
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:8402",
+   "seq": 8402,
+   "round": 9,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P008-P007-6",
+   "reply_to": "42:6049",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:8465",
+   "seq": 8465,
+   "round": 9,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P010-P009-1",
+   "reply_to": "42:6421",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-P009-1"
+    ],
+    "age_rounds": [
+     2,
+     5
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:8582",
+   "seq": 8582,
+   "round": 9,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P014-P011-1",
+   "reply_to": "42:6955",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:8829",
+   "seq": 8829,
+   "round": 9,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P012-P015-4",
+   "reply_to": "42:7815",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:11049",
+   "seq": 11049,
+   "round": 10,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P006-P003-6",
+   "reply_to": "42:8316",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:12427",
+   "seq": 12427,
+   "round": 10,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P003-7",
+   "reply_to": "42:8148",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:12905",
+   "seq": 12905,
+   "round": 10,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P008-P007-6",
+   "reply_to": "42:8402",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P008"
+    ],
+    "threads": [
+     "TH-P008-P007-6"
+    ],
+    "age_rounds": [
+     4
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:13369",
+   "seq": 13369,
+   "round": 10,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P008-P007-7",
+   "reply_to": "42:8355",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:15597",
+   "seq": 15597,
+   "round": 10,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P004-P013-4",
+   "reply_to": "42:8199",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:16961",
+   "seq": 16961,
+   "round": 10,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P002-7",
+   "reply_to": "42:8093",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:17432",
+   "seq": 17432,
+   "round": 11,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P016-P002-7",
+   "reply_to": "42:16961",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:18802",
+   "seq": 18802,
+   "round": 12,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P009-12",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:18972",
+   "seq": 18972,
+   "round": 12,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P006-P003-7",
+   "reply_to": "42:12427",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:19047",
+   "seq": 19047,
+   "round": 12,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P001-12",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:19116",
+   "seq": 19116,
+   "round": 12,
+   "type": "MSG_PUBLIC",
+   "author": "P005",
+   "thread_id": "TH-P005-PUB-12-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:19187",
+   "seq": 19187,
+   "round": 12,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P003-6",
+   "reply_to": "42:11049",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P003"
+    ],
+    "threads": [
+     "TH-P006-P003-6"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:19262",
+   "seq": 19262,
+   "round": 12,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P008-P007-7",
+   "reply_to": "42:13369",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P008"
+    ],
+    "threads": [
+     "TH-P008-P007-6"
+    ],
+    "age_rounds": [
+     6
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:19333",
+   "seq": 19333,
+   "round": 12,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P008-P007-6",
+   "reply_to": "42:12905",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:19402",
+   "seq": 19402,
+   "round": 12,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P009-P014-12",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:19471",
+   "seq": 19471,
+   "round": 12,
+   "type": "MSG_PUBLIC",
+   "author": "P010",
+   "thread_id": "TH-P010-PUB-12-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:19546",
+   "seq": 19546,
+   "round": 12,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P008-12",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:19686",
+   "seq": 19686,
+   "round": 12,
+   "type": "MSG_PUBLIC",
+   "author": "P013",
+   "thread_id": "TH-P013-PUB-12-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:19836",
+   "seq": 19836,
+   "round": 12,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P015-P002-12",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:19913",
+   "seq": 19913,
+   "round": 12,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P002-7",
+   "reply_to": "42:17432",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:20239",
+   "seq": 20239,
+   "round": 13,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P004-P001-12",
+   "reply_to": "42:19047",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:20297",
+   "seq": 20297,
+   "round": 13,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P016-P002-7",
+   "reply_to": "42:19913",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:20355",
+   "seq": 20355,
+   "round": 13,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P006-P003-6",
+   "reply_to": "42:19187",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P006"
+    ],
+    "threads": [
+     "TH-P006-P003-6"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:20432",
+   "seq": 20432,
+   "round": 13,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P001-13",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:20507",
+   "seq": 20507,
+   "round": 13,
+   "type": "MSG_PUBLIC",
+   "author": "P005",
+   "thread_id": "TH-P005-PUB-13-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:20594",
+   "seq": 20594,
+   "round": 13,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P003-7",
+   "reply_to": "42:18972",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:20673",
+   "seq": 20673,
+   "round": 13,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P008-P007-6",
+   "reply_to": "42:19333",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P008"
+    ],
+    "threads": [
+     "TH-P008-P007-6"
+    ],
+    "age_rounds": [
+     7
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:20738",
+   "seq": 20738,
+   "round": 13,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P011-P008-12",
+   "reply_to": "42:19546",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:20825",
+   "seq": 20825,
+   "round": 13,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P001-P009-12",
+   "reply_to": "42:18802",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:20876",
+   "seq": 20876,
+   "round": 13,
+   "type": "MSG_PUBLIC",
+   "author": "P010",
+   "thread_id": "TH-P010-PUB-13-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:20961",
+   "seq": 20961,
+   "round": 13,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P008-13",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:21077",
+   "seq": 21077,
+   "round": 13,
+   "type": "MSG_PUBLIC",
+   "author": "P013",
+   "thread_id": "TH-P013-PUB-13-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:21138",
+   "seq": 21138,
+   "round": 13,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P009-P014-12",
+   "reply_to": "42:19402",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:21223",
+   "seq": 21223,
+   "round": 13,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P015-P002-13",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:21300",
+   "seq": 21300,
+   "round": 13,
+   "type": "MSG_PUBLIC",
+   "author": "P016",
+   "thread_id": "TH-P016-PUB-13-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:21424",
+   "seq": 21424,
+   "round": 14,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P015-P002-13",
+   "reply_to": "42:21223",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P015"
+    ],
+    "threads": [
+     "TH-P015-P002-13"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:21823",
+   "seq": 21823,
+   "round": 15,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P009-12",
+   "reply_to": "42:20825",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:21834",
+   "seq": 21834,
+   "round": 15,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P002-P011-15",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:21841",
+   "seq": 21841,
+   "round": 15,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P006-P003-7",
+   "reply_to": "42:20594",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P006"
+    ],
+    "threads": [
+     "TH-P006-P003-6"
+    ],
+    "age_rounds": [
+     3
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:21858",
+   "seq": 21858,
+   "round": 15,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P001-12",
+   "reply_to": "42:20239",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:21916",
+   "seq": 21916,
+   "round": 15,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P011-P008-13",
+   "reply_to": "42:20961",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:21937",
+   "seq": 21937,
+   "round": 15,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P009-P014-12",
+   "reply_to": "42:21138",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:21942",
+   "seq": 21942,
+   "round": 15,
+   "type": "MSG_PUBLIC",
+   "author": "P010",
+   "thread_id": "TH-P010-PUB-15-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:21963",
+   "seq": 21963,
+   "round": 15,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P008-12",
+   "reply_to": "42:20738",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:21972",
+   "seq": 21972,
+   "round": 15,
+   "type": "MSG_PUBLIC",
+   "author": "P012",
+   "thread_id": "TH-P012-PUB-15-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:21981",
+   "seq": 21981,
+   "round": 15,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P013-P004-15",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:22009",
+   "seq": 22009,
+   "round": 15,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P015-P002-13",
+   "reply_to": "42:21424",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:22026",
+   "seq": 22026,
+   "round": 15,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P015-15",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:22403",
+   "seq": 22403,
+   "round": 16,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P004-P001-12",
+   "reply_to": "42:21858",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:22497",
+   "seq": 22497,
+   "round": 16,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P015-P002-13",
+   "reply_to": "42:22009",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P015"
+    ],
+    "threads": [
+     "TH-P015-P002-13"
+    ],
+    "age_rounds": [
+     3
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:22639",
+   "seq": 22639,
+   "round": 16,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P013-P004-15",
+   "reply_to": "42:21981",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 3,
+    "route": "reply",
+    "with": [
+     "P013"
+    ],
+    "threads": [
+     "TH-P004-P013-4",
+     "TH-P013-PUB-12-0",
+     "TH-P013-PUB-13-0"
+    ],
+    "age_rounds": [
+     3,
+     4,
+     6
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:22903",
+   "seq": 22903,
+   "round": 16,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P011-P008-12",
+   "reply_to": "42:21963",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:22964",
+   "seq": 22964,
+   "round": 16,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P001-P009-12",
+   "reply_to": "42:21823",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:23023",
+   "seq": 23023,
+   "round": 16,
+   "type": "MSG_PUBLIC",
+   "author": "P010",
+   "thread_id": "TH-P010-PUB-16-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:23114",
+   "seq": 23114,
+   "round": 16,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P008-13",
+   "reply_to": "42:21916",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:23173",
+   "seq": 23173,
+   "round": 16,
+   "type": "MSG_PUBLIC",
+   "author": "P012",
+   "thread_id": "TH-P012-PUB-16-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:23258",
+   "seq": 23258,
+   "round": 16,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P013-P004-16",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:23309",
+   "seq": 23309,
+   "round": 16,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P009-P014-12",
+   "reply_to": "42:21937",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:23358",
+   "seq": 23358,
+   "round": 16,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P016-P015-15",
+   "reply_to": "42:22026",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:23403",
+   "seq": 23403,
+   "round": 16,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P015-16",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:23813",
+   "seq": 23813,
+   "round": 18,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P009-12",
+   "reply_to": "42:22964",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:23866",
+   "seq": 23866,
+   "round": 18,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P001-12",
+   "reply_to": "42:22403",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P001"
+    ],
+    "threads": [
+     "TH-P004-P001-12"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:23902",
+   "seq": 23902,
+   "round": 18,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P007-P005-18",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:23932",
+   "seq": 23932,
+   "round": 18,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P011-P008-13",
+   "reply_to": "42:23114",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:23941",
+   "seq": 23941,
+   "round": 18,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P009-P014-12",
+   "reply_to": "42:23309",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P014"
+    ],
+    "threads": [
+     "TH-P009-P014-12"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:23977",
+   "seq": 23977,
+   "round": 18,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P008-12",
+   "reply_to": "42:22903",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:23990",
+   "seq": 23990,
+   "round": 18,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P012-P001-18",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:24015",
+   "seq": 24015,
+   "round": 18,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P013-P004-15",
+   "reply_to": "42:22639",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:24020",
+   "seq": 24020,
+   "round": 18,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P016-18",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:24025",
+   "seq": 24025,
+   "round": 18,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P016-P015-16",
+   "reply_to": "42:23403",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:24028",
+   "seq": 24028,
+   "round": 18,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P015-15",
+   "reply_to": "42:23358",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:24443",
+   "seq": 24443,
+   "round": 19,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P004-P001-12",
+   "reply_to": "42:23866",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P004"
+    ],
+    "threads": [
+     "TH-P004-P001-12"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:24744",
+   "seq": 24744,
+   "round": 19,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P013-P004-15",
+   "reply_to": "42:24015",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P013"
+    ],
+    "threads": [
+     "TH-P013-PUB-12-0",
+     "TH-P013-PUB-13-0"
+    ],
+    "age_rounds": [
+     6,
+     7
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:24872",
+   "seq": 24872,
+   "round": 19,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P007-P005-18",
+   "reply_to": "42:23902",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:25053",
+   "seq": 25053,
+   "round": 19,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P007-P005-19",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:25178",
+   "seq": 25178,
+   "round": 19,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P011-P008-12",
+   "reply_to": "42:23977",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:25308",
+   "seq": 25308,
+   "round": 19,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P001-P009-12",
+   "reply_to": "42:23813",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:25491",
+   "seq": 25491,
+   "round": 19,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P008-13",
+   "reply_to": "42:23932",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:25619",
+   "seq": 25619,
+   "round": 19,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P012-P001-19",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:25875",
+   "seq": 25875,
+   "round": 19,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P009-P014-12",
+   "reply_to": "42:23941",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:25939",
+   "seq": 25939,
+   "round": 19,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P016-P015-15",
+   "reply_to": "42:24028",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:26071",
+   "seq": 26071,
+   "round": 19,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P015-16",
+   "reply_to": "42:24025",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:26549",
+   "seq": 26549,
+   "round": 20,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P007-P005-19",
+   "reply_to": "42:25053",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:26876",
+   "seq": 26876,
+   "round": 20,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P013-P004-15",
+   "reply_to": "42:24744",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:27149",
+   "seq": 27149,
+   "round": 21,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P012-P001-19",
+   "reply_to": "42:25619",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:27462",
+   "seq": 27462,
+   "round": 21,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P013-P004-15",
+   "reply_to": "42:26876",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P013"
+    ],
+    "threads": [
+     "TH-P013-PUB-12-0",
+     "TH-P013-PUB-13-0"
+    ],
+    "age_rounds": [
+     8,
+     9
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:27737",
+   "seq": 27737,
+   "round": 21,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P007-P005-19",
+   "reply_to": "42:26549",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:27826",
+   "seq": 27826,
+   "round": 21,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P011-P008-13",
+   "reply_to": "42:25491",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:28612",
+   "seq": 28612,
+   "round": 21,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P016-P015-16",
+   "reply_to": "42:26071",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:28718",
+   "seq": 28718,
+   "round": 21,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P015-15",
+   "reply_to": "42:25939",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P015"
+    ],
+    "threads": [
+     "TH-P016-P015-15"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:30203",
+   "seq": 30203,
+   "round": 22,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P007-P005-19",
+   "reply_to": "42:27737",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:31405",
+   "seq": 31405,
+   "round": 22,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P012-P001-19",
+   "reply_to": "42:27149",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:31929",
+   "seq": 31929,
+   "round": 22,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P016-P015-15",
+   "reply_to": "42:28718",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P016"
+    ],
+    "threads": [
+     "TH-P016-P015-15"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:32119",
+   "seq": 32119,
+   "round": 22,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P015-16",
+   "reply_to": "42:28612",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P015"
+    ],
+    "threads": [
+     "TH-P016-P015-15"
+    ],
+    "age_rounds": [
+     3
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:32497",
+   "seq": 32497,
+   "round": 23,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P012-P001-19",
+   "reply_to": "42:31405",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:32917",
+   "seq": 32917,
+   "round": 23,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P007-P005-19",
+   "reply_to": "42:30203",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:33911",
+   "seq": 33911,
+   "round": 24,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P009-24",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:33986",
+   "seq": 33986,
+   "round": 24,
+   "type": "MSG_PUBLIC",
+   "author": "P002",
+   "thread_id": "TH-P002-PUB-24-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:34133",
+   "seq": 34133,
+   "round": 24,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P007-24",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:34208",
+   "seq": 34208,
+   "round": 24,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P007-P005-19",
+   "reply_to": "42:32917",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:34279",
+   "seq": 34279,
+   "round": 24,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P002-24",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:34356",
+   "seq": 34356,
+   "round": 24,
+   "type": "MSG_PUBLIC",
+   "author": "P007",
+   "thread_id": "TH-P007-PUB-24-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:34429",
+   "seq": 34429,
+   "round": 24,
+   "type": "MSG_PUBLIC",
+   "author": "P008",
+   "thread_id": "TH-P008-PUB-24-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:34500",
+   "seq": 34500,
+   "round": 24,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P009-P008-24",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:34644",
+   "seq": 34644,
+   "round": 24,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P013-24",
+   "reply_to": null,
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "initiate",
+    "with": [
+     "P013"
+    ],
+    "threads": [
+     "TH-P013-PUB-12-0",
+     "TH-P013-PUB-13-0"
+    ],
+    "age_rounds": [
+     11,
+     12
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:34715",
+   "seq": 34715,
+   "round": 24,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P012-P001-19",
+   "reply_to": "42:32497",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:34857",
+   "seq": 34857,
+   "round": 24,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P015-24",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:34930",
+   "seq": 34930,
+   "round": 24,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P016-P015-16",
+   "reply_to": "42:32119",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P016"
+    ],
+    "threads": [
+     "TH-P016-P015-15"
+    ],
+    "age_rounds": [
+     3
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:35005",
+   "seq": 35005,
+   "round": 24,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P013-24",
+   "reply_to": null,
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "initiate",
+    "with": [
+     "P013"
+    ],
+    "threads": [
+     "TH-P013-PUB-12-0",
+     "TH-P013-PUB-13-0"
+    ],
+    "age_rounds": [
+     11,
+     12
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:35326",
+   "seq": 35326,
+   "round": 25,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P012-P001-19",
+   "reply_to": "42:34715",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:35409",
+   "seq": 35409,
+   "round": 25,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P006-P002-24",
+   "reply_to": "42:34279",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P006"
+    ],
+    "threads": [
+     "TH-P006-P002-24"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:35557",
+   "seq": 35557,
+   "round": 25,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P007-25",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:35626",
+   "seq": 35626,
+   "round": 25,
+   "type": "MSG_PUBLIC",
+   "author": "P005",
+   "thread_id": "TH-P005-PUB-25-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:35719",
+   "seq": 35719,
+   "round": 25,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P002-25",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:35790",
+   "seq": 35790,
+   "round": 25,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P004-P007-24",
+   "reply_to": "42:34133",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P004"
+    ],
+    "threads": [
+     "TH-P004-P007-24"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:35867",
+   "seq": 35867,
+   "round": 25,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P009-P008-24",
+   "reply_to": "42:34500",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:35962",
+   "seq": 35962,
+   "round": 25,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P001-P009-24",
+   "reply_to": "42:33911",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:36128",
+   "seq": 36128,
+   "round": 25,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P013-25",
+   "reply_to": null,
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "initiate",
+    "with": [
+     "P013"
+    ],
+    "threads": [
+     "TH-P013-PUB-12-0",
+     "TH-P013-PUB-13-0"
+    ],
+    "age_rounds": [
+     12,
+     13
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:36181",
+   "seq": 36181,
+   "round": 25,
+   "type": "MSG_PUBLIC",
+   "author": "P012",
+   "thread_id": "TH-P012-PUB-25-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:36236",
+   "seq": 36236,
+   "round": 25,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P016-P013-24",
+   "reply_to": "42:35005",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:36329",
+   "seq": 36329,
+   "round": 25,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P015-25",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:36384",
+   "seq": 36384,
+   "round": 25,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P014-P015-24",
+   "reply_to": "42:34857",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:36479",
+   "seq": 36479,
+   "round": 25,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P013-25",
+   "reply_to": null,
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "initiate",
+    "with": [
+     "P013"
+    ],
+    "threads": [
+     "TH-P013-PUB-13-0"
+    ],
+    "age_rounds": [
+     12
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:36836",
+   "seq": 36836,
+   "round": 26,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P016-P013-25",
+   "reply_to": "42:36479",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37013",
+   "seq": 37013,
+   "round": 27,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P009-24",
+   "reply_to": "42:35962",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37038",
+   "seq": 37038,
+   "round": 27,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P006-P002-25",
+   "reply_to": "42:35719",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P006"
+    ],
+    "threads": [
+     "TH-P006-P002-24",
+     "TH-P006-P002-25"
+    ],
+    "age_rounds": [
+     2,
+     3
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37064",
+   "seq": 37064,
+   "round": 27,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P007-24",
+   "reply_to": "42:35790",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37100",
+   "seq": 37100,
+   "round": 27,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P002-24",
+   "reply_to": "42:35409",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37113",
+   "seq": 37113,
+   "round": 27,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P004-P007-25",
+   "reply_to": "42:35557",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P004"
+    ],
+    "threads": [
+     "TH-P004-P007-24"
+    ],
+    "age_rounds": [
+     3
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37138",
+   "seq": 37138,
+   "round": 27,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P008-P006-27",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37163",
+   "seq": 37163,
+   "round": 27,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P009-P008-24",
+   "reply_to": "42:35867",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37180",
+   "seq": 37180,
+   "round": 27,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P004-27",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37208",
+   "seq": 37208,
+   "round": 27,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P012-P002-27",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37213",
+   "seq": 37213,
+   "round": 27,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P011-P013-25",
+   "reply_to": "42:36128",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37238",
+   "seq": 37238,
+   "round": 27,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P015-24",
+   "reply_to": "42:36384",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37241",
+   "seq": 37241,
+   "round": 27,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P014-P015-25",
+   "reply_to": "42:36329",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37268",
+   "seq": 37268,
+   "round": 27,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P013-25",
+   "reply_to": "42:36836",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P013"
+    ],
+    "threads": [
+     "TH-P013-PUB-13-0"
+    ],
+    "age_rounds": [
+     14
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37611",
+   "seq": 37611,
+   "round": 28,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P007-28",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37674",
+   "seq": 37674,
+   "round": 28,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P006-P002-24",
+   "reply_to": "42:37100",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P006"
+    ],
+    "threads": [
+     "TH-P006-P002-24",
+     "TH-P006-P002-25"
+    ],
+    "age_rounds": [
+     3,
+     4
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37780",
+   "seq": 37780,
+   "round": 28,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P010-P004-27",
+   "reply_to": "42:37180",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-P004-27"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37872",
+   "seq": 37872,
+   "round": 28,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P008-P006-27",
+   "reply_to": "42:37138",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37941",
+   "seq": 37941,
+   "round": 28,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P004-P007-24",
+   "reply_to": "42:37064",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P004"
+    ],
+    "threads": [
+     "TH-P004-P007-24"
+    ],
+    "age_rounds": [
+     4
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:37994",
+   "seq": 37994,
+   "round": 28,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P009-P008-24",
+   "reply_to": "42:37163",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38055",
+   "seq": 38055,
+   "round": 28,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P001-P009-24",
+   "reply_to": "42:37013",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38120",
+   "seq": 38120,
+   "round": 28,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P004-28",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38163",
+   "seq": 38163,
+   "round": 28,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P013-25",
+   "reply_to": "42:37213",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P013"
+    ],
+    "threads": [
+     "TH-P013-PUB-12-0",
+     "TH-P013-PUB-13-0"
+    ],
+    "age_rounds": [
+     15,
+     16
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38228",
+   "seq": 38228,
+   "round": 28,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P012-P002-28",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38291",
+   "seq": 38291,
+   "round": 28,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P016-P013-25",
+   "reply_to": "42:37268",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38352",
+   "seq": 38352,
+   "round": 28,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P015-25",
+   "reply_to": "42:37241",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38405",
+   "seq": 38405,
+   "round": 28,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P014-P015-24",
+   "reply_to": "42:37238",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38448",
+   "seq": 38448,
+   "round": 28,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P002-28",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38719",
+   "seq": 38719,
+   "round": 30,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P009-24",
+   "reply_to": "42:38055",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38732",
+   "seq": 38732,
+   "round": 30,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P016-P002-28",
+   "reply_to": "42:38448",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38748",
+   "seq": 38748,
+   "round": 30,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P010-P004-28",
+   "reply_to": "42:38120",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-P004-27",
+     "TH-P010-P004-28"
+    ],
+    "age_rounds": [
+     2,
+     3
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38753",
+   "seq": 38753,
+   "round": 30,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P005-P006-30",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38760",
+   "seq": 38760,
+   "round": 30,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P002-24",
+   "reply_to": "42:37674",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38777",
+   "seq": 38777,
+   "round": 30,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P001-P007-28",
+   "reply_to": "42:37611",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38784",
+   "seq": 38784,
+   "round": 30,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P008-P006-27",
+   "reply_to": "42:37872",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38793",
+   "seq": 38793,
+   "round": 30,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P009-P008-24",
+   "reply_to": "42:37994",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38810",
+   "seq": 38810,
+   "round": 30,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P004-27",
+   "reply_to": "42:37780",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P004"
+    ],
+    "threads": [
+     "TH-P010-P004-27"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38815",
+   "seq": 38815,
+   "round": 30,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P003-30",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38832",
+   "seq": 38832,
+   "round": 30,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P012-P002-30",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38845",
+   "seq": 38845,
+   "round": 30,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P011-P013-25",
+   "reply_to": "42:38163",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38858",
+   "seq": 38858,
+   "round": 30,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P015-24",
+   "reply_to": "42:38405",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38867",
+   "seq": 38867,
+   "round": 30,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P014-P015-25",
+   "reply_to": "42:38352",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:38870",
+   "seq": 38870,
+   "round": 30,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P013-25",
+   "reply_to": "42:38291",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P013"
+    ],
+    "threads": [
+     "TH-P013-PUB-13-0"
+    ],
+    "age_rounds": [
+     17
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:39413",
+   "seq": 39413,
+   "round": 31,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P007-28",
+   "reply_to": "42:38777",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:39554",
+   "seq": 39554,
+   "round": 31,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P006-P002-24",
+   "reply_to": "42:38760",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P006"
+    ],
+    "threads": [
+     "TH-P006-P002-24",
+     "TH-P006-P002-25"
+    ],
+    "age_rounds": [
+     6,
+     7
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:39696",
+   "seq": 39696,
+   "round": 31,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P011-P003-30",
+   "reply_to": "42:38815",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:39835",
+   "seq": 39835,
+   "round": 31,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P010-P004-27",
+   "reply_to": "42:38810",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-P004-27",
+     "TH-P010-P004-28"
+    ],
+    "age_rounds": [
+     3,
+     4
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:39972",
+   "seq": 39972,
+   "round": 31,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P005-P006-31",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:40118",
+   "seq": 40118,
+   "round": 31,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P008-P006-27",
+   "reply_to": "42:38784",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:40397",
+   "seq": 40397,
+   "round": 31,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P009-P008-24",
+   "reply_to": "42:38793",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:40536",
+   "seq": 40536,
+   "round": 31,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P001-P009-24",
+   "reply_to": "42:38719",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:40675",
+   "seq": 40675,
+   "round": 31,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P004-28",
+   "reply_to": "42:38748",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P004"
+    ],
+    "threads": [
+     "TH-P010-P004-27"
+    ],
+    "age_rounds": [
+     3
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:40814",
+   "seq": 40814,
+   "round": 31,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P013-25",
+   "reply_to": "42:38845",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P013"
+    ],
+    "threads": [
+     "TH-P013-PUB-12-0",
+     "TH-P013-PUB-13-0"
+    ],
+    "age_rounds": [
+     18,
+     19
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:40956",
+   "seq": 40956,
+   "round": 31,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P012-P002-31",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:41015",
+   "seq": 41015,
+   "round": 31,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P016-P013-25",
+   "reply_to": "42:38870",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:41079",
+   "seq": 41079,
+   "round": 31,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P015-25",
+   "reply_to": "42:38867",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:41223",
+   "seq": 41223,
+   "round": 31,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P014-P015-24",
+   "reply_to": "42:38858",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:41282",
+   "seq": 41282,
+   "round": 31,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P002-28",
+   "reply_to": "42:38732",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:41871",
+   "seq": 41871,
+   "round": 32,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P001-P007-28",
+   "reply_to": "42:39413",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:42468",
+   "seq": 42468,
+   "round": 33,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P007-28",
+   "reply_to": "42:41871",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:43021",
+   "seq": 43021,
+   "round": 33,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P016-P002-28",
+   "reply_to": "42:41282",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:44075",
+   "seq": 44075,
+   "round": 33,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P010-P004-28",
+   "reply_to": "42:40675",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-P004-27",
+     "TH-P010-P004-28"
+    ],
+    "age_rounds": [
+     5,
+     6
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:45160",
+   "seq": 45160,
+   "round": 33,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P005-P006-31",
+   "reply_to": "42:39972",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:46167",
+   "seq": 46167,
+   "round": 33,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P008-P006-27",
+   "reply_to": "42:40118",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:47278",
+   "seq": 47278,
+   "round": 33,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P004-27",
+   "reply_to": "42:39835",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P004"
+    ],
+    "threads": [
+     "TH-P010-P004-27"
+    ],
+    "age_rounds": [
+     2,
+     5
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:47825",
+   "seq": 47825,
+   "round": 33,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P003-30",
+   "reply_to": "42:39696",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:48886",
+   "seq": 48886,
+   "round": 33,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P011-P013-25",
+   "reply_to": "42:40814",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:49916",
+   "seq": 49916,
+   "round": 33,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P014-P015-25",
+   "reply_to": "42:41079",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:51977",
+   "seq": 51977,
+   "round": 34,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P011-P003-30",
+   "reply_to": "42:47825",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:52150",
+   "seq": 52150,
+   "round": 34,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P010-P004-27",
+   "reply_to": "42:47278",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-P004-27",
+     "TH-P010-P004-28"
+    ],
+    "age_rounds": [
+     6,
+     7
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:52327",
+   "seq": 52327,
+   "round": 34,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P005-P006-31",
+   "reply_to": "42:45160",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P006"
+    ],
+    "threads": [
+     "TH-P005-P006-31"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:52500",
+   "seq": 52500,
+   "round": 34,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P008-P006-27",
+   "reply_to": "42:46167",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:52671",
+   "seq": 52671,
+   "round": 34,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P001-P007-28",
+   "reply_to": "42:42468",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:53186",
+   "seq": 53186,
+   "round": 34,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P004-28",
+   "reply_to": "42:44075",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P004"
+    ],
+    "threads": [
+     "TH-P010-P004-27"
+    ],
+    "age_rounds": [
+     3,
+     6
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:54223",
+   "seq": 54223,
+   "round": 34,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P002-28",
+   "reply_to": "42:43021",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:54682",
+   "seq": 54682,
+   "round": 35,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P016-P002-28",
+   "reply_to": "42:54223",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:55367",
+   "seq": 55367,
+   "round": 35,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P003-30",
+   "reply_to": "42:51977",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:56292",
+   "seq": 56292,
+   "round": 36,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P011-P003-30",
+   "reply_to": "42:55367",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:56366",
+   "seq": 56366,
+   "round": 36,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P010-P004-28",
+   "reply_to": "42:53186",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-P004-27",
+     "TH-P010-P004-28"
+    ],
+    "age_rounds": [
+     8,
+     9
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:56450",
+   "seq": 56450,
+   "round": 36,
+   "type": "MSG_PUBLIC",
+   "author": "P005",
+   "thread_id": "TH-P005-PUB-36-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:56534",
+   "seq": 56534,
+   "round": 36,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P005-P006-31",
+   "reply_to": "42:52327",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P005"
+    ],
+    "threads": [
+     "TH-P005-P006-31"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:56605",
+   "seq": 56605,
+   "round": 36,
+   "type": "MSG_PUBLIC",
+   "author": "P007",
+   "thread_id": "TH-P007-PUB-36-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:56684",
+   "seq": 56684,
+   "round": 36,
+   "type": "MSG_PUBLIC",
+   "author": "P008",
+   "thread_id": "TH-P008-PUB-36-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:56884",
+   "seq": 56884,
+   "round": 36,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P009-36",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:56971",
+   "seq": 56971,
+   "round": 36,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P006-36",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:57046",
+   "seq": 57046,
+   "round": 36,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P012-P014-36",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:57133",
+   "seq": 57133,
+   "round": 36,
+   "type": "MSG_PUBLIC",
+   "author": "P013",
+   "thread_id": "TH-P013-PUB-36-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:57214",
+   "seq": 57214,
+   "round": 36,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P016-36",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:57390",
+   "seq": 57390,
+   "round": 36,
+   "type": "MSG_PUBLIC",
+   "author": "P016",
+   "thread_id": "TH-P016-PUB-36-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:57767",
+   "seq": 57767,
+   "round": 37,
+   "type": "MSG_PUBLIC",
+   "author": "P003",
+   "thread_id": "TH-P003-PUB-37-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:57847",
+   "seq": 57847,
+   "round": 37,
+   "type": "MSG_PUBLIC",
+   "author": "P004",
+   "thread_id": "TH-P004-PUB-37-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:57903",
+   "seq": 57903,
+   "round": 37,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P005-P006-31",
+   "reply_to": "42:56534",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P006"
+    ],
+    "threads": [
+     "TH-P005-P006-31"
+    ],
+    "age_rounds": [
+     4
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:57987",
+   "seq": 57987,
+   "round": 37,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P011-P006-36",
+   "reply_to": "42:56971",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:58037",
+   "seq": 58037,
+   "round": 37,
+   "type": "MSG_PUBLIC",
+   "author": "P007",
+   "thread_id": "TH-P007-PUB-37-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:58111",
+   "seq": 58111,
+   "round": 37,
+   "type": "MSG_PUBLIC",
+   "author": "P008",
+   "thread_id": "TH-P008-PUB-37-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:58187",
+   "seq": 58187,
+   "round": 37,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P010-P009-36",
+   "reply_to": "42:56884",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:58249",
+   "seq": 58249,
+   "round": 37,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P009-37",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:58333",
+   "seq": 58333,
+   "round": 37,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P006-37",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:58409",
+   "seq": 58409,
+   "round": 37,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P012-P014-37",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:58467",
+   "seq": 58467,
+   "round": 37,
+   "type": "MSG_PUBLIC",
+   "author": "P013",
+   "thread_id": "TH-P013-PUB-37-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:58545",
+   "seq": 58545,
+   "round": 37,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P012-P014-36",
+   "reply_to": "42:57046",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:58645",
+   "seq": 58645,
+   "round": 37,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P014-P016-36",
+   "reply_to": "42:57214",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:58908",
+   "seq": 58908,
+   "round": 38,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P010-P009-37",
+   "reply_to": "42:58249",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:59152",
+   "seq": 59152,
+   "round": 39,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P005-39",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:59167",
+   "seq": 59167,
+   "round": 39,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P002-P007-39",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:59195",
+   "seq": 59195,
+   "round": 39,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P001-39",
+   "reply_to": null,
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "initiate",
+    "with": [
+     "P001"
+    ],
+    "threads": [
+     "TH-P004-P001-12"
+    ],
+    "age_rounds": [
+     23
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:59200",
+   "seq": 59200,
+   "round": 39,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P005-P013-39",
+   "reply_to": null,
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 2,
+    "route": "initiate",
+    "with": [
+     "P013"
+    ],
+    "threads": [
+     "TH-P013-PUB-12-0",
+     "TH-P013-PUB-13-0"
+    ],
+    "age_rounds": [
+     26,
+     27
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:59227",
+   "seq": 59227,
+   "round": 39,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P005-P006-31",
+   "reply_to": "42:57903",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P005"
+    ],
+    "threads": [
+     "TH-P005-P006-31"
+    ],
+    "age_rounds": [
+     5
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:59247",
+   "seq": 59247,
+   "round": 39,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P008-P016-39",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:59270",
+   "seq": 59270,
+   "round": 39,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P009-P006-39",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:59287",
+   "seq": 59287,
+   "round": 39,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P009-37",
+   "reply_to": "42:58908",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:59310",
+   "seq": 59310,
+   "round": 39,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P006-36",
+   "reply_to": "42:57987",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:59331",
+   "seq": 59331,
+   "round": 39,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P012-P014-36",
+   "reply_to": "42:58545",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P014"
+    ],
+    "threads": [
+     "TH-P012-P014-36"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:59367",
+   "seq": 59367,
+   "round": 39,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P016-36",
+   "reply_to": "42:58645",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P016"
+    ],
+    "threads": [
+     "TH-P014-P016-36"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:59372",
+   "seq": 59372,
+   "round": 39,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P015-P011-39",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:59377",
+   "seq": 59377,
+   "round": 39,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P011-39",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:59722",
+   "seq": 59722,
+   "round": 40,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P004-P001-39",
+   "reply_to": "42:59195",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P004"
+    ],
+    "threads": [
+     "TH-P004-P001-12"
+    ],
+    "age_rounds": [
+     22
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:59803",
+   "seq": 59803,
+   "round": 40,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P002-P007-40",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:59945",
+   "seq": 59945,
+   "round": 40,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P001-40",
+   "reply_to": null,
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "initiate",
+    "with": [
+     "P001"
+    ],
+    "threads": [
+     "TH-P004-P001-12"
+    ],
+    "age_rounds": [
+     24
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:60006",
+   "seq": 60006,
+   "round": 40,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P001-P005-39",
+   "reply_to": "42:59152",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P001"
+    ],
+    "threads": [
+     "TH-P001-P005-39"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:60057",
+   "seq": 60057,
+   "round": 40,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P011-P006-36",
+   "reply_to": "42:59310",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:60138",
+   "seq": 60138,
+   "round": 40,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P002-P007-39",
+   "reply_to": "42:59167",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:60219",
+   "seq": 60219,
+   "round": 40,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P008-P016-40",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:60288",
+   "seq": 60288,
+   "round": 40,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P010-P009-37",
+   "reply_to": "42:59287",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:60331",
+   "seq": 60331,
+   "round": 40,
+   "type": "MSG_PUBLIC",
+   "author": "P010",
+   "thread_id": "TH-P010-PUB-40-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:60418",
+   "seq": 60418,
+   "round": 40,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P016-P011-39",
+   "reply_to": "42:59377",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:60520",
+   "seq": 60520,
+   "round": 40,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P005-P013-39",
+   "reply_to": "42:59200",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:60575",
+   "seq": 60575,
+   "round": 40,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P012-P014-36",
+   "reply_to": "42:59331",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P012"
+    ],
+    "threads": [
+     "TH-P012-P014-37"
+    ],
+    "age_rounds": [
+     3
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:60624",
+   "seq": 60624,
+   "round": 40,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P015-P011-40",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:60689",
+   "seq": 60689,
+   "round": 40,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P014-P016-36",
+   "reply_to": "42:59367",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:60919",
+   "seq": 60919,
+   "round": 41,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P002-P007-40",
+   "reply_to": "42:59803",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:61020",
+   "seq": 61020,
+   "round": 41,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P012-P014-36",
+   "reply_to": "42:60575",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P014"
+    ],
+    "threads": [
+     "TH-P012-P014-36"
+    ],
+    "age_rounds": [
+     1,
+     4
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:61156",
+   "seq": 61156,
+   "round": 42,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P005-39",
+   "reply_to": "42:60006",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:61187",
+   "seq": 61187,
+   "round": 42,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P002-P007-40",
+   "reply_to": "42:60919",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:61202",
+   "seq": 61202,
+   "round": 42,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P003-P008-42",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:61231",
+   "seq": 61231,
+   "round": 42,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P001-39",
+   "reply_to": "42:59722",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:61248",
+   "seq": 61248,
+   "round": 42,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P005-P013-39",
+   "reply_to": "42:60520",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:61253",
+   "seq": 61253,
+   "round": 42,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P011-42",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:61298",
+   "seq": 61298,
+   "round": 42,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P007-P012-42",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:61344",
+   "seq": 61344,
+   "round": 42,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P009-P007-42",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:61349",
+   "seq": 61349,
+   "round": 42,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P009-37",
+   "reply_to": "42:60288",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P009"
+    ],
+    "threads": [
+     "TH-P010-P009-37"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:61386",
+   "seq": 61386,
+   "round": 42,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P015-P011-40",
+   "reply_to": "42:60624",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:61406",
+   "seq": 61406,
+   "round": 42,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P013-P008-42",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:61415",
+   "seq": 61415,
+   "round": 42,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P012-P014-36",
+   "reply_to": "42:61020",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P012"
+    ],
+    "threads": [
+     "TH-P012-P014-36"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:61422",
+   "seq": 61422,
+   "round": 42,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P015-P003-42",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:61435",
+   "seq": 61435,
+   "round": 42,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P011-39",
+   "reply_to": "42:60418",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:61816",
+   "seq": 61816,
+   "round": 43,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P004-P001-39",
+   "reply_to": "42:61231",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P004"
+    ],
+    "threads": [
+     "TH-P004-P001-12"
+    ],
+    "age_rounds": [
+     25
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:61917",
+   "seq": 61917,
+   "round": 43,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P002-P009-43",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:61990",
+   "seq": 61990,
+   "round": 43,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P015-P003-42",
+   "reply_to": "42:61422",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:62061",
+   "seq": 62061,
+   "round": 43,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P014-43",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:62164",
+   "seq": 62164,
+   "round": 43,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P001-P005-39",
+   "reply_to": "42:61156",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P001"
+    ],
+    "threads": [
+     "TH-P001-P005-39"
+    ],
+    "age_rounds": [
+     4
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:62213",
+   "seq": 62213,
+   "round": 43,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P011-43",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:62318",
+   "seq": 62318,
+   "round": 43,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P009-P007-42",
+   "reply_to": "42:61344",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:62421",
+   "seq": 62421,
+   "round": 43,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P013-P008-42",
+   "reply_to": "42:61406",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P013"
+    ],
+    "threads": [
+     "TH-P013-PUB-13-0"
+    ],
+    "age_rounds": [
+     30
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:62524",
+   "seq": 62524,
+   "round": 43,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P010-P009-37",
+   "reply_to": "42:61349",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-PUB-40-0"
+    ],
+    "age_rounds": [
+     3
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:62625",
+   "seq": 62625,
+   "round": 43,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P002-43",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:62670",
+   "seq": 62670,
+   "round": 43,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P016-P011-39",
+   "reply_to": "42:61435",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:62773",
+   "seq": 62773,
+   "round": 43,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P007-P012-42",
+   "reply_to": "42:61298",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P007"
+    ],
+    "threads": [
+     "TH-P007-P012-42"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:62824",
+   "seq": 62824,
+   "round": 43,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P005-P013-39",
+   "reply_to": "42:61248",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:62968",
+   "seq": 62968,
+   "round": 43,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P015-P011-40",
+   "reply_to": "42:61386",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:63039",
+   "seq": 63039,
+   "round": 43,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P003-43",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:63528",
+   "seq": 63528,
+   "round": 44,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P003-P008-42",
+   "reply_to": "42:61202",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:63767",
+   "seq": 63767,
+   "round": 44,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P004-P014-43",
+   "reply_to": "42:62061",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:63967",
+   "seq": 63967,
+   "round": 45,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P005-39",
+   "reply_to": "42:62164",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P005"
+    ],
+    "threads": [
+     "TH-P001-P005-39"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:64846",
+   "seq": 64846,
+   "round": 45,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P010-P002-43",
+   "reply_to": "42:62625",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-PUB-40-0"
+    ],
+    "age_rounds": [
+     5
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:65767",
+   "seq": 65767,
+   "round": 45,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P003-P008-42",
+   "reply_to": "42:63528",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:66607",
+   "seq": 66607,
+   "round": 45,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P014-43",
+   "reply_to": "42:63767",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:67544",
+   "seq": 67544,
+   "round": 45,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P005-P013-39",
+   "reply_to": "42:62824",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:69280",
+   "seq": 69280,
+   "round": 45,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P007-P012-42",
+   "reply_to": "42:62773",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:71028",
+   "seq": 71028,
+   "round": 45,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P009-P007-42",
+   "reply_to": "42:62318",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P007"
+    ],
+    "threads": [
+     "TH-P009-P007-42"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:72874",
+   "seq": 72874,
+   "round": 45,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P015-P011-40",
+   "reply_to": "42:62968",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:74632",
+   "seq": 74632,
+   "round": 45,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P013-P008-42",
+   "reply_to": "42:62421",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:76423",
+   "seq": 76423,
+   "round": 45,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P015-P003-42",
+   "reply_to": "42:61990",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:77201",
+   "seq": 77201,
+   "round": 45,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P011-39",
+   "reply_to": "42:62670",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P011"
+    ],
+    "threads": [
+     "TH-P016-P011-39"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:79174",
+   "seq": 79174,
+   "round": 46,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P015-P003-42",
+   "reply_to": "42:76423",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:79510",
+   "seq": 79510,
+   "round": 46,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P001-P005-39",
+   "reply_to": "42:63967",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P001"
+    ],
+    "threads": [
+     "TH-P001-P005-39"
+    ],
+    "age_rounds": [
+     7
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:79856",
+   "seq": 79856,
+   "round": 46,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P009-P007-42",
+   "reply_to": "42:71028",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:80035",
+   "seq": 80035,
+   "round": 46,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P013-P008-42",
+   "reply_to": "42:74632",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P013"
+    ],
+    "threads": [
+     "TH-P013-PUB-13-0"
+    ],
+    "age_rounds": [
+     33
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:80397",
+   "seq": 80397,
+   "round": 46,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P002-43",
+   "reply_to": "42:64846",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:80580",
+   "seq": 80580,
+   "round": 46,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P016-P011-39",
+   "reply_to": "42:77201",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:80751",
+   "seq": 80751,
+   "round": 46,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P007-P012-42",
+   "reply_to": "42:69280",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:80924",
+   "seq": 80924,
+   "round": 46,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P005-P013-39",
+   "reply_to": "42:67544",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:81109",
+   "seq": 81109,
+   "round": 46,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P004-P014-43",
+   "reply_to": "42:66607",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:81288",
+   "seq": 81288,
+   "round": 46,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P015-P011-40",
+   "reply_to": "42:72874",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:81934",
+   "seq": 81934,
+   "round": 47,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P010-P002-43",
+   "reply_to": "42:80397",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-PUB-40-0"
+    ],
+    "age_rounds": [
+     7
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:82106",
+   "seq": 82106,
+   "round": 47,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P004-P014-43",
+   "reply_to": "42:81109",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:82425",
+   "seq": 82425,
+   "round": 47,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P003-P008-42",
+   "reply_to": "42:65767",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:82506",
+   "seq": 82506,
+   "round": 47,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P009-P007-42",
+   "reply_to": "42:79856",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:83486",
+   "seq": 83486,
+   "round": 48,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P013-48",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:83589",
+   "seq": 83589,
+   "round": 48,
+   "type": "MSG_PUBLIC",
+   "author": "P002",
+   "thread_id": "TH-P002-PUB-48-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:83698",
+   "seq": 83698,
+   "round": 48,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P003-P008-42",
+   "reply_to": "42:82425",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:83796",
+   "seq": 83796,
+   "round": 48,
+   "type": "MSG_PUBLIC",
+   "author": "P004",
+   "thread_id": "TH-P004-PUB-48-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:83879",
+   "seq": 83879,
+   "round": 48,
+   "type": "MSG_PUBLIC",
+   "author": "P005",
+   "thread_id": "TH-P005-PUB-48-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:83968",
+   "seq": 83968,
+   "round": 48,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P016-48",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:84061",
+   "seq": 84061,
+   "round": 48,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P009-P007-42",
+   "reply_to": "42:82506",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:84329",
+   "seq": 84329,
+   "round": 48,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P002-43",
+   "reply_to": "42:81934",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:84428",
+   "seq": 84428,
+   "round": 48,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P015-P011-40",
+   "reply_to": "42:81288",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P015"
+    ],
+    "threads": [
+     "TH-P015-P011-40"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:84621",
+   "seq": 84621,
+   "round": 48,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P013-P008-42",
+   "reply_to": "42:80035",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:84709",
+   "seq": 84709,
+   "round": 48,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P004-P014-43",
+   "reply_to": "42:82106",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:84822",
+   "seq": 84822,
+   "round": 48,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P015-P003-42",
+   "reply_to": "42:79174",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:85152",
+   "seq": 85152,
+   "round": 49,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P013-49",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:85208",
+   "seq": 85208,
+   "round": 49,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P010-P002-43",
+   "reply_to": "42:84329",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-PUB-40-0"
+    ],
+    "age_rounds": [
+     9
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:85284",
+   "seq": 85284,
+   "round": 49,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P015-P003-42",
+   "reply_to": "42:84822",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:85368",
+   "seq": 85368,
+   "round": 49,
+   "type": "MSG_PUBLIC",
+   "author": "P004",
+   "thread_id": "TH-P004-PUB-49-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:85438",
+   "seq": 85438,
+   "round": 49,
+   "type": "MSG_PUBLIC",
+   "author": "P005",
+   "thread_id": "TH-P005-PUB-49-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:85502",
+   "seq": 85502,
+   "round": 49,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P016-49",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:85606",
+   "seq": 85606,
+   "round": 49,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P013-P008-42",
+   "reply_to": "42:84621",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P013"
+    ],
+    "threads": [
+     "TH-P013-PUB-13-0"
+    ],
+    "age_rounds": [
+     36
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:85746",
+   "seq": 85746,
+   "round": 49,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P002-49",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:85938",
+   "seq": 85938,
+   "round": 49,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P001-P013-48",
+   "reply_to": "42:83486",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:86016",
+   "seq": 86016,
+   "round": 49,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P010-49",
+   "reply_to": null,
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "initiate",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-PUB-40-0"
+    ],
+    "age_rounds": [
+     9
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:86128",
+   "seq": 86128,
+   "round": 49,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P006-P016-48",
+   "reply_to": "42:83968",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:86321",
+   "seq": 86321,
+   "round": 50,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P003-P008-42",
+   "reply_to": "42:83698",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:86462",
+   "seq": 86462,
+   "round": 50,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P006-P016-49",
+   "reply_to": "42:85502",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:86537",
+   "seq": 86537,
+   "round": 51,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P013-48",
+   "reply_to": "42:85938",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:86546",
+   "seq": 86546,
+   "round": 51,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P010-P002-49",
+   "reply_to": "42:85746",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-PUB-40-0"
+    ],
+    "age_rounds": [
+     11
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:86561",
+   "seq": 86561,
+   "round": 51,
+   "type": "MSG_PUBLIC",
+   "author": "P003",
+   "thread_id": "TH-P003-PUB-51-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:86585",
+   "seq": 86585,
+   "round": 51,
+   "type": "MSG_PUBLIC",
+   "author": "P004",
+   "thread_id": "TH-P004-PUB-51-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:86602",
+   "seq": 86602,
+   "round": 51,
+   "type": "MSG_PUBLIC",
+   "author": "P005",
+   "thread_id": "TH-P005-PUB-51-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:86617",
+   "seq": 86617,
+   "round": 51,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P016-49",
+   "reply_to": "42:86462",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:86624",
+   "seq": 86624,
+   "round": 51,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P007-P002-51",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:86640",
+   "seq": 86640,
+   "round": 51,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P009-P015-51",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:86667",
+   "seq": 86667,
+   "round": 51,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P014-P010-49",
+   "reply_to": "42:86016",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:86708",
+   "seq": 86708,
+   "round": 51,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P001-P013-49",
+   "reply_to": "42:85152",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:86724",
+   "seq": 86724,
+   "round": 51,
+   "type": "MSG_PUBLIC",
+   "author": "P015",
+   "thread_id": "TH-P015-PUB-51-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:86735",
+   "seq": 86735,
+   "round": 51,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P014-51",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:87095",
+   "seq": 87095,
+   "round": 52,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P013-49",
+   "reply_to": "42:86708",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:87174",
+   "seq": 87174,
+   "round": 52,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P007-P002-51",
+   "reply_to": "42:86624",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P007"
+    ],
+    "threads": [
+     "TH-P007-P002-51"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:87261",
+   "seq": 87261,
+   "round": 52,
+   "type": "MSG_PUBLIC",
+   "author": "P003",
+   "thread_id": "TH-P003-PUB-52-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:87362",
+   "seq": 87362,
+   "round": 52,
+   "type": "MSG_PUBLIC",
+   "author": "P004",
+   "thread_id": "TH-P004-PUB-52-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:87449",
+   "seq": 87449,
+   "round": 52,
+   "type": "MSG_PUBLIC",
+   "author": "P005",
+   "thread_id": "TH-P005-PUB-52-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:87540",
+   "seq": 87540,
+   "round": 52,
+   "type": "MSG_PUBLIC",
+   "author": "P006",
+   "thread_id": "TH-P006-PUB-52-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:87615",
+   "seq": 87615,
+   "round": 52,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P007-P002-52",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:87735",
+   "seq": 87735,
+   "round": 52,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P009-P015-52",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:87804",
+   "seq": 87804,
+   "round": 52,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P010-P002-49",
+   "reply_to": "42:86546",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:87989",
+   "seq": 87989,
+   "round": 52,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P001-P013-48",
+   "reply_to": "42:86537",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:88044",
+   "seq": 88044,
+   "round": 52,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P016-P014-51",
+   "reply_to": "42:86735",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P016"
+    ],
+    "threads": [
+     "TH-P016-P014-51"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:88133",
+   "seq": 88133,
+   "round": 52,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P009-P015-51",
+   "reply_to": "42:86640",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:88194",
+   "seq": 88194,
+   "round": 52,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P006-P016-49",
+   "reply_to": "42:86617",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:88604",
+   "seq": 88604,
+   "round": 53,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P010-49",
+   "reply_to": "42:86667",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-PUB-40-0"
+    ],
+    "age_rounds": [
+     13
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:88751",
+   "seq": 88751,
+   "round": 54,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P013-48",
+   "reply_to": "42:87989",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:88768",
+   "seq": 88768,
+   "round": 54,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P010-P002-49",
+   "reply_to": "42:87804",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-PUB-40-0"
+    ],
+    "age_rounds": [
+     14
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:88799",
+   "seq": 88799,
+   "round": 54,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P003-P005-54",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:88872",
+   "seq": 88872,
+   "round": 54,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P005-P012-54",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:88914",
+   "seq": 88914,
+   "round": 54,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P016-49",
+   "reply_to": "42:88194",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P016"
+    ],
+    "threads": [
+     "TH-P006-P016-49"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:88931",
+   "seq": 88931,
+   "round": 54,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P007-P002-51",
+   "reply_to": "42:87174",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:88936",
+   "seq": 88936,
+   "round": 54,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P008-P002-54",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:88957",
+   "seq": 88957,
+   "round": 54,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P009-P015-51",
+   "reply_to": "42:88133",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:88968",
+   "seq": 88968,
+   "round": 54,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P014-P010-49",
+   "reply_to": "42:88604",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:88973",
+   "seq": 88973,
+   "round": 54,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P010-54",
+   "reply_to": null,
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "initiate",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-PUB-40-0"
+    ],
+    "age_rounds": [
+     14
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:88997",
+   "seq": 88997,
+   "round": 54,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P001-P013-49",
+   "reply_to": "42:87095",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:89004",
+   "seq": 89004,
+   "round": 54,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P004-54",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:89043",
+   "seq": 89043,
+   "round": 54,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P009-P015-52",
+   "reply_to": "42:87735",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:89050",
+   "seq": 89050,
+   "round": 54,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P014-51",
+   "reply_to": "42:88044",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:89436",
+   "seq": 89436,
+   "round": 55,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P013-49",
+   "reply_to": "42:88997",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:89555",
+   "seq": 89555,
+   "round": 55,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P007-P002-51",
+   "reply_to": "42:88931",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P007"
+    ],
+    "threads": [
+     "TH-P007-P002-51"
+    ],
+    "age_rounds": [
+     1,
+     4
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:89670",
+   "seq": 89670,
+   "round": 55,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P003-P005-55",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:89789",
+   "seq": 89789,
+   "round": 55,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P014-P004-54",
+   "reply_to": "42:89004",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:89832",
+   "seq": 89832,
+   "round": 55,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P003-P005-54",
+   "reply_to": "42:88799",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:89951",
+   "seq": 89951,
+   "round": 55,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P007-55",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:90008",
+   "seq": 90008,
+   "round": 55,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P007-P011-55",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:90123",
+   "seq": 90123,
+   "round": 55,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P008-P002-55",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:90174",
+   "seq": 90174,
+   "round": 55,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P009-P015-52",
+   "reply_to": "42:89043",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:90235",
+   "seq": 90235,
+   "round": 55,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P011-P010-54",
+   "reply_to": "42:88973",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:90350",
+   "seq": 90350,
+   "round": 55,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P010-55",
+   "reply_to": null,
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "initiate",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-PUB-40-0"
+    ],
+    "age_rounds": [
+     15
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:90465",
+   "seq": 90465,
+   "round": 55,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P005-P012-54",
+   "reply_to": "42:88872",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:90516",
+   "seq": 90516,
+   "round": 55,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P001-P013-48",
+   "reply_to": "42:88751",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:90577",
+   "seq": 90577,
+   "round": 55,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P016-P014-51",
+   "reply_to": "42:89050",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P016"
+    ],
+    "threads": [
+     "TH-P016-P014-51"
+    ],
+    "age_rounds": [
+     4
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:90694",
+   "seq": 90694,
+   "round": 55,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P009-P015-51",
+   "reply_to": "42:88957",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:90811",
+   "seq": 90811,
+   "round": 55,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P006-P016-49",
+   "reply_to": "42:88914",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P006"
+    ],
+    "threads": [
+     "TH-P006-P016-49"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:92898",
+   "seq": 92898,
+   "round": 57,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P008-P002-55",
+   "reply_to": "42:90123",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:94190",
+   "seq": 94190,
+   "round": 57,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P003-P005-54",
+   "reply_to": "42:89832",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:96623",
+   "seq": 96623,
+   "round": 57,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P005-P012-54",
+   "reply_to": "42:90465",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:99056",
+   "seq": 99056,
+   "round": 57,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P006-P007-55",
+   "reply_to": "42:89951",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:101427",
+   "seq": 101427,
+   "round": 57,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P009-P015-51",
+   "reply_to": "42:90694",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:102742",
+   "seq": 102742,
+   "round": 57,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P011-P010-55",
+   "reply_to": "42:90350",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P011"
+    ],
+    "threads": [
+     "TH-P011-P010-55"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:103999",
+   "seq": 103999,
+   "round": 57,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P007-P011-55",
+   "reply_to": "42:90008",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P007"
+    ],
+    "threads": [
+     "TH-P007-P011-55"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:106486",
+   "seq": 106486,
+   "round": 57,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P001-P013-49",
+   "reply_to": "42:89436",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:107637",
+   "seq": 107637,
+   "round": 57,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P004-54",
+   "reply_to": "42:89789",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:108829",
+   "seq": 108829,
+   "round": 57,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P009-P015-52",
+   "reply_to": "42:90174",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:109997",
+   "seq": 109997,
+   "round": 57,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P016-P014-51",
+   "reply_to": "42:90577",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:112366",
+   "seq": 112366,
+   "round": 58,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P014-P004-54",
+   "reply_to": "42:107637",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:112545",
+   "seq": 112545,
+   "round": 58,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P003-P005-54",
+   "reply_to": "42:94190",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:112716",
+   "seq": 112716,
+   "round": 58,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P007-55",
+   "reply_to": "42:99056",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P007"
+    ],
+    "threads": [
+     "TH-P006-P007-55"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:112895",
+   "seq": 112895,
+   "round": 58,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P007-P011-55",
+   "reply_to": "42:103999",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:113066",
+   "seq": 113066,
+   "round": 58,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P008-P002-55",
+   "reply_to": "42:92898",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:113243",
+   "seq": 113243,
+   "round": 58,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P009-P015-52",
+   "reply_to": "42:108829",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:113597",
+   "seq": 113597,
+   "round": 58,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P010-55",
+   "reply_to": "42:102742",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P011-P010-55"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:113772",
+   "seq": 113772,
+   "round": 58,
+   "type": "MSG_DM",
+   "author": "P012",
+   "thread_id": "TH-P005-P012-54",
+   "reply_to": "42:96623",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:114123",
+   "seq": 114123,
+   "round": 58,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P016-P014-51",
+   "reply_to": "42:109997",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P016"
+    ],
+    "threads": [
+     "TH-P016-P014-51"
+    ],
+    "age_rounds": [
+     7
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:114290",
+   "seq": 114290,
+   "round": 58,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P009-P015-51",
+   "reply_to": "42:101427",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:114905",
+   "seq": 114905,
+   "round": 59,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P008-P002-55",
+   "reply_to": "42:113066",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:114990",
+   "seq": 114990,
+   "round": 59,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P003-P005-54",
+   "reply_to": "42:112545",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:115521",
+   "seq": 115521,
+   "round": 59,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P011-P010-55",
+   "reply_to": "42:113597",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P011"
+    ],
+    "threads": [
+     "TH-P011-P010-55"
+    ],
+    "age_rounds": [
+     4
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:116428",
+   "seq": 116428,
+   "round": 60,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P002-P014-60",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:116654",
+   "seq": 116654,
+   "round": 60,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P003-P005-54",
+   "reply_to": "42:114990",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:116729",
+   "seq": 116729,
+   "round": 60,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P013-60",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:116822",
+   "seq": 116822,
+   "round": 60,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P006-P007-55",
+   "reply_to": "42:112716",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P006"
+    ],
+    "threads": [
+     "TH-P006-P007-55"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:116905",
+   "seq": 116905,
+   "round": 60,
+   "type": "MSG_DM",
+   "author": "P008",
+   "thread_id": "TH-P008-P002-55",
+   "reply_to": "42:114905",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:117063",
+   "seq": 117063,
+   "round": 60,
+   "type": "MSG_PUBLIC",
+   "author": "P010",
+   "thread_id": "TH-P010-PUB-60-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:117156",
+   "seq": 117156,
+   "round": 60,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P010-55",
+   "reply_to": "42:115521",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P011-P010-55"
+    ],
+    "age_rounds": [
+     3
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:117227",
+   "seq": 117227,
+   "round": 60,
+   "type": "MSG_PUBLIC",
+   "author": "P012",
+   "thread_id": "TH-P012-PUB-60-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:117400",
+   "seq": 117400,
+   "round": 60,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P004-54",
+   "reply_to": "42:112366",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:117495",
+   "seq": 117495,
+   "round": 60,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P009-P015-52",
+   "reply_to": "42:113243",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:117983",
+   "seq": 117983,
+   "round": 61,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P008-P002-55",
+   "reply_to": "42:116905",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:118213",
+   "seq": 118213,
+   "round": 61,
+   "type": "MSG_DM",
+   "author": "P004",
+   "thread_id": "TH-P014-P004-54",
+   "reply_to": "42:117400",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:118395",
+   "seq": 118395,
+   "round": 61,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P007-55",
+   "reply_to": "42:116822",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:118473",
+   "seq": 118473,
+   "round": 61,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P007-P009-61",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:118527",
+   "seq": 118527,
+   "round": 61,
+   "type": "MSG_GROUP",
+   "author": "P008",
+   "thread_id": "TH-P008-Gplace-school-61",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:118711",
+   "seq": 118711,
+   "round": 61,
+   "type": "MSG_DM",
+   "author": "P010",
+   "thread_id": "TH-P011-P010-55",
+   "reply_to": "42:117156",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P011"
+    ],
+    "threads": [
+     "TH-P011-P010-55"
+    ],
+    "age_rounds": [
+     6
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:118773",
+   "seq": 118773,
+   "round": 61,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P016-61",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:118817",
+   "seq": 118817,
+   "round": 61,
+   "type": "MSG_PUBLIC",
+   "author": "P012",
+   "thread_id": "TH-P012-PUB-61-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:118887",
+   "seq": 118887,
+   "round": 61,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P006-P013-60",
+   "reply_to": "42:116729",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:118971",
+   "seq": 118971,
+   "round": 61,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P002-P014-60",
+   "reply_to": "42:116428",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:119434",
+   "seq": 119434,
+   "round": 62,
+   "type": "MSG_GROUP",
+   "author": "P004",
+   "thread_id": "TH-P008-Gplace-school-61",
+   "reply_to": "42:118527",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P008"
+    ],
+    "threads": [
+     "TH-P008-Gplace-school-61"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:119546",
+   "seq": 119546,
+   "round": 62,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P007-P009-61",
+   "reply_to": "42:118473",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:119690",
+   "seq": 119690,
+   "round": 62,
+   "type": "MSG_GROUP",
+   "author": "P016",
+   "thread_id": "TH-P008-Gplace-school-61",
+   "reply_to": "42:118527",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P008"
+    ],
+    "threads": [
+     "TH-P008-Gplace-school-61"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:119837",
+   "seq": 119837,
+   "round": 63,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P006-63",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:119858",
+   "seq": 119858,
+   "round": 63,
+   "type": "MSG_GROUP",
+   "author": "P002",
+   "thread_id": "TH-P008-Gplace-school-61",
+   "reply_to": "42:119690",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:119957",
+   "seq": 119957,
+   "round": 63,
+   "type": "MSG_PUBLIC",
+   "author": "P005",
+   "thread_id": "TH-P005-PUB-63-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:119968",
+   "seq": 119968,
+   "round": 63,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P013-60",
+   "reply_to": "42:118887",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:119987",
+   "seq": 119987,
+   "round": 63,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P006-P007-55",
+   "reply_to": "42:118395",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P006"
+    ],
+    "threads": [
+     "TH-P006-P007-55"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:119996",
+   "seq": 119996,
+   "round": 63,
+   "type": "MSG_GROUP",
+   "author": "P008",
+   "thread_id": "TH-P008-Gplace-school-61",
+   "reply_to": "42:119690",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:120031",
+   "seq": 120031,
+   "round": 63,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P009-P006-63",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:120065",
+   "seq": 120065,
+   "round": 63,
+   "type": "MSG_GROUP",
+   "author": "P011",
+   "thread_id": "TH-P008-Gplace-school-61",
+   "reply_to": "42:119690",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:120070",
+   "seq": 120070,
+   "round": 63,
+   "type": "MSG_GROUP",
+   "author": "P012",
+   "thread_id": "TH-P012-Gplace-market-63",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:120087",
+   "seq": 120087,
+   "round": 63,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P013-P009-63",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:120098",
+   "seq": 120098,
+   "round": 63,
+   "type": "MSG_DM",
+   "author": "P014",
+   "thread_id": "TH-P014-P009-63",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:120168",
+   "seq": 120168,
+   "round": 63,
+   "type": "MSG_DM",
+   "author": "P016",
+   "thread_id": "TH-P011-P016-61",
+   "reply_to": "42:118773",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P011"
+    ],
+    "threads": [
+     "TH-P016-P011-39"
+    ],
+    "age_rounds": [
+     20
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:120521",
+   "seq": 120521,
+   "round": 64,
+   "type": "MSG_GROUP",
+   "author": "P001",
+   "thread_id": "TH-P012-Gplace-market-63",
+   "reply_to": "42:120070",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:120596",
+   "seq": 120596,
+   "round": 64,
+   "type": "MSG_PUBLIC",
+   "author": "P002",
+   "thread_id": "TH-P002-PUB-64-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:120768",
+   "seq": 120768,
+   "round": 64,
+   "type": "MSG_GROUP",
+   "author": "P004",
+   "thread_id": "TH-P008-Gplace-school-61",
+   "reply_to": "42:120065",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P011"
+    ],
+    "threads": [
+     "TH-P008-Gplace-school-61"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:120835",
+   "seq": 120835,
+   "round": 64,
+   "type": "MSG_PUBLIC",
+   "author": "P005",
+   "thread_id": "TH-P005-PUB-64-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:120914",
+   "seq": 120914,
+   "round": 64,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P009-P006-63",
+   "reply_to": "42:120031",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:120999",
+   "seq": 120999,
+   "round": 64,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P007-P009-61",
+   "reply_to": "42:119546",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:121133",
+   "seq": 121133,
+   "round": 64,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P014-P009-63",
+   "reply_to": "42:120098",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P014"
+    ],
+    "threads": [
+     "TH-P009-P014-12"
+    ],
+    "age_rounds": [
+     48
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:121198",
+   "seq": 121198,
+   "round": 64,
+   "type": "MSG_GROUP",
+   "author": "P010",
+   "thread_id": "TH-P010-Gplace-town_hall-64",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:121291",
+   "seq": 121291,
+   "round": 64,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P016-61",
+   "reply_to": "42:120168",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:121334",
+   "seq": 121334,
+   "round": 64,
+   "type": "MSG_GROUP",
+   "author": "P012",
+   "thread_id": "TH-P012-Gplace-market-64",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:121407",
+   "seq": 121407,
+   "round": 64,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P006-P013-60",
+   "reply_to": "42:119968",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:121482",
+   "seq": 121482,
+   "round": 64,
+   "type": "MSG_GROUP",
+   "author": "P014",
+   "thread_id": "TH-P012-Gplace-market-63",
+   "reply_to": "42:120070",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P012"
+    ],
+    "threads": [
+     "TH-P012-P014-36"
+    ],
+    "age_rounds": [
+     23
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:121549",
+   "seq": 121549,
+   "round": 64,
+   "type": "MSG_GROUP",
+   "author": "P015",
+   "thread_id": "TH-P012-Gplace-market-63",
+   "reply_to": "42:120070",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:121640",
+   "seq": 121640,
+   "round": 64,
+   "type": "MSG_GROUP",
+   "author": "P016",
+   "thread_id": "TH-P008-Gplace-school-61",
+   "reply_to": "42:120065",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P011"
+    ],
+    "threads": [
+     "TH-P008-Gplace-school-61"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:121811",
+   "seq": 121811,
+   "round": 65,
+   "type": "MSG_GROUP",
+   "author": "P003",
+   "thread_id": "TH-P010-Gplace-town_hall-64",
+   "reply_to": "42:121198",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-PUB-40-0"
+    ],
+    "age_rounds": [
+     25
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:121853",
+   "seq": 121853,
+   "round": 65,
+   "type": "MSG_GROUP",
+   "author": "P004",
+   "thread_id": "TH-P012-Gplace-market-63",
+   "reply_to": "42:121549",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:121966",
+   "seq": 121966,
+   "round": 65,
+   "type": "MSG_GROUP",
+   "author": "P008",
+   "thread_id": "TH-P008-Gplace-school-61",
+   "reply_to": "42:121640",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:122276",
+   "seq": 122276,
+   "round": 66,
+   "type": "MSG_GROUP",
+   "author": "P001",
+   "thread_id": "TH-P012-Gplace-market-63",
+   "reply_to": "42:121853",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P004"
+    ],
+    "threads": [
+     "TH-P004-P001-12",
+     "TH-P012-Gplace-market-63"
+    ],
+    "age_rounds": [
+     1,
+     48
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:122297",
+   "seq": 122297,
+   "round": 66,
+   "type": "MSG_GROUP",
+   "author": "P002",
+   "thread_id": "TH-P008-Gplace-school-61",
+   "reply_to": "42:121966",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P008"
+    ],
+    "threads": [
+     "TH-P008-Gplace-school-61"
+    ],
+    "age_rounds": [
+     5
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:122328",
+   "seq": 122328,
+   "round": 66,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P003-P005-66",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:122357",
+   "seq": 122357,
+   "round": 66,
+   "type": "MSG_GROUP",
+   "author": "P004",
+   "thread_id": "TH-P008-Gplace-school-61",
+   "reply_to": "42:121966",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P008"
+    ],
+    "threads": [
+     "TH-P008-Gplace-school-61"
+    ],
+    "age_rounds": [
+     5
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:122391",
+   "seq": 122391,
+   "round": 66,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P006-P013-60",
+   "reply_to": "42:121407",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:122450",
+   "seq": 122450,
+   "round": 66,
+   "type": "MSG_DM",
+   "author": "P009",
+   "thread_id": "TH-P007-P009-61",
+   "reply_to": "42:120999",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:122469",
+   "seq": 122469,
+   "round": 66,
+   "type": "MSG_GROUP",
+   "author": "P010",
+   "thread_id": "TH-P010-Gplace-town_hall-64",
+   "reply_to": "42:121811",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:122498",
+   "seq": 122498,
+   "round": 66,
+   "type": "MSG_GROUP",
+   "author": "P011",
+   "thread_id": "TH-P008-Gplace-school-61",
+   "reply_to": "42:121966",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P008"
+    ],
+    "threads": [
+     "TH-P008-Gplace-school-61"
+    ],
+    "age_rounds": [
+     5
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:122505",
+   "seq": 122505,
+   "round": 66,
+   "type": "MSG_GROUP",
+   "author": "P012",
+   "thread_id": "TH-P012-Gplace-market-63",
+   "reply_to": "42:121853",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P004"
+    ],
+    "threads": [
+     "TH-P012-Gplace-market-63"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:122520",
+   "seq": 122520,
+   "round": 66,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P013-P015-66",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:122537",
+   "seq": 122537,
+   "round": 66,
+   "type": "MSG_GROUP",
+   "author": "P014",
+   "thread_id": "TH-P012-Gplace-market-63",
+   "reply_to": "42:121853",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P004"
+    ],
+    "threads": [
+     "TH-P012-Gplace-market-63"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:122558",
+   "seq": 122558,
+   "round": 66,
+   "type": "MSG_GROUP",
+   "author": "P015",
+   "thread_id": "TH-P012-Gplace-market-63",
+   "reply_to": "42:121853",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P004"
+    ],
+    "threads": [
+     "TH-P012-Gplace-market-63"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:122585",
+   "seq": 122585,
+   "round": 66,
+   "type": "MSG_GROUP",
+   "author": "P016",
+   "thread_id": "TH-P008-Gplace-school-61",
+   "reply_to": "42:121966",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P008"
+    ],
+    "threads": [
+     "TH-P008-Gplace-school-61"
+    ],
+    "age_rounds": [
+     5
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:123149",
+   "seq": 123149,
+   "round": 67,
+   "type": "MSG_GROUP",
+   "author": "P003",
+   "thread_id": "TH-P010-Gplace-town_hall-64",
+   "reply_to": "42:122469",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-PUB-40-0"
+    ],
+    "age_rounds": [
+     27
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:123280",
+   "seq": 123280,
+   "round": 67,
+   "type": "MSG_GROUP",
+   "author": "P004",
+   "thread_id": "TH-P012-Gplace-market-63",
+   "reply_to": "42:122558",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:123395",
+   "seq": 123395,
+   "round": 67,
+   "type": "MSG_DM",
+   "author": "P005",
+   "thread_id": "TH-P003-P005-66",
+   "reply_to": "42:122328",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:123533",
+   "seq": 123533,
+   "round": 67,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P007-P009-61",
+   "reply_to": "42:122450",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:123677",
+   "seq": 123677,
+   "round": 67,
+   "type": "MSG_GROUP",
+   "author": "P009",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:123875",
+   "seq": 123875,
+   "round": 67,
+   "type": "MSG_GROUP",
+   "author": "P011",
+   "thread_id": "TH-P012-Gplace-market-63",
+   "reply_to": "42:122558",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:124109",
+   "seq": 124109,
+   "round": 67,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P006-P013-60",
+   "reply_to": "42:122391",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:124356",
+   "seq": 124356,
+   "round": 67,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P013-P015-66",
+   "reply_to": "42:122520",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:124651",
+   "seq": 124651,
+   "round": 68,
+   "type": "MSG_GROUP",
+   "author": "P002",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:123677",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:124753",
+   "seq": 124753,
+   "round": 68,
+   "type": "MSG_GROUP",
+   "author": "P005",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:123677",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:124887",
+   "seq": 124887,
+   "round": 68,
+   "type": "MSG_GROUP",
+   "author": "P010",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:123677",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P009"
+    ],
+    "threads": [
+     "TH-P010-P009-37"
+    ],
+    "age_rounds": [
+     28
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:124943",
+   "seq": 124943,
+   "round": 68,
+   "type": "MSG_GROUP",
+   "author": "P012",
+   "thread_id": "TH-P012-Gplace-market-63",
+   "reply_to": "42:123875",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:125022",
+   "seq": 125022,
+   "round": 68,
+   "type": "MSG_GROUP",
+   "author": "P014",
+   "thread_id": "TH-P012-Gplace-market-63",
+   "reply_to": "42:123875",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:125104",
+   "seq": 125104,
+   "round": 68,
+   "type": "MSG_GROUP",
+   "author": "P016",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:123677",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:128236",
+   "seq": 128236,
+   "round": 69,
+   "type": "MSG_DM",
+   "author": "P003",
+   "thread_id": "TH-P003-P005-66",
+   "reply_to": "42:123395",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P005"
+    ],
+    "threads": [
+     "TH-P003-P005-66"
+    ],
+    "age_rounds": [
+     2
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:133946",
+   "seq": 133946,
+   "round": 69,
+   "type": "MSG_GROUP",
+   "author": "P007",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:125104",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:136816",
+   "seq": 136816,
+   "round": 69,
+   "type": "MSG_GROUP",
+   "author": "P009",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:125104",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:138389",
+   "seq": 138389,
+   "round": 69,
+   "type": "MSG_GROUP",
+   "author": "P010",
+   "thread_id": "TH-P010-Gplace-town_hall-64",
+   "reply_to": "42:123149",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:141303",
+   "seq": 141303,
+   "round": 69,
+   "type": "MSG_GROUP",
+   "author": "P012",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:125104",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:142741",
+   "seq": 142741,
+   "round": 69,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P013-P015-66",
+   "reply_to": "42:124356",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:144098",
+   "seq": 144098,
+   "round": 69,
+   "type": "MSG_GROUP",
+   "author": "P014",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:125104",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P016"
+    ],
+    "threads": [
+     "TH-P016-P014-51"
+    ],
+    "age_rounds": [
+     18
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:149083",
+   "seq": 149083,
+   "round": 70,
+   "type": "MSG_GROUP",
+   "author": "P002",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:144098",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:149265",
+   "seq": 149265,
+   "round": 70,
+   "type": "MSG_GROUP",
+   "author": "P003",
+   "thread_id": "TH-P010-Gplace-town_hall-64",
+   "reply_to": "42:138389",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-Gplace-town_hall-64",
+     "TH-P010-PUB-40-0"
+    ],
+    "age_rounds": [
+     1,
+     30
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:149613",
+   "seq": 149613,
+   "round": 70,
+   "type": "MSG_GROUP",
+   "author": "P005",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:144098",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:150481",
+   "seq": 150481,
+   "round": 70,
+   "type": "MSG_GROUP",
+   "author": "P010",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:144098",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:151350",
+   "seq": 151350,
+   "round": 70,
+   "type": "MSG_DM",
+   "author": "P015",
+   "thread_id": "TH-P013-P015-66",
+   "reply_to": "42:142741",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:151524",
+   "seq": 151524,
+   "round": 70,
+   "type": "MSG_GROUP",
+   "author": "P016",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:144098",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:152355",
+   "seq": 152355,
+   "round": 71,
+   "type": "MSG_GROUP",
+   "author": "P007",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:151524",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:152499",
+   "seq": 152499,
+   "round": 71,
+   "type": "MSG_GROUP",
+   "author": "P009",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:151524",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:152716",
+   "seq": 152716,
+   "round": 71,
+   "type": "MSG_GROUP",
+   "author": "P012",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:151524",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:152799",
+   "seq": 152799,
+   "round": 71,
+   "type": "MSG_DM",
+   "author": "P013",
+   "thread_id": "TH-P013-P015-66",
+   "reply_to": "42:151350",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:152874",
+   "seq": 152874,
+   "round": 71,
+   "type": "MSG_GROUP",
+   "author": "P014",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:151524",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P016"
+    ],
+    "threads": [
+     "TH-P016-P014-51"
+    ],
+    "age_rounds": [
+     20
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:153452",
+   "seq": 153452,
+   "round": 72,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P007-72",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:153546",
+   "seq": 153546,
+   "round": 72,
+   "type": "MSG_GROUP",
+   "author": "P002",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:152874",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:153822",
+   "seq": 153822,
+   "round": 72,
+   "type": "MSG_GROUP",
+   "author": "P005",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:152874",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:154002",
+   "seq": 154002,
+   "round": 72,
+   "type": "MSG_DM",
+   "author": "P007",
+   "thread_id": "TH-P007-P006-72",
+   "reply_to": null,
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "initiate",
+    "with": [
+     "P006"
+    ],
+    "threads": [
+     "TH-P006-P007-55"
+    ],
+    "age_rounds": [
+     11
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:154272",
+   "seq": 154272,
+   "round": 72,
+   "type": "MSG_GROUP",
+   "author": "P010",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:152874",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:154358",
+   "seq": 154358,
+   "round": 72,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P008-72",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:154820",
+   "seq": 154820,
+   "round": 72,
+   "type": "MSG_GROUP",
+   "author": "P016",
+   "thread_id": "TH-P009-Gplace-hall-67",
+   "reply_to": "42:152874",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:155124",
+   "seq": 155124,
+   "round": 73,
+   "type": "MSG_DM",
+   "author": "P001",
+   "thread_id": "TH-P001-P007-73",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:155180",
+   "seq": 155180,
+   "round": 73,
+   "type": "MSG_DM",
+   "author": "P002",
+   "thread_id": "TH-P002-P016-73",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:155236",
+   "seq": 155236,
+   "round": 73,
+   "type": "MSG_GROUP",
+   "author": "P003",
+   "thread_id": "TH-P003-Gplace-school-73",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:155452",
+   "seq": 155452,
+   "round": 73,
+   "type": "MSG_DM",
+   "author": "P006",
+   "thread_id": "TH-P007-P006-72",
+   "reply_to": "42:154002",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P007"
+    ],
+    "threads": [
+     "TH-P006-P007-55"
+    ],
+    "age_rounds": [
+     10
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:155874",
+   "seq": 155874,
+   "round": 73,
+   "type": "MSG_DM",
+   "author": "P011",
+   "thread_id": "TH-P011-P008-73",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:155938",
+   "seq": 155938,
+   "round": 73,
+   "type": "MSG_GROUP",
+   "author": "P012",
+   "thread_id": "TH-P012-Gplace-school-73",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:156577",
+   "seq": 156577,
+   "round": 74,
+   "type": "MSG_GROUP",
+   "author": "P009",
+   "thread_id": "TH-P012-Gplace-school-73",
+   "reply_to": "42:155938",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P012"
+    ],
+    "threads": [
+     "TH-P012-Gplace-school-73"
+    ],
+    "age_rounds": [
+     1
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:156690",
+   "seq": 156690,
+   "round": 74,
+   "type": "MSG_GROUP",
+   "author": "P014",
+   "thread_id": "TH-P012-Gplace-school-73",
+   "reply_to": "42:155938",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P012"
+    ],
+    "threads": [
+     "TH-P012-Gplace-school-73",
+     "TH-P012-P014-36"
+    ],
+    "age_rounds": [
+     1,
+     33
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:156888",
+   "seq": 156888,
+   "round": 75,
+   "type": "MSG_GROUP",
+   "author": "P002",
+   "thread_id": "TH-P002-Gplace-town_hall-75",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:156917",
+   "seq": 156917,
+   "round": 75,
+   "type": "MSG_GROUP",
+   "author": "P003",
+   "thread_id": "TH-P012-Gplace-school-73",
+   "reply_to": "42:156690",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:156934",
+   "seq": 156934,
+   "round": 75,
+   "type": "MSG_GROUP",
+   "author": "P004",
+   "thread_id": "TH-P004-Gplace-market-75",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:156975",
+   "seq": 156975,
+   "round": 75,
+   "type": "MSG_PUBLIC",
+   "author": "P005",
+   "thread_id": "TH-P005-PUB-75-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:157115",
+   "seq": 157115,
+   "round": 75,
+   "type": "MSG_GROUP",
+   "author": "P009",
+   "thread_id": "TH-P003-Gplace-school-73",
+   "reply_to": "42:155236",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:157148",
+   "seq": 157148,
+   "round": 75,
+   "type": "MSG_GROUP",
+   "author": "P010",
+   "thread_id": "TH-P012-Gplace-school-73",
+   "reply_to": "42:156690",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:157206",
+   "seq": 157206,
+   "round": 75,
+   "type": "MSG_GROUP",
+   "author": "P012",
+   "thread_id": "TH-P012-Gplace-school-73",
+   "reply_to": "42:156690",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P014"
+    ],
+    "threads": [
+     "TH-P012-Gplace-market-63",
+     "TH-P012-P014-36"
+    ],
+    "age_rounds": [
+     9,
+     35
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:157249",
+   "seq": 157249,
+   "round": 75,
+   "type": "MSG_PUBLIC",
+   "author": "P013",
+   "thread_id": "TH-P013-PUB-75-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:157339",
+   "seq": 157339,
+   "round": 75,
+   "type": "MSG_PUBLIC",
+   "author": "P015",
+   "thread_id": "TH-P015-PUB-75-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:157795",
+   "seq": 157795,
+   "round": 76,
+   "type": "MSG_GROUP",
+   "author": "P001",
+   "thread_id": "TH-P002-Gplace-town_hall-75",
+   "reply_to": "42:156888",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:157870",
+   "seq": 157870,
+   "round": 76,
+   "type": "MSG_GROUP",
+   "author": "P002",
+   "thread_id": "TH-P004-Gplace-market-75",
+   "reply_to": "42:156934",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:157951",
+   "seq": 157951,
+   "round": 76,
+   "type": "MSG_GROUP",
+   "author": "P003",
+   "thread_id": "TH-P003-Gplace-school-73",
+   "reply_to": "42:157115",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:158002",
+   "seq": 158002,
+   "round": 76,
+   "type": "MSG_GROUP",
+   "author": "P004",
+   "thread_id": "TH-P004-Gplace-market-76",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:158075",
+   "seq": 158075,
+   "round": 76,
+   "type": "MSG_GROUP",
+   "author": "P005",
+   "thread_id": "TH-P004-Gplace-market-75",
+   "reply_to": "42:156934",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:158192",
+   "seq": 158192,
+   "round": 76,
+   "type": "MSG_GROUP",
+   "author": "P006",
+   "thread_id": "TH-P004-Gplace-market-75",
+   "reply_to": "42:156934",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:158533",
+   "seq": 158533,
+   "round": 76,
+   "type": "MSG_GROUP",
+   "author": "P009",
+   "thread_id": "TH-P012-Gplace-school-73",
+   "reply_to": "42:157206",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P012"
+    ],
+    "threads": [
+     "TH-P012-Gplace-school-73"
+    ],
+    "age_rounds": [
+     3
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:158828",
+   "seq": 158828,
+   "round": 76,
+   "type": "MSG_GROUP",
+   "author": "P012",
+   "thread_id": "TH-P004-Gplace-market-75",
+   "reply_to": "42:156934",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:158943",
+   "seq": 158943,
+   "round": 76,
+   "type": "MSG_GROUP",
+   "author": "P013",
+   "thread_id": "TH-P004-Gplace-market-75",
+   "reply_to": "42:156934",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:159004",
+   "seq": 159004,
+   "round": 76,
+   "type": "MSG_GROUP",
+   "author": "P014",
+   "thread_id": "TH-P012-Gplace-school-73",
+   "reply_to": "42:157206",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P012"
+    ],
+    "threads": [
+     "TH-P012-Gplace-school-73",
+     "TH-P012-P014-36"
+    ],
+    "age_rounds": [
+     3,
+     35
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:159113",
+   "seq": 159113,
+   "round": 76,
+   "type": "MSG_PUBLIC",
+   "author": "P015",
+   "thread_id": "TH-P015-PUB-76-0",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:159188",
+   "seq": 159188,
+   "round": 76,
+   "type": "MSG_GROUP",
+   "author": "P016",
+   "thread_id": "TH-P016-Gplace-town_hall-76",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:159487",
+   "seq": 159487,
+   "round": 77,
+   "type": "MSG_GROUP",
+   "author": "P006",
+   "thread_id": "TH-P016-Gplace-town_hall-76",
+   "reply_to": "42:159188",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P016"
+    ],
+    "threads": [
+     "TH-P006-P016-49"
+    ],
+    "age_rounds": [
+     25
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:159645",
+   "seq": 159645,
+   "round": 77,
+   "type": "MSG_GROUP",
+   "author": "P010",
+   "thread_id": "TH-P012-Gplace-school-73",
+   "reply_to": "42:159004",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:159983",
+   "seq": 159983,
+   "round": 78,
+   "type": "MSG_GROUP",
+   "author": "P001",
+   "thread_id": "TH-P016-Gplace-town_hall-76",
+   "reply_to": "42:159487",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:160002",
+   "seq": 160002,
+   "round": 78,
+   "type": "MSG_GROUP",
+   "author": "P002",
+   "thread_id": "TH-P004-Gplace-market-76",
+   "reply_to": "42:158002",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:160023",
+   "seq": 160023,
+   "round": 78,
+   "type": "MSG_GROUP",
+   "author": "P003",
+   "thread_id": "TH-P012-Gplace-school-73",
+   "reply_to": "42:159645",
+   "dialogue_rift": {
+    "prompted": true,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-Gplace-town_hall-64"
+    ],
+    "age_rounds": [
+     9
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:160032",
+   "seq": 160032,
+   "round": 78,
+   "type": "MSG_GROUP",
+   "author": "P004",
+   "thread_id": "TH-P016-Gplace-town_hall-76",
+   "reply_to": "42:159487",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:160051",
+   "seq": 160051,
+   "round": 78,
+   "type": "MSG_GROUP",
+   "author": "P005",
+   "thread_id": "TH-P004-Gplace-market-76",
+   "reply_to": "42:158002",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:160094",
+   "seq": 160094,
+   "round": 78,
+   "type": "MSG_GROUP",
+   "author": "P006",
+   "thread_id": "TH-P004-Gplace-market-76",
+   "reply_to": "42:158002",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:160209",
+   "seq": 160209,
+   "round": 78,
+   "type": "MSG_GROUP",
+   "author": "P009",
+   "thread_id": "TH-P012-Gplace-school-73",
+   "reply_to": "42:159645",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-PUB-40-0"
+    ],
+    "age_rounds": [
+     38
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:160250",
+   "seq": 160250,
+   "round": 78,
+   "type": "MSG_GROUP",
+   "author": "P010",
+   "thread_id": "TH-P016-Gplace-town_hall-76",
+   "reply_to": "42:159487",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:160289",
+   "seq": 160289,
+   "round": 78,
+   "type": "MSG_GROUP",
+   "author": "P011",
+   "thread_id": "TH-P016-Gplace-town_hall-76",
+   "reply_to": "42:159487",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:160300",
+   "seq": 160300,
+   "round": 78,
+   "type": "MSG_GROUP",
+   "author": "P012",
+   "thread_id": "TH-P012-Gplace-school-73",
+   "reply_to": "42:159645",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P010"
+    ],
+    "threads": [
+     "TH-P010-PUB-40-0"
+    ],
+    "age_rounds": [
+     38
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:160337",
+   "seq": 160337,
+   "round": 78,
+   "type": "MSG_GROUP",
+   "author": "P013",
+   "thread_id": "TH-P004-Gplace-market-76",
+   "reply_to": "42:158002",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:160350",
+   "seq": 160350,
+   "round": 78,
+   "type": "MSG_GROUP",
+   "author": "P014",
+   "thread_id": "TH-P012-Gplace-school-73",
+   "reply_to": "42:159645",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:160408",
+   "seq": 160408,
+   "round": 78,
+   "type": "MSG_GROUP",
+   "author": "P016",
+   "thread_id": "TH-P016-Gplace-town_hall-76",
+   "reply_to": "42:159487",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:160949",
+   "seq": 160949,
+   "round": 79,
+   "type": "MSG_GROUP",
+   "author": "P004",
+   "thread_id": "TH-P004-Gplace-market-76",
+   "reply_to": "42:160337",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:160996",
+   "seq": 160996,
+   "round": 79,
+   "type": "MSG_GROUP",
+   "author": "P005",
+   "thread_id": "TH-P005-Gplace-hall-79",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:161105",
+   "seq": 161105,
+   "round": 79,
+   "type": "MSG_GROUP",
+   "author": "P006",
+   "thread_id": "TH-P016-Gplace-town_hall-76",
+   "reply_to": "42:160408",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P016"
+    ],
+    "threads": [
+     "TH-P006-P016-49"
+    ],
+    "age_rounds": [
+     27
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:161441",
+   "seq": 161441,
+   "round": 79,
+   "type": "MSG_GROUP",
+   "author": "P010",
+   "thread_id": "TH-P010-Gplace-plaza-79",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:161603",
+   "seq": 161603,
+   "round": 79,
+   "type": "MSG_GROUP",
+   "author": "P012",
+   "thread_id": "TH-P004-Gplace-market-76",
+   "reply_to": "42:160337",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:161789",
+   "seq": 161789,
+   "round": 79,
+   "type": "MSG_GROUP",
+   "author": "P014",
+   "thread_id": "TH-P014-Gplace-plaza-79",
+   "reply_to": null,
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:162040",
+   "seq": 162040,
+   "round": 80,
+   "type": "MSG_GROUP",
+   "author": "P001",
+   "thread_id": "TH-P016-Gplace-town_hall-76",
+   "reply_to": "42:161105",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:164197",
+   "seq": 164197,
+   "round": 81,
+   "type": "MSG_GROUP",
+   "author": "P002",
+   "thread_id": "TH-P004-Gplace-market-76",
+   "reply_to": "42:161603",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:165955",
+   "seq": 165955,
+   "round": 81,
+   "type": "MSG_GROUP",
+   "author": "P003",
+   "thread_id": "TH-P014-Gplace-plaza-79",
+   "reply_to": "42:161789",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:167642",
+   "seq": 167642,
+   "round": 81,
+   "type": "MSG_GROUP",
+   "author": "P004",
+   "thread_id": "TH-P016-Gplace-town_hall-76",
+   "reply_to": "42:162040",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:169380",
+   "seq": 169380,
+   "round": 81,
+   "type": "MSG_GROUP",
+   "author": "P005",
+   "thread_id": "TH-P004-Gplace-market-76",
+   "reply_to": "42:161603",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:171033",
+   "seq": 171033,
+   "round": 81,
+   "type": "MSG_GROUP",
+   "author": "P006",
+   "thread_id": "TH-P004-Gplace-market-76",
+   "reply_to": "42:161603",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:177615",
+   "seq": 177615,
+   "round": 81,
+   "type": "MSG_GROUP",
+   "author": "P010",
+   "thread_id": "TH-P016-Gplace-town_hall-76",
+   "reply_to": "42:162040",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:179257",
+   "seq": 179257,
+   "round": 81,
+   "type": "MSG_GROUP",
+   "author": "P011",
+   "thread_id": "TH-P016-Gplace-town_hall-76",
+   "reply_to": "42:162040",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:180915",
+   "seq": 180915,
+   "round": 81,
+   "type": "MSG_GROUP",
+   "author": "P012",
+   "thread_id": "TH-P014-Gplace-plaza-79",
+   "reply_to": "42:161789",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 2,
+    "route": "reply",
+    "with": [
+     "P014"
+    ],
+    "threads": [
+     "TH-P012-Gplace-market-63",
+     "TH-P012-P014-36"
+    ],
+    "age_rounds": [
+     15,
+     41
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:182539",
+   "seq": 182539,
+   "round": 81,
+   "type": "MSG_GROUP",
+   "author": "P013",
+   "thread_id": "TH-P004-Gplace-market-76",
+   "reply_to": "42:161603",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:184032",
+   "seq": 184032,
+   "round": 81,
+   "type": "MSG_GROUP",
+   "author": "P014",
+   "thread_id": "TH-P010-Gplace-plaza-79",
+   "reply_to": "42:161441",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:187191",
+   "seq": 187191,
+   "round": 81,
+   "type": "MSG_GROUP",
+   "author": "P016",
+   "thread_id": "TH-P016-Gplace-town_hall-76",
+   "reply_to": "42:162040",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:189665",
+   "seq": 189665,
+   "round": 82,
+   "type": "MSG_GROUP",
+   "author": "P002",
+   "thread_id": "TH-P014-Gplace-plaza-79",
+   "reply_to": "42:180915",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:190036",
+   "seq": 190036,
+   "round": 82,
+   "type": "MSG_GROUP",
+   "author": "P004",
+   "thread_id": "TH-P004-Gplace-market-76",
+   "reply_to": "42:182539",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:190215",
+   "seq": 190215,
+   "round": 82,
+   "type": "MSG_GROUP",
+   "author": "P005",
+   "thread_id": "TH-P014-Gplace-plaza-79",
+   "reply_to": "42:180915",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:190409",
+   "seq": 190409,
+   "round": 82,
+   "type": "MSG_GROUP",
+   "author": "P006",
+   "thread_id": "TH-P014-Gplace-plaza-79",
+   "reply_to": "42:180915",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:191099",
+   "seq": 191099,
+   "round": 82,
+   "type": "MSG_GROUP",
+   "author": "P010",
+   "thread_id": "TH-P010-Gplace-plaza-79",
+   "reply_to": "42:184032",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:191451",
+   "seq": 191451,
+   "round": 82,
+   "type": "MSG_GROUP",
+   "author": "P012",
+   "thread_id": "TH-P004-Gplace-market-76",
+   "reply_to": "42:182539",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:191789",
+   "seq": 191789,
+   "round": 82,
+   "type": "MSG_GROUP",
+   "author": "P014",
+   "thread_id": "TH-P014-Gplace-plaza-79",
+   "reply_to": "42:180915",
+   "dialogue_rift": {
+    "prompted": false,
+    "open": 1,
+    "route": "reply",
+    "with": [
+     "P012"
+    ],
+    "threads": [
+     "TH-P012-P014-36"
+    ],
+    "age_rounds": [
+     41
+    ]
+   },
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:192133",
+   "seq": 192133,
+   "round": 82,
+   "type": "MSG_GROUP",
+   "author": "P016",
+   "thread_id": "TH-P010-Gplace-plaza-79",
+   "reply_to": "42:184032",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:192664",
+   "seq": 192664,
+   "round": 83,
+   "type": "MSG_GROUP",
+   "author": "P003",
+   "thread_id": "TH-P014-Gplace-plaza-79",
+   "reply_to": "42:191789",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  },
+  {
+   "msg_uid": "42:193442",
+   "seq": 193442,
+   "round": 83,
+   "type": "MSG_GROUP",
+   "author": "P013",
+   "thread_id": "TH-P004-Gplace-market-76",
+   "reply_to": "42:191451",
+   "dialogue_rift": null,
+   "dialogue_repair": null
+  }
+ ]
+}

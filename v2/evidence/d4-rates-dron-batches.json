@@ -1,0 +1,451 @@
+{
+  "tool": "tools/dr/d4_rates.py",
+  "card": "T-D4-RATES",
+  "definitions": {
+    "D4-1": "机制到位率 = dialogue_repair.prompted=true 的 MSG 条数 / 该 agent 存在未了结 rift 的 MSG 条数",
+    "D4-2": "和解率 = 同线程后续出现修复词而注销的 rift 数 / 登记的 rift 数",
+    "open_timing": "处理到 seq=e 的 MSG 时，发言方台账在吸收完所有 seq<e 的可见 MSG 后仍非空",
+    "zero_rule": "分母=0 ⇒ 输出 status=undefined + undefined_reason，**不输出 0%**"
+  },
+  "inputs": [
+    {
+      "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_f4_on_n16r60_seed42/run.jsonl",
+      "events": 116277,
+      "msgs": 504,
+      "mode_a_observed": {
+        "note": "口径 A = 该臂运行期真值（字段只在 enabled=1 时出现）",
+        "msgs_total": 504,
+        "field_presence": {
+          "msgs_with_dialogue_rift": 41,
+          "msgs_with_dialogue_repair": 22,
+          "msgs_missing_dialogue_repair_key": 482,
+          "dialogue_repair_not_observable": false,
+          "note": "键不存在 ⇒ 该通道在本批不可观测（历史版本早于 R13），**不是 0**"
+        },
+        "msgs_with_rift_open_gt0": 41,
+        "rift_open_gt0_by_route": {
+          "reply": 39,
+          "initiate": 2
+        },
+        "msgs_with_dialogue_repair_prompted_true": 22,
+        "word_hits": {
+          "neg_word_msgs": 19,
+          "repair_word_msgs": 20
+        },
+        "d4_1_all_paths": {
+          "numerator": 22,
+          "denominator": 41,
+          "value": 0.536585,
+          "status": "ok"
+        },
+        "d4_1_reply_only": {
+          "numerator": 22,
+          "denominator": 39,
+          "value": 0.564103,
+          "status": "ok"
+        },
+        "d4_1": {
+          "numerator": 22,
+          "denominator": 39,
+          "value": 0.564103,
+          "status": "ok"
+        },
+        "d4_2_note": "口径 A 无法观测'注销'（`ingest_one` 的 pop 不落事件）⇒ D4-2 只看口径 B"
+      },
+      "mode_b_replay": {
+        "note": "口径 B = 离线重放假想台账（enabled=True）⇒ 预估，不是该臂读数",
+        "word_hits": {
+          "neg_word_msgs": 19,
+          "repair_word_msgs": 20
+        },
+        "replay_enabled": true,
+        "agents": 16,
+        "registered": 33,
+        "resolved": 4,
+        "pruned_dropped": 3,
+        "d4_1_denominator_estimate": 255,
+        "d4_1_estimate_note": "口径 B 只给分母：批内无 `dialogue_repair.prompted` 字段 ⇒ 分子不可观测，故不给比值（给了就是编数）",
+        "d4_2": {
+          "numerator": 4,
+          "denominator": 33,
+          "value": 0.121212,
+          "status": "ok"
+        },
+        "open_msgs_by_agent": {
+          "P014": 26,
+          "P004": 30,
+          "P015": 23,
+          "P007": 21,
+          "P016": 24,
+          "P005": 16,
+          "P001": 15,
+          "P008": 16,
+          "P006": 13,
+          "P010": 14,
+          "P011": 12,
+          "P012": 7,
+          "P013": 11,
+          "P009": 13,
+          "P002": 14
+        },
+        "registered_by_agent": {
+          "P014": 3,
+          "P004": 5,
+          "P015": 2,
+          "P007": 3,
+          "P005": 2,
+          "P016": 4,
+          "P001": 2,
+          "P008": 3,
+          "P002": 2,
+          "P006": 1,
+          "P009": 1,
+          "P010": 2,
+          "P011": 1,
+          "P012": 1,
+          "P013": 1
+        },
+        "resolved_by_agent": {
+          "P005": 1,
+          "P007": 1,
+          "P016": 1,
+          "P004": 1
+        },
+        "registered_by_thread_top": {
+          "TH-P003-PUB-37-0": 15,
+          "TH-P007-P005-19": 3,
+          "TH-P004-P014-43": 2,
+          "TH-P014-P011-1": 1,
+          "TH-P014-P011-0": 1,
+          "TH-P004-P013-4": 1,
+          "TH-P016-P015-15": 1,
+          "TH-P016-P015-16": 1,
+          "TH-P012-P001-19": 1,
+          "TH-P009-P008-24": 1
+        },
+        "dwell_rounds": {
+          "n": 4,
+          "min": 0,
+          "max": 0,
+          "mean": 0.0
+        },
+        "open_at_end": 26
+      },
+      "slice": {
+        "slice_path": "/tmp/d4slice_1.json",
+        "slice_msgs": 504,
+        "slice_bytes": 123157
+      }
+    },
+    {
+      "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/emo-on-20261029/run.jsonl",
+      "events": 33840,
+      "msgs": 192,
+      "mode_a_observed": {
+        "note": "口径 A = 该臂运行期真值（字段只在 enabled=1 时出现）",
+        "msgs_total": 192,
+        "field_presence": {
+          "msgs_with_dialogue_rift": 31,
+          "msgs_with_dialogue_repair": 12,
+          "msgs_missing_dialogue_repair_key": 180,
+          "dialogue_repair_not_observable": false,
+          "note": "键不存在 ⇒ 该通道在本批不可观测（历史版本早于 R13），**不是 0**"
+        },
+        "msgs_with_rift_open_gt0": 31,
+        "rift_open_gt0_by_route": {
+          "reply": 25,
+          "initiate": 6
+        },
+        "msgs_with_dialogue_repair_prompted_true": 12,
+        "word_hits": {
+          "neg_word_msgs": 9,
+          "repair_word_msgs": 8
+        },
+        "d4_1_all_paths": {
+          "numerator": 12,
+          "denominator": 31,
+          "value": 0.387097,
+          "status": "ok"
+        },
+        "d4_1_reply_only": {
+          "numerator": 12,
+          "denominator": 25,
+          "value": 0.48,
+          "status": "ok"
+        },
+        "d4_1": {
+          "numerator": 12,
+          "denominator": 25,
+          "value": 0.48,
+          "status": "ok"
+        },
+        "d4_2_note": "口径 A 无法观测'注销'（`ingest_one` 的 pop 不落事件）⇒ D4-2 只看口径 B"
+      },
+      "mode_b_replay": {
+        "note": "口径 B = 离线重放假想台账（enabled=True）⇒ 预估，不是该臂读数",
+        "word_hits": {
+          "neg_word_msgs": 9,
+          "repair_word_msgs": 8
+        },
+        "replay_enabled": true,
+        "agents": 16,
+        "registered": 23,
+        "resolved": 3,
+        "pruned_dropped": 0,
+        "d4_1_denominator_estimate": 179,
+        "d4_1_estimate_note": "口径 B 只给分母：批内无 `dialogue_repair.prompted` 字段 ⇒ 分子不可观测，故不给比值（给了就是编数）",
+        "d4_2": {
+          "numerator": 3,
+          "denominator": 23,
+          "value": 0.130435,
+          "status": "ok"
+        },
+        "open_msgs_by_agent": {
+          "P008": 15,
+          "P009": 13,
+          "P010": 10,
+          "P011": 13,
+          "P012": 12,
+          "P013": 15,
+          "P014": 10,
+          "P015": 13,
+          "P016": 15,
+          "P002": 11,
+          "P004": 14,
+          "P001": 13,
+          "P007": 12,
+          "P003": 7,
+          "P006": 6
+        },
+        "registered_by_agent": {
+          "P001": 1,
+          "P002": 3,
+          "P003": 1,
+          "P004": 2,
+          "P006": 1,
+          "P007": 1,
+          "P008": 1,
+          "P009": 1,
+          "P010": 1,
+          "P011": 1,
+          "P012": 2,
+          "P013": 2,
+          "P014": 1,
+          "P015": 3,
+          "P016": 2
+        },
+        "resolved_by_agent": {
+          "P012": 1,
+          "P016": 1,
+          "P002": 1
+        },
+        "registered_by_thread_top": {
+          "TH-P005-PUB-0-0": 15,
+          "TH-P012-P016-0": 2,
+          "TH-P015-P002-12": 2,
+          "TH-P001-P002-3": 1,
+          "TH-P004-P013-4": 1,
+          "TH-P013-P004-16": 1,
+          "TH-P016-P015-16": 1
+        },
+        "dwell_rounds": {
+          "n": 3,
+          "min": 0,
+          "max": 0,
+          "mean": 0.0
+        },
+        "open_at_end": 20
+      },
+      "slice": {
+        "slice_path": "/tmp/d4slice_2.json",
+        "slice_msgs": 192,
+        "slice_bytes": 49849
+      }
+    },
+    {
+      "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/run_r6_treat_n16_seed42/run.jsonl",
+      "events": 193959,
+      "msgs": 683,
+      "mode_a_observed": {
+        "note": "口径 A = 该臂运行期真值（字段只在 enabled=1 时出现）",
+        "msgs_total": 683,
+        "field_presence": {
+          "msgs_with_dialogue_rift": 139,
+          "msgs_with_dialogue_repair": 0,
+          "msgs_missing_dialogue_repair_key": 683,
+          "dialogue_repair_not_observable": true,
+          "note": "键不存在 ⇒ 该通道在本批不可观测（历史版本早于 R13），**不是 0**"
+        },
+        "msgs_with_rift_open_gt0": 139,
+        "rift_open_gt0_by_route": {
+          "reply": 128,
+          "initiate": 11
+        },
+        "msgs_with_dialogue_repair_prompted_true": 0,
+        "word_hits": {
+          "neg_word_msgs": 71,
+          "repair_word_msgs": 28
+        },
+        "d4_1_all_paths": {
+          "numerator": null,
+          "denominator": 139,
+          "value": null,
+          "status": "undefined",
+          "undefined_reason": "dialogue_repair 键在本批不存在（代码版本早于 R13）⇒ 分子不可观测，**不是 0%**"
+        },
+        "d4_1_reply_only": {
+          "numerator": null,
+          "denominator": 128,
+          "value": null,
+          "status": "undefined",
+          "undefined_reason": "dialogue_repair 键在本批不存在（代码版本早于 R13）⇒ 分子不可观测，**不是 0%**"
+        },
+        "d4_1": {
+          "numerator": null,
+          "denominator": 139,
+          "value": null,
+          "status": "undefined",
+          "undefined_reason": "dialogue_repair 键在本批不存在（代码版本早于 R13）⇒ 分子不可观测，**不是 0%**"
+        },
+        "d4_2_note": "口径 A 无法观测'注销'（`ingest_one` 的 pop 不落事件）⇒ D4-2 只看口径 B"
+      },
+      "mode_b_replay": {
+        "note": "口径 B = 离线重放假想台账（enabled=True）⇒ 预估，不是该臂读数",
+        "word_hits": {
+          "neg_word_msgs": 71,
+          "repair_word_msgs": 28
+        },
+        "replay_enabled": true,
+        "agents": 16,
+        "registered": 166,
+        "resolved": 26,
+        "pruned_dropped": 94,
+        "d4_1_denominator_estimate": 577,
+        "d4_1_estimate_note": "口径 B 只给分母：批内无 `dialogue_repair.prompted` 字段 ⇒ 分子不可观测，故不给比值（给了就是编数）",
+        "d4_2": {
+          "numerator": 26,
+          "denominator": 166,
+          "value": 0.156627,
+          "status": "ok"
+        },
+        "open_msgs_by_agent": {
+          "P016": 45,
+          "P009": 40,
+          "P007": 39,
+          "P012": 35,
+          "P006": 36,
+          "P004": 41,
+          "P015": 35,
+          "P001": 33,
+          "P002": 40,
+          "P003": 29,
+          "P005": 38,
+          "P008": 30,
+          "P010": 38,
+          "P011": 35,
+          "P014": 39,
+          "P013": 24
+        },
+        "registered_by_agent": {
+          "P016": 14,
+          "P009": 8,
+          "P007": 10,
+          "P012": 16,
+          "P006": 13,
+          "P004": 15,
+          "P003": 7,
+          "P001": 8,
+          "P002": 15,
+          "P005": 10,
+          "P008": 6,
+          "P010": 9,
+          "P011": 11,
+          "P014": 11,
+          "P015": 6,
+          "P013": 7
+        },
+        "resolved_by_agent": {
+          "P016": 3,
+          "P006": 2,
+          "P007": 2,
+          "P012": 2,
+          "P001": 2,
+          "P005": 1,
+          "P009": 2,
+          "P002": 2,
+          "P004": 2,
+          "P008": 1,
+          "P011": 2,
+          "P014": 2,
+          "P015": 1,
+          "P003": 1,
+          "P010": 1
+        },
+        "registered_by_thread_top": {
+          "TH-P004-Gplace-market-76": 20,
+          "TH-P013-PUB-12-0": 15,
+          "TH-P013-PUB-13-0": 15,
+          "TH-P010-PUB-40-0": 15,
+          "TH-P012-Gplace-market-63": 10,
+          "TH-P008-Gplace-school-61": 8,
+          "TH-P010-Gplace-plaza-79": 7,
+          "TH-P014-Gplace-plaza-79": 7,
+          "TH-P010-Gplace-town_hall-64": 5,
+          "TH-P016-Gplace-town_hall-76": 5
+        },
+        "dwell_rounds": {
+          "n": 26,
+          "min": 0,
+          "max": 0,
+          "mean": 0.0
+        },
+        "open_at_end": 46
+      },
+      "slice": {
+        "slice_path": "/tmp/d4slice_3.json",
+        "slice_msgs": 683,
+        "slice_bytes": 179686
+      }
+    }
+  ],
+  "selftest": {
+    "case1_register_then_repair": {
+      "registered": 1,
+      "resolved": 1,
+      "rate": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0,
+        "status": "ok"
+      }
+    },
+    "case2_register_no_repair": {
+      "registered": 1,
+      "resolved": 0,
+      "rate": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0,
+        "status": "ok"
+      }
+    },
+    "case3_no_rift": {
+      "registered": 0,
+      "resolved": 0,
+      "rate": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": null,
+        "status": "undefined",
+        "undefined_reason": "分母=0：无 rift 登记 ⇒ 未定义"
+      }
+    },
+    "case4_d41_shape": {
+      "numerator": 2,
+      "denominator": 3,
+      "value": 0.666667,
+      "status": "ok"
+    },
+    "selftest_ok": true
+  }
+}

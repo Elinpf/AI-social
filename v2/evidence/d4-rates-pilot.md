@@ -109,7 +109,43 @@ case4_d41_shape:           numerator=2, denominator=3, value=0.666667  ← 比�
 
 ---
 
-## 5. 边界
+## 5. DR-on 三批实证（**关键补充：判据能不能当真判据，看这一节**）
+
+> 由 leader 扫描 114 批发现的三批 **DR 已开**历史数据（未入库，本机可复算；本卡导出了可入库切片，见 §5.1）。
+> 命令：`python3 tools/dr/d4_rates.py --log <三批> --export-slice ...`；原始输出 `v2/evidence/d4-rates-dron-batches.json`。
+
+| 批次 | MSG | `dialogue_rift` | `dialogue_repair` | open>0（reply/initiate） | **D4-1 全口径 / reply-only** | 词命中（负向/修复） | **D4-2**（注销/登记） | 台账自洽 |
+|---|---:|---:|---:|---|---:|---|---:|---|
+| `run_f4_on_n16r60_seed42` | 504 | 41 | 22 | 41（39/2） | **0.5366 / 0.5641** | 19 / **20** | **0.1212**（4/33） | 33=4+3+26 ✅ |
+| `emo-on-20261029` | 192 | 31 | 12 | 31（25/6） | **0.3871 / 0.4800** | 9 / **8** | **0.1304**（3/23） | 23=3+0+20 ✅ |
+| `run_r6_treat_n16_seed42` | 683 | 139 | **0（键不存在）** | 139（128/11） | **undefined**（分子不可观测） | 71 / **28** | **0.1566**（26/166） | 166=26+94+46 ✅ |
+
+### 5.1 三个结论
+
+1. **D4-1 有分辨力，能当真判据**：两批字段完整的 DR-on 臂给出 **0.39 / 0.54**（reply-only 0.48 / 0.56），
+   **不是退化值**（既非恒 0 也非恒 1）。⇒ 它可作为"机制到位率"的臂内读数。
+   ⚠ 但 `dialogue_repair` 只在 **reply** 路径存在，故**全口径会被 initiate 稀释**（0.5366 vs 0.5641、0.3871 vs 0.48）
+   ⇒ 报数时应给 **reply-only 为主、全口径为下界**。
+2. **D4-2 也能当真判据**：三批 0.1212 / 0.1304 / 0.1566，且**修复词命中非 0**（20 / 8 / 28）
+   ⇒ 之前 `d9z-on` 的 `0/83` 是**那批语料里修复词命中 0**，**不是判据恒 0**。
+   ⚠ 边界仍要写死：D4-2 的上限由 `REPAIR_WORDS`（14 词）覆盖度决定，**必须并排"修复词命中条数"**。
+3. **`run_r6_treat` 的"139 rift 却 0 repair" 解释**：该批 MSG 上**根本没有 `dialogue_repair` 键**
+   （`field_presence.dialogue_repair_not_observable = true`，代码版本早于 R13）
+   ⇒ **不是"没和解"，是"该通道不可观测"**。脚本对此判 `undefined`（**若算成 0.0 就是"字段缺失伪装成 0%"**）。
+   而**重放口径能补上这一格**：D4-2 = 26/166 = 0.1566（该批词命中修复词 28 条，和解确实在发生）。
+
+### 5.2 可入库切片（复算底稿）
+
+| 文件 | MSG | 字节 | sha256 前缀 |
+|---|---:|---:|---|
+| `v2/evidence/d4-rates-slices/run_f4_on_n16r60_seed42.json` | 504 | 123157 | `7f162b8105986d1c` |
+| `v2/evidence/d4-rates-slices/emo-on-20261029.json` | 192 | 49849 | `bdbd5d0cbf55f721` |
+| `v2/evidence/d4-rates-slices/run_r6_treat_n16_seed42.json` | 683 | 179686 | `ec1492f5f0e34826` |
+
+字段：`msg_uid / seq / round / type / author / thread_id / reply_to / dialogue_rift{prompted,open,route,with,threads,age_rounds} / dialogue_repair{prompted,rift_ids,trigger_seqs,thread}`。
+**不含 `body`**（体积与隐私）⇒ 词命中类指标无法由切片复算，需原 `run.jsonl`；D4-1/D4-2 主判据**可由切片复算**。
+
+## 6. 边界
 
 - 只读脚本；**未改 `code/`、未跑真批、未写预登记**。
 - 口径 B 是**重放假想值**（`enabled=True`），不是该臂运行期读数；引用时必须带"口径 B"标签。
