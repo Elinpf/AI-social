@@ -58,8 +58,30 @@ tr '\0' '\n' < /proc/<pid>/environ | grep -E 'NARRATION|ROTATION|ACTION|SYNTAX|O
 | `ROTATION` | `narration_example()` **被调用**次数 | 本类臂（`OPENINGS=1`）**必须为 0** —— **这是"短路成立"的正向证据，不是异常** |
 | `S-1` | `_apply_syntax_clause(drop_s1=True)` 命中次数 | ON 臂 **> 0** |
 
+**⚠ 零值必须配阳性对照（`dialogue-core-dev` 补，2026-11-01 10:4x）——否则会重蹈"0 和空都要先证明装置能出声"**：
+
+> **计数门必须同时给分子、分母和一个阳性对照；只有分子为 0 而无阳性对照 ⇒ `CANNOT-VERIFY`，不得写 PASS。**
+
+| 要判的 | 分子 | 必要阳性对照 | 判定 |
+|---|---|---|---|
+| `ROTATION` 短路成立 | `narration_example()` 调用次数 = **0** | **`narration_tail()` 调用次数 > 0** | 分子 0 且对照 > 0 ⇒ **短路成立**；对照也 0 ⇒ **`CANNOT-VERIFY（未触达）`**，**不是 PASS** |
+| 可见性分支未进入（OFF 臂） | `_pending_view()` 返回非 None = 0 | **`_pending_view()` 调用次数 > 0** | 同上 |
+| 可见性分支已进入（ON 臂） | 两条**独立**路径各自计数（如 `_pending_view()` 非 None **88** 与 `VisibilityIndex.visible(extra=非空)` **88**） | `_pending_view()` 调用总次数（如 **128**） | 两条路径**必须相等**才算"对得上"；单条为 0 ⇒ `CANNOT-VERIFY` |
+
+**理由**：`0` 有两种含义 ——"**短路成立**"与"**压根没走到那条路**"，**没有阳性对照就分不开**。
+这与"空 `fault.log` ≠ 无长尾"、"串行门返回空 ≠ 没批在跑"同源：**0 和空，都要先证明装置能出声。**
+
 **模板**：`tools/d9z/branch_entry_count.py` 即此模式（不看 `=1`，数"真的进了几次"）。
 **成本**：每个开关 3–5 行验证代码，**比事后在判定件里争"到底有没有接通"便宜得多**。
+
+> **实现方式（2026-11-01 补，必读）**：计数**由验证脚本注入，不写入生产代码**。
+> `narration_tail` / `narration_example` / `_pending_view` / `VisibilityIndex.visible` 等均为**模块级纯函数**，
+> 可用 `monkeypatch` 在其中计数，与 `tools/d9z/branch_entry_count.py` 的做法一致。
+> **理由**：若为 L2b 去改 `code/life/*.py` 加计数器，会同时破两条约束 ——
+> ①「跑批期禁改 `code/life|orchestration|config|engine`」；②「`FP` before/after 必须相等」（改代码即换指纹）。
+> ⇒ **看到 L2b 想到"去生产代码里加日志"，就是走错路了。**
+
+
 
 **本条不接受的反例**：`grep '=1' /proc/.../environ` 有输出 ⇒ **只证明环境变量存在**；`run.log` 里没有报错 ⇒ **只证明没崩**。二者都**不是**接通证据。
 
