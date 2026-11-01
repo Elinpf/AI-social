@@ -1,0 +1,29 @@
+================ R49 臂 off 起批证据 ================
+采集时刻: 2026-11-01T18:06:19+08:00
+repo:      /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
+branch:    feat/r49-life-diversity
+HEAD:      161f115f92cc3c168b7b4da7c3bd6c5b2a1d209a
+out_dir:   /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-off-20261101_n16r24_s42
+side_root: /tmp/r49_diversity_off_n16r24_s42_side
+params:    seed=42 agents=16 rounds=24 flush_every=2
+臂变量:    无（OFF 臂，HITT_D12_DETAIL 不设）
+---- [闸门0] flock -n /tmp/hitt.batch.lock ----
+  flock 试占成功（探针即刻释放；真锁由批体进程全程持有）
+---- [闸门0b] 三重并发检查 ----
+  pgrep -f '/orchestration[[:space:]]+run/' => 无命中 PASS
+  pgrep -f '/[r]un_[b]atch/' => 无命中 PASS
+  pgrep -f '/[n]ightly\.py/' => 无命中 PASS
+PASS preflight sha=161f115f(feat/r49-life-diversity) ts=2026-11-01T18:06:19+08:00 concurrency=0 frozen_tree=clean log=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-off-20261101_n16r24_s42/preflight_20261101T100619Z_161f115f_r49-diversity-off.log
+---- [闸门2] check_clean_tree verdict=PASS ----
+# 读数器 / 渲染器指纹
+a85f2711a46bfe150d0d162361cfa7584d8d7aea9ec2fb01b344d3ec879e0b34  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/metrics/render_shots.py
+0217209ae862253185ca0bb6023a188f12990d0f1c647283fd5c7982aaa063a0  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/metrics/lex_template_rate.py
+5f9f7d04d2ef178fadd9d6f614d8b117340584bc5b8f78909fa092dfe1ce156f  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/metrics/r49_detail_opener.py
+45b946af9f33a3a5b16d419fe2eb595ff06139704f919622d7f7be31d0413be7  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/r49/wiring_proof.py
+472f05b1fdc69770093b3e593dbb77432946657c2f84c3d8f1e764aac231bfdb  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/preflight.sh
+e7c71dcdae9a924616abd70eff6329facd57323872d7566311bbdf9188eca6ae  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/check_clean_tree.py
+闸门2b PASS：.env.local 未混入臂开关
+---- [启动自证] ----
+hosting_mode=setsid
+setsid_pid=2273523
+start_epoch=1793527580 captured_at=2026-11-01T18:06:20+08:00

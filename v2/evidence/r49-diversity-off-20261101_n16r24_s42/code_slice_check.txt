@@ -1,0 +1,5 @@
+# R49 冻结区代码切片 sha256（本批实际执行的树）
+161f115f92cc3c168b7b4da7c3bd6c5b2a1d209a
+63cd84c811762ed5ef288bdeaeb3ce465798aa6a11dd71bc3196a8c4d9abe517  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/life/agent.py
+2e6b0e371de0a02eeb285d1d2a3117206847f2fb292f02755959a1159a4ca6f3  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/orchestration/integration.py
+339ca4d9aeb6375c7fe674ab0fdd08ad5acda48600587ca6daffe4057c5777a0  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d2/run_batch.sh

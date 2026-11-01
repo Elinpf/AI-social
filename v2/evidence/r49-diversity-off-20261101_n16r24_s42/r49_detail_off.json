@@ -1,0 +1,61 @@
+{
+  "detail_body": {
+    "den": 191,
+    "num": 187,
+    "rate": 0.979058,
+    "rate_pct": 97.9058,
+    "status": "ok",
+    "wilson95": {
+      "hi": 0.991827,
+      "lo": 0.947398,
+      "p": 0.979058
+    }
+  },
+  "detail_line": {
+    "den": 191,
+    "num": 167,
+    "rate": 0.874346,
+    "rate_pct": 87.4346,
+    "status": "ok",
+    "wilson95": {
+      "hi": 0.914088,
+      "lo": 0.819841,
+      "p": 0.874346
+    }
+  },
+  "detail_opener6": {
+    "den": 191,
+    "num": 42,
+    "rate": 0.219895,
+    "rate_pct": 21.9895,
+    "status": "ok",
+    "wilson95": {
+      "hi": 0.283836,
+      "lo": 0.167,
+      "p": 0.219895
+    }
+  },
+  "impl_sha256": "242ea2c8973bb9849d9767a15194f3f6f89ab6372a167308069fd0ecfb6ecd5a",
+  "label": "off",
+  "lexicon_sha256": "e8507082b0915f93eb62ab200969da17d4a700e1b337e0d97ce2355196dd7477",
+  "lexicon_source": "v2/evidence/d12c_proxy_lexicon.txt §P1（逐字）",
+  "log": {
+    "path": "v2/evidence/r49-diversity-off-20261101_n16r24_s42/run.jsonl",
+    "sha256": "40d1bb09c3face4afabbae8e786eb2f7aaaf3ecb079171aaa83a6425b8430434"
+  },
+  "n_msgs": 191,
+  "opener_chars": 6,
+  "paren_lead": {
+    "den": 191,
+    "num": 172,
+    "rate": 0.900524,
+    "rate_pct": 90.0524,
+    "status": "ok",
+    "wilson95": {
+      "hi": 0.935389,
+      "lo": 0.849865,
+      "p": 0.900524
+    }
+  },
+  "ruler_version": "r49-detail-opener-v1"
+}

@@ -1,0 +1,7 @@
+# 读数器 / 渲染器指纹
+a85f2711a46bfe150d0d162361cfa7584d8d7aea9ec2fb01b344d3ec879e0b34  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/metrics/render_shots.py
+0217209ae862253185ca0bb6023a188f12990d0f1c647283fd5c7982aaa063a0  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/metrics/lex_template_rate.py
+5f9f7d04d2ef178fadd9d6f614d8b117340584bc5b8f78909fa092dfe1ce156f  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/metrics/r49_detail_opener.py
+45b946af9f33a3a5b16d419fe2eb595ff06139704f919622d7f7be31d0413be7  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/r49/wiring_proof.py
+472f05b1fdc69770093b3e593dbb77432946657c2f84c3d8f1e764aac231bfdb  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/preflight.sh
+e7c71dcdae9a924616abd70eff6329facd57323872d7566311bbdf9188eca6ae  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/tools/d5/check_clean_tree.py

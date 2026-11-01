@@ -1,0 +1,224 @@
+{
+  "n_msgs": {
+    "off": 191,
+    "on": 191
+  },
+  "prereg": "reports/R49-prereg-diversity-20261101.md",
+  "rows": {
+    "backref_hit": {
+      "delta_pp": -7.3299,
+      "fisher_two_sided_p": 0.043913,
+      "off": {
+        "den": 191,
+        "num": 31,
+        "rate": 0.162304,
+        "rate_pct": 16.2304,
+        "status": "ok",
+        "wilson95": {
+          "hi": 0.221162,
+          "lo": 0.116761,
+          "p": 0.162304
+        }
+      },
+      "on": {
+        "den": 191,
+        "num": 17,
+        "rate": 0.089005,
+        "rate_pct": 8.9005,
+        "status": "ok",
+        "wilson95": {
+          "hi": 0.137904,
+          "lo": 0.056313,
+          "p": 0.089005
+        }
+      },
+      "wilson_overlap": true
+    },
+    "detail_body": {
+      "delta_pp": 2.0942,
+      "fisher_two_sided_p": 0.123034,
+      "off": {
+        "den": 191,
+        "num": 187,
+        "rate": 0.979058,
+        "rate_pct": 97.9058,
+        "status": "ok",
+        "wilson95": {
+          "hi": 0.991827,
+          "lo": 0.947398,
+          "p": 0.979058
+        }
+      },
+      "on": {
+        "den": 191,
+        "num": 191,
+        "rate": 1.0,
+        "rate_pct": 100.0,
+        "status": "ok",
+        "wilson95": {
+          "hi": 1.0,
+          "lo": 0.980283,
+          "p": 1.0
+        }
+      },
+      "wilson_overlap": true
+    },
+    "detail_line": {
+      "delta_pp": 9.9476,
+      "fisher_two_sided_p": 0.000333,
+      "off": {
+        "den": 191,
+        "num": 167,
+        "rate": 0.874346,
+        "rate_pct": 87.4346,
+        "status": "ok",
+        "wilson95": {
+          "hi": 0.914088,
+          "lo": 0.819841,
+          "p": 0.874346
+        }
+      },
+      "on": {
+        "den": 191,
+        "num": 186,
+        "rate": 0.973822,
+        "rate_pct": 97.3822,
+        "status": "ok",
+        "wilson95": {
+          "hi": 0.988768,
+          "lo": 0.940192,
+          "p": 0.973822
+        }
+      },
+      "wilson_overlap": false
+    },
+    "detail_opener6": {
+      "delta_pp": 7.8534,
+      "fisher_two_sided_p": 0.101829,
+      "off": {
+        "den": 191,
+        "num": 42,
+        "rate": 0.219895,
+        "rate_pct": 21.9895,
+        "status": "ok",
+        "wilson95": {
+          "hi": 0.283836,
+          "lo": 0.167,
+          "p": 0.219895
+        }
+      },
+      "on": {
+        "den": 191,
+        "num": 57,
+        "rate": 0.298429,
+        "rate_pct": 29.8429,
+        "status": "ok",
+        "wilson95": {
+          "hi": 0.366776,
+          "lo": 0.238031,
+          "p": 0.298429
+        }
+      },
+      "wilson_overlap": true
+    },
+    "distinct_body_ratio": {
+      "delta_pp": 0.0,
+      "fisher_two_sided_p": 1.0,
+      "off": {
+        "den": 191,
+        "num": 191,
+        "rate": 1.0,
+        "rate_pct": 100.0,
+        "status": "ok",
+        "wilson95": {
+          "hi": 1.0,
+          "lo": 0.980284,
+          "p": 1.0
+        }
+      },
+      "on": {
+        "den": 191,
+        "num": 191,
+        "rate": 1.0,
+        "rate_pct": 100.0,
+        "status": "ok",
+        "wilson95": {
+          "hi": 1.0,
+          "lo": 0.980284,
+          "p": 1.0
+        }
+      },
+      "wilson_overlap": true
+    },
+    "opener_top10_share": {
+      "delta_pp": 1.0471,
+      "fisher_two_sided_p": 0.844764,
+      "off": {
+        "den": 191,
+        "num": 13,
+        "rate": 0.068063,
+        "rate_pct": 6.8063,
+        "status": "ok",
+        "wilson95": {
+          "hi": 0.112953,
+          "lo": 0.040204,
+          "p": 0.068063
+        }
+      },
+      "on": {
+        "den": 191,
+        "num": 15,
+        "rate": 0.078534,
+        "rate_pct": 7.8534,
+        "status": "ok",
+        "wilson95": {
+          "hi": 0.125519,
+          "lo": 0.048168,
+          "p": 0.078534
+        }
+      },
+      "wilson_overlap": true
+    },
+    "paren_lead": {
+      "delta_pp": 4.1884,
+      "fisher_two_sided_p": 0.182306,
+      "off": {
+        "den": 191,
+        "num": 172,
+        "rate": 0.900524,
+        "rate_pct": 90.0524,
+        "status": "ok",
+        "wilson95": {
+          "hi": 0.935389,
+          "lo": 0.849865,
+          "p": 0.900524
+        }
+      },
+      "on": {
+        "den": 191,
+        "num": 180,
+        "rate": 0.942408,
+        "rate_pct": 94.2408,
+        "status": "ok",
+        "wilson95": {
+          "hi": 0.967541,
+          "lo": 0.89983,
+          "p": 0.942408
+        }
+      },
+      "wilson_overlap": true
+    }
+  },
+  "thresholds": {
+    "E1_MDE_PP": 5.9,
+    "M1_MDE_PP": 11.7,
+    "N_FLOOR": 160
+  },
+  "verdicts": {
+    "E1_opener_share": "不可判(效应低于本采样结构 MDE 5.9pp 或未显著)",
+    "E2_distinct_body_ratio": "不可判(预登记：OFF 已达 1.000 天花板，无改善空间)",
+    "E3_backref_hit": "只描述，不进判据（预登记 §3.3）",
+    "M1_mechanism": "机制未生效(未达 MDE 或未显著)",
+    "U1_denominator_ok": true
+  }
+}

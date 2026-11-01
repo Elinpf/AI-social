@@ -1,0 +1,97 @@
+{
+  "batch_id": "R49-on",
+  "fail_count": 0,
+  "generated_at": "2026-11-01T18:56:09+08:00",
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on-20261101_n16r24_s42/run.jsonl",
+  "log_sha256": "cfc1d44ae065ff660394efb997c3bd44be18bb3f7ba6a1af7336dac69c39b6bb",
+  "ok_count": 2,
+  "policy": {
+    "blank_check": "自行像素自检（distinct_colors/top_color_frac/non_bg_frac 逐张落盘）；未沿用 shot.py 的单色判据——该判据对深色 dialogue.html 会假红（实测 80.09% 误判）",
+    "code_untouched": "服务根为临时目录 + 符号链接；未在 code/frontend 下写入任何文件",
+    "no_reuse": "输出同名 PNG 若已存在则先删除，只认本次现截",
+    "no_stitching": "每张图独立截图，禁止拼图/跨批混拼"
+  },
+  "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on-20261101_n16r24_s42",
+  "run_sha256_in_threads": "cfc1d44ae065ff660394efb997c3bd44be18bb3f7ba6a1af7336dac69c39b6bb",
+  "schema_version": "render-shots/1.0",
+  "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on_shots/threads_R49-on.json",
+  "threads_json_sha256": "84db1631a7eec4a294cdba34bbbdd83fd6670a40a3369a41e2374221af5c9e61",
+  "views": [
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 23009,
+        "height": 900,
+        "non_bg_frac": 0.53,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.1573,
+        "width": 1400
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on_shots/R49-on-chat-cfc1d44a.png",
+      "png_bytes": 287743,
+      "png_mtime_iso": "2026-11-01T18:56:05+08:00",
+      "png_mtime_ns": 1793530565532517114,
+      "png_sha256": "4065ecdf310b1de319f75e7d43c8044cf84c87f301968db823b7fd03ad3e2fa2",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on-20261101_n16r24_s42/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on-20261101_n16r24_s42/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on_shots/threads_R49-on.json --label R49-on",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on-20261101_n16r24_s42/run.jsonl",
+        "log_sha256": "cfc1d44ae065ff660394efb997c3bd44be18bb3f7ba6a1af7336dac69c39b6bb",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:37585/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_R49-on/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on_shots/R49-on-chat-cfc1d44a.png --width 1400 --height 900 --timeout 180.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on-20261101_n16r24_s42",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on_shots/threads_R49-on.json",
+        "threads_json_sha256": "84db1631a7eec4a294cdba34bbbdd83fd6670a40a3369a41e2374221af5c9e61"
+      },
+      "view": "chat"
+    },
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 20795,
+        "height": 1050,
+        "non_bg_frac": 0.3866,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.3709,
+        "width": 1300
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on_shots/R49-on-rhythm-cfc1d44a.png",
+      "png_bytes": 279816,
+      "png_mtime_iso": "2026-11-01T18:56:07+08:00",
+      "png_mtime_ns": 1793530567844107285,
+      "png_sha256": "ac135cd0de178065e099e208304fa46b366dae3161dc077c11a7d86087828887",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on-20261101_n16r24_s42/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on-20261101_n16r24_s42/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on_shots/threads_R49-on.json --label R49-on",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on-20261101_n16r24_s42/run.jsonl",
+        "log_sha256": "cfc1d44ae065ff660394efb997c3bd44be18bb3f7ba6a1af7336dac69c39b6bb",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:37585/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_R49-on/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on_shots/R49-on-rhythm-cfc1d44a.png --width 1300 --height 1050 --timeout 180.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on-20261101_n16r24_s42",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-on_shots/threads_R49-on.json",
+        "threads_json_sha256": "84db1631a7eec4a294cdba34bbbdd83fd6670a40a3369a41e2374221af5c9e61"
+      },
+      "view": "rhythm"
+    }
+  ]
+}
