@@ -1,0 +1,73 @@
+{
+  "env": {
+    "HITT_NEED_SPEECH": "1",
+    "LIFE_PROMPT_NARRATION": "0"
+  },
+  "fixtures": {
+    "empty": {
+      "ctx_keys": [
+        "mood",
+        "need",
+        "relation",
+        "topic"
+      ],
+      "ctx_sha256": "762258b2d7d18ae5025f3e0f6fb1ea5dd5c36e8833b999ecc612753ae774befd",
+      "dialogue_prompt_len": 242,
+      "dialogue_prompt_sha256": "4c191eaea179a10ad654efdd31471a3cd48faa173b49fd4052cf0e607bbefed8",
+      "mood_line": "情绪：平和",
+      "mood_line_sha256": "3d470a98435fc649d66098e9973e9cd8d3b2538158d4627cfa3845ef3b3b24dc",
+      "needs": {},
+      "reply_prompt_len": 254,
+      "reply_prompt_sha256": "413f5c38f4282fea2ed0c82998f4656f24af5eba074cb787cfdc20e4a39fb454"
+    },
+    "noise": {
+      "ctx_keys": [
+        "mood",
+        "need",
+        "need_speech",
+        "relation",
+        "topic"
+      ],
+      "ctx_sha256": "7724dd4ee093274a5fbe102eae102cf60c7ad215fee2c90b7bad88887b6994dc",
+      "dialogue_prompt_len": 242,
+      "dialogue_prompt_sha256": "4c191eaea179a10ad654efdd31471a3cd48faa173b49fd4052cf0e607bbefed8",
+      "mood_line": "情绪：平和",
+      "mood_line_sha256": "3d470a98435fc649d66098e9973e9cd8d3b2538158d4627cfa3845ef3b3b24dc",
+      "needs": {
+        "energy": 55,
+        "esteem": 62,
+        "leisure": 51,
+        "mastery": 58,
+        "satiety": 52,
+        "social": 60
+      },
+      "reply_prompt_len": 254,
+      "reply_prompt_sha256": "413f5c38f4282fea2ed0c82998f4656f24af5eba074cb787cfdc20e4a39fb454"
+    },
+    "urgent": {
+      "ctx_keys": [
+        "mood",
+        "need",
+        "need_speech",
+        "relation",
+        "topic"
+      ],
+      "ctx_sha256": "a2bf125d2499dd5ef178d1169d9a390051d30e56107bf53635d68ae7f5f81506",
+      "dialogue_prompt_len": 265,
+      "dialogue_prompt_sha256": "4959f9cb3c3a6208d53ccbc7645b0d3c5771cbfcada8436fb075dd4354783c64",
+      "mood_line": "情绪：饥饿；肚子空得发慌，晌午忙到现在没顾上吃",
+      "mood_line_sha256": "25877bd4f23043402e539f6f0652a269587629090019748c55fe38e0d88dc9b5",
+      "needs": {
+        "energy": 55,
+        "esteem": 62,
+        "leisure": 51,
+        "mastery": 58,
+        "satiety": 12,
+        "social": 60
+      },
+      "reply_prompt_len": 267,
+      "reply_prompt_sha256": "d6c0fa2c3b5ab85a1c3ef7aba03b37040a4715e2241286839f984d96ae9441f9"
+    }
+  },
+  "label": "post-change-on"
+}

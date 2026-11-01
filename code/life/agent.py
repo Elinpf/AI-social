@@ -95,6 +95,49 @@ def addr_evolve_enabled() -> bool:
     return os.environ.get(ADDR_EVOLVE_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
 
 
+# R51 臂开关（需求的「人话化 + 紧迫门控」）：**只影响 `_mood_line()` 一行文本 + 一个 additive 审计键**，默认 OFF。
+# 预登记：`reports/R51-prereg-need-speech-20261101.md`（判据先于跑批冻结）。
+# 单变量约束：OFF ⇒ `_mood_line()` 与改动前**逐字节相同**、`ctx.need_speech` 键不出现（payload 亦逐字节不变）；
+# ON  ⇒ ① 最紧需求 `val >= NEED_SPEECH_URGENT`（不紧迫）时整段不出现，只留情绪；
+#        ② `val < NEED_SPEECH_URGENT`（真紧迫）时把 `dim=val` 换成人话短语，机器口径数字**不进**提示词。
+# 改动面就只有这一个函数（+ 下面这张冻结短语表与开关读取）；不碰配置 / 世界态 / 随机数消费。
+NEED_SPEECH_ENV = "HITT_NEED_SPEECH"
+
+#: 紧迫线：与 `dialogue_threads.mood_label` 的 40 **同源**（全维 >=40 时它已返回「平和」），不新造阈值。
+NEED_SPEECH_URGENT = 40
+
+#: 人话短语表（**逐维冻结 3 条**；轮换用确定性计数器，避免 191 条对话写成同一句 ⇒ 多样性塌陷）。
+#: 只含生活语汇（累/困/饿/闷/孤单…），**不含**英文维名、不含裸数值。
+NEED_SPEECH_PHRASES = {
+    "satiety": ("肚子空得发慌，晌午忙到现在没顾上吃",
+                "饿得前心贴后背，闻见谁家灶上的味儿都走不动道",
+                "嘴里发苦，就想找口热乎的"),
+    "energy": ("累得眼皮直打架，腿肚子发软",
+               "困得直打哈欠，站着都能打个盹",
+               "浑身乏，想找个地方歇一歇"),
+    "social": ("心里空落落的，想找个人说句话",
+               "半天没人搭话，闷得慌",
+               "有点孤单，想凑到人堆里去"),
+    "esteem": ("心里憋着口气，想让人正眼瞧一回",
+               "觉得自个儿说的话没人当回事",
+               "想听人正经夸一句"),
+    "mastery": ("手上这点活儿老是不顺手，心里痒痒",
+                "一直想学的那手还没学会，惦记着",
+                "干着干着没劲了，想拾掇点新鲜的"),
+    "leisure": ("闷得发慌，想寻点乐子",
+                "想歇一会儿，找处清静地方坐坐",
+                "心里痒痒，想瞧瞧外头有什么新鲜事"),
+}
+
+#: 未知维度（词汇表外）时的人话兜底：不吐机器字段，只说"不得劲"。
+NEED_SPEECH_FALLBACK = "身上有点不得劲，说不上来哪儿别扭"
+
+
+def need_speech_enabled() -> bool:
+    """R51 臂开关（env `HITT_NEED_SPEECH` ∈ {1,true,yes,on}）；默认关。"""
+    return os.environ.get(NEED_SPEECH_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
 # 旁白/动作神态通道开关：**只影响 prompt 收尾指令的文本**。
 # D9i 阶段它是「仅靠 env 的实验开关、默认 0 = 禁旁白」；ROUND1（本分支 feat/narration-default-on）把它
 # **默认化**：默认值改由 `config/life_v2.json` 的 `prompt.narration.enabled` 提供（文件内写 true）,
@@ -1221,6 +1264,15 @@ class LifeLayerAgent:
             rel = int(self._rel_cache.get((partner, "affinity"), 0))
         ctx = {"relation": rel, "mood": DT.mood_label(self.needs),
                "need": DT.scarcest_need(self.needs), "topic": topic}
+        if need_speech_enabled():
+            # R51 审计（additive）：本条消息生成时「最紧需求有没有真的进提示词、以什么形式」。
+            # 提示词原文不落盘 ⇒ 没有这个键，"噪声需求注入率"就只能靠结构推断、无法被观测。
+            # `_mood_line()` 在同一条消息的提示词装配里写入 `_need_speech`（三个 `_ctx_snapshot`
+            # 调用点都在 prompt 构建之后、同一函数内）；默认 OFF ⇒ 本键不出现 ⇒ payload 逐字节不变。
+            _ns = getattr(self, "_need_speech", None)
+            if isinstance(_ns, dict):
+                ctx["need_speech"] = {"dim": _ns.get("dim"), "value": _ns.get("value"),
+                                      "injected": bool(_ns.get("injected"))}
         if getattr(self, "_mem_refs", None):
             # F-6 审计（additive）：本条消息生成时提示词里实际注入了哪些跨天记忆
             # （可回 run.jsonl 的 MEMORY_WRITE 事件按 mem_id 还原其 day/slot/text）。
@@ -1565,12 +1617,33 @@ class LifeLayerAgent:
         return "、".join(bits)
 
     def _mood_line(self) -> str:
+        """情绪 + （可选）最紧需求一行。
+
+        单变量约束（沿用 `_gossip_hint` / `_scene_line` 的开关先例）：
+          - 开关关闭（默认 OFF）⇒ 与改动前**逐字节相同**，且**不写** `self._need_speech`
+            ⇒ `ctx` 里 `need_speech` 键不出现 ⇒ payload 亦逐字节不变；
+          - 打开（`HITT_NEED_SPEECH=1`）⇒ 只在**需求那一段**上改动：不紧迫（`val >= 40`）整段不出现，
+            真紧迫（`val < 40`）换成人话短语（机器口径 `dim=val` 不进提示词），并写一条 additive 审计快照。
+        """
         mood = DT.mood_label(self.needs)
         need = DT.scarcest_need(self.needs)
-        if need:
-            dim, val = next(iter(need.items()))
+        if not need:
+            return f"情绪：{mood}"
+        dim, val = next(iter(need.items()))
+        if not need_speech_enabled():
             return f"情绪：{mood}；最紧的需求：{dim}={val}"
-        return f"情绪：{mood}"
+        # ---- R51：紧迫门控 + 人话化 ----
+        self._need_speech = {"dim": dim, "value": int(val), "injected": False}
+        if int(val) >= NEED_SPEECH_URGENT:
+            return f"情绪：{mood}"          # 不紧迫 ⇒ 不占提示词预算
+        phrases = NEED_SPEECH_PHRASES.get(dim)
+        if not phrases:
+            self._need_speech["injected"] = True
+            return f"情绪：{mood}；{NEED_SPEECH_FALLBACK}"
+        # 确定性轮换（计数器只随调用递增；同 run 同序列 ⇒ 可复现，不读随机数、不读墙钟）
+        self._need_speech_seq = getattr(self, "_need_speech_seq", 0) + 1
+        self._need_speech["injected"] = True
+        return f"情绪：{mood}；{phrases[self._need_speech_seq % len(phrases)]}"
 
     # ---- 处境锚臂（SA）：此刻时段 + 所在场所 + 手上正做什么 --------------
     def _scene_line(self, wv) -> str:
