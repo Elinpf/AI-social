@@ -43,6 +43,26 @@ tr '\0' '\n' < /proc/<pid>/environ | grep -E 'NARRATION|ROTATION|ACTION|SYNTAX|O
 ```
 **闸门**：新开关 ON 臂必须**显式存在且为目标值**；`NARRATION/ROTATION/ACTION/SYNTAX/OPENINGS` 五点沿用 D9t 口径。**缺一 ⇒ 该臂 `CANNOT-VERIFY（未采集）`**，不得事后补写。
 
+## L2b 通道接通计数门（**新增，治「配置 `=1` ≠ 通道接通」**）
+
+**前置认知**：`/proc` 只能证明"环境变量传进去了"，**不能证明"那段代码真的被执行"**。
+本仓已有实例：本臂 `OPENINGS=1` 时 `narration_tail` 在 `if not narration_rotation_enabled() or openings_enabled():` 处**短路**，
+`narration_example(...)` **一次都不会被调用** ⇒ `ROTATION=1` 写得很漂亮，**通道是死的**。
+
+**闸门**：凡是"开了某开关"的臂，必须给**运行期计数**，配置值本身不接受：
+
+| 开关 | 必须给的计数 | 本类臂的期望值 |
+|---|---|---|
+| `HITT_INTRA_ROUND_VISIBILITY` | 分支进入次数（非 None / 索引非空） | OFF 臂 **0**；ON 臂 **> 0** 且与另一独立口径对得上 |
+| `OPENINGS` | `openings_clause()` 返回**非空**的次数 | ON 臂 **> 0** |
+| `ROTATION` | `narration_example()` **被调用**次数 | 本类臂（`OPENINGS=1`）**必须为 0** —— **这是"短路成立"的正向证据，不是异常** |
+| `S-1` | `_apply_syntax_clause(drop_s1=True)` 命中次数 | ON 臂 **> 0** |
+
+**模板**：`tools/d9z/branch_entry_count.py` 即此模式（不看 `=1`，数"真的进了几次"）。
+**成本**：每个开关 3–5 行验证代码，**比事后在判定件里争"到底有没有接通"便宜得多**。
+
+**本条不接受的反例**：`grep '=1' /proc/.../environ` 有输出 ⇒ **只证明环境变量存在**；`run.log` 里没有报错 ⇒ **只证明没崩**。二者都**不是**接通证据。
+
 ## L3 代码指纹门（补丁版 `FP`）
 
 ```bash
