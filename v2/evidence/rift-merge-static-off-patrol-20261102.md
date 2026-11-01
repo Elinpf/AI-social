@@ -12,6 +12,12 @@
 
 **这是对 Leader 自己判断的更正，不是对别人的更正。**
 
+> ### ⚠⚠ 本表的适用**时点**（Leader 2026-11-02 04:2x 自纠，`repro-verifier` 04:18 实测触发）
+> **`merge-tree` 的输出 sha 不是稳定标识符** —— 它 = f(`origin/master`, `efcf441`)，**master 一动它就变**。
+> 实测：`master@340b965` 时得到临时树 `d7bb9737`（**非当前版**）；`master@9d2888c` 时同一命令得到临时树 `5bfc0662`（**非当前版**）。**两者内容等价，只是基线不同。**
+> ⇒ **本件所有读数绑定「`origin/master` = `340b9659` 那一刻」**。引用时**必须同时给 master 的 sha**，否则读者复算会得到另一个数并误判"件是编的"。
+> ⇒ 通用规则：**引用临时树/合并树，必须写成 `merge-tree(master@X, branch@Y) = Z` 三元组**，只写 Z 不够。
+
 > ### ⚠ 本表的适用范围（`repro-verifier` 2026-11-02 04:1x 提，Leader 采纳）
 > **本表核的是「合并树 / `efcf441`」，不是 `master`。** `master` 上 `observer` / `rift_ids` 在 `code/life/dialogue_repair.py` **零命中** —— 因为这些代码**还没进 master**。
 > ⇒ 读本表时不要问"master 上为什么找不到"，**本表回答的是"合并后会怎样"，不是"master 现在怎样"**。
