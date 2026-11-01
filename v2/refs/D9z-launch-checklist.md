@@ -30,11 +30,29 @@ tr '\0' '\n' < /proc/<pid>/environ | grep -E 'NARRATION|ROTATION|ACTION|SYNTAX|O
 ## L3 代码指纹门（补丁版 `FP`）
 
 ```bash
-bash scripts/FP before      # 期望：先打印文件数，<100 即 FATAL
-# 跑完后
-bash scripts/FP after       # 必须与 before 逐字节相等
+bash tools/tree_fingerprint.sh world   # 输出 files= / sha256= / mode=（**同源**，见下）
+# 跑完后同一条命令再跑一次
 ```
-**闸门**：不等 ⇒ 判"跑批期代码被动过"，**整批不得用于判定**。
+
+**闸门**：`sha256` 不等 ⇒ 判"跑批期代码被动过"，**整批不得用于判定**。
+
+**报 FP 必须写三元组，且同一行**：
+```
+FP = (rev=<分支名>@<commit>, files=<N>, sha256=<…>)
+```
+**为什么必须带 rev**（2026-11-01 由 `repro-verifier` 实测指出）：文件数**随 rev 变** ——
+`cef1c58` = **282**、`feat/d9z-intra-round` = **283**、`origin/master` = **284**。
+**三个数都"对"**，只写 `283` 的话，下一个人在 master 上复算得 `284` 会判"文件集变了"，
+其实是**换了 rev** —— 这正是 `FP` 最典型的一次假报警。
+
+**工具侧已改（同日）**：`tools/tree_fingerprint.sh` 旧版**只输出 sha，文件数在管道里被丢掉** ⇒
+"起跑时贴文件数"只能人另跑一条命令手贴，两个数来自两条命令/两个时点就可能对不上。
+现版本把清单先落临时文件，**指纹与文件数都从同一份清单数出来**，并**双向自验**：
+- 在 `cef1c58` 树上跑得 `files=282` / `sha256` 内容 sha·实测值 `fd8a8f98…`，与旧版已知值**逐字节相同**（向后兼容）；
+- 文件数 `<100` 直接 `FATAL / rc=3`，杜绝"空目录稳定指纹"。
+
+**另**：`world` 段计入集 = `git ls-files -- code config` + 同名 untracked、**排除 `code/frontend/**`**；
+**根 `tools/` 不在 `world` 段内**（`^tools/` 命中 0 行）⇒ 报范围时不得写"含 tools/d9z"。
 
 ## L4 规模门（`n` 与配置）
 
