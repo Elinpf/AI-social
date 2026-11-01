@@ -478,6 +478,11 @@ MSG 191 | 带 reply_to 125（全部可解析）| gap=0: 0 (0.0%) | gap=1: 77 (61
 
 **为什么不是"`repair_ask` 默认 `false`"**（Leader 卡面曾自相冲突，已撤回）：默认 `false` 会让 `enabled=true` 时**既有行为改变**；`null` 才能同时满足"既有行为不变"与"可显式分离"。⇒ **"默认关"这条只约束两个新布尔。**
 **已核**：默认全关与基座 `43a56c1` **逐事件链 7541/7541 全等**（`first_divergence=null`）；回归 681 passed / 1 skipped；**改了 `code/` ⇒ FP 变内容 sha·实测值 `61feb052…`，不得沿用 `3625502c…`（历史版·旧基座）**。
+> **⚠ 互斥引用禁令（`dialogue-core-dev` 提，Leader 采纳）**：`dialogue_rift.prompted` / `dialogue_repair.prompted` **只在 `enabled=1` 时出现** ⇒
+> **它们本身就是"开 DR 就改日志内容"的证据**。⇒ **报告里不得同时用「这两个字段」与「hash 链等价」** —— 两句话互斥（一个说日志变了，一个说没变）。
+> **逐条真标记**：`dialogue_repair.prompted = bool(repair_line)` 才是"动作要求是否注入"的真标记；`dialogue_rift.prompted` 只看 `gripe_context`+年龄，**不代表动作要求**。
+> **分母写法**：`prompted=true 的 MSG 数 / 带该字段的 MSG 数`（按 §14 三件齐）。
+
 **可单测的最小组合**：`enabled=1, gripe_context=1, repair_ask=false, reply_priority=false` ⇒ 只注入"处境"。但**任开一档都会新增日志字段 ⇒ hash 链不再能当等价性证据**（§3.8.4 第 2 条），真批的"只改 prompt"只能靠 **静态 diff + `L2b` 计数**证明。
 
 ### 3.8.5 引用约束
