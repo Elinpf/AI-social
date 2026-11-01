@@ -1,0 +1,408 @@
+{
+  "tool": "tools/d9z/channel_counts.py",
+  "l2b": true,
+  "arms": [
+    {
+      "arm": {
+        "mode": "off",
+        "env": {
+          "LIFE_PROMPT_NARRATION": "unset",
+          "LIFE_PROMPT_NARRATION_ROTATION": "unset",
+          "LIFE_PROMPT_NARRATION_ACTION": "unset",
+          "LIFE_PROMPT_NARRATION_SYNTAX": "unset",
+          "LIFE_PROMPT_NARRATION_OPENINGS": "unset",
+          "HITT_INTRA_ROUND_VISIBILITY": "unset"
+        },
+        "provider": "mock（HITT_LLM_PROVIDER 已 pop）",
+        "n": 6,
+        "rounds": 4,
+        "seed": 42,
+        "events": 594,
+        "msg_events": 12,
+        "dialogue_llm_calls": 12
+      },
+      "patch_targets": {
+        "narration_tail": {
+          "target": "life.agent.narration_tail",
+          "module_imported": true,
+          "has_attr": true,
+          "attr_is_callable": true
+        },
+        "narration_example": {
+          "target": "life.agent.narration_example",
+          "module_imported": true,
+          "has_attr": true,
+          "attr_is_callable": true
+        },
+        "openings_clause": {
+          "target": "life.agent.openings_clause",
+          "module_imported": true,
+          "has_attr": true,
+          "attr_is_callable": true
+        },
+        "syntax_clause": {
+          "target": "life.agent.syntax_clause",
+          "module_imported": true,
+          "has_attr": true,
+          "attr_is_callable": true
+        },
+        "pending_view": {
+          "target": "orchestration.integration.KernelAdapter._pending_view",
+          "module_imported": false,
+          "has_attr": false,
+          "attr_is_callable": false
+        },
+        "visibility_visible": {
+          "target": "orchestration.visibility_index.VisibilityIndex.visible",
+          "module_imported": false,
+          "has_attr": false,
+          "attr_is_callable": false
+        }
+      },
+      "patch_selfcheck": {
+        "narration_example": {
+          "before": 0,
+          "after": 1,
+          "delta": 1,
+          "ok": true
+        },
+        "openings_clause": {
+          "before": 0,
+          "after": 1,
+          "delta": 1,
+          "ok": true
+        },
+        "syntax_clause": {
+          "before": 0,
+          "after": 1,
+          "delta": 1,
+          "ok": true
+        },
+        "narration_tail": {
+          "before": 0,
+          "after": 1,
+          "delta": 1,
+          "ok": true
+        }
+      },
+      "counts": {
+        "narration_tail_calls": {
+          "total": 12,
+          "initiate": 9,
+          "reply": 3,
+          "other": 0
+        },
+        "narration_example_calls": 0,
+        "openings_clause_calls": 0,
+        "openings_clause_nonempty_calls": {
+          "total": 0,
+          "initiate": 0,
+          "reply": 0,
+          "other": 0
+        },
+        "syntax_clause_calls": 0,
+        "syntax_drop_s1_true_calls": 0,
+        "syntax_drop_s1_effective_calls": 0,
+        "pending_view_calls": 24,
+        "pending_view_non_none": 0,
+        "visibility_visible_calls": 48,
+        "visible_extra_nonempty": 0
+      },
+      "verdict": {
+        "ROTATION_shortcircuit": {
+          "verdict": "CANNOT-VERIFY",
+          "detail": "channel_off",
+          "reason": "旁白通道整体关闭（NARRATION 未开）：example==0 不可归因于 OPENINGS 短路"
+        },
+        "OPENINGS_clause": {
+          "verdict": "CANNOT-VERIFY",
+          "detail": "channel_off",
+          "reason": "OPENINGS 未开：非空次数为 0 属预期，不构成「通道正常」的证据"
+        },
+        "SYNTAX_drop_s1": {
+          "verdict": "CANNOT-VERIFY",
+          "detail": "channel_off",
+          "reason": "SYNTAX 未开：drop_s1 传了也不会进 _apply_syntax_clause"
+        },
+        "INTRA_ROUND_pending_view": {
+          "verdict": "CANNOT-VERIFY",
+          "detail": "channel_off",
+          "reason": "开关未开：pending_view 调用 24 次、非 None 0 次（应为 0）"
+        },
+        "INTRA_ROUND_visibility_extra": {
+          "verdict": "CANNOT-VERIFY",
+          "detail": "channel_off",
+          "reason": "开关未开：visible(extra≠空)=0（应为 0，阳性对照 visible 调用 48 次）"
+        }
+      }
+    },
+    {
+      "arm": {
+        "mode": "on",
+        "env": {
+          "LIFE_PROMPT_NARRATION": "1",
+          "LIFE_PROMPT_NARRATION_ROTATION": "1",
+          "LIFE_PROMPT_NARRATION_ACTION": "1",
+          "LIFE_PROMPT_NARRATION_SYNTAX": "1",
+          "LIFE_PROMPT_NARRATION_OPENINGS": "1",
+          "HITT_INTRA_ROUND_VISIBILITY": "1"
+        },
+        "provider": "mock（HITT_LLM_PROVIDER 已 pop）",
+        "n": 6,
+        "rounds": 4,
+        "seed": 42,
+        "events": 514,
+        "msg_events": 10,
+        "dialogue_llm_calls": 10
+      },
+      "patch_targets": {
+        "narration_tail": {
+          "target": "life.agent.narration_tail",
+          "module_imported": true,
+          "has_attr": true,
+          "attr_is_callable": true
+        },
+        "narration_example": {
+          "target": "life.agent.narration_example",
+          "module_imported": true,
+          "has_attr": true,
+          "attr_is_callable": true
+        },
+        "openings_clause": {
+          "target": "life.agent.openings_clause",
+          "module_imported": true,
+          "has_attr": true,
+          "attr_is_callable": true
+        },
+        "syntax_clause": {
+          "target": "life.agent.syntax_clause",
+          "module_imported": true,
+          "has_attr": true,
+          "attr_is_callable": true
+        },
+        "pending_view": {
+          "target": "orchestration.integration.KernelAdapter._pending_view",
+          "module_imported": false,
+          "has_attr": false,
+          "attr_is_callable": false
+        },
+        "visibility_visible": {
+          "target": "orchestration.visibility_index.VisibilityIndex.visible",
+          "module_imported": false,
+          "has_attr": false,
+          "attr_is_callable": false
+        }
+      },
+      "patch_selfcheck": {
+        "narration_example": {
+          "before": 0,
+          "after": 1,
+          "delta": 1,
+          "ok": true
+        },
+        "openings_clause": {
+          "before": 0,
+          "after": 1,
+          "delta": 1,
+          "ok": true
+        },
+        "syntax_clause": {
+          "before": 0,
+          "after": 1,
+          "delta": 1,
+          "ok": true
+        },
+        "narration_tail": {
+          "before": 0,
+          "after": 1,
+          "delta": 1,
+          "ok": true
+        }
+      },
+      "counts": {
+        "narration_tail_calls": {
+          "total": 10,
+          "initiate": 7,
+          "reply": 3,
+          "other": 0
+        },
+        "narration_example_calls": 0,
+        "openings_clause_calls": 10,
+        "openings_clause_nonempty_calls": {
+          "total": 10,
+          "initiate": 7,
+          "reply": 3,
+          "other": 0
+        },
+        "syntax_clause_calls": 10,
+        "syntax_drop_s1_true_calls": 10,
+        "syntax_drop_s1_effective_calls": 10,
+        "pending_view_calls": 24,
+        "pending_view_non_none": 13,
+        "visibility_visible_calls": 48,
+        "visible_extra_nonempty": 13
+      },
+      "verdict": {
+        "ROTATION_shortcircuit": {
+          "verdict": "PASS",
+          "detail": "ok",
+          "reason": "短路成立：narration_tail()=10>0 而 narration_example()==0，且 NARRATION 与 OPENINGS 均开"
+        },
+        "OPENINGS_clause": {
+          "verdict": "PASS",
+          "detail": "ok",
+          "reason": "两条路径都有非空追加：initiate=7、reply=3"
+        },
+        "SYNTAX_drop_s1": {
+          "verdict": "PASS",
+          "detail": "ok",
+          "reason": "drop_s1_true=10 == effective=10（返回串均不含 S1_CLAUSE）"
+        },
+        "INTRA_ROUND_pending_view": {
+          "verdict": "PASS",
+          "detail": "ok",
+          "reason": "双口径互证：pending_view 非 None=13 == visible(extra≠空)=13（调用 24/48）"
+        },
+        "INTRA_ROUND_visibility_extra": {
+          "verdict": "PASS",
+          "detail": "ok",
+          "reason": "visible(extra≠空)=13 >0（visible 总调用 48 次作阳性对照）"
+        }
+      }
+    },
+    {
+      "arm": {
+        "mode": "mixed",
+        "env": {
+          "LIFE_PROMPT_NARRATION": "1",
+          "LIFE_PROMPT_NARRATION_ROTATION": "1",
+          "LIFE_PROMPT_NARRATION_ACTION": "unset",
+          "LIFE_PROMPT_NARRATION_SYNTAX": "1",
+          "LIFE_PROMPT_NARRATION_OPENINGS": "unset",
+          "HITT_INTRA_ROUND_VISIBILITY": "1"
+        },
+        "provider": "mock（HITT_LLM_PROVIDER 已 pop）",
+        "n": 6,
+        "rounds": 4,
+        "seed": 42,
+        "events": 438,
+        "msg_events": 10,
+        "dialogue_llm_calls": 10
+      },
+      "patch_targets": {
+        "narration_tail": {
+          "target": "life.agent.narration_tail",
+          "module_imported": true,
+          "has_attr": true,
+          "attr_is_callable": true
+        },
+        "narration_example": {
+          "target": "life.agent.narration_example",
+          "module_imported": true,
+          "has_attr": true,
+          "attr_is_callable": true
+        },
+        "openings_clause": {
+          "target": "life.agent.openings_clause",
+          "module_imported": true,
+          "has_attr": true,
+          "attr_is_callable": true
+        },
+        "syntax_clause": {
+          "target": "life.agent.syntax_clause",
+          "module_imported": true,
+          "has_attr": true,
+          "attr_is_callable": true
+        },
+        "pending_view": {
+          "target": "orchestration.integration.KernelAdapter._pending_view",
+          "module_imported": false,
+          "has_attr": false,
+          "attr_is_callable": false
+        },
+        "visibility_visible": {
+          "target": "orchestration.visibility_index.VisibilityIndex.visible",
+          "module_imported": false,
+          "has_attr": false,
+          "attr_is_callable": false
+        }
+      },
+      "patch_selfcheck": {
+        "narration_example": {
+          "before": 0,
+          "after": 1,
+          "delta": 1,
+          "ok": true
+        },
+        "openings_clause": {
+          "before": 0,
+          "after": 1,
+          "delta": 1,
+          "ok": true
+        },
+        "syntax_clause": {
+          "before": 0,
+          "after": 1,
+          "delta": 1,
+          "ok": true
+        },
+        "narration_tail": {
+          "before": 0,
+          "after": 1,
+          "delta": 1,
+          "ok": true
+        }
+      },
+      "counts": {
+        "narration_tail_calls": {
+          "total": 10,
+          "initiate": 7,
+          "reply": 3,
+          "other": 0
+        },
+        "narration_example_calls": 10,
+        "openings_clause_calls": 10,
+        "openings_clause_nonempty_calls": {
+          "total": 0,
+          "initiate": 0,
+          "reply": 0,
+          "other": 0
+        },
+        "syntax_clause_calls": 10,
+        "syntax_drop_s1_true_calls": 0,
+        "syntax_drop_s1_effective_calls": 0,
+        "pending_view_calls": 24,
+        "pending_view_non_none": 13,
+        "visibility_visible_calls": 48,
+        "visible_extra_nonempty": 13
+      },
+      "verdict": {
+        "ROTATION_shortcircuit": {
+          "verdict": "CANNOT-VERIFY",
+          "detail": "channel_off",
+          "reason": "OPENINGS 未开，短路前提不成立（此时 example==0 才是正常旋转关闭）"
+        },
+        "OPENINGS_clause": {
+          "verdict": "CANNOT-VERIFY",
+          "detail": "channel_off",
+          "reason": "OPENINGS 未开：非空次数为 0 属预期，不构成「通道正常」的证据"
+        },
+        "SYNTAX_drop_s1": {
+          "verdict": "CANNOT-VERIFY",
+          "detail": "zero_but_reached",
+          "reason": "SYNTAX 已开但 syntax_clause(drop_s1=True) 调用 0 次"
+        },
+        "INTRA_ROUND_pending_view": {
+          "verdict": "PASS",
+          "detail": "ok",
+          "reason": "双口径互证：pending_view 非 None=13 == visible(extra≠空)=13（调用 24/48）"
+        },
+        "INTRA_ROUND_visibility_extra": {
+          "verdict": "PASS",
+          "detail": "ok",
+          "reason": "visible(extra≠空)=13 >0（visible 总调用 48 次作阳性对照）"
+        }
+      }
+    }
+  ]
+}

@@ -72,6 +72,9 @@ tr '\0' '\n' < /proc/<pid>/environ | grep -E 'NARRATION|ROTATION|ACTION|SYNTAX|O
 这与"空 `fault.log` ≠ 无长尾"、"串行门返回空 ≠ 没批在跑"同源：**0 和空，都要先证明装置能出声。**
 
 **模板**：`tools/d9z/branch_entry_count.py` 即此模式（不看 `=1`，数"真的进了几次"）。
+**已工具化（2026-11-01）**：`tools/d9z/channel_counts.py` —— 一条命令出全通道计数与 `PASS / CANNOT-VERIFY` 判定，自测见 `v2/evidence/l2b-channel-counts/`（`on` 臂五项全 PASS、`off` 臂五项全 `CANNOT-VERIFY(channel_off)` 且带阳性对照不报 PASS、`2×2` 小跑出现 `not_reached` 证明第三态真会触发）。
+用法要点：`--arm on|off|mixed`；**`rc=0` 全 PASS｜`rc=1` 真异常（`zero_but_reached` / `mismatch`）｜`rc=2` 活动不足（`not_reached`，非不合格）**。
+**它只证"通道进了几次"，不替代 `/proc` 取证与 `FP` 前后相等，也不能用于跑后读数判定。**
 **成本**：每个开关 3–5 行验证代码，**比事后在判定件里争"到底有没有接通"便宜得多**。
 
 > **实现方式（2026-11-01 补，必读）**：计数**由验证脚本注入，不写入生产代码**。
