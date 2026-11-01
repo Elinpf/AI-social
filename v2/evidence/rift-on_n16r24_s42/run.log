@@ -1,0 +1,61 @@
+Timeout (0:10:00)!
+Thread 0x000077c6f94ae080 (most recent call first):
+  File "/usr/lib/python3.12/socket.py", line 707 in readinto
+  File "/usr/lib/python3.12/http/client.py", line 297 in _read_status
+  File "/usr/lib/python3.12/http/client.py", line 336 in begin
+  File "/usr/lib/python3.12/http/client.py", line 1457 in getresponse
+  File "/usr/lib/python3.12/urllib/request.py", line 1348 in do_open
+  File "/usr/lib/python3.12/urllib/request.py", line 1373 in http_open
+  File "/usr/lib/python3.12/urllib/request.py", line 492 in _call_chain
+  File "/usr/lib/python3.12/urllib/request.py", line 532 in _open
+  File "/usr/lib/python3.12/urllib/request.py", line 515 in open
+  File "/usr/lib/python3.12/urllib/request.py", line 215 in urlopen
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/freeze/providers.py", line 266 in _post
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/freeze/providers.py", line 319 in complete
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/freeze/llm_client.py", line 403 in complete
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/freeze/client.py", line 120 in call
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/life/agent.py", line 2105 in _score_importance
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/life/agent.py", line 730 in _observe
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/life/agent.py", line 685 in step
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/engine/kernel.py", line 212 in phase_decide
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/engine/kernel.py", line 263 in run_round
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/orchestration/integration.py", line 1170 in run_e2e
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/orchestration/cli.py", line 29 in _cmd_run
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/orchestration/cli.py", line 102 in main
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/orchestration/__main__.py", line 4 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 229 in run_module
+  File "<string>", line 8 in <module>
+Timeout (0:10:00)!
+Thread 0x000077c6f94ae080 (most recent call first):
+  File "/usr/lib/python3.12/socket.py", line 707 in readinto
+  File "/usr/lib/python3.12/http/client.py", line 297 in _read_status
+  File "/usr/lib/python3.12/http/client.py", line 336 in begin
+  File "/usr/lib/python3.12/http/client.py", line 1457 in getresponse
+  File "/usr/lib/python3.12/urllib/request.py", line 1348 in do_open
+  File "/usr/lib/python3.12/urllib/request.py", line 1373 in http_open
+  File "/usr/lib/python3.12/urllib/request.py", line 492 in _call_chain
+  File "/usr/lib/python3.12/urllib/request.py", line 532 in _open
+  File "/usr/lib/python3.12/urllib/request.py", line 515 in open
+  File "/usr/lib/python3.12/urllib/request.py", line 215 in urlopen
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/freeze/providers.py", line 266 in _post
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/freeze/providers.py", line 319 in complete
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/freeze/llm_client.py", line 403 in complete
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/freeze/client.py", line 120 in call
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/life/agent.py", line 1379 in _send_reply
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/life/agent.py", line 1153 in _communicate
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/life/agent.py", line 695 in step
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/engine/kernel.py", line 212 in phase_decide
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/engine/kernel.py", line 263 in run_round
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/orchestration/integration.py", line 1170 in run_e2e
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/orchestration/cli.py", line 29 in _cmd_run
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/orchestration/cli.py", line 102 in main
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/rift-events/code/orchestration/__main__.py", line 4 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 229 in run_module
+  File "<string>", line 8 in <module>
+[life] n_agents=16 rounds=24 events=33767 seconds=1303.3536 log_bytes=17109292
+  unknown_event_types=[]
+  chain_ok=True replay_parity=True first_run_equals_replay=True
+  conservation_ok=True final_state_hash=sha256:f6f36ef472ea9593221b2eacd8ce19f4570460a61f783c22c7193a0cf1bdfb2c
+  log written: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/rift-events/v2/evidence/rift-on_n16r24_s42/run.jsonl

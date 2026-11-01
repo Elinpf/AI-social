@@ -1,0 +1,30 @@
+arm=rift_on run_id=20261102T011555
+out=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/rift-events/v2/evidence/rift-on_n16r24_s42
+side=/tmp/rift_on_side_20261102T011555
+HEAD=8a58fef6521e52e01997ceb7eba1187e28a40966 branch=feat/rift-events
+params=agents=16 rounds=24 seed=42
+env=HITT_DIALOGUE_REPAIR=1 HITT_DR_RIFT_EVENTS=1 HITT_DR_REPAIR_ASK=0 reply_priority=0(默认config) 
+    LIFE_PROMPT_NARRATION=1 ..._ROTATION=1 ..._ACTION=1 ..._SYNTAX=1 ..._OPENINGS=1 HITT_INTRA_ROUND_VISIBILITY=1 HITT_LLM_PROVIDER=openai_compat
+places_sha256=c36c0f8776372f4e36ec39126f0fd9546c1dadf5e814c294172f5e2e04bb66fa
+started_at=2026-11-02T01:15:55+08:00
+--- gate A (pgrep run_module) ---
+(empty)
+--- gate B (ps python3 /orchestration/) ---
+(empty)
+--- FP before (master 版 tree_fingerprint.sh world) ---
+files=285
+sha256=571fc1666e01fa91b6ba5ace3687b77705fb3452a8a7849f50c11028f14ac401
+mode=world
+fp_before_rc=0
+faulthandler=dump_traceback_later(600, repeat=True) -> stderr(run.log)
+env_source=/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/.env.local
+pid=3272754
+finished_at=2026-11-02T01:38:01+08:00 rc=0
+--- FP after (master 版) ---
+files=285
+sha256=571fc1666e01fa91b6ba5ace3687b77705fb3452a8a7849f50c11028f14ac401
+mode=world
+fp_equal=YES
+38820c9d22880f6e223ae948963392796848c3403280f91df7b640e3e43e4103  /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/rift-events/v2/evidence/rift-on_n16r24_s42/run.jsonl
+33767
+17109292
