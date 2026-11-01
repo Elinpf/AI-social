@@ -7,17 +7,25 @@
 ## L0 串行门（缺一不起跑）
 
 ```bash
-pgrep -af 'orchestration [r]un'                       # 旧门（对 launch 脚本形态会漏检，见下）
-pgrep -af 'run_module\("orchestration"'              # ← 必须加这一条：launcher 形态
+# 主门（唯一有效）：launcher 形态
+pgrep -af 'run_module\("orchestration"' | grep -v "pgrep" 
+# 辅助门：只看 comm=python3 的，避免把"包含该字面量的检查命令"当批
+ps -eo pid,comm,args | awk '$2 ~ /^python3/ && /orchestration/'
 ```
-**非空即不起跑**。D9t 曾因同一脚本被启动两次写同一 `out/side-root`，取证被覆盖（留档 `/tmp/D9T_ON_TAINTED_1793434444`）。
+**任一非空即不起跑。**
 
-> ⚠ **旧门会漏检（2026-11-01 实测，真批在跑时旧门返回"空"）**：本仓的启动器是用
-> `python3 -c` + `runpy.run_module("orchestration")` 起的，**命令行里没有** `orchestration run`
-> 这串连续字符（`sys.argv` 是 `["orchestration", "run", …]`，带引号与逗号）。
-> ⇒ **只跑旧门会得到"没有批在跑"的错误结论**，可能因此并发起跑、写坏同一 `side-root`。
-> **必须两条都跑**；任一条非空即不起跑。
-> 这条是"检查器的沉默 ≠ 没有东西"的又一实例：**门返回空，要先验证门自己能看见东西**。
+> ⚠ **门本身的三个缺陷（2026-11-01 实测，两条来自 `dialogue-core-dev` 现场取证）**：
+> 1. **`pgrep -af 'orchestration [r]un'` 对 launcher 形态漏检**：启动器是 `python3 -c` + `runpy.run_module("orchestration")`，
+>    命令行里没有 `orchestration run` 连续串（`sys.argv` 为 `["orchestration", "run", …]`，带引号逗号）。
+>    实测：真批在跑时该门返回**空**。⇒ 只看它=误判"没有批在跑"，可能并发起跑写坏同一 `side-root`。
+> 2. **门 A 可能自匹配**：若包装命令的文本里出现**字面** `orchestration run`（例如 `sh -c 'ps aux | grep "orchestration run"'`），
+>    该 `sh -c` 进程自身会被抓进来。**`[r]` 手法只能防 `pgrep` 自身，防不住 `sh -c` 包裹的整段文本。**
+>    （Leader 用 `bash -c 'pgrep -af "orchestration [r]un"'` 复现为 **0 命中**，故该形态取决于包装命令写法；但风险真实，须防。）
+> 3. **起跑时刻的串行性不可事后证明**：若起跑时只跑了失效的门，就只能给**旁证**（① `side-root` 起跑前不存在；
+>    ② 事后主门只命中本批一个 pid），**不得写成"当时已验证串行"**。
+>
+> 结论：**主门只认 `run_module("orchestration")` 那条**；门 A 降为辅助且必须看"是不是 `python3`"。
+> 这条属"**检查器的沉默 ≠ 没有东西**"：**门返回空，要先验证门自己能看见东西。**
 
 ## L1 代码身份门
 
