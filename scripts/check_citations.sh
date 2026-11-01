@@ -12,6 +12,11 @@
 #   object(历史版)    blob/tree 但不在 $REV 树里 ⇒ 须标注（历史/旧版/已废弃…）
 #   content(核过)     同行有路径，git show $REV:<path> | sha256sum 前缀一致
 #   content(待配)     看着像内容 sha 但取不到路径（--strict 下算漏）
+#   ⚠ 已知局限（2026-11-01 记）：
+#     ① **每行只取一个路径**（`head -1`）。同一行引用多个不同文件时，该行所有 sha 都会与第一个路径比对
+#        ⇒ 报出的 `content 不符` 可能是"配错对象"，不一定是"sha 陈旧"。
+#        处置：作者应把"多文件同行"拆成多行或小表；检查器的 BAD 须人工确认对象后再改。
+#     ② basename 回退只在**唯一命中**时生效，多命中一律维持"待配"（不猜，避免把 A 件的数配到 B 件上）。
 #   已声明            紧邻 20 字窗口内有 不存在/已废弃/作废/未入库/未落地/MISSING/文本切片/字符串级/内容 sha/历史版/旧版
 #
 # 用法：scripts/check_citations.sh <file> [--strict] [--selftest] [<rev>]
@@ -104,6 +109,18 @@ for entry in "${RAW[@]}"; do
   fi
 
   path=$(printf '%s' "$line_text" | grep -oE '[A-Za-z0-9_./-]+\.(jsonl|ndjson|md|py|json|sh|txt|yaml|yml)' | head -1)
+  # 路径回退（2026-11-01 加）：报告/证据件常按**文件名**引用（如 `run.jsonl`、`_ann.py`），
+  # 这些路径相对 repo 根不存在，但按 basename 唯一命中时可解析。规则：
+  #   仅当 repo 根相对不存在时，才按 basename 在 $REV 全树里找**唯一**匹配；多匹配或无匹配 ⇒ 维持"待配"。
+  #   多匹配一律不猜（避免把 A 件的数配到 B 件上），并在输出里注明匹配数。
+  if [ -n "$path" ] && ! git cat-file -e "$REV:$path" 2>/dev/null; then
+    base=$(basename "$path")
+    n_match=$(git ls-tree -r --name-only "$REV" | grep -cE "(^|/)$(printf '%s' "$base" | sed 's/[.[\*^$(){}?+|/]/\\&/g')$" || true)
+    if [ "$n_match" = "1" ]; then
+      path=$(git ls-tree -r --name-only "$REV" | grep -E "(^|/)$(printf '%s' "$base" | sed 's/[.[\*^$(){}?+|/]/\\&/g')$")
+    fi
+  fi
+
   if [ -n "$path" ] && git cat-file -e "$REV:$path" 2>/dev/null; then
     actual=$(git show "$REV:$path" | sha256sum | cut -c1-${#tok})
     if [ "$actual" = "$tok" ]; then
