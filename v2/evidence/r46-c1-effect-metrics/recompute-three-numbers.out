@@ -1,0 +1,4 @@
+mismatch_total=87  judged_mismatch=75  judged_match=90  分母=165
+路径A: mismatch_total - judged_mismatch = 87 - 75 = 12
+路径B: no_cue_total - no_cue_match = 26 - 14 = 12
+naive_from_place_false_positives=104   no_move_dialogue=104

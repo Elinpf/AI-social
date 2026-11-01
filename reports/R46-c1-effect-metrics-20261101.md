@@ -522,6 +522,7 @@ PY
 | **89** | repo-scout 称其"变体 B=104 是 `actor` 取键 bug，改 `payload.agent_id` 后得 89" | **我未复现出 89**：两种事件源（`PLACE_MOVE` / `PLACE_ARRIVED`）、两种取键（`actor` / `payload.agent_id`）下，"无本轮移动的对话条数"均为 **104** | ⚠️ **未复现 ⇒ 按 §0.2 纪律不转述，登记为待核项** |
 
 - **原说法「`home_place` 兜底缺失会产出 12」撤回**：本批 191 条含 `scene` 的消息中，「该次到达是该 agent 的**首次**到达、因而缺"移动前站位"、需要 `home_place` 兜底」的情形我在一个**刻意变体**下确实数到 12 条，但那**不是**团队流传说法的含义（该说法指"陷阱后果"）；同一数字在两套不同定义下撞车，正是必须写清定义的理由。**该解释作废，以本表为准。**
+- **复算件已由我实跑验证**：`v2/evidence/r46-c1-effect-metrics/recompute-three-numbers.py`（standalone，只读 `run.jsonl`）输出 `mismatch_total=87 judged_mismatch=75 judged_match=90 分母=165`、`87−75=12`、`26−14=12`、`naive_from_place_false_positives=104 no_move_dialogue=104`，两次运行 `cmp` ⇒ **BYTE_IDENTICAL**，与本报告数字逐项一致。
 - 保留结论：`c1_anchor_stale_check.py` 的口径（只遍历错位条目 + 同轮守卫 + 取 `from_place`）**不受上述任何变体影响**，其 87/87 与反例 0 不变。
 
 ### 12.4 因此本报告可以说到哪一步
@@ -639,6 +640,16 @@ A0 `[10:09:59, 10:34:23]` 与 A1 `[10:44:02, 11:06:43]` **不相交**，间隔 9
 
 ### 17.1 sha 回填区（推送后填写）
 
-- 报告提交 sha：`<%SHA%>`
-- 远程分支 `origin/feat/r46-c1-effect-metrics` tip：`<%REMOTE_SHA%>`
-- 回填一致性：`<%SHA_CHECK%>`
+| 项 | 值 |
+|---|---|
+| **首交付 sha**（四条并列结论 + 证据 + 截图 + 工具） | `dcf8c9dcd2523c5f6fae5c0378818922278f64d1`（短码 `dcf8c9d`） |
+| **勘误 sha**（§0.2 三半纪律 / §12.3 12-104-89 分开 / §0 补 probe 级 / §12.5 自查案例；**不改变任何数据与结论**） | `7a1cbbdd152e61b7a1cfcad1855ccd257fafa394`（短码 `7a1cbbd`） |
+| **定稿 sha**（内容定稿提交） | 见 §17.2 回填区：由紧随其后的「sha 回填提交」写入本行，`git log --format=%H -1 -- reports/R46-c1-effect-metrics-20261101.md` 可复核 |
+| 远程分支 | `origin/feat/r46-c1-effect-metrics`（不推 master、不 force） |
+| 回填一致性核对 | 见 §17.2 |
+
+### 17.2 回填核对命令（第三方可复核）
+```bash
+git log --oneline -3 -- reports/R46-c1-effect-metrics-20261101.md
+git rev-parse HEAD; git ls-remote --heads origin feat/r46-c1-effect-metrics
+```
