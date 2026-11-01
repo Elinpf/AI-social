@@ -550,6 +550,35 @@ MSG 191 | 带 reply_to 125（全部可解析）| gap=0: 0 (0.0%) | gap=1: 77 (61
 > **`B 率 > 100%` ⇒ `B 无效`** —— 一行判定，任何引用 B 的地方先跑它。
 > 更一般：**任何"率"若分子分母同量纲却算出 >100%，先判口径错，不得解释为"接近全覆盖"。**
 
+> ### 🔴 重定义：**`dialogue_repair` 不是"修复"**（2026-11-02 01:5x，`repro-verifier` 核码，Leader 逐行复核）
+>
+> `code/life/dialogue_repair.py::repair_audit()`（行号见件）**不做任何词表匹配**，只做：
+> ```python
+> rows = [v for v in rifts.values()
+>         if v.get("thread_id") == thread_id and (peer is None or v.get("with") == peer)]
+> # 返回 rift_ids / trigger_seqs / peers / age_rounds / prompted
+> ```
+> ⇒ **它的语义是「本条回复所在线程（+peer）里仍然存在的旧账列表」= "被回复**涉及**的旧账"，不是"被修复的旧账"。**
+>
+> **后果（必须全量更正）**：
+> | 旧表述 | 更正为 |
+> |---|---|
+> | D4-2 分子 = `dialogue_repair.rift_ids` 去重 | **那是 `D4-2′ 涉及率` 的分子**（"回复涉及过多少笔旧账"） |
+> | 旧值 `7 / 16 / 0` = "被修复 rift 绝对数" | **= "被回复涉及过的旧账数"（distinct）** |
+> | 已报过的 `0.1212 / 0.1304 / 0.1566` = "和解率" | **= "涉及率"（D4-2′），不是和解率** |
+>
+> **D4-2（真正的和解率）分子 = `RIFT_CLOSE{reason="repair"}` 去重**，**只有带 `rift_events` 的批才算得出**。
+> ⇒ **旧三批（`emo-on` / `run_f4_on` / `run_r6_treat`）无 `RIFT_CLOSE` ⇒ D4-2 在旧数据上不可算**（不是 0，是不可算）。
+>
+> **两个口径实测差得远**（首跑 `rift-on_n16r24_s42`）：
+> ```
+> RIFT_CLOSE{reason=repair}     → 0（distinct (agent_id, rift_id)）
+> dialogue_repair.rift_ids 去重 → 2 distinct rift（4 条 MSG）
+> 两者交集 = 空
+> ```
+>
+> **命名建议**：`dialogue_repair` 这个字段名会持续误导 —— 引用时必须写作 **`dialogue_repair`（= 涉及旧账审计，非修复）**。
+
 > ### ⚠ `rift_id` **不是主键**：`(agent_id, rift_id)` 才是（2026-11-02 01:5x，首跑实测）
 >
 > 首跑（`v2/evidence/rift-on_n16r24_s42/run.jsonl`，`16×24`）实测：
@@ -572,7 +601,18 @@ MSG 191 | 带 reply_to 125（全部可解析）| gap=0: 0 (0.0%) | gap=1: 77 (61
 >
 > 补齐 `RIFT_OPEN/CLOSE` + `dialogue_rift.rift_ids` 后，D4-2 会**重算**。重算前先写死两条，否则会把正常结果读成异常：
 >
-> **① 对账不是"应该相等"，是"新值 ≥ 旧值"。**
+> ### ⚠⚠ 上面 ① 的前提被我写漏了（2026-11-02 01:5x，`repro-verifier` 指出，Leader 采纳）
+> 原文"新 ≥ 旧 且 新−旧 = 沉默的 rift 数"**只有在"同一批数据"上才成立**。
+> 实测：旧值 `7/16/0` 来自 `emo-on` / `run_f4_on` / `run_r6_treat`（**跑在 `rift_events` 存在之前**，无 RIFT 事件、无 `rift_ids`）；新批 `rift-on_n16r24_s42` 是**另一次跑批**。
+> ⇒ **跨批相减 = 口径差 + 批次差混杂**，`delta == delta_explained` 会给出"看似成立但无意义"的结果。
+> **修正后的规则**：
+> 1. **对账只能同批**（同一 `run.jsonl` 内新口径 vs 旧口径字段），或
+> 2. **同配置、同 seed 的配对臂**（`rift_events=1` vs `=0`）逐 `(agent_id, rift_id)` 比对；
+> 3. **跨批一律只报各自绝对数，不做差值**。
+>
+> **② 对账不是"应该相等"，是"新值 ≥ 旧值"（仅同批/配对臂成立）。**
+
+
 > 今天的 `7 / 16 / 0` 是**"被修复 rift 的绝对数"**；新口径会数到**从未被修复的 rift** ⇒ **新总数必然 ≥ 旧值**，**差额 = "沉默的 rift"（今天没人知道有多少）**。
 > 判据：`新 ≥ 旧` 且 `新 − 旧 = 可解释的未修复 rift 数`。**不得期待两值相等** —— 相等反而说明新口径没起作用。
 >
