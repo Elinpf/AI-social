@@ -257,4 +257,4 @@ python3 tools/metrics/render_shots.py --run-dir v2/evidence/d9t-on_n16r24_s42 --
 
 - 看板：`docs/team-board.md` §一 新增第 17 行（本维度）；§二 A 档新增一行标注 **A-1 已由 R46/`63d3226` 收口**（不改历史行）；§三 新增本轮记录行。
 - 索引：`reports/README.md` 新增 `R47` 行（`R44`/`R45`/`R46` 的历史欠账**不代补**，按本表惯例留欠账注记）。
-- **本轮不 commit / 不 push**（由后续任务统一提交）。
+- 提交：本轮 commit **`a7f008f`**（分支 `feat/r46-c1-effect-metrics`，只含 R47 相关六项 + 看板/索引登记；看板 `sha` 回填为后续补充 commit）。**不推 `master`**——`origin/master...HEAD = 103/72` 分叉待评估（`P-1b` 未销号），master 合并须单独决策；push 状态见 `rounds/2026-11-01-r1/` 的提交信息节（实测网络 `ls-remote` 超时，推送结果如实标注）。
