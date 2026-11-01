@@ -1,0 +1,155 @@
+{
+  "tool": "tools/d9z/channel_counts.py",
+  "card": "T-L2B-DR-CHANNELS",
+  "note": "三档 DR 自测（对齐卡面档1/档2/档3）。全量五臂见同目录 selftest_all_arms.json",
+  "patch_targets_dr": {
+    "context_line": {
+      "target": "life.dialogue_repair.context_line",
+      "module_imported": true,
+      "has_attr": true,
+      "attr_is_callable": true
+    },
+    "repair_ask": {
+      "target": "life.dialogue_repair.repair_ask",
+      "module_imported": true,
+      "has_attr": true,
+      "attr_is_callable": true
+    },
+    "why_not_life_agent": "DR 在 agent.py 里以模块别名导入（`from . import dialogue_repair as DR` ⇒ `DR.context_line(...)`），故调用点是 `life.dialogue_repair.context_line`，不是 `life.agent.context_line`"
+  },
+  "tiers": {
+    "tier1_enabled0": {
+      "source": "arm=off",
+      "dr_enabled": false,
+      "counts": {
+        "context_line_calls": 0,
+        "context_line_nonempty_calls": {
+          "total": 0,
+          "peer_nonempty": 0,
+          "peer_empty": 0
+        },
+        "context_line_rifts_nonempty_calls": 0,
+        "repair_ask_calls": 0,
+        "repair_ask_nonempty_calls": 0,
+        "repair_ask_rifts_nonempty_calls": 0
+      },
+      "verdict": {
+        "DR_context_line": {
+          "verdict": "CANNOT-VERIFY",
+          "detail": "channel_off",
+          "value": 0,
+          "why_zero": "DR 总开关 enabled=0（机制整体关闭；该档本就不该有调用）",
+          "positive_control": "calls=0; 台账非空且 peer/thread 匹配的调用=0 次",
+          "reason": "enabled 关闭 ⇒ 0 属预期，不是通道故障"
+        },
+        "DR_repair_ask": {
+          "verdict": "CANNOT-VERIFY",
+          "detail": "channel_off",
+          "value": 0,
+          "why_zero": "DR 总开关 enabled=0（机制整体关闭；该档本就不该有调用）",
+          "positive_control": "calls=0; 台账非空且 peer/thread 匹配的调用=0 次",
+          "reason": "enabled 关闭 ⇒ 0 属预期，不是通道故障"
+        }
+      },
+      "why_zero": "DR 总开关 enabled=0（机制整体关闭；该档本就不该有调用）"
+    },
+    "tier2_enabled1_no_rift": {
+      "source": "arm=dr_msg（mock 回复体不含负向词 ⇒ 真实 rift 恒 0）",
+      "dr_enabled": true,
+      "counts": {
+        "context_line_calls": 8,
+        "context_line_nonempty_calls": {
+          "total": 0,
+          "peer_nonempty": 8,
+          "peer_empty": 0
+        },
+        "context_line_rifts_nonempty_calls": 0,
+        "repair_ask_calls": 3,
+        "repair_ask_nonempty_calls": 0,
+        "repair_ask_rifts_nonempty_calls": 0
+      },
+      "verdict": {
+        "DR_context_line": {
+          "verdict": "CANNOT-VERIFY",
+          "detail": "not_reached",
+          "value": 0,
+          "why_zero": "无旧账：调用时 agent 台账为空（rifts_nonempty_calls=0，**可核**）",
+          "positive_control": "calls=8; 台账非空且 peer/thread 匹配的调用=0 次",
+          "reason": "没有旧账可叙 ⇒ 0 属预期（mock 回复不含负向词时必然如此）"
+        },
+        "DR_repair_ask": {
+          "verdict": "CANNOT-VERIFY",
+          "detail": "not_reached",
+          "value": 0,
+          "why_zero": "无旧账：调用时 agent 台账为空（rifts_nonempty_calls=0，**可核**）",
+          "positive_control": "calls=3; 台账非空且 peer/thread 匹配的调用=0 次",
+          "reason": "没有旧账可叙 ⇒ 0 属预期（mock 回复不含负向词时必然如此）"
+        }
+      },
+      "why_zero": "无旧账：调用时 agent 台账为空（rifts_nonempty_calls=0，**可核**）"
+    },
+    "tier3_enabled1_with_rift_repair_ask_false": {
+      "source": "arm=dr_noask 的 function_level_probe（构造台账直调两函数；mock 世界拿不到 rift）",
+      "dr_enabled": true,
+      "repair_ask_param": false,
+      "counts_in_world": {
+        "context_line_calls": 8,
+        "context_line_nonempty_calls": {
+          "total": 0,
+          "peer_nonempty": 8,
+          "peer_empty": 0
+        },
+        "context_line_rifts_nonempty_calls": 0,
+        "repair_ask_calls": 3,
+        "repair_ask_nonempty_calls": 0,
+        "repair_ask_rifts_nonempty_calls": 0
+      },
+      "world_note": "世界内 rift 恒 0 ⇒ 世界内两计数为 0，why_zero=无旧账；档3 的证据来自下面的注入 probe",
+      "probe": {
+        "context_line_empty_rifts_is_none": true,
+        "context_line_disabled_is_none": true,
+        "context_line_with_rifts_nonempty": true,
+        "repair_ask_default_nonempty": true,
+        "repair_ask_false_is_none": true,
+        "counter_distinguishes": true
+      },
+      "requirement_check": {
+        "context_line_gt0_with_rift": true,
+        "repair_ask_gt0_when_default": true,
+        "repair_ask_zero_when_false": true,
+        "counter_distinguishes_zero_reasons": true
+      },
+      "why_zero": "repair_ask=False 显式关闭该段（0 是正向证据，对照：默认 null 时非空）"
+    }
+  },
+  "three_tier_ok": {
+    "tier1_enabled0": {
+      "source": "arm=off",
+      "context_line_value": 0,
+      "repair_ask_value": 0,
+      "why_zero": "DR 总开关 enabled=0（机制整体关闭；该档本就不该有调用）",
+      "positive_control": "calls=0; 台账非空且 peer/thread 匹配的调用=0 次",
+      "ok": true
+    },
+    "tier2_enabled1_no_rift": {
+      "source": "arm=dr_msg（mock 回复不含负向词 ⇒ 真实 rift 恒 0）",
+      "context_line_value": 0,
+      "repair_ask_value": 0,
+      "rifts_nonempty_calls": 0,
+      "why_zero": "无旧账：调用时 agent 台账为空（rifts_nonempty_calls=0，**可核**）",
+      "positive_control": "calls=8; 台账非空且 peer/thread 匹配的调用=0 次",
+      "ok": true
+    },
+    "tier3_with_rift_repair_ask_false": {
+      "source": "function_level_probe（构造台账直调两函数；mock 世界里拿不到 rift）",
+      "context_line_with_rift_nonempty": true,
+      "repair_ask_default_nonempty": true,
+      "repair_ask_false_is_none": true,
+      "counter_distinguishes": true,
+      "why_zero": "repair_ask=False 显式关闭该段（0 是正向证据）",
+      "positive_control": "同一构造台账下 repair_ask 默认（null/True）时非空，且 repair_ask=False 时为空",
+      "ok": true
+    }
+  },
+  "all_pass": true
+}

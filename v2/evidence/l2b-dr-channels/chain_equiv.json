@@ -1,0 +1,20 @@
+{
+  "a": {
+    "path": "/tmp/dr_base_out/run.jsonl",
+    "sha256": "868e86d617aa0f8c19b4c2936467360b0cac72578d972277fc12cef9311968db",
+    "events": 7541,
+    "chain_self_consistent": true,
+    "first_bad_link": -1
+  },
+  "b": {
+    "path": "/tmp/l2bdr_out/run.jsonl",
+    "sha256": "868e86d617aa0f8c19b4c2936467360b0cac72578d972277fc12cef9311968db",
+    "events": 7541,
+    "chain_self_consistent": true,
+    "first_bad_link": -1
+  },
+  "events_compared": 7541,
+  "identical_prefix_events": 7541,
+  "identical": true,
+  "first_divergence": null
+}
