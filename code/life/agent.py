@@ -38,6 +38,7 @@ from . import anti_repeat as AR   # R12：L-7 去重臂（env LIFE_PROMPT_MEMORY
 from . import l7_structural as L7S  # L-7 结构臂（env LIFE_PROMPT_L7_STRUCT，**默认 ON**）
 from . import topic_breadth as TB  # R19 话题宽度臂（env LIFE_PROMPT_TOPIC_BREADTH，**默认 OFF**）
 from . import scene_anchor as SA  # 处境锚臂（env LIFE_PROMPT_SCENE，**默认 OFF**）
+from . import schedule_offset as _sched  # R53 作息个体差异臂（env HITT_SCHEDULE_OFFSET，**默认 OFF**）
 from . import weather as WX  # 天气臂（env HITT_WEATHER，**默认 OFF**）：今儿的天进提示词
 from .policy import (social_enabled, exchange_enabled, m2b_judge_mode, m2b_importance_mode,
                      narrative_persist_enabled)
@@ -847,6 +848,7 @@ class LifeLayerAgent:
             for si, slot in enumerate(C.TIME_CONFIG["SLOTS_PER_DAY"]):
                 slot_id = f"day{dow}-{slot}"
                 planned_tick = dow * 12 + si * C.TIME_CONFIG["ROUNDS_PER_SLOT"]
+                tick_off, act_changed = 0, False   # R53 审计初值（OFF 臂不读不写）
                 chosen = planner.plan_slot(day_type, slot, slot_id, int(wv.cash), focus)
                 extra: dict = {}
                 if chosen:
@@ -858,10 +860,20 @@ class LifeLayerAgent:
                                                  "participants": chosen["participants"]}
                 else:
                     atype, place = self._choose_activity(day_type, slot)
+                    if _sched.offset_enabled():     # R53：活动类型个体化（仅 base 路径）
+                        # habitual = 本 slot 未被需求剥夺覆盖（取值 == 基础作息）
+                        atype, place, act_changed = _sched.plan_activity(
+                            self.agent_id, day_type, slot, slot_id, (atype, place), self._valid,
+                            habitual=(atype, place) == self._base_activity(day_type, slot))
                     self._plan_slots[slot_id] = {"activity_type": atype, "place": place}
+                if _sched.offset_enabled():         # R53：相位偏移（slot 内后移，常量）
+                    tick_off = _sched.tick_offset(self.agent_id)
+                    planned_tick += tick_off
                 d = {"slot_id": slot_id, "activity_type": atype, "place": place,
                      "priority": 0.7, "planned_tick": planned_tick}
                 d.update(extra)
+                if _sched.offset_enabled():         # 审计键（additive，仅 ON 臂出现）
+                    d["schedule_offset"] = {"ticks": tick_off, "activity_changed": act_changed}
                 slots.append(d)
         return slots
 
