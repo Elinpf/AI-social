@@ -1833,6 +1833,22 @@ class LifeLayerAgent:
         # 双条件：命中 shift 关键词 且 不命中 base 关键词（防「本来就在说这个话题」白送）
         return p["shift"] if TB.confirm(body, p["shift"], p.get("base")) else None
 
+    @staticmethod
+    def _d12_detail_line() -> str:
+        """D12-A「具体性插槽」提示词增量（`HITT_D12_DETAIL=1` 时生效；**默认关**）。
+
+        R49 复用（逐字取自 `feat/d12-detail@a6ae5e5`，15 行只加不减）：文本原样来自
+        `v2/refs/D12-L7-dedup-round3-prereg.md` §2 臂 D12-A。
+
+        正向约束：不禁止任何句式，只提供一条"从具体物起句"的替代路径。
+        关闭（未设 / 非 1/true/on/yes）⇒ 返回空串 ⇒ 提示词与接入前**逐字节相同**。
+        """
+        import os
+        if os.environ.get("HITT_D12_DETAIL", "").strip().lower() not in ("1", "true", "on", "yes"):
+            return ""
+        return ("\n说话前来得及的话，先说一个你此刻手上或眼前的具体东西（一样器物、一个数、"
+                "一个刚发生的小事），再顺着它说下去。")
+
     def _dialogue_prompt(self, tid: str, parts: list, cfg: dict | None = None,
                          rift_line: str | None = None, wv=None) -> str:
         cfg = cfg or self._dlg_cfg()
@@ -1848,6 +1864,7 @@ class LifeLayerAgent:
                 + mem_line                   # F-6 臂：跨天记忆原文（默认OFF ⇒ 空串）
                 + self._l7_struct_line(wv, partners, 0, "initiate")  # L-7 结构臂：开口/收束/禁忌开头（默认ON）
                 + AR.prompt_line()           # R12 去重臂：最近说过的话（默认OFF ⇒ 空串）
+                + self._d12_detail_line()    # R49/D12-A 具体性插槽（默认OFF ⇒ 空串）
                 + (ADDR_EVOLVE_LINE if addr_evolve_enabled() else "")  # N-15 臂：称呼随相处演化一行（默认OFF ⇒ 空串）
                 + narration_tail("initiate", self.agent_id,
                                  0 if wv is None else getattr(wv, "round", 0)))  # D9i/D9m：收尾指令按 LIFE_PROMPT_NARRATION 二选一；旋转臂再按 LIFE_PROMPT_NARRATION_ROTATION 换示例（均默认关 ⇒ 与改动前逐字节相同）
@@ -1876,6 +1893,7 @@ class LifeLayerAgent:
                                        "reply")  # L-7 结构臂：开口/收束/禁忌开头（默认ON）
                 + self._topic_shift_line(wv, partner, tid, topic, turn)  # R19 话题宽度臂（默认OFF ⇒ 空串）
                 + AR.prompt_line()           # R12 去重臂：最近说过的话（默认OFF ⇒ 空串）
+                + self._d12_detail_line()    # R49/D12-A 具体性插槽（默认OFF ⇒ 空串）
                 + narration_tail("reply", self.agent_id,
                                  0 if wv is None else getattr(wv, "round", 0)))  # D9i/D9m：同上（旋转臂默认关 ⇒ 与 D9i ON 逐字节相同）
 
