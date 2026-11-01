@@ -115,4 +115,24 @@ git grep -n "ALL_INTENT_CLASSES" $M -- code/
 > **`V2`（最小移植分支）的 off 臂若出现任何 `RIFT_*` 事件 ⇒ 不是分叉点，是实现缺陷**（与本件 §3.5 的"最严重"同级）。
 > **处置：暂停移植、回实现方修，不得先跑完再说。**
 
-**为什么单列**：`ALL_INTENT_CLASSES` 加一个成员，看起来只是"放宽校验"，但若某处遍历该类集合去**预分配/初始化**，就会在 off 臂产生副作用。`RIFT_*` 出现在 off 臂是这种副作用的**唯一硬信号** —— 它一旦出现，说明"默认关"在意图路径上没关住。
+**为什么单列**：`RIFT_*` 出现在 off 臂是"默认关在意图路径上没关住"的**唯一硬信号**。
+
+#### 7.1.1 排查起点已收窄（`repro-verifier` 2026-11-02 04:4x 全仓扫，Leader 采纳）
+
+`ALL_INTENT_CLASSES` 的**全部消费点**（master 与 `efcf441` 各 4 类）已逐点扫过：
+
+| 位置 | 用法 | 是否遍历预分配 |
+|---|---|---|
+| `life/ports.py` | **定义**（tuple 字面量） | — |
+| `life/tests/support/mini_kernel.py:283` | `intent.intent_class not in ALL_INTENT_CLASSES` | **否**（成员校验） |
+| `orchestration/integration.py:398` / `:423` | `legal = set(ALL_INTENT_CLASSES) \| {"INTENT.SOCIAL"}` | **否**（`set()` 成员校验） |
+| `tests/test_ports_econ.py:20` / `test_ports_social.py:12` | `assert c in P.ALL_INTENT_CLASSES` | **否**（测试断言） |
+
+⇒ **全仓零遍历、零预分配、零初始化依赖**；`+1` 个成员**只影响 `in` 判定**。
+
+**⇒ 排查起点换成**：真出现 `RIFT_*` 时，**先查 `_do_rift` 的调用条件**（`obs = self._on_rift_event if dr.get("rift_events") else None` 那一行，以及 `submit_intent(INTENT_RIFT, ...)` 的触发点），**不要先怀疑集合加成员**（已排除）。
+
+#### 7.1.2 附加子项：元组顺序未变（移植时须核）
+
+`INTENT_RIFT` 目前是**在 `ALL_INTENT_CLASSES` 元组里追加成员，未改顺序**。若最小移植时**重排了元组**，任何**按索引**取该元组的代码都会错位。
+（现 master / `efcf441` 均为字面量元组、无索引消费 ⇒ 当前无事，但移植时须核。）
