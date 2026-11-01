@@ -39,6 +39,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CODE = ROOT / "code"
 
+# 臂开关登记表（表驱动，单一真源）：看板 A-4 —— 「每加一个臂就要手改三处、漏一处 ⇒
+# switch_effective 少一个键」的老缺口，改成「加臂 = 表里加一行」。
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import arm_switch_table as AST  # noqa: E402  （同目录模块，需先插 sys.path）
+
 
 def _sha256(path: Path) -> str:
     h = hashlib.sha256()
@@ -109,25 +114,12 @@ _TRUTHY = {"1", "true", "yes", "on"}
 def _declared_switch(name: str, kind: str = "bool") -> dict:
     """本进程实际读到的开关 env 值（**声明值**，非运行期事实）。
 
-    只作声明侧证据：真正「跑批时生效值」由 `_weather_switch_effective` 从 run.jsonl
-    反推（运行期事实）。两者并列，绝不单独采用声明值（沿用 leader 裁决：meta.provider 不是事实）。
-
-    `kind` 决定归一口径（**别把非布尔 env 硬塞进布尔口径**）：
-      * `"bool"`（HITT_WEATHER）：`normalized_effective` = 是否为 {1,true,yes,on}（与 weather.enabled 同口径）
-      * `"int"`（HITT_WORLD_SEED）：给 `parsed_int`（与 weather.world_seed 同口径：非法/缺失 ⇒ 0），
-        不产出 `normalized_effective`（种子不是开关，写成 bool 会误导）
+    实现已迁到 `tools/d2/arm_switch_table.py::declared_switch`（表驱动，单一真源）：
+    除了原来的 `raw` / `normalized_effective`，还显式给出 `state` ∈ {unset, empty, set}，
+    以便区分「环境里根本没有这个变量」与「设了但值是空串」（旧实现把两者压成同一个 False）。
+    本函数保留为薄包装，避免调用点散落。
     """
-    raw = os.environ.get(name)
-    out = {"raw": raw, "source": f"os.environ[{name!r}] @ emit_run_meta 进程"}
-    if kind == "int":
-        try:
-            out["parsed_int"] = int((raw or "").strip()) if (raw or "").strip() else 0
-        except (TypeError, ValueError):
-            out["parsed_int"] = 0
-        out["parse_rule"] = "同 code/life/weather.py::world_seed：缺失/非法 ⇒ 0"
-    else:
-        out["normalized_effective"] = (raw or "").strip().lower() in _TRUTHY
-    return out
+    return AST.declared_switch(name, kind=kind)
 
 
 def _weather_switch_effective(recs) -> dict:
@@ -417,17 +409,12 @@ def main(argv=None) -> int:
         # 导致「跑批当时的开关值 CANNOT-VERIFY」。天气臂用 env 开关，故在此把它落成可取证字段：
         #   switch_declared  = emit_run_meta 进程读到的 env（声明侧，弱）
         #   switch_effective = 由 run.jsonl 每条 MSG 的 payload.ctx.weather 反推（运行期侧，强）
-        "switch_declared": {
-            "HITT_WEATHER": _declared_switch("HITT_WEATHER"),
-            "HITT_WORLD_SEED": _declared_switch("HITT_WORLD_SEED", kind="int"),
-            # F-3 / F-4 对话臂（impl-101）：同一套 env 逃生口 + 运行期反推取证
-            "HITT_DIALOGUE_EMOTION_ECHO": _declared_switch("HITT_DIALOGUE_EMOTION_ECHO"),
-            "HITT_DIALOGUE_REPAIR": _declared_switch("HITT_DIALOGUE_REPAIR"),
-            # N-15 称呼演化臂（R01）：**纯提示词开关**，称呼文本不进 payload ⇒ 无结构字段可反推。
-            # 预登记 §4 已写死：本开关的 ON/OFF 判定只认 M2（prompt 渲染 sha）/ M3（prompt_hash 集合）
-            # / M4（进程 environ），**不得**用 switch_effective 反推「开关没开」。
-            "LIFE_PROMPT_ADDR_EVOLVE": _declared_switch("LIFE_PROMPT_ADDR_EVOLVE"),
-        },
+        # 臂开关（表驱动，见 tools/d2/arm_switch_table.py::ARM_SWITCHES）：
+        #   switch_declared  = emit_run_meta 进程读到的 env（声明侧，弱）+ state∈{unset,empty,set}
+        #   switch_effective = 由 run.jsonl 的结构化审计键反推（运行期侧，强）
+        # 加臂 = 表里加一行；本字典不再逐臂手写，避免「加了臂却忘了加键」（看板 A-4）。
+        "switch_declared": {_n: _declared_switch(_n, kind=_k)
+                            for _n, _k in ((_s["name"], _s["kind"]) for _s in AST.ARM_SWITCHES)},
     }
     # 运行期反推（强证据）：在 meta 落盘前算，overwrite 上面的占位
     _decl_wx = meta["switch_declared"]["HITT_WEATHER"]["normalized_effective"]
@@ -477,6 +464,37 @@ def main(argv=None) -> int:
                               "LLM_CALL.payload.prompt_hash"],
     }
 
+    # --- 开关取证（表驱动兜底）：表里登记、但上面没有专门分支的臂 ---------------------
+    # 修复看板 A-4：R53 两臂 meta 的 switch_effective 只有 4 个键、不含 HITT_SCHEDULE_OFFSET
+    # （「加了臂却忘了加键」，R53 是第三次复现）。这里按 ARM_SWITCHES 统一补齐，规则：
+    #   * 有 probe（run.jsonl 结构化审计键）⇒ 命中数 + 四态（与天气/对话臂同口径）
+    #   * 无 probe（纯提示词开关）⇒ 恒 cannot-verify，理由写进 state_rule（**不是**「开关没开」的证据）
+    #   * in_effective=False（如 HITT_WORLD_SEED，种子不是开关）⇒ 不写进 switch_effective
+    for _sw in AST.ARM_SWITCHES:
+        _n = _sw["name"]
+        if not _sw.get("in_effective", True) or _n in meta["switch_effective"]:
+            continue
+        _decl = meta["switch_declared"][_n]["normalized_effective"]
+        _dstate = meta["switch_declared"][_n]["state"]
+        if _sw.get("probe") is None:
+            meta["switch_effective"][_n] = {
+                "effective": "cannot-verify",
+                "declared_on": _decl,
+                "declared_state": _dstate,
+                "state_rule": _sw.get(
+                    "cannot_verify_reason",
+                    "无结构字段可反推 ⇒ 恒 cannot-verify；**不得**据此反推「开关没开」。"),
+                "evidence_pointers": ["switch_declared", "LLM_CALL.payload.prompt_hash"],
+            }
+            continue
+        _eff = AST.probe_runtime(recs, _sw["probe"])
+        _eff["effective"] = AST.fuse_state(_eff["hits"], _decl)
+        _eff["declared_on"] = _decl
+        _eff["declared_state"] = _dstate
+        _eff["state_rule"] = ("结构字段命中>0 ⇒ on（声明 OFF 则 contradiction）；"
+                              "命中==0 ⇒ off（声明 ON 则 cannot-verify，非 OFF 证据）")
+        meta["switch_effective"][_n] = _eff
+
     drops = Counter((r["payload"].get("reason"), r["payload"].get("type"))
                     for r in recs if r["type"] == "DROPPED")
     # 跑批窗口内 code/ 是否被改动（起跑快照 vs 结束快照，只比 code 路径）
@@ -513,6 +531,23 @@ def main(argv=None) -> int:
           f"declared_on={meta['switch_declared']['LIFE_PROMPT_ADDR_EVOLVE']['normalized_effective']} "
           f"declared={meta['switch_declared']['LIFE_PROMPT_ADDR_EVOLVE']['raw']!r}"
           f"  (恒 cannot-verify：称呼文本不入 payload；判据见 M2/M3/M4)")
+
+    # 表驱动开关一览（含 A-4 缺口新增的 HITT_SCHEDULE_OFFSET / HITT_SCENE_FRESH / HITT_NEED_SPEECH
+    # / HITT_D12_DETAIL）：每条一行，declared_state 区分 unset/empty/set。
+    for _sw in AST.ARM_SWITCHES:
+        _n = _sw["name"]
+        if _n in ("HITT_WEATHER", "HITT_DIALOGUE_EMOTION_ECHO",
+                  "HITT_DIALOGUE_REPAIR", "LIFE_PROMPT_ADDR_EVOLVE"):
+            continue  # 上面四条已有更详细的打印
+        _d = meta["switch_declared"][_n]
+        if _n not in meta["switch_effective"]:
+            print(f"[meta] switch.{_n}: declared={_d['raw']!r} state={_d['state']} "
+                  f"(不写入 switch_effective：非臂开关)")
+            continue
+        _e = meta["switch_effective"][_n]
+        _extra = (f"hits={_e['hits']}" if "hits" in _e else "")
+        print(f"[meta] switch.{_n}: declared={_d['raw']!r} state={_d['state']} "
+              f"effective={_e['effective']} {_extra}".rstrip())
 
     # 可选硬闸：只有显式传 --require-weather-state 才拦（缺省 ⇒ 只记录，返回码不变，exit 8 专用）
     if a.require_weather_state is not None:

@@ -11,7 +11,7 @@
 #
 # 闸门（任一失败即退出，不降级）：
 #   0   flock -n /tmp/hitt.batch.lock 试占（真锁由批体全程持有）
-#   0b  三重 pgrep 并发探针（bracket 防自匹配）
+#   0b  并发探针（四条：锚定真实跑批调用形态；bracket 防自匹配）
 #   1   tools/d5/preflight.sh --tag r53-schedule-offset-<arm> --log-dir <out>
 #   2   tools/d5/check_clean_tree.py（code/{life,orchestration,config,engine} 零改动）
 #   2b  code/.env.local 不得混入臂开关（只允许 HITT_LLM_PROVIDER / LLM_API_KEY）
@@ -57,8 +57,28 @@ else
 fi
 
 # ---- 闸门0b ----
-echo "---- [闸门0b] 三重并发检查 ----" | tee -a "$LE"
-for pat in "orchestration[[:space:]]+run" "[r]un_[b]atch" "[n]ightly\.py"; do
+# 探针收窄（事故根因：`pgrep -f` 匹配**整条 cmdline 子串**，人为只读监视壳的命令行里
+# 只要出现字面量 `run_batch.rc`（例如 `ls … | grep -E 'meta.json|run_batch.rc'`）就会被
+# 裸模式 `[r]un_[b]atch` 命中 ⇒ 整臂中止。R52、R53 各中一次，每次约 25 分钟真 LLM 损失）。
+# 修法：只认「真实跑批进程」的调用形态（四条都锚定到可执行/脚本名本身，且要求名字后
+# 紧跟空白或行尾），不做「删检查 / 永远 pass」的降级：
+#   a) `python3 -m orchestration run …`  —— 跑批的 Python 主体（tools/d2/run_batch.sh:58；
+#      要求 `-m` 前缀：仓库里所有真实调用都是 `-m orchestration run`，裸 `orchestration run`
+#      子串同样可能出现在只读壳/RG 命令行里 ⇒ 一并收窄）
+#   b) `bash …/run_batch.sh <args>`       —— 跑批封装；`.sh` 后必须是空白/行尾 ⇒ `run_batch.rc` 不命中
+#   c) `bash …/arm_inner.sh <arm>`        —— 臂批体（launch_arm.sh 用 setsid 拉起）；覆盖
+#                                            「run_batch.sh 还没起来 / 已退出但 flock 仍持有」的窗口
+#   d) `…/nightly.py <args>`              —— 历史夜间批
+# 为什么不漏报：真正的并发只有这四种形态能起跑（launch_arm.sh → arm_inner.sh → run_batch.sh
+# → orchestration run），每条真跑批链路至少命中 (b)+(c) 中的一条；闸门0 的 flock 仍是第一道硬锁。
+GATE0B_PATTERNS=(
+  "[-]m[[:space:]]+orchestration[[:space:]]+run"
+  "[r]un_batch\.sh([[:space:]]|$)"
+  "[a]rm_inner\.sh([[:space:]]|$)"
+  "[n]ightly\.py([[:space:]]|$)"
+)
+echo "---- [闸门0b] 并发检查（${#GATE0B_PATTERNS[@]} 条，锚定真实跑批调用形态）----" | tee -a "$LE"
+for pat in "${GATE0B_PATTERNS[@]}"; do
   if pgrep -f "$pat" >/dev/null 2>&1; then
     pgrep -fa "$pat" | tee -a "$LE"; fail "闸门0b：检出并发进程 /$pat/" 22
   fi

@@ -6,11 +6,17 @@
 #
 # 检查项（按序全部执行，任一项失败即 exit 9）：
 #   1) 三重并发检查（pgrep -f，命中任一即失败）：
-#        a) orchestration[[:space:]]+run       —— 已有跑批在跑世界
-#        b) run_batch                          —— 已有 run_batch 封装在跑
-#        c) nightly\.py                        —— 夜间批在跑
+#        a) -m[[:space:]]+orchestration[[:space:]]+run  —— 已有跑批在跑世界（锚定 `-m` 前缀）
+#        b) run_batch\.sh([[:space:]]|$)      —— 已有 run_batch 封装在跑（**收窄**：见下）
+#        c) nightly\.py([[:space:]]|$)        —— 夜间批在跑
 #      说明：pgrep 会自动排除自身；此外显式排除**当前进程的全部祖先链**，
 #      因此由 run_batch.sh 调用本脚本时不会把自己（run_batch）判成冲突。
+#      **为什么 b 必须收窄**（R52/R53 各被误判一次、每次约 25 分钟真 LLM 损失）：
+#      裸模式 `run_batch` 会命中**任何** cmdline 里含该子串的进程，包括只读监视壳
+#      `ls … | grep -E 'meta.json|run_batch.rc'`（现场证据
+#      v2/evidence/r53-gate0b-falsepositive-20261102/）。收窄后要求 `.sh` 后紧跟空白/行尾，
+#      故 `run_batch.rc` 不命中；真跑批链路 `bash …/run_batch.sh <args>` 仍必然命中。
+#      同一收窄同步用于 tools/r5x/launch_arm.sh 的闸门0b（那里 4 条探针，另含 arm_inner.sh）。
 #   2) 代码树干净度：调用 tools/d5/check_clean_tree.py（冻结区 code/{life,orchestration,config,engine}
 #      有任何 modified/staged/untracked 即失败；退出码 1=FAIL、2=UNDECIDABLE 均按失败处理）。
 #   3) 留存锚点：记录 `git rev-parse HEAD`、分支名、ISO 时间戳与三项检查结果到可留存文件。
@@ -99,9 +105,9 @@ scan_pattern() {
   done
 }
 
-mapfile -t RAW_ORCH < <(scan_pattern orchestration_run 'orchestration[[:space:]]+run')
-mapfile -t RAW_BATCH < <(scan_pattern run_batch 'run_batch')
-mapfile -t RAW_NIGHTLY < <(scan_pattern nightly_py 'nightly\.py')
+mapfile -t RAW_ORCH < <(scan_pattern orchestration_run '[-]m[[:space:]]+orchestration[[:space:]]+run')
+mapfile -t RAW_BATCH < <(scan_pattern run_batch 'run_batch\.sh([[:space:]]|$)')
+mapfile -t RAW_NIGHTLY < <(scan_pattern nightly_py 'nightly\.py([[:space:]]|$)')
 
 HIT_ORCH=("${RAW_ORCH[@]:-}")
 HIT_BATCH=("${RAW_BATCH[@]:-}")
