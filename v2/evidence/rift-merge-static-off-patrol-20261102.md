@@ -1,0 +1,66 @@
+# 合并树「默认全关」静态巡检：逐文件核 off 路径是否原样（只读，未跑批）
+
+- 时间：2026-11-02 04:2x
+- 对象：`origin/master` → 合并树 `d7bb9737cc9b3784ff3a4ca41eac880ff8479518`（**临时树·非当前版**，`merge-tree` 输出，无 ref 指向）
+- 方法：`git diff origin/master <merge> -- code/` 逐 hunk 读，只用 `git show` / `git grep`，**未执行任何代码**
+- 目的：把 `dialogue-core-dev` 待写的 `--static-only` 模式先手工做一遍，缩掉盲跑 A/B 的候选
+
+## 1. 结论先给
+
+**在合并带来的 10 个实现文件里，我逐处核了 off 路径，未找到"未设环境变量时行为会变"的静态候选。**
+⇒ 我前一件写的「`A ≡ B` 很可能不成立」**需要降级为「静态上未见分叉源，仍须实测确认」**。
+
+**这是对 Leader 自己判断的更正，不是对别人的更正。**
+
+## 2. 逐文件核查（每一行都给了判据）
+
+| # | 文件 | 合并带来的改动 | off 时是否原样 | 判据 |
+|---|---|---|---|---|
+| 1 | `code/life/dialogue_repair.py` | +100 | **是** | `observer` 形参默认 `None`，所有 `observer(...)` 调用都在 `if observer is not None:` 内；`rift_ids` 在 `if _cfg().get("rift_events"):` 内；`record_only` / `repair_ask is False` 各自守卫 |
+| 2 | `code/life/agent.py` | +233 | **是** | `obs = self._on_rift_event if dr.get("rift_events") else None`；`dr` 缺该键 ⇒ `None` ⇒ 不传；`_on_rift_event` 只经 `obs` 触达 |
+| 3 | `code/engine/kernel.py` | +17 | **是** | 只新增只读方法 `pending_records()`，**off 时无调用方**（调用方是 `_pending_view()`，见 #6） |
+| 4 | `code/engine/perceive.py` | +46 | **是** | `intra_round_mode()` 未设 env ⇒ `"off"`；`with_pending()` 在 `off` 时**返回入参同一对象**（`repro-verifier` 11-01 已核，`with_pending_calls=0`） |
+| 5 | `code/engine/events.py` | +2 | **是** | 仅向 `EVENT_TYPES` 集合**增加两个成员**；该集合只做成员校验，**不参与排序/序列化** |
+| 6 | `code/engine/replay.py` | +2 | **是** | 仅向 `_NOOP_TYPES` 列表追加两项，`_APPLIERS.setdefault(...)` 为两新类型注册 noop；**既有类型行为不变** |
+| 7 | `code/life/ports.py` | +5 | **是** | 只把 `INTENT_RIFT` 加入 `ALL_INTENT_CLASSES`；唯一用途是 `integration.py:423` 的 `set(...)` **成员校验**，不排序、不枚举落盘 |
+| 8 | `code/orchestration/integration.py` | +72 | **是** | `_pending_view()` 在 `mode == "off"` 时 `return None`；`visibility_query(..., extra=None)` 与原调用等价；`out["dialogue_pick"]` 只在 payload 已带该键时追加（须 `pick_mark` 开） |
+| 9 | `code/orchestration/visibility_index.py` | +13 | **是** | `extra` 新增形参默认 `None`，`None`/空 ⇒ 与引入前一致（docstring 自述并已核调用点） |
+| 10 | `code/config/dialogue_repair.json` | 6 行 | **是** | **只追加 4 个新键**（`repair_ask:null` / `record_only:false` / `pick_mark:false` / `rift_events:false`），**既有键一个未动**（`repro-verifier` 已核同一事实） |
+
+## 3. 三个"看着像风险、实则不是"的点（记下来防止后人重复怀疑）
+
+1. **`dialogue_repair.json` 追加键** —— 担心的"默认值解析被改"不成立：既有键未动，新键由 `_bool` / `_tri` 读，未设时分别回落到 `False` / `None`。
+2. **`EVENT_TYPES` 加成员** —— 担心的"事件类型集合被用于排序"不成立：它是 `set` 字面量，用法只有 `in` 校验。
+3. **`ALL_INTENT_CLASSES` 加成员** —— 担心的"意图枚举被落盘/计数"不成立：全仓唯一消费点 `integration.py:423` 是 `set(...)` 成员校验。
+
+## 4. 这条静态结论**不能替代**实测（边界写死）
+
+- **静态只证"未设 env 时走的还是那些行"，不证"那些行在合并后算出的值相同"**；
+- 合并把 `agent.py` 改了 233 行，即使 off 分支逻辑相同，**函数内局部顺序/变量绑定若有细微改动，仍可能改变输出**——这只有实测能看见；
+- ⇒ 实测（`A vs B`）**仍必须做**；本节的作用只是：**若实测分叉，可直接排除上述 10 处常见怀疑，直奔真正的那一处**。
+
+## 5. 复算命令
+
+```bash
+M=<合并树临时 sha：上表同一串，非当前版>
+git diff origin/master $M -- code/ --stat
+git diff origin/master $M -- code/engine/kernel.py code/engine/events.py code/engine/replay.py code/life/ports.py
+git show $M:code/life/dialogue_repair.py | grep -n -B6 'out\["rift_ids"\]'
+git grep -n "ALL_INTENT_CLASSES" $M -- code/
+```
+
+## 率的定义
+
+**本件不新增任何率**（静态巡检，无分子分母）。
+
+| 率名 | 分子 | 分母 | 计算式（含边界） | 纳入排除 |
+|---|---|---|---|---|
+| 无（只报"10 个实现文件中 10 个 off 路径原样"） | 不适用 | 不适用 | 不适用 | 不适用 |
+
+## 外推与假定
+
+**本件不外推**。结论限于"该合并树的静态 off 路径"，不外推到真 LLM 行为。
+
+| 外推式 | 假定不变的量 | 值来源 |
+|---|---|---|
+| 无 | 不适用 | 不适用 |
