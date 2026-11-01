@@ -52,8 +52,17 @@ ENV = "HITT_DIALOGUE_PUBLIC_REPLY"
 
 #: ① 同一 agent 同一 slot 至多接几条公开话
 MAX_PER_AGENT_PER_SLOT = 1
-#: ② 同一 place 同一 slot 内公开消息总数上限（含首发与接话）
+#: ② 同一 place 同一 slot 内**开场白**上限（不含线程内接话；R44 起分桶，数值不变）
 MAX_PER_PLACE_PER_SLOT = 2
+
+#: ②' R44：同一 place 同一 slot 内**线程内接话**上限（**独立桶**，不与开场白互相吃配额）
+#: 依据见 `v2/refs/prereg-r44-public-reply-inbound.md` §2：R41/R43 把开场白与接话放进同一个桶，
+#: 一个场所里两人各说一句开场白（=2）之后，第三句——恰好是接话——被确定性丢弃，
+#: 而该配额的设计目的（原文「防止 16 个 agent 同处一地时瞬间刷屏」）只针对**开场白**。
+MAX_PLACE_REPLIES_PER_SLOT = 2
+
+#: 配额分桶的合法取值（`kind_of()` 的唯一返回值域）
+KINDS = ("opener", "reply")
 
 #: 信号版本（写进 ctx 审计字段，便于按版本复算）
 VERSION = "r41/1"
@@ -104,7 +113,37 @@ def is_replyable_public(payload: dict, me: str, my_place: str | None,
 
 
 #: 场所配额闸版本（写进 DROPPED 审计字段，便于按版本复算）
-GATE_VERSION = "r43/1"
+#: r44/1：配额按 `kind_of()` 分桶（opener / reply 各有独立上限），替代 r43/1 的单桶计数。
+GATE_VERSION = "r44/1"
+
+
+def kind_of(payload: dict) -> str:
+    """把一条**待发**公开消息归类为 `opener`（开场白）或 `reply`（线程内接话）。
+
+    唯一判据（只看 payload，不读世界态）：
+      * `payload.reply_to` 非空（字符串）⇒ `reply`；
+      * 否则 `payload.turn_index` 转 int 后 > 0 ⇒ `reply`；
+      * 其余（含缺键 / None / 0 / 非法值）⇒ `opener`。
+
+    为什么两条都看：`_send_reply` 写 `reply_to` 与 `turn_index`（>0）两个字段，
+    而 `_initiate` 写 `reply_to=None` / `turn_index=0`；两条同时用可防「上游只给一个」时误判。
+    """
+    p = payload or {}
+    v = p.get("reply_to")
+    if isinstance(v, str) and v.strip():
+        return "reply"
+    t = p.get("turn_index")
+    try:
+        if t is not None and int(t) > 0:
+            return "reply"
+    except (TypeError, ValueError):
+        pass
+    return "opener"
+
+
+def cap_for(kind: str) -> int:
+    """该桶的上限（`kind` 非法 ⇒ 按 `opener`，取更严的那一侧，不放大配额）。"""
+    return MAX_PLACE_REPLIES_PER_SLOT if kind == "reply" else MAX_PER_PLACE_PER_SLOT
 
 
 def _type_of(ev) -> str:
@@ -122,7 +161,8 @@ def _payload_of(ev) -> dict:
     return p or {}
 
 
-def place_slot_count(records, place: str | None, day=None, slot=None) -> int:
+def place_slot_count(records, place: str | None, day=None, slot=None,
+                     kind: str | None = None) -> int:
     """**唯一**的场所配额计数（R43）：同一 `place` + 同一 `day` + 同一 `slot` 的 `MSG_PUBLIC` 条数。
 
     R43 根因修复（R41V-C4 越界的直接原因见 `reports/R41b-public-talk-verify.md` §2.3）：
@@ -147,6 +187,8 @@ def place_slot_count(records, place: str | None, day=None, slot=None) -> int:
         p = _payload_of(ev)
         if place_of(p) != str(place):
             continue
+        if kind is not None and kind_of(p) != kind:
+            continue
         if day is not None and p.get("day") is not None and str(p.get("day")) != str(day):
             continue
         if slot is not None and p.get("slot") is not None and str(p.get("slot")) != str(slot):
@@ -155,10 +197,15 @@ def place_slot_count(records, place: str | None, day=None, slot=None) -> int:
     return n
 
 
-def place_quota_gate(records, place: str | None, day=None, slot=None) -> tuple[bool, int]:
-    """② 唯一判定函数：`(是否放行, 当前已占条数)`。所有调用点都必须走它，不得各自数一遍。"""
-    n = place_slot_count(records, place, day, slot)
-    return (n < MAX_PER_PLACE_PER_SLOT, n)
+def place_quota_gate(records, place: str | None, day=None, slot=None,
+                     kind: str = "opener") -> tuple[bool, int]:
+    """② 唯一判定函数：`(是否放行, 该桶当前已占条数)`。所有调用点都必须走它，不得各自数一遍。
+
+    R44：`kind` ∈ {"opener","reply"}，两个桶**各自**按 `cap_for(kind)` 判，互不挤占。
+    缺省 `kind="opener"` ⇒ 与 r43/1 的「只数开场白」语义一致（向后兼容既有调用）。
+    """
+    n = place_slot_count(records, place, day, slot, kind=kind)
+    return (n < cap_for(kind), n)
 
 
 def public_count_at(slot_events, place: str | None, slot_id: str) -> int:
@@ -170,10 +217,11 @@ def public_count_at(slot_events, place: str | None, slot_id: str) -> int:
     return place_slot_count(slot_events, place, None, slot)
 
 
-def place_quota_ok(slot_events, place: str | None, slot_id: str, day=None) -> bool:
-    """R41 兼容包装：同 place 同 slot（可选再限 day）公开消息总数是否仍有余额。"""
+def place_quota_ok(slot_events, place: str | None, slot_id: str, day=None,
+                   kind: str = "opener") -> bool:
+    """R41 兼容包装：同 place 同 slot（可选再限 day）该桶是否仍有余额（R44 加 `kind`）。"""
     slot = str(slot_id).split("-", 1)[-1] if slot_id else None
-    return place_quota_gate(slot_events, place, day, slot)[0]
+    return place_quota_gate(slot_events, place, day, slot, kind=kind)[0]
 
 
 def agent_quota_ok(slot_public_replies: dict, slot_id: str) -> bool:

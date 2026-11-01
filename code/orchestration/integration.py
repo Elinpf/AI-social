@@ -188,7 +188,7 @@ def _r41_public_place(agent_id: str, st) -> str | None:
     return st.agents.get(agent_id, {}).get("location")
 
 
-def _r43_place_gate(st, place, day, slot) -> tuple[bool, int]:
+def _r43_place_gate(st, place, day, slot, kind: str = "opener") -> tuple[bool, int]:
     """R43（additive）：场所配额的**唯一强制点**（唯一判定函数在 `life/public_talk.py`）。
 
     返回 `(是否放行, 当前已占条数)`；臂关闭（默认）⇒ 恒 `(True, -1)`，不数、不放事件
@@ -201,6 +201,10 @@ def _r43_place_gate(st, place, day, slot) -> tuple[bool, int]:
         首发与接话两条路径在此汇合，不会再出现「各自看到 1 条、各自放行」。
 
     纪律：只读；不新增真相源、不改可见性、不进 `state_hash`。
+
+    R44（additive）：`kind` ∈ {"opener","reply"} 由 `life/public_talk.py::kind_of(p)` 从**待发
+    intent 的 payload** 推出，两个桶各有独立上限 ⇒ 一人开场白之后，同场所的接话不再被
+    「开场白已满 2 条」挤掉（依据 `v2/refs/prereg-r44-public-reply-inbound.md` §2 D-2）。
     """
     try:
         from life import public_talk as PT
@@ -208,7 +212,7 @@ def _r43_place_gate(st, place, day, slot) -> tuple[bool, int]:
         return True, -1
     if not PT.enabled():
         return True, -1
-    return PT.place_quota_gate(st.event_index.values(), place, day, slot)
+    return PT.place_quota_gate(st.event_index.values(), place, day, slot, kind=kind)
 
 
 def _r43_gate_version() -> str | None:
@@ -904,11 +908,18 @@ class KernelAdapter:
             # 这里改在**写入口**判：`state.event_index` 含本回合 arbiter 缓冲
             # （`engine/arbiter.py::emit` → `replay.apply_event` 已落索引），且 intent 逐条
             # 应用 ⇒ 首发与接话**汇入同一道闸**、串行计数，不再各自数一遍。
-            place_ok, place_n = _r43_place_gate(st, place, t["day"], t["slot"])
-            if not place_ok:   # 同 day×slot×place 已满 ⇒ 确定性截断 + DROPPED{quota_place}
+            # R44：按「开场白 / 线程内接话」分桶后过闸（唯一判定函数仍是 PT.place_quota_gate）
+            try:
+                from life import public_talk as _PT
+                _kind = _PT.kind_of(p)
+            except ImportError:      # 极简桩环境 ⇒ 退化为原路径（按开场白口径）
+                _kind = "opener"
+            place_ok, place_n = _r43_place_gate(st, place, t["day"], t["slot"], kind=_kind)
+            if not place_ok:   # 该桶同 day×slot×place 已满 ⇒ 确定性截断 + DROPPED{quota_place}
                 seq = self._emit("DROPPED", {"type": "MSG_PUBLIC", "reason": "quota_place",
                                              "author": agent_id, "day": t["day"],
                                              "slot": t["slot"], "place": place,
+                                             "kind": _kind,
                                              "n_place": place_n, "gate": _r43_gate_version()},
                                  phase=PHASE_COMMUNICATE, actor=agent_id)
                 return IntentResult(ok=False, reason="quota_place", event_seqs=(seq,))

@@ -172,11 +172,17 @@ def test_on_but_different_place_not_replyable(monkeypatch, tmp_path):
 
 
 def test_on_but_place_quota_exhausted(monkeypatch, tmp_path):
-    """同 place 同 slot 已有 2 条公开消息 ⇒ 不再接（防刷屏）。"""
+    """R44 口径变更后的断言（**有意改断言**，依据 `v2/refs/prereg-r44-public-reply-inbound.md` §2 D-2）：
+
+    R41/R43 单桶时：同 place 同 slot 已有 2 条**开场白** ⇒ 接话也被挡（旧断言 `is None`）。
+    R44 分桶后：2 条开场白只占满**开场白桶**，**接话桶**仍空 ⇒ 接话被允许；
+               接话桶自己满（2 条）时才挡（见 `test_r44_reply_bucket_has_its_own_cap`）。
+    """
     monkeypatch.setenv(PT.ENV, "1")
     _, agent = _build(tmp_path)
-    wv = _wv([_arrived(1), _pub(2), _pub(3, author="P005")])
-    assert agent._pick_reply_target(wv, dict(DT.DEFAULTS)) is None
+    wv = _wv([_arrived(1), _pub(2), _pub(3, author="P005", thread="TH-P005-PUB-1-1")])
+    target = agent._pick_reply_target(wv, dict(DT.DEFAULTS))
+    assert target is not None and target.type == "MSG_PUBLIC"
 
 
 # ---------------------------------------------------------------- 6) place 注入
@@ -194,3 +200,60 @@ def test_integration_place_injection_on_uses_agent_location(monkeypatch):
     assert IG._r41_public_place("P003", st) == "market"
     # 未知 agent ⇒ None（不抛错，不崩批）
     assert IG._r41_public_place("P999", st) is None
+
+
+# ---------------------------------------------------------------- 7) R44 配额分桶
+def test_r44_kind_of_classifies_opener_and_reply():
+    """`kind_of` 唯一分类：reply_to 非空 或 turn_index>0 ⇒ reply；其余 ⇒ opener。"""
+    assert PT.kind_of({"reply_to": "42:189", "turn_index": 1}) == "reply"
+    assert PT.kind_of({"reply_to": "42:189", "turn_index": 0}) == "reply"
+    assert PT.kind_of({"reply_to": None, "turn_index": 3}) == "reply"
+    assert PT.kind_of({"reply_to": None, "turn_index": 0}) == "opener"
+    assert PT.kind_of({"reply_to": "", "turn_index": "0"}) == "opener"
+    assert PT.kind_of({}) == "opener"
+    assert PT.kind_of({"reply_to": None, "turn_index": "abc"}) == "opener"   # 非法值不抛错
+
+
+def test_r44_bucket_caps_are_independent_constants():
+    assert PT.MAX_PER_PLACE_PER_SLOT == 2           # 开场白上限：数值不变（R41V-C4 同阈值）
+    assert PT.MAX_PLACE_REPLIES_PER_SLOT == 2       # 接话上限：独立桶
+    assert PT.cap_for("opener") == 2
+    assert PT.cap_for("reply") == 2
+    assert PT.cap_for("不存在") == PT.MAX_PER_PLACE_PER_SLOT   # 非法 kind ⇒ 按更严的 opener
+    assert PT.GATE_VERSION == "r44/1"
+
+
+def test_r44_opener_bucket_full_does_not_block_reply_bucket():
+    """**本轮核心机制**：同 place 同 slot 已有 2 条开场白 ⇒ 开场白桶满，但接话桶仍放行。"""
+    evs = [_pub(1), _pub(2, author="P005", thread="TH-P005-PUB-1-1")]
+    # 开场白桶已满
+    assert PT.place_slot_count(evs, "market", 1, "morning", kind="opener") == 2
+    assert PT.place_quota_gate(evs, "market", 1, "morning", kind="opener") == (False, 2)
+    # 接话桶空 ⇒ 放行（R43 的单桶口径下这里是 False，接话会被丢掉）
+    assert PT.place_slot_count(evs, "market", 1, "morning", kind="reply") == 0
+    assert PT.place_quota_gate(evs, "market", 1, "morning", kind="reply") == (True, 0)
+    # 兼容口径：kind=None ⇒ 总数（老语义不变）
+    assert PT.place_slot_count(evs, "market", 1, "morning") == 2
+
+
+def test_r44_reply_bucket_has_its_own_cap():
+    """接话桶自己也会满（≤2），防「一个场所无限对答」。"""
+    base = [_pub(1), _pub(2, author="P005", thread="TH-P005-PUB-1-1")]
+    replies = [_pub(3 + i, author=f"P00{6 + i}", thread="TH-P007-PUB-1-0", turn=1)
+               for i in range(2)]
+    for r in replies:                       # 只有 reply 桶成员带 reply_to
+        r.payload["reply_to"] = "42:1"
+    evs = base + replies
+    assert PT.place_slot_count(evs, "market", 1, "morning", kind="reply") == 2
+    assert PT.place_quota_gate(evs, "market", 1, "morning", kind="reply") == (False, 2)
+
+
+def test_r44_agent_prefilter_uses_reply_bucket(monkeypatch):
+    """决策侧预过滤必须按接话桶判，否则分桶在写入口永远用不上（改动退化成空转）。"""
+    monkeypatch.setenv(PT.ENV, "1")
+    _, agent = _build(Path("/tmp/r44_agent_prefilter"))
+    # 同处一条 PLACE_ARRIVED + 两条开场白（占满开场白桶）
+    wv = _wv([_arrived(1), _pub(2), _pub(3, author="P005", thread="TH-P005-PUB-1-1")])
+    target = agent._pick_reply_target(wv, dict(DT.DEFAULTS))
+    assert target is not None, "开场白桶满不应再挡掉接话（R44 分桶的核心效果）"
+    assert target.type == "MSG_PUBLIC"

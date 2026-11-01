@@ -220,18 +220,59 @@ def test_gate_key_is_day_slot_place():
 
 # ---------------------------------------------------------------- 真实证据回归
 def test_real_violating_groups_are_capped_at_two(monkeypatch):
-    """四组真实越界用例串行过闸后每组 ≤2，且被丢的是最后到的那条。"""
+    """真实越界四组在 **R44 分桶口径**下的期望（口径变更见
+    `v2/refs/prereg-r44-public-reply-inbound.md` §2 D-2 与 §7）。
+
+    R43 单桶：每组总数被截到 2（接话与开场白互相吃配额）。
+    R44 分桶：**每个桶各自 ≤2**（开场白 `MAX_PER_PLACE_PER_SLOT=2`、接话
+    `MAX_PLACE_REPLIES_PER_SLOT=2`），合计最多 4；被丢的仍是**该桶**最后到的那条。
+
+    | 组 | 开场白 | 接话 | R43 结果 | R44 结果 |
+    |---|---|---|---|---|
+    | farm / school(d0) / school(d1) | 1 | 2 | 截到 2 | 3 全放行（两桶都未满） |
+    | bank(d0 afternoon) | 3 | 0 | 截到 2 | 截到 2（开场白桶满） |
+    """
     monkeypatch.setenv(PT.ENV, "1")
+    out = {}
     for key, rows in REAL_VIOLATIONS.items():
         day = 0 if key[0] == "day0" else 1
         accepted, dropped = [], []
         for seq, author, rnd, _day, slot, place, turn, reply_to in rows:
-            ok, _n = IG._r43_place_gate(_st(accepted, rnd=rnd), place, day, slot)
+            kind = PT.kind_of({"turn_index": turn, "reply_to": reply_to})
+            ok, _n = IG._r43_place_gate(_st(accepted, rnd=rnd), place, day, slot, kind=kind)
             rec = _rec(seq, author, place=place, day=day, slot=slot, rnd=rnd)
             rec["payload"]["turn_index"], rec["payload"]["reply_to"] = turn, reply_to
+            rec["payload"]["_kind"] = kind
             (accepted if ok else dropped).append(rec)
-        assert len(accepted) == 2, (key, [r["seq"] for r in accepted])
-        assert len(dropped) == 1 and dropped[0]["seq"] == max(r[0] for r in rows), key
+        n_open = sum(1 for r in accepted if r["payload"]["_kind"] == "opener")
+        n_reply = sum(1 for r in accepted if r["payload"]["_kind"] == "reply")
+        assert n_open <= PT.MAX_PER_PLACE_PER_SLOT, (key, n_open)
+        assert n_reply <= PT.MAX_PLACE_REPLIES_PER_SLOT, (key, n_reply)
+        out[key] = (n_open, n_reply, [r["seq"] for r in dropped])
+    # 逐组写死（写死才不会被"两桶都放宽"蒙混过去）
+    assert out[("day0", "morning", "farm")] == (1, 2, [])
+    assert out[("day0", "morning", "school")] == (1, 2, [])
+    assert out[("day1", "morning", "school")] == (1, 2, [])
+    assert out[("day0", "afternoon", "bank")] == (2, 0, [2339])   # 开场白桶满，丢最后到的一条
+
+
+def test_r44_bucket_split_differs_from_r43_single_bucket(monkeypatch):
+    """同一组真实数据：单桶口径（R43）与分桶口径（R44）**必须给出不同结果** —— 否则改动是空转。"""
+    monkeypatch.setenv(PT.ENV, "1")
+    rows = REAL_VIOLATIONS[("day0", "morning", "farm")]      # 1 开场白 + 2 接话
+    acc_single, acc_split = [], []
+    for seq, author, rnd, _day, slot, place, turn, reply_to in rows:
+        rec = _rec(seq, author, place=place, day=0, slot=slot, rnd=rnd)
+        rec["payload"]["turn_index"], rec["payload"]["reply_to"] = turn, reply_to
+        # 单桶口径（= R43 语义，kind=None ⇒ 只按总数判）
+        if PT.place_slot_count(acc_single, place, 0, slot) < PT.MAX_PER_PLACE_PER_SLOT:
+            acc_single.append(rec)
+        # 分桶口径（R44）
+        kind = PT.kind_of({"turn_index": turn, "reply_to": reply_to})
+        if IG._r43_place_gate(_st(acc_split, rnd=rnd), place, 0, slot, kind=kind)[0]:
+            acc_split.append(rec)
+    assert len(acc_single) == 2          # R43：接话被开场白挤掉
+    assert len(acc_split) == 3           # R44：两桶各自未满，接话被保住
 
 
 def test_old_architecture_reproduces_the_violation():

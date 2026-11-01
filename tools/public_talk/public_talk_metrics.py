@@ -140,6 +140,15 @@
        附带修正 `msg_graph_degree.pub_out_degree_reply_nonnull` 把该回退项一并计入。
        **口径改动不等于改善**：旧读数（含 `v2/evidence/r41v_public_talk_readings/*`）
        系旧口径，不得与新读数直接比大小。
+    R44 (v6，口径版本 `public-talk-deg/2`) **只追加**入度主口径：
+       `pub_in_degree_total_any` = 任一消息事件（DM/PUB/GROUP）的 `reply_to` 命中某条
+       MSG_PUBLIC 的 `msg_uid` 的边数；配套 `pub_in_degree_by_channel` /
+       `pub_replied_uid_count` / `pub_in_degree_zero_any` / `isolated_nodes_any`。
+       旧字段 `pub_in_degree_total`（= 只数 DM 边）语义不变、降级为兼容口径：
+       在 `HITT_DIALOGUE_PUBLIC_REPLY=1` 的批里它会把「公开面被公开面接住」的边
+       整体漏掉（d47 实测 旧 0 / 新 4）⇒ 引用入度请用 `*_any`。
+       同时把 `note` 从写死文案改为按实测值拼接（CYCLE-47 §159 登记的文案硬化）。
+       **旧读数不得与新读数直接比大小**。
 """
 from __future__ import annotations
 
@@ -743,11 +752,35 @@ def main() -> int:
     pub_out_reply = (forms["real_message_id"] + forms["real_message_id_legacy_msg_id"]
                      + forms["other"])
     pub_out_refs = sum(1 for pl in pub_payloads if isinstance(pl.get("refs"), (list, tuple)) and len(pl["refs"]) > 0)
+    # R44（口径 `public-talk-deg/2`，**只追加**）：真入度 = **任一**消息事件
+    # （DM / PUB / GROUP）的 `reply_to` 命中某条 PUB 的 `msg_uid` 的边数。
+    # 旧字段 `pub_in_degree_total` 等价于「只数 DM 边」(`dm_hit_pub`)，在
+    # `HITT_DIALOGUE_PUBLIC_REPLY=1` 的批里会**整体漏掉**「公开面被公开面接住」这一类边
+    # （d47 实测：旧 0 / 新 4）。旧字段语义不变，降级为 dm-only 兼容口径。
+    pub_in_edges: list[tuple[str, str]] = []   # (回复方类型, 被回复的 PUB msg_uid)
+    for t, pl in ((t, pl) for _, t, pl in rows_msg):
+        v = pl.get("reply_to")
+        if isinstance(v, str) and v and v in pub_uid:
+            pub_in_edges.append((t, v))
+    in_by_channel: dict[str, int] = {}
+    for t, _ in pub_in_edges:
+        in_by_channel[t] = in_by_channel.get(t, 0) + 1
+    pub_in_total_any = len(pub_in_edges)
+    pub_replied_uid_count = len({u for _, u in pub_in_edges})
     msg_graph_degree = {
         "stat_unit": "边（reply_to 引用关系）",
+        "ruler_version": "public-talk-deg/2",
         "dm_reply_to_nonnull": len(dm_reply),
         "dm_reply_to_hit_dm_msg_uid": dm_hit_dm,
         "dm_reply_to_hit_pub_msg_uid": dm_hit_pub,
+        # R44 新增（主口径）：任一消息事件命中 PUB msg_uid 的入度
+        "pub_in_degree_total_any": pub_in_total_any,
+        "pub_in_degree_by_channel": dict(sorted(in_by_channel.items())),
+        "pub_replied_uid_count": pub_replied_uid_count,
+        "pub_in_degree_zero_any": pub_in_total_any == 0,
+        "isolated_nodes_any": (pub_in_total_any == 0 and pub_out_reply == 0 and pub_out_refs == 0),
+        # 兼容字段（语义不变）：只数 DM 边 ⇒ 在「公开面被公开面接住」的批里会低估，
+        # 引用时请用 `pub_in_degree_total_any`（见 reports round-1-public-reply.md §R44-C0）
         "pub_in_degree_total": dm_hit_pub,
         "pub_out_degree_reply_nonnull": pub_out_reply,
         "pub_out_degree_refs_nonempty": pub_out_refs,
@@ -758,8 +791,22 @@ def main() -> int:
         "probe": True,
         "not_a_judgment": True,
         "note": (
-            f"DM 的 reply_to 非空 {len(dm_reply)} 条全部命中 DM msg_uid（{dm_hit_dm}/{len(dm_reply) if dm_reply else 0}），"
-            f"命中 PUB msg_uid = {dm_hit_pub} ⇒ 公开消息在消息图里入度 0、出边 0，是孤立节点"
+            f"DM 的 reply_to 非空 {len(dm_reply)} 条中命中 DM msg_uid {dm_hit_dm} 条、"
+            f"命中 PUB msg_uid {dm_hit_pub} 条（dm-only 兼容口径）；"
+            f"任一消息事件命中 PUB msg_uid = {pub_in_total_any} 条"
+            f"（按类型：{dict(sorted(in_by_channel.items())) or '{}'}）⇒ "
+            + ("公开消息在消息图里入度 0、出边 "
+               f"{pub_out_reply + pub_out_refs}（= 回复边 {pub_out_reply} + refs {pub_out_refs}），"
+               "按 public-talk-deg/2 判为孤立节点"
+               if pub_in_total_any == 0 and pub_out_reply == 0 and pub_out_refs == 0
+               else f"公开消息入度 {pub_in_total_any}（其中被公开面接住 "
+                    f"{in_by_channel.get('MSG_PUBLIC', 0)} 条）、出边 "
+                    f"{pub_out_reply + pub_out_refs}（= 回复边 {pub_out_reply} + refs {pub_out_refs}），"
+                    "不是孤立节点")
+        ),
+        "legacy_note": (
+            "CYCLE-47 §159 登记过：旧 note 把 `出边 0` 写死，与实测 pub_out_degree_reply_nonnull>0 不一致；"
+            "自 public-talk-deg/2 起 note 由实测值拼接（不再写死）"
         ),
     }
 

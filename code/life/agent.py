@@ -1153,8 +1153,11 @@ class LifeLayerAgent:
                 # `PT.place_quota_ok` → `PT.place_quota_gate`，键同为 day+slot+place）；
                 # **裁决点**在写入口 `orchestration/integration.py::_do_social`，
                 # 因为它才看得到本回合已放行的消息（本函数只有决策时点可见集）。
+                # R44：这里的预过滤按**接话桶**判（`kind="reply"`），与写入口
+                # `integration._do_social` 的分桶口径一致；否则「开场白已满 2 条」会在决策侧
+                # 就把接话全部挡掉，写入口的分桶永远用不上（改动退化为空转）。
                 if not PT.place_quota_ok(wv.visible_events, PT.place_of(p), pub_slot,
-                                         day=wv.time.day):
+                                         day=wv.time.day, kind="reply"):
                     continue
             else:
                 if ev.type not in ("MSG_DM", "MSG_GROUP"):
