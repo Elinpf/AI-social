@@ -1,0 +1,53 @@
+# A1 处境锚臂 逐项验收表（C1 · attempt2，复核者：run-observer 2026-11-01）
+
+- 批次目录：`v2/evidence/c1-scene-a1-20261101_n16r24_s42`
+- run.jsonl 绝对路径：`/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/c1-scene-a1-20261101_n16r24_s42/run.jsonl`
+- 托管：`systemd-run` 瞬态 service `hitt-c1-a1-20261101T104402.service`（见 host.log 首行 `mode=systemd-run-service`）
+- 起跑 10:44:02（host.log `started_at=2026-11-01T10:44:02+08:00`）/ meta.started_at 10:44:03 / 收尾 11:06:42，`run_batch.rc=0`
+- 代码锚：`code_sha = code_sha_end = 8b64615b0c717a5a42db8d40ae9fff5b469cfe7d`（跑批期间零漂移，与 A0 同码）
+
+## 逐项值
+
+| 项 | 实测值 | 判定 |
+|---|---|---|
+| `run_batch.rc` | `0` | PASS |
+| `meta.json` | 存在，45571 B | PASS |
+| `wc -l run.jsonl` | `34075` | — |
+| `meta.events` | `34075` | PASS（相等） |
+| `duration_sec` | `1359`（22 分 39 秒） | — |
+| `llm_calls` / `engine_log.total.calls` | `2255` / `2255` | PASS（>0） |
+| `tokens_total` | `321172`（in 173233 / out 147939） | — |
+| `llm_cached` / `llm_cached_ratio` | `1387` / `0.6151` | — |
+| `degraded_calls` / `degraded` | `0` / `0` | PASS |
+| `provider_guard.ok` | `true` | PASS |
+| `by_provider` 键集合 | `['openai_compat']`（唯一，计数 2255） | PASS |
+| `obs llm-cost --require-provider openai_compat` | `rc=0`，落 `llm_cost.txt` | PASS |
+| `assertions.code_unchanged_during_run` | `null` | 如实报 null（与 A0 同型） |
+| `assertions.participants_consistent` | `false` | 如实报（与 A0 同型） |
+| `assertions.participants_violations` | `9` | 如实报（与 A0 同数 ⇒ 对称） |
+| `n` / `n_declared` / `n_in_log` | `16` / `16` / `16` | PASS |
+| `rounds` / `rounds_declared` / `rounds_effective` / `rounds_contiguous` | `24` / `24` / `24` / `true` | PASS |
+| `msg_counts` | `MSG_DM=161, MSG_PUBLIC=30`（对话类合计 191，与 A0 相同） | — |
+| `fallback_detected` | `false` | PASS |
+| `provider` / `model` / `endpoint_host` | `openai_compat` / `DeepSeek-Flash` / `172.16.3.41:31809` | — |
+| `run_sha256` | `c828b4075f027917ce883670564b2a827b4f1feecd322315619f9ecbe9324633` | — |
+
+## 关于 `llm_cost.txt` / `llm_cost.gate.out` 起初缺失（已查清，不是验真缺失）
+
+- 根因：`tools/d2/run_batch.sh:81` 把门禁输出写死到 **`/tmp/d2_llmcost_$$.out`**，`tail -3` 后不落批次目录 ⇒ 批次目录里「没有 llm_cost.txt」是**落点问题**，不是门禁没跑。A0 同型（A0 已在其 `A0_ACCEPT.txt` 里记录）。
+- 本轮门禁真实落点（复核时仍在）：`/tmp/d2_llmcost_1251980.out`，mtime `2026-11-01 11:06:43`，1119 B，其 `engine_log.total.calls=2255`、`provider_guard.ok=true`；`$$=1251980` 与本批 host.log 末行 `finished_at=2026-11-01T11:06:43+08:00 rc=0` 时刻一致。
+- 归档做法（**零跑批、零 LLM 调用**）：
+  1. `cp -p /tmp/d2_llmcost_1251980.out v2/evidence/c1-scene-a1-20261101_n16r24_s42/llm_cost.gate.out`（保留原 mtime，作为「门禁当时输出」的原始落点档）；
+  2. `cd code && python3 -m obs llm-cost --log ../v2/evidence/c1-scene-a1-20261101_n16r24_s42/run.jsonl --require-provider openai_compat > ../v2/evidence/c1-scene-a1-20261101_n16r24_s42/llm_cost.txt`（`rc=0`，生成时刻 2026-11-01T12:11 前后）；
+  3. `cmp -s /tmp/d2_llmcost_1251980.out llm_cost.txt` ⇒ **BYTE_IDENTICAL**（复算与门禁原件逐字节相同，说明归档不是新结论、只是换落点）。
+
+## 与 A0 的可比性（单变量核对）
+
+- `diff` 两臂 `env_manifest.txt` ⇒ 差异**只有 `LIFE_PROMPT_SCENE` 一行**（A0 无、A1 有）；其余键 `HITT_DIALOGUE_PUBLIC_REPLY / HITT_LLM_PROVIDER / HITT_WORLD_SEED / LLM_API_KEY` 相同。
+- 同参数：`seed=42 agents=16 rounds=24 flush_every=2`；同 `code_sha`；同 `model`。
+
+## 已知数据完整性边界（复核留痕，务必连同结论一起引用）
+
+- 本臂的 `attempt1`（10:43:32 起，误用 A0 的 side_root）**不是本表所述批次**：其产物已移入 `attempt1_wrong_side_root/`（1694 行、round 0–1、末事件 round1 TURN_SEAL seq=1693 @10:43:47，随后中止）。
+- 该 attempt1 在 A0 的 side_root 写下 **211 个 freeze_cache 文件**（mtime 区间 10:43:33–10:43:47，晚于 A0 收批 10:34:22）⇒ A0 的 `run.jsonl` 未受影响，但**任何读 A0 side_root 缓存的二次分析必须按 mtime ≤10:34:22 过滤**。
+- 本臂（正式 A1）自身 side_root `/tmp/c1_scene_a1_n16r24_s42_side` 最早文件 mtime 10:44:06，晚于本臂起跑 ⇒ 本臂未读到 attempt1 的残留。

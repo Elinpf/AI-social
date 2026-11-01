@@ -1,0 +1,8 @@
+dialogue=191 scene_key=0 anchor_match=0 anchor_mismatch=0 mismatch_rate=0.0000
+anchor_eq_from_place=0 (NA) neither_from_nor_to=0
+falsify_H2_no_move_but_mismatch=0 falsify_H3_place_ne_to_place=0
+
+# 逐条明细（seq | round | actor | 消息place | 锚place | 前置移动 from→to | 正文前40字）
+
+# 判伪反例（非空即推翻「移动前快照」解释）
+(none：锚点场所 100% 落在 from_place 上)

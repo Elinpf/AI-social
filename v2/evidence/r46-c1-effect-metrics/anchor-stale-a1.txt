@@ -1,0 +1,95 @@
+dialogue=191 scene_key=191 anchor_match=104 anchor_mismatch=87 mismatch_rate=0.4555
+anchor_eq_from_place=87 (100.00%) neither_from_nor_to=0
+falsify_H2_no_move_but_mismatch=0 falsify_H3_place_ne_to_place=0
+
+# 逐条明细（seq | round | actor | 消息place | 锚place | 前置移动 from→to | 正文前40字）
+53 | 0 | P002 | library | residence | residence→library | 天刚亮，手就闲不住。（把刨子往木料上一推，薄木花卷着落下来）给老周家闺女打的樟木
+73 | 0 | P004 | library | residence | residence→library | （把沾着面粉的手在围裙上蹭了蹭）这两天忙不忙？我正揉着一盆老面，想跟你讨个准头—
+84 | 0 | P005 | workshop | residence | residence→workshop | （把药碾子里的黄芪又过了一遍筛）唉，这味药磨得还是粗了些，回头给李家那娃子敷上怕
+113 | 0 | P008 | library | residence | residence→library | 周公文，（把砚台往桌角挪了挪）这一笔总写不直，你说是不是手腕还欠点火候？
+124 | 0 | P009 | park | residence | residence→park | （把算盘珠子拨回原位）今早这账本翻了三遍，你那边铺子的流水对上了没？（搁下笔）账
+135 | 0 | P010 | park | residence | residence→park | 金先生，（把琴盒扣上，指节在拉链头上蹭了两下）天刚亮我就把昨晚那段副歌拆开重排，
+145 | 0 | P011 | park | residence | residence→park | （把木剑往地上一戳，歪头看你）桂婶这会儿在院里晒萝卜干呢吧
+156 | 0 | P012 | school | residence | residence→school | （把泡着的粽叶从盆里捞起来抖了抖水）兰姐，我这粽叶泡了一上午还是发脆，你手巧，教
+167 | 0 | P013 | school | residence | residence→school | （把炉边的风箱拉了两下，火星子溅出来）天没亮透就生火，铁还没红。你那边咋样？
+178 | 0 | P014 | park | residence | residence→park | （拿锉刀蹭了蹭刚捡的铜片边角）小满？这名字听着就顺耳——我正给王婶家小孙子磨个铜
+189 | 0 | P015 | farm | residence | residence→farm | （把灶上那锅昨晚剩的米汤又添了把新米，拿长柄勺慢慢搅着）这么早起来，是心里搁着事
+200 | 0 | P016 | park | residence | residence→park | 陈医，我这正把摊上剩的几把干艾草扎成小捆呢，你练功歇口气的时候帮我瞅瞅这成色吧
+2213 | 3 | P001 | market | farm | farm→market | （把锄头往垄沟里一插，抹了把汗）老石啊，我这正给玉米培土呢，晌午头太阳毒，地皮都
+2226 | 3 | P002 | market | library | library→market | （把刨子往木料上一搁）这阵子忙得脚不沾地吧，金先生家那批桌椅还赶不赶得上？
+2248 | 3 | P004 | market | library | library→market | （把摊在膝头的《面点谱》往旁边挪了挪，指尖还沾着书页上的灰）周公文，我正琢磨这书
+2253 | 3 | P005 | bank | workshop | workshop→bank | （把摊在膝头的《本草备要》往桌角推了推，指腹还沾着刚碾的艾绒）攒钱这事啊，我倒是
+2278 | 3 | P008 | bank | library | library→bank | （把摊开的账本往桌边挪了挪）老周啊，这月的定存我又添了一笔，利息虽薄，好歹是个进
+2299 | 3 | P009 | market | park | park→market | （把保温杯搁在长椅扶手上，拧开盖吹了吹）练功跟对账一个理，卡住的那小节，先拆成两
+2320 | 3 | P010 | farm | park | park→farm | 哎，我刚拿脚尖在石板缝里一下一下点第三小节，点着点着倒把拍子点散了——你说这账，
+2341 | 3 | P011 | bank | park | park→bank | 哟，你这小雀儿翅膀还没刻出来呢。（用指甲在木片边缘划了道浅痕）我拿砂纸给你蹭两下
+2354 | 3 | P012 | cafe | school | school→cafe | （哎，我赶紧把灶上那锅水又添了把柴，顺手从窗台摸出碱面罐子）兰姐你这么一说我就明
+2388 | 3 | P014 | workshop | park | park→workshop | （晃了晃手里的铜铃铛）你那犁头磨到哪一步了？我这铃铛刚给王婶家小孙子拴上红绳。喏
+2420 | 3 | P016 | bank | park | park→bank | （把摊上的艾草往旁边挪了挪，腾出块地方）你这手艺我信得过，就是我这摊子刚摆开，绳
+5016 | 6 | P002 | community_center | market | market→community_center | （把刨子往木凳上一搁）你那花生地今年墒情咋样？我这有个榫头还没合严，得赶天黑前弄
+5025 | 6 | P003 | plaza | farm | farm→plaza | （把沾泥的麻绳往腰上缠了缠）这黑天还在地里忙呢，巧儿家那袋新挖的红薯我搁门口了，
+5046 | 6 | P004 | community_center | market | market→community_center | （把油纸包往老石手里一塞）刚出炉的枣泥酥，你拿回去给婶子尝尝。我这摊子一收就得赶
+5067 | 6 | P005 | cafe | bank | bank→cafe | （把算盘珠子拨回去，抬眼看了看窗外渐暗的天）哎，我这摊子清闲，是因为晌午前给李家
+5072 | 6 | P006 | plaza | school | school→plaza | （把红笔搁在作业本上，抬头看了看窗外）哎，阿禾，我这儿刚批完一摞本子，桌角还剩半
+5093 | 6 | P007 | park | market | market→park | （把摊上最后两把干豇豆拢到一块儿，掂了掂）今儿这价压得低，我正琢磨要不要给西街王
+5114 | 6 | P008 | community_center | bank | bank→community_center | （把柜台上的印泥盒盖好）阿林，天快黑了，你帮我把这份单子按手印的地方再核一遍。
+5135 | 6 | P009 | cafe | market | market→cafe | （把账本往腋下一夹，弯腰捡起摊边一颗滚落的铜板）哎，劈柴也算练功，账要平，人也要
+5144 | 6 | P010 | cafe | farm | farm→cafe | （把锄头往垄沟边一靠，鞋帮上还沾着湿泥）数出声就数出声，我这就把刚翻的那畦萝卜地
+5165 | 6 | P011 | plaza | bank | bank→plaza | （把木料往灯下挪了挪，眯眼瞧那道新纹）巧儿你这手真稳，我上回刻个雀儿，翅膀直接崩
+5191 | 6 | P013 | cafe | bank | bank→cafe | （把铁钳往柜台上一搁，炉灰还沾着袖口）这年头连糖糕都得抢，我那铁料上个月就断供了
+5196 | 6 | P014 | plaza | workshop | workshop→plaza | （把砂纸往桌上一搁，木屑沾了满手）你那犁头要是李叔又拖，我明儿顺路帮你催催——我
+5222 | 6 | P016 | cafe | bank | bank→cafe | （把算盘珠子拨回原位，账本合上压住一沓零钱）刚给东街豆腐坊结了这月的账，人家急着
+5623 | 7 | P001 | plaza | market | market→plaza | （把手里的麻绳往筐沿上绕了两圈）你那榫头还差多少？我这花生地墒情一般，倒是想问问
+8219 | 9 | P002 | residence | community_center | community_center→residence | （把刨子往凳上一搁，木屑还沾在袖口）笋尖我收下，正好给东头老周家打个碗柜，缺个由
+8274 | 9 | P003 | residence | plaza | plaza→residence | （把麻绳往扁担上又绕了一圈）刚给东头老周家送完两筐菜苗，顺道过来歇脚。南瓜饼我收
+8323 | 9 | P004 | residence | community_center | community_center→residence | （把糖糕翻了个面，油纸底下洇出一小圈糖印）春耕可不等人，赵家那锄头要是误了，他媳
+8436 | 9 | P006 | residence | plaza | plaza→residence | （把夹在腋下的作业本抽出来翻了翻，纸角还沾着点红笔印）你家小子的我单独搁上头了，
+8475 | 9 | P007 | residence | park | park→residence | 周公文，楼道灯我昨天找物业老陈说了，他答应今儿下午来换，我出门前把新灯泡搁在二楼
+8521 | 9 | P008 | residence | community_center | community_center→residence | （拿扇子对着单子轻轻扇了两下）墨是得晾晾，上回老赵家小子按完手印蹭了一袖子，闹到
+8582 | 9 | P009 | residence | cafe | cafe→residence | （把账本往桌上一摊，指尖点着最后一行）哎，练功也得先看账，我这本子还差三块钱对不
+8699 | 9 | P011 | residence | plaza | plaza→residence | （把雀儿翻个面，指甲刮着翅膀断口）我正拿砂纸磨它肚子呢，磨得手心发烫。铁蛋那鞋掉
+8944 | 9 | P015 | residence | cafe | cafe→residence | （把可颂翻个面，指腹蹭了蹭焦边）你那两根黄瓜还带着露水，搁我这儿一晚上就蔫了，不
+18916 | 12 | P001 | park | residence | residence→park | （把锄头往墙根一靠，蹲在门槛上）天没亮透就下地，回来腿还发软。金先生，你说这身子
+19086 | 12 | P003 | farm | residence | residence→farm | （把扁担从肩头卸下，绳扣里的油纸包晃了晃）方老师，灶上那锅粥还温着没？我这儿空着
+19161 | 12 | P004 | school | residence | residence→school | （把案板上那团发过头的面往盆里一按）老周，你上回说揉面得顺着一个方向，我试了两回
+19230 | 12 | P005 | school | residence | residence→school | （把药柜最上层那排当归挪下来，指尖捻了捻根须）老周家媳妇上回抓的这味，潮了。趁天
+19301 | 12 | P006 | park | residence | residence→park | 阿禾，本子你先拿回去看，我这儿还温着一壶茶，等你择完豆角再过来坐坐吧。
+19376 | 12 | P007 | school | residence | residence→school | （哎，你这一说倒提醒我了，我灶上还热着半块饼没顾上吃）老陈那人就是嘴上抹蜜手底生
+19447 | 12 | P008 | town_hall | residence | residence→town_hall | （把桌上的契纸角捻平，指腹蹭过未干的墨迹）印泥糊纸这事，搁我这儿得重填三份。你那
+19516 | 12 | P009 | park | residence | residence→park | （把算盘珠子拨回原位）巧儿，我这肚子空得响，账要平，饭也得平。先垫口饼子。
+19585 | 12 | P010 | office | residence | residence→office | （把吉他往墙边一靠，顺手掰了半块昨天剩的干面包）你这会儿是刚忙完还是也闲着没着落
+19658 | 12 | P011 | park | residence | residence→park | （把木剑横在膝上，拿袖子蹭了蹭剑柄的灰）周公文，你上回教我那招“云手”，我练得胳
+19796 | 12 | P013 | town_hall | residence | residence→town_hall | （把炉钩子往墙根一靠）这阵子你那边还顺当不？我这儿天没亮就醒了，手里攥着半块凉饼
+19946 | 12 | P015 | park | residence | residence→park | （把菜刀往砧板上一搁，手背蹭了蹭额角的汗）老石，我这会儿正跟一锅糖醋汁较劲呢，第
+20023 | 12 | P016 | school | residence | residence→school | （把绳头往指头上绕了一圈）横撑加得好，刘婶那筐底爱漏。你给老周家打碗柜，我这儿有
+21989 | 15 | P001 | bank | park | park→bank | （拿脚尖拨了拨地上的落叶）哎，金先生，我这儿有半块干饼，你先垫垫。别饿着。
+22000 | 15 | P002 | market | workshop | workshop→market | （把凿子往木料上一搁）紧俏货……小满家那扇窗框我还没收口，等这阵抢完，我去给她把
+22024 | 15 | P004 | market | school | school→market | （把手里的书往膝头一扣，指头在书脊上蹭了蹭）转半圈再压……我上回在案板上试过，面
+22082 | 15 | P008 | market | town_hall | town_hall→market | （把手里的公文往桌角一压，抬眼看了看）哎，我这正核着东街李家的户籍底册呢，走不开
+22103 | 15 | P009 | farm | park | park→farm | （把枣糕推回去，摸了摸口袋里的铜板）哎，巧儿，我这肚子正空着，可枣糕得留着换盐。
+22108 | 15 | P010 | bank | office | office→bank | （把手里那叠演出海报往桌角一磕，纸边儿都卷了）唉，跑了一下午腿，肚子叫得比台上还
+22129 | 15 | P011 | market | park | park→market | （捏着半块凉红薯，眼睛往供销社那边瞟）哎，这肚子一饿，啥热闹都赶不上趟——听说秀
+22138 | 15 | P012 | bank | farm | farm→bank | （蹲在垄边把最后一棵番茄苗培上土）这苗子栽完我腰都直不起来了，回头得去你家讨口热
+22147 | 15 | P013 | market | town_hall | town_hall→market | （把手里那截铁条往柜台上一搁）我这正给陈家打门轴呢，秀娘你倒先挤进来了——紧俏货
+22175 | 15 | P015 | kitchen | park | park→kitchen | 五味：（把手里那截铁皮在膝盖上磕了磕，磕掉浮灰）磨边就等你那锉刀了，我先拿赵家窗
+22192 | 15 | P016 | cafe | school | school→cafe | （把书页折了个角，指尖在封皮上蹭了蹭）五味啊，你说的那个“顺路”，我听着就犯怵—
+23977 | 18 | P001 | community_center | bank | bank→community_center | （把饼掰成两半，一半搁在算盘边）你这账对到哪一笔了？王家那三文，我兜里正好有。
+24066 | 18 | P007 | plaza | market | market→plaza | （把油纸包往怀里紧了紧，里头是给陈医捎的两斤新晒的陈皮）陈医，您这药铺还亮着灯，
+24098 | 18 | P008 | cafe | market | market→cafe | （把袖口往上撸了撸，露出腕上那道旧墨痕）陀螺那玩意儿，刘婶家小孙子刻得歪，转起来
+24107 | 18 | P009 | cafe | farm | farm→cafe | （把算盘珠子拨回原位，账本合上）巧儿，你那半碗凉粥先别动，我这儿有块晌午剩的贴饼
+24143 | 18 | P011 | plaza | market | market→plaza | （把一包晒干的艾草往兰姐摊边一搁）兰姐，这艾草给你留着熏蚊子——我饿得前胸贴后背
+24156 | 18 | P012 | cafe | bank | bank→cafe | （哎，你帮我瞅瞅这利率表，我眼神不济了）老周，我这儿还饿着肚子呢，本想着取完钱去
+24186 | 18 | P013 | cafe | market | market→cafe | （接过糖糕咬了一口，另一只手还攥着陈家那根门轴）哎，秀娘，门轴我这就给他装，你排
+24193 | 18 | P014 | cafe | workshop | workshop→cafe | （把刚削好的小木鸟往兰姐手里一塞）兰姐你来得正好，这只歪脖子鸟送你家小栓玩吧，我
+24198 | 18 | P015 | plaza | kitchen | kitchen→plaza | 兰姐，（手上还沾着面粉，正把一炉卖剩的圆面包往筐里捡）我这儿刚出炉的还剩俩，你捎
+24915 | 19 | P004 | cafe | market | market→cafe | （把空竹篮往柜台上一搁，朝蒸笼那边努努嘴）铁头啊，你先帮我把这笼枣泥酥端下来吧，
+27320 | 21 | P001 | residence | community_center | community_center→residence | （接过红薯，咬了一口）哎，桂婶，我家那垄白菜还没盖膜，夜里要上冻。汤不喝了。
+27641 | 21 | P004 | residence | cafe | cafe→residence | （把刚出炉的糖糕往铁头那边推了推）铁头啊，周家婆娘那三个娃我记着呢，明早我多蒸一
+27922 | 21 | P007 | residence | plaza | plaza→residence | 陈医，我这一路光顾着打听王木匠家小子跑哪去了，饭点就这么错过去了嘛。（搓了搓手，
+28500 | 21 | P012 | residence | cafe | cafe→residence | （把围裙角上沾的面粉拍掉，往老周那边挪了半步）馒头你先收着，我这儿刚出炉的糖糕还
+28613 | 21 | P013 | residence | cafe | cafe→residence | （放下铁钳，油手在围裙上蹭了蹭）枣泥酥先搁着，我这炉子刚生上，火还没稳。饿得慌就
+28827 | 21 | P015 | residence | plaza | plaza→residence | （把手在围裙上蹭了蹭，往广场石阶上一坐）垫肚子这事我懂，你咬你的，我说我的——那
+28934 | 21 | P016 | residence | cafe | cafe→residence | （把账本往桌上一扣，指头点着那行字）这年头谁都不容易，可账不能糊。兰家小子那两吊
+
+# 判伪反例（非空即推翻「移动前快照」解释）
+(none：锚点场所 100% 落在 from_place 上)
