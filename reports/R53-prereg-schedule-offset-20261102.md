@@ -117,6 +117,37 @@
    **本卡的选择是**：C1 是**机制层确定性判定**（开关有没有改变分配），不是效果推断，故采用 rule-of-three 口径；
    一旦报告里出现任何"提升/改善"类效果表述，该作者**必须**同时披露上句争议，否则该结论作废。
 
+### 4.6 次判据 C1b（**预登记加固件**，与 C1 并列冻结；由 §4.5 第 2 条的 MDE 推导而来）
+
+> **来历（写清，供审计确认这是"跑批前加固"而不是"事后调阈值"）**：
+> §4.5 第 2 条已经算出了二项口径下的 MDE = **17.64pp**（`mde_pp(0.65625, 96, 96)`，`p` 取自表 T1 OFF 基线、`n` 取 r36 每臂预期分母 96）。
+> 若只把这条写成"审计方若坚持二项口径则 C1 不可判"，整轮结论就会悬在一个**口径选择**上；
+> 因此本卡在**零数据时点**（任何 R53 臂 `run.jsonl` 落盘之前）把二项口径也冻成一条独立判据，
+> 使口径争议从"结论算不算数"降级为"两条已冻结判据各自成立与否"。
+> **本节的加入时刻晚于 §4.1，但早于任何数据**（时序可用 §10 的 `git log` 命令核：本文件两次 commit 均早于两臂 `start_epoch.txt`）。
+
+- **C1b 的分子 / 分母 / `ON` 上限与 C1 完全相同**（同一条 pair-cell 分母定义、同一个 `act_homophily` 指标、同样要求 `act_homophily(ON) ≤ 0.50`）。
+  ⚠️ **分母定义一个字节都不动**：C1b 不是新口径，只是把 Δ 阈值换成分母同一口径下的二项 MDE。
+- **唯一差别**：`C1b` 的 Δ 阈值 = **`Δ ≥ +17.64pp`**（而 C1 是 `Δ ≥ +15.0pp`）⇒ 逻辑上 **C1b 严格强于 C1**：`C1b 成立 ⇒ C1 必然成立`。
+- **band_source**：`MDE(α=.05, power=.80) = 17.64pp`（复算 `python3 -c "import sys;sys.path.insert(0,'tools/metrics');from need_to_speech import mde_pp;print(mde_pp(0.65625,96,96))"` → `17.64`）。
+  这条 band 的口径与 C1 的 `rule-of-three(3/96)=3.125pp` **不同源**，是**刻意**的：两条判据分别代表"确定性机制口径"与"保守二项口径"。
+- **阈值冻结、不得重算**：`17.64pp` 是在 `n=96/96` 口径下算出的 MDE。**若收批后实际 `pair_cells` 不等于 96，也不得重算阈值**；
+  报告只能在读数旁追加一行描述性备注「C1b 的 MDE 依据 n=96，实收分母为 X」，**不改变任何阈值**（与 §4「事后不得下调」同一条纪律）。
+- **C1b 同样受 §5 全部不可判条件约束**（命中任一 ⇒ C1b 也写「不可判」，不得写「不成立」）。
+- **G1 不动**：本轮守卫仍只有 G1 一条，C1b 不附带新守卫、不改变 G1 的任何数字。
+
+### 4.7 C1 / C1b 三态组合的唯一读法（**禁止只挑对结论有利的那条报**）
+
+| C1（Δ≥15.0pp，rule-of-three 带） | C1b（Δ≥17.64pp，二项 MDE） | 报告里**唯一允许**的表述 |
+|---|---|---|
+| 成立 | 成立 | 「**稳健成立**」：两套口径同时达标 ⇒ Δ 相对两条带都有余量 |
+| 成立 | 不成立 | 「**方向成立但不稳健**」：必须**同表并列**给出 `Δ`、C1 判「成立」、C1b 判「不成立」，并写明"二项口径下未达 MDE"；**不得**只报 C1 |
+| 不成立 | 不成立 | 「**不成立**」（C1b 必然也不成立，因为 C1b 严格强于 C1） |
+| 任一为「不可判」 | 任意 | 「**不可判**」，并逐条列出命中的 §5 条件 |
+
+- 机械可核验的硬约束：报告里凡是出现"成立"字样的行，必须**同时**出现 `C1` 与 `C1b` 两个标签（或同表两列），缺一即视为选择性报告，该结论作废。
+- `C1 不成立 + C1b 成立` 是**逻辑上不可能**的组合（C1b 严格强于 C1）；若读数出现，说明尺子或阈值实现有缺陷 ⇒ 报告必须登记为「判据实现缺陷 D-1」并停止出结论。
+
 ---
 
 ## 5. 不可判条件（命中任一即写「不可判」，**不得写「不成立」**）
@@ -156,8 +187,20 @@ python3 tools/metrics/schedule_homophily.py --arm off=<off>/run.jsonl --arm on=<
   --thr-work-guard-pp 5.0 > /tmp/r53_b.json
 cmp /tmp/r53_a.json /tmp/r53_b.json && echo BYTE_IDENTICAL      # 落盘前已实测：BYTE_IDENTICAL
 
-# 4) MDE 旁注（§4.5 第 2 条争议里的那个数）
+# 4) MDE 旁注（§4.5 第 2 条争议里的那个数，也是 C1b 阈值的唯一来源）
 python3 -c "import sys;sys.path.insert(0,'tools/metrics');from need_to_speech import mde_pp;print(mde_pp(0.65625,96,96))"   # → 17.64
+
+# 4b) C1b 机械比对（从第 2 条落盘的 compare.json 里取 C1 的 delta_pp，与冻结阈值 17.64 比；
+#     分子/分母/ON 上限与 C1 同源，故不另算一遍读数，避免第二套数）
+python3 - <<'PY'
+import json
+c = json.load(open("v2/evidence/r53-schedule-offset/compare.json"))["compare"]["C1_act_homophily"]
+d = c["delta_pp"]
+c1  = "成立" if (c["rate_on"] is not None and c["rate_on"] <= 0.50 and d >= 15.0) else "不成立"
+c1b = "成立" if (c["rate_on"] is not None and c["rate_on"] <= 0.50 and d >= 17.64) else "不成立"
+print(f"delta_pp={d}  rate_on={c['rate_on']}  C1={c1}(Δ>=15.0)  C1b={c1b}(Δ>=17.64)")
+print("C1不成立+C1b成立 ⇒ 判据实现缺陷 D-1（逻辑不可能）" if (c1 == "不成立" and c1b == "成立") else "组合合法")
+PY
 
 # 5) 单变量对账（两臂 env 差异只应有 HITT_SCHEDULE_OFFSET）
 diff <(sort v2/evidence/<off>/env_manifest.txt) <(sort v2/evidence/<on>/env_manifest.txt)
@@ -283,8 +326,9 @@ python3 tools/metrics/schedule_homophily.py \
 ```bash
 cd /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment
 
-# a) 本卡入库 commit 时间（必须早于任一新臂 start_epoch）
-git log -1 --format='%H %ad' --date=iso -- reports/R53-prereg-schedule-offset-20261102.md
+# a) 本卡**全部**入库 commit 时间（必须**都**早于任一新臂 start_epoch；
+#    §4.6 C1b 加固件是第二次 commit，须与第一次一起列出来核）
+git log --format='%H %ad %s' --date=iso -- reports/R53-prereg-schedule-offset-20261102.md
 
 # b) 载荷：本卡必须早于两臂起跑
 for b in r53-schedule-offset-off-*_n16r36_s42 r53-schedule-offset-on-*_n16r36_s42; do
