@@ -1657,6 +1657,16 @@ class LifeLayerAgent:
         素材**只读** `WorldView`：`time.slot` / `location` / `current_activity`。
         场所名走 `self.places[place_id]["name_cn"]`（人话）；缺项则**不写该片段**，
         **绝不把 `plaza` / `farm` 这类内部 id 递进提示词**（防 L-8c / L-13 回归）。
+
+        ---- R52 / B-8 修复：锚点**取值时点**（第二个开关 `HITT_SCENE_FRESH`）----
+        缺陷（R46-A1 实测 87/191 = 45.55%）：`WorldView` 在**本轮 perceive 阶段**取定，居民随后
+        在本轮内搬了地方再说话，锚点描述的就是**上一站**；而消息落盘时的 `payload.place` 取自
+        `orchestration/integration.py::_do_social` 的 `st.agents[id]["location"]`（当轮实时）。
+          - `HITT_SCENE_FRESH` 不设（默认 OFF）⇒ 仍取 `wv` 快照 ⇒ **与改动前逐字节相同**；
+          - 设 `=1` ⇒ 在**装配这一条消息的时点**重新 `kernel.perceive()` 一次，取与
+            `_do_social` **同一真相源**的实时 `location` / `current_activity`，
+            并在 `ctx.scene` 里多记一个 additive 审计键 `place_src="live"`。
+        失败/字段缺失 ⇒ 退回 `wv` 快照（宁缺不编，不打断对话）。
         """
         self._scene = None
         if wv is None or not SA.enabled():
@@ -1669,6 +1679,20 @@ class LifeLayerAgent:
             activity = str(ca.get("activity_type") or "") if isinstance(ca, dict) else ""
         except Exception:      # 世界视图字段缺失 ⇒ 退化为「不加处境」，不打断对话
             return ""
+        place_src = None
+        if SA.fresh_enabled():      # R52：发言时点重取（与 _do_social 落盘 payload.place 同源）
+            live = None
+            try:
+                perceive = getattr(self.kernel, "perceive", None)
+                live = perceive(self.agent_id) if callable(perceive) else None
+            except Exception:       # 重取失败 ⇒ 保持快照，绝不编造场所
+                live = None
+            if live is not None:
+                slot = str(getattr(getattr(live, "time", None), "slot", "") or slot)
+                place = str(getattr(live, "location", "") or place)
+                ca2 = getattr(live, "current_activity", None) or {}
+                activity = str(ca2.get("activity_type") or "") if isinstance(ca2, dict) else ""
+                place_src = "live"
         name = ""
         if place:
             spec = (self.places or {}).get(place) or {}
@@ -1676,7 +1700,7 @@ class LifeLayerAgent:
         line = SA.render(self.agent_id, rnd, slot, name, activity or None)
         if not line:
             return ""
-        self._scene = SA.audit(slot, place or None, activity or None, line)
+        self._scene = SA.audit(slot, place or None, activity or None, line, place_src=place_src)
         return line
 
     # ---- 天气臂（WX）：今儿天怎么样（季 + 天气）--------------------------

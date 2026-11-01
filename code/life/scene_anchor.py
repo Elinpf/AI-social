@@ -28,6 +28,12 @@ import os
 #: 臂开关（env `LIFE_PROMPT_SCENE`）；默认关。
 SCENE_ENV = "LIFE_PROMPT_SCENE"
 
+#: R52 / B-8 修复开关（env `HITT_SCENE_FRESH`）；默认关。
+#: 关 ⇒ 处境锚仍取 `WorldView` 快照（本轮 perceive 阶段取定，可能是**上一站**）；
+#: 开 ⇒ 在装配这一条消息的时点重新 perceive，取与 `_do_social` 落盘 `payload.place`
+#: 同一真相源的**当轮实时**场所/活动。仅在 `LIFE_PROMPT_SCENE` 打开时才有意义。
+FRESH_ENV = "HITT_SCENE_FRESH"
+
 #: 时段 → 人话措辞候选（固定词表；改词表＝改行为，须重新冻结 sha256，见 runbook §3.97）
 SLOT_WORDS: dict[str, tuple[str, ...]] = {
     "morning": ("一大早", "这会儿天刚亮", "上午这会儿"),
@@ -56,6 +62,15 @@ LEXICON_VERSION = "scene-anchor-v1"
 def enabled() -> bool:
     """臂开关（env `LIFE_PROMPT_SCENE` ∈ {1,true,yes,on}）；默认关。"""
     return os.environ.get(SCENE_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def fresh_enabled() -> bool:
+    """R52 修复开关（env `HITT_SCENE_FRESH` ∈ {1,true,yes,on}）；默认关。
+
+    关 ⇒ 取 `WorldView` 快照场所（改动前行为，逐字节等价）；
+    开 ⇒ 取「装配这条消息时点」的实时场所（与 `_do_social` 落盘 `payload.place` 同源）。
+    """
+    return os.environ.get(FRESH_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
 
 
 def _sha(text: str) -> str:
@@ -105,11 +120,15 @@ def render(agent_id: str, round_no: int, slot: str, place_name: str | None,
 
 
 def audit(slot: str, place_id: str | None, activity_type: str | None,
-          line: str | None = None) -> dict:
+          line: str | None = None, place_src: str | None = None) -> dict:
     """审计快照（写进 MSG payload 的 `ctx.scene`；**只在开关打开时产**）。
 
     与 `ctx.topic` 同口径：机器侧记的是 id（`place` / `activity`），不是人话；
     另记 `line_sha256`，便于报告侧证明"模型看到的那一行"确实是它。
+
+    `place_src`（R52 新增，**仅 `HITT_SCENE_FRESH=1` 时由调用方传入**）：
+      * 传 `"live"` ⇒ 本条场所取自「装配消息时点」的实时状态（与 `_do_social` 同源）；
+      * 不传（`None`）⇒ 该键**不出现** ⇒ 改动前/修复关闭态的 `ctx.scene` 逐字节不变。
     """
     out: dict = {"slot": str(slot)}
     if place_id:
@@ -118,4 +137,6 @@ def audit(slot: str, place_id: str | None, activity_type: str | None,
         out["activity"] = str(activity_type)
     if line:
         out["line_sha256"] = _sha(line.strip())   # 不含前导换行：与提示词里那一行文本对齐
+    if place_src:
+        out["place_src"] = str(place_src)
     return out
