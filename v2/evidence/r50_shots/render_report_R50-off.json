@@ -1,0 +1,97 @@
+{
+  "batch_id": "R50-off",
+  "fail_count": 0,
+  "generated_at": "2026-11-01T20:02:13+08:00",
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-off-20261101_n16r24_s42/run.jsonl",
+  "log_sha256": "40d1bb09c3face4afabbae8e786eb2f7aaaf3ecb079171aaa83a6425b8430434",
+  "ok_count": 2,
+  "policy": {
+    "blank_check": "自行像素自检（distinct_colors/top_color_frac/non_bg_frac 逐张落盘）；未沿用 shot.py 的单色判据——该判据对深色 dialogue.html 会假红（实测 80.09% 误判）",
+    "code_untouched": "服务根为临时目录 + 符号链接；未在 code/frontend 下写入任何文件",
+    "no_reuse": "输出同名 PNG 若已存在则先删除，只认本次现截",
+    "no_stitching": "每张图独立截图，禁止拼图/跨批混拼"
+  },
+  "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-off-20261101_n16r24_s42",
+  "run_sha256_in_threads": "40d1bb09c3face4afabbae8e786eb2f7aaaf3ecb079171aaa83a6425b8430434",
+  "schema_version": "render-shots/1.0",
+  "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r50_shots/threads_R50-off.json",
+  "threads_json_sha256": "4cbef84bb596e02552fb1e2e31d1b6ee035e7d4ac0e03ba55752760cd3962384",
+  "views": [
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 23467,
+        "height": 900,
+        "non_bg_frac": 0.5361,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.1513,
+        "width": 1400
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r50_shots/R50-off-chat-40d1bb09.png",
+      "png_bytes": 292179,
+      "png_mtime_iso": "2026-11-01T20:02:09+08:00",
+      "png_mtime_ns": 1793534529870605560,
+      "png_sha256": "4d6d7b8428138f4f1c8c9bdeb7f33a857658fc2c7b53452ee07804088aa02ce3",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-off-20261101_n16r24_s42/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-off-20261101_n16r24_s42/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r50_shots/threads_R50-off.json --label R50-off",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-off-20261101_n16r24_s42/run.jsonl",
+        "log_sha256": "40d1bb09c3face4afabbae8e786eb2f7aaaf3ecb079171aaa83a6425b8430434",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:41823/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_R50-off/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r50_shots/R50-off-chat-40d1bb09.png --width 1400 --height 900 --timeout 180.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-off-20261101_n16r24_s42",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r50_shots/threads_R50-off.json",
+        "threads_json_sha256": "4cbef84bb596e02552fb1e2e31d1b6ee035e7d4ac0e03ba55752760cd3962384"
+      },
+      "view": "chat"
+    },
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 20827,
+        "height": 1050,
+        "non_bg_frac": 0.3867,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.3709,
+        "width": 1300
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r50_shots/R50-off-rhythm-40d1bb09.png",
+      "png_bytes": 280042,
+      "png_mtime_iso": "2026-11-01T20:02:12+08:00",
+      "png_mtime_ns": 1793534532269982363,
+      "png_sha256": "012c17a63f75b713cebf68dbcc23eff5d25c107b53b0867cefbb5d040c3a6a91",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-off-20261101_n16r24_s42/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-off-20261101_n16r24_s42/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r50_shots/threads_R50-off.json --label R50-off",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-off-20261101_n16r24_s42/run.jsonl",
+        "log_sha256": "40d1bb09c3face4afabbae8e786eb2f7aaaf3ecb079171aaa83a6425b8430434",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:41823/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_R50-off/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r50_shots/R50-off-rhythm-40d1bb09.png --width 1300 --height 1050 --timeout 180.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r49-diversity-off-20261101_n16r24_s42",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r50_shots/threads_R50-off.json",
+        "threads_json_sha256": "4cbef84bb596e02552fb1e2e31d1b6ee035e7d4ac0e03ba55752760cd3962384"
+      },
+      "view": "rhythm"
+    }
+  ]
+}
