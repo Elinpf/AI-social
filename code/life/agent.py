@@ -43,7 +43,7 @@ from .policy import (social_enabled, exchange_enabled, m2b_judge_mode, m2b_impor
 from .ports import (
     INTENT_ECON_OFFER,
     INTENT_GOAL, INTENT_MEMORY, INTENT_MOVE, INTENT_OBSERVE, INTENT_PLAN, INTENT_RELATION,
-    INTENT_SOCIAL, Intent, KernelPort,
+    INTENT_RIFT, INTENT_SOCIAL, Intent, KernelPort,
 )
 from .soft import get_soft_layer, rng_branch
 from .util import clamp, sha256_hex
@@ -1088,8 +1088,10 @@ class LifeLayerAgent:
         cfg = self._dlg_cfg()
         dr = DR.load_params()
         if dr.get("enabled"):                 # R6-T2：先吸收可见消息 → 更新 rift 台账（只读）
+            # T-RIFT-EVENTS（最小移植）：开关开时把 rift 生命周期落成事件（默认关 ⇒ observer=None，行为不变）
+            obs = self._on_rift_event if dr.get("rift_events") else None
             DR.ingest(self._rifts, self._rifts_seen, wv.visible_events,
-                      self.agent_id, dr, wv.round)
+                      self.agent_id, dr, wv.round, observer=obs)
         slot_id = f"day{wv.time.day_of_week}-{wv.time.slot}"
         if int(self._slot_msgs.get(slot_id, 0)) >= int(cfg.get("max_messages_per_slot", 2)):
             return
@@ -1105,6 +1107,24 @@ class LifeLayerAgent:
         # 同场偶遇搭话臂（默认 OFF ⇒ 直接返回 False，事件流与接入前一致）：
         # 只有「本 slot 没有模板对话」这个空档才会走到这里。
         self._initiate_encounter(wv, cfg, slot_id)
+
+    def _on_rift_event(self, kind: str, data: dict) -> None:
+        """T-RIFT-EVENTS（最小移植）：把一次 rift 生命周期变化落成 `RIFT_OPEN` / `RIFT_CLOSE` 事件。
+
+        **纯审计**：不改世界态、不入 state_hash；`rift_id` 直接沿用 `DR.rift_id()` 生成的字符串
+        （`R|<thread>|<msg_uid>`），本处不另造格式。只在 `dialogue_repair.rift_events=true` 时被调用。
+        """
+        if kind == "open":
+            payload = {"op": "open", "rift_id": data.get("rift_id"),
+                       "thread_id": data.get("thread_id"), "with": data.get("with"),
+                       "trigger_seq": data.get("seq"), "reason": "negative_msg"}
+        else:
+            payload = {"op": "close", "rift_id": data.get("rift_id"),
+                       "thread_id": data.get("thread_id"), "with": data.get("with"),
+                       "trigger_seq": data.get("trigger_seq"),
+                       # **缺省不得是 "repair"**：未知关闭用显式 `unknown`，不静默抬高 D4-2 分子
+                       "reason": data.get("reason") or "unknown"}
+        self.kernel.submit_intent(self.agent_id, Intent(INTENT_RIFT, self.agent_id, payload))
 
     def _thread_max_turn(self, wv, tid: str) -> int:
         """线程内「已存在的最大 turn_index」（按可见事件；无则 -1）。多方可同时处于同一 turn。"""

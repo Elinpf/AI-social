@@ -7,5 +7,6 @@
   "window_msgs": 8,
   "max_open": 3,
   "max_age_rounds": 84,
-  "context_max_age_rounds": 24
+  "context_max_age_rounds": 24,
+  "rift_events": false
 }

@@ -768,6 +768,45 @@ class KernelAdapter:
         from engine.canon import hash_obj
         return hash_obj({"author": author, "body": body})
 
+    def _do_rift(self, agent_id, p):
+        """T-RIFT-EVENTS（最小移植）：把 rift 生命周期落成事件（**纯审计，不改世界态**）。
+
+        payload: {"op": "open"|"close", "rift_id", "thread_id", "with", "trigger_seq", "reason"}
+        `rift_id` **必须由 `life.dialogue_repair.rift_id()` 生成**（格式 `R|<thread>|<msg_uid>`），
+        本处只校验（非空）+ 取值域校验 + 落账，**不另造格式**。
+        """
+        from life.ports import IntentResult
+        from engine.constants import PHASE_COMMUNICATE
+
+        op = p.get("op")
+        if op not in ("open", "close"):
+            return self._reject_reason(agent_id, "INTENT.RIFT", "unknown_op", p)
+        rid = p.get("rift_id")
+        if not isinstance(rid, str) or not rid:
+            return self._reject_reason(agent_id, "INTENT.RIFT", "missing_rift_id", p)
+        etype = "RIFT_OPEN" if op == "open" else "RIFT_CLOSE"
+        if op == "close":
+            # **取值域封闭集**：只认 RIFT_CLOSE_REASONS_ALLOWED；拼写/大小写变体一律拒绝（不静默兼容）
+            from life.dialogue_repair import RIFT_CLOSE_REASONS_ALLOWED, RIFT_CLOSE_UNKNOWN
+            why = p.get("reason")
+            if why is None:
+                why = RIFT_CLOSE_UNKNOWN          # **缺省不得是 "repair"**（会把未知关闭算进和解）
+            elif why not in RIFT_CLOSE_REASONS_ALLOWED:
+                return self._reject_reason(agent_id, "INTENT.RIFT", f"invalid_reason:{why!r}", p)
+        else:
+            why = p.get("reason") or "negative_msg"
+        payload = {
+            "agent_id": agent_id,
+            "rift_id": rid,
+            "thread_id": p.get("thread_id"),
+            "with": p.get("with"),
+            "trigger_seq": p.get("trigger_seq"),
+            "round": int(self.engine.state.round),
+            "reason": why,
+        }
+        seq = self._emit(etype, payload, phase=PHASE_COMMUNICATE, actor=agent_id)
+        return IntentResult(ok=True, event_seqs=(seq,))
+
     def _do_social(self, agent_id, p):
         """v2：把 INTENT.SOCIAL 封装为 MSG_DM(PRIVATE)/MSG_PUBLIC(GLOBAL)/MSG_GROUP(MEMBERS)。
 

@@ -66,6 +66,8 @@ EVENT_TYPES = {
     "WAKE", "IDLE",
     # 每回合封条
     "TURN_SEAL",
+    # T-RIFT-EVENTS：DR 裂痕生命周期（纯审计，no-op 折叠；仅在 rift_events 开关开时产生）
+    "RIFT_OPEN", "RIFT_CLOSE",
 }
 
 

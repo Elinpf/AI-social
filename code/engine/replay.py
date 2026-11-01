@@ -648,6 +648,8 @@ _NOOP_TYPES = [
     "WAKE", "IDLE",
     # T322 / 08 §1.2 W：人格漂移候选 —— identity fold，不改世界状态、不入 state_hash
     "PERSONA_DRIFT_CANDIDATE",
+    # T-RIFT-EVENTS：DR 裂痕生命周期（纯审计，不改世界状态、不入 state_hash）
+    "RIFT_OPEN", "RIFT_CLOSE",
 ]
 for _t in _NOOP_TYPES:
     _APPLIERS.setdefault(_t, lambda state, rec, p: None)

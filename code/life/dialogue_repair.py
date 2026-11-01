@@ -54,6 +54,10 @@ DEFAULTS = {
     "max_open": 3,                # 每个 agent 同时最多记 N 条 rift（防上下文膨胀）
     "max_age_rounds": 84,         # 超过 N 回合仍未了结 → 自然淡忘（= 一个模拟周）
     "context_max_age_rounds": 24, # 只有 N 回合内的旧账进提示词（更老的只计数不叙述）
+    # T-RIFT-EVENTS（最小移植）：把 rift 的生命周期**落成事件**（RIFT_OPEN / RIFT_CLOSE），
+    # 并让 `dialogue_rift` 快照带 `rift_ids`。默认 False ⇒ 不产任何新事件、不多任何键。
+    # 注：另有与"DR 可分离化"相关的三项开关**不在本次移植范围**（它们属另一条线）。
+    "rift_events": False,
 }
 
 #: 选项工具箱（**只给选项，不给句子**；不得含任何现成道歉句式）
@@ -74,6 +78,32 @@ REPAIR_WORDS = (
 _CFG_PATH = Path(__file__).resolve().parents[1] / "config" / "dialogue_repair.json"
 _cache: dict | None = None
 _override: dict | None = None
+
+# ---- T-RIFT-EVENTS（最小移植）：`RIFT_CLOSE.reason` 的**取值域**（封闭集，禁拼写/大小写变体）----
+#: 三种**已知**关闭原因（由 `ingest` 的注销分支与 `_prune` 分支产生）
+RIFT_CLOSE_REASONS = frozenset({"repair", "expire", "prune"})
+#: 允许出现但不参与 D4-2 分子的**显式未知**值：调用点忘传 reason 时用它，**绝不默认成 `repair`**
+#: （默认成 repair 会把未知关闭静默算进"和解"，直接抬高 D4-2 分子 —— 对结论有利，最危险）
+RIFT_CLOSE_UNKNOWN = "unknown"
+RIFT_CLOSE_REASONS_ALLOWED = RIFT_CLOSE_REASONS | {RIFT_CLOSE_UNKNOWN}
+
+#: 开关 env（与既有 `HITT_DIALOGUE_REPAIR` 同风格）
+RIFT_EVENTS_ENV = "HITT_DR_RIFT_EVENTS"
+
+_TRUTHY = ("1", "true", "on", "yes")
+_FALSEY = ("0", "false", "off", "no")
+
+
+def _bool(raw, current=None) -> bool:
+    """env 字符串 → bool；`raw is None` ⇒ 沿用 config 值（`current`），再缺省 False。"""
+    if raw is None:
+        return bool(current) if current is not None else False
+    v = str(raw).strip().lower()
+    if v in _TRUTHY:
+        return True
+    if v in _FALSEY:
+        return False
+    return bool(current) if current is not None else False
 
 
 # ---------------------------------------------------------------- 开关/参数
@@ -107,6 +137,8 @@ def load_params(path: str | Path | None = None) -> dict:
     out["max_open"] = int(out["max_open"])
     out["max_age_rounds"] = int(out["max_age_rounds"])
     out["context_max_age_rounds"] = int(out["context_max_age_rounds"])
+    # T-RIFT-EVENTS（最小移植）：env 优先于 config
+    out["rift_events"] = _bool(os.environ.get(RIFT_EVENTS_ENV), out.get("rift_events"))
     if path is None:
         _cache = dict(out)
     return out
@@ -145,23 +177,47 @@ def rift_id(thread_id: str | None, msg_uid: str | None, seq: int | None = None) 
 
 # ---------------------------------------------------------------- rift 台账（纯函数）
 def ingest(rifts: dict, seen: set, events, agent_id: str, params: dict,
-           round_no: int | None = None) -> dict:
+           round_no: int | None = None, observer=None) -> dict:
     """增量吸收可见事件 → 更新 rift 台账（**纯读日志，不写世界**）。
 
     * 别人对我说的、或我听到的负向话 ⇒ 记一条 rift（`with` = 说话人）；
     * 同一线程后续消息出现修复词 ⇒ 该线程内**更早**的 rift 全部注销（和解）；
     * `max_open` / `max_age_rounds` 做有界化（超龄即淡忘）。
     返回入参 `rifts`（就地更新，便于调用方持有同一 dict）。
+
+    `observer`（T-RIFT-EVENTS 最小移植，默认 `None` ⇒ 行为逐字节不变）：
+    `observer("open", rift_dict)` / `observer("close", {"rift_id", "reason": "repair"|"expire"|"prune", …})`
+    —— 只在开关开时由调用方传入，用于把 rift 生命周期落成事件。
     """
     if not params.get("enabled"):
         return rifts
     msgs = [ev for ev in events
             if getattr(ev, "type", None) in MSG_TYPES and getattr(ev, "seq", None) not in seen]
     for ev in sorted(msgs, key=lambda e: int(e.seq)):
+        before = set(rifts)
         ingest_one(rifts, seen, int(ev.seq), getattr(ev, "type", None),
                    getattr(ev, "payload", None) or {}, int(getattr(ev, "round", 0) or 0),
                    agent_id, params)
+        if observer is not None:
+            after = set(rifts)
+            for rid in sorted(after - before):
+                observer("open", dict(rifts[rid]))
+            for rid in sorted(before - after):
+                observer("close", {"rift_id": rid, "reason": "repair"})
+    # 有界化：区分"超龄淡忘(expire)"与"超 max_open 截断(prune)"
+    before2 = {k: dict(v) for k, v in rifts.items()}
     _prune(rifts, params, round_no)
+    if observer is not None:
+        age_max = int(params.get("max_age_rounds", 84))
+        for rid in sorted(set(before2) - set(rifts)):
+            v = before2[rid]
+            expired = (round_no is not None
+                       and int(round_no) - int(v.get("round", 0)) > age_max)
+            _why = "expire" if expired else "prune"
+            assert _why in RIFT_CLOSE_REASONS, _why      # 防拼写漂移（封闭集断言）
+            observer("close", {"rift_id": rid, "reason": _why,
+                               "thread_id": v.get("thread_id"), "with": v.get("with"),
+                               "trigger_seq": v.get("seq"), "round": v.get("round")})
     return rifts
 
 
@@ -253,7 +309,7 @@ def audit_fields(rifts: dict, round_no: int, route: str,
     rows = [v for v in rifts.values() if not peers or v.get("with") in peers]
     if not rows:
         return None
-    return {
+    out = {
         "v": "f4/1",
         "open": len(rows),
         "with": sorted({v["with"] for v in rows if v.get("with")}),
@@ -262,6 +318,10 @@ def audit_fields(rifts: dict, round_no: int, route: str,
         "age_rounds": sorted(max(0, int(round_no) - int(v["round"])) for v in rows),
         "prompted": bool(rows and _prompted(rows, round_no)),
     }
+    # T-RIFT-EVENTS（最小移植）：快照带 `rift_ids`（与 `threads`/`with` 同源，供 D4 分母精确化）
+    if _cfg().get("rift_events"):
+        out["rift_ids"] = sorted({v["rift_id"] for v in rows if v.get("rift_id")})
+    return out
 
 
 def repair_ask(rifts: dict, thread_id: str, peer: str | None, round_no: int,
