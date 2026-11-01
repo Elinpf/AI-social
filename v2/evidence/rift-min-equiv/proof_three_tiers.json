@@ -1,0 +1,157 @@
+{
+  "tool": "tools/dr/rift_events_proof.py",
+  "card": "T-RIFT-EVENTS / T-RIFT-EVENTS-FIX",
+  "arms": {
+    "A": {
+      "mode": "A",
+      "env": {
+        "HITT_DIALOGUE_REPAIR": "1",
+        "HITT_DR_RIFT_EVENTS": "unset",
+        "HITT_DR_REPAIR_ASK": "unset",
+        "HITT_DR_RECORD_ONLY": "unset",
+        "HITT_DR_PICK_MARK": "unset"
+      },
+      "rift_events_flag": false,
+      "enabled_flag": true,
+      "n": 4,
+      "rounds": 6,
+      "seed": 42,
+      "events_total": 723,
+      "msg_total": 15,
+      "msgs_with_dialogue_rift": 1,
+      "msgs_with_rift_ids_key": 0,
+      "RIFT_OPEN_count": 0,
+      "RIFT_CLOSE_count": 0,
+      "rift_open_ids": [],
+      "rift_close_ids": [],
+      "rift_close_reasons": [],
+      "distinct_open_ids": 0,
+      "distinct_close_ids": 0,
+      "snapshot_ids_subset_of_open": true,
+      "snapshot_subset_violations": 0
+    },
+    "B": {
+      "mode": "B",
+      "env": {
+        "HITT_DIALOGUE_REPAIR": "1",
+        "HITT_DR_RIFT_EVENTS": "1",
+        "HITT_DR_REPAIR_ASK": "unset",
+        "HITT_DR_RECORD_ONLY": "unset",
+        "HITT_DR_PICK_MARK": "unset"
+      },
+      "rift_events_flag": true,
+      "enabled_flag": true,
+      "n": 4,
+      "rounds": 6,
+      "seed": 42,
+      "events_total": 725,
+      "msg_total": 15,
+      "msgs_with_dialogue_rift": 1,
+      "msgs_with_rift_ids_key": 1,
+      "RIFT_OPEN_count": 1,
+      "RIFT_CLOSE_count": 1,
+      "rift_open_ids": [
+        "R|dm:P002:P001:r1|INJ-1"
+      ],
+      "rift_close_ids": [
+        "R|dm:P002:P001:r1|INJ-1"
+      ],
+      "rift_close_reasons": [
+        "repair"
+      ],
+      "distinct_open_ids": 1,
+      "distinct_close_ids": 1,
+      "snapshot_ids_subset_of_open": true,
+      "snapshot_subset_violations": 0
+    },
+    "C": {
+      "mode": "C",
+      "env": {
+        "HITT_DIALOGUE_REPAIR": "unset",
+        "HITT_DR_RIFT_EVENTS": "1",
+        "HITT_DR_REPAIR_ASK": "unset",
+        "HITT_DR_RECORD_ONLY": "unset",
+        "HITT_DR_PICK_MARK": "unset"
+      },
+      "rift_events_flag": true,
+      "enabled_flag": false,
+      "n": 4,
+      "rounds": 6,
+      "seed": 42,
+      "events_total": 723,
+      "msg_total": 15,
+      "msgs_with_dialogue_rift": 0,
+      "msgs_with_rift_ids_key": 0,
+      "RIFT_OPEN_count": 0,
+      "RIFT_CLOSE_count": 0,
+      "rift_open_ids": [],
+      "rift_close_ids": [],
+      "rift_close_reasons": [],
+      "distinct_open_ids": 0,
+      "distinct_close_ids": 0,
+      "snapshot_ids_subset_of_open": true,
+      "snapshot_subset_violations": 0
+    }
+  },
+  "reason_probes": {
+    "D_prune": {
+      "params": {
+        "max_open": 1,
+        "max_age_rounds": 999
+      },
+      "closes": [
+        {
+          "rift_id": "R|T1|m1",
+          "reason": "prune",
+          "thread_id": "T1",
+          "with": "P001",
+          "trigger_seq": 1,
+          "round": 0
+        }
+      ],
+      "open_after": [
+        "R|T2|m2"
+      ],
+      "reason_observed": [
+        "prune"
+      ]
+    },
+    "E_expire": {
+      "params": {
+        "max_age_rounds": 1,
+        "max_open": 99
+      },
+      "closes": [
+        {
+          "rift_id": "R|T1|m1",
+          "reason": "expire",
+          "thread_id": "T1",
+          "with": "P001",
+          "trigger_seq": 1,
+          "round": 0
+        }
+      ],
+      "open_after": [],
+      "reason_observed": [
+        "expire"
+      ]
+    }
+  },
+  "checks": {
+    "A_no_rift_events": true,
+    "A_no_rift_ids_key": true,
+    "B_has_open": true,
+    "B_open_ids_unique": true,
+    "B_has_close": true,
+    "B_close_reason_repair": true,
+    "B_open_close_same_ids": true,
+    "B_has_rift_ids_key": true,
+    "B_snapshot_subset_of_open": true,
+    "C_no_rift_events": true,
+    "C_no_rift_ids_key": true,
+    "D_prune_reason_observed": true,
+    "E_expire_reason_observed": true,
+    "all_three_reasons_have_samples": true,
+    "all_pass": true
+  }
+}

@@ -1,0 +1,17 @@
+# V1/V2 env 指纹（两臂跑前/跑后均为下列 (unset)）
+# BASE=3610815475cd49654d7e560f7137b7111f6dd9f8
+# V1=worktree .worktrees/rift-min-v1 (detached @BASE)
+# V2=worktree .worktrees/rift-min @feat/rift-minimal 6f1f800
+HITT_LLM_PROVIDER=(unset)
+HITT_DIALOGUE_REPAIR=(unset)
+HITT_DR_RIFT_EVENTS=(unset)
+HITT_DR_REPAIR_ASK=(unset)
+HITT_DR_RECORD_ONLY=(unset)
+HITT_DR_PICK_MARK=(unset)
+HITT_INTRA_ROUND_VISIBILITY=(unset)
+LIFE_PROMPT_NARRATION=(unset)
+LIFE_PROMPT_NARRATION_ROTATION=(unset)
+LIFE_PROMPT_NARRATION_ACTION=(unset)
+LIFE_PROMPT_NARRATION_SYNTAX=(unset)
+LIFE_PROMPT_NARRATION_OPENINGS=(unset)
+--- 实测环境残留 ---
