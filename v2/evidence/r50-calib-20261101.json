@@ -1,0 +1,415 @@
+{
+  "arms": {
+    "off": {
+      "log": {
+        "path": "v2/evidence/r49-diversity-off-20261101_n16r24_s42/run.jsonl",
+        "sha256": "40d1bb09c3face4afabbae8e786eb2f7aaaf3ecb079171aaa83a6425b8430434"
+      },
+      "n_msgs": 191,
+      "no_cue": {
+        "den": 191,
+        "num": 4,
+        "rate": 0.020942,
+        "rate_pct": 2.0942,
+        "status": "ok",
+        "wilson95": {
+          "hi": 0.052602,
+          "lo": 0.008173,
+          "p": 0.020942
+        }
+      },
+      "opener6_gap": {
+        "first_clause_hit": 48,
+        "opener6_hit": 42,
+        "opener6_hit_but_skip_miss": 0,
+        "opener6_missed_but_skip_hit": 70,
+        "skip_hit": 112,
+        "skip_only": 64
+      },
+      "paren_lead": {
+        "den": 191,
+        "num": 172,
+        "rate": 0.900524,
+        "rate_pct": 90.0524,
+        "status": "ok",
+        "wilson95": {
+          "hi": 0.935389,
+          "lo": 0.849865,
+          "p": 0.900524
+        }
+      },
+      "strata": {
+        "anywhere": {
+          "den": 191,
+          "num": 187,
+          "rate": 0.979058,
+          "rate_pct": 97.9058,
+          "status": "ok",
+          "wilson95": {
+            "hi": 0.991827,
+            "lo": 0.947398,
+            "p": 0.979058
+          }
+        },
+        "first_clause": {
+          "den": 191,
+          "num": 48,
+          "rate": 0.251309,
+          "rate_pct": 25.1309,
+          "status": "ok",
+          "wilson95": {
+            "hi": 0.317317,
+            "lo": 0.195108,
+            "p": 0.251309
+          }
+        },
+        "first_clause_skip": {
+          "den": 191,
+          "num": 112,
+          "rate": 0.586387,
+          "rate_pct": 58.6387,
+          "status": "ok",
+          "wilson95": {
+            "hi": 0.653857,
+            "lo": 0.515511,
+            "p": 0.586387
+          }
+        },
+        "opener6": {
+          "den": 191,
+          "num": 42,
+          "rate": 0.219895,
+          "rate_pct": 21.9895,
+          "status": "ok",
+          "wilson95": {
+            "hi": 0.283836,
+            "lo": 0.167,
+            "p": 0.219895
+          }
+        }
+      }
+    },
+    "on": {
+      "log": {
+        "path": "v2/evidence/r49-diversity-on-20261101_n16r24_s42/run.jsonl",
+        "sha256": "cfc1d44ae065ff660394efb997c3bd44be18bb3f7ba6a1af7336dac69c39b6bb"
+      },
+      "n_msgs": 191,
+      "no_cue": {
+        "den": 191,
+        "num": 0,
+        "rate": 0.0,
+        "rate_pct": 0.0,
+        "status": "ok",
+        "wilson95": {
+          "hi": 0.019717,
+          "lo": 0.0,
+          "p": 0.0
+        }
+      },
+      "opener6_gap": {
+        "first_clause_hit": 61,
+        "opener6_hit": 57,
+        "opener6_hit_but_skip_miss": 0,
+        "opener6_missed_but_skip_hit": 89,
+        "skip_hit": 146,
+        "skip_only": 85
+      },
+      "paren_lead": {
+        "den": 191,
+        "num": 180,
+        "rate": 0.942408,
+        "rate_pct": 94.2408,
+        "status": "ok",
+        "wilson95": {
+          "hi": 0.967541,
+          "lo": 0.89983,
+          "p": 0.942408
+        }
+      },
+      "strata": {
+        "anywhere": {
+          "den": 191,
+          "num": 191,
+          "rate": 1.0,
+          "rate_pct": 100.0,
+          "status": "ok",
+          "wilson95": {
+            "hi": 1.0,
+            "lo": 0.980283,
+            "p": 1.0
+          }
+        },
+        "first_clause": {
+          "den": 191,
+          "num": 61,
+          "rate": 0.319372,
+          "rate_pct": 31.9372,
+          "status": "ok",
+          "wilson95": {
+            "hi": 0.388496,
+            "lo": 0.25737,
+            "p": 0.319372
+          }
+        },
+        "first_clause_skip": {
+          "den": 191,
+          "num": 146,
+          "rate": 0.764398,
+          "rate_pct": 76.4398,
+          "status": "ok",
+          "wilson95": {
+            "hi": 0.819001,
+            "lo": 0.699369,
+            "p": 0.764398
+          }
+        },
+        "opener6": {
+          "den": 191,
+          "num": 57,
+          "rate": 0.298429,
+          "rate_pct": 29.8429,
+          "status": "ok",
+          "wilson95": {
+            "hi": 0.366776,
+            "lo": 0.238031,
+            "p": 0.298429
+          }
+        }
+      }
+    }
+  },
+  "artifact": "r50-calib-20261101",
+  "contrast": {
+    "anywhere": {
+      "delta_pp": 2.0942,
+      "fisher_two_sided_p": 0.123034,
+      "mde_pp_from_off_p1": 6.5,
+      "n_per_arm_for_10pp": 103,
+      "note": "post-hoc 开发集标定读数，不是效果判决",
+      "off": {
+        "den": 191,
+        "num": 187,
+        "rate_pct": 97.9058,
+        "wilson95": {
+          "hi": 0.991827,
+          "lo": 0.947398,
+          "p": 0.979058
+        }
+      },
+      "on": {
+        "den": 191,
+        "num": 191,
+        "rate_pct": 100.0,
+        "wilson95": {
+          "hi": 1.0,
+          "lo": 0.980283,
+          "p": 1.0
+        }
+      },
+      "preregistered": false,
+      "wilson95_disjoint": false
+    },
+    "first_clause": {
+      "delta_pp": 6.8063,
+      "fisher_two_sided_p": 0.173801,
+      "mde_pp_from_off_p1": 11.4,
+      "n_per_arm_for_10pp": 252,
+      "note": "post-hoc 开发集标定读数，不是效果判决",
+      "off": {
+        "den": 191,
+        "num": 48,
+        "rate_pct": 25.1309,
+        "wilson95": {
+          "hi": 0.317317,
+          "lo": 0.195108,
+          "p": 0.251309
+        }
+      },
+      "on": {
+        "den": 191,
+        "num": 61,
+        "rate_pct": 31.9372,
+        "wilson95": {
+          "hi": 0.388496,
+          "lo": 0.25737,
+          "p": 0.319372
+        }
+      },
+      "preregistered": false,
+      "wilson95_disjoint": false
+    },
+    "first_clause_skip": {
+      "delta_pp": 17.8011,
+      "fisher_two_sided_p": 0.000293,
+      "mde_pp_from_off_p1": 14.4,
+      "n_per_arm_for_10pp": 390,
+      "note": "post-hoc 开发集标定读数，不是效果判决",
+      "off": {
+        "den": 191,
+        "num": 112,
+        "rate_pct": 58.6387,
+        "wilson95": {
+          "hi": 0.653857,
+          "lo": 0.515511,
+          "p": 0.586387
+        }
+      },
+      "on": {
+        "den": 191,
+        "num": 146,
+        "rate_pct": 76.4398,
+        "wilson95": {
+          "hi": 0.819001,
+          "lo": 0.699369,
+          "p": 0.764398
+        }
+      },
+      "preregistered": false,
+      "wilson95_disjoint": true
+    },
+    "opener6": {
+      "delta_pp": 7.8534,
+      "fisher_two_sided_p": 0.101829,
+      "mde_pp_from_off_p1": 10.7,
+      "n_per_arm_for_10pp": 221,
+      "note": "post-hoc 开发集标定读数，不是效果判决",
+      "off": {
+        "den": 191,
+        "num": 42,
+        "rate_pct": 21.9895,
+        "wilson95": {
+          "hi": 0.283836,
+          "lo": 0.167,
+          "p": 0.219895
+        }
+      },
+      "on": {
+        "den": 191,
+        "num": 57,
+        "rate_pct": 29.8429,
+        "wilson95": {
+          "hi": 0.366776,
+          "lo": 0.238031,
+          "p": 0.298429
+        }
+      },
+      "preregistered": false,
+      "wilson95_disjoint": false
+    }
+  },
+  "disclaimer": "本文件是在 R49 已冻结日志上做的 post-hoc 开发集标定。其中的 Δ / p / MDE 一律不得写成效果判决、不得写「有效/无效/显著改善/生活气息提升」；唯一用途是选点消歧与下一轮功效估算。",
+  "impl_sha256": "ccac0523544787054029ba9ff3680e86d25b2d84909451364cd760f3a0e0b1d7",
+  "lexicon_sha256": "e8507082b0915f93eb62ab200969da17d4a700e1b337e0d97ce2355196dd7477",
+  "lexicon_source": "tools/metrics/r49_detail_opener.py::DETAIL_PATTERNS（逐字复用）",
+  "mde_method": {
+    "alpha": 0.05,
+    "formula": "p̄=(p1n1+p2n2)/(n1+n2); SE=sqrt(p̄(1-p̄)(1/n1+1/n2)); |p1-p2|/SE - z_b >= z_a",
+    "n1": 191,
+    "n2": 191,
+    "power": 0.8,
+    "two_sided": true,
+    "z_alpha_2": 1.96,
+    "z_beta": 0.8416
+  },
+  "mde_table": {
+    "anywhere": {
+      "mde_pp_at_n191": 6.5,
+      "n_per_arm_for_10pp": 103,
+      "n_per_arm_for_12pp": 80,
+      "n_per_arm_for_15pp": 60,
+      "p1_off": 0.979058
+    },
+    "first_clause": {
+      "mde_pp_at_n191": 11.4,
+      "n_per_arm_for_10pp": 252,
+      "n_per_arm_for_12pp": 168,
+      "n_per_arm_for_15pp": 101,
+      "p1_off": 0.251309
+    },
+    "first_clause_skip": {
+      "mde_pp_at_n191": 14.4,
+      "n_per_arm_for_10pp": 390,
+      "n_per_arm_for_12pp": 271,
+      "n_per_arm_for_15pp": 174,
+      "p1_off": 0.586387
+    },
+    "opener6": {
+      "mde_pp_at_n191": 10.7,
+      "n_per_arm_for_10pp": 221,
+      "n_per_arm_for_12pp": 146,
+      "n_per_arm_for_15pp": 86,
+      "p1_off": 0.219895
+    }
+  },
+  "no_cue": {
+    "diff_pp": -2.0942,
+    "off": {
+      "den": 191,
+      "num": 4,
+      "rate_pct": 2.0942
+    },
+    "on": {
+      "den": 191,
+      "num": 0,
+      "rate_pct": 0.0
+    }
+  },
+  "r49_reconcile": {
+    "all_match": true,
+    "checks": {
+      "off": {
+        "anywhere(=r49 detail_body)": {
+          "computed": 187,
+          "match": true,
+          "r49_published": 187
+        },
+        "n_msgs": {
+          "computed": 191,
+          "match": true,
+          "r49_published": 191
+        },
+        "opener6": {
+          "computed": 42,
+          "match": true,
+          "r49_published": 42
+        },
+        "paren_lead": {
+          "computed": 172,
+          "match": true,
+          "r49_published": 172
+        }
+      },
+      "on": {
+        "anywhere(=r49 detail_body)": {
+          "computed": 191,
+          "match": true,
+          "r49_published": 191
+        },
+        "n_msgs": {
+          "computed": 191,
+          "match": true,
+          "r49_published": 191
+        },
+        "opener6": {
+          "computed": 57,
+          "match": true,
+          "r49_published": 57
+        },
+        "paren_lead": {
+          "computed": 180,
+          "match": true,
+          "r49_published": 180
+        }
+      }
+    }
+  },
+  "ruler_version": "r50-detail-position-v2",
+  "status": "POST_HOC_DEVELOPMENT_SET_CALIBRATION",
+  "strata_definitions": {
+    "anywhere": "未剥旁白整条正文命中词表（= R49 detail_body）",
+    "first_clause": "strip_lead_paren(body) 首个分句命中词表",
+    "first_clause_skip": "strip_lead_paren(body) 起跳过≤2个「≤8字且无具体物」前导分句后首个分句命中",
+    "opener6": "strip_lead_paren(body) 前 6 字符命中词表（= R49 detail_opener6，逐字同口径）"
+  }
+}
