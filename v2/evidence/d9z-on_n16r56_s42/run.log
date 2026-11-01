@@ -1,0 +1,117 @@
+Timeout (0:10:00)!
+Thread 0x00007d107c30d080 (most recent call first):
+  File "/usr/lib/python3.12/socket.py", line 707 in readinto
+  File "/usr/lib/python3.12/http/client.py", line 297 in _read_status
+  File "/usr/lib/python3.12/http/client.py", line 336 in begin
+  File "/usr/lib/python3.12/http/client.py", line 1457 in getresponse
+  File "/usr/lib/python3.12/urllib/request.py", line 1348 in do_open
+  File "/usr/lib/python3.12/urllib/request.py", line 1373 in http_open
+  File "/usr/lib/python3.12/urllib/request.py", line 492 in _call_chain
+  File "/usr/lib/python3.12/urllib/request.py", line 532 in _open
+  File "/usr/lib/python3.12/urllib/request.py", line 515 in open
+  File "/usr/lib/python3.12/urllib/request.py", line 215 in urlopen
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/freeze/providers.py", line 266 in _post
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/freeze/providers.py", line 319 in complete
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/freeze/llm_client.py", line 403 in complete
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/freeze/llm_client.py", line 590 in judge
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/life/soft.py", line 49 in judge
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/life/agent.py", line 1072 in _maybe_social_appraisal
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/life/agent.py", line 690 in step
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/engine/kernel.py", line 212 in phase_decide
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/engine/kernel.py", line 263 in run_round
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/orchestration/integration.py", line 1128 in run_e2e
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/orchestration/cli.py", line 29 in _cmd_run
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/orchestration/cli.py", line 102 in main
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/orchestration/__main__.py", line 4 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 229 in run_module
+  File "<string>", line 10 in <module>
+Timeout (0:10:00)!
+Thread 0x00007d107c30d080 (most recent call first):
+  File "/usr/lib/python3.12/socket.py", line 707 in readinto
+  File "/usr/lib/python3.12/http/client.py", line 297 in _read_status
+  File "/usr/lib/python3.12/http/client.py", line 336 in begin
+  File "/usr/lib/python3.12/http/client.py", line 1457 in getresponse
+  File "/usr/lib/python3.12/urllib/request.py", line 1348 in do_open
+  File "/usr/lib/python3.12/urllib/request.py", line 1373 in http_open
+  File "/usr/lib/python3.12/urllib/request.py", line 492 in _call_chain
+  File "/usr/lib/python3.12/urllib/request.py", line 532 in _open
+  File "/usr/lib/python3.12/urllib/request.py", line 515 in open
+  File "/usr/lib/python3.12/urllib/request.py", line 215 in urlopen
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/freeze/providers.py", line 266 in _post
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/freeze/providers.py", line 319 in complete
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/freeze/llm_client.py", line 403 in complete
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/freeze/llm_client.py", line 590 in judge
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/life/soft.py", line 49 in judge
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/life/agent.py", line 1072 in _maybe_social_appraisal
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/life/agent.py", line 690 in step
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/engine/kernel.py", line 212 in phase_decide
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/engine/kernel.py", line 263 in run_round
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/orchestration/integration.py", line 1128 in run_e2e
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/orchestration/cli.py", line 29 in _cmd_run
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/orchestration/cli.py", line 102 in main
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/orchestration/__main__.py", line 4 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 229 in run_module
+  File "<string>", line 10 in <module>
+Timeout (0:10:00)!
+Thread 0x00007d107c30d080 (most recent call first):
+  File "/usr/lib/python3.12/socket.py", line 707 in readinto
+  File "/usr/lib/python3.12/http/client.py", line 297 in _read_status
+  File "/usr/lib/python3.12/http/client.py", line 336 in begin
+  File "/usr/lib/python3.12/http/client.py", line 1457 in getresponse
+  File "/usr/lib/python3.12/urllib/request.py", line 1348 in do_open
+  File "/usr/lib/python3.12/urllib/request.py", line 1373 in http_open
+  File "/usr/lib/python3.12/urllib/request.py", line 492 in _call_chain
+  File "/usr/lib/python3.12/urllib/request.py", line 532 in _open
+  File "/usr/lib/python3.12/urllib/request.py", line 515 in open
+  File "/usr/lib/python3.12/urllib/request.py", line 215 in urlopen
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/freeze/providers.py", line 266 in _post
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/freeze/providers.py", line 319 in complete
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/freeze/llm_client.py", line 403 in complete
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/freeze/llm_client.py", line 590 in judge
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/life/soft.py", line 49 in judge
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/life/agent.py", line 1029 in _maybe_soft_judge
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/life/agent.py", line 689 in step
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/engine/kernel.py", line 212 in phase_decide
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/engine/kernel.py", line 263 in run_round
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/orchestration/integration.py", line 1128 in run_e2e
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/orchestration/cli.py", line 29 in _cmd_run
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/orchestration/cli.py", line 102 in main
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/orchestration/__main__.py", line 4 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 229 in run_module
+  File "<string>", line 10 in <module>
+Timeout (0:10:00)!
+Thread 0x00007d107c30d080 (most recent call first):
+  File "/usr/lib/python3.12/socket.py", line 707 in readinto
+  File "/usr/lib/python3.12/http/client.py", line 297 in _read_status
+  File "/usr/lib/python3.12/http/client.py", line 336 in begin
+  File "/usr/lib/python3.12/http/client.py", line 1457 in getresponse
+  File "/usr/lib/python3.12/urllib/request.py", line 1348 in do_open
+  File "/usr/lib/python3.12/urllib/request.py", line 1373 in http_open
+  File "/usr/lib/python3.12/urllib/request.py", line 492 in _call_chain
+  File "/usr/lib/python3.12/urllib/request.py", line 532 in _open
+  File "/usr/lib/python3.12/urllib/request.py", line 515 in open
+  File "/usr/lib/python3.12/urllib/request.py", line 215 in urlopen
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/freeze/providers.py", line 266 in _post
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/freeze/providers.py", line 319 in complete
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/freeze/llm_client.py", line 403 in complete
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/freeze/llm_client.py", line 590 in judge
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/life/soft.py", line 49 in judge
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/life/agent.py", line 1029 in _maybe_soft_judge
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/life/agent.py", line 689 in step
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/engine/kernel.py", line 212 in phase_decide
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/engine/kernel.py", line 263 in run_round
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/orchestration/integration.py", line 1128 in run_e2e
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/orchestration/cli.py", line 29 in _cmd_run
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/orchestration/cli.py", line 102 in main
+  File "/root/.jiuwenswarm/agent/workspace/work/\u5c1d\u8bd5/social-experiment/.worktrees/d9z-intraround/code/orchestration/__main__.py", line 4 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 229 in run_module
+  File "<string>", line 10 in <module>
+[life] n_agents=16 rounds=56 events=90532 seconds=2725.7089 log_bytes=44305670
+  unknown_event_types=[]
+  chain_ok=True replay_parity=True first_run_equals_replay=True
+  conservation_ok=True final_state_hash=sha256:4227ac5dbcabd3d0fdce6b70194a93ae632bc775af8bdb20517628405206cc3b
+  log written: /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/.worktrees/d9z-intraround/v2/evidence/d9z-on_n16r56_s42/run.jsonl
