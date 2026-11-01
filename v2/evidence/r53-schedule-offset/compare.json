@@ -1,0 +1,246 @@
+{
+  "arms": [
+    {
+      "act_homophily": {
+        "den": 96,
+        "num": 63,
+        "rate": 0.65625,
+        "rate_pct": 65.625,
+        "rule_of_three_pp": 3.125
+      },
+      "both_homophily": {
+        "den": 96,
+        "num": 45,
+        "rate": 0.46875,
+        "rate_pct": 46.875,
+        "rule_of_three_pp": 3.125
+      },
+      "label": "off",
+      "log": "v2/evidence/r53-schedule-offset-off-20261102_n16r36_s42/run.jsonl",
+      "log_bytes": 27755502,
+      "log_sha256": "b3d2a8048747d94d85353a39136535d98ed610e25a3a98b00fb2618d807a67a4",
+      "n_agents_in_personas": 20,
+      "n_roles": 11,
+      "n_same_role_pairs": 11,
+      "pair_cells": 96,
+      "personas": "code/config/personas.json",
+      "personas_sha256": "08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d",
+      "place_homophily": {
+        "den": 96,
+        "num": 45,
+        "rate": 0.46875,
+        "rate_pct": 46.875,
+        "rule_of_three_pp": 3.125
+      },
+      "roles_multi": {
+        "artist": [
+          "P010",
+          "P018"
+        ],
+        "cook": [
+          "P004",
+          "P015"
+        ],
+        "craftsman": [
+          "P002",
+          "P013",
+          "P014"
+        ],
+        "farmer": [
+          "P001",
+          "P003",
+          "P012"
+        ],
+        "merchant": [
+          "P007",
+          "P016"
+        ],
+        "student": [
+          "P011",
+          "P019"
+        ],
+        "teacher": [
+          "P006",
+          "P017"
+        ]
+      },
+      "stats": {
+        "activity_started_events": 192,
+        "activity_type_dist": {
+          "civic": 3,
+          "learn": 16,
+          "leisure": 16,
+          "rest": 48,
+          "socialize": 54,
+          "trade": 20,
+          "work": 35
+        },
+        "cells_day_slot": 12,
+        "unknown_role_agent_events": 0,
+        "unknown_role_agents": {},
+        "work_share_day": {
+          "den": 96,
+          "num": 35
+        }
+      },
+      "tick_homophily": {
+        "den": 96,
+        "num": 96,
+        "rate": 1.0,
+        "rate_pct": 100.0,
+        "rule_of_three_pp": 3.125
+      }
+    },
+    {
+      "act_homophily": {
+        "den": 96,
+        "num": 52,
+        "rate": 0.5416666666666666,
+        "rate_pct": 54.1667,
+        "rule_of_three_pp": 3.125
+      },
+      "both_homophily": {
+        "den": 96,
+        "num": 38,
+        "rate": 0.3958333333333333,
+        "rate_pct": 39.5833,
+        "rule_of_three_pp": 3.125
+      },
+      "label": "on",
+      "log": "v2/evidence/r53-schedule-offset-on-20261102_n16r36_s42/run.jsonl",
+      "log_bytes": 25984752,
+      "log_sha256": "f3a99c5637bb08e1cfcd0ebaa59b0423c4cafea99f17ba41ca1eb8cc49918c0f",
+      "n_agents_in_personas": 20,
+      "n_roles": 11,
+      "n_same_role_pairs": 11,
+      "pair_cells": 96,
+      "personas": "code/config/personas.json",
+      "personas_sha256": "08d11eb36d644e55db0c9b7e00adccb81613d50476927e3acf07117f7f970f7d",
+      "place_homophily": {
+        "den": 96,
+        "num": 38,
+        "rate": 0.3958333333333333,
+        "rate_pct": 39.5833,
+        "rule_of_three_pp": 3.125
+      },
+      "roles_multi": {
+        "artist": [
+          "P010",
+          "P018"
+        ],
+        "cook": [
+          "P004",
+          "P015"
+        ],
+        "craftsman": [
+          "P002",
+          "P013",
+          "P014"
+        ],
+        "farmer": [
+          "P001",
+          "P003",
+          "P012"
+        ],
+        "merchant": [
+          "P007",
+          "P016"
+        ],
+        "student": [
+          "P011",
+          "P019"
+        ],
+        "teacher": [
+          "P006",
+          "P017"
+        ]
+      },
+      "stats": {
+        "activity_started_events": 192,
+        "activity_type_dist": {
+          "civic": 3,
+          "learn": 16,
+          "leisure": 20,
+          "rest": 49,
+          "self_care": 6,
+          "socialize": 38,
+          "trade": 21,
+          "work": 39
+        },
+        "cells_day_slot": 12,
+        "unknown_role_agent_events": 0,
+        "unknown_role_agents": {},
+        "work_share_day": {
+          "den": 96,
+          "num": 35
+        }
+      },
+      "tick_homophily": {
+        "den": 96,
+        "num": 60,
+        "rate": 0.625,
+        "rate_pct": 62.5,
+        "rule_of_three_pp": 3.125
+      }
+    }
+  ],
+  "compare": {
+    "C1_act_homophily": {
+      "delta_pp": 11.4583,
+      "den_off": 96,
+      "den_on": 96,
+      "num_off": 63,
+      "num_on": 52,
+      "rate_off": 0.65625,
+      "rate_on": 0.5416666666666666,
+      "rule_of_three_pp_off": 3.125,
+      "rule_of_three_pp_on": 3.125,
+      "thr_delta_pp": 15.0,
+      "thr_max": 0.5,
+      "verdict": "不成立"
+    },
+    "C2_tick_homophily": {
+      "delta_pp": 37.5,
+      "den_off": 96,
+      "den_on": 96,
+      "num_off": 96,
+      "num_on": 60,
+      "rate_off": 1.0,
+      "rate_on": 0.625,
+      "rule_of_three_pp_off": 3.125,
+      "rule_of_three_pp_on": 3.125,
+      "thr_delta_pp": 25.0,
+      "thr_max": 0.75,
+      "verdict": "成立"
+    },
+    "G1_work_share_day": {
+      "den_off": 96,
+      "den_on": 96,
+      "drop_pp": 0.0,
+      "num_off": 35,
+      "num_on": 35,
+      "rate_off": 0.3645833333333333,
+      "rate_on": 0.3645833333333333,
+      "rule_of_three_pp_off": 3.125,
+      "rule_of_three_pp_on": 3.125,
+      "thr_max_drop_pp": 5.0,
+      "verdict": "成立"
+    },
+    "_undecidable_reasons": [],
+    "descriptive_only": [
+      "place_homophily",
+      "both_homophily"
+    ]
+  },
+  "impl": "schedule-homophily/1",
+  "impl_sha256": "77d574494c0d5c4e33e88a5b6f73f5c75e8a49040621c2e3ce656046b0d79638",
+  "ruler_version": "r53-schedule-offset-v1",
+  "thresholds": {
+    "act_delta_pp": 15.0,
+    "act_max": 0.5,
+    "min_den": 68,
+    "tick_delta_pp": 25.0,
+    "tick_max": 0.75,
+    "work_guard_pp": 5.0
+  }
+}
