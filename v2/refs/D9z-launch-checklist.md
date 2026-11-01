@@ -86,6 +86,21 @@ tr '\0' '\n' < /proc/<pid>/environ | grep -E 'NARRATION|ROTATION|ACTION|SYNTAX|O
 
 
 
+### L2b-补：**零值必须写"为什么是零"**（2026-11-01 补，`repro-verifier` 提，Leader 采纳）
+
+阳性对照只解决"0 是短路成立还是没走到"，**还剩一种更隐蔽的 0**：**总量全对、无人执行**。
+本批实例：`engine.perceive.with_pending` 在 life 路径**无 live caller** ⇒ `with_pending_calls` 两臂皆 **0**，
+而 `off_pending_view_nonNone=0`、`off_idx_extra_zero=true` 等**全部符合预期**，**没有一个数字会抖**。
+**这次能被发现，靠的是实现方自己写了** `notes.explain = "…无 live caller（保留为 engine 侧孪生入口）"`。
+
+⇒ **规则**：每个计数字段必须三件齐，才算"记录过"：
+```json
+{ "value": 0, "why_zero": "<指向可核事实，如 'life 路径无 live caller'、'该分支被 OPENINGS 短路'>",
+  "positive_control": "<在哪能看到非零>" }
+```
+**缺 `why_zero` 的 0，一律当"未采集"，不得当"通过"。**
+**`why_zero` 必须指向可核事实**（可 `grep` / 可读代码位置）；写"未触发"这种**不可核**的说法等于没写。
+
 **本条不接受的反例**：`grep '=1' /proc/.../environ` 有输出 ⇒ **只证明环境变量存在**；`run.log` 里没有报错 ⇒ **只证明没崩**。二者都**不是**接通证据。
 
 ## L3 代码指纹门（补丁版 `FP`）
