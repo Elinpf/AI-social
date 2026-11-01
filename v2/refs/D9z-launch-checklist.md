@@ -7,9 +7,17 @@
 ## L0 串行门（缺一不起跑）
 
 ```bash
-pgrep -af "orchestration [r]un"      # 期望：空
+pgrep -af 'orchestration [r]un'                       # 旧门（对 launch 脚本形态会漏检，见下）
+pgrep -af 'run_module\("orchestration"'              # ← 必须加这一条：launcher 形态
 ```
 **非空即不起跑**。D9t 曾因同一脚本被启动两次写同一 `out/side-root`，取证被覆盖（留档 `/tmp/D9T_ON_TAINTED_1793434444`）。
+
+> ⚠ **旧门会漏检（2026-11-01 实测，真批在跑时旧门返回"空"）**：本仓的启动器是用
+> `python3 -c` + `runpy.run_module("orchestration")` 起的，**命令行里没有** `orchestration run`
+> 这串连续字符（`sys.argv` 是 `["orchestration", "run", …]`，带引号与逗号）。
+> ⇒ **只跑旧门会得到"没有批在跑"的错误结论**，可能因此并发起跑、写坏同一 `side-root`。
+> **必须两条都跑**；任一条非空即不起跑。
+> 这条是"检查器的沉默 ≠ 没有东西"的又一实例：**门返回空，要先验证门自己能看见东西**。
 
 ## L1 代码身份门
 
