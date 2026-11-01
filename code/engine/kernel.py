@@ -299,6 +299,23 @@ class Engine:
     def current_round(self) -> int:
         return self.state.round
 
+    def pending_records(self) -> list:
+        """D9z：本回合**已发出但未提交**事件的只读投影（`Arbiter` 缓冲区）。
+
+        只给「可见性上界」用：`seq` 与 `emit` 时分配的临时序号一致（`len(records)+i`），
+        因此后续 `commit` 后真实 `seq` 与之一致；`hash`/`prev_hash` 此刻未定，**不投影**
+        （可见性谓词不读这两个字段）。**不落盘、不改状态**。
+        """
+        base = len(self.ledger.records)
+        return [{
+            "seq": base + i,
+            "round": ev.round,
+            "phase": ev.phase,
+            "actor": ev.actor,
+            "type": ev.type,
+            "payload": ev.payload,
+        } for i, ev in enumerate(self.arbiter.pending())]
+
     # ---- M4/M6（T215）----
     @property
     def llm_budget_level(self) -> int:

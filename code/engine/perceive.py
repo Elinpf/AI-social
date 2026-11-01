@@ -7,12 +7,48 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from .time import derive_time
 
 _PERCEPTION_SCOPE_PATH = Path(__file__).resolve().parents[1] / "config" / "perception_scope.json"
 _PERCEPTION_SCOPE_CACHE: dict | None = None
+
+# ---- D9z：同轮可见（intra-round visibility）开关 -------------------------------
+# 默认**关闭** ⇒ `pending` 一律忽略，`perceive()` 输出与开关引入前**逐字节相同**。
+#   `1`/`true`/`yes`/`on` → 仅**本轮已发出的消息**（MSG_*）对同轮后续 agent 可见；
+#   `all`                 → 本轮已发出的**全部**事件对同轮后续 agent 可见（宽口径，敏感性对照）。
+# 取值只影响「可见性上界」这一处：候选集 = 已提交账本 + 本回合缓冲区。
+INTRA_ROUND_ENV = "HITT_INTRA_ROUND_VISIBILITY"
+_MSG_TYPES = ("MSG_DM", "MSG_PUBLIC", "MSG_GROUP")
+
+
+def intra_round_mode() -> str:
+    """返回 `"off"` / `"msg"` / `"all"`（未设或非法值一律 `"off"`）。"""
+    raw = os.environ.get(INTRA_ROUND_ENV)
+    if raw is None:
+        return "off"
+    v = raw.strip().lower()
+    if v in ("1", "true", "yes", "on", "msg", "messages"):
+        return "msg"
+    if v in ("all", "any", "2"):
+        return "all"
+    return "off"
+
+
+def intra_round_enabled() -> bool:
+    return intra_round_mode() != "off"
+
+
+def with_pending(records: list, pending) -> list:
+    """把本回合**已发出**的事件并入可见性候选集（开关关/无缓冲 ⇒ 原样返回同一对象）。"""
+    mode = intra_round_mode()
+    if mode == "off" or not pending:
+        return records
+    if mode == "all":
+        return list(records) + list(pending)
+    return list(records) + [r for r in pending if r.get("type") in _MSG_TYPES]
 
 
 def load_perception_scope(config_dir=None) -> dict:
@@ -111,10 +147,16 @@ def memory_refs(records: list, agent_id: str, upto_round: int) -> list:
     return refs
 
 
-def perceive(state, agent_id: str, records: list, config: dict | None = None) -> dict:
-    """IF-1：返回 WorldView（纯只读）。"""
+def perceive(state, agent_id: str, records: list, config: dict | None = None,
+             pending: list | None = None) -> dict:
+    """IF-1：返回 WorldView（纯只读）。
+
+    `pending`（D9z）：本回合**已发出但尚未提交**的事件（`Arbiter` 缓冲区投影）。
+    开关默认关闭 ⇒ `with_pending()` 原样返回 `records`（同一对象），行为不变。
+    """
     if agent_id not in state.agents:
         raise KeyError(f"未知 agent: {agent_id}")
+    records = with_pending(records, pending)
     tcfg = None
     if isinstance(config, dict):
         tcfg = config.get("time_config")

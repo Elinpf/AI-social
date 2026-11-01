@@ -136,11 +136,18 @@ class VisibilityIndex:
 
     def visible(self, agent_id: str, upto_round: int, *,
                 window_rounds: int | None = None, location: str | None = None,
-                place_local_actor_fallback: bool = False) -> list:
+                place_local_actor_fallback: bool = False,
+                extra: list | None = None) -> list:
+        """`extra`（D9z）：本回合缓冲区的只读投影，**不进索引**（避免与后续 commit 重复 ingest），
+        仅按**同一条** `contracts.visibility.visible()` 谓词追加裁决后并入结果，按 `seq` 归并。"""
         loc = location if location is not None else self._loc_at(agent_id, upto_round)
         gmembers = self._gm_upto(upto_round)
         out = []
-        for rec in self._candidates(agent_id):
+        pool = self._candidates(agent_id)
+        if extra:
+            seen = {r["seq"] for r in pool}
+            pool = pool + [r for r in extra if r["seq"] not in seen]
+        for rec in pool:
             if rec["round"] > upto_round:
                 continue
             if window_rounds is not None and rec["round"] < upto_round - window_rounds:
@@ -148,4 +155,6 @@ class VisibilityIndex:
             if _visible(self._class(rec), agent_id, rec.get("actor", "SYSTEM"),
                         rec.get("payload", {}), loc, gmembers, place_local_actor_fallback):
                 out.append(rec)
+        if extra:
+            out.sort(key=lambda r: r["seq"])
         return out
