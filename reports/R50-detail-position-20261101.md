@@ -1,7 +1,7 @@
 # R50 · 具体性尺子 v2 —— 位置分层与选点消歧（**post-hoc 开发集标定，不产生效果结论**）
 
 - 报告人：`report-writer`（实验报告与证据官）｜出数时刻：2026-11-01 20:0x +08:00
-- 分支：`feat/r49-life-diversity`，基线 HEAD **`f53d3a1`**（R49 定稿）→ 本轮尺子入库 **`58bcdc7`**（`master` 未动；本报告入库 sha **`<pending-repo-gatekeeper>`**，由 R50-T3 提交后回填）
+- 分支：`feat/r49-life-diversity`，基线 HEAD **`f53d3a1`**（R49 定稿）→ 本轮尺子入库 **`58bcdc7`**（`master` 未动；本报告入库 sha **`d2fa10a`**，标定更正 sha **`d3c13ae`**；完整交付状态见 §12）
 - 预登记卡 v2（**下一轮真跑批用**，本轮零跑批）：`v2/refs/R50-prereg-20261101.md`
 - 尺子入库 commit：**`58bcdc7`**（`ruler(R50)`，5 文件 / 1262 insertions：新尺子 + 标定器 + 预登记卡 + 标定 JSON + 标定说明）
 - 新尺子：`tools/metrics/r50_detail_position.py`（`ruler_version=r50-detail-position-v2`，`impl_sha256=ccac0523544787054029ba9ff3680e86d25b2d84909451364cd760f3a0e0b1d7`，`lexicon_sha256=e8507082b0915f93eb62ab200969da17d4a700e1b337e0d97ce2355196dd7477` ＝ **与 R49 预登记卡逐字相同**）
@@ -355,3 +355,18 @@ python3 tools/metrics/render_shots.py --run-dir v2/evidence/r49-diversity-on-202
 3. **`no_cue` 地板差余量仅 7.91pp**（U7 阈值 10pp）：本轮 −2.09pp 未触发，但这一点对样本量变化敏感。
 4. **`first_clause` 与旧 `opener6` 的 Wilson95 均重叠**（`p=0.174` / `p=0.102`）：只有放宽位置窗口后才出现区间不重叠的读数（`first_clause_skip`, `p=0.000293`）——**这本身就是"窗口决定结论"的直接证据**，也正是不能把标定当效果的原因。
 5. **本报告的所有"成立"都限缩在观测级**，且**没有任何一行可以升级为效果结论**：本轮零新增 LLM 调用（`obs llm-cost` 复核仅针对 R49 既有日志），不涉及任何新的模型行为样本。
+
+---
+
+## 12. 交付状态（入库 sha 回填，由 `repo-gatekeeper` 填写）
+
+| 项 | commit | 内容 | 说明 |
+|---|---|---|---|
+| (a) | **`58bcdc7`** | `ruler(R50)`：尺子 v2 + 判据预登记冻结 + 标定初版（5 文件 / 1262 insertions） | 标定 JSON **初版** sha256 `3bb3bff9…`，已被 (b′) 覆盖 |
+| (b′) | **`d3c13ae`** | `fix(R50)`：标定偏差方向更正（3 文件 / +63 −2） | **以本条为准**：JSON sha256 `3bb3bff9…` → `88f9b79fd36d9eaa2c3a043ae08c8269b1322ab8f9d73dd7c03e738cc37ae39a`；原「系统性低估干预臂」结论作废 |
+| (c) | **`d2fa10a`** | `docs(R50)`：本报告 + `docs/team-board.md` 追加 3 行 + `v2/evidence/r50_shots/` 现渲截图（13 文件） | 看板 `git diff --numstat` = `3 0`，纯追加 |
+| (d) | 本条 | `docs(R50): 回填入库 sha` | 仅改本报告与 `docs/team-board.md`，**未碰** `v2/refs/R50-prereg-20261101.md` |
+
+**口径声明**：**(b′) 覆盖 (a) 的 calibration 段，最终有效读数以 (b′) 为准**；(a) 中的标定 JSON 属已被更正的中间态，不应用于引用。判据、MDE 阈值、不可判条件 U1–U8 与预登记卡 `v2/refs/R50-prereg-20261101.md` 自 `58bcdc7` 起一字未改。
+
+本报告与看板行的 `master` 未动；推送范围仅 `feat/r49-life-diversity` 分支。
