@@ -86,6 +86,47 @@ CONFLICT (add/add): Merge conflict in v2/evidence/d9z-on_n16r56_s42/launch_cmd.t
 
 > **sha 声明**：本件提到的一切 `d7bb9737（临时树·非当前版）…`（含 `d7bb9737cc9b3784ff3a4ca41eac880ff8479518（临时树·非当前版）`）均为 `git merge-tree --write-tree` 的输出——**一个未被任何 ref 指向的临时树**，不是历史版、不是分支头、不是当前版。
 
+
+## 6. 🔴 关键发现：这次合并携带的是**三个特性**，不是"一个 rift"
+
+上节把合并差异统称"rift 的贡献"，**这个说法不成立**。实测（`git grep`）：
+
+```
+git grep -c "HITT_INTRA_ROUND_VISIBILITY" origin/master -- code/    → 空（0 命中）
+git grep -c "HITT_INTRA_ROUND_VISIBILITY" <merged>    -- code/    → code/engine/perceive.py:1
+```
+
+⇒ **`master` 上根本没有 D9z 的同轮可见代码**；合并树才第一次把它带进来。合并带来的 10 个实现文件改动里，至少包含：
+
+| 特性 | 进入 master 的证据 | 状态 |
+|---|---|---|
+| **D9z 同轮可见** | `code/engine/perceive.py` 新增 `INTRA_ROUND_ENV = "HITT_INTRA_ROUND_VISIBILITY"` | master **无**，本合并**首次**带入 |
+| **DR 可分离化** | `code/life/dialogue_repair.py`（+100）、`code/config/dialogue_repair.json`（6 行：`repair_ask`/`record_only`/`pick_mark`） | 同理首次带入 |
+| **rift 事件** | `code/engine/events.py`、`code/engine/replay.py`、`code/life/agent.py` 的 `RIFT_*` | 同理首次带入 |
+
+### 6.1 由此推翻一条归因
+
+**不能再说"`A vs B` 不等 ⇒ 是 merge 的锅、与特性无关"。** 准确表述只能是：
+
+> `A vs B` 不等 ⇒ 差异来自**"这次合并带进来的全部改动"在默认全关下的行为**；
+> 具体归因必须先落到**文件/符号**：是被合并特性的"默认关不彻底"，还是纯代码路径重构的副作用。
+
+### 6.2 更重的一条：D9z 的判定与本合并的关系
+
+D9z 判定「通过」是在**分支**上跑的（实现基 `cef1c58`）。由于 `master` 至今不含 `HITT_INTRA_ROUND_VISIBILITY`：
+- **`master` 上的任何一批（含外部臂 `r1-encounter-master`）都不带 D9z 代码**；
+- ⇒ **D9z 的 PASS 不能自动转写为"master 具备该能力"**；合并后必须在合并树上**重跑一次三档读数**，才能说"master 上 D9z 成立"。
+
+### 6.3 对等价性证明的直接影响
+
+`A ≡ B`（默认全关逐行全等）**从"可期望"降级为"待验证，且很可能不成立"**：三个特性同时进树，只要其中任一在默认关下仍有路径差异（例如 `dialogue_repair.json` 的 6 行改动改了默认值解析），A/B 就会分叉。**分叉本身不是失败，是数据**——它告诉我们"默认关不彻底"发生在哪一处。
+
+## 7. 本节的边界
+
+- 上述全部来自 `git grep` / `git diff`，**未运行任何代码**；
+- "master 无该代码"是**当前 `origin/master` 状态**的事实，**不评价**为何如此（可能是分支未合并、也可能是别的路径）；
+- 本件**仍不主张合并是否安全**，只把"合并携带什么"说清。
+
 ## 率的定义
 
 **本件不新增任何率**（只读可行性实测件，无分子分母计数需求）。
