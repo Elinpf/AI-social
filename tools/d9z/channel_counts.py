@@ -123,7 +123,9 @@ def _run_arm(mode: str, n: int, rounds: int, seed: int) -> dict:
         "visible_extra_nonempty": 0,
         # ---- T-DR-L2B-CHANNELS：DR 两条提示词通道 ----
         "context_line_calls": 0,
-        "context_line_nonempty_calls": {"total": 0, "peer_nonempty": 0, "peer_empty": 0},
+        # 拆开"同名两义"：一个容器只装一种量（旧键 `context_line_nonempty_calls` 已移除）
+        "context_line_nonempty_returns": {"total": 0},          # **返回非空**次数
+        "context_line_calls_by_peer": {"peer_nonempty": 0, "peer_empty": 0},  # **调用**次数按 peer 分组
         # 阳性对照①：调用时**台账确实有旧账且 peer 非空**的次数（否则"非空为 0"分不清
         # "机制没接通"与"本来就没有旧账可叙"）
         "context_line_rifts_nonempty_calls": 0,
@@ -213,12 +215,12 @@ def _run_arm(mode: str, n: int, rounds: int, seed: int) -> dict:
     def w_context_line(rifts, peer=None, round_no=0, name=None, params=None, *a, **kw):
         counts["context_line_calls"] += 1
         peer_ok = bool(peer)
-        counts["context_line_nonempty_calls"]["peer_nonempty" if peer_ok else "peer_empty"] += 1
+        counts["context_line_calls_by_peer"]["peer_nonempty" if peer_ok else "peer_empty"] += 1
         if peer_ok and isinstance(rifts, dict) and rifts:
             counts["context_line_rifts_nonempty_calls"] += 1     # 阳性对照①
         out = orig["context_line"](rifts, peer, round_no, name, params, *a, **kw)
         if out:
-            counts["context_line_nonempty_calls"]["total"] += 1
+            counts["context_line_nonempty_returns"]["total"] += 1
         return out
 
     def w_repair_ask(rifts, thread_id=None, peer=None, round_no=0, params=None, *a, **kw):
@@ -306,12 +308,13 @@ def _run_arm(mode: str, n: int, rounds: int, seed: int) -> dict:
         _p_on = dict(DRm.DEFAULTS); _p_on["enabled"] = True
         _p_off = dict(DRm.DEFAULTS); _p_off["enabled"] = False
         _p_noask = dict(_p_on); _p_noask["repair_ask"] = False
-        _snap = lambda: (counts["context_line_calls"], counts["context_line_nonempty_calls"]["total"],
+        _snap = lambda: (counts["context_line_calls"], counts["context_line_nonempty_returns"]["total"],
                          counts["repair_ask_calls"], counts["repair_ask_nonempty_calls"])
         # **probe 前后回滚**：`counts` 必须只反映"跑批世界"里的调用，probe 单独报，
         # 否则"全关时两条新通道计数必须为 0"这条会被 probe 自身污染。
         _bak = {"context_line_calls": counts["context_line_calls"],
-                "context_line_nonempty_calls": dict(counts["context_line_nonempty_calls"]),
+                "context_line_nonempty_returns": dict(counts["context_line_nonempty_returns"]),
+                "context_line_calls_by_peer": dict(counts["context_line_calls_by_peer"]),
                 "context_line_rifts_nonempty_calls": counts["context_line_rifts_nonempty_calls"],
                 "repair_ask_calls": counts["repair_ask_calls"],
                 "repair_ask_nonempty_calls": counts["repair_ask_nonempty_calls"],
@@ -327,12 +330,13 @@ def _run_arm(mode: str, n: int, rounds: int, seed: int) -> dict:
         _s3 = _snap()
         _probe_isolated = {
             "context_line_calls_in_arm": _bak["context_line_calls"],
-            "context_line_nonempty_in_arm": _bak["context_line_nonempty_calls"]["total"],
+            "context_line_nonempty_returns_in_arm": _bak["context_line_nonempty_returns"]["total"],
             "repair_ask_calls_in_arm": _bak["repair_ask_calls"],
             "repair_ask_nonempty_in_arm": _bak["repair_ask_nonempty_calls"],
         }
         counts.update(_bak)          # 回滚：探针不计入本臂统计
-        counts["context_line_nonempty_calls"] = dict(_bak["context_line_nonempty_calls"])
+        counts["context_line_nonempty_returns"] = dict(_bak["context_line_nonempty_returns"])
+        counts["context_line_calls_by_peer"] = dict(_bak["context_line_calls_by_peer"])
         function_probe = {
             "note": "构造台账直调两函数：wrapper 生效；探针增量已从本臂统计回滚，单独列于此处",
             "arm_counts_before_probe": _probe_isolated,
@@ -484,7 +488,7 @@ def _verdict(mode: str, c: dict, sw: dict, act: dict) -> dict:
     def _dr_v(kind: str) -> dict:
         if kind == "context_line":
             calls = c["context_line_calls"]
-            nonempty = c["context_line_nonempty_calls"]["total"]
+            nonempty = c["context_line_nonempty_returns"]["total"]
             rifts_nn = c["context_line_rifts_nonempty_calls"]
             blocked = "record_only" if sw.get("record_only") else None
         else:
@@ -588,7 +592,7 @@ def main(argv: list) -> int:
         cl, ra = by_mode["off"]["counts"], by_mode["off"]["verdict"]
         tiers["tier1_enabled0"] = {
             "source": "arm=off",
-            "context_line_value": cl["context_line_calls"] and cl["context_line_nonempty_calls"]["total"] or 0,
+            "context_line_value": cl["context_line_nonempty_returns"]["total"],
             "repair_ask_value": cl["repair_ask_nonempty_calls"],
             "why_zero": ra["DR_context_line"]["why_zero"],
             "positive_control": ra["DR_context_line"]["positive_control"],
@@ -598,12 +602,13 @@ def main(argv: list) -> int:
         cl = by_mode["dr_msg"]["counts"]
         tiers["tier2_enabled1_no_rift"] = {
             "source": "arm=dr_msg（mock 回复不含负向词 ⇒ 真实 rift 恒 0）",
-            "context_line_value": cl["context_line_nonempty_calls"]["total"],
+            "context_line_value": cl["context_line_nonempty_returns"]["total"],
+            "context_line_calls_by_peer": cl["context_line_calls_by_peer"],
             "repair_ask_value": cl["repair_ask_nonempty_calls"],
             "rifts_nonempty_calls": cl["context_line_rifts_nonempty_calls"],
             "why_zero": by_mode["dr_msg"]["verdict"]["DR_context_line"]["why_zero"],
             "positive_control": by_mode["dr_msg"]["verdict"]["DR_context_line"]["positive_control"],
-            "ok": (cl["context_line_nonempty_calls"]["total"] == 0
+            "ok": (cl["context_line_nonempty_returns"]["total"] == 0
                    and cl["repair_ask_nonempty_calls"] == 0
                    and cl["context_line_rifts_nonempty_calls"] == 0),
         }
