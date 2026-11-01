@@ -1,0 +1,97 @@
+{
+  "batch_id": "r44-aborted-r9",
+  "fail_count": 0,
+  "generated_at": "2026-11-01T08:38:51+08:00",
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r44-public-reply-20261101_n16r24_s42/run.jsonl",
+  "log_sha256": "3059db66ae00bfffc1464695f6347409e7cce5547818c1cb1530871c7dbbff08",
+  "ok_count": 2,
+  "policy": {
+    "blank_check": "自行像素自检（distinct_colors/top_color_frac/non_bg_frac 逐张落盘）；未沿用 shot.py 的单色判据——该判据对深色 dialogue.html 会假红（实测 80.09% 误判）",
+    "code_untouched": "服务根为临时目录 + 符号链接；未在 code/frontend 下写入任何文件",
+    "no_reuse": "输出同名 PNG 若已存在则先删除，只认本次现截",
+    "no_stitching": "每张图独立截图，禁止拼图/跨批混拼"
+  },
+  "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r44-public-reply-20261101_n16r24_s42",
+  "run_sha256_in_threads": "3059db66ae00bfffc1464695f6347409e7cce5547818c1cb1530871c7dbbff08",
+  "schema_version": "render-shots/1.0",
+  "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r44_shots/threads_r44-aborted-r9.json",
+  "threads_json_sha256": "822f06618b36790f44bb7975c6c948f450bef57b086b1e60af1db41605327e9e",
+  "views": [
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 22907,
+        "height": 900,
+        "non_bg_frac": 0.5184,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.172,
+        "width": 1400
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r44_shots/r44-aborted-r9-chat-3059db66.png",
+      "png_bytes": 287090,
+      "png_mtime_iso": "2026-11-01T08:38:47+08:00",
+      "png_mtime_ns": 1793493527541075671,
+      "png_sha256": "a29b33e7fc8d4cf8717a3339083b57339106fed791c7748d66eefa56df913fff",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r44-public-reply-20261101_n16r24_s42/run.jsonl --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r44_shots/threads_r44-aborted-r9.json --label r44-aborted-r9",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r44-public-reply-20261101_n16r24_s42/run.jsonl",
+        "log_sha256": "3059db66ae00bfffc1464695f6347409e7cce5547818c1cb1530871c7dbbff08",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:46443/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_r44-aborted-r9/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r44_shots/r44-aborted-r9-chat-3059db66.png --width 1400 --height 900 --timeout 240.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r44-public-reply-20261101_n16r24_s42",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r44_shots/threads_r44-aborted-r9.json",
+        "threads_json_sha256": "822f06618b36790f44bb7975c6c948f450bef57b086b1e60af1db41605327e9e"
+      },
+      "view": "chat"
+    },
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 19969,
+        "height": 1050,
+        "non_bg_frac": 0.3558,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.4031,
+        "width": 1300
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r44_shots/r44-aborted-r9-rhythm-3059db66.png",
+      "png_bytes": 275960,
+      "png_mtime_iso": "2026-11-01T08:38:50+08:00",
+      "png_mtime_ns": 1793493530037221220,
+      "png_sha256": "f04f6b3ec1b7cd522b131d62f4c1f3cc99ace02dd0aa3cbbeb1e0ef3c8c3c833",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r44-public-reply-20261101_n16r24_s42/run.jsonl --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r44_shots/threads_r44-aborted-r9.json --label r44-aborted-r9",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r44-public-reply-20261101_n16r24_s42/run.jsonl",
+        "log_sha256": "3059db66ae00bfffc1464695f6347409e7cce5547818c1cb1530871c7dbbff08",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:46443/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_r44-aborted-r9/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r44_shots/r44-aborted-r9-rhythm-3059db66.png --width 1300 --height 1050 --timeout 240.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r44-public-reply-20261101_n16r24_s42",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r44_shots/threads_r44-aborted-r9.json",
+        "threads_json_sha256": "822f06618b36790f44bb7975c6c948f450bef57b086b1e60af1db41605327e9e"
+      },
+      "view": "rhythm"
+    }
+  ]
+}
