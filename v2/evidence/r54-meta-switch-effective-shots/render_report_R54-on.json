@@ -1,0 +1,97 @@
+{
+  "batch_id": "R54-on",
+  "fail_count": 0,
+  "generated_at": "2026-11-02T08:02:58+08:00",
+  "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r53-schedule-offset-on-20261102_n16r36_s42/run.jsonl",
+  "log_sha256": "f3a99c5637bb08e1cfcd0ebaa59b0423c4cafea99f17ba41ca1eb8cc49918c0f",
+  "ok_count": 2,
+  "policy": {
+    "blank_check": "自行像素自检（distinct_colors/top_color_frac/non_bg_frac 逐张落盘）；未沿用 shot.py 的单色判据——该判据对深色 dialogue.html 会假红（实测 80.09% 误判）",
+    "code_untouched": "服务根为临时目录 + 符号链接；未在 code/frontend 下写入任何文件",
+    "no_reuse": "输出同名 PNG 若已存在则先删除，只认本次现截",
+    "no_stitching": "每张图独立截图，禁止拼图/跨批混拼"
+  },
+  "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r53-schedule-offset-on-20261102_n16r36_s42",
+  "run_sha256_in_threads": "f3a99c5637bb08e1cfcd0ebaa59b0423c4cafea99f17ba41ca1eb8cc49918c0f",
+  "schema_version": "render-shots/1.0",
+  "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r54-meta-switch-effective-shots/threads_R54-on.json",
+  "threads_json_sha256": "55a06b25ca94ccd79dbb53fc135d2472b771fda592185b767b48378035d1f97b",
+  "views": [
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 23770,
+        "height": 900,
+        "non_bg_frac": 0.5466,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.1329,
+        "width": 1400
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r54-meta-switch-effective-shots/R54-on-chat-f3a99c56.png",
+      "png_bytes": 281724,
+      "png_mtime_iso": "2026-11-02T08:02:54+08:00",
+      "png_mtime_ns": 1793577774965666916,
+      "png_sha256": "18fa9f84288baa740f5ebb6b76e5047c0494b5143aa5d14fd9442b9bc3dbc0ba",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r53-schedule-offset-on-20261102_n16r36_s42/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r53-schedule-offset-on-20261102_n16r36_s42/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r54-meta-switch-effective-shots/threads_R54-on.json --label R54-on",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r53-schedule-offset-on-20261102_n16r36_s42/run.jsonl",
+        "log_sha256": "f3a99c5637bb08e1cfcd0ebaa59b0423c4cafea99f17ba41ca1eb8cc49918c0f",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:37099/dialogue.html?still=1&multi=1&min=0&sort=turns&data=sample/dialogue_R54-on/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r54-meta-switch-effective-shots/R54-on-chat-f3a99c56.png --width 1400 --height 900 --timeout 240.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r53-schedule-offset-on-20261102_n16r36_s42",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r54-meta-switch-effective-shots/threads_R54-on.json",
+        "threads_json_sha256": "55a06b25ca94ccd79dbb53fc135d2472b771fda592185b767b48378035d1f97b"
+      },
+      "view": "chat"
+    },
+    {
+      "pixel_selfcheck": {
+        "distinct_colors": 21540,
+        "height": 1050,
+        "non_bg_frac": 0.4151,
+        "rule": "distinct_colors ≥ 200 且 top_color_frac ≤ 0.99 ⇒ OK（深色 UI 不按单色占比判死）",
+        "status": "OK",
+        "top_color": [
+          19,
+          25,
+          34
+        ],
+        "top_color_frac": 0.3353,
+        "width": 1300
+      },
+      "png": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r54-meta-switch-effective-shots/R54-on-rhythm-f3a99c56.png",
+      "png_bytes": 279763,
+      "png_mtime_iso": "2026-11-02T08:02:57+08:00",
+      "png_mtime_ns": 1793577777344864657,
+      "png_sha256": "01716f7e531f2e31b730beeab0f4215afc6c578939b6e9dedc2174d0c5b50797",
+      "rc": 0,
+      "shot_stdout_tail": [
+        "  px = list(q.getdata())",
+        "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py:191: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.",
+        "  data = im.getdata()"
+      ],
+      "triplet": {
+        "gen_threads_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/gen_threads.py --log /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r53-schedule-offset-on-20261102_n16r36_s42/run.jsonl --meta /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r53-schedule-offset-on-20261102_n16r36_s42/meta.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r54-meta-switch-effective-shots/threads_R54-on.json --label R54-on",
+        "log": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r53-schedule-offset-on-20261102_n16r36_s42/run.jsonl",
+        "log_sha256": "f3a99c5637bb08e1cfcd0ebaa59b0423c4cafea99f17ba41ca1eb8cc49918c0f",
+        "mock_log_sha256": null,
+        "render_cmd": "/opt/openjiuwen/workswarm-venv/bin/python3 /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/code/frontend/tools/shot.py --url http://127.0.0.1:37099/dialogue.html?still=1&multi=1&min=0&view=rhythm&data=sample/dialogue_R54-on/threads.json --out /root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r54-meta-switch-effective-shots/R54-on-rhythm-f3a99c56.png --width 1300 --height 1050 --timeout 240.0 --retry-blank 2 --no-blank-check",
+        "run_dir": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r53-schedule-offset-on-20261102_n16r36_s42",
+        "threads_json": "/root/.jiuwenswarm/agent/workspace/work/尝试/social-experiment/v2/evidence/r54-meta-switch-effective-shots/threads_R54-on.json",
+        "threads_json_sha256": "55a06b25ca94ccd79dbb53fc135d2472b771fda592185b767b48378035d1f97b"
+      },
+      "view": "rhythm"
+    }
+  ]
+}
