@@ -1,0 +1,20 @@
+{
+  "a": {
+    "path": "/tmp/d9zpm_A/run.jsonl",
+    "sha256": "d8ca11609c3f470beb2a01aa3c6bdef8ba18febc9e9f4af311303abefacb9d4b",
+    "events": 7541,
+    "chain_self_consistent": true,
+    "first_bad_link": -1
+  },
+  "b": {
+    "path": "/tmp/d9zpm_B/run.jsonl",
+    "sha256": "d8ca11609c3f470beb2a01aa3c6bdef8ba18febc9e9f4af311303abefacb9d4b",
+    "events": 7541,
+    "chain_self_consistent": true,
+    "first_bad_link": -1
+  },
+  "events_compared": 7541,
+  "identical_prefix_events": 7541,
+  "identical": true,
+  "first_divergence": null
+}

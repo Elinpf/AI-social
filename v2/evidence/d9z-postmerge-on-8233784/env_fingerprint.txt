@@ -1,0 +1,18 @@
+# D9z post-merge 重跑：V1'/V2' env 指纹（两臂跑前/跑后均为下列 (unset)）
+# BASE=823378404acf8226662978a8427c5883fea56a0b（merge commit：a3beacf + 6a7cc6d）
+# V1'=worktree .worktrees/d9z-pm-v1 (detached @BASE)
+# V2'=worktree .worktrees/d9z-pm-v2 (detached @BASE)
+# 注意：V1' 与 V2' 是**同一棵树**（同一 rev）的两次独立运行 ⇒ 本组比对考的是「确定性 + 与旧批 sha 一致」，
+#       不是「分支 vs 基线」。
+HITT_LLM_PROVIDER=(unset)
+HITT_DIALOGUE_REPAIR=(unset)
+HITT_DR_RIFT_EVENTS=(unset)
+HITT_DR_REPAIR_ASK=(unset)
+HITT_DR_RECORD_ONLY=(unset)
+HITT_DR_PICK_MARK=(unset)
+HITT_INTRA_ROUND_VISIBILITY=(unset)
+LIFE_PROMPT_NARRATION=(unset)
+LIFE_PROMPT_NARRATION_ROTATION=(unset)
+LIFE_PROMPT_NARRATION_ACTION=(unset)
+LIFE_PROMPT_NARRATION_SYNTAX=(unset)
+LIFE_PROMPT_NARRATION_OPENINGS=(unset)

@@ -1,0 +1,120 @@
+{
+  "tool": "tools/dr/rift_gate0_check.py",
+  "gate0_definition": {
+    "1": "RIFT_OPEN distinct rift_id 数 == 台账登记数",
+    "2": "RIFT_CLOSE reason∈{repair,expire,prune} 之和 == 台账注销数（unknown 单列不计）",
+    "3": "逐 seq：dialogue_rift.open == len(已OPEN未CLOSE) 且 set(rift_ids) == 该集合"
+  },
+  "inputs": [
+    {
+      "log": "../rift-events/v2/evidence/rift-on_n16r24_s42/run.jsonl",
+      "events": 33767,
+      "1_open_vs_ledger": {
+        "status": "MISMATCH",
+        "detail": "OPEN 事件 distinct=7（重复 42） vs 重放登记=49",
+        "rift_open_events": 49,
+        "rift_open_distinct_ids": 7,
+        "duplicate_open_ids": 42,
+        "ledger_registered": 49,
+        "match": false
+      },
+      "2_close_vs_ledger": {
+        "status": "PASS",
+        "rift_close_events": 3,
+        "reason_distribution": {
+          "prune": 3
+        },
+        "known_close_sum": 3,
+        "unknown_close": 0,
+        "other_close": 0,
+        "ledger_resolved_repair": 0,
+        "ledger_dropped_prune": 3,
+        "match": true
+      },
+      "3_snapshot_alignment": {
+        "status": "MISMATCH",
+        "detail": "逐 seq 违例 22 条",
+        "first": {
+          "seq": 7314,
+          "agent": "P016",
+          "kind": "open_mismatch",
+          "snapshot_open": 2,
+          "expected": 3
+        },
+        "msgs_with_dialogue_rift": 17,
+        "msgs_with_rift_ids_key": 17,
+        "violations": 22,
+        "violation_samples": [
+          {
+            "seq": 7314,
+            "agent": "P016",
+            "kind": "open_mismatch",
+            "snapshot_open": 2,
+            "expected": 3
+          },
+          {
+            "seq": 7314,
+            "agent": "P016",
+            "kind": "rift_ids_mismatch",
+            "snapshot_ids": [
+              "R|TH-P005-P016-7|42:5920",
+              "R|TH-P005-PUB-0-0|42:90"
+            ],
+            "expected_ids": [
+              "R|TH-P005-P016-7|42:5920",
+              "R|TH-P005-PUB-0-0|42:90",
+              "R|TH-P016-P002-6|42:5583"
+            ]
+          },
+          {
+            "seq": 8912,
+            "agent": "P016",
+            "kind": "open_mismatch",
+            "snapshot_open": 2,
+            "expected": 3
+          },
+          {
+            "seq": 8912,
+            "agent": "P016",
+            "kind": "rift_ids_mismatch",
+            "snapshot_ids": [
+              "R|TH-P005-P016-7|42:5920",
+              "R|TH-P005-PUB-0-0|42:90"
+            ],
+            "expected_ids": [
+              "R|TH-P005-P016-7|42:5920",
+              "R|TH-P005-PUB-0-0|42:90",
+              "R|TH-P016-P002-6|42:5583"
+            ]
+          },
+          {
+            "seq": 16839,
+            "agent": "P016",
+            "kind": "open_mismatch",
+            "snapshot_open": 2,
+            "expected": 3
+          }
+        ],
+        "match": false
+      },
+      "ledger": {
+        "agents": 16,
+        "registered": 49,
+        "resolved_by_repair": 0,
+        "dropped_by_prune": 3,
+        "open_at_end": 46
+      },
+      "blockers": [
+        "① MISMATCH",
+        "③ MISMATCH"
+      ],
+      "gate0_ready": false,
+      "gate0_status": {
+        "1_open_vs_ledger": "MISMATCH",
+        "2_close_vs_ledger": "PASS",
+        "3_snapshot_alignment": "MISMATCH"
+      },
+      "note": "unknown_close > 0 ⇒ **bug 信号**（有调用点没传 reason），单列且不计入 ② 的 match；gate0 判定不因此放宽，但需先修调用点"
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "agents_a": 17,
+  "agents_b": 17,
+  "agent_sets_equal": true,
+  "total_seqs_a": 3701,
+  "total_seqs_b": 3701,
+  "agents_compared": 17,
+  "agents_not_equal": 0,
+  "not_equal_ids": [],
+  "all_equal": true,
+  "per_agent": {
+    "MARKET": {
+      "n_a": 38,
+      "n_b": 38,
+      "equal": true
+    },
+    "P001": {
+      "n_a": 165,
+      "n_b": 165,
+      "equal": true
+    },
+    "P002": {
+      "n_a": 171,
+      "n_b": 171,
+      "equal": true
+    },
+    "P003": {
+      "n_a": 266,
+      "n_b": 266,
+      "equal": true
+    },
+    "P004": {
+      "n_a": 157,
+      "n_b": 157,
+      "equal": true
+    },
+    "P005": {
+      "n_a": 250,
+      "n_b": 250,
+      "equal": true
+    },
+    "P006": {
+      "n_a": 254,
+      "n_b": 254,
+      "equal": true
+    },
+    "P007": {
+      "n_a": 220,
+      "n_b": 220,
+      "equal": true
+    },
+    "P008": {
+      "n_a": 161,
+      "n_b": 161,
+      "equal": true
+    },
+    "P009": {
+      "n_a": 253,
+      "n_b": 253,
+      "equal": true
+    },
+    "P010": {
+      "n_a": 254,
+      "n_b": 254,
+      "equal": true
+    },
+    "P011": {
+      "n_a": 293,
+      "n_b": 293,
+      "equal": true
+    },
+    "P012": {
+      "n_a": 229,
+      "n_b": 229,
+      "equal": true
+    },
+    "P013": {
+      "n_a": 252,
+      "n_b": 252,
+      "equal": true
+    },
+    "P014": {
+      "n_a": 253,
+      "n_b": 253,
+      "equal": true
+    },
+    "P015": {
+      "n_a": 219,
+      "n_b": 219,
+      "equal": true
+    },
+    "P016": {
+      "n_a": 266,
+      "n_b": 266,
+      "equal": true
+    }
+  }
+}

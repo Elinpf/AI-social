@@ -1,0 +1,69 @@
+{
+  "tool": "tools/dr/rift_gate0_check.py",
+  "gate0_definition": {
+    "1": "RIFT_OPEN distinct rift_id 数 == 台账登记数",
+    "2": "RIFT_CLOSE reason∈{repair,expire,prune} 之和 == 台账注销数（unknown 单列不计）",
+    "3": "逐 seq：dialogue_rift.open == len(已OPEN未CLOSE) 且 set(rift_ids) == 该集合"
+  },
+  "inputs": [
+    {
+      "log": "/tmp/d9zpm_A/run.jsonl",
+      "events": 7541,
+      "1_open_vs_ledger": {
+        "status": "CANNOT-VERIFY(1_open_vs_ledger)",
+        "missing": [
+          "本批没有任何 RIFT_OPEN 事件，且重放台账登记也是 0 ⇒ 无法区分「没有负向话」与「rift_events 开关没生效」"
+        ],
+        "rift_open_events": 0,
+        "rift_open_distinct_ids": 0,
+        "duplicate_open_ids": 0,
+        "ledger_registered": 0,
+        "match": true
+      },
+      "2_close_vs_ledger": {
+        "status": "CANNOT-VERIFY(2_close_vs_ledger)",
+        "missing": [
+          "本批没有任何 RIFT_CLOSE 事件，重放也无注销 ⇒ 无法区分「没有关闭」与「未接线」"
+        ],
+        "rift_close_events": 0,
+        "reason_distribution": {},
+        "known_close_sum": 0,
+        "unknown_close": 0,
+        "other_close": 0,
+        "ledger_resolved_repair": 0,
+        "ledger_dropped_prune": 0,
+        "match": true
+      },
+      "3_snapshot_alignment": {
+        "status": "CANNOT-VERIFY(3_snapshot_alignment)",
+        "missing": [
+          "没有任何 MSG 带 dialogue_rift 快照"
+        ],
+        "msgs_with_dialogue_rift": 0,
+        "msgs_with_rift_ids_key": 0,
+        "violations": 0,
+        "violation_samples": [],
+        "match": false
+      },
+      "ledger": {
+        "agents": 16,
+        "registered": 0,
+        "resolved_by_repair": 0,
+        "dropped_by_prune": 0,
+        "open_at_end": 0
+      },
+      "blockers": [
+        "① CANNOT-VERIFY(1_open_vs_ledger)",
+        "② CANNOT-VERIFY(2_close_vs_ledger)",
+        "③ CANNOT-VERIFY(3_snapshot_alignment)"
+      ],
+      "gate0_ready": false,
+      "gate0_status": {
+        "1_open_vs_ledger": "CANNOT-VERIFY(1_open_vs_ledger)",
+        "2_close_vs_ledger": "CANNOT-VERIFY(2_close_vs_ledger)",
+        "3_snapshot_alignment": "CANNOT-VERIFY(3_snapshot_alignment)"
+      },
+      "note": "unknown_close > 0 ⇒ **bug 信号**（有调用点没传 reason），单列且不计入 ② 的 match；gate0 判定不因此放宽，但需先修调用点"
+    }
+  ]
+}

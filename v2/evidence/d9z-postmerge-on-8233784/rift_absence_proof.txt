@@ -1,0 +1,14 @@
+# master@8233784 是否含 rift 观测面 —— 符号搜索（决定三查 ①② 能否在该树上算）
+# 生成命令：grep -rn '<符号>' code/
+# rev = 823378404acf8226662978a8427c5883fea56a0b
+
+RIFT_OPEN : 0 命中
+RIFT_CLOSE : 0 命中
+HITT_DR_RIFT_EVENTS : 0 命中
+RIFT_CLOSE_REASONS : 0 命中
+
+# 对照：D9z 符号（应 >0，证明本树确实含 D9z）
+HITT_INTRA_ROUND_VISIBILITY : 1 命中
+
+# 结论：master 侧无 rift 观测面 ⇒ RIFT_OPEN/RIFT_CLOSE 事件在本树物理上不会产生，
+#       故三查 ①②（(agent_id,rift_id) 配对、reason 封闭集）在本轮 run.jsonl 上不可观测，只能记 CANNOT-VERIFY。
