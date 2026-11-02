@@ -1,0 +1,18 @@
+# D9z V1-V4 证据 — 三元组
+BASE=619e9ae0036ed64b8aeb6f260d2d4dfa46f8c3c9
+V1=worktree .worktrees/d9z-min-v1 (detached @BASE)
+V2=worktree .worktrees/d9z-min @feat/d9z-minimal df35d7e
+--- env 清单（两臂跑前/跑后均 (unset)）---
+HITT_LLM_PROVIDER=(unset)
+HITT_INTRA_ROUND_VISIBILITY=(unset)
+HITT_DIALOGUE_REPAIR=(unset)
+HITT_DR_RIFT_EVENTS=(unset)
+HITT_DR_REPAIR_ASK=(unset)
+HITT_DR_RECORD_ONLY=(unset)
+HITT_DR_PICK_MARK=(unset)
+LIFE_PROMPT_NARRATION=(unset)
+LIFE_PROMPT_NARRATION_ROTATION=(unset)
+LIFE_PROMPT_NARRATION_ACTION=(unset)
+LIFE_PROMPT_NARRATION_SYNTAX=(unset)
+LIFE_PROMPT_NARRATION_OPENINGS=(unset)
+--- 实测残留 ---

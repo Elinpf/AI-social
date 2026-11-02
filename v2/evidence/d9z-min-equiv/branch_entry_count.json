@@ -1,0 +1,46 @@
+{
+  "off": {
+    "mode": "off(unset)",
+    "switch_value": null,
+    "n": 16,
+    "rounds": 8,
+    "seed": 42,
+    "events": 7541,
+    "final_state_hash": "sha256:84c1a221a8593c28fe77db244257f3de9180a19c61ea74c0dd8bf20c15e61db1",
+    "pending_view_calls": 128,
+    "pending_view_nonNone": 0,
+    "with_pending_calls": 0,
+    "with_pending_merged": 0,
+    "idx_visible_calls": 257,
+    "idx_visible_with_extra": 0
+  },
+  "on": {
+    "mode": "1",
+    "switch_value": "1",
+    "n": 16,
+    "rounds": 8,
+    "seed": 42,
+    "events": 7547,
+    "final_state_hash": "sha256:a03a840e3fa657718387c98a852c1118da37bcfbcd15bfe7a5c614b322e395ea",
+    "pending_view_calls": 128,
+    "pending_view_nonNone": 88,
+    "with_pending_calls": 0,
+    "with_pending_merged": 0,
+    "idx_visible_calls": 257,
+    "idx_visible_with_extra": 88
+  },
+  "checks": {
+    "off_pending_view_nonNone_zero": true,
+    "off_with_pending_merged_zero": true,
+    "off_idx_extra_zero": true,
+    "on_pending_view_nonNone_positive": true,
+    "on_idx_extra_positive": true,
+    "off_same_events_as_on_sanity": true,
+    "all_pass": true
+  },
+  "notes": {
+    "with_pending_calls_off": 0,
+    "with_pending_calls_on": 0,
+    "explain": "engine.perceive.with_pending 在 life 路径无 live caller（保留为 engine 侧孪生入口）"
+  }
+}

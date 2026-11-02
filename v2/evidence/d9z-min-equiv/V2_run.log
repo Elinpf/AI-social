@@ -1,0 +1,5 @@
+[life] n_agents=16 rounds=8 events=7541 seconds=1.8746 log_bytes=3898601
+  unknown_event_types=[]
+  chain_ok=True replay_parity=True first_run_equals_replay=True
+  conservation_ok=True final_state_hash=sha256:84c1a221a8593c28fe77db244257f3de9180a19c61ea74c0dd8bf20c15e61db1
+  log written: /tmp/d9zmin_B/run.jsonl
