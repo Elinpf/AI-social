@@ -162,12 +162,20 @@ def table_names(*, only_effective: bool = False) -> list[str]:
             if (not only_effective) or s.get("in_effective", True)]
 
 
-def parse_env_manifest(path: str | Path) -> dict:
-    """读 arm_inner.sh 落盘的 env_manifest.txt → {NAME: raw}；`<unset>` 不进 dict（= 未设）。
+def parse_env_manifest_detailed(path: str | Path) -> dict:
+    """读 env_manifest.txt → 三件事分开记：`env` / `explicit_unset` / `keys`。
 
-    只认 `KEY=VALUE` 形态的行（含值带空格的如 INLINE_ENV，无害：我们只按名精确查）。
+    为什么要 detailed 版（看板 A-2/A-4）：manifest 由 `tools/r53/arm_inner.sh` 一类的启动器
+    **只登记它自己关心的那几个键**。于是「清单里没这个键」与「清单里明确写了
+    `<unset>`」是**两种不同强度的证据**：
+      * 明确 `<unset>` ⇒ 该臂**确证未导出**该变量（本臂声明值 = 关）；
+      * 清单里压根没出现 ⇒ **声明侧未知**（既不能断言开、也不能断言关）。
+    旧 `parse_env_manifest()` 把两者压成同一个「不在 dict 里」，用于「回放取证」会把
+    「不知道」冒充成「关」，故这里补 detailed 版（旧函数语义保持不变，向后兼容）。
     """
     env: dict[str, str] = {}
+    explicit_unset: list[str] = []
+    keys: list[str] = []
     with open(path, encoding="utf-8") as fh:
         for line in fh:
             line = line.rstrip("\n")
@@ -177,10 +185,26 @@ def parse_env_manifest(path: str | Path) -> dict:
             k = k.strip()
             if not k or " " in k or "\t" in k:
                 continue
+            keys.append(k)
             if v == UNSET_MARKER:
+                explicit_unset.append(k)
                 continue  # 未设 ⇒ 不出现在 env 里（与真实进程环境一致）
             env[k] = v
-    return env
+    return {
+        "path": str(path),
+        "env": env,
+        "explicit_unset": sorted(set(explicit_unset)),
+        "keys": sorted(set(keys)),
+    }
+
+
+def parse_env_manifest(path: str | Path) -> dict:
+    """读 arm_inner.sh 落盘的 env_manifest.txt → {NAME: raw}；`<unset>` 不进 dict（= 未设）。
+
+    只认 `KEY=VALUE` 形态的行（含值带空格的如 INLINE_ENV，无害：我们只按名精确查）。
+    需要区分「明确 <unset>」与「清单里没出现」时用 `parse_env_manifest_detailed()`。
+    """
+    return parse_env_manifest_detailed(path)["env"]
 
 
 def declared_switch(name: str, env: dict | None = None, kind: str = "bool",
@@ -223,6 +247,29 @@ def declared_switch(name: str, env: dict | None = None, kind: str = "bool",
         out["parse_rule"] = ("bool：strip().lower() ∈ {1,true,yes,on} ⇒ 真"
                              "（与 code/life/weather.py::enabled 同口径）")
     return out
+
+
+def declared_switch_from_manifest(name: str, manifest: dict, kind: str = "bool") -> dict:
+    """按 env_manifest **回放**取声明值（离线取证用；manifest 见 `parse_env_manifest_detailed`）。
+
+    与 live 模式（读 `os.environ`）的差别只有一处、但很关键：`declared_known`。
+      * 清单里出现该键（有值 或 明确 `<unset>`）⇒ `declared_known=True`，
+        `declared_state` 仍走 unset/empty/set 三态（`explicit_unset` 显式标出）；
+      * 清单里没出现 ⇒ `declared_known=False`、`declared_state="absent-from-manifest"`：
+        **声明侧未知**（manifest 只登记启动器关心的键，缺键 ≠ 未设），
+        此时 `normalized_effective` 仍给出兼容用的 False，但**禁止**把它当真值引用。
+    """
+    st = declared_switch(name, env=manifest["env"], kind=kind,
+                         source=f"env_manifest[{manifest['path']}]")
+    mentioned = name in manifest["keys"] or name in manifest["explicit_unset"]
+    st["declared_known"] = mentioned
+    st["declared_state"] = st["state"]
+    if name in manifest["explicit_unset"]:
+        st["explicit_unset"] = True
+    if not mentioned:
+        st["declared_state"] = "absent-from-manifest"
+        st["absent_from_manifest"] = True
+    return st
 
 
 def _msg_recs(recs):
@@ -296,10 +343,19 @@ def probe_runtime(recs, spec: dict) -> dict:
     }
 
 
-def fuse_state(hits: int, declared_on: bool) -> str:
-    """四态融合（与 emit_run_meta._fuse_state 同口径）：on/off/cannot-verify/contradiction。"""
+def fuse_state(hits: int, declared_on: bool, declared_known: bool = True) -> str:
+    """四态融合（与 emit_run_meta 同口径）：on/off/cannot-verify/contradiction。
+
+    `declared_known=False`（清单里没登记该键 ⇒ 声明侧未知）时的额外纪律：
+      * 命中>0 ⇒ `on`（**不**判 contradiction —— 拿「未知的声明值」去否决运行期硬证据是错的）；
+      * 命中==0 ⇒ `cannot-verify`（**不**判 off —— 未知不是「关」）。
+    """
     if hits > 0:
-        return "on" if declared_on else "contradiction"
+        if declared_known and not declared_on:
+            return "contradiction"
+        return "on"
+    if not declared_known:
+        return "cannot-verify"
     return "off" if not declared_on else "cannot-verify"
 
 
@@ -380,6 +436,39 @@ def _selftest() -> int:
     chk(fuse_state(3, False) == "contradiction", "fusion 判错 contradiction")
     chk(fuse_state(0, True) == "cannot-verify", "fusion 判错 cannot-verify")
     chk(fuse_state(0, False) == "off", "fusion 判错 off")
+    # 声明侧未知（declared_known=False）：既不判 off、也不判 contradiction
+    chk(fuse_state(0, False, declared_known=False) == "cannot-verify",
+        "声明未知 + 命中 0 应判 cannot-verify（不得冒充 off）")
+    chk(fuse_state(5, False, declared_known=False) == "on",
+        "声明未知 + 命中>0 应判 on（不得用未知声明值否掉运行期硬证据）")
+
+    # 7) env_manifest 回放：明确 <unset> = 声明已知且关；清单缺键 = 声明未知
+    import tempfile
+    with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False, encoding="utf-8") as fh:
+        fh.write("# manifest\nLIFE_PROMPT_SCENE=1\nHITT_SCHEDULE_OFFSET=<unset>\n")
+        tmp2 = fh.name
+    try:
+        man = parse_env_manifest_detailed(tmp2)
+        chk("HITT_SCHEDULE_OFFSET" in man["explicit_unset"], "explicit_unset 未记录 <unset> 键")
+        off_st = declared_switch_from_manifest("HITT_SCHEDULE_OFFSET", man)
+        on_st = declared_switch_from_manifest("LIFE_PROMPT_SCENE", man)
+        unk_st = declared_switch_from_manifest("HITT_WEATHER", man)
+        chk(off_st["declared_known"] is True and off_st["normalized_effective"] is False
+            and off_st["state"] == "unset", f"manifest 显式 <unset> 判错：{off_st}")
+        chk(on_st["declared_known"] is True and on_st["normalized_effective"] is True,
+            f"manifest 有值键判错：{on_st}")
+        chk(unk_st["declared_known"] is False
+            and unk_st["declared_state"] == "absent-from-manifest",
+            f"manifest 缺键应判声明未知：{unk_st}")
+        # 端到端：off 臂显式 <unset> + 命中 0 ⇒ off；on 臂有值 ⇒ on
+        chk(fuse_state(0, off_st["normalized_effective"],
+                       declared_known=off_st["declared_known"]) == "off",
+            "manifest off 臂应判 off")
+        chk(fuse_state(448, on_st["normalized_effective"],
+                       declared_known=on_st["declared_known"]) == "on",
+            "manifest on 臂应判 on")
+    finally:
+        os.unlink(tmp2)
 
     if fails:
         for f in fails:

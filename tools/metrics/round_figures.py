@@ -607,11 +607,22 @@ def _diag_extract(path: str) -> dict:
     sg = (d.get("schema_gate") or {}).get("key_presence") or {}
     counts = {t: (sg.get(t) or {}).get("events") for t in ("MSG_DM", "MSG_PUBLIC", "MSG_GROUP")}
     pl = d.get("place_adjacency") or {}
+    g = d.get("msg_graph_degree") or {}
+    # 入度主口径（看板 A-4 / public-talk-deg/2）：`pub_in_degree_total_any` = 任一消息事件
+    # （DM/PUB/GROUP）命中 PUB msg_uid 的边数；`pub_in_degree_total` 是 dm-only 兼容字段，
+    # 在「公开面被公开面接住」的批里会低估。有主口径就用主口径，并显式记录所用字段名，
+    # 避免图注与数字来自不同口径（旧问题：图注写死「孤立节点」而实测 isolated_nodes=false）。
+    _in_any = g.get("pub_in_degree_total_any")
+    _in_legacy = g.get("pub_in_degree_total")
     return {
         "path": os.path.abspath(path),
         "counts": counts,
-        "in_deg": (d.get("msg_graph_degree") or {}).get("pub_in_degree_total"),
-        "out_deg": (d.get("msg_graph_degree") or {}).get("pub_out_degree_reply_nonnull"),
+        "in_deg": _in_any if _in_any is not None else _in_legacy,
+        "in_deg_field": "pub_in_degree_total_any" if _in_any is not None else "pub_in_degree_total",
+        "in_deg_legacy": _in_legacy,
+        "out_deg": g.get("pub_out_degree_reply_nonnull"),
+        "isolated_nodes": (g.get("isolated_nodes_any")
+                           if g.get("isolated_nodes_any") is not None else g.get("isolated_nodes")),
         "part_hist": (d.get("participants_length_dist") or {}).get("length_histogram") or {},
         "part_den": (d.get("participants_length_dist") or {}).get("denominator"),
         "reply_forms": (d.get("reply_to_forms") or {}).get("forms") or {},
@@ -667,19 +678,28 @@ def figure_diag(paths: list[str], out_png: str, label: str,
 
     # ② 公开消息入度 / 出边（两条零事实）
     ax = fig.add_subplot(gs[0, 1])
-    lab = ["公开消息入度\npub_in_degree_total", "公开消息对外出边\npub_out_degree_reply_nonnull"]
+    _in_field = d.get("in_deg_field") or "pub_in_degree_total"
+    lab = [f"公开消息入度\n{_in_field}", "公开消息对外出边\npub_out_degree_reply_nonnull"]
     vv = [d["in_deg"], d["out_deg"]]
     if all(v is not None for v in vv):
         ax.bar(lab, vv, color=["#c62828", "#c62828"], width=0.5)
         for i, v in enumerate(vv):
             ax.text(i, v, f"{v}", ha="center", va="bottom", fontsize=13, color="#c62828")
         ax.set_ylim(0, max(1.0, max(vv) * 1.5 + 0.2))
-        ax.text(0.5, 0.62, "全部为 0 ⇒ 公开消息在消息图里是孤立节点\n（无人接、也没接人）",
+        # 图注由**实测值**拼出（看板 A-4）：旧版写死「出边 0 ⇒ 孤立节点」，
+        # 与 `isolated_nodes=false` / `pub_out_degree_reply_nonnull=4` 的批直接矛盾。
+        _iso = (vv[0] == 0 and vv[1] == 0)
+        ax.text(0.5, 0.62,
+                ("入度 0、出边 0 ⇒ 公开消息在消息图里是孤立节点\n（无人接、也没接人）"
+                 if _iso else
+                 f"入度 {vv[0]} / 出边 {vv[1]} ⇒ 不是孤立节点\n（图注由实测值生成，不写死）"),
                 ha="center", va="center", fontsize=9.5, color="#c62828", transform=ax.transAxes)
         ax.set_ylabel("边数")
         ax.set_title("② 公开消息在图中的连边（两条零事实）", fontsize=10)
         ax.grid(axis="y", alpha=0.3)
-        notes.append(f"pub_in_degree_total={d['in_deg']}, pub_out_degree_reply_nonnull={d['out_deg']}")
+        notes.append(f"{_in_field}={d['in_deg']}, pub_out_degree_reply_nonnull={d['out_deg']}"
+                     + (f", isolated_nodes={d.get('isolated_nodes')}"
+                        if d.get("isolated_nodes") is not None else ""))
     else:
         ax.text(0.5, 0.5, MISSING, ha="center", va="center", fontsize=15, color="#c62828",
                 transform=ax.transAxes)

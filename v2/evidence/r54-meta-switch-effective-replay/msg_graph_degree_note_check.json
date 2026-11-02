@@ -1,0 +1,36 @@
+{
+  "input": {
+    "log": "v2/evidence/d47-ruler-f2-20261101_n16r24_s42/run.jsonl",
+    "log_sha256": "5d1a3f72074c49bc293b9f15797a3560ec8c7280b60ef1b023c1c9daa79ebbc7",
+    "meta": "v2/evidence/d47-ruler-f2-20261101_n16r24_s42/meta.json",
+    "ruler_cmd": "python3 tools/public_talk/public_talk_metrics.py --log <log> --meta <meta> --out <out>"
+  },
+  "on_disk_readings": {
+    "contradiction": true,
+    "file": "v2/evidence/d47-ruler-f2-20261101_n16r24_s42/readings/readings_d47_newruler.json",
+    "isolated_nodes": false,
+    "note": "DM 的 reply_to 非空 117 条全部命中 DM msg_uid（117/117），命中 PUB msg_uid = 0 ⇒ 公开消息在消息图里入度 0、出边 0，是孤立节点",
+    "pub_in_degree_total": 0,
+    "pub_out_degree_reply_nonnull": 4,
+    "ruler_version": null
+  },
+  "purpose": "A-4 验证：同一份证据（同一 run.jsonl）上，msg_graph_degree.note 与实测 isolated_nodes 是否矛盾",
+  "recomputed_with_fixed_code": {
+    "isolated_nodes_any": false,
+    "isolated_nodes_legacy_dm_only": false,
+    "note": "DM 的 reply_to 非空 117 条中命中 DM msg_uid 117 条、命中 PUB msg_uid 0 条（dm-only 兼容口径）；任一消息事件命中 PUB msg_uid = 4 条（按类型：{'MSG_PUBLIC': 4}）⇒ 公开消息入度 4（其中被公开面接住 4 条）、出边 4（= 回复边 4 + refs 0），不是孤立节点",
+    "note_consistency": {
+      "consistent": true,
+      "isolated_nodes_any": false,
+      "note_says_isolated": false,
+      "rule": "note 的「孤立节点 / 不是孤立节点」判定与 isolated_nodes_any 同口径：pub_in_degree_total_any==0 且 pub_out_degree_reply_nonnull==0 且 pub_out_degree_refs_nonempty==0"
+    },
+    "pub_in_degree_total_any": 4,
+    "pub_out_degree_reply_nonnull": 4,
+    "ruler_version": "public-talk-deg/2"
+  },
+  "verdict": {
+    "consistent": true,
+    "statement": "旧读数（on_disk_readings）文案与数字矛盾；用修后的纯函数重算后，note 的孤立判定与 isolated_nodes_any 同口径一致。"
+  }
+}

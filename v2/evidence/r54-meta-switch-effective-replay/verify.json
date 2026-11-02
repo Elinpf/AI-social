@@ -1,0 +1,84 @@
+{
+  "branch": "feat/r54-meta-switch-effective",
+  "head_before_commit": "84c903d2036c41fc97c240789e5826a441125bfd",
+  "items": {
+    "1_A2_replay": {
+      "off": {
+        "LIFE_PROMPT_SCENE_effective": "on",
+        "LIFE_PROMPT_SCENE_hits": 294,
+        "code_unchanged_during_run": true,
+        "code_unchanged_method": "git_diff_vs_code_sha+git_status_snapshot",
+        "declared_provenance_mode": "env_manifest",
+        "env_manifest_line": "HITT_SCHEDULE_OFFSET=<unset>",
+        "meta": "v2/evidence/r54-meta-switch-effective-replay/meta_off.json",
+        "rc": 0,
+        "switch_declared": {
+          "declared_known": true,
+          "explicit_unset": true,
+          "raw": null,
+          "state": "unset"
+        },
+        "switch_effective": {
+          "declared_known": true,
+          "declared_on": false,
+          "declared_state": "unset",
+          "effective": "off",
+          "hits": 0
+        }
+      },
+      "on": {
+        "LIFE_PROMPT_SCENE_effective": "on",
+        "LIFE_PROMPT_SCENE_hits": 294,
+        "code_unchanged_during_run": true,
+        "code_unchanged_method": "git_diff_vs_code_sha+git_status_snapshot",
+        "declared_provenance_mode": "env_manifest",
+        "env_manifest_line": "HITT_SCHEDULE_OFFSET=1",
+        "meta": "v2/evidence/r54-meta-switch-effective-replay/meta_on.json",
+        "rc": 0,
+        "switch_declared": {
+          "declared_known": true,
+          "explicit_unset": null,
+          "raw": "1",
+          "state": "set"
+        },
+        "switch_effective": {
+          "declared_known": true,
+          "declared_on": true,
+          "declared_state": "set",
+          "effective": "on",
+          "hits": 448
+        }
+      }
+    },
+    "2_A3_assertion": {
+      "gate_rc_with_change": 9,
+      "gate_stderr_tail": "[meta] FAIL(冻结区取证): code_unchanged_during_run=false method=exit_trap+git_diff_vs_code_sha+git_status_snapshot reasons=['EXIT trap 记录冻结区改动 1 个文件']",
+      "normal_assertion": true,
+      "normal_rc": 0,
+      "triggered_assertion": false,
+      "triggered_exit_trap_diff": [
+        "code/life/agent.py"
+      ],
+      "triggered_rc": 0,
+      "triggered_reasons": [
+        "EXIT trap 记录冻结区改动 1 个文件"
+      ]
+    },
+    "3_A4_note": {
+      "evidence": "v2/evidence/r54-meta-switch-effective-replay/msg_graph_degree_note_check.json"
+    },
+    "4_obs_llm_cost": {
+      "by_provider": {
+        "openai_compat": 2433
+      },
+      "problems": [],
+      "provider_guard_ok": true,
+      "rc": 0
+    },
+    "5_check_clean_tree": {
+      "blocking": [],
+      "rc": 0,
+      "verdict": "PASS"
+    }
+  }
+}

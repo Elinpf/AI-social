@@ -43,6 +43,7 @@ CODE = ROOT / "code"
 # switch_effective 少一个键」的老缺口，改成「加臂 = 表里加一行」。
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import arm_switch_table as AST  # noqa: E402  （同目录模块，需先插 sys.path）
+import frozen_zone_diff as FZD  # noqa: E402  （冻结区单一真源，见该模块 FROZEN_ZONES）
 
 
 def _sha256(path: Path) -> str:
@@ -110,16 +111,26 @@ def _assertions(recs) -> dict:
 #: 环境变量开关 → 归一化「真值」判定（与 code/life/weather.py::enabled 同口径）
 _TRUTHY = {"1", "true", "yes", "on"}
 
+#: 声明值来源上下文（看板 A-2）：`env_manifest` 回放 vs live `os.environ`。
+#  `None` ⇒ live（跑批当场由 run_batch.sh 调用本脚本时，本进程 environ 就是跑批 environ）；
+#  dict ⇒ 由 `AST.parse_env_manifest_detailed()` 解析出来的清单（**事后回放**时必须用它，
+#  否则「今天这台机器的 env」会被冒充成「那次跑批的 env」）。
+_DECL_MANIFEST: dict | None = None
+
 
 def _declared_switch(name: str, kind: str = "bool") -> dict:
-    """本进程实际读到的开关 env 值（**声明值**，非运行期事实）。
+    """本臂开关的**声明值**（弱证据，非运行期事实）。
 
-    实现已迁到 `tools/d2/arm_switch_table.py::declared_switch`（表驱动，单一真源）：
-    除了原来的 `raw` / `normalized_effective`，还显式给出 `state` ∈ {unset, empty, set}，
-    以便区分「环境里根本没有这个变量」与「设了但值是空串」（旧实现把两者压成同一个 False）。
-    本函数保留为薄包装，避免调用点散落。
+    两种模式（看板 A-2）：
+      * live（`_DECL_MANIFEST is None`）⇒ 读本进程 `os.environ`；
+      * 回放（给了 `--env-manifest` 或 run_dir 里自动探测到 `env_manifest.txt`）⇒ 读清单。
+    实现主体在 `tools/d2/arm_switch_table.py`（表驱动，单一真源）：
+    除了原来的 `raw` / `normalized_effective`，还给出 `state` ∈ {unset, empty, set}；
+    回放模式额外给 `declared_known` / `declared_state`（清单**缺键** ≠ 未设 ⇒ 声明侧未知）。
     """
-    return AST.declared_switch(name, kind=kind)
+    if _DECL_MANIFEST is None:
+        return AST.declared_switch(name, kind=kind)
+    return AST.declared_switch_from_manifest(name, _DECL_MANIFEST, kind=kind)
 
 
 def _weather_switch_effective(recs) -> dict:
@@ -246,11 +257,13 @@ def _dialogue_switch_effective(recs) -> dict:
     }
 
 
-def _fuse_state(hits: int, declared_on: bool) -> str:
-    """四态融合（与天气臂同口径）：on / off / cannot-verify / contradiction。"""
-    if hits > 0:
-        return "on" if declared_on else "contradiction"
-    return "off" if not declared_on else "cannot-verify"
+def _fuse_state(hits: int, declared_on: bool, declared_known: bool = True) -> str:
+    """四态融合（与 `AST.fuse_state` 同口径）：on / off / cannot-verify / contradiction。
+
+    `declared_known=False`（env_manifest 里没登记该键 ⇒ 声明侧未知）：
+    命中>0 ⇒ on（不判 contradiction）；命中==0 ⇒ cannot-verify（**不**冒充 off）。
+    """
+    return AST.fuse_state(hits, declared_on, declared_known=declared_known)
 
 
 def _read_lines(path: str | None) -> list | None:
@@ -288,6 +301,20 @@ def main(argv=None) -> int:
     ap.add_argument("--started-at", default=None)
     ap.add_argument("--finished-at", default=None)
     ap.add_argument("--duration-sec", type=int, default=None)
+    ap.add_argument("--env-manifest", default=None,
+                    help="声明值来源：arm_inner.sh 落盘的 env_manifest.txt（**事后回放必传**）。"
+                         "缺省 ⇒ 自动探测 <run-dir>/env_manifest.txt；都没有 ⇒ 读本进程 os.environ。")
+    ap.add_argument("--no-env-manifest", action="store_true",
+                    help="强制关闭自动探测，退回读本进程 os.environ（老行为）")
+    ap.add_argument("--out", default=None,
+                    help="meta.json 输出路径（缺省 <run-dir>/meta.json）。回放已有证据时用它，"
+                         "避免覆盖原 meta 的 code_sha 锚点。")
+    ap.add_argument("--code-sha", default=None,
+                    help="**仅供事后回放**：钉住那次跑批的 code_sha（来源写进 meta.code_sha_source）。"
+                         "缺省 ⇒ 现场 `git rev-parse HEAD`。")
+    ap.add_argument("--require-code-unchanged", action="store_true",
+                    help="可选硬闸：冻结区（code/life|orchestration|config|engine）在跑批窗口内"
+                         "有改动 ⇒ exit 9。缺省只记录进 meta.assertions，不拦返回码。")
     ap.add_argument("--require-weather-state", choices=("on", "off"), default=None,
                     help="可选硬闸：断言天气臂运行期生效值（ON 臂传 on / OFF 臂传 off）。"
                          "缺省(None) ⇒ 只记录不拦，返回码与未加本参数时完全一致。")
@@ -301,6 +328,42 @@ def main(argv=None) -> int:
     if not run.exists():
         print(f"[meta] run.jsonl 不存在: {run}", file=sys.stderr)
         return 2
+
+    # ---- 声明值来源（看板 A-2）：显式 --env-manifest > 自动探测 > live os.environ ----
+    global _DECL_MANIFEST
+    _DECL_MANIFEST = None  # 同一进程内多次调用（测试/批内逐臂补 meta）时不得残留上一次的清单
+    manifest_path, manifest_auto = None, False
+    if a.env_manifest and not a.no_env_manifest:
+        manifest_path = Path(a.env_manifest)
+        if not manifest_path.is_absolute():
+            manifest_path = (ROOT / a.env_manifest).resolve()
+    elif not a.no_env_manifest:
+        cand = run_dir / "env_manifest.txt"
+        if cand.exists():
+            manifest_path, manifest_auto = cand, True
+    if manifest_path is not None:
+        if not manifest_path.exists():
+            print(f"[meta] FAIL: --env-manifest 不存在: {manifest_path}", file=sys.stderr)
+            return 2
+        _DECL_MANIFEST = AST.parse_env_manifest_detailed(manifest_path)
+    decl_note = ("env_manifest（回放：读那次跑批启动器落盘的清单）" if _DECL_MANIFEST
+                 else "os.environ（live：本进程环境即跑批环境）")
+
+    # ---- 起跑快照（看板 A-3）：显式 --git-status-start > 自动探测 <run-dir>/git_status_start.txt ----
+    start_snapshot_path, start_snapshot_source = a.git_status_start, a.git_status_start_source
+    if not start_snapshot_path:
+        _cand = run_dir / "git_status_start.txt"
+        if _cand.exists():
+            start_snapshot_path = str(_cand)
+            start_snapshot_source = f"auto:run_dir/git_status_start.txt（{_cand}）"
+
+    # ---- code_sha（A-3 的比对基准）：live 取现场 HEAD；回放可用 --code-sha 钉住 ----
+    if a.code_sha:
+        code_sha_effective = a.code_sha.strip()
+        code_sha_source = "arg:--code-sha（事后回放钉住那次跑批的 sha，非现场 HEAD）"
+    else:
+        code_sha_effective = _git("rev-parse", "HEAD")
+        code_sha_source = "git:rev-parse HEAD @ emit_run_meta 时刻"
 
     recs, bad_lines = [], 0
     with open(run, encoding="utf-8") as fh:
@@ -371,7 +434,10 @@ def main(argv=None) -> int:
         "rounds_seen_max": rr[-1] if rr else None,
         "rounds_contiguous": bool(rr) and rr == list(range(rr[0], rr[0] + len(rr))),
         "rounds_per_slot_effective": _rounds_per_slot(),
-        "code_sha": _git("rev-parse", "HEAD"),
+        # code_sha 默认取现场 HEAD（跑批当时的代码身份）；`--code-sha` 仅供**事后回放**
+        # 已有证据时钉住那次跑批的 sha（来源显式记在 code_sha_source，不可冒充 live）。
+        "code_sha": code_sha_effective,
+        "code_sha_source": code_sha_source,
         "git_dirty_files": [ln for ln in _git("status", "--porcelain").splitlines() if ln],
         # 说明：本字段是**生成 meta 时刻**的全仓快照（共享仓库里可能有其他成员的未跟踪产物）。
         # 跑批时刻的「代码身份」以 `code_sha` + 日志内 `WORLD_INIT.config_components` 为硬证据：
@@ -379,8 +445,8 @@ def main(argv=None) -> int:
         "git_dirty_code_files": [ln for ln in _git("status", "--porcelain").splitlines()
                                  if ln and (" code/" in ln or ln.endswith("code/"))],
         "git_status_end": [ln for ln in _git("status", "--porcelain").splitlines() if ln],
-        "git_status_start": _read_lines(a.git_status_start),
-        "git_status_start_source": a.git_status_start_source,
+        "git_status_start": _read_lines(start_snapshot_path),
+        "git_status_start_source": a.git_status_start_source or start_snapshot_source,
         "code_sha_end": _git("rev-parse", "HEAD"),
         "code_identity_note": ("代码身份硬证据 = code_sha + WORLD_INIT.config_components；"
                                "git_dirty_code_files 为空表示 code/ 无未提交改动"),
@@ -415,18 +481,32 @@ def main(argv=None) -> int:
         # 加臂 = 表里加一行；本字典不再逐臂手写，避免「加了臂却忘了加键」（看板 A-4）。
         "switch_declared": {_n: _declared_switch(_n, kind=_k)
                             for _n, _k in ((_s["name"], _s["kind"]) for _s in AST.ARM_SWITCHES)},
+        # 声明值来源（看板 A-2）：事后回放必须用那次的 env_manifest，不能用「今天的 shell 环境」
+        "switch_declared_provenance": {
+            "mode": "env_manifest" if _DECL_MANIFEST else "process_env",
+            "source": (_DECL_MANIFEST["path"] if _DECL_MANIFEST else "os.environ @ emit_run_meta 进程"),
+            "auto_detected": bool(manifest_auto),
+            "manifest_keys": (_DECL_MANIFEST["keys"] if _DECL_MANIFEST else []),
+            "manifest_explicit_unset": (_DECL_MANIFEST["explicit_unset"] if _DECL_MANIFEST else []),
+            "manifest_meta": ({k: _DECL_MANIFEST["env"][k]
+                               for k in ("code_sha", "branch")
+                               if _DECL_MANIFEST["env"].get(k)} if _DECL_MANIFEST else {}),
+            "note": ("env_manifest 只登记启动器（arm_inner.sh 一类）关心的键：清单里**明确**写了 "
+                     "`<unset>` ⇒ 确证该臂未导出该变量；清单里**压根没出现** ⇒ 声明侧未知"
+                     "（declared_known=false，不得当成「关」引用）。"),
+        },
     }
     # 运行期反推（强证据）：在 meta 落盘前算，overwrite 上面的占位
-    _decl_wx = meta["switch_declared"]["HITT_WEATHER"]["normalized_effective"]
+    _decl_wx_st = meta["switch_declared"]["HITT_WEATHER"]
+    _decl_wx = _decl_wx_st["normalized_effective"]
+    _known_wx = _decl_wx_st.get("declared_known", True)
     _wx_eff = _weather_switch_effective(recs)
-    if _wx_eff["ctx_weather_msgs"] > 0:
-        _state = "on" if _decl_wx else "contradiction"
-    else:
-        _state = "off" if not _decl_wx else "cannot-verify"
+    _state = _fuse_state(_wx_eff["ctx_weather_msgs"], _decl_wx, declared_known=_known_wx)
     _wx_eff["effective"] = _state                       # on / off / cannot-verify / contradiction
     _wx_eff["declared_on"] = _decl_wx
-    _wx_eff["state_rule"] = ("ctx.weather>0 ⇒ on（若声明 OFF 则 contradiction）；"
-                             "ctx.weather==0 ⇒ off（若声明 ON 则 cannot-verify）")
+    _wx_eff["declared_known"] = _known_wx
+    _wx_eff["state_rule"] = ("ctx.weather>0 ⇒ on（声明 OFF 且声明已知 则 contradiction）；"
+                             "ctx.weather==0 ⇒ off（声明 ON 则 cannot-verify；声明未知亦 cannot-verify）")
     meta["switch_effective"] = {"HITT_WEATHER": _wx_eff}
 
     # --- 开关取证（F-3/F-4 对话臂，impl-101）：声明值 + 运行期反推，二者并列 -----------
@@ -435,15 +515,20 @@ def main(argv=None) -> int:
     # 无法从 engine_version 归因。这里补上运行期反推，使同 sha 的 ON/OFF 两臂可复算。
     _dlg_eff = _dialogue_switch_effective(recs)
     for _k in ("HITT_DIALOGUE_EMOTION_ECHO", "HITT_DIALOGUE_REPAIR"):
-        _decl = meta["switch_declared"][_k]["normalized_effective"]
+        _st = meta["switch_declared"][_k]
+        _decl = _st["normalized_effective"]
+        _known = _st.get("declared_known", True)
         if _k == "HITT_DIALOGUE_EMOTION_ECHO":
             _hits = _dlg_eff[_k]["ctx_echo_msgs"]
         else:
             _hits = _dlg_eff[_k]["n_f4_any_key"]
-        _dlg_eff[_k]["effective"] = _fuse_state(_hits, _decl)
+        _dlg_eff[_k]["effective"] = _fuse_state(_hits, _decl, declared_known=_known)
         _dlg_eff[_k]["declared_on"] = _decl
-        _dlg_eff[_k]["state_rule"] = ("结构字段命中>0 ⇒ on（声明 OFF 则 contradiction）；"
-                                      "命中==0 ⇒ off（声明 ON 则 cannot-verify，非 OFF 证据）")
+        _dlg_eff[_k]["declared_known"] = _known
+        _dlg_eff[_k]["declared_state"] = _st.get("declared_state", _st["state"])
+        _dlg_eff[_k]["state_rule"] = ("结构字段命中>0 ⇒ on（声明 OFF 且声明已知 则 contradiction）；"
+                                      "命中==0 ⇒ off（声明 ON 则 cannot-verify，非 OFF 证据；"
+                                      "声明未知亦 cannot-verify）")
     meta["switch_effective"].update(_dlg_eff)
 
     # --- 开关取证（N-15 称呼演化臂，R01）：**只能记 cannot-verify** ---------------------------
@@ -453,10 +538,13 @@ def main(argv=None) -> int:
     # M3（两臂 `purpose=dialogue` 的 `LLM_CALL.payload.prompt_hash` 集合交集为空）、
     # M4（`switch_proof.txt` 从 `/proc/<pid>/environ` 取真值）。
     # 把声明值并列写出，供 M4 对拍；`effective` 恒为 `cannot-verify`（不是「开关没开」的证据）。
-    _ae_decl = meta["switch_declared"]["LIFE_PROMPT_ADDR_EVOLVE"]["normalized_effective"]
+    _ae_st = meta["switch_declared"]["LIFE_PROMPT_ADDR_EVOLVE"]
+    _ae_decl = _ae_st["normalized_effective"]
     meta["switch_effective"]["LIFE_PROMPT_ADDR_EVOLVE"] = {
         "effective": "cannot-verify",
         "declared_on": _ae_decl,
+        "declared_known": _ae_st.get("declared_known", True),
+        "declared_state": _ae_st.get("declared_state", _ae_st["state"]),
         "state_rule": ("恒 cannot-verify：本开关只改提示词文本，称呼文本不进 MSG payload，"
                        "无结构字段可反推；ON/OFF 判定只认 M2(prompt 渲染 sha)/M3(prompt_hash 集合)/M4(/proc/<pid>/environ)。"
                        "**不得**用 effective=cannot-verify 反推「开关没开」。"),
@@ -474,12 +562,15 @@ def main(argv=None) -> int:
         _n = _sw["name"]
         if not _sw.get("in_effective", True) or _n in meta["switch_effective"]:
             continue
-        _decl = meta["switch_declared"][_n]["normalized_effective"]
-        _dstate = meta["switch_declared"][_n]["state"]
+        _st = meta["switch_declared"][_n]
+        _decl = _st["normalized_effective"]
+        _known = _st.get("declared_known", True)
+        _dstate = _st.get("declared_state", _st["state"])
         if _sw.get("probe") is None:
             meta["switch_effective"][_n] = {
                 "effective": "cannot-verify",
                 "declared_on": _decl,
+                "declared_known": _known,
                 "declared_state": _dstate,
                 "state_rule": _sw.get(
                     "cannot_verify_reason",
@@ -488,28 +579,63 @@ def main(argv=None) -> int:
             }
             continue
         _eff = AST.probe_runtime(recs, _sw["probe"])
-        _eff["effective"] = AST.fuse_state(_eff["hits"], _decl)
+        _eff["effective"] = AST.fuse_state(_eff["hits"], _decl, declared_known=_known)
         _eff["declared_on"] = _decl
+        _eff["declared_known"] = _known
         _eff["declared_state"] = _dstate
-        _eff["state_rule"] = ("结构字段命中>0 ⇒ on（声明 OFF 则 contradiction）；"
-                              "命中==0 ⇒ off（声明 ON 则 cannot-verify，非 OFF 证据）")
+        _eff["state_rule"] = ("结构字段命中>0 ⇒ on（声明 OFF 且声明已知 则 contradiction）；"
+                              "命中==0 ⇒ off（声明 ON 则 cannot-verify，非 OFF 证据；声明未知亦 cannot-verify）")
         meta["switch_effective"][_n] = _eff
 
     drops = Counter((r["payload"].get("reason"), r["payload"].get("type"))
                     for r in recs if r["type"] == "DROPPED")
-    # 跑批窗口内 code/ 是否被改动（起跑快照 vs 结束快照，只比 code 路径）
-    end_code = sorted(x for x in meta["git_status_end"] if " code/" in x)
-    start_code = sorted(x for x in (meta["git_status_start"] or []) if " code/" in x)
-    meta["assertions"]["code_unchanged_during_run"] = (
-        None if meta["git_status_start"] is None else (start_code == end_code))
+
+    # ---- 冻结区零改动真断言（看板 A-3）---------------------------------------------
+    # 旧实现：只在显式传 --git-status-start 时比较起跑/结束快照，否则恒 null（而 run_batch.sh
+    # 从不传 ⇒ 两臂 meta 全是 None，「跑批期间有没有人动冻结区」没有证据）。
+    # 新实现三路证据取「与」（任一路有改动即 false，任何一路都没有 ⇒ false+unverifiable，不静默）：
+    #   ① EXIT trap 落盘的 <run-dir>/code_frozen_diff_at_exit.txt（跑批当时的事实，最强）
+    #   ② git diff --name-only <code_sha> -- <冻结区>（事后可复算，绑定那次跑批的 sha）
+    #   ③ git status 冻结区条目相对起跑快照的**新增**（补 ② 看不见的 untracked 文件）
+    trap_path = run_dir / FZD.TRAP_FILE_NAME
+    trap_diff = FZD._parse_trap_file(trap_path) if trap_path.exists() else None
+    rev_diff = FZD.frozen_diff(ROOT, meta["code_sha"]) if meta["code_sha"] else None
+    new_status = FZD.frozen_status_new(ROOT, meta["git_status_start"]) \
+        if meta["git_status_start"] is not None else None
+    ccu = FZD.decide(trap_diff=trap_diff, rev_diff=rev_diff, new_status=new_status)
+    meta["assertions"]["code_unchanged_during_run"] = bool(ccu["unchanged"])
+    meta["code_unchanged_evidence"] = {
+        "unchanged": ccu["unchanged"],
+        "method": ccu["method"],
+        "reasons": ccu["reasons"],
+        "frozen_zones": list(FZD.FROZEN_ZONES),
+        "exit_trap_file": (str(trap_path) if trap_diff is not None else None),
+        "exit_trap_diff": trap_diff,
+        "git_diff_vs_code_sha": rev_diff,
+        "git_status_new_vs_start": new_status,
+        "git_status_start_available": meta["git_status_start"] is not None,
+        "code_sha": meta["code_sha"],
+        "note": ("三路证据取「与」：EXIT trap（跑批当时）/ git diff vs code_sha（事后复算）/ "
+                 "git status 冻结区新增（补 untracked）；无任何可用证据时记 false+unverifiable，"
+                 "**不再**写 null 静默。"),
+    }
     meta["dropped_counts"] = {f"{k[0]}|{k[1]}": v for k, v in sorted(drops.items(), key=lambda kv: str(kv[0]))}
     meta["msg_dropped_unknown_intent_field"] = sum(
         v for k, v in drops.items() if k[0] == "unknown_intent_field" and str(k[1]).startswith("MSG"))
 
     out = run_dir / "meta.json"
+    if a.out:
+        out = Path(a.out) if Path(a.out).is_absolute() else (ROOT / a.out)
+        out.parent.mkdir(parents=True, exist_ok=True)
+
     out.write_text(json.dumps(meta, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
                    encoding="utf-8")
     print(f"[meta] {out}")
+    print(f"[meta] switch_declared 来源={decl_note}"
+          f" auto_detected={meta['switch_declared_provenance']['auto_detected']}")
+    print(f"[meta] assertions.code_unchanged_during_run={meta['assertions']['code_unchanged_during_run']} "
+          f"method={meta['code_unchanged_evidence']['method']} "
+          f"reasons={meta['code_unchanged_evidence']['reasons'] or '[]'}")
     print(f"[meta] events={meta['events']} llm_calls={meta['llm_calls']} "
           f"cached_ratio={meta['llm_cached_ratio']} provider={meta['llm_provider_in_events']} "
           f"model={meta['llm_model_in_events']}")
@@ -540,13 +666,15 @@ def main(argv=None) -> int:
                   "HITT_DIALOGUE_REPAIR", "LIFE_PROMPT_ADDR_EVOLVE"):
             continue  # 上面四条已有更详细的打印
         _d = meta["switch_declared"][_n]
+        _dstate = _d.get("declared_state", _d["state"])
         if _n not in meta["switch_effective"]:
-            print(f"[meta] switch.{_n}: declared={_d['raw']!r} state={_d['state']} "
+            print(f"[meta] switch.{_n}: declared={_d['raw']!r} state={_dstate} "
                   f"(不写入 switch_effective：非臂开关)")
             continue
         _e = meta["switch_effective"][_n]
         _extra = (f"hits={_e['hits']}" if "hits" in _e else "")
-        print(f"[meta] switch.{_n}: declared={_d['raw']!r} state={_d['state']} "
+        print(f"[meta] switch.{_n}: declared={_d['raw']!r} state={_dstate} "
+              f"declared_known={_d.get('declared_known', True)} "
               f"effective={_e['effective']} {_extra}".rstrip())
 
     # 可选硬闸：只有显式传 --require-weather-state 才拦（缺省 ⇒ 只记录，返回码不变，exit 8 专用）
@@ -571,6 +699,16 @@ def main(argv=None) -> int:
                 return 8
             print(f"[meta] OK(开关取证): {_k} effective={_got}")
 
+
+    # 可选硬闸（看板 A-3）：冻结区在跑批窗口内有改动 ⇒ exit 9（缺省只记 meta.assertions）
+    if a.require_code_unchanged and not meta["assertions"]["code_unchanged_during_run"]:
+        print(f"[meta] FAIL(冻结区取证): code_unchanged_during_run=false "
+              f"method={meta['code_unchanged_evidence']['method']} "
+              f"reasons={meta['code_unchanged_evidence']['reasons']}", file=sys.stderr)
+        return 9
+    if a.require_code_unchanged:
+        print("[meta] OK(冻结区取证): code_unchanged_during_run=true "
+              f"method={meta['code_unchanged_evidence']['method']}")
 
     if a.rounds and meta["rounds_effective"] != a.rounds:
         print(f"[meta] FAIL: rounds_effective={meta['rounds_effective']} != 声明 {a.rounds}", file=sys.stderr)

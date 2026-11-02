@@ -394,6 +394,33 @@ def normalize_argv(argv: list) -> list:
     return out
 
 
+def msg_graph_degree_note(*, n_dm_reply: int, dm_hit_dm: int, dm_hit_pub: int,
+                          pub_in_total_any: int, in_by_channel: dict,
+                          pub_out_reply: int, pub_out_refs: int) -> str:
+    """`msg_graph_degree.note` 的**唯一**生成点：全部数字来自实测，绝不写死结论。
+
+    看板 A-4（原 A-3 / CYCLE-47 N-1）：旧 note 是一段写死的人话——「公开消息在消息图里
+    入度 0、**出边 0**，是孤立节点」，而同一批实测 `isolated_nodes=false`、
+    `pub_out_degree_reply_nonnull=4` ⇒ **文案与数字自相矛盾**。现在把「是不是孤立节点」
+    这件事交给实测值判定（口径与 `isolated_nodes_any` 完全一致），note 里只陈述计数。
+    本函数是纯函数，便于单测（见 `tools/public_talk/test_msg_graph_degree_note.py`）。
+    """
+    out_edges = pub_out_reply + pub_out_refs
+    isolated = (pub_in_total_any == 0 and pub_out_reply == 0 and pub_out_refs == 0)
+    head = (f"DM 的 reply_to 非空 {n_dm_reply} 条中命中 DM msg_uid {dm_hit_dm} 条、"
+            f"命中 PUB msg_uid {dm_hit_pub} 条（dm-only 兼容口径）；"
+            f"任一消息事件命中 PUB msg_uid = {pub_in_total_any} 条"
+            f"（按类型：{dict(sorted(in_by_channel.items())) or '{}'}）⇒ ")
+    if isolated:
+        tail = (f"公开消息在消息图里入度 0、出边 {out_edges}"
+                f"（= 回复边 {pub_out_reply} + refs {pub_out_refs}），按 public-talk-deg/2 判为孤立节点")
+    else:
+        tail = (f"公开消息入度 {pub_in_total_any}（其中被公开面接住 "
+                f"{in_by_channel.get('MSG_PUBLIC', 0)} 条）、出边 {out_edges}"
+                f"（= 回复边 {pub_out_reply} + refs {pub_out_refs}），不是孤立节点")
+    return head + tail
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="公开场合接话：确定性尺子（只读、零跑批、零 LLM）")
     ap.add_argument("--log", required=True, help="主数据源 run.jsonl（唯一尺子数据源）")
@@ -790,20 +817,20 @@ def main() -> int:
         "denominator_dm_reply": len(dm_reply),
         "probe": True,
         "not_a_judgment": True,
-        "note": (
-            f"DM 的 reply_to 非空 {len(dm_reply)} 条中命中 DM msg_uid {dm_hit_dm} 条、"
-            f"命中 PUB msg_uid {dm_hit_pub} 条（dm-only 兼容口径）；"
-            f"任一消息事件命中 PUB msg_uid = {pub_in_total_any} 条"
-            f"（按类型：{dict(sorted(in_by_channel.items())) or '{}'}）⇒ "
-            + ("公开消息在消息图里入度 0、出边 "
-               f"{pub_out_reply + pub_out_refs}（= 回复边 {pub_out_reply} + refs {pub_out_refs}），"
-               "按 public-talk-deg/2 判为孤立节点"
-               if pub_in_total_any == 0 and pub_out_reply == 0 and pub_out_refs == 0
-               else f"公开消息入度 {pub_in_total_any}（其中被公开面接住 "
-                    f"{in_by_channel.get('MSG_PUBLIC', 0)} 条）、出边 "
-                    f"{pub_out_reply + pub_out_refs}（= 回复边 {pub_out_reply} + refs {pub_out_refs}），"
-                    "不是孤立节点")
-        ),
+        "note": msg_graph_degree_note(
+            n_dm_reply=len(dm_reply), dm_hit_dm=dm_hit_dm, dm_hit_pub=dm_hit_pub,
+            pub_in_total_any=pub_in_total_any, in_by_channel=in_by_channel,
+            pub_out_reply=pub_out_reply, pub_out_refs=pub_out_refs),
+        "note_consistency": {
+            "rule": ("note 的「孤立节点 / 不是孤立节点」判定与 isolated_nodes_any 同口径："
+                     "pub_in_degree_total_any==0 且 pub_out_degree_reply_nonnull==0 且 "
+                     "pub_out_degree_refs_nonempty==0"),
+            "note_says_isolated": (pub_in_total_any == 0 and pub_out_reply == 0
+                                   and pub_out_refs == 0),
+            "isolated_nodes_any": (pub_in_total_any == 0 and pub_out_reply == 0
+                                   and pub_out_refs == 0),
+            "consistent": True,  # 同一表达式生成的两处，结构上恒等；字段保留以便外部复算
+        },
         "legacy_note": (
             "CYCLE-47 §159 登记过：旧 note 把 `出边 0` 写死，与实测 pub_out_degree_reply_nonnull>0 不一致；"
             "自 public-talk-deg/2 起 note 由实测值拼接（不再写死）"

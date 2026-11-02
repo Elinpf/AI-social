@@ -44,6 +44,31 @@ mkdir -p "$OUT_DIR"
 OUT_ABS="$(cd "$OUT_DIR" && pwd)"
 RUN="$OUT_ABS/run.jsonl"
 
+# --- 冻结区零改动：EXIT trap 落盘（看板 A-3）---------------------------------------
+# 为什么用 trap：跑批中途 `exit` / `set -e` 触发的任何一条退出路径都要留下证据，
+# 否则「批结束时冻结区动没动」就只存在于人的记忆里。落盘文件名与口径由
+# `tools/d2/frozen_zone_diff.py`（冻结区单一真源）定义，`emit_run_meta.py` 会优先读它。
+TRAP_OUT="$OUT_ABS/code_frozen_diff_at_exit.txt"
+_frozen_zone_exit_trap() {
+  local rc=$?
+  set +e
+  {
+    echo "# run_batch EXIT trap at $(date -Iseconds) rc=$rc"
+    echo "code_sha=$(git -C "$ROOT" rev-parse HEAD 2>/dev/null)"
+    echo "rc=$rc"
+    python3 "$ROOT/tools/d2/frozen_zone_diff.py" --repo "$ROOT" --rev "$(git -C "$ROOT" rev-parse HEAD 2>/dev/null)" 2>/dev/null \
+      | sed -n 's/^DIFF //p'
+  } > "$TRAP_OUT" 2>/dev/null
+  return $rc
+}
+trap _frozen_zone_exit_trap EXIT
+
+# 起跑快照：launcher（launch_arm.sh 一类）通常已写；没有就由这里补，供
+# `emit_run_meta.py` 自动探测（看板 A-3 的「起跑 vs 结束」对照）。
+if [[ ! -s "$OUT_ABS/git_status_start.txt" ]]; then
+  git -C "$ROOT" status --porcelain > "$OUT_ABS/git_status_start.txt" 2>/dev/null || true
+fi
+
 cd "$CODE"
 # shellcheck disable=SC1091
 set -a; . ./.env.local; set +a
@@ -61,7 +86,10 @@ FINISHED="$(date -Iseconds)"
 
 META_ARGS=(--run-dir "$OUT_ABS" --seed "$SEED" --n "$AGENTS" --rounds "$ROUNDS"
            --mock-precalib-msg "$MOCK_PRECALIB_MSG" --started-at "$STARTED"
-           --finished-at "$FINISHED" --duration-sec "$((T1 - T0))")
+           --finished-at "$FINISHED" --duration-sec "$((T1 - T0))"
+           # live 模式：本进程 environ 就是跑批 environ，比 launcher 只登记几个键的
+           # env_manifest.txt 更权威 ⇒ 显式关掉自动探测（回放时才用 --env-manifest）。
+           --no-env-manifest)
 if [[ "$MOCK" -eq 1 ]]; then META_ARGS+=(--mock); fi
 set +e
 python3 "$ROOT/tools/d2/emit_run_meta.py" "${META_ARGS[@]}"
