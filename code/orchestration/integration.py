@@ -327,17 +327,37 @@ class KernelAdapter:
         return self._C.PERCEPTION_SCOPE.get(etype, self._C.DEFAULT_VISIBILITY)
 
     def visibility_query(self, agent_id: str, upto_round: int, *,
-                         window_rounds: int | None = None, location: str | None = None) -> list:
-        """T264：经增量索引取可见事件（候选超集 + `contracts.visible` 裁决；逐字节不变）。"""
+                         window_rounds: int | None = None, location: str | None = None,
+                         extra: list | None = None) -> list:
+        """T264：经增量索引取可见事件（候选超集 + `contracts.visible` 裁决；逐字节不变）。
+
+        `extra`（D9z）：本回合缓冲区的只读投影；`None`/空 ⇒ 与引入前完全一致。
+        """
         if self._vindex is None:
             from .visibility_index import VisibilityIndex
             self._vindex = VisibilityIndex(self._scope_table, self._default_cls)
         self._vindex.sync(self.engine.ledger.records)
         return self._vindex.visible(agent_id, upto_round,
                                     window_rounds=window_rounds, location=location,
-                                    place_local_actor_fallback=self._plaf)
+                                    place_local_actor_fallback=self._plaf, extra=extra)
 
     # ---- IF-1 perceive ----
+    def _pending_view(self) -> list | None:
+        """D9z：本回合**已发出未提交**事件的只读视图（开关关闭 ⇒ `None`，零行为变化）。
+
+        - `engine.perceive.intra_round_mode()` = `off`（默认）⇒ `None`；
+        - `msg` ⇒ 只取 `MSG_DM/MSG_PUBLIC/MSG_GROUP`；`all` ⇒ 整个缓冲区；
+        - 数据来自 `Kernel.pending_records()`（`Arbiter` 缓冲区投影，`seq` 与 emit 时一致）。
+        """
+        from engine import perceive as _p
+        mode = _p.intra_round_mode()
+        if mode == "off":
+            return None
+        pending = self.engine.pending_records()
+        if mode == "msg":
+            pending = [r for r in pending if r["type"] in _p._MSG_TYPES]
+        return pending or None
+
     def perceive(self, agent_id: str):
         from life.ports import EventView, MemoryRef, WorldView
         st = self.engine.state
@@ -345,7 +365,9 @@ class KernelAdapter:
         r = st.round
         loc = a.get("location", "residence")
         # T264 步骤⑤：可见性走**组合根构建的增量索引**（候选超集 + 单一真源谓词；逐字节不变）
-        recs = self.visibility_query(agent_id, r, window_rounds=self.VISIBLE_WINDOW_ROUNDS, location=loc)
+        # D9z：开关关闭 ⇒ `_pending_view` 为 None，行为不变；开启 ⇒ 并入本回合已发出事件。
+        recs = self.visibility_query(agent_id, r, window_rounds=self.VISIBLE_WINDOW_ROUNDS,
+                                     location=loc, extra=self._pending_view())
         visible = [EventView(seq=ev["seq"], round=ev["round"], phase=ev["phase"],
                              actor=ev["actor"], type=ev["type"],
                              payload=ev.get("payload", {}),
