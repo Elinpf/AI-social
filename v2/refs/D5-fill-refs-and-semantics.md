@@ -38,13 +38,27 @@ for p in ("v2/evidence/d9z-on_n16r56_s42/run.jsonl","v2/evidence/cycle36_f3_off_
 | `payload.body_ref` | `code/life/memory.py:246/250`、`agent.py:1090/2144` | **side storage 的叙事正文指针**（`side://narrative/<agent>/<nid>.txt`），用于 `NARRATIVE.body_ref` / `MEMORY_WRITE.body_ref` | MSG 上**本就不该有**（它不是消息字段）⇒ **不要往 MSG 写 `body_ref`** |
 | `ctx.memory_refs` | `code/life/agent.py:1276-1281`（`self._mem_refs` → `ctx["memory_refs"]`），由 `_memory_line()`（`agent.py:1739`）填充 | **F-6 臂**（跨天记忆进对话）的审计键：**本条消息生成时，提示词里实际注入了哪些跨天记忆的 `mem_id`** | F-6 关着 ⇒ `_mem_refs` 恒空 ⇒ 键不出现 |
 
-### 2.2 谁写 / 写哪些字段 / 什么触发
+### 2.2 落值方案（**`payload.refs` = 不实施**，2026-11-02 空跑后裁定）
 
-| 项 | 结论 |
-|---|---|
-| **谁写** | ① `agent.py` 三个 MSG 落盘点（`:1403 / :1477 / :1576`）—— 把 `"refs": []` 换成实测值；② `_memory_line()` 已在写 `self._mem_refs`，`_ctx_snapshot()` 已把它落进 `ctx.memory_refs`（**这部分不用改，只需开 F-6**） |
-| **写哪些字段** | **`payload.refs`: `list[dict]`，每项 `{"kind": "msg"│"mem", "id": <msg_uid│mem_id>, "day": <int>}`** —— 只放**被指名的引用对象**，不放对话对象、不放 `reply_to`（那是另一回事）；**`ctx.memory_refs` 保持现状（`list[mem_id]`）** |
-| **什么触发** | ① **F-6 记忆注入**：`_memory_line()` 实际注入时逐条记 `mem_id`（已实现，开开关即有）；② **MSG 侧转述**：仅当消息属"转述类"（`ctx.trigger ∈ {polite_reject, whisper, rel_maintain, counter_propose}` 且正文出现指向旧事的锚点）时，把被转述的 `msg_uid` 记入 `refs`；**原创/回答类保持 `[]`** |
+**结论：`payload.refs` 不落值。** 依据是落值前空跑表（`d9z-on` 444 条、按 §3.2 新口径）：
+
+| 步骤 | 可判条数 | 占比 |
+|---|---|---|
+| ② 指名（判读文本含锚点） | **319 / 444** | **71.8%**（机器下限） |
+| ②∧③（再加 `reply_to` 可解 ⇒ 非承接可判） | **195 / 319** | **61.1%**（占含锚点者） |
+| **`cross_day_restate` 可判定条数** | **0** | — |
+
+- **卡在第 ① 步「跨天」**：判定跨天必须知道"引用的是**哪一条**旧消息"，而 `payload.refs` / `ctx.memory_refs` 全空 ⇒ **无源消息标识**；
+- **文本共现不能替代**：同一锚点可被多条旧消息提到（如"老周"在下 5 天出现 17 次），**共现只证明"该词出现过"，不证明"引用了哪一条"** ⇒ 用它会把 N 条候选叉成 N×M 对；**proxy 不作判定**。
+
+**⇒ 只落 `refs` 仍 0 条 ⇒ 不实施。**
+
+**并且（这条比"白落"更重要）**：**落一个"提供索引但不提供可算性"的字段，会在日志里制造"看起来有记忆追踪"的假象** —— 下一个读日志的人会以为 D5 已经能算。**这比不落更坏。**
+
+**替代路径**：真要解锁 D5，须开 **F-6（记忆注入，`LIFE_PROMPT_MEMORY_F6=1`）**，且**按干预定性**——它改的是 prompt（注入 `TOP_N=2` × `ITEM_CHARS=60`、语义配额 1）⇒ **世界变了** ⇒ 须**自预登记**、**D5 读数只描述"F-6 世界"**、**不得与 `d9z-on`（F-6 关）的 D5 并列**（§18）、**不写"补了观测面"**。
+
+**F-6 关的判定方法（非循环）**：`d9z-on` 实测 `MEMORY_WRITE` 25,524 / `MEMORY_RETRIEVE` 896（记忆有写有取），而 `ctx.memory_refs` 非空仅 **0 / 90,532** ⇒ 排除"F-6 开但无记忆可注"这一替代解释 ⇒ **只能 F-6 关**。
+（⚠ 单看"`memory_refs`=0"是**循环论证**；必须加 `MEMORY_RETRIEVE > 0` 才能切断。）
 
 ### 2.3 定性：`refs` = **索引/缓存**，不是观测面（Leader 2026-11-02 拍板）
 
